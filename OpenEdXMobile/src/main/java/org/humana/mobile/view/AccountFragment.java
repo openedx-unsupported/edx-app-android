@@ -282,7 +282,8 @@ public class AccountFragment extends BaseFragment {
 
 
     private void getNotificationCount(){
-        mDataManager.getNotificationCount(new OnResponseCallback<NotificationCountResponse>() {
+        mDataManager.getNotificationCount(mDataManager.getLoginPrefs().getProgramId(),
+                new OnResponseCallback<NotificationCountResponse>() {
             @Override
             public void onSuccess(NotificationCountResponse response) {
 

@@ -65,7 +65,7 @@
                     android:layout_marginEnd="@dimen/_70px"
                     android:fontFamily="@font/hind_regular"
                     android:gravity="center"
-                    android:text="No notificationResponse available at the moment"
+                    android:text="No notification available at the moment."
                     android:textColor="@color/primary_cyan"
                     android:textSize="12sp" />
 

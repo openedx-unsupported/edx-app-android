@@ -268,11 +268,11 @@ public class TaAPI {
         return taService.getCurricullam(program_id);
     }
 
-    public Call<NotificationCountResponse> getNotificationCount(){
-        return taService.getNotificationCount();
+    public Call<NotificationCountResponse> getNotificationCount(String course_id){
+        return taService.getNotificationCount(course_id);
     }
-    public Call<SuccessResponse> getReadNotification(String id){
-        return taService.getReadNotification(id);
+    public Call<SuccessResponse> getReadNotification(String id,String course_id){
+        return taService.getReadNotification(id,course_id);
     }
 
     public Call<List<Section>> getSections(String programId){

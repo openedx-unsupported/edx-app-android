@@ -331,7 +331,8 @@ public class NotificationViewModel extends BaseViewModel {
     
     private void notifyNotificationRead(String id, Notification item){
         mActivity.showLoading();
-        mDataManager.readNotification(id, new OnResponseCallback<SuccessResponse>() {
+        mDataManager.readNotification(mDataManager.getLoginPrefs().getProgramId(),
+                id, new OnResponseCallback<SuccessResponse>() {
             @Override
             public void onSuccess(SuccessResponse response) {
                 item.setSeen(true);

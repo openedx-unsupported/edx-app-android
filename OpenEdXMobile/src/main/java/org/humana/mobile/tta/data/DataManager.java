@@ -3679,11 +3679,12 @@ public class DataManager extends BaseRoboInjector {
     }
 
 
-    public void getNotificationCount(OnResponseCallback<NotificationCountResponse> callback) {
+    public void getNotificationCount(String course_id,
+                                     OnResponseCallback<NotificationCountResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new GetNotificationCountTask(context) {
+            new GetNotificationCountTask(course_id,context) {
                 @Override
                 protected void onSuccess(NotificationCountResponse response) throws Exception {
                     super.onSuccess(response);
@@ -3706,11 +3707,11 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
-    public void readNotification(String id,OnResponseCallback<SuccessResponse> callback) {
+    public void readNotification(String course_id,String id,OnResponseCallback<SuccessResponse> callback) {
 
         if (NetworkUtil.isConnected(context)) {
 
-            new ReadNotificationTask(context,id) {
+            new ReadNotificationTask(course_id,context,id) {
                 @Override
                 protected void onSuccess(SuccessResponse response) throws Exception {
                     super.onSuccess(response);

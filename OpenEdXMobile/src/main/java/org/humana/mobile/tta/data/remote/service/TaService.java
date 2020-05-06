@@ -209,10 +209,11 @@ public interface TaService {
     Call<CurricullamModel> getCurricullam(@Query(value = Constants.COURSE_KEY,encoded = true) String programId);
 
     @GET(ApiConstants.URL_MX_GET_NOTIFICATION_COUNT)
-    Call<NotificationCountResponse> getNotificationCount();
+    Call<NotificationCountResponse> getNotificationCount(@Query(value = Constants.KEY_ACTION_PARENT_ID) String course_id);
 
     @GET(ApiConstants.URL_MX_GET_NOTIFICATION_READ)
-    Call<SuccessResponse> getReadNotification(@Query(Constants.KEY_ID) String id);
+    Call<SuccessResponse> getReadNotification(@Query(Constants.KEY_ID) String id,
+                                              @Query(Constants.KEY_ACTION_PARENT_ID) String course_id);
 
     @GET(ApiConstants.URL_MX_GET_SECTIONS)
     Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);

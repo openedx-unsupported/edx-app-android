@@ -119,7 +119,7 @@ public class NotificationNavigationViewModel extends BaseViewModel {
     }
     private void notifyNotificationRead(String id){
         mActivity.showLoading();
-        mDataManager.readNotification(id, new OnResponseCallback<SuccessResponse>() {
+        mDataManager.readNotification(courseId,id, new OnResponseCallback<SuccessResponse>() {
             @Override
             public void onSuccess(SuccessResponse response) {
                 mActivity.hideLoading();

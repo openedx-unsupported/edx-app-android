@@ -15,13 +15,15 @@ public class GetNotificationCountTask extends Task<NotificationCountResponse> {
 
     @Inject
     private TaAPI taAPI;
+    private String course_id;
 
-    public GetNotificationCountTask(Context context) {
+    public GetNotificationCountTask(String course_id,Context context) {
         super(context);
+        this.course_id = course_id;
     }
 
     @Override
     public NotificationCountResponse call() throws Exception {
-        return taAPI.getNotificationCount().execute().body();
+        return taAPI.getNotificationCount(course_id).execute().body();
     }
 }

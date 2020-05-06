@@ -101,6 +101,7 @@ public class ProgramViewModel extends BaseViewModel {
                 false,
                 null
         );
+        mActivity.hideLoading();
     }
 
     public void showSearch() {
@@ -112,6 +113,8 @@ public class ProgramViewModel extends BaseViewModel {
                 false,
                 null
         );
+        mActivity.hideLoading();
+
     }
 
 
@@ -124,6 +127,8 @@ public class ProgramViewModel extends BaseViewModel {
                 false,
                 null
         );
+        mActivity.hideLoading();
+
     }
 
 

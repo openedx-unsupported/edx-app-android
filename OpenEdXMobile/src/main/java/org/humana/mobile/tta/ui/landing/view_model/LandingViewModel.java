@@ -330,7 +330,7 @@ public class LandingViewModel extends BaseViewModel {
     }
 
     private void getNotificationCount(){
-        mDataManager.getNotificationCount(new OnResponseCallback<NotificationCountResponse>() {
+        mDataManager.getNotificationCount(mDataManager.getLoginPrefs().getProgramId(),new OnResponseCallback<NotificationCountResponse>() {
             @Override
             public void onSuccess(NotificationCountResponse response) {
                 if (response.getUnReadCount()==0L){

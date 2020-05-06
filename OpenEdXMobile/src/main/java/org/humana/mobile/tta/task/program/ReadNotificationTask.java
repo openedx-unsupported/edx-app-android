@@ -14,14 +14,16 @@ public class ReadNotificationTask extends Task<SuccessResponse> {
     private TaAPI taAPI;
 
     private String id;
+    private String course_id;
 
-    public ReadNotificationTask(Context context, String id) {
+    public ReadNotificationTask(String course_id,Context context, String id) {
         super(context);
         this.id = id;
+        this.course_id = course_id;
     }
 
     @Override
     public SuccessResponse call() throws Exception {
-        return taAPI.getReadNotification(id).execute().body();
+        return taAPI.getReadNotification(id,course_id).execute().body();
     }
 }
