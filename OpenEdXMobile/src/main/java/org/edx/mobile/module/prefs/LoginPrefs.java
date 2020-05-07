@@ -61,7 +61,7 @@ public class LoginPrefs {
     public void clear() {
         clearSocialLoginToken();
         setSubtitleLanguage(null);
-        saveDefaultPlaybackSpeed(VideoPlaybackSpeed.NORMAL.getSpeedValue());
+        saveDefaultPlaybackSpeed(VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue());
         pref.put(PrefManager.Key.PROFILE_JSON, null);
         pref.put(PrefManager.Key.AUTH_JSON, null);
         EdxCookieManager.getSharedInstance(MainApplication.instance()).clearWebWiewCookie();
@@ -98,7 +98,7 @@ public class LoginPrefs {
      * i-e- NORMAL_PLAYBACK_SPEED if user hasn't selected it yet.
      */
     public float getDefaultPlaybackSpeed() {
-        return pref.getFloat(PrefManager.Key.PLAYBACK_SPEED, VideoPlaybackSpeed.NORMAL.getSpeedValue());
+        return pref.getFloat(PrefManager.Key.PLAYBACK_SPEED, VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue());
     }
 
     public void saveDefaultPlaybackSpeed(float speed) {
