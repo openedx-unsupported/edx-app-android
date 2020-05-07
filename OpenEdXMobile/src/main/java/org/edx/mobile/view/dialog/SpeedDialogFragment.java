@@ -65,9 +65,9 @@ public class SpeedDialogFragment extends RoboDialogFragment {
         setupWindow();
 
         View view = inflater.inflate(R.layout.panel_speed_popup_dialog_fragment, container, false);
-        float selectedPlaybackSpeed = VideoPlaybackSpeed.NORMAL.getSpeedValue();
+        float selectedPlaybackSpeed = VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue();
         if (getArguments() != null) {
-            selectedPlaybackSpeed = getArguments().getFloat(PLAYBACK_SPEED, VideoPlaybackSpeed.NORMAL.getSpeedValue());
+            selectedPlaybackSpeed = getArguments().getFloat(PLAYBACK_SPEED, VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue());
         }
         SpeedAdapter adapter = new SpeedAdapter(getContext(), environment, selectedPlaybackSpeed) {
             @Override

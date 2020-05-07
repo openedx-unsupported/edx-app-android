@@ -23,7 +23,7 @@ public abstract class SpeedAdapter extends BaseListAdapter<Float> {
     @Override
     public void render(BaseViewHolder tag, Float speed) {
         ViewHolder holder = (ViewHolder) tag;
-        holder.tvSpeed.setText(String.format(Locale.getDefault(), "%.1f x", speed));
+        holder.tvSpeed.setText(String.format(Locale.getDefault(), "%.2f x", speed));
         if (speed == selectedPlaybackSpeed) {
             holder.tvSpeed.setBackgroundResource(R.color.cyan_text_navigation_20);
         } else {
