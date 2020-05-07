@@ -1,6 +1,7 @@
 package org.edx.mobile.module.prefs;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -95,7 +96,7 @@ public class LoginPrefs {
 
     /**
      * @return User selected video playback speed, returns normal speed
-     * i-e- NORMAL_PLAYBACK_SPEED if user hasn't selected it yet.
+     * i-e- {@link VideoPlaybackSpeed#SPEED_1_0X} if user hasn't selected it yet.
      */
     public float getDefaultPlaybackSpeed() {
         return pref.getFloat(PrefManager.Key.PLAYBACK_SPEED, VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue());
