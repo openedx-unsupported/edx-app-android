@@ -4,7 +4,7 @@ apply plugin: 'jacoco'
 
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.3"
     // WARNING: v0.7.3+ breaks Robolectric coverage support: https://github.com/jacoco/jacoco/issues/288
 }
 
