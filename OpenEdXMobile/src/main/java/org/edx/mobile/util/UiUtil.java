@@ -61,8 +61,11 @@ public class UiUtil {
         return 0;
     }
 
-
-    public static boolean isLeftToRightOrientation() {
+    /**
+     * Utility method to check the screen direction
+     * @return true if direction is LTR false else wise
+     */
+    public static boolean isDirectionLeftToRight() {
         Configuration config = MainApplication.instance().getResources().getConfiguration();
         return config.getLayoutDirection() == View.LAYOUT_DIRECTION_LTR;
     }

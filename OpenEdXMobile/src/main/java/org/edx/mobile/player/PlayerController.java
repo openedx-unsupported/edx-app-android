@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -37,12 +38,14 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageButton;
-import com.joanzapata.iconify.IconDrawable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -63,7 +66,7 @@ import java.util.Locale;
  * <p>
  * Functions like show() and hide() have no effect when MediaController
  * is created in an xml layout.
- * 
+ *
  * MediaController will hide and
  * show the buttons according to these rules:
  * <ul>
@@ -100,17 +103,22 @@ public class PlayerController extends FrameLayout {
     StringBuilder               mFormatBuilder;
     Formatter                   mFormatter;
     private IconImageButton     mPauseButton;
-    private ImageButton         mRewButton;
     private ImageButton         mNextButton;
     private ImageButton         mPrevButton;
+    private ImageButton         mRewindButton;
+    private ImageButton         mForwardButton;
     private IconImageButton     mFullscreenButton;
     private IconImageButton     mSettingsButton;
     private Handler             mHandler = new MessageHandler(this);
     private String              mTitle;
     private TextView            mTitleTextView;
+    private TextView            mRewindTimeTextView;
+    private TextView            mForwardTimeTextView;
     private boolean             mIsAutoHide = true;
     private String              mLmsUrl;
     private View                mTopBar;
+    private TranslateAnimation  mForwardAnimation;
+    private TranslateAnimation  mRewindAnimation;
 
     private static final Logger logger = new Logger(PlayerController.class.getName());
 
@@ -192,11 +200,19 @@ public class PlayerController extends FrameLayout {
             mFullscreenButton.setOnClickListener(mFullscreenListener);
         }
 
-        mRewButton = (ImageButton) v.findViewById(R.id.rewind_button);
-        if (mRewButton != null) {
-            mRewButton.setOnClickListener(mRewListener);
+        mRewindButton = (ImageButton) v.findViewById(R.id.rewind);
+        if (mRewindButton != null) {
+            mRewindButton.setOnClickListener(mRewindListener);
             if (!mFromXml) {
-                mRewButton.setVisibility(mUseFastForward ? View.VISIBLE : View.GONE);
+                mRewindButton.setVisibility(mUseFastForward ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        mForwardButton = (ImageButton) v.findViewById(R.id.forward);
+        if (mForwardButton != null) {
+            mForwardButton.setOnClickListener(mForwardListener);
+            if (!mFromXml) {
+                mForwardButton.setVisibility(mUseFastForward ? View.VISIBLE : View.GONE);
             }
         }
 
@@ -233,7 +249,17 @@ public class PlayerController extends FrameLayout {
         installPrevNextListeners();
 
         mTitleTextView = (TextView) v.findViewById(R.id.video_title);
+        mRewindTimeTextView = (TextView) v.findViewById(R.id.rewind_time);
+        mForwardTimeTextView = (TextView) v.findViewById(R.id.forward_time);
         mTopBar = v.findViewById(R.id.video_top_bar);
+
+        initializeAnimations();
+    }
+
+    private void initializeAnimations() {
+        boolean isLTRDirection = UiUtil.isDirectionLeftToRight();
+        mForwardAnimation = ViewAnimationUtil.getSeekTimeAnimation(mForwardTimeTextView, isLTRDirection);
+        mRewindAnimation = ViewAnimationUtil.getSeekTimeAnimation(mRewindTimeTextView, !isLTRDirection);
     }
 
     /**
@@ -262,6 +288,7 @@ public class PlayerController extends FrameLayout {
      *  tapping the screen, activating a control, etc.
      */
     public void show() {
+        hideTimeText();
         show(mTimeoutMS);
     }
 
@@ -324,13 +351,6 @@ public class PlayerController extends FrameLayout {
                     mPauseButton.setEnabled(false);
                 } else {
                     mPauseButton.setEnabled(true);
-                }
-            } 
-            if (mRewButton != null) {
-                if (!mPlayer.canSeekBackward()) {
-                    mRewButton.setEnabled(false);
-                } else {
-                    mRewButton.setEnabled(true);
                 }
             }
         } catch (IncompatibleClassChangeError ex) {
@@ -406,6 +426,9 @@ public class PlayerController extends FrameLayout {
                 long pos = 1000L * position / duration;
                 mProgress.setProgress( (int) pos);
             }
+            if(position > duration){
+                position = duration;
+            }
             int percent = mPlayer.getBufferPercentage();
             mProgress.setSecondaryProgress(percent * 10);
         }
@@ -417,13 +440,13 @@ public class PlayerController extends FrameLayout {
 
         return position;
     }
-    
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         show();
         return false;
     }
-    
+
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
         show();
@@ -559,6 +582,7 @@ public class PlayerController extends FrameLayout {
             return;
         }
 
+        hideTimeText();
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
         } else {
@@ -577,7 +601,7 @@ public class PlayerController extends FrameLayout {
         }catch(Exception e){
             logger.error(e);
         }
-        
+
         // callback this event
         /*if (mEventListener != null) {
             mEventListener.callSettings();
@@ -677,8 +701,11 @@ public class PlayerController extends FrameLayout {
         if (mPauseButton != null) {
             mPauseButton.setEnabled(enabled);
         }
-        if (mRewButton != null) {
-            mRewButton.setEnabled(enabled);
+        if (mForwardButton != null) {
+            mForwardButton.setEnabled(enabled);
+        }
+        if (mRewindButton != null) {
+            mRewindButton.setEnabled(enabled);
         }
         if (mNextButton != null) {
             mNextButton.setEnabled(enabled && mNextListener != null);
@@ -706,34 +733,68 @@ public class PlayerController extends FrameLayout {
     }
 
     /**
-     * Listener for the rewind 30 seconds button in the media player
+     * Listener for the rewind 10 seconds button in the media player
      */
-    private View.OnClickListener mRewListener = new View.OnClickListener() {
+    private View.OnClickListener mRewindListener = new View.OnClickListener() {
         public void onClick(View v) {
             if (mPlayer == null) {
                 return;
             }
+            hideTimeText();
+            if(mRewindAnimation != null){
+                mRewindTimeTextView.startAnimation(mRewindAnimation);
+            }
             long pos = mPlayer.getCurrentPosition();
             try{
-                mPlayer.callPlayerSeeked(pos, pos-30000, true);
+                mPlayer.callPlayerSeeked(pos, pos-10000, true);
             }catch(Exception e){
                 logger.error(e);
             }
-            
-            // apply 30 seconds rewind
-            pos -= (30 * 1000); // milliseconds
+
+            // apply 10 seconds rewind
+            pos -= (10 * 1000); // milliseconds
             mPlayer.seekTo(pos);
             setProgress();
 
             show();
-
-            // callback this event
-//          if (mEventListener != null) {
-//              mEventListener.onSeek(pos);
-//          }
         }
     };
 
+    /**
+     * Listener for the forward 15 seconds button in the media player
+     */
+    private View.OnClickListener mForwardListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (mPlayer == null) {
+                return;
+            }
+            hideTimeText();
+           if(mForwardAnimation != null){
+               mForwardTimeTextView.startAnimation(mForwardAnimation);
+           }
+            long pos = mPlayer.getCurrentPosition();
+            try{
+                mPlayer.callPlayerSeeked(pos, pos+15000, true);
+            }catch(Exception e){
+                logger.error(e);
+            }
+
+            // apply 15 seconds forward
+            pos += (15 * 1000); // milliseconds
+            mPlayer.seekTo(pos);
+            setProgress();
+
+            show();
+        }
+    };
+
+    /**
+     * Hide Rewind & Forward time text
+     */
+    private void hideTimeText(){
+        mRewindTimeTextView.setVisibility(GONE);
+        mForwardTimeTextView.setVisibility(GONE);
+    }
 
     private void installPrevNextListeners() {
         if(mNextListener!=null){
@@ -778,7 +839,7 @@ public class PlayerController extends FrameLayout {
     }
 
     private static class MessageHandler extends Handler {
-        private final WeakReference<PlayerController> mView; 
+        private final WeakReference<PlayerController> mView;
 
         MessageHandler(PlayerController view) {
             mView = new WeakReference<>(view);
@@ -836,18 +897,18 @@ public class PlayerController extends FrameLayout {
     public void showProgress() {
         this.mProgress.setVisibility(View.VISIBLE);
     }
-    
+
     /**
      * Triggers click of next button.
      */
     public void playNext() {
-        if (mNextListener != null 
+        if (mNextListener != null
                 && mNextButton != null
                 && mNextButton.getVisibility() == View.VISIBLE) {
             mNextListener.onClick(mNextButton);
         }
     }
-    
+
     /**
      * Triggers click of previous button.
      */
@@ -858,7 +919,7 @@ public class PlayerController extends FrameLayout {
             mPrevListener.onClick(mPrevButton);
         }
     }
-    
+
     public void setSettingsBtnDrawable(boolean isSettingEnabled){
         if (mSettingsButton != null) {
             if (isSettingEnabled) {

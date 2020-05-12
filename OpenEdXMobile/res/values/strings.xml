@@ -528,6 +528,10 @@
     <string name="video_player_previous">Previous</string>
     <!-- Accessibility Label for Pause button of Video Player -->
     <string name="video_player_pause">Pause</string>
+    <!-- Accessibility Label for Rewind button on Video Player -->
+    <string name="video_player_rewind_button">Rewind 10 seconds</string>
+    <!-- Accessibility Label for Forward button on Video Player -->
+    <string name="video_player_forward_button">Forward 15 seconds</string>
     <!-- Accessibility Label for Rewind button on Video Player bottom bar -->
     <string name="video_player_rewind">Rewind 30 seconds</string>
     <!-- Accessibility Label for Settings button on Video Player bottom bar -->
@@ -536,6 +540,10 @@
     <string name="video_player_enter_fullscreen">Enter fullscreen mode</string>
     <!-- Accessibility Label for Exiting Fullscreen button on Video Player bottom bar -->
     <string name="video_player_exit_fullscreen">Exit fullscreen mode</string>
+    <!--Label for video playback rewind 10 sec in video player-->
+    <string name="video_player_rewind_time_sec">-10</string>
+    <!--Label for video playback forward 15 sec in video player-->
+    <string name="video_player_forward_time_sec">+15</string>
 
     <!-- Button label to bring up course finder -->
     <string name="find_course_text">Looking for a new challenge?</string>
