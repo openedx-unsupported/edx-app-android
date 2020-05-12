@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 """
 This module will handle test run on AWS Device Farm
 """
@@ -9,7 +10,10 @@ import errno
 import time
 import boto3
 import requests
+import sys
 
+AUT_NAME = sys.argv[1]
+print('AUT name - {}'.format(AUT_NAME))
 
 REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
@@ -23,10 +27,8 @@ RUN_TIMEOUT_SECONDS = 60 * 30
 UPLOAD_SUCCESS_STATUS = 'SUCCEEDED'
 RUN_COMPLETED_STATUS = 'COMPLETED'
 TARGET_AVAILABILITY = 'HIGHLY_AVAILABLE'
-APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable/'
-AUT_NAME = APK_PATH + 'edx-debuggable-2.20.2.apk'
 PACKAGE_NAME = 'test_bundle.zip'
-CUSTOM_SPECS_NAME = 'edx.yml'
+CUSTOM_SPECS_NAME = 'trigger_aws.yml'
 status_flag = False
 
 
@@ -34,7 +36,7 @@ print('Application Under Test - {}, Test Package - {} - configs {}'.format(
     AUT_NAME,
     PACKAGE_NAME,
     CUSTOM_SPECS_NAME
-    ))
+))
 
 device_farm = boto3.client('devicefarm', region_name=REGION)
 
@@ -48,21 +50,25 @@ def aws_job():
     get_device_info(target_project_arn)
 
     project_arn = get_project_arn(PROJECT_NAME)
-    aut_arn = upload_file(
-        project_arn,
-        ANDROID_APP_UPLOAD_TYPE,
-        AUT_NAME
-        )
+
     package_arn = upload_file(
         project_arn,
         PACKAGE_UPLOAD_TYPE,
         PACKAGE_NAME
-        )
+    )
+
     test_specs_arn = upload_file(
         project_arn,
         CUSTOM_SPECS_UPLOAD_TYPE,
         CUSTOM_SPECS_NAME
-        )
+    )
+
+    aut_arn = upload_file(
+        project_arn,
+        ANDROID_APP_UPLOAD_TYPE,
+        AUT_NAME
+    )
+
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
     test_run_arn = schedule_run(
@@ -123,7 +129,7 @@ def upload_file(project_arn, upload_type, target_file_name):
 
     _upload_presigned_url(pre_signed_url, name)
 
-    timeout_seconds = 10
+    timeout_seconds = 60
     check_every_seconds = 10 if timeout_seconds == RUN_TIMEOUT_SECONDS else 1
     start = time.time()
     while True:
@@ -145,7 +151,6 @@ def upload_file(project_arn, upload_type, target_file_name):
             break
         time.sleep(check_every_seconds)
 
-    print('{} uploaded successfully'.format(target_file_name))
     return upload_arn
 
 
@@ -177,7 +182,7 @@ def get_device_pool(project_arn, name):
     """
 
     for device_pool in device_farm.list_device_pools(arn=project_arn
-                                                    )['devicePools']:
+                                                     )['devicePools']:
         if device_pool['name'] == name:
             print('{} exits '.format(name))
             return device_pool['arn']
@@ -209,7 +214,8 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         name=name,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn,},
+              'testSpecArn': test_specs_arn
+              },
     )
 
     run_arn = schedule_run_result['run']['arn']
@@ -221,7 +227,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         str(test_run['run']['created']),
         test_run['run']['status'],
         test_run['run']['result'])
-         )
+    )
     return run_arn
 
 
@@ -248,8 +254,8 @@ def get_test_run(run_arn):
             wait_try,
             run_status,
             run_result
-            )
-             )
+        )
+        )
         now = time.time()
         if now - start > timeout_seconds:
             print(now - start)
@@ -259,7 +265,7 @@ def get_test_run(run_arn):
         wait_try += 1
 
 
-def get_test_run_artifacts(run_arn):
+def get_test_run_artifacts(run_name, run_arn):
     """
     get run artifacts
 
@@ -306,7 +312,7 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
             print('Artifacts directory created - {} '.format(
                 artifacts_directory
             )
-                 )
+            )
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
@@ -319,7 +325,7 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
         file_type,
         target_file_name
     )
-         )
+    )
 
 
 def setup_project(project_name):
@@ -519,14 +525,14 @@ def get_device_info(target_project_arn):
                 device_model_id,
                 device_type
             )
-                 )
+            )
             print('Device Platform {} with OS {}, visibility {} & availability - {} '.format(
                 device_platform,
                 device_os,
                 device_visibility,
                 device_availability
             )
-                 )
+            )
 
             if device_availability == TARGET_AVAILABILITY:
                 print('AWS setup is complete')
@@ -538,5 +544,7 @@ def get_device_info(target_project_arn):
     except IndexError:
         print('Problem finding device from pool {}'.format(device_info))
 
+
 if __name__ == '__main__':
+
     aws_job()
