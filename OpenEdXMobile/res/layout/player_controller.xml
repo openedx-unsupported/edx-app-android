@@ -38,12 +38,6 @@
         android:layout_gravity="bottom"
         android:padding="7dp">
 
-        <com.joanzapata.iconify.widget.IconImageButton
-            android:id="@+id/rewind_button"
-            style="@style/video_player_bottom_control"
-            android:contentDescription="@string/video_player_rewind"
-            app:iconName="fa-history" />
-
         <SeekBar
             android:id="@+id/mediacontroller_progress"
             style="@style/video_player_seekbar_control"
@@ -88,26 +82,81 @@
 
     <!-- Put play/pause button to the center of player -->
 
-    <com.joanzapata.iconify.widget.IconImageButton
-        android:id="@+id/pause"
-        style="@style/video_player_play_pause_button"
-        android:contentDescription="@string/video_player_pause"
-        app:iconName="fa-pause" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
-    <com.joanzapata.iconify.widget.IconImageButton
-        android:id="@+id/prev"
-        style="@style/video_player_side_control"
-        android:layout_gravity="center_vertical|start"
-        android:layout_marginStart="@dimen/video_player_control_left_margin"
-        android:contentDescription="@string/video_player_previous"
-        app:iconName="fa-chevron-circle-left" />
+        <com.joanzapata.iconify.widget.IconImageButton
+            android:id="@+id/prev"
+            style="@style/video_player_side_control"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="@dimen/video_player_control_left_margin"
+            android:contentDescription="@string/video_player_previous"
+            app:iconName="fa-chevron-circle-left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.joanzapata.iconify.widget.IconImageButton
-        android:id="@+id/next"
-        style="@style/video_player_side_control"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="@dimen/video_player_control_right_margin"
-        android:contentDescription="@string/video_player_next"
-        app:iconName="fa-chevron-circle-right" />
+        <TextView
+            android:id="@+id/rewind_time"
+            style="@style/video_player_advance_control_time_text"
+            android:text="@string/video_player_rewind_time_sec"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/rewind"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <com.joanzapata.iconify.widget.IconImageButton
+            android:id="@+id/rewind"
+            style="@style/video_player_side_control"
+            android:background="@drawable/semi_transparent_gray_circle"
+            android:contentDescription="@string/video_player_rewind_button"
+            app:iconName="fa-history"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/pause"
+            app:layout_constraintStart_toEndOf="@+id/prev"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.joanzapata.iconify.widget.IconImageButton
+            android:id="@+id/pause"
+            style="@style/video_player_play_pause_button"
+            android:contentDescription="@string/video_player_pause"
+            app:iconName="fa-pause"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.joanzapata.iconify.widget.IconImageButton
+            android:id="@+id/forward"
+            style="@style/video_player_side_control"
+            android:background="@drawable/semi_transparent_gray_circle"
+            android:contentDescription="@string/video_player_forward_button"
+            android:scaleX="-1"
+            app:iconName="fa-history"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/next"
+            app:layout_constraintStart_toEndOf="@+id/pause"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/forward_time"
+            style="@style/video_player_advance_control_time_text"
+            android:text="@string/video_player_forward_time_sec"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/forward"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.joanzapata.iconify.widget.IconImageButton
+            android:id="@+id/next"
+            style="@style/video_player_side_control"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="@dimen/video_player_control_right_margin"
+            android:contentDescription="@string/video_player_next"
+            app:iconName="fa-chevron-circle-right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
