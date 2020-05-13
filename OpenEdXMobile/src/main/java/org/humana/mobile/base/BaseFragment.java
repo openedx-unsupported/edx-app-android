@@ -71,7 +71,7 @@ public class BaseFragment extends RoboFragment {
         } else {
             // android.R.id.content gives you the root element of a view, without having to know its actual name/type/ID
             // Ref: https://stackoverflow.com/questions/47666685/java-lang-illegalargumentexception-no-suitable-parent-found-from-the-given-view
-            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
+//            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
             if (permissionListener != null) {
                 permissionListener.onPermissionDenied(permissions, requestCode);
             }

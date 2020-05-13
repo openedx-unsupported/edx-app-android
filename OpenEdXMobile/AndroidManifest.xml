@@ -42,7 +42,7 @@
         android:name="org.humana.mobile.instrumentation.EdxInstrumentation"
         android:targetPackage="org.humana.mobile" />
 
-    <application
+   <application
         android:name="org.humana.mobile.base.RuntimeApplication"
         android:allowBackup="false"
         android:icon="@mipmap/humana_launcher"

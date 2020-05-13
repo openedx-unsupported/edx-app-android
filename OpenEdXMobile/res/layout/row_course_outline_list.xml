@@ -177,7 +177,6 @@
             <ImageView
                 android:id="@+id/mx_scrom_download"
                 android:contentDescription="download"
-                android:src="@drawable/download"
                 android:paddingLeft="12dp"
                 android:paddingRight="4dp"
                 android:visibility="visible"
@@ -296,7 +295,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="12dp"
                 android:visibility="visible"
-                android:src="@drawable/t_icon_play_green"
+                android:background="@drawable/t_icon_play_green"
                 tools:targetApi="17"
                 android:layout_width="42dp" />
         </LinearLayout>

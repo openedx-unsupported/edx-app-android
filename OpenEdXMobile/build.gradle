@@ -251,7 +251,6 @@ dependencies {
 
 
     implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
-//    implementation 'com.borax12.materialdaterangepicker:library:2.0'
 
     //Include DI framework
     implementation 'org.roboguice:roboguice:3.0.1'

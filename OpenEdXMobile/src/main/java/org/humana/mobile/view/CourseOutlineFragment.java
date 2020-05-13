@@ -317,7 +317,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     @Override
-    public void onLoadFinished(Loader<AsyncTaskResult<CourseComponent>> loader, AsyncTaskResult<CourseComponent> result) {
+    public void onLoadFinished(Loader<AsyncTaskResult<CourseComponent>> loader,
+                               AsyncTaskResult<CourseComponent> result) {
         final CourseComponent courseComponent = result.getResult();
         if (courseComponent != null) {
             // Course data exist in persistable cache
