@@ -17,6 +17,8 @@ buildscript {
         //Screenshot testing library
         classpath 'com.facebook.testing.screenshot:plugin:0.11.0'
         classpath 'com.google.gms:google-services:4.2.0'
+        // Jacoco-android Wrapper : https://github.com/arturdm/jacoco-android-gradle-plugin
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
     }
 }
 
@@ -24,15 +26,18 @@ apply plugin: 'edxapp'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'jacoco-android'
 edx {
     platform = ANDROID
 }
 
 apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
-apply from: 'jacoco.gradle'
 apply from: file('gradle_scripts/AndroidHelper.gradle')
 
+jacoco {
+    toolVersion = "0.8.4"
+}
 /**
  * Computes a semantic version string, e.g. "1.0" or "2.5.7" by parsing git branches or tags.
  * Branch name takes priority, otherwise the last annotated tag name will be used.
