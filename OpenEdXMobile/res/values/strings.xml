@@ -278,7 +278,7 @@
     <string name="payments_info_header">Pursue a Verified Certificate!</string>
     <string name="payments_info_details">Highlight your new knowledge and skills with a verified certificate.\n\nUse this valuable credential to improve your job prospects and advance your career, or highlight your certificate in school applications.</string>
     <string name="audit_access_expires_on">Audit Access Expires {date}</string>
-    <string name="audit_access_expires_details">You loose all course access, including your progress, on {date}.</string>
+    <string name="audit_access_expires_details">You lose all course access, including your progress, on {date}.</string>
     <string name="upgrade_deadline_details">Upgrade by {date} to get unlimited access to the course as long as it exists on the site.</string>
     <string name="locked_content_header">Available to verified learners!</string>
     <string name="locked_content_details">Graded assessments are available to Verified Track Learners. Upgrade below to unlock.</string>
