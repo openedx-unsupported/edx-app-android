@@ -8,16 +8,17 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
@@ -35,7 +36,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.analytics.AnswersAnalytics;
 import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
 import org.edx.mobile.module.db.DataCallback;
@@ -59,7 +59,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import io.branch.referral.Branch;
-import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -105,18 +104,7 @@ public abstract class MainApplication extends MultiDexApplication {
 
         injector.injectMembers(this);
 
-        // initialize Fabric
-        if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
-            Fabric.with(this, config.getFabricConfig().getKitsConfig().getEnabledKits());
-
-            if (config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled()) {
-                EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
-            }
-
-            if (config.getFabricConfig().getKitsConfig().isAnswersEnabled()) {
-                analyticsRegistry.addAnalyticsProvider(injector.getInstance(AnswersAnalytics.class));
-            }
-        }
+        EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
 
         if (config.getNewRelicConfig().isEnabled()) {
             EventBus.getDefault().register(new NewRelicObserver());
@@ -166,7 +154,7 @@ public abstract class MainApplication extends MultiDexApplication {
         );
 
         // Init Branch
-        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+        if (config.getBranchConfig().isEnabled()) {
             Branch.getAutoInstance(this);
         }
 
@@ -225,7 +213,7 @@ public abstract class MainApplication extends MultiDexApplication {
     public static class CrashlyticsCrashReportObserver {
         @SuppressWarnings("unused")
         public void onEventMainThread(Logger.CrashReportEvent e) {
-            CrashlyticsCore.getInstance().logException(e.getError());
+            FirebaseCrashlytics.getInstance().recordException(e.getError());
         }
     }
 

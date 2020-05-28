@@ -55,7 +55,7 @@ public class SplashActivity extends Activity {
         // when this launcher activity will be started. For more details study onCreate() function.
         PushLinkManager.INSTANCE.checkAndReactIfFCMNotificationReceived(this, getIntent().getExtras());
 
-        if (Config.FabricBranchConfig.isBranchEnabled(config.getFabricConfig())) {
+        if (config.getBranchConfig().isEnabled()) {
             Branch.getInstance().initSession((referringParams, error) -> {
                 if (error == null) {
                     // params are the deep linked params associated with the link that the user
