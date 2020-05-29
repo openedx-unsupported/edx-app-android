@@ -56,4 +56,8 @@ public class WhatsNewUtil {
         }
         return androidItems.size() > 0 ? androidItems : null;
     }
+
+    public static int provideNumber() {
+        return 42;
+    }
 }

@@ -89,4 +89,10 @@ public class WhatsNewUtilTest extends BaseTest {
         whatsNewItems.add(item);
         assertThat(WhatsNewUtil.filterAndroidItems(whatsNewItems)).hasSize(2);
     }
+
+    @Test
+    public void shouldProvideProperNumber() {
+        // then
+        assertThat(WhatsNewUtil.provideNumber()).isEqualTo(42);
+    }
 }
