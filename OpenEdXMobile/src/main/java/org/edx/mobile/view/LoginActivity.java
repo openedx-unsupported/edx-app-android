@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -107,6 +109,40 @@ public class LoginActivity
                 } else {
                     showAlertDialog(getString(R.string.reset_no_network_title), getString(R.string.network_not_connected));
                 }
+            }
+        });
+
+        activityLoginBinding.emailEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                activityLoginBinding.usernameWrapper.setError(null);
+            }
+        });
+
+        activityLoginBinding.passwordEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                activityLoginBinding.passwordWrapper.setError(null);
             }
         });
 
@@ -226,15 +262,15 @@ public class LoginActivity
         final String emailStr = activityLoginBinding.emailEt.getText().toString().trim();
         final String passwordStr = activityLoginBinding.passwordEt.getText().toString().trim();
 
-        if (activityLoginBinding.emailEt != null && emailStr.length() == 0) {
-            showAlertDialog(getString(R.string.login_error),
-                    getString(R.string.error_enter_email));
-            activityLoginBinding.emailEt.requestFocus();
-        } else if (activityLoginBinding.passwordEt != null && passwordStr.length() == 0) {
-            showAlertDialog(getString(R.string.login_error),
-                    getString(R.string.error_enter_password));
+        if (passwordStr.length() == 0) {
+            activityLoginBinding.passwordWrapper.setError(getString(R.string.error_enter_password));
             activityLoginBinding.passwordEt.requestFocus();
-        } else {
+        }
+        if (emailStr.length() == 0) {
+            activityLoginBinding.usernameWrapper.setError(getString(R.string.error_enter_email));
+            activityLoginBinding.emailEt.requestFocus();
+        }
+        if (emailStr.length() > 0 && passwordStr.length() > 0) {
             activityLoginBinding.emailEt.setEnabled(false);
             activityLoginBinding.passwordEt.setEnabled(false);
             activityLoginBinding.forgotPasswordTv.setEnabled(false);
