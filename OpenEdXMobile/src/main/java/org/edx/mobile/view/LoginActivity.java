@@ -250,7 +250,7 @@ public class LoginActivity
                 @Override
                 public void onException(Exception ex) {
                     if (ex instanceof HttpStatusException &&
-                            ((HttpStatusException) ex).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                            ((HttpStatusException) ex).getStatusCode() == HttpStatus.BAD_REQUEST) {
                         onUserLoginFailure(new LoginException(new LoginErrorMessage(
                                 getString(R.string.login_error),
                                 getString(R.string.login_failed))), null, null);
