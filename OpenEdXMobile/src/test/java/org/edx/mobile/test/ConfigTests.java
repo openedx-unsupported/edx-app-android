@@ -47,17 +47,9 @@ public class ConfigTests extends BaseTestCase {
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
     private static final String KEY = "KEY";
     private static final String SECRET = "SECRET";
-    private static final String KITS = "KITS";
-    private static final String CRASHLYTICS = "CRASHLYTICS";
-    private static final String ANSWERS = "ANSWERS";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
     private static final String DOMAINS = "DOMAINS";
-
-    private static final String PARSE = "PARSE";
-    private static final String PARSE_ENABLED = "NOTIFICATIONS_ENABLED";
-    private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
-    private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
 
     @Test
     public void testZeroRatingNoConfig() {
