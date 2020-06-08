@@ -21,6 +21,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -129,7 +130,9 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         isInitiated = true;
         this.fragmentActivity = fragmentActivity;
         this.isManuallyReloadable = isManuallyReloadable;
-        webView.clearCache(true);
+//        webView.clearCache(true);
+        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAllowFileAccess(true);
 

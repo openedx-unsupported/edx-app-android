@@ -33,6 +33,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
+import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
@@ -40,6 +41,7 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.mvvm.BaseVMActivity;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
+import org.humana.mobile.tta.utils.AppUtil;
 import org.humana.mobile.util.DateUtil;
 import org.humana.mobile.util.NetworkUtil;
 
@@ -189,71 +191,11 @@ public class AddUnitsViewModel extends BaseViewModel {
                 default:
 
                     mActivity.showLoading();
-                    if (item.isPublish()) {
-                        boolean ssp = selectedOriginal.contains(item);
-                        EnrolledCoursesResponse c;
-                        if (ssp) {
-                            c = course;
-                        } else {
-                            c = parentCourse;
-                        }
-
-                        if (c == null) {
-
-                            String courseId;
-                            if (ssp) {
-                                courseId = mDataManager.getLoginPrefs().getProgramId();
-                            } else {
-                                courseId = mDataManager.getLoginPrefs().getParentId();
-                            }
-                            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                                @Override
-                                public void onSuccess(ResponseBody responseBody) {
-
-                                    mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                        @Override
-                                        public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                            if (courseId != null) {
-                                                for (EnrolledCoursesResponse response : data) {
-                                                    if (response.getCourse().getId().trim().toLowerCase()
-                                                            .equals(courseId.trim().toLowerCase())) {
-                                                        if (ssp) {
-                                                            AddUnitsViewModel.this.course = response;
-                                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                        } else {
-                                                            AddUnitsViewModel.this.parentCourse = response;
-                                                        }
-                                                        getBlockComponent(item);
-                                                        break;
-                                                    }
-                                                }
-                                            } else {
-                                                mActivity.hideLoading();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            mActivity.hideLoading();
-                                            mActivity.showLongSnack("You're not enrolled in the program");
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    mActivity.hideLoading();
-                                    mActivity.showLongSnack("enroll failure");
-                                }
-                            });
-
-                        } else {
-                            getBlockComponent(item);
-                        }
-
-                    } else{
-                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
-                    }
+                    getUnitPublish(item);
+//                    if (item.isPublish()) {
+//
+//
+//                    }
 
             }
         });
@@ -370,6 +312,88 @@ public class AddUnitsViewModel extends BaseViewModel {
                     @Override
                     public void onFailure(Exception e) {
                         filtersVisible.set(false);
+                    }
+                });
+
+    }
+    private void getUnitPublish(Unit unit) {
+        String unitId = AppUtil.encode(unit.getId());
+        mDataManager.getUnitPublish(unitId,
+                new OnResponseCallback<UnitPublish>() {
+                    @Override
+                    public void onSuccess(UnitPublish data) {
+                       if (data !=null && data.isPublish){
+                           boolean ssp = selectedOriginal.contains(unit);
+                           EnrolledCoursesResponse c;
+                           if (ssp) {
+                               c = course;
+                           } else {
+                               c = parentCourse;
+                           }
+
+                           if (c == null) {
+
+                               String courseId;
+                               if (ssp) {
+                                   courseId = mDataManager.getLoginPrefs().getProgramId();
+                               } else {
+                                   courseId = mDataManager.getLoginPrefs().getParentId();
+                               }
+                               mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                   @Override
+                                   public void onSuccess(ResponseBody responseBody) {
+
+                                       mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                           @Override
+                                           public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                               if (courseId != null) {
+                                                   for (EnrolledCoursesResponse response : data) {
+                                                       if (response.getCourse().getId().trim().toLowerCase()
+                                                               .equals(courseId.trim().toLowerCase())) {
+                                                           if (ssp) {
+                                                               AddUnitsViewModel.this.course = response;
+                                                               EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                           } else {
+                                                               AddUnitsViewModel.this.parentCourse = response;
+                                                           }
+                                                           getBlockComponent(unit);
+                                                           break;
+                                                       }
+                                                   }
+                                               } else {
+                                                   mActivity.hideLoading();
+                                               }
+                                           }
+
+                                           @Override
+                                           public void onFailure(Exception e) {
+                                               mActivity.hideLoading();
+                                               mActivity.showLongSnack("You're not enrolled in the program");
+                                           }
+                                       });
+                                   }
+
+                                   @Override
+                                   public void onFailure(Exception e) {
+                                       mActivity.hideLoading();
+                                       mActivity.showLongSnack("enroll failure");
+                                   }
+                               });
+
+                           } else {
+                               getBlockComponent(unit);
+                           }
+                       }
+                       else{
+                           mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+                           mActivity.hideLoading();
+                       }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+                        mActivity.hideLoading();
                     }
                 });
 

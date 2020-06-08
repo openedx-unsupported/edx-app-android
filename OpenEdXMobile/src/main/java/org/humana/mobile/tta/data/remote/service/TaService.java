@@ -38,6 +38,7 @@ import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
 
 import java.util.List;
@@ -47,6 +48,7 @@ import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -217,6 +219,9 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_SECTIONS)
     Call<List<Section>> getSections(@Query(Constants.KEY_PROGRAM_ID) String programId);
+
+    @GET(ApiConstants.URL_MX_GET_UNIT_PUBLISH)
+    Call<UnitPublish> getUnitPublish(@Query(value=Constants.KEY_UNIT_ID, encoded = true) String unitId);
 
     @POST(ApiConstants.URL_MX_GET_PROGRAM_FILTERS)
     Call<List<ProgramFilter>> getProgramFilters(@Body Map<String, Object> parameters);

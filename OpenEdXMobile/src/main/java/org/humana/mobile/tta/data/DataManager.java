@@ -103,6 +103,7 @@ import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
+import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.data.model.search.FilterSection;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
 import org.humana.mobile.tta.data.pref.AppPref;
@@ -184,6 +185,7 @@ import org.humana.mobile.tta.task.program.GetPeriodsTask;
 import org.humana.mobile.tta.task.program.GetProgramFiltersTask;
 import org.humana.mobile.tta.task.program.GetProgramsTask;
 import org.humana.mobile.tta.task.program.GetSectionsTask;
+import org.humana.mobile.tta.task.program.GetUnitPublishTask;
 import org.humana.mobile.tta.task.program.GetUnitsTask;
 import org.humana.mobile.tta.task.program.GetUserStatusTask;
 import org.humana.mobile.tta.task.program.GetUsersTask;
@@ -4050,6 +4052,33 @@ public class DataManager extends BaseRoboInjector {
 
     }
 
+    public void getUnitPublish(String unit_id, OnResponseCallback<UnitPublish> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+            new GetUnitPublishTask(context, unit_id) {
+                @Override
+                protected void onSuccess(UnitPublish isPublish) throws Exception {
+                    super.onSuccess(isPublish);
+                    if (isPublish == null) {
+                        callback.onFailure(new TaException("Unit not published."));
+                        return;
+                    }
+
+                    callback.onSuccess(isPublish);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
     public void getUserStatus(List<ProgramFilter> filters, String programId, String sectionId,
                               String role, String studentName, int take, int skip, OnResponseCallback<List<Unit>> callback) {
 
@@ -4782,5 +4811,7 @@ public class DataManager extends BaseRoboInjector {
         }
 
     }
+
+
 }
 

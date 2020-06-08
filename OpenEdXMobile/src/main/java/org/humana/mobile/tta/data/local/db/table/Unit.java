@@ -92,8 +92,8 @@ public class Unit {
     @SerializedName("staff_date")
     private long staffDate;
 
-    @SerializedName("isPublish")
-    private boolean isPublish;
+//    @SerializedName("isPublish")
+//    private boolean isPublish;
 
     public String getDesc() {
         return desc;
@@ -194,13 +194,13 @@ public class Unit {
         this.staffDate = staffDate;
     }
 
-    public boolean isPublish() {
-        return isPublish;
-    }
-
-    public void setPublish(boolean publish) {
-        isPublish = publish;
-    }
+//    public boolean isPublish() {
+//        return isPublish;
+//    }
+//
+//    public void setPublish(boolean publish) {
+//        isPublish = publish;
+//    }
 
     @Override
     public boolean equals(@Nullable Object obj) {

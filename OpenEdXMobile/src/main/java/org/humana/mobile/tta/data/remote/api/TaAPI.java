@@ -39,6 +39,7 @@ import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.data.model.search.FilterSection;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
 import org.humana.mobile.tta.data.remote.service.TaService;
@@ -273,6 +274,10 @@ public class TaAPI {
     }
     public Call<SuccessResponse> getReadNotification(String id,String course_id){
         return taService.getReadNotification(id,course_id);
+    }
+
+    public Call<UnitPublish> getUnitPublish(String unit_id){
+        return taService.getUnitPublish(unit_id);
     }
 
     public Call<List<Section>> getSections(String programId){

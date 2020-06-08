@@ -14,6 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 
 public class AppUtil {
@@ -127,5 +129,21 @@ public class AppUtil {
             Log.v(TAG,"Permission is granted2");
             return true;
         }
+    }
+
+    public static String encode(String url) {
+
+        try {
+
+            String encodeURL = URLEncoder.encode(url, "UTF-8");
+
+            return encodeURL;
+
+        } catch (UnsupportedEncodingException e) {
+
+            return "Issue while encoding" + e.getMessage();
+
+        }
+
     }
 }

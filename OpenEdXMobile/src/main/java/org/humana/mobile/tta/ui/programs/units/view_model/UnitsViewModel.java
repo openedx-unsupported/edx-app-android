@@ -40,6 +40,7 @@ import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
+import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
 import org.humana.mobile.tta.event.program.ProgramFilterSavedEvent;
@@ -47,9 +48,13 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
+import org.humana.mobile.tta.ui.programs.addunits.viewmodel.AddUnitsViewModel;
 import org.humana.mobile.tta.ui.programs.units.FragmentCalendarBottomSheet;
+import org.humana.mobile.tta.utils.AppUtil;
 import org.humana.mobile.util.DateUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,75 +176,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     break;
                 default:
 
-                    if (item.isPublish()) {
-                        mActivity.showLoading();
-                        boolean ssp = units.contains(item);
-                        EnrolledCoursesResponse c;
-                        if (ssp) {
-                            c = course;
-                        } else {
-                            c = parentCourse;
-                        }
-
-                        if (c == null) {
-
-                            String courseId;
-                            if (ssp) {
-                                courseId = mDataManager.getLoginPrefs().getProgramId();
-                            } else {
-                                courseId = mDataManager.getLoginPrefs().getParentId();
-                            }
-                            mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                                @Override
-                                public void onSuccess(ResponseBody responseBody) {
-
-                                    mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                        @Override
-                                        public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                            if (courseId != null) {
-                                                for (EnrolledCoursesResponse response : data) {
-                                                    if (response.getCourse().getId().trim().toLowerCase()
-                                                            .equals(courseId.trim().toLowerCase())) {
-                                                        if (ssp) {
-                                                            UnitsViewModel.this.course = response;
-                                                            EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                        } else {
-                                                            UnitsViewModel.this.parentCourse = response;
-                                                        }
-                                                        getBlockComponent(item);
-                                                        break;
-                                                    }
-                                                }
-                                                mActivity.hideLoading();
-                                            } else {
-                                                mActivity.hideLoading();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            e.printStackTrace();
-                                            mActivity.hideLoading();
-                                            mActivity.showLongSnack("enroll org failure");
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    e.printStackTrace();
-                                    mActivity.hideLoading();
-                                    mActivity.showLongSnack("enroll failure");
-                                }
-                            });
-
-                        } else {
-                            getBlockComponent(item);
-                        }
-
-                    } else {
-                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
-                    }
+                    getUnitPublish(item);
             }
 
 
@@ -248,6 +185,93 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         fetchFilters();
     }
 
+    private void getUnitPublish(Unit unit) {
+        String unitId = AppUtil.encode(unit.getId());
+        mDataManager.getUnitPublish(unitId,
+                new OnResponseCallback<UnitPublish>() {
+                    @Override
+                    public void onSuccess(UnitPublish data) {
+                        if (data !=null && data.isPublish){
+                            mActivity.showLoading();
+                            boolean ssp = units.contains(unit);
+                            EnrolledCoursesResponse c;
+                            if (ssp) {
+                                c = course;
+                            } else {
+                                c = parentCourse;
+                            }
+
+                            if (c == null) {
+
+                                String courseId;
+                                if (ssp) {
+                                    courseId = mDataManager.getLoginPrefs().getProgramId();
+                                } else {
+                                    courseId = mDataManager.getLoginPrefs().getParentId();
+                                }
+                                mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                    @Override
+                                    public void onSuccess(ResponseBody responseBody) {
+
+                                        mDataManager.getenrolledCourseByOrg("Humana", new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                            @Override
+                                            public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                                if (courseId != null) {
+                                                    for (EnrolledCoursesResponse response : data) {
+                                                        if (response.getCourse().getId().trim().toLowerCase()
+                                                                .equals(courseId.trim().toLowerCase())) {
+                                                            if (ssp) {
+                                                                UnitsViewModel.this.course = response;
+                                                                EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                            } else {
+                                                                UnitsViewModel.this.parentCourse = response;
+                                                            }
+                                                            getBlockComponent(unit);
+                                                            break;
+                                                        }
+                                                    }
+                                                    mActivity.hideLoading();
+                                                } else {
+                                                    mActivity.hideLoading();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Exception e) {
+                                                e.printStackTrace();
+                                                mActivity.hideLoading();
+                                                mActivity.showLongSnack("enroll org failure");
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        e.printStackTrace();
+                                        mActivity.hideLoading();
+                                        mActivity.showLongSnack("enroll failure");
+                                    }
+                                });
+
+                            } else {
+                                getBlockComponent(unit);
+                            }
+
+                        }
+                        else{
+                            mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+                            mActivity.hideLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+                        mActivity.hideLoading();
+                    }
+                });
+
+    }
 
     private void setToolTip() {
         searchTooltipText.set("You can filter \nunits with title here");
@@ -1022,4 +1046,5 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 //            setToolTip();
 //        }
     }
+
 }
