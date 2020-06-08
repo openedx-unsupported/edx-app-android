@@ -149,7 +149,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
         });
 
         mActivity.showLoading();
-        progressVisible.set(true);
+//        progressVisible.set(true);
         fetchData();
     }
 
@@ -329,7 +329,7 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
 
 
     private void fetchData() {
-        mActivity.showLoading();
+//        mActivity.showLoading();
         fetchUnits();
 
     }
@@ -440,7 +440,9 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                             EventBus.getDefault().post(eventsArrayList);
                             isDateSelected = false;
                         }
-
+                        progressVisible.set(false);
+                        mActivity.hideLoading();
+                        unitsAdapter.setLoadingDone();
 
                     }
 
@@ -448,10 +450,12 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
                         allLoaded = true;
+                        progressVisible.set(false);
                         unitsAdapter.setLoadingDone();
                         toggleEmptyVisibility();
                     }
                 });
+        mActivity.hideLoading();
 
     }
 

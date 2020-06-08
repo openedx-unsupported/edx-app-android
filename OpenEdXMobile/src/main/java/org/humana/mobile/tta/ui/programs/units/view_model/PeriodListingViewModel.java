@@ -89,6 +89,11 @@ public class PeriodListingViewModel extends BaseViewModel {
                                 periodAdapter.setItems(periods);
                             }
                         }
+                        if (periods.isEmpty()){
+                            emptyVisible.set(true);
+                        }else {
+                            emptyVisible.set(false);
+                        }
                         mActivity.hideLoading();
                     }
 
@@ -96,6 +101,7 @@ public class PeriodListingViewModel extends BaseViewModel {
                     public void onFailure(Exception e) {
                         mActivity.hideLoading();
                         periodAdapter.setLoadingDone();
+                        emptyVisible.set(true);
                         toggleEmptyVisibility();
                     }
                 });

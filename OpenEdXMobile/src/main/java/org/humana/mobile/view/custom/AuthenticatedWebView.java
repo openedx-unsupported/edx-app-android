@@ -15,6 +15,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
@@ -45,6 +46,8 @@ import org.humana.mobile.services.EdxCookieManager;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.WebViewUtil;
+
+import java.sql.Date;
 
 import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
@@ -135,6 +138,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAllowFileAccess(true);
+        long a,b;
 
         webView.setWebChromeClient(new WebChromeClient(){
             // openFileChooser for Android 3.0+
