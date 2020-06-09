@@ -20,7 +20,7 @@ import org.edx.mobile.base.MainApplication;
  *
  * - RoboGuice injector initialization.
  *
- * - Crashlytics/Fabric crash reporting.
+ * - Firebase Crashlytics crash reporting.
  *
  * - Checking for application upgrades, and repairing download
  *   statuses and clearing the web view cookie cache.

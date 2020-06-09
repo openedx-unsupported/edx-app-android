@@ -32,10 +32,10 @@ public class ConfigTests extends BaseTestCase {
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
-    private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
+    private static final String BRANCH = "BRANCH";
 
     private static final String ENABLED = "ENABLED";
     private static final String DISABLED_CARRIERS = "DISABLED_CARRIERS";
@@ -45,19 +45,11 @@ public class ConfigTests extends BaseTestCase {
     private static final String TYPE = "TYPE";
     private static final String DETAIL_TEMPLATE = "DETAIL_TEMPLATE";
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
-    private static final String FABRIC_KEY = "FABRIC_KEY";
-    private static final String FABRIC_BUILD_SECRET = "FABRIC_BUILD_SECRET";
-    private static final String KITS = "KITS";
-    private static final String CRASHLYTICS = "CRASHLYTICS";
-    private static final String ANSWERS = "ANSWERS";
+    private static final String KEY = "KEY";
+    private static final String SECRET = "SECRET";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
     private static final String DOMAINS = "DOMAINS";
-
-    private static final String PARSE = "PARSE";
-    private static final String PARSE_ENABLED = "NOTIFICATIONS_ENABLED";
-    private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
-    private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
 
     @Test
     public void testZeroRatingNoConfig() {
@@ -284,88 +276,44 @@ public class ConfigTests extends BaseTestCase {
     }
 
     @Test
-    public void testFabricNoConfig() {
+    public void testBranchNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
-        assertFalse(config.getFabricConfig().isEnabled());
-        assertNull(config.getFabricConfig().getFabricKey());
-        assertNull(config.getFabricConfig().getFabricBuildSecret());
+        assertFalse(config.getBranchConfig().isEnabled());
+        assertNull(config.getBranchConfig().getKey());
+        assertNull(config.getBranchConfig().getSecret());
     }
 
     @Test
-    public void testFabricEmptyConfig() {
-        JsonObject fabricConfig = new JsonObject();
+    public void testBranchEmptyConfig() {
+        JsonObject branchConfig = new JsonObject();
 
         JsonObject configBase = new JsonObject();
-        configBase.add(FABRIC, fabricConfig);
+        configBase.add(BRANCH, branchConfig);
 
         Config config = new Config(configBase);
-        assertFalse(config.getFabricConfig().isEnabled());
-        assertNull(config.getFabricConfig().getFabricKey());
-        assertNull(config.getFabricConfig().getFabricBuildSecret());
+        assertFalse(config.getBranchConfig().isEnabled());
+        assertNull(config.getBranchConfig().getKey());
+        assertNull(config.getBranchConfig().getSecret());
     }
 
     @Test
-    public void testFabricConfig() {
+    public void testBranchConfig() {
         final String key = "fake-key";
         final String secret = "fake-secret";
 
-        JsonObject fabricKits = new JsonObject();
-        fabricKits.add(CRASHLYTICS, new JsonPrimitive(true));
-        fabricKits.add(ANSWERS, new JsonPrimitive(true));
-
-        JsonObject fabricConfig = new JsonObject();
-        fabricConfig.add(ENABLED, new JsonPrimitive(true));
-        fabricConfig.add(FABRIC_KEY, new JsonPrimitive(key));
-        fabricConfig.add(FABRIC_BUILD_SECRET, new JsonPrimitive(secret));
-        fabricConfig.add(KITS, fabricKits);
+        JsonObject branchConfig = new JsonObject();
+        branchConfig.add(ENABLED, new JsonPrimitive(true));
+        branchConfig.add(KEY, new JsonPrimitive(key));
+        branchConfig.add(SECRET, new JsonPrimitive(secret));
 
         JsonObject configBase = new JsonObject();
-        configBase.add(FABRIC, fabricConfig);
+        configBase.add(BRANCH, branchConfig);
 
         Config config = new Config(configBase);
-        assertTrue(config.getFabricConfig().isEnabled());
-        assertEquals(key, config.getFabricConfig().getFabricKey());
-        assertEquals(secret, config.getFabricConfig().getFabricBuildSecret());
-    }
-
-    @Test
-    public void testFabricConfig_withMissingKits() {
-        final String key = "fake-key";
-        final String secret = "fake-secret";
-
-        JsonObject fabricKits = new JsonObject();
-
-        JsonObject fabricConfig = new JsonObject();
-        fabricConfig.add(ENABLED, new JsonPrimitive(true));
-        fabricConfig.add(FABRIC_KEY, new JsonPrimitive(key));
-        fabricConfig.add(FABRIC_BUILD_SECRET, new JsonPrimitive(secret));
-        fabricConfig.add(KITS, fabricKits);
-
-        JsonObject configBase = new JsonObject();
-        configBase.add(FABRIC, fabricConfig);
-
-        Config config = new Config(configBase);
-        assertFalse(config.getFabricConfig().isEnabled());
-    }
-
-    @Test
-    public void testFabricKitsConfig() {
-        JsonObject fabricKits = new JsonObject();
-        fabricKits.add(CRASHLYTICS, new JsonPrimitive(true));
-        fabricKits.add(ANSWERS, new JsonPrimitive(true));
-
-        JsonObject fabricConfig = new JsonObject();
-        fabricConfig.add(KITS, fabricKits);
-
-        JsonObject configBase = new JsonObject();
-        configBase.add(FABRIC, fabricConfig);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getFabricConfig().getKitsConfig().isAnswersEnabled());
-        assertTrue(config.getFabricConfig().getKitsConfig().isCrashlyticsEnabled());
-        assertTrue(config.getFabricConfig().getKitsConfig().hasEnabledKits());
-        assertEquals(2, config.getFabricConfig().getKitsConfig().getEnabledKits().length);
+        assertTrue(config.getBranchConfig().isEnabled());
+        assertEquals(key, config.getBranchConfig().getKey());
+        assertEquals(secret, config.getBranchConfig().getSecret());
     }
 
     @Test

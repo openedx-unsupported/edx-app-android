@@ -23,6 +23,8 @@ buildscript {
         // Add the dependency for the Performance Monitoring plugin
         classpath 'com.google.firebase:perf-plugin:1.2.1'  // Performance Monitoring plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}"
+        // Firebase Crashlytics Gradle plugin.
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
     }
 }
 

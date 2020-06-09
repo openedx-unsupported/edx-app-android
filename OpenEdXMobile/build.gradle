@@ -6,7 +6,6 @@ buildscript {
         jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
@@ -132,7 +131,12 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     // Google Firebase
     implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation ("com.google.firebase:firebase-messaging:20.2.0") {
+        // This exclusion has been added due to a conflict between this library and Roboguice
+        // (which has already added the javax.inject group) causing the following error during
+        // compile time: Error: Program type already present: javax.inject.Inject
+        exclude group: 'javax.inject'
+    }
     // Add the dependency for the Performance Monitoring library
     implementation 'com.google.firebase:firebase-perf:17.0.2'
     // Firebase remote config
@@ -198,10 +202,14 @@ dependencies {
         transitive = true
     }
 
-    // Crashlytics Kit
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    // Firebase Crashlytics SDK
+    implementation ('com.google.firebase:firebase-crashlytics:17.0.0'){
+        exclude group: 'javax.inject'
         transitive = true
     }
+
+    // Recommended: Add the Google Analytics SDK along Firebase Crashlytics SDK
+    implementation 'com.google.firebase:firebase-analytics:17.4.2'
 
     // Branch SDK
     // Check this link for guide to updating Branch integration:
@@ -275,6 +283,8 @@ if (firebaseEnabled ?: false) {
     }
     // Apply the Performance Monitoring plugin to enable instrumentation
     apply plugin: 'com.google.firebase.firebase-perf'
+    // Firebase Crashlytics plugin.
+    apply plugin: 'com.google.firebase.crashlytics'
 }
 // Variable to check if Firebase Cloud Messaging is enabled
 def fcmEnabled = config.get('PUSH_NOTIFICATIONS') && firebaseEnabled && firebaseConfig?.get('CLOUD_MESSAGING_ENABLED')
@@ -352,27 +362,12 @@ android {
         }
         resValue "string", "phonetic_platform_name", phoneticPlatformName
 
-        def fabric = config.get('FABRIC')
-        if (fabric?.get('ENABLED')) {
-            def fabric_key = fabric?.get('FABRIC_KEY')
-            if (null == fabric_key) {
-                throw new GradleException("You must set FABRIC_KEY if Fabric is enabled")
-            } else {
-                resValue "string", "io.fabric.ApiKey", fabric_key
-                resValue "bool", "com.crashlytics.RequireBuildId", "false"
-            }
-        }
         def branchKey = ""
-        if (fabric != null) {
-            def kits = fabric.get('KITS')
-            if (null != kits) {
-                def branch = kits.get('BRANCH')
-                if (branch != null && branch.get('ENABLED')) {
-                    branchKey = branch.get('BRANCH_KEY')
-                    if (null == branchKey) {
-                        throw new GradleException("You must set BRANCH_KEY if Branch is enabled")
-                    }
-                }
+        def branch = config.get('BRANCH')
+        if (branch != null && branch.get('ENABLED')) {
+            branchKey = branch.get('KEY')
+            if (null == branchKey) {
+                throw new GradleException("You must set BRANCH_KEY if Branch is enabled")
             }
         }
 
