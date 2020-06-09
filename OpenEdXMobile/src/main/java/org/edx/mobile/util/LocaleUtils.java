@@ -186,7 +186,11 @@ public class LocaleUtils {
         if (transcript.containsKey(subtitleLanguage)) {
             transcriptUrl = transcript.get(subtitleLanguage);
         } else if (transcript.entrySet().size() > 0) {
-            transcriptUrl = transcript.entrySet().iterator().next().getValue();
+            if (transcript.containsKey(Locale.ENGLISH.getLanguage())) {
+                transcriptUrl = transcript.get(Locale.ENGLISH.getLanguage());
+            } else {
+                transcriptUrl = transcript.entrySet().iterator().next().getValue();
+            }
         }
         return transcriptUrl;
     }

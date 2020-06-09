@@ -18,7 +18,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.util.MediaConsentUtils;
-import org.edx.mobile.view.dialog.IDialogCallback;
 
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
@@ -178,22 +177,7 @@ public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
     private void checkVideoStatusAndPlay(VideoBlockModel unit) {
         final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
         if (!checkDownloadEntry(entry)) return;
-        if (entry.isDownloaded()) {
-            startOnlinePlay(entry);
-        } else {
-            MediaConsentUtils.requestStreamMedia(getActivity(), new IDialogCallback() {
-                @Override
-                public void onPositiveClicked() {
-                    startOnlinePlay(entry);
-                }
-
-                @Override
-                public void onNegativeClicked() {
-                    ((BaseFragmentActivity) getActivity()).
-                            showInfoMessage(getString(R.string.wifi_off_message));
-                }
-            });
-        }
+        startOnlinePlay(entry);
     }
 
     private void startOnlinePlay(DownloadEntry model) {
