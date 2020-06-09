@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Thêm tùy chọn tốc độ phát lại",
+        "message": "Chúng tôi đã thêm nhiều tùy chọn để kiểm soát tốc độ video để đáp ứng nhu cầu của bạn."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Tua lại và chuyển tiếp video",
+        "message": "Chúng tôi nghe bạn nói! Bây giờ bạn có thể tua lại hoặc chuyển tiếp video để đi đến điểm chính xác nơi nó quan trọng."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

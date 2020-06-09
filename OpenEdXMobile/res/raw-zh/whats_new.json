@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "更多播放速度选项",
+        "message": "我们添加了更多选项来控制视频速度以满足您的需求。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "倒带和转发视频",
+        "message": "我们听到了您的声音！现在，您可以倒带或转发视频，以到达最重要的位置。"
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

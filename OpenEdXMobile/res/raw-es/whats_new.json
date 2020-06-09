@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Más opciones de velocidad de reproducción",
+        "message": "Hemos agregado más opciones para controlar la velocidad del video para satisfacer sus necesidades."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Rebobinar y reenviar videos",
+        "message": "¡Te hemos escuchado! Ahora puede rebobinar o reenviar videos para llegar al punto exacto donde importa."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {
