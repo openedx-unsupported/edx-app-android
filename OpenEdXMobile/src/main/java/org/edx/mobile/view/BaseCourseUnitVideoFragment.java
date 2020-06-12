@@ -137,7 +137,10 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                 updateClosedCaptionData(null);
             }
         }
-        subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
+        // Only Allow handler to post the runnable when fragment is visible to user
+        if (getUserVisibleHint()) {
+            subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
+        }
     };
 
     /**
