@@ -122,7 +122,10 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     int startMillis = subtitle.start.getMseconds();
                     int endMillis = subtitle.end.getMseconds();
                     if (currentPos >= startMillis && currentPos <= endMillis) {
-                        updateClosedCaptionData(subtitle);
+                        String subtitleLang = loginPrefs.getSubtitleLanguage();
+                        if (subtitleLang == null || !subtitleLang.equalsIgnoreCase(getString(R.string.lbl_cc_none))) {
+                            updateClosedCaptionData(subtitle);
+                        }
                         updateSelection(currentSubtitleIndex);
                         break;
                     } else if (currentPos > endMillis) {
@@ -134,7 +137,10 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                 updateClosedCaptionData(null);
             }
         }
-        subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
+        // Only Allow handler to post the runnable when fragment is visible to user
+        if (getUserVisibleHint()) {
+            subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
+        }
     };
 
     /**
