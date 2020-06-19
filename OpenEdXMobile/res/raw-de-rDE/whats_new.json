@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Weitere Optionen für die Wiedergabegeschwindigkeit",
+        "message": "Wir haben weitere Optionen zur Steuerung der Videogeschwindigkeit hinzugefügt, um Ihren Anforderungen gerecht zu werden."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Videos zurückspulen und weiterleiten",
+        "message": "Wir haben Sie gehört! Jetzt können Sie Videos zurückspulen oder weiterleiten, um genau den Punkt zu erreichen, an dem es darauf ankommt."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

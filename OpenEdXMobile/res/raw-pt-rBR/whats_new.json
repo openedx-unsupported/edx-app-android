@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Mais opções de velocidade de reprodução",
+        "message": "Adicionamos mais opções para controlar a velocidade do vídeo para atender às suas necessidades."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Retroceder e encaminhar vídeos",
+        "message": "Nós ouvimos você! Agora você pode retroceder ou encaminhar os vídeos para chegar ao ponto exato em que isso importa."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

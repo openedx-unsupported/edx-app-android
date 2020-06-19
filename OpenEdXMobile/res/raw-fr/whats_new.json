@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Plus d'options de vitesse de lecture",
+        "message": "Nous avons ajouté plus d'options pour contrôler la vitesse de la vidéo pour répondre à vos besoins."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Rembobiner et avancer des vidéos",
+        "message": "Nous vous avons entendu! Vous pouvez maintenant rembobiner ou transférer des vidéos pour arriver au point exact où cela compte."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

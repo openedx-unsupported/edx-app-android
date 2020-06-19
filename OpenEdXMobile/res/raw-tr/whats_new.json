@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Diğer oynatma hızı seçenekleri",
+        "message": "İhtiyaçlarınızı karşılamak için video hızını kontrol etmek için daha fazla seçenek ekledik."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Videoları geri alma ve iletme",
+        "message": "Sizi duyduk! Artık önemli olduğu noktaya ulaşmak için videoları geri veya ileri sarabilirsiniz."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

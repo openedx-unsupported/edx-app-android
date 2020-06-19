@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "その他の再生速度オプション",
+        "message": "ニーズに合わせてビデオ速度を制御するオプションがさらに追加されました。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "ビデオの巻き戻しと転送",
+        "message": "聞いたよ！これで、ビデオを巻き戻しまたは転送して、重要なポイントに正確に到達できます。"
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {

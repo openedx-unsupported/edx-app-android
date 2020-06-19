@@ -1,5 +1,26 @@
 [
   {
+    "version": "2.22",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "More playback speed options",
+        "message": "We’ve added more options for controlling video speed to meet your needs."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Rewind and forward videos",
+        "message": "We’ve heard you! Now you can rewind or forward videos to get to the exact point where it matters."
+      }
+    ]
+  },
+  {
     "version": "2.21",
     "messages": [
       {
