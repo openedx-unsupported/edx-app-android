@@ -134,9 +134,6 @@ public abstract class TabsBaseFragment extends BaseFragment {
             tabLayout.setVisibility(View.GONE);
         } else {
             tabLayout.setVisibility(View.VISIBLE);
-            for (FragmentItemModel fragmentItem : fragmentItems) {
-                tabLayout.addTab(createTab(tabLayout, fragmentItem));
-            }
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
@@ -175,15 +172,16 @@ public abstract class TabsBaseFragment extends BaseFragment {
 
         // Attach Tab layout with viewpager2
         new TabLayoutMediator(tabLayout, binding.viewPager2, (tab, position) -> {
-
+            createTab(tab, fragmentItems.get(position));
         }).attach();
         /*
          It will load all of the fragments on creation and will stay in memory till ViewPager's
          life time, it will greatly improve our user experience as all fragments will be available
          to view all the time. We can decrease the limit if it creates memory problems on low-end devices.
          */
-        binding.viewPager2.setOffscreenPageLimit(fragmentItems.size() - 1);
-
+        if (fragmentItems.size() - 1 > 1) {
+            binding.viewPager2.setOffscreenPageLimit(fragmentItems.size() - 1);
+        }
         /*
          ViewPager doesn't call the onPageSelected for its first item, so we have to explicitly
          call it ourselves.
@@ -197,11 +195,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
         });
     }
 
-    protected TabLayout.Tab createTab(TabLayout tabLayout, FragmentItemModel fragmentItem) {
+    protected void createTab(TabLayout.Tab tab, FragmentItemModel fragmentItem) {
         final IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
         iconDrawable.colorRes(getContext(), TAB_COLOR_SELECTOR_RES);
-        final TabLayout.Tab tab;
-        tab = tabLayout.newTab();
         if (showTitleInTabs()) {
             iconDrawable.sizeRes(getContext(), R.dimen.edx_small);
             final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
@@ -216,7 +212,6 @@ public abstract class TabsBaseFragment extends BaseFragment {
             tab.setIcon(iconDrawable);
         }
         tab.setContentDescription(fragmentItem.getTitle());
-        return tab;
     }
 
     /**
