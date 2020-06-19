@@ -8,9 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.JsonObject;
 
@@ -28,7 +27,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
-import org.edx.mobile.view.custom.DisableableViewPager;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -141,9 +139,9 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         TextView nextUnitLabel = (TextView) nextUnitTitle;
         View pager = activity.findViewById(R.id.pager);
         assertNotNull(pager);
-        assertThat(pager).isInstanceOf(ViewPager.class);
-        ViewPager viewPager = (ViewPager) pager;
-        PagerAdapter pagerAdapter = viewPager.getAdapter();
+        assertThat(pager).isInstanceOf(ViewPager2.class);
+        ViewPager2 viewPager = (ViewPager2) pager;
+        RecyclerView.Adapter pagerAdapter = viewPager.getAdapter();
         assertNotNull(pagerAdapter);
 
         // Text navigation through units
@@ -247,7 +245,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     private void verifyState(CourseUnitNavigationActivity activity,
             int unitIndex, CourseComponent currentUnit,
             CourseComponent prevUnit, CourseComponent nextUnit,
-            ViewPager viewPager, PagerAdapter pagerAdapter,
+            ViewPager2 viewPager, RecyclerView.Adapter pagerAdapter,
             TextView prevButton, TextView nextButton,
             TextView prevUnitLabel, TextView nextUnitLabel) {
         assertTitle(activity, currentUnit.getDisplayName());
@@ -268,7 +266,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         } else {
             fragmentClass = CourseUnitMobileNotSupportedFragment.class;
         }
-        Object item = pagerAdapter.instantiateItem(viewPager, unitIndex);
+        Object item = pagerAdapter.getItemId(unitIndex);
         assertNotNull(item);
         assertThat(item).isInstanceOf(fragmentClass);
         Bundle args = ((Fragment) item).getArguments();
@@ -312,7 +310,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         assertNotNull(courseUnitNavBar);
         View pagerView = activity.findViewById(R.id.pager);
         assertNotNull(pagerView);
-        assertThat(pagerView).isInstanceOf(DisableableViewPager.class);
+        assertThat(pagerView).isInstanceOf(ViewPager2.class);
         assertEquals(true, (pagerView).isEnabled());
     }
 
@@ -384,7 +382,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     @Ignore
     @Test
     public void testUnitFragmentCreation() {
-        FragmentManager fragmentManager = Mockito.mock(FragmentManager.class);
         EnrolledCoursesResponse courseData = Mockito.mock(EnrolledCoursesResponse.class);
         CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
@@ -446,7 +443,10 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         unitList.add(othersModel);
         classesList.add(CourseUnitMobileNotSupportedFragment.class);
 
-        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
+        ActivityController<? extends CourseUnitNavigationActivity> controller =
+                Robolectric.buildActivity(getActivityClass(), getIntent());
+
+        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(controller.get(), config,
                 unitList, courseData, null, hasComponent);
 
         for (int size = unitList.size(), i = 0; i < size; i++) {
@@ -540,12 +540,11 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         @Test
         public void test() throws IOException {
             config = new org.edx.mobile.util.Config(generateConfigProperties());
-
-            FragmentManager fragmentManager = Mockito.mock(FragmentManager.class);
             EnrolledCoursesResponse courseData = Mockito.mock(EnrolledCoursesResponse.class);
             CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
-            CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
+            CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(
+                    Robolectric.buildActivity(CourseUnitNavigationActivity.class).get(), config,
                     Collections.singletonList(paramCourseComponent), courseData, null, hasComponent);
 
             assertThat(adapter.getItem(0)).isInstanceOf(expectedFragmentClass);

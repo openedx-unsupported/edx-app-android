@@ -2,11 +2,13 @@ package org.edx.mobile.view.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.edx.mobile.model.FragmentItemModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,19 +21,21 @@ import java.util.Map;
  * Implementation of {@link FragmentPagerAdapter} that takes a static list
  * of Fragments as the items.
  */
-public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
+public class StaticFragmentPagerAdapter extends FragmentStateAdapter {
+
     @NonNull
     private List<FragmentItemModel> items = Collections.emptyList();
     @NonNull
     private final Map<Integer, Fragment> positionToFragment = new HashMap<>();
 
     private FragmentLifecycleCallbacks fragmentLifecycleCallbacks;
+
     public interface FragmentLifecycleCallbacks {
         void onFragmentInstantiate();
     }
 
-    public StaticFragmentPagerAdapter(@NonNull FragmentManager manager, FragmentLifecycleCallbacks fragmentLifecycleCallbacks, @NonNull FragmentItemModel... items) {
-        super(manager);
+    public StaticFragmentPagerAdapter(@NonNull Fragment fragment, FragmentLifecycleCallbacks fragmentLifecycleCallbacks, @NonNull FragmentItemModel... items) {
+        super(fragment);
         this.fragmentLifecycleCallbacks = fragmentLifecycleCallbacks;
         setItems(Arrays.asList(items));
     }
@@ -42,27 +46,14 @@ public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return items.size();
     }
 
+    @NotNull
     @Override
-    public Fragment getItem(int position) {
-        return items.get(position).generateFragment();
-    }
-
-    public Fragment getFragment(int position) {
-        return positionToFragment.get(position);
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return items.get(position).getTitle();
-    }
-
-    @Override
-    public Fragment instantiateItem(ViewGroup container, int position) {
-        final Fragment fragment = (Fragment)super.instantiateItem(container, position);
+    public Fragment createFragment(int position) {
+        Fragment fragment = items.get(position).generateFragment();
         positionToFragment.put(position, fragment);
         if (fragmentLifecycleCallbacks != null) {
             fragmentLifecycleCallbacks.onFragmentInstantiate();
@@ -70,9 +61,11 @@ public class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
         return fragment;
     }
 
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
-        positionToFragment.remove(position);
+    public Fragment getFragment(int position) {
+        return positionToFragment.get(position);
+    }
+
+    public CharSequence getPageTitle(int position) {
+        return items.get(position).getTitle();
     }
 }

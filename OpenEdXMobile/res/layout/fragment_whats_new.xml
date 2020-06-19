@@ -42,11 +42,12 @@
                 android:textSize="@dimen/edx_x_large" />
         </FrameLayout>
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:orientation="horizontal" />
 
         <FrameLayout
             android:id="@+id/fl_bottom_bar"

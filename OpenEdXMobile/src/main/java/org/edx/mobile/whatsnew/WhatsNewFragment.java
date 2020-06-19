@@ -1,17 +1,17 @@
 package org.edx.mobile.whatsnew;
 
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +28,7 @@ import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.WhatsNewUtil;
 import org.edx.mobile.view.custom.IndicatorController;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -87,8 +88,8 @@ public class WhatsNewFragment extends BaseFragment {
                 return;
             }
             noOfPages = items.size();
-            binding.viewPager.setAdapter(new WhatsNewAdapter(getFragmentManager(), items));
-            binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            binding.viewPager2.setAdapter(new WhatsNewAdapter(this.getActivity(), items));
+            binding.viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 }
@@ -125,7 +126,7 @@ public class WhatsNewFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 environment.getAnalyticsRegistry().trackWhatsNewClosed(BuildConfig.VERSION_NAME,
-                        totalPagesViewed, binding.viewPager.getCurrentItem() + 1, noOfPages);
+                        totalPagesViewed, binding.viewPager2.getCurrentItem() + 1, noOfPages);
                 getActivity().finish();
             }
         });
@@ -149,22 +150,23 @@ public class WhatsNewFragment extends BaseFragment {
         indicatorController.initialize(noOfPages);
     }
 
-    private class WhatsNewAdapter extends FragmentStatePagerAdapter {
+    private static class WhatsNewAdapter extends FragmentStateAdapter {
         @NonNull
         final List<WhatsNewItemModel> list;
 
-        public WhatsNewAdapter(@NonNull FragmentManager fm, @NonNull List<WhatsNewItemModel> list) {
-            super(fm);
+        public WhatsNewAdapter(@NonNull FragmentActivity fragmentActivity, @NonNull List<WhatsNewItemModel> list) {
+            super(fragmentActivity);
             this.list = list;
         }
 
+        @NotNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             return WhatsNewItemFragment.newInstance(list.get(position));
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return list.size();
         }
     }

@@ -76,7 +76,18 @@ public class MainDiscoveryFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         toolbarCallbacks = getActivity() instanceof ToolbarCallbacks ?
                 (ToolbarCallbacks) getActivity() : null;
-        onFragmentVisibilityChanged(getUserVisibleHint());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onFragmentVisibilityChanged(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        onFragmentVisibilityChanged(false);
     }
 
     private void initFragments() {
@@ -274,12 +285,6 @@ public class MainDiscoveryFragment extends BaseFragment {
             default:
                 return -1;
         }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        onFragmentVisibilityChanged(isVisibleToUser);
     }
 
     public void onFragmentVisibilityChanged(final boolean isVisibleToUser) {

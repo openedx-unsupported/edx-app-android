@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +11,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseUpgradedEvent;
@@ -23,7 +23,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
-import org.edx.mobile.view.custom.DisableableViewPager;
 import org.edx.mobile.view.custom.PreLoadingListener;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         BaseCourseUnitVideoFragment.HasComponent, PreLoadingListener {
     protected Logger logger = new Logger(getClass().getSimpleName());
 
-    private DisableableViewPager pager;
+    private ViewPager2 pager2;
     private CourseComponent selectedUnit;
 
     private List<CourseComponent> unitList = new ArrayList<>();
@@ -67,29 +66,16 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         insertPoint.addView(v, 0,
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        pager = findViewById(R.id.pager);
-        pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
-                environment.getConfig(), unitList, courseData, courseUpgradeData, this);
-        pager.setAdapter(pagerAdapter);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager2 = findViewById(R.id.pager2);
+        pagerAdapter = new CourseUnitPagerAdapter(this, environment.getConfig(),
+                unitList, courseData, courseUpgradeData, this);
+        pager2.setAdapter(pagerAdapter);
+        pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
             private boolean firstPageLoad = true;
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                /*
-                 * The method setUserVisibleHint is not called the first time the viewpager loads
-                 * so it's necessary to call it manually in order to run the logic inside it.
-                 *
-                 * 'onPageScrolled' method has been chosen instead of 'onPageSelected', because
-                 * `onPageSelected` is not getting called when pager opens page of position 0.
-                 */
-                if (firstPageLoad) {
-                    firstPageLoad = false;
-                    final CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.instantiateItem(pager, position);
-                    initialPage.setUserVisibleHint(true);
-                }
-                // refresh the menu items to update the current state of google cast button
                 invalidateOptionsMenu();
             }
 
@@ -99,7 +85,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                if (state == ViewPager2.SCROLL_STATE_IDLE) {
                     tryToUpdateForEndOfSequential();
                 }
             }
@@ -133,17 +119,17 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public void navigatePreviousComponent() {
-        int index = pager.getCurrentItem();
+        int index = pager2.getCurrentItem();
         if (index > 0) {
-            pager.setCurrentItem(index - 1);
+            pager2.setCurrentItem(index - 1);
         }
     }
 
     @Override
     public void navigateNextComponent() {
-        int index = pager.getCurrentItem();
-        if (index < pagerAdapter.getCount() - 1) {
-            pager.setCurrentItem(index + 1);
+        int index = pager2.getCurrentItem();
+        if (index < pagerAdapter.getItemCount() - 1) {
+            pager2.setCurrentItem(index + 1);
         }
     }
 
@@ -176,18 +162,18 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     private void tryToUpdateForEndOfSequential() {
-        int curIndex = pager.getCurrentItem();
+        int curIndex = pager2.getCurrentItem();
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
         mPreviousBtn.setEnabled(curIndex > 0);
-        mNextBtn.setEnabled(curIndex < pagerAdapter.getCount() - 1);
+        mNextBtn.setEnabled(curIndex < pagerAdapter.getItemCount() - 1);
 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
         setTitle(selectedUnit.getDisplayName());
 
         String currentSubsectionId = selectedUnit.getParent().getId();
-        if (curIndex + 1 <= pagerAdapter.getCount() - 1) {
+        if (curIndex + 1 <= pagerAdapter.getItemCount() - 1) {
             String nextUnitSubsectionId = unitList.get(curIndex + 1).getParent().getId();
             if (currentSubsectionId.equalsIgnoreCase(nextUnitSubsectionId)) {
                 mNextUnitLbl.setVisibility(View.GONE);
@@ -240,7 +226,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         int index = unitList.indexOf(selectedUnit);
         if (index >= 0) {
-            pager.setCurrentItem(index);
+            pager2.setCurrentItem(index, false);
             tryToUpdateForEndOfSequential();
         }
 
@@ -288,8 +274,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public boolean showGoogleCastButton() {
-        if (pager != null && pagerAdapter != null) {
-            return ((CourseUnitFragment) pagerAdapter.instantiateItem(pager, pager.getCurrentItem())).hasCastSupportedVideoContent();
+        if (pager2 != null && pagerAdapter != null) {
+            CourseUnitFragment fragment = ((CourseUnitFragment) pagerAdapter.getItem(pager2.getCurrentItem()));
+            return fragment != null && fragment.hasCastSupportedVideoContent();
         }
         return super.showGoogleCastButton();
     }
