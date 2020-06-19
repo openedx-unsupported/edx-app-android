@@ -2,8 +2,8 @@ package org.edx.mobile.view.adapters;
 
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
@@ -15,7 +15,6 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.VideoUtil;
-import org.edx.mobile.view.LockedCourseUnitFragment;
 import org.edx.mobile.view.CourseBaseActivity;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
@@ -25,23 +24,26 @@ import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
 import org.edx.mobile.view.CourseUnitVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
 import org.edx.mobile.view.CourseUnitYoutubePlayerFragment;
+import org.edx.mobile.view.LockedCourseUnitFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
+public class CourseUnitPagerAdapter extends FragmentStateAdapter {
     private Config config;
     private List<CourseComponent> unitList;
     private EnrolledCoursesResponse courseData;
     private CourseUpgradeResponse courseUpgradeData;
     private CourseUnitFragment.HasComponent callback;
+    private List<Fragment> fragments = new ArrayList<>();
 
-    public CourseUnitPagerAdapter(FragmentManager manager,
+    public CourseUnitPagerAdapter(FragmentActivity fragmentActivity,
                                   Config config,
                                   List<CourseComponent> unitList,
                                   EnrolledCoursesResponse courseData,
                                   CourseUpgradeResponse courseUpgradeData,
                                   CourseUnitFragment.HasComponent callback) {
-        super(manager);
+        super(fragmentActivity);
         this.config = config;
         this.unitList = unitList;
         this.courseData = courseData;
@@ -65,7 +67,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int pos) {
+    public Fragment createFragment(int pos) {
         final CourseComponent unit = getUnit(pos);
         // FIXME: Remove this code once LEARNER-6713 is merged
         final CourseComponent minifiedUnit;
@@ -118,12 +120,16 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         unitFragment.setHasComponentCallback(callback);
-
+        fragments.add(unitFragment);
         return unitFragment;
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return unitList.size();
+    }
+
+    public Fragment getItem(int position) {
+        return fragments.get(position);
     }
 }

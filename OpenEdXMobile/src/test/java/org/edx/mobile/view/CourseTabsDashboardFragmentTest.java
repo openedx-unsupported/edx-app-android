@@ -2,7 +2,7 @@ package org.edx.mobile.view;
 
 import android.view.View;
 
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.edx.mobile.R;
 import org.edx.mobile.deeplink.Screen;
@@ -37,9 +37,9 @@ public class CourseTabsDashboardFragmentTest extends UiTest {
         View view = fragment.getView();
         assertNotNull(view);
 
-        View viewPager = view.findViewById(R.id.viewPager);
-        assertNotNull(viewPager);
-        assertThat(viewPager).isInstanceOf(ViewPager.class);
+        View viewPager2 = view.findViewById(R.id.viewPager2);
+        assertNotNull(viewPager2);
+        assertThat(viewPager2).isInstanceOf(ViewPager2.class);
     }
 
 // TODO: Following commented test cases will be revisited in LEARNER-5277 story.

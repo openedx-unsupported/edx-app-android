@@ -2,30 +2,33 @@ package org.edx.mobile.view.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.edx.mobile.model.FragmentItemModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class FragmentItemPagerAdapter extends FragmentStatePagerAdapter {
+public class FragmentItemPagerAdapter extends FragmentStateAdapter {
+
     @NonNull
     private List<FragmentItemModel> fragmentItems;
 
-    public FragmentItemPagerAdapter(@NonNull FragmentManager fm,
+    public FragmentItemPagerAdapter(@NonNull FragmentActivity fragmentActivity,
                                     @NonNull List<FragmentItemModel> fragmentItems) {
-        super(fm);
+        super(fragmentActivity);
         this.fragmentItems = fragmentItems;
     }
 
+    @NotNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         return fragmentItems.get(position).generateFragment();
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return fragmentItems.size();
     }
 }
