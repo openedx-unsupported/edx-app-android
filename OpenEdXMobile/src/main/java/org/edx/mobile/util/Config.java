@@ -503,8 +503,6 @@ public class Config {
         private static final String DEFAULT_API_VERSION = "v1";
         @SerializedName("BLOCKS")
         private String blocksApiVersion;
-        @SerializedName("REGISTRATION")
-        private String registrationApiVersion;
 
         public ApiUrlVersionConfig() {
             blocksApiVersion = DEFAULT_API_VERSION;
@@ -516,10 +514,6 @@ public class Config {
 
         public String getBlocksApiVersion() {
             return blocksApiVersion != null ? blocksApiVersion : DEFAULT_API_VERSION;
-        }
-
-        public String getRegistrationApiVersion() {
-            return registrationApiVersion != null ? registrationApiVersion : DEFAULT_API_VERSION;
         }
     }
 

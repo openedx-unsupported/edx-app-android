@@ -10,7 +10,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class ApiConstants {
-    public static final String API_VERSION = "apiVersion";
     public static final String COURSE_ID = "courseId";
     public static final String USER_NAME = "username";
     public static final String GROUP_ID = "groupId";
@@ -30,7 +29,7 @@ public class ApiConstants {
 
     public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 
-    public static final String URL_REGISTRATION = "/user_api/{" + API_VERSION + "}/account/registration/";
+    public static final String URL_REGISTRATION = "/user_api/v1/account/registration/";
 
     public static final String URL_ENROLLMENT = "/api/enrollment/v1/enrollment";
 

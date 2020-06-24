@@ -48,12 +48,11 @@ public interface LoginService {
     @NonNull
     @FormUrlEncoded
     @POST(ApiConstants.URL_REGISTRATION)
-    Call<ResponseBody> register(@Path(ApiConstants.API_VERSION) String apiVersion,
-                                @FieldMap Map<String, String> parameters);
+    Call<ResponseBody> register(@FieldMap Map<String, String> parameters);
 
     @NonNull
     @GET(ApiConstants.URL_REGISTRATION)
-    Call<RegistrationDescription> getRegistrationForm(@Path(ApiConstants.API_VERSION) String apiVersion);
+    Call<RegistrationDescription> getRegistrationForm();
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
