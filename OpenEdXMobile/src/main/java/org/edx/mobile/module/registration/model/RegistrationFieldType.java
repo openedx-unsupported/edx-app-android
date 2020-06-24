@@ -12,9 +12,6 @@ public enum RegistrationFieldType {
     @SerializedName("email")
     EMAIL,
 
-    @SerializedName("confirm_email")
-    CONFIRM_EMAIL,
-
     @SerializedName("text")
     TEXT,
 
