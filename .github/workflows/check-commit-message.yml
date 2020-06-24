@@ -2,16 +2,14 @@
 # Ref: https://github.com/marketplace/actions/opinionated-commit-message
 name: 'Check commit message style'
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - reopened
-      - synchronize
   push:
     branches:
       - master
       - 'dev/*'
+      - 'khalid/*'
+      - 'farhan/*'
+      - 'farhan_ar/*'
+      - 'omer/*'
 
 jobs:
   check-commit-message-style:
