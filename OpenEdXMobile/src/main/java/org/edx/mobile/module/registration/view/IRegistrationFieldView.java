@@ -70,7 +70,7 @@ public interface IRegistrationFieldView {
                 return new RegistrationTextAreaView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.MULTI)) {
-                View view = inflater.inflate(R.layout.view_register_spinner, null);
+                View view = inflater.inflate(R.layout.view_register_auto_complete, null);
                 return new RegistrationSelectView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.PLAINTEXT)) {

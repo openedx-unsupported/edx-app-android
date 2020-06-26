@@ -88,8 +88,8 @@
 
     <!-- Error prompt shown during registration to indicate an empty field. Argument is a field name -->
     <string name="error_enter_field">Please enter your %1$s.</string>
-    <!-- Error prompt shown during registration to indicate a field missing a selection. Argument is a field name -->
-    <string name="error_select_field">Please select your %1$s.</string>
+    <!-- Error prompt shown during registration to indicate a field invalid input. Argument is a field name -->
+    <string name="error_select_or_enter_field">Please select or enter a valid %1$s.</string>
     <!-- Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number -->
     <string name="error_min_length">%1$s must have at least %2$d characters.</string>
     <!-- Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number -->
