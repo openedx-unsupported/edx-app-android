@@ -147,7 +147,8 @@ public class LoginActivity
         });
 
         activityLoginBinding.endUserAgreementTv.setMovementMethod(LinkMovementMethod.getInstance());
-        activityLoginBinding.endUserAgreementTv.setText(TextUtils.generateLicenseText(getResources(), R.string.by_signing_in));
+        activityLoginBinding.endUserAgreementTv.setText(TextUtils.generateLicenseText(
+                environment.getConfig(), getResources(), R.string.by_signing_in));
 
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LOGIN);
 
