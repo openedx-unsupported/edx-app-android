@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.programs.periodunits.viewmodel;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -14,7 +15,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lib.mxcalendar.models.Event;
 import com.lib.mxcalendar.view.IMxCalenderListener;
@@ -142,6 +147,9 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         title = mActivity.getString(R.string.my_date);
                     }
                     showDatePicker(item, title);
+                    break;
+                case R.id.tv_read:
+                    showComments(item.getComment());
                     break;
                 default:
                    getUnitPublish(item);
@@ -884,19 +892,45 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                 } else {
                     unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                 }
-                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                    if (!model.getStatus().equals("")) {
+//                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+//                    if (!model.getStatus().equals("")) {
+//                        unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+//                        if (model.getStatus().equals("Submitted")) {
+//                            unitBinding.tvComment.setVisibility(View.GONE);
+//                        } else {
+//                            unitBinding.tvComment.setVisibility(View.VISIBLE);
+//                        }
+//                    } else {
+//                        unitBinding.tvComment.setVisibility(View.GONE);
+//                    }
+//                } else {
+//                    unitBinding.tvComment.setVisibility(View.GONE);
+//                }
+
+                if (model.getComment() != null || model.getComment() != "") {
+                    if (model.getComment().length() > 15) {
                         unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
-                        if (model.getStatus().equals("Submitted")) {
-                            unitBinding.tvComment.setVisibility(View.GONE);
-                        } else {
-                            unitBinding.tvComment.setVisibility(View.VISIBLE);
-                        }
+                        unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
+                        unitBinding.tvRead.setVisibility(View.VISIBLE);
                     } else {
-                        unitBinding.tvComment.setVisibility(View.GONE);
+                        unitBinding.tvComment.setVisibility(View.VISIBLE);
+
+                        unitBinding.tvComment.setText(model.getComment());
                     }
                 } else {
+
                     unitBinding.tvComment.setVisibility(View.GONE);
+                    unitBinding.tvRead.setVisibility(View.GONE);
+                }
+
+                if(model.getComment()!=null || model.getComment()!=""){
+                    if(model.getComment().length()>15) {
+                        unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
+                        unitBinding.tvRead.setVisibility(View.VISIBLE);
+                    }
+                }else {
+                    unitBinding.tvComment.setVisibility(View.GONE);
+                    unitBinding.tvRead.setVisibility(View.GONE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
                 unitBinding.checkbox.setVisibility(View.GONE);
@@ -977,6 +1011,11 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
                         listener.onItemClick(v, model);
                     }
                 });
+                unitBinding.tvRead.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
 
                 unitBinding.getRoot().setOnClickListener(v -> {
                     if (listener != null) {
@@ -1026,5 +1065,24 @@ public class PeriodUnitsViewModel extends BaseViewModel implements IMxCalenderLi
             fetchData();
         }
     }
+    public void showComments(String comments){
+        final Dialog dialog = new Dialog(mActivity);
+        dialog.setContentView(R.layout.dialog_comment);
 
+        TextView dialogText =  dialog.findViewById(R.id.txt_comment);
+        ImageView close =  dialog.findViewById(R.id.iv_close);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+
+        // if button is clicked, close the custom dialog
+        dialogText.setText(comments);
+
+        close.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCancelable(false);
+        dialog.show();
+    }
 }

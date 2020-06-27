@@ -517,7 +517,7 @@ android {
             signingConfig signingConfigs.releasekey
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
-                    project.ext { appName = 'humana' }
+                    project.ext { appName = 'The Nett Platform' }
                     outputFileName = "${project.ext.appName}-${variant.buildType.name}-${versionName}.apk"
                 }
             }

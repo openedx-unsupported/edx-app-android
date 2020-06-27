@@ -240,6 +240,7 @@ public class AccountFragment extends BaseFragment {
 
     private void setNotificationBladge(){
         if (mDataManager.getLoginPrefs().getNotificationCount() > 9){
+            binding.tvNotificationBadge.setVisibility(View.VISIBLE);
             binding.tvNotificationBadge.setText("9+");
         }else if (mDataManager.getLoginPrefs().getNotificationCount()==0 ||
                 mDataManager.getLoginPrefs().getNotificationCount()==-1){

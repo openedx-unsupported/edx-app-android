@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
 import com.lib.mxcalendar.models.Event;
@@ -477,13 +478,24 @@ public class UnitCalendarViewModel extends BaseViewModel {
                     }
                     unitBinding.tvDescription.setText(model.getDesc());
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                        if (model.getComment() != null) {
-                            unitBinding.tvComment.setText(model.getComment());
+                        if (model.getComment() != null || model.getComment() != "") {
+                            if (model.getComment().length() > 15) {
+                                unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                                unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
+                                unitBinding.tvRead.setVisibility(View.VISIBLE);
+                            } else {
+                                unitBinding.tvComment.setVisibility(View.VISIBLE);
+
+                                unitBinding.tvComment.setText(model.getComment());
+                            }
                         } else {
+
                             unitBinding.tvComment.setVisibility(View.GONE);
+                            unitBinding.tvRead.setVisibility(View.GONE);
                         }
                     } else {
                         unitBinding.tvComment.setVisibility(View.GONE);
+                        unitBinding.tvRead.setVisibility(View.GONE);
                     }
                     if (model.getMyDate() > 0) {
                         unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));

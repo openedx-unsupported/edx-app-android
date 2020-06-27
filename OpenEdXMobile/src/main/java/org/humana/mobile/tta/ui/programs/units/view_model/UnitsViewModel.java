@@ -1,5 +1,6 @@
 package org.humana.mobile.tta.ui.programs.units.view_model;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -15,8 +16,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.lib.mxcalendar.models.Event;
@@ -48,13 +53,10 @@ import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.tta.ui.base.TaBaseFragment;
 import org.humana.mobile.tta.ui.base.mvvm.BaseViewModel;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.programs.addunits.viewmodel.AddUnitsViewModel;
 import org.humana.mobile.tta.ui.programs.units.FragmentCalendarBottomSheet;
 import org.humana.mobile.tta.utils.AppUtil;
 import org.humana.mobile.util.DateUtil;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,8 +152,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
         bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
         bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Unit");
-        bundle.putString("page_loaded","Unit Screen");
-        mFirebaseAnalytics.setCurrentScreen(mActivity,"Unit","Fragment");
+        bundle.putString("page_loaded", "Unit Screen");
+        mFirebaseAnalytics.setCurrentScreen(mActivity, "Unit", "Fragment");
         mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
 
 //        mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs());
@@ -174,6 +176,9 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     }
                     showDatePicker(item, title);
                     break;
+                case R.id.tv_read:
+                    showComments(item.getComment());
+                    break;
                 default:
 
                     getUnitPublish(item);
@@ -191,7 +196,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 new OnResponseCallback<UnitPublish>() {
                     @Override
                     public void onSuccess(UnitPublish data) {
-                        if (data !=null && data.isPublish){
+                        if (data != null && data.isPublish) {
                             mActivity.showLoading();
                             boolean ssp = units.contains(unit);
                             EnrolledCoursesResponse c;
@@ -257,8 +262,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                 getBlockComponent(unit);
                             }
 
-                        }
-                        else{
+                        } else {
                             mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
                             mActivity.hideLoading();
                         }
@@ -411,7 +415,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
             fetchUnits(startDateTime, endDateTime);
             calVisible.set(true);
             frameVisible.set(false);
-        }else {
+        } else {
             calVisible.set(false);
             frameVisible.set(true);
             fetchUnits();
@@ -449,7 +453,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                     for (ProgramFilterTag tag : filter.getTags()) {
                         if (selected.getSelected_tag() != null) {
-                            if (selected.getSelected_tag_item()!=null) {
+                            if (selected.getSelected_tag_item() != null) {
                                 if (selected.getSelected_tag_item().equals(tag)) {
                                     selectedTags.add(tag);
                                     ProgramFilter pf = new ProgramFilter();
@@ -464,7 +468,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                     }
                                     break;
                                 }
-                            }else {
+                            } else {
                                 if (selected.getSelected_tag().equals(tag.getDisplayName())) {
                                     selectedTags.add(tag);
                                     ProgramFilter pf = new ProgramFilter();
@@ -537,7 +541,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                             emptyVisible.set(true);
                             calVisible.set(false);
                             frameVisible.set(false);
-                        }else {
+                        } else {
                             emptyVisible.set(false);
                             calVisible.set(true);
                             frameVisible.set(false);
@@ -615,7 +619,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                         mActivity.hideLoading();
 
                         Event et;
-                        for (Event event: eventsArrayList) {
+                        for (Event event : eventsArrayList) {
                             et = new Event(event.getDATE(),
                                     null, null, "#ffffff");
                             events.add(et);
@@ -670,10 +674,10 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     }
 
     public void onEventMainThread(ProgramFilterSavedEvent event) {
-        if (event !=null) {
+        if (event != null) {
             changesMade = true;
             allLoaded = false;
-            filters=(event.getProgramFilters());
+            filters = (event.getProgramFilters());
         }
     }
 
@@ -755,12 +759,12 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     for (ProgramFilterTag tag : model.getTags()) {
                         for (SelectedFilter item : selectedFilter) {
                             if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
-                                if (item.getSelected_tag_item()!=null) {
+                                if (item.getSelected_tag_item() != null) {
                                     if (item.getSelected_tag_item().equals(tag)) {
                                         dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
                                     }
                                     break;
-                                }else {
+                                } else {
                                     if (item.getSelected_tag().equals(model.getDisplayName())) {
                                         dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
                                     }
@@ -797,7 +801,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                             if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                                 for (ProgramFilterTag tag : filter.getTags()) {
                                     if (selected.getSelected_tag() != null) {
-                                        if (selected.getSelected_tag_item()!=null) {
+                                        if (selected.getSelected_tag_item() != null) {
                                             if (selected.getSelected_tag_item().equals(tag)) {
                                                 selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
@@ -812,7 +816,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                                                 }
                                                 break;
                                             }
-                                        }else {
+                                        } else {
                                             if (selected.getSelected_tag().equals(tag.getDisplayName())) {
                                                 selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
@@ -880,10 +884,11 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                 }
                 unitBinding.tvDescription.setText(model.getDesc());
-                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+             /*   if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     if (!model.getStatus().equals("")) {
                         if(!model.getComment().toLowerCase().equalsIgnoreCase("none comment")) {
-                            unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+//                            unitBinding.tvComment.setVisibility(View.GONE);
+//                            unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
                         }
                         if (model.getStatus().equals("Submitted")) {
                             unitBinding.tvComment.setVisibility(View.GONE);
@@ -895,6 +900,21 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     }
                 } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
+                }*/
+                if (model.getComment() != null || model.getComment() != "") {
+                    if (model.getComment().length() > 15) {
+                        unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                        unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
+                        unitBinding.tvRead.setVisibility(View.VISIBLE);
+                    } else {
+                        unitBinding.tvComment.setVisibility(View.VISIBLE);
+
+                        unitBinding.tvComment.setText(model.getComment());
+                    }
+                } else {
+
+                    unitBinding.tvComment.setVisibility(View.GONE);
+                    unitBinding.tvRead.setVisibility(View.GONE);
                 }
 
                 unitBinding.checkbox.setVisibility(View.GONE);
@@ -960,7 +980,6 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 }
 
 
-
                 unitBinding.tvMyDate.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
@@ -968,6 +987,11 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 });
 
                 unitBinding.getRoot().setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onItemClick(v, model);
+                    }
+                });
+                unitBinding.tvRead.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onItemClick(v, model);
                     }
@@ -982,8 +1006,8 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
             isCheckedObserver.set(true);
             calVisible.set(true);
             frameVisible.set(false);
-            changesMade=false;
-            skip =0;
+            changesMade = false;
+            skip = 0;
             fetchData();
         } else {
             isCheckedObserver.set(isChecked);
@@ -1008,7 +1032,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
     public void onItemClick(Long selectedDate, Long startDateTime, Long endDateTime) {
         FragmentCalendarBottomSheet bottomSheetDialogFragment =
                 new FragmentCalendarBottomSheet(selectedDate, startDateTime, endDateTime, periodId
-                        , periodName,filters);
+                        , periodName, filters);
         bottomSheetDialogFragment.show(mActivity.getSupportFragmentManager(),
                 "units");
     }
@@ -1045,6 +1069,27 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 //        if (!mDataManager.getLoginPrefs().isUnitTootipSeen()) {
 //            setToolTip();
 //        }
+    }
+
+    public void showComments(String comments) {
+        final Dialog dialog = new Dialog(mActivity);
+        dialog.setContentView(R.layout.dialog_comment);
+
+        TextView dialogText = dialog.findViewById(R.id.txt_comment);
+        ImageView close = dialog.findViewById(R.id.iv_close);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+
+        // if button is clicked, close the custom dialog
+        dialogText.setText(comments);
+
+        close.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
 }
