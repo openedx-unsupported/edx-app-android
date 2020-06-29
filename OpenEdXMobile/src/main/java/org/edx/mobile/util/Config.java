@@ -60,6 +60,7 @@ public class Config {
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String API_URL_VERSION = "API_URL_VERSION";
     private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
+    private static final String AGREEMENT_URLS = "AGREEMENT_URLS";
 
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
@@ -517,6 +518,33 @@ public class Config {
         }
     }
 
+    public static class AgreementUrlsConfig {
+        @SerializedName("EULA_URL")
+        private String eulaUrl;
+
+        @SerializedName("TOS_URL")
+        private String tosUrl;
+
+        @SerializedName("PRIVACY_POLICY_URL")
+        private String privacyPolicyUrl;
+
+        public String getEulaUrl() {
+            return eulaUrl;
+        }
+
+        public String getTosUrl() {
+            return tosUrl;
+        }
+
+        public String getPrivacyPolicyUrl() {
+            return privacyPolicyUrl;
+        }
+
+        public boolean isAtleastOneAgreementUrlAvailable() {
+            return !TextUtils.isEmpty(eulaUrl) || !TextUtils.isEmpty(tosUrl) || !TextUtils.isEmpty(privacyPolicyUrl);
+        }
+    }
+
     public static class YoutubePlayerConfig {
         @SerializedName("ENABLED")
         private boolean enabled;
@@ -785,6 +813,16 @@ public class Config {
     }
 
     @NonNull
+    public YoutubePlayerConfig getYoutubePlayerConfig() {
+        return getObjectOrNewInstance(YOUTUBE_PLAYER, YoutubePlayerConfig.class);
+    }
+
+    @NonNull
+    public AgreementUrlsConfig getAgreementUrlsConfig() {
+        return getObjectOrNewInstance(AGREEMENT_URLS, AgreementUrlsConfig.class);
+    }
+
+    @NonNull
     private <T> T getObjectOrNewInstance(@NonNull String key, @NonNull Class<T> cls) {
         JsonElement element = getObject(key);
         if (element != null) {
@@ -799,10 +837,5 @@ public class Config {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    @NonNull
-    public YoutubePlayerConfig getYoutubePlayerConfig() {
-        return getObjectOrNewInstance(YOUTUBE_PLAYER, YoutubePlayerConfig.class);
     }
 }

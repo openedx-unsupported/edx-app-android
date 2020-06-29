@@ -1,14 +1,15 @@
 package org.edx.mobile.util;
 
 import android.content.res.Resources;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.URLSpan;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
 
@@ -62,38 +63,55 @@ public class TextUtils {
      * Generates the license text for displaying in app that includes clickable links to license
      * documents shipped with app.
      *
+     * @param config        Configurations object to use for obtaining agreement URLs in config.
      * @param resources     Resources object to use for obtaining strings from strings.xml.
      * @param licenseTextId Resource ID of the license text.
      * @return License text having clickable links to license documents.
      */
-    public static CharSequence generateLicenseText(@NonNull Resources resources,
+    public static CharSequence generateLicenseText(@NonNull Config config,
+                                                   @NonNull Resources resources,
                                                    @StringRes int licenseTextId) {
         final String platformName = resources.getString(R.string.platform_name);
-        final CharSequence licenseAgreement = ResourceUtil.getFormattedString(resources, R.string.licensing_agreement, "platform_name", platformName);
-        final CharSequence terms = ResourceUtil.getFormattedString(resources, R.string.tos_and_honor_code, "platform_name", platformName);
+        final CharSequence eula = ResourceUtil.getFormattedString(resources, R.string.licensing_agreement, "platform_name", platformName);
+        final CharSequence tos = ResourceUtil.getFormattedString(resources, R.string.tos_and_honor_code, "platform_name", platformName);
         final CharSequence privacyPolicy = resources.getString(R.string.privacy_policy);
 
-        final SpannableString agreementSpan = new SpannableString(licenseAgreement);
-        agreementSpan.setSpan(new URLSpan(TextUtils.createAppUri(
-                resources.getString(R.string.end_user_title),
-                resources.getString(R.string.eula_file_link))),
-                0, licenseAgreement.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        final SpannableString termsSpan = new SpannableString(terms);
-        termsSpan.setSpan(new URLSpan(TextUtils.createAppUri(
-                resources.getString(R.string.terms_of_service_title),
-                resources.getString(R.string.terms_file_link))),
-                0, terms.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+        final SpannableString eulaSpan = new SpannableString(eula);
+        final SpannableString tosSpan = new SpannableString(tos);
         final SpannableString privacyPolicySpan = new SpannableString(privacyPolicy);
-        privacyPolicySpan.setSpan(new URLSpan(TextUtils.createAppUri(
-                resources.getString(R.string.privacy_policy_title),
-                resources.getString(R.string.privacy_file_link))),
-                0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        String eulaUri = resources.getString(R.string.eula_file_link);
+        String tosUri = resources.getString(R.string.terms_file_link);
+        String privacyPolicyUri = resources.getString(R.string.privacy_file_link);
+
+        final Config.AgreementUrlsConfig agreementUrlsConfig = config.getAgreementUrlsConfig();
+        if (agreementUrlsConfig.isAtleastOneAgreementUrlAvailable()) {
+            eulaUri = agreementUrlsConfig.getEulaUrl();
+            tosUri = agreementUrlsConfig.getTosUrl();
+            privacyPolicyUri = agreementUrlsConfig.getPrivacyPolicyUrl();
+        }
+
+        if (!android.text.TextUtils.isEmpty(eulaUri)) {
+            eulaSpan.setSpan(new URLSpan(TextUtils.createAppUri(
+                    resources.getString(R.string.end_user_title), eulaUri)),
+                    0, eula.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (!android.text.TextUtils.isEmpty(tosUri)) {
+            tosSpan.setSpan(new URLSpan(TextUtils.createAppUri(
+                    resources.getString(R.string.terms_of_service_title), tosUri)),
+                    0, tos.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (!android.text.TextUtils.isEmpty(privacyPolicyUri)) {
+            privacyPolicySpan.setSpan(new URLSpan(TextUtils.createAppUri(
+                    resources.getString(R.string.privacy_policy_title), privacyPolicyUri)),
+                    0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
 
         final Map<String, CharSequence> keyValMap = new HashMap<>();
-        keyValMap.put("license", agreementSpan);
-        keyValMap.put("tos_and_honor_code", termsSpan);
+        keyValMap.put("license", eulaSpan);
+        keyValMap.put("tos_and_honor_code", tosSpan);
         keyValMap.put("platform_name", platformName);
         keyValMap.put("privacy_policy", privacyPolicySpan);
 
