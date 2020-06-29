@@ -69,8 +69,6 @@
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">رجاء أدخل  %1$s.</string>
-  <!--Error prompt shown during registration to indicate a field missing a selection. Argument is a field name-->
-  <string name="error_select_field">رجاء قم باختيار  %1$s.</string>
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length"> %1$s يجب أن يتكون من %2$d أحرف الأقل.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->

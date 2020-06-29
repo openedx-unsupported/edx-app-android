@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.Html;
@@ -65,9 +64,7 @@ import javax.inject.Inject;
 import retrofit2.Call;
 
 public class RegisterActivity extends BaseFragmentActivity
-        implements SocialLoginDelegate.MobileLoginCallback,
-        RegistrationSelectView.OnSpinnerItemSelectedListener,
-        RegistrationSelectView.OnSpinnerFocusedListener {
+        implements SocialLoginDelegate.MobileLoginCallback {
     private static final int ACCESSIBILITY_FOCUS_DELAY_MS = 500;
 
     private ViewGroup createAccountBtn;
@@ -239,8 +236,6 @@ public class RegisterActivity extends BaseFragmentActivity
             // Add item selected listener for spinner views
             if (field.getFieldType().equals(RegistrationFieldType.MULTI)) {
                 RegistrationSelectView selectView = (RegistrationSelectView) fieldView;
-                selectView.setOnSpinnerItemSelectedListener(this);
-                selectView.setOnSpinnerFocusedListener(this);
             }
         }
 
@@ -631,35 +626,5 @@ public class RegisterActivity extends BaseFragmentActivity
         microsoftButton.setClickable(enable);
 
         return true;
-    }
-
-    @Override
-    public void onSpinnerItemSelected() {
-        /**
-         * After selection of an item from a spinner, OS shifts the focus to some
-         * {@link android.widget.EditText} available on the screen, to avoid that we are removing
-         * the focusability of {@link android.widget.EditText} fields for some milliseconds.
-         */
-        setAllEditTextsFocusable(false);
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setAllEditTextsFocusable(true);
-            }
-        }, ACCESSIBILITY_FOCUS_DELAY_MS);
-    }
-
-    public void setAllEditTextsFocusable(final boolean focusable) {
-        for (IRegistrationFieldView fieldView : mFieldViews) {
-            if (fieldView instanceof RegistrationEditTextView) {
-                RegistrationEditTextView field = (RegistrationEditTextView) fieldView;
-                field.setEditTextFocusable(focusable);
-            }
-        }
-    }
-
-    @Override
-    public void onSpinnerFocused() {
-        SoftKeyboardUtil.hide(this);
     }
 }
