@@ -129,7 +129,7 @@ public class UserProfileFragment
     @VisibleForTesting
     @NonNull
     protected StaticFragmentPagerAdapter createTabAdapter() {
-        return new StaticFragmentPagerAdapter(this.getActivity() , this);
+        return new StaticFragmentPagerAdapter(this , this);
     }
 
     @NonNull

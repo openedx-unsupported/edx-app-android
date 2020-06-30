@@ -3,6 +3,7 @@ package org.edx.mobile.view.adapters;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
@@ -33,8 +34,8 @@ public class StaticFragmentPagerAdapter extends FragmentStateAdapter {
         void onFragmentInstantiate();
     }
 
-    public StaticFragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity, FragmentLifecycleCallbacks fragmentLifecycleCallbacks, @NonNull FragmentItemModel... items) {
-        super(fragmentActivity);
+    public StaticFragmentPagerAdapter(@NonNull Fragment fragment, FragmentLifecycleCallbacks fragmentLifecycleCallbacks, @NonNull FragmentItemModel... items) {
+        super(fragment);
         this.fragmentLifecycleCallbacks = fragmentLifecycleCallbacks;
         setItems(Arrays.asList(items));
     }
