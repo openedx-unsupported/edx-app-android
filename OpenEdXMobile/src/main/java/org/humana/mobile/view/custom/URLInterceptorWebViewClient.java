@@ -1,25 +1,21 @@
 package org.humana.mobile.view.custom;
 
 import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.logger.Logger;
@@ -30,11 +26,7 @@ import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.StandardCharsets;
 import org.humana.mobile.util.links.WebViewLink;
 
-import java.io.File;
-
 import roboguice.RoboGuice;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by rohan on 2/2/15.
@@ -121,75 +113,31 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 if (pageStatusListener != null) {
                     pageStatusListener.onPageLoadProgressChanged(view, progress);
                 }
+            }
 
-                // choose file code here
-//                    openFileChooser(mUploadMessage);
+            // For Lollipop 5.0+ Devices
+            @Override
+            public boolean onShowFileChooser(WebView mWebView,
+                                             ValueCallback<Uri[]> filePathCallback,
+                                             WebChromeClient.FileChooserParams fileChooserParams) {
+
+                if (pageStatusListener != null) {
+                    pageStatusListener.openFile(mWebView, filePathCallback, fileChooserParams);
+                    return true;
+                }
+                return false;
+
+            }
+
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                Log.d("LogTag", message);
+                result.confirm();
+                return true;
             }
 
         });
     }
-
-    protected void openFileChooser(ValueCallback uploadMsg, String acceptType)
-    {
-        mUploadMessage = uploadMsg;
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("video");
-        activity.startActivityForResult(Intent.createChooser(i, "File Browser"), FILECHOOSER_RESULTCODE);
-    }
-
-    // For Lollipop 5.0+ Devices
-    public boolean onShowFileChooser(WebView mWebView,
-                                     ValueCallback<Uri[]> filePathCallback,
-                                     WebChromeClient.FileChooserParams fileChooserParams)
-    {
-        if (uploadMessage != null) {
-            uploadMessage.onReceiveValue(null);
-            uploadMessage = null;
-        }
-
-        uploadMessage = filePathCallback;
-
-        Intent intent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            intent = fileChooserParams.createIntent();
-        }
-        try
-        {
-            activity.startActivityForResult(intent, REQUEST_SELECT_FILE);
-        } catch (ActivityNotFoundException e)
-        {
-            uploadMessage = null;
-            return false;
-        }
-        return true;
-    }
-
-    //For Android 4.1 only
-    protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
-    {
-        mUploadMessage = uploadMsg;
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("video");
-        activity.startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
-    }
-
-    protected void openFileChooser(ValueCallback<Uri> uploadMsg)
-    {
-        mUploadMessage = uploadMsg;
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("video");
-
-
-        // video/mp4
-        //video/x-msvideo
-        //video/x-ms-wmv
-        activity.startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
-    }
-
-
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -379,6 +327,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          */
         void onPageLoadProgressChanged(WebView webView, int progress);
 
-        void openFile(WebView webView,ValueCallback<Uri> uploadMsg);
+        void openFile(WebView webView, ValueCallback<Uri[]> uploadMsg, WebChromeClient.FileChooserParams fileChooserParams);
     }
 }

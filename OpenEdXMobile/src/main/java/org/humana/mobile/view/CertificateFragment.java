@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -126,7 +127,7 @@ public class CertificateFragment extends BaseFragment {
             }
 
             @Override
-            public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
+            public void openFile(WebView webView, ValueCallback<Uri[]> uploadMsg, WebChromeClient.FileChooserParams fileChooserParams) {
 
             }
         });

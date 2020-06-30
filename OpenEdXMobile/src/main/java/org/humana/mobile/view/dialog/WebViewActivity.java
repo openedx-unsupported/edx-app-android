@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -87,7 +88,7 @@ public class WebViewActivity extends BaseFragmentActivity {
             }
 
             @Override
-            public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
+            public void openFile(WebView webView, ValueCallback<Uri[]> uploadMsg, WebChromeClient.FileChooserParams fileChooserParams) {
 
             }
         });

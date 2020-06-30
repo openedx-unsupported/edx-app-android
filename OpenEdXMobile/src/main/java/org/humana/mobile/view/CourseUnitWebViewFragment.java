@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -97,9 +98,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             }
 
             @Override
-            public void openFile(WebView webView, ValueCallback<Uri> uploadMsg) {
+            public void openFile(WebView webView, ValueCallback<Uri[]> uploadMsg, WebChromeClient.FileChooserParams fileChooserParams) {
 
             }
+
         });
 
         if (ViewPagerDownloadManager.USING_UI_PRELOADING) {
