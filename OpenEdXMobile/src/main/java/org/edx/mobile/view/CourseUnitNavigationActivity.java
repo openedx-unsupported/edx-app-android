@@ -76,21 +76,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                /*
-                 * The method setUserVisibleHint is not called the first time the viewpager loads
-                 * so it's necessary to call it manually in order to run the logic inside it.
-                 *
-                 * 'onPageScrolled' method has been chosen instead of 'onPageSelected', because
-                 * `onPageSelected` is not getting called when pager opens page of position 0.
-                 */
-                if (firstPageLoad) {
-                    final CourseUnitFragment initialPage = (CourseUnitFragment) pagerAdapter.getItem(position);
-                    if (initialPage != null) {
-                        firstPageLoad = false;
-                        initialPage.setUserVisibleHint(true);
-                    }
-                }
-                // refresh the menu items to update the current state of google cast button
                 invalidateOptionsMenu();
             }
 
@@ -241,7 +226,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         int index = unitList.indexOf(selectedUnit);
         if (index >= 0) {
-            pager2.setCurrentItem(index);
+            pager2.setCurrentItem(index, false);
             tryToUpdateForEndOfSequential();
         }
 

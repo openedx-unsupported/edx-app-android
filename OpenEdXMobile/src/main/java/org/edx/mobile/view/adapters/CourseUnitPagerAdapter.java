@@ -25,6 +25,7 @@ import org.edx.mobile.view.CourseUnitVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
 import org.edx.mobile.view.CourseUnitYoutubePlayerFragment;
 import org.edx.mobile.view.LockedCourseUnitFragment;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         return (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null);
     }
 
+    @NotNull
     @Override
     public Fragment createFragment(int pos) {
         final CourseComponent unit = getUnit(pos);
