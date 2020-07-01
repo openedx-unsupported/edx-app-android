@@ -194,7 +194,8 @@ public class LoginAPI {
         for (String key : parameters.keySet()) {
             parameterMap.put(key, parameters.getString(key));
         }
-        final Response<ResponseBody> response = loginService.register(parameterMap).execute();
+        final Response<ResponseBody> response = loginService.register(
+                config.getApiUrlVersionConfig().getRegistrationApiVersion(), parameterMap).execute();
         if (!response.isSuccessful()) {
             final int errorCode = response.code();
             final String errorBody = response.errorBody().string();
