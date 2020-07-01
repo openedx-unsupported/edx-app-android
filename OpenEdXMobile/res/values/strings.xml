@@ -579,13 +579,15 @@
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
-    <string name="launch_register">Create your Account</string>
+    <string name="launch_register">Register</string>
     <!-- Button leading user to log in screen -->
-    <string name="launch_login">Log In</string>
+    <string name="launch_login">Sign In</string>
     <!-- Introduction text on the launch screen -->
-    <string name="launch_text">Courses from the world’s best universities in your pocket.</string>
+    <string name="launch_text">Courses and programs from the world\'s best universities in your pocket.</string>
+    <!-- Search View title on the launch screen -->
+    <string name="launch_search_title">What do you want to learn?</string>
     <!-- Search view leading user to Find Courses screen from the launch screen upon searching some text -->
-    <string name="launch_search_courses">Search Courses</string>
+    <string name="launch_search_courses">Search courses and programs</string>
 
     <!-- Registration Screen -->
     <!-- Button text allowing user to show hidden optional registration fields -->

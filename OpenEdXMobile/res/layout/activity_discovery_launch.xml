@@ -37,10 +37,19 @@
                 android:textColor="@color/edx_brand_primary_base"
                 android:textSize="@dimen/edx_xx_large" />
 
+            <TextView
+                android:id="@+id/tv_search_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_quadruple"
+                android:text="@string/launch_search_title"
+                android:textColor="@color/edx_brand_primary_base"
+                android:textSize="@dimen/edx_large" />
+
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/sv_search_courses"
                 style="@style/launch_search_bar"
-                android:layout_marginTop="@dimen/widget_margin_quadruple"
+                android:layout_marginTop="@dimen/widget_margin"
                 app:theme="@style/search_view_theme" />
         </LinearLayout>
 
