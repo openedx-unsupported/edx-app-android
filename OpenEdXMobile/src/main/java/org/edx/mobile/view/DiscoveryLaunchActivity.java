@@ -54,6 +54,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                         }
                     });
                 } else {
+                    binding.tvSearchTitle.setVisibility(View.GONE);
                     binding.svSearchCourses.setVisibility(View.GONE);
                 }
             }
