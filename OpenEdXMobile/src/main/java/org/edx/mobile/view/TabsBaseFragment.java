@@ -1,21 +1,21 @@
 package org.edx.mobile.view;
 
 import android.content.Intent;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
@@ -30,6 +30,7 @@ import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 
 import java.util.List;
@@ -57,6 +58,8 @@ public abstract class TabsBaseFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Enforce to intercept single scrolling direction
+        UiUtil.enforceSingleScrollDirection(binding.viewPager2);
         handleTabSelection(getArguments());
     }
 
@@ -195,7 +198,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
         });
     }
 
-    protected void createTab(TabLayout.Tab tab, FragmentItemModel fragmentItem) {
+    protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
         final IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
         iconDrawable.colorRes(getContext(), TAB_COLOR_SELECTOR_RES);
         if (showTitleInTabs()) {

@@ -2,13 +2,10 @@ package org.edx.mobile.view.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.edx.mobile.model.FragmentItemModel;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +47,7 @@ public class StaticFragmentPagerAdapter extends FragmentStateAdapter {
         return items.size();
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Fragment createFragment(int position) {
         Fragment fragment = items.get(position).generateFragment();

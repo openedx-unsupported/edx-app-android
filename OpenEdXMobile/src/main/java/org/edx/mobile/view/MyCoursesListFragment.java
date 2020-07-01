@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;

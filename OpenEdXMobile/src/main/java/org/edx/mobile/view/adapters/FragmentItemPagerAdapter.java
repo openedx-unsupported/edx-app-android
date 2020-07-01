@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import org.edx.mobile.model.FragmentItemModel;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class FragmentItemPagerAdapter extends FragmentStateAdapter {
         this.fragmentItems = fragmentItems;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Fragment createFragment(int position) {
         return fragmentItems.get(position).generateFragment();

@@ -137,7 +137,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         assertNotNull(nextUnitTitle);
         assertThat(nextUnitTitle).isInstanceOf(TextView.class);
         TextView nextUnitLabel = (TextView) nextUnitTitle;
-        View pager = activity.findViewById(R.id.pager);
+        View pager = activity.findViewById(R.id.pager2);
         assertNotNull(pager);
         assertThat(pager).isInstanceOf(ViewPager2.class);
         ViewPager2 viewPager = (ViewPager2) pager;
@@ -308,7 +308,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         ActionBar bar = activity.getSupportActionBar();
         View courseUnitNavBar = activity.findViewById(R.id.course_unit_nav_bar);
         assertNotNull(courseUnitNavBar);
-        View pagerView = activity.findViewById(R.id.pager);
+        View pagerView = activity.findViewById(R.id.pager2);
         assertNotNull(pagerView);
         assertThat(pagerView).isInstanceOf(ViewPager2.class);
         assertEquals(true, (pagerView).isEnabled());

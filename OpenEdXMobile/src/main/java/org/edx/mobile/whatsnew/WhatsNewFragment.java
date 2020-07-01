@@ -1,17 +1,17 @@
 package org.edx.mobile.whatsnew;
 
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,9 +26,9 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.WhatsNewUtil;
 import org.edx.mobile.view.custom.IndicatorController;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -114,6 +114,8 @@ public class WhatsNewFragment extends BaseFragment {
 
                 }
             });
+            // Enforce to intercept single scrolling direction
+            UiUtil.enforceSingleScrollDirection(binding.viewPager2);
         } catch (IOException e) {
             // Submit crash report and end the activity
             logger.error(e, true);
@@ -159,7 +161,7 @@ public class WhatsNewFragment extends BaseFragment {
             this.list = list;
         }
 
-        @NotNull
+        @NonNull
         @Override
         public Fragment createFragment(int position) {
             return WhatsNewItemFragment.newInstance(list.get(position));

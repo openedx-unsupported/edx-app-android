@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +15,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.viewpager2.widget.ViewPager2;
-
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.logger.Logger;
@@ -22,6 +22,7 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
 
@@ -71,9 +72,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 unitList, courseData, courseUpgradeData, this);
         pager2.setAdapter(pagerAdapter);
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-
-            private boolean firstPageLoad = true;
-
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 invalidateOptionsMenu();
@@ -90,6 +88,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 }
             }
         });
+        // Enforce to intercept single scrolling direction
+        UiUtil.enforceSingleScrollDirection(pager2);
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
         mPreviousBtn.setOnClickListener(view -> navigatePreviousComponent());

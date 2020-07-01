@@ -1,7 +1,15 @@
 package org.edx.mobile.profiles;
 
 import android.content.res.Resources;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,16 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
 import com.google.inject.Injector;

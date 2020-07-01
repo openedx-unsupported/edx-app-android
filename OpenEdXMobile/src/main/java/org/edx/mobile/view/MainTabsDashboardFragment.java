@@ -2,14 +2,15 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.IconDrawable;
@@ -167,7 +168,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
             return;
         }
         if (binding != null) {
-            binding.viewPager2.setCurrentItem(binding.viewPager2.getAdapter().getItemCount() - 1, true);
+            binding.viewPager2.setCurrentItem(binding.viewPager2.getAdapter().getItemCount() - 1);
             if (event.getScreenName() != null) {
                 EventBus.getDefault().post(ScreenArgumentsEvent.Companion.getNewInstance(event.getScreenName()));
             }
