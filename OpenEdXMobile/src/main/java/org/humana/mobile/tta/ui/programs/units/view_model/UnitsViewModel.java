@@ -177,7 +177,7 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                     showDatePicker(item, title);
                     break;
                 case R.id.tv_read:
-                    showComments(item.getComment());
+                    showComments(item.getComment(), item.getStatus());
                     break;
                 default:
 
@@ -901,18 +901,24 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
                 } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                 }*/
-                if (model.getComment() != null || model.getComment() != "") {
-                    if (model.getComment().length() > 15) {
+                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+
+                    if (model.getComment() != null || model.getComment() != "") {
+                    if (model.getComment().length() > 20) {
                         unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
                         unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
                         unitBinding.tvRead.setVisibility(View.VISIBLE);
                     } else {
                         unitBinding.tvComment.setVisibility(View.VISIBLE);
-
                         unitBinding.tvComment.setText(model.getComment());
+                        unitBinding.tvRead.setVisibility(View.GONE);
                     }
                 } else {
 
+                    unitBinding.tvComment.setVisibility(View.GONE);
+                    unitBinding.tvRead.setVisibility(View.GONE);
+                }
+                } else {
                     unitBinding.tvComment.setVisibility(View.GONE);
                     unitBinding.tvRead.setVisibility(View.GONE);
                 }
@@ -1071,12 +1077,13 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 //        }
     }
 
-    public void showComments(String comments) {
+    public void showComments(String comments, String status){
         final Dialog dialog = new Dialog(mActivity);
         dialog.setContentView(R.layout.dialog_comment);
 
-        TextView dialogText = dialog.findViewById(R.id.txt_comment);
-        ImageView close = dialog.findViewById(R.id.iv_close);
+        TextView dialogText =  dialog.findViewById(R.id.txt_comment);
+        TextView statusText =  dialog.findViewById(R.id.txt_heading);
+        ImageView close =  dialog.findViewById(R.id.iv_close);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -1086,10 +1093,10 @@ public class UnitsViewModel extends BaseViewModel implements IMxCalenderListener
 
         // if button is clicked, close the custom dialog
         dialogText.setText(comments);
+        statusText.setText(status+" comment");
 
         close.setOnClickListener(v -> dialog.dismiss());
         dialog.setCancelable(false);
         dialog.show();
     }
-
 }
