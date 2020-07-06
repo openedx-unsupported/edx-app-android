@@ -110,4 +110,12 @@ public abstract class TADatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE unit ADD COLUMN unit_id TEXT");
         }
     };
+
+    public static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE period ADD COLUMN total_points TEXT");
+            database.execSQL("ALTER TABLE period ADD COLUMN completed_points TEXT");
+        }
+    };
 }

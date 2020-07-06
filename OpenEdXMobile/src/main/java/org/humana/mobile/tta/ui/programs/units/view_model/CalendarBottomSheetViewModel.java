@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
 import com.lib.mxcalendar.models.Event;
@@ -520,8 +521,13 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                         if (!model.getStatus().isEmpty()) {
                             if (model.getStaffDate() > 0) {
-                                unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
-                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                                if (!model.getStatus().matches("None")) {
+                                    unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                                }else{
+                                    unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStatusDate()));
+                                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                                }
                             }
                         } else {
                             unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
@@ -545,8 +551,10 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                         String role = mDataManager.getLoginPrefs().getRole();
                         if (role != null && role.trim().equalsIgnoreCase(UserRole.Student.name())) {
                             if (model.getStaffDate() > 0) {
+                                if (model.getStatus().toLowerCase() != "none") {
                                 unitBinding.tvSubmittedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                                 unitBinding.tvSubmittedDate.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                             }
@@ -621,22 +629,40 @@ public class CalendarBottomSheetViewModel extends BaseViewModel {
                                 + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                         if (!model.getStatus().isEmpty()) {
                             if (model.getStaffDate() > 0) {
-                                unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
-                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                                if (model.getStatus().toLowerCase() != "none") {
+                                    unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                                }else{
+                                    unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStatusDate()));
+                                    unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                                }
                             }
                         } else {
                             unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                         }
                         unitBinding.tvDescription.setText(model.getDesc());
                         if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
-                            if (model.getComment() != null) {
-                                unitBinding.tvComment.setText(model.getComment());
+
+                            if (model.getComment() != null || model.getComment() != "") {
+                                if (model.getComment().length() > 20) {
+                                    unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
+                                    unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
+                                    unitBinding.tvRead.setVisibility(View.VISIBLE);
+                                } else {
+                                    unitBinding.tvComment.setVisibility(View.VISIBLE);
+                                    unitBinding.tvComment.setText(model.getComment());
+                                    unitBinding.tvRead.setVisibility(View.GONE);
+                                }
                             } else {
+
                                 unitBinding.tvComment.setVisibility(View.GONE);
+                                unitBinding.tvRead.setVisibility(View.GONE);
                             }
                         } else {
                             unitBinding.tvComment.setVisibility(View.GONE);
+                            unitBinding.tvRead.setVisibility(View.GONE);
                         }
+
                         if (model.getMyDate() > 0) {
                             unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                         } else {

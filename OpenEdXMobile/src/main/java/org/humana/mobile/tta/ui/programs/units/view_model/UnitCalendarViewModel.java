@@ -470,23 +470,29 @@ public class UnitCalendarViewModel extends BaseViewModel {
                             + model.getUnitHour() + mActivity.getResources().getString(R.string.point_txt));
                     if (!model.getStatus().isEmpty()) {
                         if (model.getStaffDate() > 0) {
-                            unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
-                            unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            if (model.getStatus().toLowerCase() != "none") {
+                                unitBinding.tvStaffDate.setText(model.getStatus() + " : " + DateUtil.getDisplayDate(model.getStatusDate()));
+                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            }else{
+                                unitBinding.tvStaffDate.setText(DateUtil.getDisplayDate(model.getStatusDate()));
+                                unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
+                            }
                         }
                     } else {
                         unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                     }
                     unitBinding.tvDescription.setText(model.getDesc());
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
+
                         if (model.getComment() != null || model.getComment() != "") {
-                            if (model.getComment().length() > 15) {
+                            if (model.getComment().length() > 20) {
                                 unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
                                 unitBinding.tvRead.setMovementMethod(new ScrollingMovementMethod());
                                 unitBinding.tvRead.setVisibility(View.VISIBLE);
                             } else {
                                 unitBinding.tvComment.setVisibility(View.VISIBLE);
-
                                 unitBinding.tvComment.setText(model.getComment());
+                                unitBinding.tvRead.setVisibility(View.GONE);
                             }
                         } else {
 
@@ -497,6 +503,8 @@ public class UnitCalendarViewModel extends BaseViewModel {
                         unitBinding.tvComment.setVisibility(View.GONE);
                         unitBinding.tvRead.setVisibility(View.GONE);
                     }
+
+
                     if (model.getMyDate() > 0) {
                         unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                     } else {

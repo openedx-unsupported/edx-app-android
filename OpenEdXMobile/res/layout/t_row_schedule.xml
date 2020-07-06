@@ -209,7 +209,6 @@
                     android:fontFamily="@font/hind_medium"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="@{String.valueOf(period.completedCount)}"
                     android:visibility="gone" />
 
                 <TextView

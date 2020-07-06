@@ -53,12 +53,35 @@ public class Period implements Parcelable {
     @SerializedName("about_url")
     private String about_url;
 
-
     @SerializedName("startDate")
     private long startDate;
 
     @SerializedName("endDate")
     private long endDate;
+
+    @SerializedName("total_points")
+    private int total_points;
+
+    public int getTotal_points() {
+        return total_points;
+    }
+
+    public void setTotal_points(int total_points) {
+        this.total_points = total_points;
+    }
+
+    public int getCompleted_points() {
+        return completed_points;
+    }
+
+    public void setCompleted_points(int completed_points) {
+        this.completed_points = completed_points;
+    }
+
+    @SerializedName("completed_points")
+    private int completed_points;
+
+
 
     public String getDownloadStatus() {
         return downloadStatus;
@@ -86,6 +109,8 @@ public class Period implements Parcelable {
         about_url = in.readString();
         startDate = in.readLong();
         endDate = in.readLong();
+        total_points = in.readInt();
+        completed_points = in.readInt();
     }
 
     public static final Creator<Period> CREATOR = new Creator<Period>() {
@@ -200,10 +225,14 @@ public class Period implements Parcelable {
         dest.writeString(about_url);
         dest.writeLong(startDate);
         dest.writeLong(endDate);
+        dest.writeInt(total_points);
+        dest.writeInt(completed_points);
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof Period) && (((Period) obj).id == id);
     }
+
+
 }

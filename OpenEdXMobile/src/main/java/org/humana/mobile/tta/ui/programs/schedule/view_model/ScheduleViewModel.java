@@ -795,8 +795,14 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                 if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                     scheduleBinding.txtTotal.setText(model.getCompletedCount() + "/" +
                             model.getTotalCount() + " Units ");
+                    if(model.getTotal_points() != 0 && model.getCompleted_points()!=0) {
+                        scheduleBinding.txtCompleted.setVisibility(View.VISIBLE);
+                        scheduleBinding.txtCompleted.setText(model.getCompleted_points() + "/" +
+                                model.getTotal_points() + " points ");
+                    }
                 } else {
                     scheduleBinding.txtTotal.setText(model.getTotalCount() + " Units ");
+                    scheduleBinding.txtCompleted.setVisibility(View.VISIBLE);
                 }
 
                 if (model.getStartDate() > 0) {
