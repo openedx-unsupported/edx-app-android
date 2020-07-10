@@ -20,7 +20,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     @NonNull
     @Override
     protected DiscoveryLaunchPresenter createPresenter(@Nullable Bundle savedInstanceState) {
-        return new DiscoveryLaunchPresenter(environment.getLoginPrefs(), environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig());
+        return new DiscoveryLaunchPresenter(environment.getLoginPrefs(), environment);
     }
 
     @NonNull
@@ -31,8 +31,13 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
             @Override
-            public void setEnabledButtons(boolean courseDiscoveryEnabled) {
+            public void setEnabledButtons(boolean courseDiscoveryEnabled, boolean programDiscoveryEnabled) {
                 if (courseDiscoveryEnabled) {
+                    // Update the text based on Program discovery enabled
+                    if (programDiscoveryEnabled) {
+                        binding.tvLaunchText.setText(getString(R.string.launch_text_courses_and_program));
+                        binding.svSearchCourses.setQueryHint(getString(R.string.launch_search_courses_program));
+                    }
                     binding.svSearchCourses.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {

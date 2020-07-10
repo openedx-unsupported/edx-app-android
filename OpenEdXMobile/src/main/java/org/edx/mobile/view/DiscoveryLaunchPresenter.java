@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 
@@ -12,17 +13,25 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     private final LoginPrefs loginPrefs;
 
     @Nullable
-    private final Config.CourseDiscoveryConfig courseDiscoveryConfig;
+    IEdxEnvironment environment;
 
-    public DiscoveryLaunchPresenter(@NonNull LoginPrefs loginPrefs, @NonNull Config.CourseDiscoveryConfig courseDiscoveryConfig) {
+    public DiscoveryLaunchPresenter(@NonNull LoginPrefs loginPrefs, @NonNull IEdxEnvironment environment) {
         this.loginPrefs = loginPrefs;
-        this.courseDiscoveryConfig = courseDiscoveryConfig;
+        this.environment = environment;
     }
 
     @Override
     public void attachView(@NonNull ViewInterface view) {
         super.attachView(view);
-        view.setEnabledButtons(courseDiscoveryConfig != null && courseDiscoveryConfig.isDiscoveryEnabled());
+        if (environment.getConfig().getDiscoveryConfig() != null) {
+            Config.CourseDiscoveryConfig courseDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig();
+            Config.ProgramDiscoveryConfig programDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig();
+
+            view.setEnabledButtons(courseDiscoveryConfig != null && courseDiscoveryConfig.isDiscoveryEnabled(),
+                    programDiscoveryConfig != null && programDiscoveryConfig.isDiscoveryEnabled(environment));
+        } else {
+            view.setEnabledButtons(false, false);
+        }
     }
 
     public void onResume() {
@@ -33,7 +42,7 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     }
 
     public interface ViewInterface {
-        void setEnabledButtons(boolean courseDiscoveryEnabled);
+        void setEnabledButtons(boolean courseDiscoveryEnabled, boolean programDiscoveryEnabled);
 
         void navigateToMyCourses();
     }
