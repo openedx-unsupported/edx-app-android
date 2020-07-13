@@ -583,11 +583,15 @@
     <!-- Button leading user to log in screen -->
     <string name="launch_login">Sign In</string>
     <!-- Introduction text on the launch screen -->
-    <string name="launch_text">Courses and programs from the world\'s best universities in your pocket.</string>
+    <string name="launch_text">Courses from the world\'s best universities in your pocket.</string>
+    <!-- Introduction text on the launch screen when courses and program enabled  -->
+    <string name="launch_text_courses_and_program">Courses and programs from the world\'s best universities in your pocket.</string>
     <!-- Search View title on the launch screen -->
     <string name="launch_search_title">What do you want to learn?</string>
     <!-- Search view leading user to Find Courses screen from the launch screen upon searching some text -->
-    <string name="launch_search_courses">Search courses and programs</string>
+    <string name="launch_search_courses">Search courses</string>
+    <!-- Search view leading user to Find Courses & Program screen from the launch screen upon searching some text -->
+    <string name="launch_search_courses_program">Search courses and programs</string>
 
     <!-- Registration Screen -->
     <!-- Button text allowing user to show hidden optional registration fields -->
