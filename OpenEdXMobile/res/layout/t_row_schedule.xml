@@ -201,27 +201,25 @@
 
 
                 <TextView
-                    android:id="@+id/txt_completed"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/pending_orange"
-                    android:fontFamily="@font/hind_medium"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:visibility="gone" />
-
-                <TextView
                     android:id="@+id/txt_total"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/hind_semibold"
+                    android:fontFamily="@font/hind_medium"
                     android:gravity="center|start"
                     android:paddingStart="15dp"
                     android:textColor="@color/gray_5"
                     android:textSize="14sp" />
-
+                <TextView
+                    android:id="@+id/txt_completed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/hind_medium"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:visibility="invisible" />
                 <Button
                     android:id="@+id/textview_add"
                     android:layout_width="0dp"

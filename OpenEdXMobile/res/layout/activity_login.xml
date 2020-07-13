@@ -80,26 +80,21 @@
 
                     </org.humana.mobile.view.custom.EdxTextInputLayout>
 
-                    <org.humana.mobile.view.custom.EdxTextInputLayout
-                        android:id="@+id/passwordWrapper"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:paddingEnd="-4dp"
-                        android:paddingLeft="-4dp"
-                        android:paddingRight="-4dp"
-                        android:paddingStart="-4dp"
-                        android:textColorHint="@color/grey_text">
+                        app:passwordToggleDrawable="@drawable/view_password"
+                        app:passwordToggleEnabled="true"
+                        android:textColorHint="@color/grey_text"
+                        app:passwordToggleTint="@color/colorAccent">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/password_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:inputType="textPassword"
-                            android:maxLength="100" />
-
-                    </org.humana.mobile.view.custom.EdxTextInputLayout>
+                            android:hint="@string/password"
+                            android:id="@+id/password_et"
+                            android:inputType="textPassword"/>
+                    </android.support.design.widget.TextInputLayout>
 
                     <TextView
                         android:visibility="gone"
