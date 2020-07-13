@@ -8,12 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.tabs.TabLayout;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -27,6 +30,7 @@ import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 
 import java.util.List;
@@ -54,6 +58,8 @@ public abstract class TabsBaseFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Enforce to intercept single scrolling direction
+        UiUtil.enforceSingleScrollDirection(binding.viewPager2);
         handleTabSelection(getArguments());
     }
 
@@ -81,7 +87,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 for (int i = 0; i < fragmentItems.size(); i++) {
                     final FragmentItemModel item = fragmentItems.get(i);
                     if (shouldSelectFragment(item, screenName)) {
-                        binding.viewPager.setCurrentItem(i);
+                        binding.viewPager2.setCurrentItem(i);
                         break;
                     }
                 }
@@ -131,13 +137,10 @@ public abstract class TabsBaseFragment extends BaseFragment {
             tabLayout.setVisibility(View.GONE);
         } else {
             tabLayout.setVisibility(View.VISIBLE);
-            for (FragmentItemModel fragmentItem : fragmentItems) {
-                tabLayout.addTab(createTab(tabLayout, fragmentItem));
-            }
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    binding.viewPager.setCurrentItem(tab.getPosition());
+                    binding.viewPager2.setCurrentItem(tab.getPosition());
                 }
 
                 @Override
@@ -153,7 +156,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
         }
 
         // Init page change listener
-        final TabLayout.TabLayoutOnPageChangeListener pageChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
+        final ViewPager2.OnPageChangeCallback pageChangeListener = new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -166,34 +169,38 @@ public abstract class TabsBaseFragment extends BaseFragment {
         };
 
         // Init view pager
-        final FragmentItemPagerAdapter adapter = new FragmentItemPagerAdapter(this.getActivity().getSupportFragmentManager(), fragmentItems);
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(pageChangeListener);
+        final FragmentItemPagerAdapter adapter = new FragmentItemPagerAdapter(this.getActivity(), fragmentItems);
+        binding.viewPager2.setAdapter(adapter);
+        binding.viewPager2.registerOnPageChangeCallback(pageChangeListener);
+
+        // Attach Tab layout with viewpager2
+        new TabLayoutMediator(tabLayout, binding.viewPager2, (tab, position) -> {
+            createTab(tab, fragmentItems.get(position));
+        }).attach();
         /*
          It will load all of the fragments on creation and will stay in memory till ViewPager's
          life time, it will greatly improve our user experience as all fragments will be available
          to view all the time. We can decrease the limit if it creates memory problems on low-end devices.
          */
-        binding.viewPager.setOffscreenPageLimit(fragmentItems.size() - 1);
-
+        if (fragmentItems.size() - 1 > 1) {
+            binding.viewPager2.setOffscreenPageLimit(fragmentItems.size() - 1);
+        }
         /*
          ViewPager doesn't call the onPageSelected for its first item, so we have to explicitly
          call it ourselves.
          Inspiration for this solution: https://stackoverflow.com/a/16074152/1402616
          */
-        binding.viewPager.post(new Runnable() {
+        binding.viewPager2.post(new Runnable() {
             @Override
             public void run() {
-                pageChangeListener.onPageSelected(binding.viewPager.getCurrentItem());
+                pageChangeListener.onPageSelected(binding.viewPager2.getCurrentItem());
             }
         });
     }
 
-    protected TabLayout.Tab createTab(TabLayout tabLayout, FragmentItemModel fragmentItem) {
+    protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
         final IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
         iconDrawable.colorRes(getContext(), TAB_COLOR_SELECTOR_RES);
-        final TabLayout.Tab tab;
-        tab = tabLayout.newTab();
         if (showTitleInTabs()) {
             iconDrawable.sizeRes(getContext(), R.dimen.edx_small);
             final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
@@ -208,7 +215,6 @@ public abstract class TabsBaseFragment extends BaseFragment {
             tab.setIcon(iconDrawable);
         }
         tab.setContentDescription(fragmentItem.getTitle());
-        return tab;
     }
 
     /**

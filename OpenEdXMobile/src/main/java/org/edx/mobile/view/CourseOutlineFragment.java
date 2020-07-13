@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -172,7 +173,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         });
         UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
-
         restore(bundle);
         initListView(view);
         fetchCourseComponent();

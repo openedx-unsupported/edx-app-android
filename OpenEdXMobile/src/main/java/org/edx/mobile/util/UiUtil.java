@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.TypedValue;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.view.custom.SingleScrollDirectionEnforcer;
 
 
 /**
@@ -138,6 +141,26 @@ public class UiUtil {
                 fragmentManager.beginTransaction().remove(fragment)
                         .commitAllowingStateLoss();
             }
+        }
+    }
+
+    /**
+     * Util method to enforce the single scrolling direction gesture of the {@link ViewPager2}, as
+     * {@link ViewPager2} supports both vertical & horizontally scrolling gestures that disrupt the
+     * the child list scrolling when user gesture not perfectly in single direction (e.g diagonal
+     * gesture)
+     *
+     * @param viewPager2 view to enforce the single scrolling direction
+     * @see <a href="https://medium.com/@BladeCoder/fixing-recyclerview-nested-scrolling-in-opposite-direction-f587be5c1a04">
+     * Nested scrolling in Opposite Direction using ViewPager2</a>
+     */
+    public static void enforceSingleScrollDirection(ViewPager2 viewPager2) {
+        // ViewPager2 uses a RecyclerView internally.
+        RecyclerView recyclerView = (RecyclerView) viewPager2.getChildAt(0);
+        if (recyclerView != null) {
+            SingleScrollDirectionEnforcer enforcer = new SingleScrollDirectionEnforcer();
+            recyclerView.addOnItemTouchListener(enforcer);
+            recyclerView.addOnScrollListener(enforcer);
         }
     }
 }

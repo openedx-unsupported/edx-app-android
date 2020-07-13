@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.material.appbar.AppBarLayout;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.joanzapata.iconify.Icon;
@@ -128,7 +129,7 @@ public class UserProfileFragment
     @VisibleForTesting
     @NonNull
     protected StaticFragmentPagerAdapter createTabAdapter() {
-        return new StaticFragmentPagerAdapter(getChildFragmentManager() , this);
+        return new StaticFragmentPagerAdapter(this , this);
     }
 
     @NonNull
@@ -137,8 +138,9 @@ public class UserProfileFragment
         viewHolder = DataBindingUtil.getBinding(getView());
 
         snackbarErrorNotification = new SnackbarErrorNotification(viewHolder.getRoot());
-
-        viewHolder.profileSectionPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        // Disable viewpager swipe
+        viewHolder.profileSectionPager.setUserInputEnabled(false);
+        viewHolder.profileSectionPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 onChildScrollingPreferenceChanged();
@@ -147,7 +149,11 @@ public class UserProfileFragment
 
         final StaticFragmentPagerAdapter adapter = createTabAdapter();
         viewHolder.profileSectionPager.setAdapter(adapter);
-        viewHolder.profileSectionTabs.setupWithViewPager(viewHolder.profileSectionPager);
+
+        // Attach Tab layout with viewpager2
+        new TabLayoutMediator(viewHolder.profileSectionTabs, viewHolder.profileSectionPager, (tab, position) -> {
+            tab.setText(adapter.getPageTitle(position));
+        }).attach();
 
         return new UserProfilePresenter.ViewInterface() {
             @Override

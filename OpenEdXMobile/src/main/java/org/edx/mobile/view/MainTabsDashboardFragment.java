@@ -168,7 +168,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
             return;
         }
         if (binding != null) {
-            binding.viewPager.setCurrentItem(binding.viewPager.getAdapter().getCount() - 1, true);
+            binding.viewPager2.setCurrentItem(binding.viewPager2.getAdapter().getItemCount() - 1);
             if (event.getScreenName() != null) {
                 EventBus.getDefault().post(ScreenArgumentsEvent.Companion.getNewInstance(event.getScreenName()));
             }
