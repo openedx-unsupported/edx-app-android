@@ -82,7 +82,7 @@ public class EdxCookieManager {
                     //saveCookie(response);
                     if(response!=null) {
                         String[] arr;
-                        for (String header : response.headers().toMultimap().get("Set-Cookie")) {
+                        for (String header : response.headers().toMultimap().get("set-cookie")) {
                             if (header.contains("sessionid=")) {
                                 arr = header.split(";");
                                 BrowserUtil.loginPrefs.setLoginUserCookie(arr[0]);
