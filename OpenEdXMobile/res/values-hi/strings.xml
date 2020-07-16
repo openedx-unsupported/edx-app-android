@@ -150,4 +150,6 @@
     <string name="proposed_date">Proposed Date</string>
     <string name="empty_unit">Empty Unit</string>
     <string name="open">open..</string>
+    <string name="restart">पुनः आरंभ करें</string>
+    <string name="update_downloaded_restart">अपडेट डाउनलोड किया गया है। कृपया एप्लिकेशन पुनः आरंभ करें</string>
 </resources>
