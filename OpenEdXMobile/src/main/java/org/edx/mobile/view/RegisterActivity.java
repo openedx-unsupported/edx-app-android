@@ -36,6 +36,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
@@ -190,7 +191,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void validateRegistrationFields() {
-        Bundle parameters = getRegistrationParameter();
+        Bundle parameters = getRegistrationParameters();
         if (parameters == null) {
             return;
         }
@@ -203,9 +204,10 @@ public class RegisterActivity extends BaseFragmentActivity
         validateRegistrationFields.enqueue(new ErrorHandlingCallback<JsonObject>(this) {
             @Override
             protected void onResponse(@NonNull JsonObject responseBody) {
+                // Callback method for a successful HTTP response.
                 final Type stringMapType = new TypeToken<HashMap<String, String>>() {
                 }.getType();
-                final HashMap<String, String> messageBody = new Gson().fromJson(responseBody.get("validation_decisions"), stringMapType);
+                final HashMap<String, String> messageBody = new Gson().fromJson(responseBody.get(ApiConstants.VALIDATION_DECISIONS), stringMapType);
                 if (hasValidationError(messageBody)) {
                     hideProgress();
                 } else {
@@ -391,9 +393,8 @@ public class RegisterActivity extends BaseFragmentActivity
         task.execute();
     }
 
-    private Bundle getRegistrationParameter() {
+    private Bundle getRegistrationParameters() {
         boolean hasError = false;
-        // prepare query (POST body)
         Bundle parameters = new Bundle();
         String email = null, confirm_email = null;
         for (IRegistrationFieldView v : mFieldViews) {

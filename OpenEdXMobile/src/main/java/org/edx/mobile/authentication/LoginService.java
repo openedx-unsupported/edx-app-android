@@ -42,15 +42,13 @@ public interface LoginService {
         }
     }
 
-
     /**
-     * Depending on the query parameters for this endpoint, a different action will be triggered
-     * on the server side. In this case, we are using to validate the fields used for the registration.
-     * In case of validation errors in the response body.
+     * This endpoint used to validate the fields used for registration.
+     * In case of validation errors return error messages with associated fields.
      */
     @NonNull
     @FormUrlEncoded
-    @POST(ApiConstants.URL_VALIDATION_REGISTRATION)
+    @POST(ApiConstants.URL_VALIDATE_REGISTRATION_FIELDS)
     Call<JsonObject> validateRegistrationFields(@FieldMap Map<String, String> parameters);
 
     /**
