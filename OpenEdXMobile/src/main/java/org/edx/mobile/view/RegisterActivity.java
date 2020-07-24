@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -19,6 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -32,6 +36,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
@@ -42,7 +47,6 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.view.IRegistrationFieldView;
-import org.edx.mobile.module.registration.view.RegistrationEditTextView;
 import org.edx.mobile.module.registration.view.RegistrationSelectView;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -56,8 +60,11 @@ import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -155,7 +162,7 @@ public class RegisterActivity extends BaseFragmentActivity
             @Override
             public void onClick(View v) {
                 SoftKeyboardUtil.hide(RegisterActivity.this);
-                createAccount();
+                validateRegistrationFields();
             }
         });
 
@@ -181,6 +188,63 @@ public class RegisterActivity extends BaseFragmentActivity
 
         hideSoftKeypad();
         tryToSetUIInteraction(true);
+    }
+
+    private void validateRegistrationFields() {
+        Bundle parameters = getRegistrationParameters();
+        if (parameters == null) {
+            return;
+        }
+        showProgress();
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+        Call<JsonObject> validateRegistrationFields = loginService.validateRegistrationFields(parameterMap);
+        validateRegistrationFields.enqueue(new ErrorHandlingCallback<JsonObject>(this) {
+            @Override
+            protected void onResponse(@NonNull JsonObject responseBody) {
+                // Callback method for a successful HTTP response.
+                final Type stringMapType = new TypeToken<HashMap<String, String>>() {
+                }.getType();
+                final HashMap<String, String> messageBody = new Gson().fromJson(responseBody.get(ApiConstants.VALIDATION_DECISIONS), stringMapType);
+                if (hasValidationError(messageBody)) {
+                    hideProgress();
+                } else {
+                    createAccount(parameters);
+                }
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                hideProgress();
+                RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(error,
+                        RegisterActivity.this));
+                logger.error(error);
+            }
+        });
+    }
+
+    private boolean hasValidationError(HashMap<String, String> messageBody) {
+        boolean errorShown = false;
+        for (String key : messageBody.keySet()) {
+            if (key == null)
+                continue;
+            for (IRegistrationFieldView fieldView : mFieldViews) {
+                String error = messageBody.get(key);
+                if (!TextUtils.isEmpty(error) && key.equalsIgnoreCase(fieldView.getField().getName())) {
+                    fieldView.handleError(error);
+                    if (!errorShown) {
+                        // this is the first input field with error,
+                        // so focus on it after showing the popup
+                        showErrorPopup(fieldView.getOnErrorFocusView());
+                        errorShown = true;
+                    }
+                    break;
+                }
+            }
+        }
+        return errorShown;
     }
 
     private void showErrorMessage(String errorMsg, @NonNull Icon errorIcon) {
@@ -254,44 +318,7 @@ public class RegisterActivity extends BaseFragmentActivity
         tryToSetUIInteraction(true);
     }
 
-    private void createAccount() {
-        boolean hasError = false;
-        // prepare query (POST body)
-        Bundle parameters = new Bundle();
-        String email = null, confirm_email = null;
-        for (IRegistrationFieldView v : mFieldViews) {
-            if (v.isValidInput()) {
-                    if (v.getField().getName().equalsIgnoreCase(RegistrationFieldType.EMAIL.name())) {
-                        email = v.getCurrentValue().getAsString();
-                    }
-                    if (v.getField().getName().equalsIgnoreCase(RegistrationFieldType.CONFIRM_EMAIL.name())) {
-                        confirm_email = v.getCurrentValue().getAsString();
-                    }
-
-                    // Validating email field with confirm email field
-                    if (email != null && confirm_email != null && !email.equalsIgnoreCase(confirm_email)) {
-                        v.handleError(v.getField().getErrorMessage().getRequired());
-                        showErrorPopup(v.getOnErrorFocusView());
-                        return;
-                    }
-                if (v.hasValue()) {
-                    // we submit the field only if it provides a value
-                    parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
-                }
-            } else {
-                if (!hasError) {
-                    // this is the first input field with error,
-                    // so focus on it after showing the popup
-                    showErrorPopup(v.getOnErrorFocusView());
-                }
-                hasError = true;
-            }
-        }
-        // do NOT proceed if validations are failed
-        if (hasError) {
-            return;
-        }
-
+    private void createAccount(Bundle parameters) {
         // set honor_code and terms_of_service to true
         parameters.putString("honor_code", "true");
         parameters.putString("terms_of_service", "true");
@@ -309,8 +336,6 @@ public class RegisterActivity extends BaseFragmentActivity
         // Send analytics event for Create Account button click
         final String appVersion = String.format("%s v%s", getString(R.string.android), BuildConfig.VERSION_NAME);
         environment.getAnalyticsRegistry().trackCreateAccountClicked(appVersion, provider);
-
-        showProgress();
 
         final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(provider);
         final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
@@ -366,6 +391,45 @@ public class RegisterActivity extends BaseFragmentActivity
             }
         };
         task.execute();
+    }
+
+    private Bundle getRegistrationParameters() {
+        boolean hasError = false;
+        Bundle parameters = new Bundle();
+        String email = null, confirm_email = null;
+        for (IRegistrationFieldView v : mFieldViews) {
+            if (v.isValidInput()) {
+                if (v.getField().getName().equalsIgnoreCase(RegistrationFieldType.EMAIL.name())) {
+                    email = v.getCurrentValue().getAsString();
+                }
+                if (v.getField().getName().equalsIgnoreCase(RegistrationFieldType.CONFIRM_EMAIL.name())) {
+                    confirm_email = v.getCurrentValue().getAsString();
+                }
+
+                // Validating email field with confirm email field
+                if (email != null && confirm_email != null && !email.equalsIgnoreCase(confirm_email)) {
+                    v.handleError(v.getField().getErrorMessage().getRequired());
+                    showErrorPopup(v.getOnErrorFocusView());
+                    return null;
+                }
+                if (v.hasValue()) {
+                    // we submit the field only if it provides a value
+                    parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
+                }
+            } else {
+                if (!hasError) {
+                    // this is the first input field with error,
+                    // so focus on it after showing the popup
+                    showErrorPopup(v.getOnErrorFocusView());
+                }
+                hasError = true;
+            }
+        }
+        // do NOT proceed if validations are failed
+        if (hasError) {
+            return null;
+        }
+        return parameters;
     }
 
     /**

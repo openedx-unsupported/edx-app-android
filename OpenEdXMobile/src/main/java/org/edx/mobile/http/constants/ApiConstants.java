@@ -32,6 +32,8 @@ public class ApiConstants {
 
     public static final String URL_REGISTRATION = "/user_api/{" + API_VERSION + "}/account/registration/";
 
+    public static final String URL_VALIDATE_REGISTRATION_FIELDS = "/api/user/v1/validation/registration";
+
     public static final String URL_ENROLLMENT = "/api/enrollment/v1/enrollment";
 
     public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
@@ -39,6 +41,8 @@ public class ApiConstants {
     public static final String TOKEN_TYPE_ACCESS = "access_token";
 
     public static final String TOKEN_TYPE_REFRESH = "refresh_token";
+
+    public static final String VALIDATION_DECISIONS = "validation_decisions";
 
     @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
     @Retention(RetentionPolicy.SOURCE)

@@ -2,6 +2,7 @@ package org.edx.mobile.authentication;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 
 import org.edx.mobile.http.constants.ApiConstants;
@@ -40,6 +41,15 @@ public interface LoginService {
             return retrofit.create(LoginService.class);
         }
     }
+
+    /**
+     * This endpoint used to validate the fields used for registration.
+     * In case of validation errors return error messages with associated fields.
+     */
+    @NonNull
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_VALIDATE_REGISTRATION_FIELDS)
+    Call<JsonObject> validateRegistrationFields(@FieldMap Map<String, String> parameters);
 
     /**
      * If there are form validation errors, this call will fail with 400 or 409 error code.
