@@ -986,4 +986,9 @@
     <string name="internal_storage">Internal Storage</string>
     <string name="open">open..</string>
 
+    <string name="restart" >RESTART</string>
+    <string name="update_downloaded_restart" >Update has been downloaded. Please restart the app</string>
+    <string name="error_inapp_update" translatable="false">Error occurred while updating app</string>
+    <string name="downloading_update" translatable="false">Downloading update… %d%%</string>
+
 </resources>
