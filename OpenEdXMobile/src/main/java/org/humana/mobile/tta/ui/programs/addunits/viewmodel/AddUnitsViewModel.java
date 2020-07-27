@@ -89,10 +89,11 @@ public class AddUnitsViewModel extends BaseViewModel {
     private Long selectedDate;
     public ObservableField<String> searchText = new ObservableField<>("");
     private List<SelectedFilter> selectedFilter;
+    List<Unit> disablecheckUnits;
 
     private FirebaseAnalytics mFirebaseAnalytics;
     public boolean isSaveDisable = false;
-    private long pointAdded= 0;
+    private long pointAdded = 0;
 
     private int maxUnitForAdding;
 
@@ -130,7 +131,7 @@ public class AddUnitsViewModel extends BaseViewModel {
         allLoaded = false;
         changesMade = true;
         isUnitModePeriod = true;
-
+        disablecheckUnits = new ArrayList<>();
         selectedFilter = new ArrayList<>();
         selectedFilter = mDataManager.getSelectedFilters();
 
@@ -153,40 +154,40 @@ public class AddUnitsViewModel extends BaseViewModel {
                 case R.id.layout_checkbox:
                 case R.id.checkbox:
                     if (selected.contains(item)) {
-                            selected.remove(item);
+                        selected.remove(item);
                     } else {
                         if (selectedDate != 0) {
-                                item.setMyDate(selectedDate);
-                                proposedDateAdded.put(item.getId(), selectedDate);
-                                selected.add(item);
+                            item.setMyDate(selectedDate);
+                            proposedDateAdded.put(item.getId(), selectedDate);
+                            selected.add(item);
                         }
                         {
-                                selected.add(item);
+                            selected.add(item);
                         }
                     }
 
                     if (selectedOriginal.contains(item)) {
                         if (removed.contains(item)) {
-                                removed.remove(item);
-                                proposedDateModified.remove(item.getId());
-                                pointAdded = pointAdded + item.getUnitHour();
+                            removed.remove(item);
+                            proposedDateModified.remove(item.getId());
+                            pointAdded = pointAdded + item.getUnitHour();
                         } else {
-                                removed.add(item);
-                                pointAdded = pointAdded - item.getUnitHour();
+                            removed.add(item);
+                            pointAdded = pointAdded - item.getUnitHour();
                         }
                     } else {
                         if (added.contains(item)) {
-                                added.remove(item);
-                                proposedDateAdded.remove(item.getId());
-                                pointAdded = pointAdded - item.getUnitHour();
+                            added.remove(item);
+                            proposedDateAdded.remove(item.getId());
+                            pointAdded = pointAdded - item.getUnitHour();
                         } else {
-                                added.add(item);
-                                pointAdded = pointAdded + item.getUnitHour();
+                            added.add(item);
+                            pointAdded = pointAdded + item.getUnitHour();
 
                         }
                     }
 
-                    if ((added.size() - removed.size()) > maxUnitForAdding) {
+                  /*  if ((added.size() - removed.size()) > maxUnitForAdding) {
                         for(Unit unit : units){
                             if(selected.contains(unit) && added.contains(unit)) {
                                 isSaveDisable = true;
@@ -204,10 +205,37 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
                                 }
                         }
+                    }*/
+                    if ((added.size() - removed.size()) < (maxUnitForAdding)) {
+                        unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
+                        List<Unit> disablecheckUnits = new ArrayList<Unit>();
+                        disablecheckUnits.addAll(selected);
+                        disablecheckUnits.addAll(added);
+                        disablecheckUnits.addAll(removed);
+
+                        for (Unit unit : units) {
+                            if (!disablecheckUnits.contains(unit)) {
+                                unit.setDisablecheck(false);
+                                isSaveDisable = false;
+                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                            }
+                        }
+                    }else {
+                        List<Unit> disablecheckUnits = new ArrayList<Unit>();
+                        disablecheckUnits.addAll(selected);
+                        disablecheckUnits.addAll(added);
+                        disablecheckUnits.addAll(removed);
+
+                        for (Unit unit : units) {
+                            if (!disablecheckUnits.contains(unit)) {
+                                unit.setDisablecheck(true);
+                                isSaveDisable = true;
+                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                            }
+                        }
                     }
 
 //                    if ((added.size() - removed.size()) < maxUnitForAdding) {
-                        unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
 //                    }
                     break;
                 case R.id.tv_my_date:
@@ -339,11 +367,11 @@ public class AddUnitsViewModel extends BaseViewModel {
                         }
 
 
-                        for(ProgramFilter pf : data){
-                            if(pf.getInternalName().equals("subject")){
+                        for (ProgramFilter pf : data) {
+                            if (pf.getInternalName().equals("subject")) {
 
-                                for(ProgramFilterTag tag : pf.getTags()){
-                                    if(tag.getSelected()){
+                                for (ProgramFilterTag tag : pf.getTags()) {
+                                    if (tag.getSelected()) {
                                         SelectedFilter sf = new SelectedFilter();
                                         sf.setInternal_name(pf.getInternalName());
                                         sf.setDisplay_name(pf.getDisplayName());
@@ -623,7 +651,13 @@ public class AddUnitsViewModel extends BaseViewModel {
         int n = 0;
         for (Unit unit : data) {
             if (!units.contains(unit)) {
-                units.add(unit);
+                if(isSaveDisable) {
+                    unit.setDisablecheck(true);
+                    disablecheckUnits.add(unit);
+                    units.add(unit);
+                }else {
+                    units.add(unit);
+                }
                 newItemsAdded = true;
                 n++;
             }
@@ -633,6 +667,19 @@ public class AddUnitsViewModel extends BaseViewModel {
             unitsAdapter.notifyItemRangeInserted(units.size() - n, n);
         }
         mActivity.hideLoading();
+//        if(isSaveDisable) {
+//            disablecheckUnits.addAll(selected);
+//            disablecheckUnits.addAll(added);
+//            disablecheckUnits.addAll(removed);
+//
+//            for (Unit unit : units) {
+//                if (!disablecheckUnits.contains(unit)) {
+//                    unit.setDisablecheck(true);
+//                    isSaveDisable = false;
+//                    unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+//                }
+//            }
+//        }
         toggleEmptyVisibility();
     }
 
@@ -649,7 +696,6 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
     public void savePeriod() {
-       if(!isSaveDisable) {
             mActivity.showLoading();
             List<String> addedIds = new ArrayList<>();
             for (Unit unit : added) {
@@ -668,7 +714,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             mActivity.hideLoading();
                             mActivity.showLongToast(mActivity.getString(R.string.period_saved_successed));
                             EventBus.getDefault().post(
-                                    new PeriodSavedEvent(periodId, added.size() - removed.size(),pointAdded));
+                                    new PeriodSavedEvent(periodId, added.size() - removed.size(), pointAdded));
                             mActivity.onBackPressed();
                         }
 
@@ -678,14 +724,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                             mActivity.showLongSnack(e.getLocalizedMessage());
                         }
                     });
-        }else {
-            Toast.makeText(mActivity,
-                    "You cannot add unit more than "+maxUnitForAdding+" at a time.",
-                    Toast.LENGTH_LONG).show();
-        }
+
 
     }
-
 
 
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
@@ -743,7 +784,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 //                        tags.add((ProgramFilterTag) item.getItem());
 //                    }
 
-                    if(model.getInternalName().equals("subject")){
+                    if (model.getInternalName().equals("subject")) {
                         pointAdded = 0;
                     }
                     SelectedFilter sf = new SelectedFilter();
@@ -832,11 +873,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
                 unitBinding.checkbox.setVisibility(View.VISIBLE);
-//                if(!isSaveDisable){
-//                    unitBinding.checkbox.setEnabled(true);
-//                }else {
-//                    unitBinding.checkbox.setEnabled(false);
-//                }
+                if (model.isDisablecheck()) {
+                    unitBinding.checkbox.setEnabled(false);
+                } else unitBinding.checkbox.setEnabled(true);
 
                 if (selected.contains(model)) {
                     unitBinding.checkbox.setChecked(true);
@@ -993,11 +1032,11 @@ public class AddUnitsViewModel extends BaseViewModel {
     }
 
 
-    private void getUnitConfiguration(){
+    private void getUnitConfiguration() {
         mDataManager.getConfiguration(new OnResponseCallback<UnitConfiguration>() {
             @Override
             public void onSuccess(UnitConfiguration data) {
-                if(data!=null) {
+                if (data != null) {
                     maxUnitForAdding = data.getMAX_ALLOWED_ADD_UNIT();
                 }
             }

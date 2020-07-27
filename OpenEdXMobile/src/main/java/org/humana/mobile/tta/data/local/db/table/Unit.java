@@ -95,6 +95,17 @@ public class Unit {
     @SerializedName("isPublish")
     private boolean isPublish;
 
+
+    public boolean isDisablecheck() {
+        return disablecheck;
+    }
+
+    public void setDisablecheck(boolean disablecheck) {
+        this.disablecheck = disablecheck;
+    }
+
+    private boolean disablecheck;
+
     public String getDesc() {
         return desc;
     }

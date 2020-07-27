@@ -290,7 +290,8 @@ public class DataManager extends BaseRoboInjector {
                     mDataManager = new DataManager(context, RetrofitServiceUtil.create(context, true),
                             new LocalDataSource(Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
                                     .addMigrations(TADatabase.MIGRATION_5_6, TADatabase.MIGRATION_6_7,
-                                            TADatabase.MIGRATION_7_8)
+                                            TADatabase.MIGRATION_7_8,
+                                            TADatabase.MIGRATION_8_9)
                                     .fallbackToDestructiveMigration()
                                     .build()));
                 }
@@ -304,7 +305,8 @@ public class DataManager extends BaseRoboInjector {
         mLocalDataSource = new LocalDataSource(
                 Room.databaseBuilder(context, TADatabase.class, TA_DATABASE)
                         .addMigrations(TADatabase.MIGRATION_5_6, TADatabase.MIGRATION_6_7,
-                                TADatabase.MIGRATION_7_8)
+                                TADatabase.MIGRATION_7_8,
+                                TADatabase.MIGRATION_8_9)
                         .fallbackToDestructiveMigration()
                         .build());
     }

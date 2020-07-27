@@ -40,6 +40,8 @@ import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.local.db.table.User;
 
+import java.io.IOException;
+
 @Database(
         entities = {
                 User.class,
@@ -59,7 +61,7 @@ import org.humana.mobile.tta.data.local.db.table.User;
                 CurricullamChaptersModel.class,
                 DownloadPeriodDesc.class,
         },
-        version = 8,
+        version = 9,
         exportSchema = false
 )
 @TypeConverters({DbTypeConverters.class})
@@ -116,6 +118,13 @@ public abstract class TADatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE period ADD COLUMN total_points TEXT");
             database.execSQL("ALTER TABLE period ADD COLUMN completed_points TEXT");
+        }
+    };
+    public static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE unit ADD COLUMN disablecheck BOOLEAN");
+
         }
     };
 }
