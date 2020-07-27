@@ -39,6 +39,7 @@ import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.data.model.program.UnitConfiguration;
 import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.data.model.search.FilterSection;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
@@ -374,6 +375,10 @@ public class TaAPI {
 
     public Call<List<ProgramUser>> getUsers(String programId, String sectionId, int take, int skip){
         return taService.getUsers(programId, sectionId, take, skip);
+    }
+
+    public Call<UnitConfiguration> getUnitConfiguration(){
+        return taService.getUnitConfiguration();
     }
 
     public Call<List<ProgramUser>> getPendingUsers(String programId, String sectionId, int take, int skip){

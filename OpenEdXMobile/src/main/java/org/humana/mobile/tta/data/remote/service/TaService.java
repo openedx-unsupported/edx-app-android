@@ -38,6 +38,7 @@ import org.humana.mobile.tta.data.local.db.table.CurricullamModel;
 import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
+import org.humana.mobile.tta.data.model.program.UnitConfiguration;
 import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
 
@@ -292,4 +293,7 @@ public interface TaService {
 
     @POST(ApiConstants.URL_MX_SEND_NOTIFICATION)
     Call<SuccessResponse> sendNotification(@Body Map<String, Object> parameters);
+
+    @GET(ApiConstants.URL_MX_GET_UNIT_CONFIGURATION)
+    Call<UnitConfiguration> getUnitConfiguration();
 }

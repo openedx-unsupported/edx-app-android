@@ -19,6 +19,7 @@ public class AddUnitsActivity extends BaseVMActivity {
     private String periodName;
     private EnrolledCoursesResponse course;
     private Long selectedDate = 0L;
+    private long total_points;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +31,8 @@ public class AddUnitsActivity extends BaseVMActivity {
             getBundledData(savedInstanceState);
         }
 
-        viewModel = new AddUnitsViewModel(this, periodId, periodName, course, selectedDate);
+        viewModel = new AddUnitsViewModel(this, periodId,
+                periodName, course, selectedDate, total_points);
         binding(R.layout.t_activity_add_units, viewModel);
         viewModel.registerEventBus();
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -58,7 +60,9 @@ public class AddUnitsActivity extends BaseVMActivity {
         if (periodId != 0){
             outState.putLong(Constants.KEY_PERIOD_ID, periodId);
         }
-
+        if (total_points != 0){
+            outState.putLong("total_points", total_points);
+        }
     }
 
     private void getBundledData(Bundle parameters){
@@ -73,6 +77,9 @@ public class AddUnitsActivity extends BaseVMActivity {
         }
         if (parameters.containsKey(Router.EXTRA_COURSE_DATA)){
             course = (EnrolledCoursesResponse) parameters.getSerializable(Router.EXTRA_COURSE_DATA);
+        }
+        if (parameters.containsKey("total_points")){
+            total_points = parameters.getLong("total_points");
         }
     }
 }

@@ -103,6 +103,7 @@ import org.humana.mobile.tta.data.model.program.NotificationCountResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramUser;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
+import org.humana.mobile.tta.data.model.program.UnitConfiguration;
 import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.data.model.search.FilterSection;
 import org.humana.mobile.tta.data.model.search.SearchFilter;
@@ -176,6 +177,7 @@ import org.humana.mobile.tta.task.program.CreatePeriodTask;
 import org.humana.mobile.tta.task.program.GetAllUnitsTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromCacheTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromServerTask;
+import org.humana.mobile.tta.task.program.GetConfigurationUnitTask;
 import org.humana.mobile.tta.task.program.GetCourseComponentTask;
 import org.humana.mobile.tta.task.program.GetCurricullamTask;
 import org.humana.mobile.tta.task.program.GetNotificationCountTask;
@@ -4289,6 +4291,34 @@ public class DataManager extends BaseRoboInjector {
                     super.onSuccess(units);
                     if (units == null || units.isEmpty()) {
                         callback.onFailure(new TaException("No units are pending for approval"));
+                        return;
+                    }
+
+                    callback.onSuccess(units);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+
+    public void getConfiguration(OnResponseCallback<UnitConfiguration> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetConfigurationUnitTask(context) {
+                @Override
+                protected void onSuccess(UnitConfiguration units) throws Exception {
+                    super.onSuccess(units);
+                    if (units == null) {
+                        callback.onFailure(new TaException("No Configuration"));
                         return;
                     }
 

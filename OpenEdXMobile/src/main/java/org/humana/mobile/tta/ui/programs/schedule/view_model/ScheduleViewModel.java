@@ -200,6 +200,7 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
                     Bundle parameters = new Bundle();
                     parameters.putString(Constants.KEY_PERIOD_NAME, item.getTitle());
                     parameters.putLong(Constants.KEY_PERIOD_ID, item.getId());
+                    parameters.putLong("total_points", item.getTotal_points());
                     parameters.putSerializable(Router.EXTRA_COURSE_DATA, ScheduleViewModel.this.course);
                     ActivityUtil.gotoPage(mActivity, AddUnitsActivity.class, parameters);
                     break;
@@ -538,8 +539,11 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         period.setId(event.getPeriodId());
         int position = periodAdapter.getItemPosition(period);
         if (position >= 0) {
+            int totalPoints = 0;
             Period p = periodList.get(position);
+            totalPoints = p.getTotal_points();
             p.setTotalCount(p.getTotalCount() + event.getUnitsCountChange());
+            p.setTotal_points((int) event.getPointCountChange() + totalPoints);
             periodAdapter.notifyItemChanged(position);
         }
     }

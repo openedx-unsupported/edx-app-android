@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maurya.mx.mxlib.core.MxFiniteAdapter;
@@ -33,6 +34,7 @@ import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.program.ProgramFilter;
 import org.humana.mobile.tta.data.model.program.ProgramFilterTag;
 import org.humana.mobile.tta.data.model.program.SelectedFilter;
+import org.humana.mobile.tta.data.model.program.UnitConfiguration;
 import org.humana.mobile.tta.data.model.program.UnitPublish;
 import org.humana.mobile.tta.event.CourseEnrolledEvent;
 import org.humana.mobile.tta.event.program.PeriodSavedEvent;
@@ -89,6 +91,10 @@ public class AddUnitsViewModel extends BaseViewModel {
     private List<SelectedFilter> selectedFilter;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+    public boolean isSaveDisable = false;
+    private long pointAdded= 0;
+
+    private int maxUnitForAdding;
 
     public MxInfiniteAdapter.OnLoadMoreListener loadMoreListener = page -> {
         if (allLoaded)
@@ -100,13 +106,14 @@ public class AddUnitsViewModel extends BaseViewModel {
 
     public AddUnitsViewModel(BaseVMActivity activity, long periodId, String periodName,
                              EnrolledCoursesResponse course,
-                             Long selectedDate) {
+                             Long selectedDate, long total_points) {
         super(activity);
 
         this.course = course;
         this.periodId = periodId;
         this.periodName.set(periodName);
         this.selectedDate = selectedDate;
+//        this.pointAdded = total_points;
         emptyVisible.set(false);
         units = new ArrayList<>();
         selectedOriginal = new ArrayList<>();
@@ -124,8 +131,8 @@ public class AddUnitsViewModel extends BaseViewModel {
         changesMade = true;
         isUnitModePeriod = true;
 
-        selectedFilter=new ArrayList<>();
-        selectedFilter= mDataManager.getSelectedFilters();
+        selectedFilter = new ArrayList<>();
+        selectedFilter = mDataManager.getSelectedFilters();
 
         unitsAdapter = new UnitsAdapter(mActivity);
         filtersAdapter = new FiltersAdapter(mActivity);
@@ -137,53 +144,77 @@ public class AddUnitsViewModel extends BaseViewModel {
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mDataManager.getLoginPrefs().getUsername());
         bundle.putString(FirebaseAnalytics.Param.CONTENT, mDataManager.getLoginPrefs().getRole());
         bundle.putString(FirebaseAnalytics.Param.DESTINATION, "Add units");
-        mFirebaseAnalytics.setCurrentScreen(mActivity,"Add units","Fragment");
+        mFirebaseAnalytics.setCurrentScreen(mActivity, "Add units", "Fragment");
         mFirebaseAnalytics.setUserId(mDataManager.getLoginPrefs().getUsername());
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         unitsAdapter.setItemClickListener((view, item) -> {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.layout_checkbox:
                 case R.id.checkbox:
-
-                    if (selected.contains(item)){
-                        selected.remove(item);
+                    if (selected.contains(item)) {
+                            selected.remove(item);
                     } else {
-                        if (selectedDate!=0){
-                            item.setMyDate(selectedDate);
-                            proposedDateAdded.put(item.getId(), selectedDate);
-                            selected.add(item);
+                        if (selectedDate != 0) {
+                                item.setMyDate(selectedDate);
+                                proposedDateAdded.put(item.getId(), selectedDate);
+                                selected.add(item);
                         }
                         {
-                            selected.add(item);
+                                selected.add(item);
                         }
                     }
 
                     if (selectedOriginal.contains(item)) {
-                        if (removed.contains(item)){
-                            removed.remove(item);
-                            proposedDateModified.remove(item.getId());
-//                            item.setMyDate(0);
-                        }else {
-                            removed.add(item);
+                        if (removed.contains(item)) {
+                                removed.remove(item);
+                                proposedDateModified.remove(item.getId());
+                                pointAdded = pointAdded + item.getUnitHour();
+                        } else {
+                                removed.add(item);
+                                pointAdded = pointAdded - item.getUnitHour();
                         }
                     } else {
-                        if (added.contains(item)){
-                            added.remove(item);
-                            proposedDateAdded.remove(item.getId());
-//                            item.setMyDate(0);
-                        }else {
-                            added.add(item);
+                        if (added.contains(item)) {
+                                added.remove(item);
+                                proposedDateAdded.remove(item.getId());
+                                pointAdded = pointAdded - item.getUnitHour();
+                        } else {
+                                added.add(item);
+                                pointAdded = pointAdded + item.getUnitHour();
+
                         }
                     }
 
-                    unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
+                    if ((added.size() - removed.size()) > maxUnitForAdding) {
+                        for(Unit unit : units){
+                            if(selected.contains(unit) && added.contains(unit)) {
+                                isSaveDisable = true;
+                                unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                            }
+                        }
 
+                        Toast.makeText(mActivity,
+                                "You cannot add unit more than "+maxUnitForAdding+" at a time.",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        for(Unit unit : units){
+                                if(selected.contains(unit) && added.contains(unit)) {
+                                    isSaveDisable = false;
+                                    unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
+                                }
+                        }
+                    }
+
+//                    if ((added.size() - removed.size()) < maxUnitForAdding) {
+                        unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(item));
+//                    }
                     break;
                 case R.id.tv_my_date:
                     String title;
-                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())){
+                    if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Instructor.name())) {
                         title = mActivity.getString(R.string.proposed_date);
-                    }else {
+                    } else {
                         title = mActivity.getString(R.string.my_date);
                     }
                     showDatePicker(item, title);
@@ -202,6 +233,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
         mActivity.showLoading();
         fetchFilters();
+        getUnitConfiguration();
 //        fetchData();
     }
 
@@ -249,7 +281,7 @@ public class AddUnitsViewModel extends BaseViewModel {
     public void onEventMainThread(ProgramFilterSavedEvent event) {
         changesMade = true;
         allLoaded = false;
-        if (event!=null) {
+        if (event != null) {
             filters.clear();
             filters.addAll(event.getProgramFilters());
         }
@@ -271,14 +303,14 @@ public class AddUnitsViewModel extends BaseViewModel {
         EventBus.getDefault().unregister(this);
     }
 
-    private void showDatePicker(Unit unit, String title){
-        DateUtil.showDatePicker(mActivity, unit.getMyDate(),title, new OnResponseCallback<Long>() {
+    private void showDatePicker(Unit unit, String title) {
+        DateUtil.showDatePicker(mActivity, unit.getMyDate(), title, new OnResponseCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
                 unit.setMyDate(data);
                 unitsAdapter.notifyItemChanged(unitsAdapter.getItemPosition(unit));
 
-                if (selectedOriginal.contains(unit)){
+                if (selectedOriginal.contains(unit)) {
                     proposedDateModified.put(unit.getId(), data);
                 } else {
                     proposedDateAdded.put(unit.getId(), data);
@@ -294,7 +326,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
     private void fetchFilters() {
         mDataManager.getProgramFilters(mDataManager.getLoginPrefs().getProgramId(),
-                mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(),filters,
+                mDataManager.getLoginPrefs().getSectionId(), ShowIn.addunits.name(), filters,
                 new OnResponseCallback<List<ProgramFilter>>() {
                     @Override
                     public void onSuccess(List<ProgramFilter> data) {
@@ -306,6 +338,25 @@ public class AddUnitsViewModel extends BaseViewModel {
                             filtersVisible.set(false);
                         }
 
+
+                        for(ProgramFilter pf : data){
+                            if(pf.getInternalName().equals("subject")){
+
+                                for(ProgramFilterTag tag : pf.getTags()){
+                                    if(tag.getSelected()){
+                                        SelectedFilter sf = new SelectedFilter();
+                                        sf.setInternal_name(pf.getInternalName());
+                                        sf.setDisplay_name(pf.getDisplayName());
+                                        sf.setSelected_tag(tag.getDisplayName());
+                                        sf.setSelected_tag_item(tag);
+                                        mDataManager.updateSelectedFilters(sf);
+                                        changesMade = true;
+                                    }
+                                }
+                            }
+                        }
+
+
                         fetchData();
                     }
 
@@ -316,78 +367,78 @@ public class AddUnitsViewModel extends BaseViewModel {
                 });
 
     }
+
     private void getUnitPublish(Unit unit) {
         String unitId = AppUtil.encode(unit.getId());
         mDataManager.getUnitPublish(unitId,
                 new OnResponseCallback<UnitPublish>() {
                     @Override
                     public void onSuccess(UnitPublish data) {
-                       if (data !=null && data.isPublish){
-                           boolean ssp = selectedOriginal.contains(unit);
-                           EnrolledCoursesResponse c;
-                           if (ssp) {
-                               c = course;
-                           } else {
-                               c = parentCourse;
-                           }
+                        if (data != null && data.isPublish) {
+                            boolean ssp = selectedOriginal.contains(unit);
+                            EnrolledCoursesResponse c;
+                            if (ssp) {
+                                c = course;
+                            } else {
+                                c = parentCourse;
+                            }
 
-                           if (c == null) {
+                            if (c == null) {
 
-                               String courseId;
-                               if (ssp) {
-                                   courseId = mDataManager.getLoginPrefs().getProgramId();
-                               } else {
-                                   courseId = mDataManager.getLoginPrefs().getParentId();
-                               }
-                               mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
-                                   @Override
-                                   public void onSuccess(ResponseBody responseBody) {
+                                String courseId;
+                                if (ssp) {
+                                    courseId = mDataManager.getLoginPrefs().getProgramId();
+                                } else {
+                                    courseId = mDataManager.getLoginPrefs().getParentId();
+                                }
+                                mDataManager.enrolInCourse(courseId, new OnResponseCallback<ResponseBody>() {
+                                    @Override
+                                    public void onSuccess(ResponseBody responseBody) {
 
-                                       mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
-                                           @Override
-                                           public void onSuccess(List<EnrolledCoursesResponse> data) {
-                                               if (courseId != null) {
-                                                   for (EnrolledCoursesResponse response : data) {
-                                                       if (response.getCourse().getId().trim().toLowerCase()
-                                                               .equals(courseId.trim().toLowerCase())) {
-                                                           if (ssp) {
-                                                               AddUnitsViewModel.this.course = response;
-                                                               EventBus.getDefault().post(new CourseEnrolledEvent(response));
-                                                           } else {
-                                                               AddUnitsViewModel.this.parentCourse = response;
-                                                           }
-                                                           getBlockComponent(unit);
-                                                           break;
-                                                       }
-                                                   }
-                                               } else {
-                                                   mActivity.hideLoading();
-                                               }
-                                           }
+                                        mDataManager.getenrolledCourseByOrg(Constants.KEY_HUMANA, new OnResponseCallback<List<EnrolledCoursesResponse>>() {
+                                            @Override
+                                            public void onSuccess(List<EnrolledCoursesResponse> data) {
+                                                if (courseId != null) {
+                                                    for (EnrolledCoursesResponse response : data) {
+                                                        if (response.getCourse().getId().trim().toLowerCase()
+                                                                .equals(courseId.trim().toLowerCase())) {
+                                                            if (ssp) {
+                                                                AddUnitsViewModel.this.course = response;
+                                                                EventBus.getDefault().post(new CourseEnrolledEvent(response));
+                                                            } else {
+                                                                AddUnitsViewModel.this.parentCourse = response;
+                                                            }
+                                                            getBlockComponent(unit);
+                                                            break;
+                                                        }
+                                                    }
+                                                } else {
+                                                    mActivity.hideLoading();
+                                                }
+                                            }
 
-                                           @Override
-                                           public void onFailure(Exception e) {
-                                               mActivity.hideLoading();
-                                               mActivity.showLongSnack("You're not enrolled in the program");
-                                           }
-                                       });
-                                   }
+                                            @Override
+                                            public void onFailure(Exception e) {
+                                                mActivity.hideLoading();
+                                                mActivity.showLongSnack("You're not enrolled in the program");
+                                            }
+                                        });
+                                    }
 
-                                   @Override
-                                   public void onFailure(Exception e) {
-                                       mActivity.hideLoading();
-                                       mActivity.showLongSnack("enroll failure");
-                                   }
-                               });
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        mActivity.hideLoading();
+                                        mActivity.showLongSnack("enroll failure");
+                                    }
+                                });
 
-                           } else {
-                               getBlockComponent(unit);
-                           }
-                       }
-                       else{
-                           mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
-                           mActivity.hideLoading();
-                       }
+                            } else {
+                                getBlockComponent(unit);
+                            }
+                        } else {
+                            mActivity.showShortSnack(mActivity.getString(R.string.unit_not_published));
+                            mActivity.hideLoading();
+                        }
                     }
 
                     @Override
@@ -399,9 +450,9 @@ public class AddUnitsViewModel extends BaseViewModel {
 
     }
 
-    public void fetchData(){
+    public void fetchData() {
         mActivity.showLoading();
-        if (changesMade){
+        if (changesMade) {
             units.clear();
             selectedOriginal.clear();
             unselectedOriginal.clear();
@@ -420,7 +471,7 @@ public class AddUnitsViewModel extends BaseViewModel {
 
     }
 
-    private void setUnitFilters(){
+    private void setUnitFilters() {
         if (filters != null)
             filters.clear();
         if (allFilters == null || allFilters.isEmpty()) {
@@ -450,7 +501,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                 if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                     for (ProgramFilterTag tag : filter.getTags()) {
                         if (selected.getSelected_tag() != null) {
-                            if (selected.getSelected_tag_item()!=null) {
+                            if (selected.getSelected_tag_item() != null) {
                                 if (selected.getSelected_tag_item().equals(tag)) {
                                     selectedTags.add(tag);
                                     ProgramFilter pf = new ProgramFilter();
@@ -465,7 +516,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                                     }
                                     break;
                                 }
-                            }else {
+                            } else {
                                 if (selected.getSelected_tag().equals(tag.getDisplayName())) {
                                     selectedTags.add(tag);
                                     ProgramFilter pf = new ProgramFilter();
@@ -493,9 +544,9 @@ public class AddUnitsViewModel extends BaseViewModel {
     private void fetchUnits() {
 
         if (isUnitModePeriod) {
-            mDataManager.getUnits(filters, searchText.get(),mDataManager.getLoginPrefs().getProgramId(),
-                    mDataManager.getLoginPrefs().getSectionId(),mDataManager.getLoginPrefs().getRole(),"",
-                    periodId ,take, skip,0L,0L,
+            mDataManager.getUnits(filters, searchText.get(), mDataManager.getLoginPrefs().getProgramId(),
+                    mDataManager.getLoginPrefs().getSectionId(), mDataManager.getLoginPrefs().getRole(), "",
+                    periodId, take, skip, 0L, 0L,
                     new OnResponseCallback<List<Unit>>() {
                         @Override
                         public void onSuccess(List<Unit> data) {
@@ -504,19 +555,18 @@ public class AddUnitsViewModel extends BaseViewModel {
                                 skip = -1;
                             }
 
-                            for (Unit unit: data){
-                                if (!selectedOriginal.contains(unit)){
+                            for (Unit unit : data) {
+                                if (!selectedOriginal.contains(unit)) {
                                     selectedOriginal.add(unit);
                                 }
                             }
-                            for (Unit unit: data){
-                                if (!selected.contains(unit)){
+                            for (Unit unit : data) {
+                                if (!selected.contains(unit)) {
                                     selected.add(unit);
                                 }
                             }
                             populateUnits(data);
 //                            unitsAdapter.setLoadingDone();
-
 
                         }
 
@@ -533,9 +583,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                     });
 
         } else {
-            if (unitsAdapter.getItemCount()==0){
+            if (unitsAdapter.getItemCount() == 0) {
                 mActivity.showLoading();
-            }else {
+            } else {
                 mActivity.hideLoading();
             }
             mDataManager.getAllUnits(filters, mDataManager.getLoginPrefs().getProgramId(),
@@ -547,8 +597,8 @@ public class AddUnitsViewModel extends BaseViewModel {
                                 allLoaded = true;
                             }
 
-                            for (Unit unit: data){
-                                if (!unselectedOriginal.contains(unit) && !selected.contains(unit)){
+                            for (Unit unit : data) {
+                                if (!unselectedOriginal.contains(unit) && !selected.contains(unit)) {
                                     unselectedOriginal.add(unit);
                                 }
                             }
@@ -598,38 +648,45 @@ public class AddUnitsViewModel extends BaseViewModel {
         }
     }
 
-    public void savePeriod(){
-        mActivity.showLoading();
+    public void savePeriod() {
+       if(!isSaveDisable) {
+            mActivity.showLoading();
+            List<String> addedIds = new ArrayList<>();
+            for (Unit unit : added) {
+                addedIds.add(unit.getId());
+            }
 
-        List<String> addedIds = new ArrayList<>();
-        for (Unit unit: added){
-            addedIds.add(unit.getId());
+            List<String> removedIds = new ArrayList<>();
+            for (Unit unit : removed) {
+                removedIds.add(unit.getId());
+            }
+
+            mDataManager.savePeriod(periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded,
+                    new OnResponseCallback<SuccessResponse>() {
+                        @Override
+                        public void onSuccess(SuccessResponse data) {
+                            mActivity.hideLoading();
+                            mActivity.showLongToast(mActivity.getString(R.string.period_saved_successed));
+                            EventBus.getDefault().post(
+                                    new PeriodSavedEvent(periodId, added.size() - removed.size(),pointAdded));
+                            mActivity.onBackPressed();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            mActivity.hideLoading();
+                            mActivity.showLongSnack(e.getLocalizedMessage());
+                        }
+                    });
+        }else {
+            Toast.makeText(mActivity,
+                    "You cannot add unit more than "+maxUnitForAdding+" at a time.",
+                    Toast.LENGTH_LONG).show();
         }
-
-        List<String> removedIds = new ArrayList<>();
-        for (Unit unit: removed){
-            removedIds.add(unit.getId());
-        }
-
-        mDataManager.savePeriod(periodId, addedIds, removedIds, proposedDateModified, proposedDateAdded,
-                new OnResponseCallback<SuccessResponse>() {
-                    @Override
-                    public void onSuccess(SuccessResponse data) {
-                        mActivity.hideLoading();
-                        mActivity.showLongToast(mActivity.getString(R.string.period_saved_successed));
-                        EventBus.getDefault().post(
-                                new PeriodSavedEvent(periodId, added.size() - removed.size()));
-                        mActivity.onBackPressed();
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        mActivity.hideLoading();
-                        mActivity.showLongSnack(e.getLocalizedMessage());
-                    }
-                });
 
     }
+
+
 
     public class FiltersAdapter extends MxFiniteAdapter<ProgramFilter> {
         /**
@@ -662,12 +719,12 @@ public class AddUnitsViewModel extends BaseViewModel {
                     for (ProgramFilterTag tag : model.getTags()) {
                         for (SelectedFilter item : selectedFilter) {
                             if (item.getInternal_name().equalsIgnoreCase(model.getInternalName())) {
-                                if (item.getSelected_tag_item()!=null) {
+                                if (item.getSelected_tag_item() != null) {
                                     if (item.getSelected_tag_item().equals(tag)) {
                                         dropDownBinding.filterDropDown.setSelection(item.getSelected_tag_item());
                                     }
                                     break;
-                                }else {
+                                } else {
                                     if (item.getSelected_tag().equals(model.getDisplayName())) {
                                         dropDownBinding.filterDropDown.setSelection(item.getDisplay_name());
                                     }
@@ -686,6 +743,9 @@ public class AddUnitsViewModel extends BaseViewModel {
 //                        tags.add((ProgramFilterTag) item.getItem());
 //                    }
 
+                    if(model.getInternalName().equals("subject")){
+                        pointAdded = 0;
+                    }
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
                     sf.setDisplay_name(model.getDisplayName());
@@ -704,7 +764,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                             if (selected.getInternal_name().equalsIgnoreCase(filter.getInternalName())) {
                                 for (ProgramFilterTag tag : filter.getTags()) {
                                     if (selected.getSelected_tag() != null) {
-                                        if (selected.getSelected_tag_item()!=null) {
+                                        if (selected.getSelected_tag_item() != null) {
                                             if (selected.getSelected_tag_item().equals(tag)) {
                                                 selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
@@ -719,7 +779,7 @@ public class AddUnitsViewModel extends BaseViewModel {
                                                 }
                                                 break;
                                             }
-                                        }else {
+                                        } else {
                                             if (selected.getSelected_tag().equals(tag.getDisplayName())) {
                                                 selectedTags.add(tag);
                                                 ProgramFilter pf = new ProgramFilter();
@@ -771,12 +831,17 @@ public class AddUnitsViewModel extends BaseViewModel {
             if (binding instanceof TRowUnitBinding) {
                 TRowUnitBinding unitBinding = (TRowUnitBinding) binding;
                 unitBinding.setUnit(model);
-
                 unitBinding.checkbox.setVisibility(View.VISIBLE);
-                if (selected.contains(model)){
+//                if(!isSaveDisable){
+//                    unitBinding.checkbox.setEnabled(true);
+//                }else {
+//                    unitBinding.checkbox.setEnabled(false);
+//                }
+
+                if (selected.contains(model)) {
                     unitBinding.checkbox.setChecked(true);
 
-                    if (model.getMyDate() > 0){
+                    if (model.getMyDate() > 0) {
                         unitBinding.tvMyDate.setText(DateUtil.getDisplayDate(model.getMyDate()));
                     } else {
                         unitBinding.tvMyDate.setText(R.string.change_date);
@@ -789,15 +854,16 @@ public class AddUnitsViewModel extends BaseViewModel {
 
                 unitBinding.unitCode.setText(model.getTitle());
                 unitBinding.unitTitle.setText(model.getCode() + "  |  " + model.getType() + " | "
-                        + model.getUnitHour() + " "+ mActivity.getResources().getString(R.string.point_txt));
+                        + model.getUnitHour() + " " + mActivity.getResources().getString(R.string.point_txt));
                 try {
                     if (!model.getStatus().equals("") || model.getStatus() != null) {
                         if (model.getStatusDate() > 0) {
-                            if ( DateUtil.getDisplayDate(model.getStatusDate()).equals("")) {
+                            if (DateUtil.getDisplayDate(model.getStatusDate()).equals("")) {
                                 unitBinding.tvStaffDate.setText(model.getStatus() + " : "
                                         + DateUtil.getDisplayDate(model.getStatusDate()));
                                 unitBinding.tvStaffDate.setVisibility(View.VISIBLE);
-                            }unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
+                            }
+                            unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
                         }
                     } else {
                         unitBinding.tvStaffDate.setVisibility(View.INVISIBLE);
@@ -811,49 +877,48 @@ public class AddUnitsViewModel extends BaseViewModel {
                         } else {
                             unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                         }
-                    }else {
+                    } else {
                         unitBinding.tvSubmittedDate.setVisibility(View.INVISIBLE);
                     }
                     if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())) {
                         if (!model.getStatus().equals("")) {
                             unitBinding.tvComment.setText(model.getStatus() + " comments : " + model.getComment());
-                            if(model.getStatus().equals("Submitted")){
+                            if (model.getStatus().equals("Submitted")) {
                                 unitBinding.tvComment.setVisibility(View.GONE);
-                            }else {
+                            } else {
                                 unitBinding.tvComment.setVisibility(View.VISIBLE);
                             }
-                        }
-                        else {
+                        } else {
                             unitBinding.tvComment.setVisibility(View.GONE);
                         }
-                    }else {
+                    } else {
                         unitBinding.tvComment.setVisibility(View.GONE);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())){
+                if (model.getType().toLowerCase().equals(mActivity.getString(R.string.course).toLowerCase())) {
                     if (mDataManager.getLoginPrefs().getRole() != null
                             && mDataManager.getLoginPrefs().getRole()
-                            .equals(UserRole.Student.name())){
+                            .equals(UserRole.Student.name())) {
                         unitBinding.tvMyDate.setEnabled(false);
-                    }else {
+                    } else {
                         unitBinding.tvMyDate.setEnabled(true);
                     }
-                }else {
+                } else {
                     unitBinding.tvMyDate.setEnabled(true);
                 }
 
                 String role = mDataManager.getLoginPrefs().getRole();
-                if (role != null && role.equals(UserRole.Student.name())){
+                if (role != null && role.equals(UserRole.Student.name())) {
                     unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.student_icon,
-                            0,0,0);
-                }else {
+                            0, 0, 0);
+                } else {
                     unitBinding.tvMyDate.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.teacher_icon,
-                            0,0,0);
+                            0, 0, 0);
                 }
 
                 switch (model.getStatus()) {
@@ -918,12 +983,31 @@ public class AddUnitsViewModel extends BaseViewModel {
         }
     };
 
-    public void searchFilter(){
+    public void searchFilter() {
         mActivity.hideLoading();
         isUnitModePeriod = false;
         unitsAdapter.setLoadingDone();
         skip = 0;
         changesMade = true;
         fetchData();
+    }
+
+
+    private void getUnitConfiguration(){
+        mDataManager.getConfiguration(new OnResponseCallback<UnitConfiguration>() {
+            @Override
+            public void onSuccess(UnitConfiguration data) {
+                if(data!=null) {
+                    maxUnitForAdding = data.getMAX_ALLOWED_ADD_UNIT();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                mActivity.hideLoading();
+                mActivity.showLongSnack(e.getLocalizedMessage());
+            }
+        });
+
     }
 }
