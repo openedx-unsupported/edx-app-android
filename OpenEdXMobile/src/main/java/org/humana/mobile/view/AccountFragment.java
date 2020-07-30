@@ -105,7 +105,8 @@ public class AccountFragment extends BaseFragment {
 
         binding.settingsBtn.setOnClickListener(v -> environment.getRouter().showSettings(getActivity()));
 
-        binding.feedbackBtn.setOnClickListener(v -> environment.getRouter()
+        binding.feedbackBtn.setOnClickListener(v ->
+                environment.getRouter()
                 .showFeedbackScreen(getActivity(), getString(R.string.email_subject)));
 
         binding.logoutBtn.setOnClickListener(v ->{

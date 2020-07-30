@@ -116,7 +116,7 @@ public class LibraryViewModel extends BaseViewModel {
         }
         demolist.add("Students");
         demolist.add("Discussion");
-        demolist.add("Curriculum");
+        demolist.add("Library");
 
         try {
             ScheduleFragment scheduleFragment = new ScheduleFragment();

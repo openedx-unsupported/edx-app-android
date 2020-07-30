@@ -140,9 +140,9 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
         mActivity.showLoading();
         isSelected = false;
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.DAY_OF_MONTH);
+//        calendar.set(Calendar.HOUR_OF_DAY, 0);
+//        calendar.set(Calendar.MINUTE, 0);
         currentDate = calendar.getTimeInMillis();
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -827,7 +827,8 @@ public class ScheduleViewModel extends BaseViewModel implements DatePickerDialog
 
                 if (model.getStartDate() > 0) {
                     if (model.getEndDate() > model.getStartDate()) {
-                        if (currentDate <= model.getStartDate() && lastDate >= model.getEndDate()) {
+                        if(model.getStartDate()<=currentDate && model.getEndDate()>=currentDate){
+//                        if (currentDate <= model.getStartDate() && lastDate >= model.getEndDate()) {
                             scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_current_period));
                         } else {
                             scheduleBinding.card.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.humana_card_background));

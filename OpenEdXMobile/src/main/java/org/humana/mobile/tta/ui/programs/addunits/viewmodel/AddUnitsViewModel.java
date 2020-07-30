@@ -225,6 +225,9 @@ public class AddUnitsViewModel extends BaseViewModel {
                         disablecheckUnits.addAll(selected);
                         disablecheckUnits.addAll(added);
                         disablecheckUnits.addAll(removed);
+                        Toast.makeText(mActivity,
+                                "Max "+maxUnitForAdding+" units can be selected.",
+                                Toast.LENGTH_LONG).show();
 
                         for (Unit unit : units) {
                             if (!disablecheckUnits.contains(unit)) {
@@ -784,8 +787,11 @@ public class AddUnitsViewModel extends BaseViewModel {
 //                        tags.add((ProgramFilterTag) item.getItem());
 //                    }
 
+                    isSaveDisable =false;
+                    disablecheckUnits.clear();
                     if (model.getInternalName().equals("subject")) {
                         pointAdded = 0;
+
                     }
                     SelectedFilter sf = new SelectedFilter();
                     sf.setInternal_name(model.getInternalName());
