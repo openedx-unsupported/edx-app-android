@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class UrlUtil {
-    public static final String QUERY_PARAM_SEARCH = "search_query";
+    public static final String QUERY_PARAM_SEARCH = "q";
     public static final String QUERY_PARAM_SUBJECT = "subject";
 
     // Resolves a URL against a base URL. If the url is already absolute,
