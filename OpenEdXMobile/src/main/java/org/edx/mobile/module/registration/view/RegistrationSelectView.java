@@ -28,6 +28,7 @@ public class RegistrationSelectView implements IRegistrationFieldView {
     protected TextInputLayout mTextInputLayout;
     private TextView mInstructionsView;
     private TextView mErrorView;
+    private boolean hasFocusLost = false;
 
     public RegistrationSelectView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
@@ -73,10 +74,13 @@ public class RegistrationSelectView implements IRegistrationFieldView {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!mInputView.hasValue(s.toString().trim())){
+                if (!mInputView.hasValue(s.toString().trim())) {
                     mInputView.setSelectedItem(null);
                 }
-                isValidInput();
+                // Don't show the error until view has lost the focus at least once
+                if (hasFocusLost) {
+                    isValidInput();
+                }
             }
 
             @Override
@@ -87,8 +91,11 @@ public class RegistrationSelectView implements IRegistrationFieldView {
         mInputView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     mInputView.showDropDown();
+                } else {
+                    hasFocusLost = true;
+                    isValidInput();
                 }
             }
         });
