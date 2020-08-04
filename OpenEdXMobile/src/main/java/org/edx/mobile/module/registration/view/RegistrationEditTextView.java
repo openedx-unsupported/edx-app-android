@@ -29,6 +29,7 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
     protected AppCompatEditText mEditText;
     protected TextView mInstructionsTextView;
     protected TextView mErrorTextView;
+    private boolean hasFocusLost = false;
 
     public RegistrationEditTextView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
@@ -92,11 +93,21 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
                     isChangedByUser = true;
                     return;
                 }
-                isValidInput();
+                // Don't show the error until view has lost the focus at least once
+                if (hasFocusLost) {
+                    isValidInput();
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                isValidInput();
+                hasFocusLost = true;
             }
         });
     }
