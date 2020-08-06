@@ -10,9 +10,9 @@ phases:
       # You can switch to an alternate supported version from 1.6.5, 1.7.1, 1.7.2, 1.8.0 or 1.8.1 by using a command like "avm 1.7.1"
       # OR
       # To install a newer version of Appium use the following commands:
-      # - export APPIUM_VERSION=1.8.1
-      # - avm $APPIUM_VERSION
-      # - ln -s /usr/local/avm/versions/$APPIUM_VERSION/node_modules/.bin/appium  /usr/local/avm/versions/$APPIUM_VERSION/node_modules/appium/bin/appium.js
+      - export APPIUM_VERSION=1.18.0
+      - avm $APPIUM_VERSION
+      - ln -s /usr/local/avm/versions/$APPIUM_VERSION/node_modules/.bin/appium  /usr/local/avm/versions/$APPIUM_VERSION/node_modules/appium/bin/appium.js
 
   # The pre-test phase includes commands that setup your test environment.
   pre_test:
