@@ -19,6 +19,7 @@ import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.model.CountResponse;
+import org.humana.mobile.tta.data.model.CourseProgram;
 import org.humana.mobile.tta.data.model.StatusResponse;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.UpdateResponse;
@@ -296,4 +297,7 @@ public interface TaService {
 
     @GET(ApiConstants.URL_MX_GET_UNIT_CONFIGURATION)
     Call<UnitConfiguration> getUnitConfiguration();
+
+    @GET(ApiConstants.URL_MX_GET_PROGRAM_COURSE)
+    Call<CourseProgram> getProgramCourses();
 }

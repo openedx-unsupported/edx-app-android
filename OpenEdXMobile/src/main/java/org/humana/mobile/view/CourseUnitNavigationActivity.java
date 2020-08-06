@@ -101,10 +101,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         unitTitle = savedInstanceState.getString(EXTRA_TITLE,"");
 
 
-        if (!Constants.UNIT_ID.equals(""))
+        /*if (!Constants.UNIT_ID.equals(""))
         {
             mfabDialog.setVisibility(View.VISIBLE);
-        }
+        }*/
 
 
         mfabDialog.setOnClickListener(new View.OnClickListener() {

@@ -76,6 +76,7 @@ import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.model.BaseResponse;
 import org.humana.mobile.tta.data.model.CountResponse;
+import org.humana.mobile.tta.data.model.CourseProgram;
 import org.humana.mobile.tta.data.model.EmptyResponse;
 import org.humana.mobile.tta.data.model.HtmlResponse;
 import org.humana.mobile.tta.data.model.StatusResponse;
@@ -179,6 +180,7 @@ import org.humana.mobile.tta.task.program.GetBlockComponentFromCacheTask;
 import org.humana.mobile.tta.task.program.GetBlockComponentFromServerTask;
 import org.humana.mobile.tta.task.program.GetConfigurationUnitTask;
 import org.humana.mobile.tta.task.program.GetCourseComponentTask;
+import org.humana.mobile.tta.task.program.GetCourseProgramTask;
 import org.humana.mobile.tta.task.program.GetCurricullamTask;
 import org.humana.mobile.tta.task.program.GetNotificationCountTask;
 import org.humana.mobile.tta.task.program.GetPendingUnitsTask;
@@ -4321,6 +4323,33 @@ public class DataManager extends BaseRoboInjector {
                     super.onSuccess(units);
                     if (units == null) {
                         callback.onFailure(new TaException("No Configuration"));
+                        return;
+                    }
+
+                    callback.onSuccess(units);
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    callback.onFailure(ex);
+                }
+            }.execute();
+
+        } else {
+            callback.onFailure(new NoConnectionException(context));
+        }
+
+    }
+    public void getProgramCourse(OnResponseCallback<CourseProgram> callback) {
+
+        if (NetworkUtil.isConnected(context)) {
+
+            new GetCourseProgramTask(context) {
+                @Override
+                protected void onSuccess(CourseProgram units) throws Exception {
+                    super.onSuccess(units);
+                    if (units == null) {
+                        callback.onFailure(new TaException("No Program in courses"));
                         return;
                     }
 

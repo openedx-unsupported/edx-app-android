@@ -382,11 +382,11 @@ public class PendingUnitsListViewModel extends BaseViewModel {
                     itemBinding.textProposedDate.setText(DateUtil.getDisplayDate(model.getStaffDate()));
                 }
                 itemBinding.textDesc.setText(model.getDesc());
-                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
-                    itemBinding.llApproval.setVisibility(View.GONE);
-                }else {
-                    itemBinding.llApproval.setVisibility(View.VISIBLE);
-                }
+//                if (mDataManager.getLoginPrefs().getRole().equals(UserRole.Student.name())){
+//                    itemBinding.llApproval.setVisibility(View.GONE);
+//                }else {
+//                    itemBinding.llApproval.setVisibility(View.VISIBLE);
+//                }
 
                /* if (getItemPosition(model) == 0) {
                     if (!mDataManager.getLoginPrefs().isScheduleTootipSeen()) {

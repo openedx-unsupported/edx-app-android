@@ -10,7 +10,7 @@
         android:icon="@drawable/course"/>
 
     <item android:id="@+id/action_search"
-        android:title="@string/search"
+        android:title="@string/ideas"
         android:icon="@drawable/search"/>
 
     <!--<item android:id="@+id/action_agenda"-->

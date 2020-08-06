@@ -227,10 +227,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         }
 
-        if (Constants.isUnitApprove){
-            linearLayout.setVisibility(View.VISIBLE);
-            approveReturn(Constants.UNIT_ID,unitType,unitTitle, unitDesc);
-        }
+//        if (Constants.isUnitApprove){
+//            linearLayout.setVisibility(View.VISIBLE);
+//            approveReturn(Constants.UNIT_ID,unitType,unitTitle, unitDesc);
+//        }
 
 
 

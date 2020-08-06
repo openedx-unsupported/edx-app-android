@@ -75,6 +75,7 @@
                 android:layout_margin="@dimen/_8px"
                 android:layout_gravity="center"
                 android:id="@+id/ll_approval"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <Button

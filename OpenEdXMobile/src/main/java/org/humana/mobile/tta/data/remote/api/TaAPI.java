@@ -20,6 +20,7 @@ import org.humana.mobile.tta.data.local.db.table.Section;
 import org.humana.mobile.tta.data.local.db.table.Unit;
 import org.humana.mobile.tta.data.local.db.table.UnitStatus;
 import org.humana.mobile.tta.data.model.CountResponse;
+import org.humana.mobile.tta.data.model.CourseProgram;
 import org.humana.mobile.tta.data.model.StatusResponse;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.data.model.UpdateResponse;
@@ -379,6 +380,9 @@ public class TaAPI {
 
     public Call<UnitConfiguration> getUnitConfiguration(){
         return taService.getUnitConfiguration();
+    }
+    public Call<CourseProgram> getProgramCourse(){
+        return taService.getProgramCourses();
     }
 
     public Call<List<ProgramUser>> getPendingUsers(String programId, String sectionId, int take, int skip){

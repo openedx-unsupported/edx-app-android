@@ -26,9 +26,13 @@ import org.humana.mobile.interfaces.RefreshListener;
 import org.humana.mobile.loader.AsyncTaskResult;
 import org.humana.mobile.loader.CoursesAsyncLoader;
 import org.humana.mobile.logger.Logger;
+import org.humana.mobile.model.api.CourseEntry;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.module.db.DataCallback;
 import org.humana.mobile.module.prefs.LoginPrefs;
+import org.humana.mobile.tta.data.DataManager;
+import org.humana.mobile.tta.data.model.CourseProgram;
+import org.humana.mobile.tta.interfaces.OnResponseCallback;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.UiUtil;
 import org.humana.mobile.view.adapters.MyCoursesAdapter;
@@ -58,6 +62,8 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     private LoginPrefs loginPrefs;
 
     private FullScreenErrorNotification errorNotification;
+    private DataManager mDataManager;
+    private List<String> programList;
 
     //TODO: All these callbacks aren't essentially part of MyCoursesListFragment and should move in
     // the Tabs container fragment that's going to be implemented in LEARNER-3251
@@ -65,6 +71,11 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDataManager = DataManager.getInstance(getActivity());
+        programList = new ArrayList<String>();
+        getProgram();
+
+
         adapter = new MyCoursesAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
@@ -144,12 +155,27 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
                     });
         } else if (result.getResult() != null) {
             ArrayList<EnrolledCoursesResponse> newItems = new ArrayList<EnrolledCoursesResponse>(result.getResult());
+            ArrayList<EnrolledCoursesResponse> filteredItems = new ArrayList<EnrolledCoursesResponse>();
 
-            updateDatabaseAfterDownload(newItems);
+            String entry;
 
-            if (result.getResult().size() > 0) {
-                adapter.setItems(newItems);
+            if(result.getResult()!=null) {
+                for (int i = 0; i < newItems.size(); i++) {
+                    EnrolledCoursesResponse response = newItems.get(i);
+                    entry = newItems.get(i).getCourse().getId();
+//                    for (String program : programList) {
+                        if (!programList.contains(entry)) {
+                            filteredItems.add(response);
+                        }
+//                    }
+                }
+                if (filteredItems.size() > 0) {
+                    adapter.setItems(filteredItems);
+                }
+                updateDatabaseAfterDownload(filteredItems);
             }
+
+
             addFindCoursesFooter();
             adapter.notifyDataSetChanged();
 
@@ -296,5 +322,21 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     @Override
     protected boolean isShowingFullScreenError() {
         return errorNotification != null && errorNotification.isShowing();
+    }
+
+    private void getProgram(){
+        mDataManager.getProgramCourse(new OnResponseCallback<CourseProgram>() {
+            @Override
+            public void onSuccess(CourseProgram courseProgram) {
+                if (courseProgram !=null){
+                    programList.addAll(courseProgram.getProgramArray());
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 }

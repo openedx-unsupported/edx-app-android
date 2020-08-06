@@ -12,6 +12,8 @@ import org.humana.mobile.model.api.CourseEntry;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.util.images.CourseCardUtils;
 
+import java.util.List;
+
 
 public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
     private long lastClickTime;
@@ -27,20 +29,20 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
         final CourseCardViewHolder holder = (CourseCardViewHolder) tag;
 
         final CourseEntry courseData = enrollment.getCourse();
-        holder.setCourseTitle(courseData.getName());
-        holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
+            holder.setCourseTitle(courseData.getName());
+            holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
 
-        if (enrollment.getCourse().hasUpdates()) {
-            holder.setHasUpdates(courseData, new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onAnnouncementClicked(enrollment);
-                }
-            });
-        } else {
-            holder.setDetails(CourseCardUtils.getFormattedDate(getContext(), courseData));
+            if (enrollment.getCourse().hasUpdates()) {
+                holder.setHasUpdates(courseData, new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onAnnouncementClicked(enrollment);
+                    }
+                });
+            } else {
+                holder.setDetails(CourseCardUtils.getFormattedDate(getContext(), courseData));
+            }
         }
-    }
 
     @Override
     public BaseViewHolder getTag(View convertView) {

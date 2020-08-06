@@ -226,6 +226,8 @@ public class ApiConstants {
 
     public static final String URL_MX_GET_UNIT_CONFIGURATION = "/mx_humana_lms/api/v1/get_configuration/";
 
+    public static final String URL_MX_GET_PROGRAM_COURSE = "/mx_humana_lms/api/v1/get_programlist/";
+
 
     public static final int STANDARD_PAGE_SIZE = 20;
 
