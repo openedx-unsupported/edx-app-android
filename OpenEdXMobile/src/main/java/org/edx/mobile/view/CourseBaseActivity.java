@@ -12,7 +12,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
-import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -21,7 +20,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
@@ -67,17 +65,11 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
 
     private FullScreenErrorNotification errorNotification;
 
-    private SnackbarErrorNotification snackbarErrorNotification;
-
-    // Reason of usage: Helps in deciding if we want to show a full screen error or a SnackBar.
-    private boolean isInitialServerCallDone = false;
-
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         super.setToolbarAsActionBar();
         errorNotification = new FullScreenErrorNotification(contentLayout);
-        snackbarErrorNotification = new SnackbarErrorNotification(contentLayout);
 
         Bundle bundle = arg0;
         if ( bundle == null ) {
@@ -121,17 +113,12 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
             getHierarchyCall = courseApi.getCourseStructure(blocksApiVersion, courseId);
             getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
                     new ProgressViewController(progressWheel), errorNotification,
-                    snackbarErrorNotification, this) {
+                    null, this) {
                 @Override
                 protected void onResponse(@NonNull final CourseComponent courseComponent) {
                     courseComponentId = courseComponent.getId();
                     invalidateOptionsMenu();
                     onLoadData();
-                }
-
-                @Override
-                protected void onFinish() {
-                    isInitialServerCallDone = true;
                 }
             });
         }
@@ -144,16 +131,12 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
         // after basic initialization
         if (courseComponentId != null) {
             onLoadData();
-            isInitialServerCallDone = true;
         }
     }
 
     @Override
     protected void onOffline() {
         hideLoadingProgress();
-        if (isInitialServerCallDone && !errorNotification.isShowing()) {
-            snackbarErrorNotification.showOfflineError(CourseBaseActivity.this);
-        }
     }
 
     @Override
@@ -218,14 +201,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
             }
         } else {
             onLoadData();
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (NetworkUtil.isConnected(this)) {
-            snackbarErrorNotification.hideError();
         }
     }
 }
