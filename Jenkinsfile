@@ -8,7 +8,7 @@ pipeline {
     environment {
             PIPELINE_JOBS_NAME = 'edx-app-android-pipeline'
             ANDROID_HOME = '/opt/android-sdk-linux'
-            APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
+            APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debug'
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
             AUT_NAME = 'edx-debug-2.22.0.apk'
