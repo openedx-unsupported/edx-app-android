@@ -33,11 +33,6 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     private Handler initializeHandler = new Handler();
     private YouTubePlayerSupportFragment youTubePlayerFragment;
 
-    /**
-     * Flag to check if Youtube Player is in foreground.
-     * It helps to play the player again when the app comes from background to foreground
-     */
-    private boolean isYoutubePlayerInForeground = true;
     private int attempts;
 
     /**
@@ -63,31 +58,34 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser && unit != null) {
+    public void onResume() {
+        super.onResume();
+        if (unit != null) {
             setVideoModel();
             /*
              * This method is not called property when the user leaves quickly the view on the view pager
              * so the youtube player can not be released( only one youtube player instance is allowed by the library)
              * so in order to avoid to create multiple youtube player instances, the youtube player only will be initialize
-             * after a second and if the view is visible to the user.
+             * after minor delay.
              */
-            initializeHandler.postDelayed(this::initializeYoutubePlayer, 1000);
+            initializeHandler.post(this::initializeYoutubePlayer);
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().register(this);
             }
-        } else {
-            releaseYoutubePlayer();
-            initializeHandler.removeCallbacks(null);
-            EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        releaseYoutubePlayer();
+        initializeHandler.removeCallbacks(null);
+        EventBus.getDefault().unregister(this);
     }
 
     public void initializeYoutubePlayer() {
         try {
-            if (getUserVisibleHint() && getActivity() != null && youTubePlayerFragment != null &&
+            if (getActivity() != null && youTubePlayerFragment != null &&
                     NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
                 downloadTranscript();
                 String apiKey = environment.getConfig().getYoutubePlayerConfig().getApiKey();
@@ -136,12 +134,6 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
     @Override
     protected void showClosedCaptionData(TimedTextObject subtitles) {
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        isYoutubePlayerInForeground = false;
     }
 
     @Override
@@ -297,18 +289,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
 
         @Override
         public void onStopped() {
-            /*
-             * `onStopped` callback is called when the player comes from background to foreground,
-             * so checking if player needs to play again here.
-             */
-            if (!isYoutubePlayerInForeground && getUserVisibleHint()) {
-                try {
-                    isYoutubePlayerInForeground = true;
-                    youTubePlayer.play();
-                } catch (Exception error) {
-                    initializeYoutubePlayer();
-                }
-            }
+
         }
 
         @Override
