@@ -92,8 +92,9 @@ class DataBindingHelperUtils {
                             clickListener.onClick(item.link)
                         }
                     }
-                    if (!parentBadgeAdded || (item.isToday() && item.dateBlockBadge == CourseDateType.DUE_NEXT)) {
-                        setBadge(childView.title, item.dateBlockBadge, item.isToday(), null)
+                    if (!parentBadgeAdded || item.dateBlockBadge == CourseDateType.DUE_NEXT) {
+                        // Pass isToday is always false cuz today block should not placed with sub date item
+                        setBadge(childView.title, item.dateBlockBadge, false, null)
                     }
                     linearLayout.addView(childView)
                 }
