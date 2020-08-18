@@ -59,7 +59,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Enforce to intercept single scrolling direction
-        UiUtil.enforceSingleScrollDirection(binding.viewPager2);
+        if (binding != null) {
+            UiUtil.enforceSingleScrollDirection(binding.viewPager2);
+        }
         handleTabSelection(getArguments());
     }
 
