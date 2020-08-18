@@ -52,3 +52,5 @@ switch_to_virtual_env
 install_requirements
 print_message "calling AWS Test run"
 python -v ./resources/trigger_aws_test_run.py $AUT_NAME
+echo -e "\n**************Java version*************\n$1\n"
+java -version
