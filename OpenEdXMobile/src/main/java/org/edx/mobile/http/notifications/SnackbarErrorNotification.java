@@ -74,7 +74,11 @@ public class SnackbarErrorNotification extends ErrorNotification {
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     super.onDismissed(transientBottomBar, event);
-                    snackbar = null;
+                    // Check if visible snackbar instance & dismissed snackbar instance are same, cuz
+                    // receiving `onDismissed` callback for other instances too.
+                    if (snackbar == transientBottomBar) {
+                        snackbar = null;
+                    }
                 }
             });
             // By applying the listener to the button like we have done below, the Snackbar
