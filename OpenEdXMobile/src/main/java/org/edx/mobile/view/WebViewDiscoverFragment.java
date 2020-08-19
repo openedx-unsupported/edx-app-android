@@ -159,13 +159,26 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     private void initSearchView() {
         searchView = toolbarCallbacks.getSearchView();
         if (getUserVisibleHint()) {
-            searchView.setQueryHint(getResources().getString(getQueryHint()));
-            searchView.setOnQueryTextListener(onQueryTextListener);
-            searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+            setupSearchViewListeners();
         }
         if (searchView.hasFocus()) {
             updateTitleVisibility(View.GONE);
         }
+    }
+
+    private void setupSearchViewListeners() {
+        searchView.setQueryHint(getResources().getString(getQueryHint()));
+        searchView.setOnQueryTextListener(onQueryTextListener);
+        searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+        setupEmptyQuerySubmitListener(searchView, onQueryTextListener);
+    }
+
+    private void setupEmptyQuerySubmitListener(SearchView searchView,
+                                               SearchView.OnQueryTextListener onQueryTextListener) {
+        // Inspiration: https://github.com/Foso/Notes/blob/master/Android/EmptySubmitSearchView.java
+        SearchView.SearchAutoComplete searchSrcTextView = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchSrcTextView.setOnEditorActionListener((textView, actionId, event) ->
+                onQueryTextListener.onQueryTextSubmit(searchView.getQuery().toString()));
     }
 
     private void updateTitleVisibility(int visibility) {
@@ -223,9 +236,7 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         if (searchView != null) {
             if (isVisible && isSearchEnabled()) {
                 searchView.setVisibility(View.VISIBLE);
-                searchView.setQueryHint(getResources().getString(getQueryHint()));
-                searchView.setOnQueryTextListener(onQueryTextListener);
-                searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+                setupSearchViewListeners();
             } else {
                 searchView.setVisibility(View.GONE);
             }
