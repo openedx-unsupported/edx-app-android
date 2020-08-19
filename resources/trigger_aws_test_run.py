@@ -247,15 +247,13 @@ def get_test_run(run_arn):
         get_run_details = device_farm.get_run(arn=run_arn)
         run_status = get_run_details['run']['status']
         run_result = get_run_details['run']['result']
-        run_message = get_run_details['run']['message']
         if run_status in RUN_COMPLETED_STATUS:
-            print('Run is {} with {} result {} message'.format(run_status, run_result, run_message))
+            print('Run is {} with {} result'.format(run_status, run_result))
             break
-        print('{} - Waiting for run to finish, currently in {} status with {} result {} message '.format(
+        print('{} - Waiting for run to finish, currently in {} status with {} result '.format(
             wait_try,
             run_status,
-            run_result,
-            run_message
+            run_result
         )
         )
         now = time.time()
