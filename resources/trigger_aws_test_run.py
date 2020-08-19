@@ -215,7 +215,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
               'testSpecArn': test_specs_arn
-              }
+              },
     )
 
     run_arn = schedule_run_result['run']['arn']
@@ -226,8 +226,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test_run['run']['platform'],
         str(test_run['run']['created']),
         test_run['run']['status'],
-        test_run['run']['result'],
-        test_run['run']['message'])
+        test_run['run']['result'])
     )
     return run_arn
 
