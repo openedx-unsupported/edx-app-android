@@ -227,7 +227,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         str(test_run['run']['created']),
         test_run['run']['status'],
         test_run['run']['result'],
-        test_run['run']['message'])
+        test_run['message'])
     )
     return run_arn
 
