@@ -19,6 +19,7 @@ import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
 
 import java.util.HashMap;
@@ -110,7 +111,10 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     }
 
     private void initSearch(@NonNull String query) {
-        final String baseUrl = getInitialUrl();
+        String baseUrl = getInitialUrl();
+        if (baseUrl.contains(QUERY_PARAM_SEARCH)) {
+            baseUrl = UrlUtil.removeQueryParameterFromURL(baseUrl, QUERY_PARAM_SEARCH);
+        }
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put(QUERY_PARAM_SEARCH, query);
         loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
