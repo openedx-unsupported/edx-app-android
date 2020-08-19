@@ -215,19 +215,19 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
               'testSpecArn': test_specs_arn
-              },
+              }
     )
 
     run_arn = schedule_run_result['run']['arn']
 
     test_run = device_farm.get_run(arn=run_arn)
-    print('Run Name - {} on {} is started at {} with status - {} & results - {} & message {}'.format(
+    print('Run Name - {} on {} is started at {} with status - {} & results - {} & messages - {}'.format(
         test_run['run']['name'],
         test_run['run']['platform'],
         str(test_run['run']['created']),
         test_run['run']['status'],
         test_run['run']['result'],
-        test_run['message'])
+        test_run['run']['message'])
     )
     return run_arn
 
@@ -248,13 +248,15 @@ def get_test_run(run_arn):
         get_run_details = device_farm.get_run(arn=run_arn)
         run_status = get_run_details['run']['status']
         run_result = get_run_details['run']['result']
+        run_message = get_run_details['run']['message']
         if run_status in RUN_COMPLETED_STATUS:
-            print('Run is {} with {} result'.format(run_status, run_result))
+            print('Run is {} with {} result {} message'.format(run_status, run_result, run_message))
             break
-        print('{} - Waiting for run to finish, currently in {} status with {} result '.format(
+        print('{} - Waiting for run to finish, currently in {} status with {} result {} message '.format(
             wait_try,
             run_status,
-            run_result
+            run_result,
+            run_message
         )
         )
         now = time.time()
