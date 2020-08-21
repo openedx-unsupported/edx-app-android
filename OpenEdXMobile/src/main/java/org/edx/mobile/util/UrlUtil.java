@@ -1,7 +1,6 @@
 package org.edx.mobile.util;
 
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
@@ -77,7 +76,7 @@ public class UrlUtil {
     }
 
     /**
-     * Method to remove the given parameter
+     * Utility function to remove the given query parameter from the URL
      * Ref: https://stackoverflow.com/a/56108097
      *
      * @param url        that needs to update

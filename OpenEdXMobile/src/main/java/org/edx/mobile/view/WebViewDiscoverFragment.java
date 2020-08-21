@@ -170,11 +170,10 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         searchView.setQueryHint(getResources().getString(getQueryHint()));
         searchView.setOnQueryTextListener(onQueryTextListener);
         searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
-        setupEmptyQuerySubmitListener(searchView, onQueryTextListener);
+        setupEmptyQuerySubmitListener();
     }
 
-    private void setupEmptyQuerySubmitListener(SearchView searchView,
-                                               SearchView.OnQueryTextListener onQueryTextListener) {
+    private void setupEmptyQuerySubmitListener() {
         // Inspiration: https://github.com/Foso/Notes/blob/master/Android/EmptySubmitSearchView.java
         SearchView.SearchAutoComplete searchSrcTextView = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchSrcTextView.setOnEditorActionListener((textView, actionId, event) ->
