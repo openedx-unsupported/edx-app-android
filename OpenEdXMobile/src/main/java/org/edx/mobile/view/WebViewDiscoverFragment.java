@@ -19,6 +19,7 @@ import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
 
 import java.util.HashMap;
@@ -110,7 +111,10 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     }
 
     private void initSearch(@NonNull String query) {
-        final String baseUrl = getInitialUrl();
+        String baseUrl = getInitialUrl();
+        if (baseUrl.contains(QUERY_PARAM_SEARCH)) {
+            baseUrl = UrlUtil.removeQueryParameterFromURL(baseUrl, QUERY_PARAM_SEARCH);
+        }
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put(QUERY_PARAM_SEARCH, query);
         loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
@@ -155,13 +159,25 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     private void initSearchView() {
         searchView = toolbarCallbacks.getSearchView();
         if (getUserVisibleHint()) {
-            searchView.setQueryHint(getResources().getString(getQueryHint()));
-            searchView.setOnQueryTextListener(onQueryTextListener);
-            searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+            setupSearchViewListeners();
         }
         if (searchView.hasFocus()) {
             updateTitleVisibility(View.GONE);
         }
+    }
+
+    private void setupSearchViewListeners() {
+        searchView.setQueryHint(getResources().getString(getQueryHint()));
+        searchView.setOnQueryTextListener(onQueryTextListener);
+        searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+        setupEmptyQuerySubmitListener();
+    }
+
+    private void setupEmptyQuerySubmitListener() {
+        // Inspiration: https://github.com/Foso/Notes/blob/master/Android/EmptySubmitSearchView.java
+        SearchView.SearchAutoComplete searchSrcTextView = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchSrcTextView.setOnEditorActionListener((textView, actionId, event) ->
+                onQueryTextListener.onQueryTextSubmit(searchView.getQuery().toString()));
     }
 
     private void updateTitleVisibility(int visibility) {
@@ -219,9 +235,7 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         if (searchView != null) {
             if (isVisible && isSearchEnabled()) {
                 searchView.setVisibility(View.VISIBLE);
-                searchView.setQueryHint(getResources().getString(getQueryHint()));
-                searchView.setOnQueryTextListener(onQueryTextListener);
-                searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+                setupSearchViewListeners();
             } else {
                 searchView.setVisibility(View.GONE);
             }

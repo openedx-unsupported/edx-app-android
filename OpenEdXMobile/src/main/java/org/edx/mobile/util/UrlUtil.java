@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class UrlUtil {
-    public static final String QUERY_PARAM_SEARCH = "search_query";
+    public static final String QUERY_PARAM_SEARCH = "q";
     public static final String QUERY_PARAM_SUBJECT = "subject";
 
     // Resolves a URL against a base URL. If the url is already absolute,
@@ -73,5 +73,24 @@ public class UrlUtil {
             }
         }
         return paramsMap;
+    }
+
+    /**
+     * Utility function to remove the given query parameter from the URL
+     * Ref: https://stackoverflow.com/a/56108097
+     *
+     * @param url        that needs to update
+     * @param queryParam that needs to remove from the url
+     */
+    public static String removeQueryParameterFromURL(@NonNull String url, @NonNull String queryParam) {
+        Uri uri = Uri.parse(url);
+        final Set<String> params = uri.getQueryParameterNames();
+        final Uri.Builder newUri = uri.buildUpon().clearQuery();
+        for (String param : params) {
+            if (!queryParam.equals(param)) {
+                newUri.appendQueryParameter(param, uri.getQueryParameter(param));
+            }
+        }
+        return newUri.build().toString();
     }
 }
