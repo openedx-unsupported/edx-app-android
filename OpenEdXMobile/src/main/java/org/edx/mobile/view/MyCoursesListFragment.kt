@@ -142,13 +142,22 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 } else if (isCached) {
                     getUserEnrolledCourses(courseAPI.enrolledCourses)
                 } else {
-                    if (response.code() == HttpStatus.UNAUTHORIZED) {
-                        environment.router?.forceLogout(context,
-                                environment.analyticsRegistry,
-                                environment.notificationDelegate)
-                    } else if (adapter.isEmpty) {
-                        showError(HttpStatusException(Response.error<Any>(HttpStatus.INTERNAL_SERVER_ERROR,
-                                ResponseBody.create(MediaType.parse("text/plain"), response.message()))))
+                    when {
+                        response.code() == HttpStatus.UNAUTHORIZED -> {
+                            environment.router?.forceLogout(context,
+                                    environment.analyticsRegistry,
+                                    environment.notificationDelegate)
+                        }
+                        response.code() == HttpStatus.UPGRADE_REQUIRED -> {
+                            context?.let { context ->
+                                errorNotification.showError(context, HttpStatusException(Response.error<Any>(response.code(),
+                                        ResponseBody.create(MediaType.parse("text/plain"), ""))), 0, null)
+                            }
+                        }
+                        adapter.isEmpty -> {
+                            showError(HttpStatusException(Response.error<Any>(response.code(),
+                                    ResponseBody.create(MediaType.parse("text/plain"), response.message()))))
+                        }
                     }
                 }
                 invalidateView()
