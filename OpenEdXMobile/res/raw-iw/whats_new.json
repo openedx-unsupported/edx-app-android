@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Improved Discovery Experience",
+        "message": "We've improved the way you search and enroll in your favorite courses & programs."
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {

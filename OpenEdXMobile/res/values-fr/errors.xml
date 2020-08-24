@@ -1,15 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">Une erreur inconnue est survenue. Veuillez réessayer ultérieurement. </string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Impossible de charger le contenu de ce cours. Veuillez réessayez ultérieurement.</string>
+  <string name="course_error_content_invalid">Impossible de charger le contenu de ce cours. Veuillez réessayez ultérieurement.</string>
   <!--Title of alert shown when course enrollment request fails-->
-  <string name="enrollment_error_title" tools:ignore="MissingTranslation">Erreur lors de l\'inscription</string>
+  <string name="enrollment_error_title">Erreur lors de l\'inscription</string>
   <!--Error message shown in alert when course enrollment request fails-->
+  <string name="enrollment_error_message">Nous n\'avons pas pu vous inscrire dans ce cours via l\'application mobile {platform_name}. Veuillez réessayer depuis un navigateur Web</string>
   <!--Error message shown when a course section is not available on mobile-->
-  <string name="not_available_on_mobile" tools:ignore="MissingTranslation">Non disponible sur mobile</string>
+  <string name="not_available_on_mobile">Non disponible sur mobile</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">Vous n\'êtes pas connecté à Internet.</string>
@@ -39,18 +40,27 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">Assurez-vous  que votre compte Facebook est associé avec votre  compte {platform_name} sur {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
-  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">Ce compte Facebook n\'est pas lié à un compte {platform_name}. Veuillez vous inscrire.</string>
+  <string name="error_account_not_linked_desc_fb_2">Ce compte Facebook n\'est pas lié à un compte {platform_name}. Veuillez vous inscrire.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">Compte google non associé avec  compte {platform_name}</string>
+  <string name="error_account_not_linked_title_google">Compte google non associé avec  compte {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">Assurez-vous que votre compte google est associé avec votre compte  {platform_name} sur  {platform_destination} </string>
+  <string name="error_account_not_linked_desc_google">Assurez-vous que votre compte google est associé avec votre compte  {platform_name} sur  {platform_destination} </string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_google_2">Ce compte Google n\'est lié à aucun compte {platform_name}. Veuillez vous inscrire.</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_title_microsoft">Compte Microsoft non associé à un compte {platform_name}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft">Vérifiez que votre compte Microsoft est associé à votre compte {platform_name} sur {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft_2">Ce compte Microsoft n\'est lié à aucun compte {platform_name}. Veuillez vous inscrire.</string>
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">Téléchargement  échoué</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
   <string name="file_size_exceeded">La taille du téléchargement dépasse l\'espace de stockage restant.</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
+  <string name="download_exceed_message">Les vidéos sélectionnées dépassent 1 Go.
+        Voulez-vous les télécharger?</string>
   <!--Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi-->
   <string name="wifi_off_message">Vos paramètres actuels de téléchargement n\'autorisent que des téléchargements par Wi-Fi.
@@ -64,22 +74,27 @@
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
+  <string name="app_version_upgrade_app_store_unavailable">Aucun app store trouvé sur l\'appareil.</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">Veuillez entrer votre %1$s.</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
+  <string name="error_select_or_enter_field">Veuillez choisir ou saisir un %1$s valide.</string>
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s doit avoir au moins %2$d caractères.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s ne peut avoir plus de %2$d caractères.</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">Ce cours n\'a pas encore démarré.</string>
+  <string name="course_not_started">Ce cours n\'a pas encore démarré.</string>
   <!--Error message shown when a user's access has expired for a course-->
-  <string name="course_access_expired" tools:ignore="MissingTranslation">Votre accès à ce cours a expiré.</string>
+  <string name="course_access_expired">Votre accès à ce cours a expiré.</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">Votre action n\'a pas pu être achevée.</string>
+  <string name="action_not_completed">Votre action n\'a pas pu être achevée.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
+  <string name="app_version_unsupported_login_msg">Votre version de l\'appli n\'est plus prise en charge. Mettez-la à jour avec la dernière version pour vous connecter.</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
+  <string name="app_version_unsupported_register_msg">Votre version de l\'appli n\'est plus prise en charge. Mettez-la à jour avec la dernière version pour vous inscrire.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
-  <string name="permission_not_granted" tools:ignore="MissingTranslation">Permission non accordée</string>
+  <string name="permission_not_granted">Permission non accordée</string>
 </resources>

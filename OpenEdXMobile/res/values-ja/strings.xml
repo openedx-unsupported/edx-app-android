@@ -20,6 +20,7 @@
   <string name="view_course_button_text">講座を見る</string>
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">あなたはこの講座に登録中です。</string>
+  <!--Floating overlay text shown to user when user already enrolled in a course-->
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">ダッシュボードが表示できません。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
@@ -137,7 +138,7 @@
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">アプリを閉じると、無料で {platform_name} コンテンツを見ることができなくなり、データ通信料が課金される場合があります。</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title" tools:ignore="MissingTranslation">エンドユーザーライセンス同意書</string>
+  <string name="end_user_title">エンドユーザーライセンス同意書</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
   <!--My Courses-->
@@ -225,7 +226,7 @@
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">最近のディスカッション</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">コメント数</string>
+  <string name="discussion_posts_sort_most_activity">コメント数</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">投票数</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -303,9 +304,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">トピック：{topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">ディスカッションを投稿</string>
+  <string name="discussion_add_post_button_label">ディスカッションを投稿</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">ディスカッションを投稿ボタン</string>
+  <string name="discussion_add_post_button_description">ディスカッションを投稿ボタン</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">質問を投稿</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -403,6 +404,8 @@
   <string name="video_player_previous">前へ</string>
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">一時停止</string>
+  <!--Accessibility Label for Rewind button on Video Player-->
+  <!--Accessibility Label for Forward button on Video Player-->
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">30秒巻き戻し</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -411,6 +414,8 @@
   <string name="video_player_enter_fullscreen">全画面モード</string>
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">全画面モード解除</string>
+  <!--Label for video playback rewind 10 sec in video player-->
+  <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">新しいチャレンジを探していますか？</string>
   <!--Button label to bring up course finder-->
@@ -421,6 +426,7 @@
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
   <string name="google_text">Google</string>
+  <!--Microsoft login method-->
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">...を利用してメールを送る</string>
   <!--Error shown when user attempts to send email, but has no email app-->
@@ -440,7 +446,10 @@
   <!--Button leading user to create account screen-->
   <!--Button leading user to log in screen-->
   <!--Introduction text on the launch screen-->
+  <!--Introduction text on the launch screen when courses and program enabled-->
+  <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
+  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">任意のフィールドを表示する</string>
@@ -497,7 +506,7 @@
   <string name="forum_no_results_for_following">フォロー中の投稿はありません。</string>
   <string name="forum_no_results_for_filtered_following">フォロー中の投稿はフィルタリング結果に含まれていません。</string>
   <string name="forum_no_results_in_category">このディスカッション・カテゴリーには投稿がありません。</string>
-  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">投稿フィルタを解除</string>
+  <string name="forum_no_results_with_filter">投稿フィルタを解除</string>
   <string name="forum_post_i_am_following">フォロー中の投稿</string>
   <string name="forum_follow">フォロー</string>
   <string name="forum_unfollow">フォロー解除</string>
@@ -575,7 +584,7 @@
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">改善できるようご協力ください！</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar" tools:ignore="MissingTranslation">Rating コントロール</string>
+  <string name="rating_bar">Rating コントロール</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">星 {num_of_stars} のうち、{rating}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

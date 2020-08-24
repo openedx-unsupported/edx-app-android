@@ -11,7 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">سجّل الآن</string>
   <!--Invitation Only button text-->
-  <string name="invitation_only_button_text" tools:ignore="MissingTranslation">بالدعوات فقط</string>
+  <string name="invitation_only_button_text">بالدعوات فقط</string>
   <!--Effort field name-->
   <string name="effort_field_name">المجهود</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -21,24 +21,26 @@
   <string name="view_course_button_text">عرض المساق</string>
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">أنت الآن مسجِّل في هذا المساق</string>
+  <!--Floating overlay text shown to user when user already enrolled in a course-->
+  <string name="you_are_already_enrolled" tools:ignore="MissingTranslation">أنت مسجل بالفعل في هذه الدورة</string>
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">تعذّر عرض لوحة المعلومات</string>
   <!--Error message shown when browser cannot handle request for given web url-->
-  <string name="cannot_open_url" tools:ignore="MissingTranslation">يتعذّر فتح صفحة الويب.</string>
+  <string name="cannot_open_url">يتعذّر فتح صفحة الويب.</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject" tools:ignore="MissingTranslation">استكشاف بحسب الموضوع</string>
+  <string name="browse_by_subject">استكشاف بحسب الموضوع</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects" tools:ignore="MissingTranslation">استعراض كافة المواضيع</string>
+  <string name="view_all_subjects">استعراض كافة المواضيع</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects" tools:ignore="MissingTranslation">موضوع البحث</string>
+  <string name="search_subjects">موضوع البحث</string>
   <!--Google Cast-->
   <!--Description of a button that will cast/un-cast the app to a remote device-->
-  <string name="media_route_menu_title" tools:ignore="MissingTranslation">تشغيل التطبيق على…</string>
+  <string name="media_route_menu_title">تشغيل التطبيق على…</string>
   <!--Google cast Introduction title-->
-  <string name="introducing_cast_text" tools:ignore="MissingTranslation">التعريف بتقنية Cast</string>
+  <string name="introducing_cast_text">التعريف بتقنية Cast</string>
   <!--Text to describe that video is casting on the remote device-->
-  <string name="remote_device_casting_message" tools:ignore="MissingTranslation">جارٍ بث الفيديو على جهاز بعيد</string>
+  <string name="remote_device_casting_message">جارٍ بث الفيديو على جهاز بعيد</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">مشاركة المُساق</string>
@@ -50,9 +52,9 @@
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">تحميل المواد والبيانات عندما يكون الجهاز متصلاً بالـ Wi-Fi فقط.</string>
   <!--Label for the Download to sd-card setting-->
-  <string name="settings_download_to_sdcard_title" tools:ignore="MissingTranslation">تحميل الفيديو إلى كرت الذاكرة</string>
+  <string name="settings_download_to_sdcard_title">تحميل الفيديو إلى كرت الذاكرة</string>
   <!--Label explaining the download location setting in detail-->
-  <string name="settings_download_to_sdcard_subtitle" tools:ignore="MissingTranslation">سيتم تحميل الفيديوهات إلى كرت الذاكرة في حال التمكن من ذلك</string>
+  <string name="settings_download_to_sdcard_subtitle">سيتم تحميل الفيديوهات إلى كرت الذاكرة في حال التمكن من ذلك</string>
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">مشاركة شهادتك</string>
@@ -88,15 +90,15 @@
   <string name="login_failed">رجاء تأكد من أنك تستخدم البريد الإلكتروني أو اسم المستخدم وكلمة السر الصحيحين، وحاول مرة أخرى.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account" tools:ignore="MissingTranslation">يعني إنشاء حساب أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
+  <string name="by_creating_account">يعني إنشاء حساب أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in" tools:ignore="MissingTranslation">يعني تسجيل الدخول إلى هذا التطبيق أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
+  <string name="by_signing_in">يعني تسجيل الدخول إلى هذا التطبيق أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement" tools:ignore="MissingTranslation">اتفاقية ترخيص المستخدم في {platform_name}</string>
+  <string name="licensing_agreement">اتفاقية ترخيص المستخدم في {platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code" tools:ignore="MissingTranslation">شروط الخدمة وميثاق الشرف الأكاديمي الخاصين بمنصّة {platform_name} </string>
+  <string name="tos_and_honor_code">شروط الخدمة وميثاق الشرف الأكاديمي الخاصين بمنصّة {platform_name} </string>
   <!--Label for Privacy Policy-->
-  <string name="privacy_policy" tools:ignore="MissingTranslation">سياسة الخصوصية</string>
+  <string name="privacy_policy">سياسة الخصوصية</string>
   <string name="login_title">تسجيل الدخول</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">إغلاق</string>
@@ -104,21 +106,21 @@
   <string name="dropdown_list_prefix">قائمة منسدلة</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads" tools:ignore="MissingTranslation">عرض التحميلات الحاليّة</string>
+  <string name="label_current_downloads">عرض التحميلات الحاليّة</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">الدخول إلى صفحتك الشخصية</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses" tools:ignore="MissingTranslation">المساقات</string>
+  <string name="label_my_courses">المساقات</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs" tools:ignore="MissingTranslation">البرامج</string>
+  <string name="label_my_programs">البرامج</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">استكشف المساقات</string>
   <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover" tools:ignore="MissingTranslation">إستكشف</string>
+  <string name="label_discover">إستكشف</string>
   <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees" tools:ignore="MissingTranslation">الدرجات العلمية</string>
+  <string name="label_degrees">الدرجات العلمية</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery" tools:ignore="MissingTranslation">استكشاف الدورات التدريبية</string>
+  <string name="label_discovery">استكشاف الدورات التدريبية</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">أرسل ملاحظاتك</string>
   <!--Toggle switch on state label-->
@@ -132,9 +134,9 @@
   <!--Settings screen version-->
   <string name="label_version">نوع إصدار التطبيق</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings" tools:ignore="MissingTranslation">الإعدادات</string>
+  <string name="label_settings">الإعدادات</string>
   <!--Title of Account screen-->
-  <string name="title_account" tools:ignore="MissingTranslation">الحساب</string>
+  <string name="title_account">الحساب</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">استعادة كلمة السر</string>
@@ -164,10 +166,10 @@
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">إذا غادرت التطبيق، فلن تعود تتصفح محتويات {platform_name} المجانية. ربما يتم تطبيق رسوم البيانات.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title" tools:ignore="MissingTranslation">اتفاقية ترخيص للمستخدم</string>
+  <string name="end_user_title">اتفاقية ترخيص للمستخدم</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
-  <string name="terms_of_service_title" tools:ignore="MissingTranslation">شروط الخدمة</string>
+  <string name="terms_of_service_title">شروط الخدمة</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">المساق</string>
@@ -175,9 +177,9 @@
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">الوصول إلى مقاطع الفيديو والواجبات</string>
   <!--Row title of videos on dashboard screen-->
-  <string name="videos_title" tools:ignore="MissingTranslation">مقاطع الفيديو</string>
+  <string name="videos_title">مقاطع الفيديو</string>
   <!--Row subtitle of videos on dashboard screen-->
-  <string name="videos_subtitle" tools:ignore="MissingTranslation">شاهد مقاطع فيديو المساق</string>
+  <string name="videos_subtitle">شاهد مقاطع فيديو المساق</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">النقاش</string>
   <!--Row of Discussion on dashboard screen-->
@@ -191,32 +193,32 @@
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">الإعلانات</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title" tools:ignore="MissingTranslation">تواريخ مهمة</string>
+  <string name="course_dates_title">تواريخ مهمة</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
-  <string name="resources_title" tools:ignore="MissingTranslation">الموارد</string>
+  <string name="resources_title">الموارد</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">أبقني على اطلاع على أحدث الأخبار</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <string name="course_dates_subtitle" tools:ignore="MissingTranslation">تتبع المواعيد النهائية لتبقى على المسار</string>
+  <string name="course_dates_subtitle">تتبع المواعيد النهائية لتبقى على المسار</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">اسم المساق</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">محتويات المساق الجديد</string>
   <!--Label for date when course starts-->
-  <string name="label_starting" tools:ignore="MissingTranslation">يبدأ في {date}</string>
+  <string name="label_starting">يبدأ في {date}</string>
   <!--Label for course that has ended-->
-  <string name="label_ended" tools:ignore="MissingTranslation">انتهى في {date}</string>
+  <string name="label_ended">انتهى في {date}</string>
   <!--Label for date when course is ending-->
-  <string name="label_ending" tools:ignore="MissingTranslation">ينتهي في {date}</string>
+  <string name="label_ending">ينتهي في {date}</string>
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires" tools:ignore="MissingTranslation">ستنتهي صلاحية الوصول إلى الدورة التدريبية {date}</string>
+  <string name="label_expires">ستنتهي صلاحية الوصول إلى الدورة التدريبية {date}</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on" tools:ignore="MissingTranslation">ستنتهي صلاحية الوصول إلى الدورة التدريبية في {date}</string>
+  <string name="label_expires_on">ستنتهي صلاحية الوصول إلى الدورة التدريبية في {date}</string>
   <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired" tools:ignore="MissingTranslation">انتهت صلاحية الوصول إلى الدورة التدريبية {date}</string>
+  <string name="label_expired">انتهت صلاحية الوصول إلى الدورة التدريبية {date}</string>
   <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on" tools:ignore="MissingTranslation">انتهت صلاحية الوصول إلى الدورة التدريبية في {date}</string>
+  <string name="label_expired_on">انتهت صلاحية الوصول إلى الدورة التدريبية في {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">محتوى المساق</string>
@@ -227,7 +229,7 @@
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">محتويات المساق غير متوفرة حالياً.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
-  <string name="no_videos_text" tools:ignore="MissingTranslation">هذا المساق لا يتضمن أي مقاطع فيديو</string>
+  <string name="no_videos_text">هذا المساق لا يتضمن أي مقاطع فيديو</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">يبدو أنك لم تسجل في المساق بعد</string>
   <!--Label shown when no announcements are available for a course-->
@@ -235,20 +237,26 @@
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">ﻻ يحتوي المساق على أيّةِ منشورات.</string>
   <!--Label shown when no important dates are available for a course-->
-  <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">مواعيد المساق غير متوفرة حاليا</string>
+  <string name="no_course_dates_to_display">مواعيد المساق غير متوفرة حاليا</string>
   <!--Title of the screen where user can delete videos-->
-  <string name="delete_videos_title" tools:ignore="MissingTranslation">حذف مقاطع الفيديو</string>
+  <string name="delete_videos_title">حذف مقاطع الفيديو</string>
   <!--Label for a course item's due date for same day-->
-  <string name="due_date_today" tools:ignore="MissingTranslation">مستحق اليوم في {due_date}</string>
+  <string name="due_date_today">مستحق اليوم في {due_date}</string>
   <!--Label for a course item's due date-->
-  <string name="due_date_past_future" tools:ignore="MissingTranslation">مستحق في {due_date}</string>
+  <string name="due_date_past_future">مستحق في {due_date}</string>
   <!--Upgrade banner's description which appears on course outline screen.-->
-  <string name="upgrade_banner_description" tools:ignore="MissingTranslation">يمكنك إكمال التقييم أثناء رحلتك التدريبية للحصول على شهادة!</string>
+  <string name="upgrade_banner_description">يمكنك إكمال التقييم أثناء رحلتك التدريبية للحصول على شهادة!</string>
   <!--Title upgrade to verified today course outline footer-->
-  <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">الترقية إلى مسار معتمَد الآن</string>
+  <string name="upgrade_to_verified_today_title">الترقية إلى مسار معتمَد الآن</string>
   <!--Title of place order for course upgrade screen-->
-  <string name="place_order_title" tools:ignore="MissingTranslation">إرسال طلب</string>
+  <string name="place_order_title">إرسال طلب</string>
   <!--Mobile Payments-->
+  <string name="payments_info_header">تعقب موثوقية الشهادة</string>
+  <string name="payments_info_details">إبراز معرفتك ومهاراتك الجديدة من خلال شهادة موثقة استخدم بيانات الاعتماد القيّمة هذه لتحسين فرص وظيفتك وتعزيز حياتك المهنية ، أو إبراز شهادتك في تطبيقات المدرسة.</string>
+  <string name="audit_access_expires_on">تنتي صلاحية دخولك كمستع في تاريخ  {date}</string>
+  <string name="upgrade_deadline_details">الترقيةمن خلال {date} للحصول على وصول دائم  للمساق طالما كان موجوداً على الموقع.</string>
+  <string name="locked_content_header">متاح لتأكيد التلاميذ</string>
+  <string name="locked_content_details">التقييمات المتدرجة متاحة للتلاميذ المعتمدين. قم بالترقية أدناه لفتح هذه الخاصية.</string>
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">مواضيع النقاش</string>
@@ -273,7 +281,7 @@
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">الأنشطة الأخيرة</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">مُعظم الأنشطة</string>
+  <string name="discussion_posts_sort_most_activity">مُعظم الأنشطة</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">مُعظم الأصوات</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -366,9 +374,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">الموضوع: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">انشر نقاشًا</string>
+  <string name="discussion_add_post_button_label">انشر نقاشًا</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">زر نشر نقاش</string>
+  <string name="discussion_add_post_button_description">زر نشر نقاش</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">اطرح سؤال</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -395,17 +403,17 @@
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">دوّر جهازك لتعرض مقطع الفيديو على شاشة كاملة.</string>
   <!--Label showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation">خطأ في المشغّل</string>
+  <string name="assessment_unable_to_play_video">خطأ في المشغّل</string>
   <!--Error message showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">يتعذّر تشغيل هذا الفيديو. يمكنك مشاهدته على تطبيق YouTube أو إعادة المحاولة لاحقًا.</string>
+  <string name="assessment_unable_to_play_video_message">يتعذّر تشغيل هذا الفيديو. يمكنك مشاهدته على تطبيق YouTube أو إعادة المحاولة لاحقًا.</string>
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">يمكن مشاهدة هذا الفيديو فقط على يوتيوب.</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">مشاهدة الفيديو على يوتيوب</string>
   <!--Label showing that you need to update youtube app in order to watch the video-->
-  <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">لمشاهدة هذا الفيديو، يجب تحديث تطبيق YouTube.</string>
+  <string name="assessment_needed_updating_youtube">لمشاهدة هذا الفيديو، يجب تحديث تطبيق YouTube.</string>
   <!--Label for button to update youtube app-->
-  <string name="assessment_update_youtube" tools:ignore="MissingTranslation">تحديث YouTube</string>
+  <string name="assessment_update_youtube">تحديث YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">التنزيلات</string>
@@ -438,9 +446,9 @@
   <string name="no_connectivity">خطأ في الاتصال</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
-  <string name="bulk_download_switch" tools:ignore="MissingTranslation">مفتاح تبديل التحميل المجمّع للفيديوهات.</string>
+  <string name="bulk_download_switch">مفتاح تبديل التحميل المجمّع للفيديوهات.</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
-  <string name="download_to_device" tools:ignore="MissingTranslation">تحميل في الجهاز</string>
+  <string name="download_to_device">تحميل في الجهاز</string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="zero">{total_videos_count} فيديو، {total_videos_size} إجمالاً</item>
@@ -451,21 +459,21 @@
     <item quantity="other">{total_videos_count} فيديو، {total_videos_size} إجمالاً</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting" tools:ignore="MissingTranslation">بدء التحميل...</string>
+  <string name="download_starting">بدء التحميل...</string>
   <!--Title for bulk videos download view when in downloading state-->
-  <string name="downloading_videos" tools:ignore="MissingTranslation">تحميل ملفات الفيديو...</string>
+  <string name="downloading_videos">تحميل ملفات الفيديو...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
-  <string name="download_remaining" tools:ignore="MissingTranslation">عدد الفيديوهات المتبقية: {remaining_videos_count}، إجمالي حجم الفيديوهات: {remaining_videos_size}</string>
+  <string name="download_remaining">عدد الفيديوهات المتبقية: {remaining_videos_count}، إجمالي حجم الفيديوهات: {remaining_videos_size}</string>
   <!--Title for bulk videos download view when in downloaded state-->
-  <string name="download_complete" tools:ignore="MissingTranslation">تم تحميل جميع ملفات الفيديو</string>
+  <string name="download_complete">تم تحميل جميع ملفات الفيديو</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
-  <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">يؤدي الضغط على مفتاح التبديل إلى تحميل جميع فيديوهات هذه الدورة التدريبية.</string>
+  <string name="switch_off_no_downloading">يؤدي الضغط على مفتاح التبديل إلى تحميل جميع فيديوهات هذه الدورة التدريبية.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
-  <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">يؤدي إيقاف مفتاح التبديل إلى إلغاء تحميل جميع فيديوهات هذه الدورة التدريبية وحذفها.</string>
+  <string name="switch_on_all_downloading">يؤدي إيقاف مفتاح التبديل إلى إلغاء تحميل جميع فيديوهات هذه الدورة التدريبية وحذفها.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
-  <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">يؤدي إيقاف مفتاح التبديل إلى حذف جميع الفيديوهات المحمّلة من هذه الدورة التدريبية.</string>
+  <string name="switch_on_all_downloaded">يؤدي إيقاف مفتاح التبديل إلى حذف جميع الفيديوهات المحمّلة من هذه الدورة التدريبية.</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
-  <string name="view_downloads" tools:ignore="MissingTranslation">انقر نقرًا مزدوجًا لمعرفة الفيديوهات التي يتم تحميلها الآن.</string>
+  <string name="view_downloads">انقر نقرًا مزدوجًا لمعرفة الفيديوهات التي يتم تحميلها الآن.</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">السماح</string>
@@ -475,9 +483,9 @@
   <!--Label for closed captions in video player-->
   <string name="lbl_closed_caption">العناوين الفرعية مغلقة</string>
   <!--Label for video playback speed in video player-->
-  <string name="lbl_video_speed" tools:ignore="MissingTranslation">سرعة الفيديو</string>
+  <string name="lbl_video_speed">سرعة الفيديو</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none" tools:ignore="MissingTranslation">ما من ترجمة</string>
+  <string name="lbl_cc_none">ما من ترجمة</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">مشغل الفيديو</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -490,6 +498,10 @@
   <string name="video_player_previous">السابق</string>
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">إيقاف مؤقت</string>
+  <!--Accessibility Label for Rewind button on Video Player-->
+  <string name="video_player_rewind_button">إرجاع 10 ثوانٍ</string>
+  <!--Accessibility Label for Forward button on Video Player-->
+  <string name="video_player_forward_button">للأمام 15 ثانية</string>
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">رجوع بفاصل زمني 30 ثانية</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -498,6 +510,10 @@
   <string name="video_player_enter_fullscreen">دخول وضع ملء الشاشة</string>
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">الخروج من وضع ملء الشاشة</string>
+  <!--Label for video playback rewind 10 sec in video player-->
+  <string name="video_player_rewind_time_sec">-10</string>
+  <!--Label for video playback forward 15 sec in video player-->
+  <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">هل تبحثُ عن تحدٍ جديد؟</string>
   <!--Button label to bring up course finder-->
@@ -508,16 +524,18 @@
   <string name="facebook_text">فيسبوك</string>
   <!--Google login method-->
   <string name="google_text">جوجل</string>
+  <!--Microsoft login method-->
+  <string name="microsoft_text" tools:ignore="MissingTranslation">مايكروسوفت</string>
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">أرسل بريداً إلكترونياً باستخدام:</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">لم يتم العثور على تطبيقات بريد إلكتروني لديك</string>
   <!--Search for a course prompt-->
-  <string name="search_for_courses" tools:ignore="MissingTranslation">البحث عن مساقات</string>
+  <string name="search_for_courses">البحث عن مساقات</string>
   <!--Search for a program prompt-->
-  <string name="search_for_programs" tools:ignore="MissingTranslation">البحث عن برامج</string>
+  <string name="search_for_programs">البحث عن برامج</string>
   <!--Search for a degree prompt-->
-  <string name="search_for_degrees" tools:ignore="MissingTranslation">البحث عن درجات علمية</string>
+  <string name="search_for_degrees">البحث عن درجات علمية</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">قمت بإنشاءِ حسابٍ مسبقاً؟ سجل الدخول</string>
@@ -528,13 +546,12 @@
   <string name="or_register_with_email">أو سجّل اشتراكك باستخدام البريد الإلكتروني</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
-  <string name="launch_register" tools:ignore="MissingTranslation">إنشاء حساب</string>
   <!--Button leading user to log in screen-->
-  <string name="launch_login" tools:ignore="MissingTranslation">تسجيل الدخول</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text" tools:ignore="MissingTranslation">مساقات من أفضل جامعات العالم في جيبك</string>
+  <!--Introduction text on the launch screen when courses and program enabled-->
+  <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses" tools:ignore="MissingTranslation">البحث عن مساقات</string>
+  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">أظهر الحقول الاختيارية</string>
@@ -551,6 +568,7 @@
   <!--Text for successful registration with social token-->
   <string name="sign_up_with_facebook_ok">تم تسجيل الدخول باستخدام فيسبوك بنجاح.</string>
   <string name="sign_up_with_google_ok">تم تسجيل الدخول باستخدام غوغل بنجاح.</string>
+  <string name="sign_up_with_microsoft_ok" tools:ignore="MissingTranslation">تم التسجيل بنجاح مع مايكروسوفت</string>
   <string name="sign_up_with_social_ok">نحتاج فقط للقليل من المعلومات قبل أن تبدأ التعلم على {platform_name}.</string>
   <!--Continue registration after social login-->
   <string name="complete_registration">أكمل تسجيلك</string>
@@ -585,14 +603,14 @@
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">دون عنوان</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">الإشعارات العامة</string>
+  <string name="default_notification_channel_title">الإشعارات العامة</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">تعذّر إيجاد نتائج للاستعلام \"{search_query}\". يُرجى إعادة المحاولة باستخدام عبارة أخرى أو اختر فئة نقاش لاستعراضها.</string>
   <string name="forum_no_results_for_all_posts">لا توجد مشاركات تخص نقاش المساق هذا.</string>
   <string name="forum_no_results_for_following">لم تقم بمتابعة أي نقاشات بعد.</string>
   <string name="forum_no_results_for_filtered_following">نتائج المرشح لا تتضمن أي منشورات متابعة.</string>
   <string name="forum_no_results_in_category">لا توجد مشاركات في فئة النقاش هذه.</string>
-  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">جرّب إزالة مرشّح مشاركاتك.</string>
+  <string name="forum_no_results_with_filter">جرّب إزالة مرشّح مشاركاتك.</string>
   <string name="forum_post_i_am_following">المشاركات التي أتابعها</string>
   <string name="forum_follow">تابع</string>
   <string name="forum_unfollow">إلغاء المتابعة</string>
@@ -670,7 +688,7 @@
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">ساعدنا لنتحسن!</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar" tools:ignore="MissingTranslation">التحكم بالتقييم</string>
+  <string name="rating_bar">التحكم بالتقييم</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} من {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

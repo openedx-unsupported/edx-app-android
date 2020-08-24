@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">خطأ غير معروف، الرجاء المحاولة لاحقاً.</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">تعذّر تحميل محتوى المساق. الرجاء المحاولة لاحقًا.</string>
+  <string name="course_error_content_invalid">تعذّر تحميل محتوى المساق. الرجاء المحاولة لاحقًا.</string>
   <!--Title of alert shown when course enrollment request fails-->
-  <string name="enrollment_error_title" tools:ignore="MissingTranslation">خطأ أثناء التسجيل</string>
+  <string name="enrollment_error_title">خطأ في التسجيل</string>
   <!--Error message shown in alert when course enrollment request fails-->
-  <string name="enrollment_error_message" tools:ignore="MissingTranslation">تعذر تسجيلك فى هذا المساق حاليا باستخدام تطبيق  {platform_name}. الرجاء المحاولة مجددًا باستخدام متصفحك. </string>
+  <string name="enrollment_error_message">تعذر تسجيلك فى هذا المساق حاليا باستخدام تطبيق  {platform_name}. الرجاء المحاولة مجددًا باستخدام متصفحك. </string>
   <!--Error message shown when a course section is not available on mobile-->
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
@@ -39,13 +39,16 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">تأكد من أن حساب الفيسبوك الخاص بك مرتبط  مع حسابك  {platform_name} في  {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
-  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">هذا الحساب على منصة الفيسبوك غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
+  <string name="error_account_not_linked_desc_fb_2">هذا الحساب على منصة الفيسبوك غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">حساب قوقل غير مرتبط بحساب  {platform_name}</string>
+  <string name="error_account_not_linked_title_google">حساب قوقل غير مرتبط بحساب  {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">تأكد من أن حساب قوقل الخاص بك مرتبط مع حسابك  {platform_name} في {platform_destination}</string>
+  <string name="error_account_not_linked_desc_google">تأكد من أن حساب قوقل الخاص بك مرتبط مع حسابك  {platform_name} في {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">هذا الحساب على جوجل غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
+  <string name="error_account_not_linked_desc_google_2">هذا الحساب على جوجل غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">فشل التحميل</string>
@@ -65,25 +68,26 @@
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
-  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">لم يتم العثور على متجر تطبيقات مدعوم على الجهاز.</string>
+  <string name="app_version_upgrade_app_store_unavailable">لم يتم العثور على متجر تطبيقات مدعوم على الجهاز.</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">رجاء أدخل  %1$s.</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length"> %1$s يجب أن يتكون من %2$d أحرف الأقل.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length"> %1$s يجب أن يتكون من %2$d أحرف الأقل.</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">هذا المساق لم يبدأ بعد</string>
+  <string name="course_not_started">هذا المساق لم يبدأ بعد</string>
   <!--Error message shown when a user's access has expired for a course-->
-  <string name="course_access_expired" tools:ignore="MissingTranslation">لم تعد مخولاً للوصول إلى هذا المساق</string>
+  <string name="course_access_expired">لم تعد مخولاً للوصول إلى هذا المساق</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">لم يتم إتمام الأمر الخاص بك</string>
+  <string name="action_not_completed">لم يتم إتمام الأمر الخاص بك</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
-  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">النسخة التي لديك من التطبيق لم تعُد مدعومة. أحصل على أحدث نسخة لتسجل الدخول.</string>
+  <string name="app_version_unsupported_login_msg">النسخة التي لديك من التطبيق لم تعُد مدعومة. أحصل على أحدث نسخة لتسجل الدخول.</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
-  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">النسخة التي لديك من التطبيق لم تعُد مدعومة. أحصل على أحدث نسخة للتسجيل.</string>
+  <string name="app_version_unsupported_register_msg">النسخة التي لديك من التطبيق لم تعُد مدعومة. أحصل على أحدث نسخة للتسجيل.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
-  <string name="permission_not_granted" tools:ignore="MissingTranslation">لا تمتلك الصلاحيات اللازمة</string>
+  <string name="permission_not_granted">لا تمتلك الصلاحيات اللازمة</string>
 </resources>

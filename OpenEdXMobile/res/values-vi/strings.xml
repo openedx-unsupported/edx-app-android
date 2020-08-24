@@ -11,7 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Đăng ký ngay</string>
   <!--Invitation Only button text-->
-  <string name="invitation_only_button_text" tools:ignore="MissingTranslation">Chỉ được mời</string>
+  <string name="invitation_only_button_text">Chỉ được mời</string>
   <!--Effort field name-->
   <string name="effort_field_name">Lần thử:</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -21,24 +21,25 @@
   <string name="view_course_button_text">Xem khóa học</string>
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">Bạn đã tham gia khóa học.</string>
+  <!--Floating overlay text shown to user when user already enrolled in a course-->
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">Không thể hiển thị dashboard.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
-  <string name="cannot_open_url" tools:ignore="MissingTranslation">Không mở được trang web.</string>
+  <string name="cannot_open_url">Không mở được trang web.</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject" tools:ignore="MissingTranslation">Tìm theo Môn học</string>
+  <string name="browse_by_subject">Tìm theo Môn học</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects" tools:ignore="MissingTranslation">Xem tất cả Môn học</string>
+  <string name="view_all_subjects">Xem tất cả Môn học</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects" tools:ignore="MissingTranslation">Tìm Môn học</string>
+  <string name="search_subjects">Tìm Môn học</string>
   <!--Google Cast-->
   <!--Description of a button that will cast/un-cast the app to a remote device-->
-  <string name="media_route_menu_title" tools:ignore="MissingTranslation">Phát trên...</string>
+  <string name="media_route_menu_title">Phát trên...</string>
   <!--Google cast Introduction title-->
-  <string name="introducing_cast_text" tools:ignore="MissingTranslation">Giới thiệu Cast</string>
+  <string name="introducing_cast_text">Giới thiệu Cast</string>
   <!--Text to describe that video is casting on the remote device-->
-  <string name="remote_device_casting_message" tools:ignore="MissingTranslation">Đang phát video đến một thiết bị từ xa</string>
+  <string name="remote_device_casting_message">Đang phát video đến một thiết bị từ xa</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Chia sẻ khóa học</string>
@@ -50,9 +51,9 @@
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">Chỉ tải nội dung xuống khi Wi-Fi đang bật</string>
   <!--Label for the Download to sd-card setting-->
-  <string name="settings_download_to_sdcard_title" tools:ignore="MissingTranslation">Tải Video vào Thẻ SD</string>
+  <string name="settings_download_to_sdcard_title">Tải Video vào Thẻ SD</string>
   <!--Label explaining the download location setting in detail-->
-  <string name="settings_download_to_sdcard_subtitle" tools:ignore="MissingTranslation">Video sẽ tải xuống sẽ được lưu vào thẻ SD khi có thể</string>
+  <string name="settings_download_to_sdcard_subtitle">Video sẽ tải xuống sẽ được lưu vào thẻ SD khi có thể</string>
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Chia sẻ Giấy chứng nhận</string>
@@ -88,15 +89,15 @@
   <string name="login_failed">Tên đăng nhập hoặc địa chỉ e-mail và mật khẩu bạn đã nhập không đúng.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account" tools:ignore="MissingTranslation">Bằng việc tạo tài khoản, bạn dã đồng ý với {license} và {tos_and_honor_code} và bạn đã chấp nhận rằng {platform_name} và mỗi Thành Viên được xử lý thông tin cá nhân của bạn theo {privacy_policy}</string>
+  <string name="by_creating_account">Bằng việc tạo tài khoản, bạn dã đồng ý với {license} và {tos_and_honor_code} và bạn đã chấp nhận rằng {platform_name} và mỗi Thành Viên được xử lý thông tin cá nhân của bạn theo {privacy_policy}</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in" tools:ignore="MissingTranslation">Bằng việc đăng nhập vào ứng dụng này, bạn dã đồng ý với {license} và {tos_and_honor_code} và bạn đã chấp nhận rằng {platform_name} và mỗi Thành Viên được xử lý thông tin cá nhân của bạn theo {privacy_policy}</string>
+  <string name="by_signing_in">Bằng việc đăng nhập vào ứng dụng này, bạn dã đồng ý với {license} và {tos_and_honor_code} và bạn đã chấp nhận rằng {platform_name} và mỗi Thành Viên được xử lý thông tin cá nhân của bạn theo {privacy_policy}</string>
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} Người dùng đồng ý với Giấy phép</string>
+  <string name="licensing_agreement">{platform_name} Người dùng đồng ý với Giấy phép</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Điều khoản dịch vụ và Honor Code</string>
+  <string name="tos_and_honor_code">{platform_name} Điều khoản dịch vụ và Honor Code</string>
   <!--Label for Privacy Policy-->
-  <string name="privacy_policy" tools:ignore="MissingTranslation">Chính sách Bảo mật</string>
+  <string name="privacy_policy">Chính sách Bảo mật</string>
   <string name="login_title">Đăng nhập</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Đóng</string>
@@ -104,21 +105,21 @@
   <string name="dropdown_list_prefix">Danh sách xổ xuống.</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads" tools:ignore="MissingTranslation">Xem các mục đang tải xuống</string>
+  <string name="label_current_downloads">Xem các mục đang tải xuống</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Mở hồ sơ của bạn</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses" tools:ignore="MissingTranslation">Khóa học</string>
+  <string name="label_my_courses">Khóa học</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs" tools:ignore="MissingTranslation">Chương trình</string>
+  <string name="label_my_programs">Chương trình</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Tìm khóa học</string>
   <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover" tools:ignore="MissingTranslation">Khám phá</string>
+  <string name="label_discover">Khám phá</string>
   <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees" tools:ignore="MissingTranslation">Bằng cấp</string>
+  <string name="label_degrees">Bằng cấp</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery" tools:ignore="MissingTranslation">Khám phá</string>
+  <string name="label_discovery">Khám phá</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Gửi phản hồi</string>
   <!--Toggle switch on state label-->
@@ -132,9 +133,9 @@
   <!--Settings screen version-->
   <string name="label_version">Phiên bản ứng dụng</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings" tools:ignore="MissingTranslation">Cài đặt</string>
+  <string name="label_settings">Cài đặt</string>
   <!--Title of Account screen-->
-  <string name="title_account" tools:ignore="MissingTranslation">Tài khoản</string>
+  <string name="title_account">Tài khoản</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Đặt lại mật khẩu</string>
@@ -160,10 +161,10 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">Nếu rời khỏi ứng dụng, bạn sẽ không thể xem nội dung {platform_name} miễn phí. Chi phí dữ liệu có thể được áp dụng.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title" tools:ignore="MissingTranslation">Thỏa thuận người dùng cấp phép</string>
+  <string name="end_user_title">Thỏa thuận người dùng cấp phép</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
-  <string name="terms_of_service_title" tools:ignore="MissingTranslation">Điều khoản dịch vụ</string>
+  <string name="terms_of_service_title">Điều khoản dịch vụ</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">Khóa học</string>
@@ -171,9 +172,9 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">Truy cập video và bài tập</string>
   <!--Row title of videos on dashboard screen-->
-  <string name="videos_title" tools:ignore="MissingTranslation">Video</string>
+  <string name="videos_title">Video</string>
   <!--Row subtitle of videos on dashboard screen-->
-  <string name="videos_subtitle" tools:ignore="MissingTranslation">Xem video khóa học</string>
+  <string name="videos_subtitle">Xem video khóa học</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">Thảo luận</string>
   <!--Row of Discussion on dashboard screen-->
@@ -187,32 +188,32 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Thông báo</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title" tools:ignore="MissingTranslation">Những ngày quan trọng</string>
+  <string name="course_dates_title">Những ngày quan trọng</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
-  <string name="resources_title" tools:ignore="MissingTranslation">Nguồn</string>
+  <string name="resources_title">Nguồn</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">Cập nhật những tin tức mới nhất</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <string name="course_dates_subtitle" tools:ignore="MissingTranslation">Theo dõi và bám sát deadline</string>
+  <string name="course_dates_subtitle">Theo dõi và bám sát deadline</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">Tên khóa học</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nội dung khóa học mới</string>
   <!--Label for date when course starts-->
-  <string name="label_starting" tools:ignore="MissingTranslation">Bắt đầu {date}</string>
+  <string name="label_starting">Bắt đầu {date}</string>
   <!--Label for course that has ended-->
-  <string name="label_ended" tools:ignore="MissingTranslation">Đã kết thúc {date}</string>
+  <string name="label_ended">Đã kết thúc {date}</string>
   <!--Label for date when course is ending-->
-  <string name="label_ending" tools:ignore="MissingTranslation">Kết thúc {date}</string>
+  <string name="label_ending">Kết thúc {date}</string>
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires" tools:ignore="MissingTranslation">Khóa học hết hạn tham gia {date}</string>
+  <string name="label_expires">Khóa học hết hạn tham gia {date}</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on" tools:ignore="MissingTranslation">Ngày hết hạn tham gia khóa học {date}</string>
+  <string name="label_expires_on">Ngày hết hạn tham gia khóa học {date}</string>
   <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired" tools:ignore="MissingTranslation">Khóa học đã hết hạn tham gia {date}</string>
+  <string name="label_expired">Khóa học đã hết hạn tham gia {date}</string>
   <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on" tools:ignore="MissingTranslation">Ngày đã hết hạn tham gia khóa học {date}</string>
+  <string name="label_expired_on">Ngày đã hết hạn tham gia khóa học {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Nội dung khóa học</string>
@@ -223,7 +224,7 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">Nội dung khóa học hiện chưa sẵn sàng</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
-  <string name="no_videos_text" tools:ignore="MissingTranslation">Khóa học này không có video.</string>
+  <string name="no_videos_text">Khóa học này không có video.</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">Có vẻ như bạn chưa tham gia khóa học nào.</string>
   <!--Label shown when no announcements are available for a course-->
@@ -231,19 +232,19 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">Khóa học này hiện tại không có tư liệu nào.</string>
   <!--Label shown when no important dates are available for a course-->
-  <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">Khóa học hiện tại không có ngày nào cần chú ý.</string>
+  <string name="no_course_dates_to_display">Khóa học hiện tại không có ngày nào cần chú ý.</string>
   <!--Title of the screen where user can delete videos-->
-  <string name="delete_videos_title" tools:ignore="MissingTranslation">Xóa video</string>
+  <string name="delete_videos_title">Xóa video</string>
   <!--Label for a course item's due date for same day-->
-  <string name="due_date_today" tools:ignore="MissingTranslation">Hết hạn hôm nay vào {due_date}</string>
+  <string name="due_date_today">Hết hạn hôm nay vào {due_date}</string>
   <!--Label for a course item's due date-->
-  <string name="due_date_past_future" tools:ignore="MissingTranslation">Hết hạn {due_date}</string>
+  <string name="due_date_past_future">Hết hạn {due_date}</string>
   <!--Upgrade banner's description which appears on course outline screen.-->
-  <string name="upgrade_banner_description" tools:ignore="MissingTranslation">Hoàn thành các bài đánh giá khi đang di chuyển để đạt được chứng nhận!</string>
+  <string name="upgrade_banner_description">Hoàn thành các bài đánh giá khi đang di chuyển để đạt được chứng nhận!</string>
   <!--Title upgrade to verified today course outline footer-->
-  <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">Nâng cấp ngay lên đã xác minh</string>
+  <string name="upgrade_to_verified_today_title">Nâng cấp ngay lên đã xác minh</string>
   <!--Title of place order for course upgrade screen-->
-  <string name="place_order_title" tools:ignore="MissingTranslation">Đặt hàng</string>
+  <string name="place_order_title">Đặt hàng</string>
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -269,7 +270,7 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">Hoạt đọng gần đây</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">Hoạt động nhiều nhất</string>
+  <string name="discussion_posts_sort_most_activity">Hoạt động nhiều nhất</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">Đánh giá nhiều nhất</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -347,9 +348,9 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Chủ đề: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Đăng thảo luận</string>
+  <string name="discussion_add_post_button_label">Đăng thảo luận</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Nút đăng thảo luận</string>
+  <string name="discussion_add_post_button_description">Nút đăng thảo luận</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Đăng câu hỏi</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -376,17 +377,17 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">Xoay thiết bị của bạn để xem video toàn màn hình.</string>
   <!--Label showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation">Lỗi trình phát</string>
+  <string name="assessment_unable_to_play_video">Lỗi trình phát</string>
   <!--Error message showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">Không thể phát video này. Bạn có thể xem video trên ứng dụng YouTube hoặc thử lại sau.</string>
+  <string name="assessment_unable_to_play_video_message">Không thể phát video này. Bạn có thể xem video trên ứng dụng YouTube hoặc thử lại sau.</string>
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">Video này chỉ có thể xem trên YouTube</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Xem video trên YouTube</string>
   <!--Label showing that you need to update youtube app in order to watch the video-->
-  <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">Video này yêu cầu bạn cập nhật ứng dụng YouTube.</string>
+  <string name="assessment_needed_updating_youtube">Video này yêu cầu bạn cập nhật ứng dụng YouTube.</string>
   <!--Label for button to update youtube app-->
-  <string name="assessment_update_youtube" tools:ignore="MissingTranslation">Cập nhật YouTube</string>
+  <string name="assessment_update_youtube">Cập nhật YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">Tải xuống</string>
@@ -419,29 +420,29 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="no_connectivity">Lỗi kết nối</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
-  <string name="bulk_download_switch" tools:ignore="MissingTranslation">Chuyển đổi video số lượng lớn.</string>
+  <string name="bulk_download_switch">Chuyển đổi video số lượng lớn.</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
-  <string name="download_to_device" tools:ignore="MissingTranslation">Tải về thiết bị</string>
+  <string name="download_to_device">Tải về thiết bị</string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="other">{total_videos_count} Video, {total_videos_size} tổng cộng</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting" tools:ignore="MissingTranslation">Bắt đầu tải xuống...</string>
+  <string name="download_starting">Bắt đầu tải xuống...</string>
   <!--Title for bulk videos download view when in downloading state-->
-  <string name="downloading_videos" tools:ignore="MissingTranslation">Đang tải video xuống...</string>
+  <string name="downloading_videos">Đang tải video xuống...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
-  <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} còn lại, {remaining_videos_size} tổng cộng</string>
+  <string name="download_remaining">{remaining_videos_count} còn lại, {remaining_videos_size} tổng cộng</string>
   <!--Title for bulk videos download view when in downloaded state-->
-  <string name="download_complete" tools:ignore="MissingTranslation">Tất cả video đã được tải xuống</string>
+  <string name="download_complete">Tất cả video đã được tải xuống</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
-  <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">Khi bật, tất cả video trong khóa học sẽ được tải xuống.</string>
+  <string name="switch_off_no_downloading">Khi bật, tất cả video trong khóa học sẽ được tải xuống.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
-  <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">Khi tắt, dừng tải xuống tất cả video và xóa tất cả video đã tải xuống trong khóa học.</string>
+  <string name="switch_on_all_downloading">Khi tắt, dừng tải xuống tất cả video và xóa tất cả video đã tải xuống trong khóa học.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
-  <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">Khi tắt, tất cả các video trong khóa học đã tải xuống sẽ bị xóa.</string>
+  <string name="switch_on_all_downloaded">Khi tắt, tất cả các video trong khóa học đã tải xuống sẽ bị xóa.</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
-  <string name="view_downloads" tools:ignore="MissingTranslation">Nhấn hai lần để xem những mục đang tải xuống.</string>
+  <string name="view_downloads">Nhấn hai lần để xem những mục đang tải xuống.</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">Cho phép</string>
@@ -451,9 +452,9 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label for closed captions in video player-->
   <string name="lbl_closed_caption">Tắt phụ đề</string>
   <!--Label for video playback speed in video player-->
-  <string name="lbl_video_speed" tools:ignore="MissingTranslation">Tốc độ Video</string>
+  <string name="lbl_video_speed">Tốc độ Video</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none" tools:ignore="MissingTranslation">Chưa có caption được chọn</string>
+  <string name="lbl_cc_none">Chưa có caption được chọn</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Trình phát video</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -466,6 +467,8 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="video_player_previous">Quay lại</string>
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">Tạm dừng</string>
+  <!--Accessibility Label for Rewind button on Video Player-->
+  <!--Accessibility Label for Forward button on Video Player-->
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">Tua lại 30 giây</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -474,6 +477,8 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="video_player_enter_fullscreen">Vào chế độ toàn màn hình</string>
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">Thoát chế độ toàn màn hình</string>
+  <!--Label for video playback rewind 10 sec in video player-->
+  <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Tìm kiếm thử thách mới?</string>
   <!--Button label to bring up course finder-->
@@ -484,16 +489,17 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
   <string name="google_text">Google</string>
+  <!--Microsoft login method-->
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">Gửi e-mail bằng...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Không tìm thấy ứng dụng e-mail nào </string>
   <!--Search for a course prompt-->
-  <string name="search_for_courses" tools:ignore="MissingTranslation">Tìm khóa học</string>
+  <string name="search_for_courses">Tìm khóa học</string>
   <!--Search for a program prompt-->
-  <string name="search_for_programs" tools:ignore="MissingTranslation">Tìm chương trình</string>
+  <string name="search_for_programs">Tìm chương trình</string>
   <!--Search for a degree prompt-->
-  <string name="search_for_degrees" tools:ignore="MissingTranslation">Tìm bằng cấp</string>
+  <string name="search_for_degrees">Tìm bằng cấp</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Đã có tài khoản? Đăng nhập ngay</string>
@@ -504,13 +510,12 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="or_register_with_email">hoặc đăng ký với email</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
-  <string name="launch_register" tools:ignore="MissingTranslation">Tạo Tài khoản</string>
   <!--Button leading user to log in screen-->
-  <string name="launch_login" tools:ignore="MissingTranslation">Đăng nhập</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text" tools:ignore="MissingTranslation">Những khóa học từ các trường Đại học hàng đầu đã nằm trong tầm tay.</string>
+  <!--Introduction text on the launch screen when courses and program enabled-->
+  <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses" tools:ignore="MissingTranslation">Tìm khóa học</string>
+  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Hiển thị những trường tùy chọn</string>
@@ -561,14 +566,14 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Chưa có tiêu đề</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Thông báo chung</string>
+  <string name="default_notification_channel_title">Thông báo chung</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">Không tìm thấy kết quả nào cho “{search_query}”. Hãy thử cụm tìm kiếm khác hoặc chọn mục Thảo luận để tìm kiếm.</string>
   <string name="forum_no_results_for_all_posts">Không có bài đăng nào trong phần thảo luận của khóa học.</string>
   <string name="forum_no_results_for_following">Bạn đang không theo dõi bất kỳ bài nào.</string>
   <string name="forum_no_results_for_filtered_following">Kết quả lọc không bao gồm bất kỳ bài viết nào sau đây.</string>
   <string name="forum_no_results_in_category">Không có bài đăng nào trong phần thảo luận này.</string>
-  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Hãy thử bỏ lọc bài đăng của bạn.</string>
+  <string name="forum_no_results_with_filter">Hãy thử bỏ lọc bài đăng của bạn.</string>
   <string name="forum_post_i_am_following">Bài đăng tôi đang theo dõi</string>
   <string name="forum_follow">Theo dõi</string>
   <string name="forum_unfollow">Ngừng theo dõi</string>
@@ -646,7 +651,7 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">Giúp chúng tôi cải thiện!</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar" tools:ignore="MissingTranslation">Đánh giá điều khiển</string>
+  <string name="rating_bar">Đánh giá điều khiển</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} trên {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

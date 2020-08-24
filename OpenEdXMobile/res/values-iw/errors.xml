@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">שגיאה. נא לנסות שוב.</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">לא ניתן להעלות את תוכן הקורס. נסו שוב מאוחר יותר.</string>
+  <string name="course_error_content_invalid">לא ניתן להעלות את תוכן הקורס. נסו שוב מאוחר יותר.</string>
   <!--Title of alert shown when course enrollment request fails-->
-  <string name="enrollment_error_title" tools:ignore="MissingTranslation">שגיאה בהרשמה</string>
+  <string name="enrollment_error_title">שגיאה בהרשמה</string>
   <!--Error message shown in alert when course enrollment request fails-->
-  <string name="enrollment_error_message" tools:ignore="MissingTranslation">לא ניתן לרשום אתכם לקורס זה כעת באמצעות האפליקציה לנייד של {platform_name}. אנא נסו שוב דרך דפדפן הרשת שלכם.</string>
+  <string name="enrollment_error_message">לא ניתן לרשום אתכם לקורס זה כעת באמצעות האפליקציה לנייד של {platform_name}. אנא נסו שוב דרך דפדפן הרשת שלכם.</string>
   <!--Error message shown when a course section is not available on mobile-->
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
@@ -40,10 +40,13 @@
   <string name="error_account_not_linked_desc_fb">ודאו שחשבון הפייסבוק שלכם מקושר עם חשבון ה-{platform_name} שלכם ב-{platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">חשבון גוגל אינו מקושר עם חשבון ה-{platform_name}</string>
+  <string name="error_account_not_linked_title_google">חשבון גוגל אינו מקושר עם חשבון ה-{platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">ודאו שחשבון הגוגל שלכם מקושר עם חשבון ה-{platform_name} שלכם ב-{platform_destination}</string>
+  <string name="error_account_not_linked_desc_google">ודאו שחשבון הגוגל שלכם מקושר עם חשבון ה-{platform_name} שלכם ב-{platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">ההורדה נכשלה</string>
@@ -63,23 +66,24 @@
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
-  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">לא נמצאה חנות אפליקציות נתמכת במכשיר זה.</string>
+  <string name="app_version_upgrade_app_store_unavailable">לא נמצאה חנות אפליקציות נתמכת במכשיר זה.</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">אנא הכנס את %1$s שלך.</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s חייב להיות באורך של לפחות %2$d תווים.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s לא יכול להיות יותר מ-%2$d תווים.</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">קורס זה טרם החל.</string>
+  <string name="course_not_started">קורס זה טרם החל.</string>
   <!--Error message shown when a user's access has expired for a course-->
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">לא ניתן היה להשלים את הפעולה שלכם.</string>
+  <string name="action_not_completed">לא ניתן היה להשלים את הפעולה שלכם.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
-  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">גרסת האפליקציה שברשותכם אינה נתמכת. עדכנו לגרסה האחרונה כדי להיכנס.</string>
+  <string name="app_version_unsupported_login_msg">גרסת האפליקציה שברשותכם אינה נתמכת. עדכנו לגרסה האחרונה כדי להיכנס.</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
-  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">גרסת האפליקציה שברשותכם אינה נתמכת. עדכנו לגרסה האחרונה כדי להיכנס.</string>
+  <string name="app_version_unsupported_register_msg">גרסת האפליקציה שברשותכם אינה נתמכת. עדכנו לגרסה האחרונה כדי להיכנס.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
 </resources>
