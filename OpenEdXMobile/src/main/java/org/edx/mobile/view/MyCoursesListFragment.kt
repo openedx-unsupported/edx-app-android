@@ -49,6 +49,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     @Inject
     private lateinit var courseAPI: CourseAPI
     private lateinit var errorNotification: FullScreenErrorNotification
+    private lateinit var enrolledCoursesCall: Call<List<EnrolledCoursesResponse>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             // Hide the progress bar as swipe layout has its own progress indicator
             binding.loadingIndicator.root.visibility = View.GONE
             errorNotification.hideError()
-            loadData(showProgress = false, isCached = false)
+            loadData(showProgress = false, fromCache = false)
         }
         UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
         // Add empty view to cause divider to render at the top of the list.
@@ -87,7 +88,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadData(showProgress = true, isCached = true)
+        loadData(showProgress = true, fromCache = true)
     }
 
     private val dataCallback: DataCallback<Int> = object : DataCallback<Int>() {
@@ -100,13 +101,14 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     override fun onResume() {
         super.onResume()
         if (refreshOnResume) {
-            loadData(showProgress = false, isCached = true)
+            loadData(showProgress = false, fromCache = true)
             refreshOnResume = false
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        enrolledCoursesCall?.cancel()
         EventBus.getDefault().unregister(this)
     }
 
@@ -117,30 +119,29 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     /**
      * Method to obtain enrolled courses data from api or cache
      * @param showProgress: show loading indicator if true, false else wise
-     * @param isCached: make cached api call if true, server api call else wise
+     * @param fromCache: make cached api call if true, server api call else wise
      */
-    private fun loadData(showProgress: Boolean, isCached: Boolean) {
+    private fun loadData(showProgress: Boolean, fromCache: Boolean) {
         if (showProgress) {
             binding.loadingIndicator.root.visibility = View.VISIBLE
             errorNotification.hideError()
         }
-        if (isCached) {
-            getUserEnrolledCourses(courseAPI.enrolledCoursesFromCache, isCached = true)
-        } else {
-            getUserEnrolledCourses(courseAPI.enrolledCourses)
-        }
+        enrolledCoursesCall = if (fromCache) courseAPI.enrolledCoursesFromCache else courseAPI.enrolledCourses
+        getUserEnrolledCourses(fromCache)
     }
 
-    private fun getUserEnrolledCourses(enrolledCoursesApi: Call<List<EnrolledCoursesResponse>>, isCached: Boolean = false) {
-        enrolledCoursesApi.enqueue(object : Callback<List<EnrolledCoursesResponse>> {
+    private fun getUserEnrolledCourses(fromCache: Boolean = false) {
+        enrolledCoursesCall.enqueue(object : Callback<List<EnrolledCoursesResponse>> {
             override fun onResponse(call: Call<List<EnrolledCoursesResponse>>, response: Response<List<EnrolledCoursesResponse>>) {
                 if (response.isSuccessful && response.code() == HttpStatus.OK) {
-                    populateCourseData(ArrayList(response.body()), isCachedData = isCached)
-                    if (isCached) {
-                        getUserEnrolledCourses(courseAPI.enrolledCourses)
+                    populateCourseData(ArrayList(response.body()), isCachedData = fromCache)
+                    // Fetch latest data from server in the background after displaying previously cached data
+                    // Show loader if the cache data is empty
+                    if (fromCache) {
+                        loadData(showProgress = response.body()?.isEmpty() == true, fromCache = false)
                     }
-                } else if (isCached) {
-                    getUserEnrolledCourses(courseAPI.enrolledCourses)
+                } else if (fromCache) { // Fetch latest data from server if cache call's response is unSuccessful
+                    loadData(showProgress = true, fromCache = false)
                 } else {
                     when {
                         response.code() == HttpStatus.UNAUTHORIZED -> {
@@ -159,21 +160,23 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                                     ResponseBody.create(MediaType.parse("text/plain"), response.message()))))
                         }
                     }
+                    invalidateView()
                 }
-                invalidateView()
             }
 
             override fun onFailure(call: Call<List<EnrolledCoursesResponse>>, t: Throwable) {
-                if (isCached) {
-                    getUserEnrolledCourses(courseAPI.enrolledCourses)
-                } else {
-                    if (t is AuthException || (t is HttpStatusException && t.statusCode == HttpStatus.UNAUTHORIZED)) {
-                        environment.router?.forceLogout(context,
-                                environment.analyticsRegistry,
-                                environment.notificationDelegate)
-                    } else if (adapter.isEmpty) {
-                        showError(t)
-                        invalidateView()
+                when {
+                    call.isCanceled -> logger.error(t)
+                    fromCache -> loadData(showProgress = true, fromCache = false)
+                    else -> {
+                        if (t is AuthException || (t is HttpStatusException && t.statusCode == HttpStatus.UNAUTHORIZED)) {
+                            environment.router?.forceLogout(context,
+                                    environment.analyticsRegistry,
+                                    environment.notificationDelegate)
+                        } else if (adapter.isEmpty) {
+                            showError(t)
+                            invalidateView()
+                        }
                     }
                 }
             }
@@ -198,6 +201,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             binding.myCourseList.visibility = View.VISIBLE
             errorNotification.hideError()
         }
+        invalidateView()
     }
 
     private fun updateDatabaseAfterDownload(list: ArrayList<EnrolledCoursesResponse>?) {
@@ -265,7 +269,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     fun onEvent(event: MainDashboardRefreshEvent?) {
-        loadData(showProgress = true, isCached = false)
+        loadData(showProgress = true, fromCache = false)
     }
 
     override fun onRevisit() {
