@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Cải thiện trải nghiệm khám phá",
+        "message": "Chúng tôi đã cải thiện cách bạn tìm kiếm và đăng ký các khóa học & chương trình yêu thích của mình."
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {

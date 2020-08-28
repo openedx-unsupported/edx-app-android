@@ -11,7 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Matricule-se agora</string>
   <!--Invitation Only button text-->
-  <string name="invitation_only_button_text" tools:ignore="MissingTranslation">Somente convidados</string>
+  <string name="invitation_only_button_text">Somente convidados</string>
   <!--Effort field name-->
   <string name="effort_field_name">Esforço:</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -21,24 +21,25 @@
   <string name="view_course_button_text">Ver curso</string>
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">Você está matriculado nesse curso.</string>
+  <!--Floating overlay text shown to user when user already enrolled in a course-->
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">Não é possível exibir o painel.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
-  <string name="cannot_open_url" tools:ignore="MissingTranslation">Não foi capaz de abrir a página.</string>
+  <string name="cannot_open_url">Não foi capaz de abrir a página.</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject" tools:ignore="MissingTranslation">Navegue por Assunto</string>
+  <string name="browse_by_subject">Navegue por Assunto</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects" tools:ignore="MissingTranslation">Visualizar Todos os Assuntos</string>
+  <string name="view_all_subjects">Visualizar Todos os Assuntos</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects" tools:ignore="MissingTranslation">Procurar por Assunto</string>
+  <string name="search_subjects">Procurar por Assunto</string>
   <!--Google Cast-->
   <!--Description of a button that will cast/un-cast the app to a remote device-->
-  <string name="media_route_menu_title" tools:ignore="MissingTranslation">Reproduzir...</string>
+  <string name="media_route_menu_title">Reproduzir...</string>
   <!--Google cast Introduction title-->
-  <string name="introducing_cast_text" tools:ignore="MissingTranslation">Iniciando transmissão</string>
+  <string name="introducing_cast_text">Iniciando transmissão</string>
   <!--Text to describe that video is casting on the remote device-->
-  <string name="remote_device_casting_message" tools:ignore="MissingTranslation">O vídeo está transmitindo para dispositivo remoto</string>
+  <string name="remote_device_casting_message">O vídeo está transmitindo para dispositivo remoto</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartilhe seu curso</string>
@@ -50,9 +51,9 @@
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">Baixar conteúdo somente quando conectado ao Wi-Fi</string>
   <!--Label for the Download to sd-card setting-->
-  <string name="settings_download_to_sdcard_title" tools:ignore="MissingTranslation">Baixar o Vídeo para o Cartão SD</string>
+  <string name="settings_download_to_sdcard_title">Baixar o Vídeo para o Cartão SD</string>
   <!--Label explaining the download location setting in detail-->
-  <string name="settings_download_to_sdcard_subtitle" tools:ignore="MissingTranslation">Vídeos serão baixados para o cartão SD se disponíveis</string>
+  <string name="settings_download_to_sdcard_subtitle">Vídeos serão baixados para o cartão SD se disponíveis</string>
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Compartilhe seu certificado</string>
@@ -88,15 +89,15 @@
   <string name="login_failed">Certifique-se de que seu nome de usuário ou endereço de e-mail e senha estão corretos e tente novamente.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account" tools:ignore="MissingTranslation">Ao criar uma conta, você concorda com o {license} e {tos_and_honor_code} e o reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}</string>
+  <string name="by_creating_account">Ao criar uma conta, você concorda com o {license} e {tos_and_honor_code} e o reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in" tools:ignore="MissingTranslation">Ao assinar esse aplicativo, você concorda com o {license} e {tos_and_honor_code} e reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}</string>
+  <string name="by_signing_in">Ao assinar esse aplicativo, você concorda com o {license} e {tos_and_honor_code} e reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}</string>
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name} Contrato de Licença de Usuário Final</string>
+  <string name="licensing_agreement">{platform_name} Contrato de Licença de Usuário Final</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name} Termos de Serviço e Código de Honra</string>
+  <string name="tos_and_honor_code">{platform_name} Termos de Serviço e Código de Honra</string>
   <!--Label for Privacy Policy-->
-  <string name="privacy_policy" tools:ignore="MissingTranslation">Política de Privacidade</string>
+  <string name="privacy_policy">Política de Privacidade</string>
   <string name="login_title">Entrar</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Fechar</string>
@@ -104,21 +105,21 @@
   <string name="dropdown_list_prefix">Lista suspensa.</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads" tools:ignore="MissingTranslation">Visualizar transferências atuais</string>
+  <string name="label_current_downloads">Visualizar transferências atuais</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">Abra seu perfil</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses" tools:ignore="MissingTranslation">Cursos</string>
+  <string name="label_my_courses">Cursos</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs" tools:ignore="MissingTranslation">Programas</string>
+  <string name="label_my_programs">Programas</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontre cursos</string>
   <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover" tools:ignore="MissingTranslation">Descubra</string>
+  <string name="label_discover">Descubra</string>
   <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees" tools:ignore="MissingTranslation">Níveis</string>
+  <string name="label_degrees">Níveis</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery" tools:ignore="MissingTranslation">Descubra</string>
+  <string name="label_discovery">Descubra</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentário</string>
   <!--Toggle switch on state label-->
@@ -132,9 +133,9 @@
   <!--Settings screen version-->
   <string name="label_version">Versão do aplicativo</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings" tools:ignore="MissingTranslation">Configurações</string>
+  <string name="label_settings">Configurações</string>
   <!--Title of Account screen-->
-  <string name="title_account" tools:ignore="MissingTranslation">Conta</string>
+  <string name="title_account">Conta</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Redefinir senha</string>
@@ -161,10 +162,10 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">Se você sair do aplicativo, não estará mais visualizando o conteúdo grátis do {platform_name}. Sujeito à cobrança de dados.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title" tools:ignore="MissingTranslation"> Contrato de Licença de Usuário Final</string>
+  <string name="end_user_title"> Contrato de Licença de Usuário Final</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
-  <string name="terms_of_service_title" tools:ignore="MissingTranslation">Termos de Serviços</string>
+  <string name="terms_of_service_title">Termos de Serviços</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">Curso</string>
@@ -172,9 +173,9 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">Acessar vídeos e tarefas</string>
   <!--Row title of videos on dashboard screen-->
-  <string name="videos_title" tools:ignore="MissingTranslation">Vídeos</string>
+  <string name="videos_title">Vídeos</string>
   <!--Row subtitle of videos on dashboard screen-->
-  <string name="videos_subtitle" tools:ignore="MissingTranslation">Assista a cursos e vídeos</string>
+  <string name="videos_subtitle">Assista a cursos e vídeos</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">Discussões</string>
   <!--Row of Discussion on dashboard screen-->
@@ -188,32 +189,32 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">Anúncios</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title" tools:ignore="MissingTranslation">Datas Importantes</string>
+  <string name="course_dates_title">Datas Importantes</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
-  <string name="resources_title" tools:ignore="MissingTranslation">Recursos</string>
+  <string name="resources_title">Recursos</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">Mantenha-se atualizado com as últimas notícias</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <string name="course_dates_subtitle" tools:ignore="MissingTranslation">Fique de olho nos prazos e se mantenha em dia</string>
+  <string name="course_dates_subtitle">Fique de olho nos prazos e se mantenha em dia</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">Nome do curso</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Novo conteúdo do curso</string>
   <!--Label for date when course starts-->
-  <string name="label_starting" tools:ignore="MissingTranslation">Iniciando {date}</string>
+  <string name="label_starting">Iniciando {date}</string>
   <!--Label for course that has ended-->
-  <string name="label_ended" tools:ignore="MissingTranslation">Finalizado {date}</string>
+  <string name="label_ended">Finalizado {date}</string>
   <!--Label for date when course is ending-->
-  <string name="label_ending" tools:ignore="MissingTranslation">Finalizado {date}</string>
+  <string name="label_ending">Finalizado {date}</string>
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires" tools:ignore="MissingTranslation">Acesso ao curso expira {date}</string>
+  <string name="label_expires">Acesso ao curso expira {date}</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on" tools:ignore="MissingTranslation">Acesso ao curso expira em {date}</string>
+  <string name="label_expires_on">Acesso ao curso expira em {date}</string>
   <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired" tools:ignore="MissingTranslation">Acesso ao curso expirado {date}</string>
+  <string name="label_expired">Acesso ao curso expirado {date}</string>
   <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on" tools:ignore="MissingTranslation">Acesso ao curso expirado em {date}</string>
+  <string name="label_expired_on">Acesso ao curso expirado em {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Conteúdo do curso</string>
@@ -224,7 +225,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">Atualmente, não há materiais didáticos disponíveis.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
-  <string name="no_videos_text" tools:ignore="MissingTranslation">Esse curso não contém nenhum vídeo.</string>
+  <string name="no_videos_text">Esse curso não contém nenhum vídeo.</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">Parece que você ainda não se matriculou em nenhum curso.</string>
   <!--Label shown when no announcements are available for a course-->
@@ -232,19 +233,19 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">Não há apostilas para este curso no momento.</string>
   <!--Label shown when no important dates are available for a course-->
-  <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">As datas do curso não estão disponíveis atualmente.</string>
+  <string name="no_course_dates_to_display">As datas do curso não estão disponíveis atualmente.</string>
   <!--Title of the screen where user can delete videos-->
-  <string name="delete_videos_title" tools:ignore="MissingTranslation">Apagar Vídeos</string>
+  <string name="delete_videos_title">Apagar Vídeos</string>
   <!--Label for a course item's due date for same day-->
-  <string name="due_date_today" tools:ignore="MissingTranslation">com vencimento hoje às {due_date}</string>
+  <string name="due_date_today">com vencimento hoje às {due_date}</string>
   <!--Label for a course item's due date-->
-  <string name="due_date_past_future" tools:ignore="MissingTranslation">vencimento {due_date}</string>
+  <string name="due_date_past_future">vencimento {due_date}</string>
   <!--Upgrade banner's description which appears on course outline screen.-->
-  <string name="upgrade_banner_description" tools:ignore="MissingTranslation">Conclua avaliações em qualquer lugar para obter um certificado!</string>
+  <string name="upgrade_banner_description">Conclua avaliações em qualquer lugar para obter um certificado!</string>
   <!--Title upgrade to verified today course outline footer-->
-  <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">Faça o upgrade para o módulo Verificado hoje mesmo</string>
+  <string name="upgrade_to_verified_today_title">Faça o upgrade para o módulo Verificado hoje mesmo</string>
   <!--Title of place order for course upgrade screen-->
-  <string name="place_order_title" tools:ignore="MissingTranslation">Realizar pedido</string>
+  <string name="place_order_title">Realizar pedido</string>
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -270,7 +271,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">Atividade recente</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">Mais ativas</string>
+  <string name="discussion_posts_sort_most_activity">Mais ativas</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">Mais votadas</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -351,9 +352,9 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Tópico: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">Publicar discussão</string>
+  <string name="discussion_add_post_button_label">Publicar discussão</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">Botão publicar discussão</string>
+  <string name="discussion_add_post_button_description">Botão publicar discussão</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Publicar pergunta</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -380,17 +381,17 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">Vire seu dispositivo para assistir a esse vídeo no modo tela cheia.</string>
   <!--Label showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation">Erro no player</string>
+  <string name="assessment_unable_to_play_video">Erro no player</string>
   <!--Error message showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">Não é possível reproduzir este vídeo. Você pode visualizá-lo no app do YouTube ou tentar novamente mais tarde.</string>
+  <string name="assessment_unable_to_play_video_message">Não é possível reproduzir este vídeo. Você pode visualizá-lo no app do YouTube ou tentar novamente mais tarde.</string>
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">Esse vídeo só pode ser reproduzido no YouTube.</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">Assista ao vídeo no YouTube</string>
   <!--Label showing that you need to update youtube app in order to watch the video-->
-  <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">Para visualizar este vídeo, é necessário atualizar o app do YouTube.</string>
+  <string name="assessment_needed_updating_youtube">Para visualizar este vídeo, é necessário atualizar o app do YouTube.</string>
   <!--Label for button to update youtube app-->
-  <string name="assessment_update_youtube" tools:ignore="MissingTranslation">Atualizar o YouTube</string>
+  <string name="assessment_update_youtube">Atualizar o YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">Downloads</string>
@@ -423,30 +424,30 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="no_connectivity">Erro de conexão</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
-  <string name="bulk_download_switch" tools:ignore="MissingTranslation">Interruptor de download de vídeos em massa.</string>
+  <string name="bulk_download_switch">Interruptor de download de vídeos em massa.</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
-  <string name="download_to_device" tools:ignore="MissingTranslation">Baixar para Dispositivo</string>
+  <string name="download_to_device">Baixar para Dispositivo</string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="one">{total_videos_count} vídeo, total de {total_videos_size}</item>
     <item quantity="other">{total_videos_count} vídeos, total de {total_videos_size}</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting" tools:ignore="MissingTranslation">Iniciando Transferência...</string>
+  <string name="download_starting">Iniciando Transferência...</string>
   <!--Title for bulk videos download view when in downloading state-->
-  <string name="downloading_videos" tools:ignore="MissingTranslation">Baixando Vídeos...</string>
+  <string name="downloading_videos">Baixando Vídeos...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
-  <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} Restando, {remaining_videos_size} total</string>
+  <string name="download_remaining">{remaining_videos_count} Restando, {remaining_videos_size} total</string>
   <!--Title for bulk videos download view when in downloaded state-->
-  <string name="download_complete" tools:ignore="MissingTranslation">Todos Vídeos Baixados</string>
+  <string name="download_complete">Todos Vídeos Baixados</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
-  <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">Ativando o interruptor, irá baixar todos os vídeos deste curso.</string>
+  <string name="switch_off_no_downloading">Ativando o interruptor, irá baixar todos os vídeos deste curso.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
-  <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">Desativando o interruptor, irá cancelar e apagar a transferência de todos os vídeos deste curso.</string>
+  <string name="switch_on_all_downloading">Desativando o interruptor, irá cancelar e apagar a transferência de todos os vídeos deste curso.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
-  <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">Desativando o interruptor, irá apagar todos os vídeos baixados deste curso.</string>
+  <string name="switch_on_all_downloaded">Desativando o interruptor, irá apagar todos os vídeos baixados deste curso.</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
-  <string name="view_downloads" tools:ignore="MissingTranslation">Toque duas vezes para ver as transferências em andamento.</string>
+  <string name="view_downloads">Toque duas vezes para ver as transferências em andamento.</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">Permitir</string>
@@ -456,9 +457,9 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label for closed captions in video player-->
   <string name="lbl_closed_caption">Legendas ocultas</string>
   <!--Label for video playback speed in video player-->
-  <string name="lbl_video_speed" tools:ignore="MissingTranslation">Velocidade de vídeo</string>
+  <string name="lbl_video_speed">Velocidade de vídeo</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none" tools:ignore="MissingTranslation">Nenhum</string>
+  <string name="lbl_cc_none">Nenhum</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Player de vídeo</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -471,6 +472,8 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="video_player_previous">Anterior</string>
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">Pausar</string>
+  <!--Accessibility Label for Rewind button on Video Player-->
+  <!--Accessibility Label for Forward button on Video Player-->
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">Voltar 30 segundos</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -479,6 +482,8 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="video_player_enter_fullscreen">Entrar no modo tela cheia</string>
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">Sair do modo tela cheia</string>
+  <!--Label for video playback rewind 10 sec in video player-->
+  <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Buscando novos desafios?</string>
   <!--Button label to bring up course finder-->
@@ -489,16 +494,17 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
   <string name="google_text">Google</string>
+  <!--Microsoft login method-->
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">Enviar e-mail utilizando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Não há clientes de e-mail instalados</string>
   <!--Search for a course prompt-->
-  <string name="search_for_courses" tools:ignore="MissingTranslation">Procurar por cursos</string>
+  <string name="search_for_courses">Procurar por cursos</string>
   <!--Search for a program prompt-->
-  <string name="search_for_programs" tools:ignore="MissingTranslation">Pesquisar por cursos</string>
+  <string name="search_for_programs">Pesquisar por cursos</string>
   <!--Search for a degree prompt-->
-  <string name="search_for_degrees" tools:ignore="MissingTranslation">Pesquisar por níveis</string>
+  <string name="search_for_degrees">Pesquisar por níveis</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Já possui uma conta? Entrar</string>
@@ -509,13 +515,12 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="or_register_with_email">ou registre-se com um e-mail</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
-  <string name="launch_register" tools:ignore="MissingTranslation">Crie sua Conta</string>
   <!--Button leading user to log in screen-->
-  <string name="launch_login" tools:ignore="MissingTranslation">Logar</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text" tools:ignore="MissingTranslation">Cursos das melhores universidades do mundo no seu bolso.</string>
+  <!--Introduction text on the launch screen when courses and program enabled-->
+  <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses" tools:ignore="MissingTranslation">Procurar Cursos</string>
+  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Exibir campos opcionais</string>
@@ -566,14 +571,14 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">Sem título</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">Notificação Geral</string>
+  <string name="default_notification_channel_title">Notificação Geral</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">Nenhum resultado encontrado para \"{search_query}\". Tente usar outro termo de busca ou selecione uma categoria de discussão para navegar.</string>
   <string name="forum_no_results_for_all_posts">Não há publicações na discussão deste curso.</string>
   <string name="forum_no_results_for_following">Você não está seguindo nenhuma publicação.</string>
   <string name="forum_no_results_for_filtered_following">Os resultados filtrados não incluem nenhuma publicação seguida.</string>
   <string name="forum_no_results_in_category">Não há nenhuma publicação nessa categoria de discussão. </string>
-  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">Tente remover o filtro da publicação.</string>
+  <string name="forum_no_results_with_filter">Tente remover o filtro da publicação.</string>
   <string name="forum_post_i_am_following">Publicações que estou seguindo</string>
   <string name="forum_follow">Seguir</string>
   <string name="forum_unfollow">Deixar de seguir</string>
@@ -651,7 +656,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">Ajude-nos a melhorar</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar" tools:ignore="MissingTranslation">Controle de avaliação</string>
+  <string name="rating_bar">Controle de avaliação</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} de {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

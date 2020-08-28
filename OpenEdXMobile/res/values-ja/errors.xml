@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">不明なエラーが生じました。後ほど再試行してください。</string>
   <!--Course related error messages-->
@@ -37,10 +37,13 @@
   <string name="error_account_not_linked_desc_fb">あなたの Facebook アカウントが {platform_destination} 上の {platform_name} アカウントと連動しているか確認してください。</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation"> {platform_name} アカウントと連動していない Google アカウント</string>
+  <string name="error_account_not_linked_title_google"> {platform_name} アカウントと連動していない Google アカウント</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">あなたの Google アカウントが {platform_destination} 上の {platform_name} アカウントと連動しているか確認してください。</string>
+  <string name="error_account_not_linked_desc_google">あなたの Google アカウントが {platform_destination} 上の {platform_name} アカウントと連動しているか確認してください。</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">ダウンロード失敗</string>
@@ -60,23 +63,24 @@ Wi-Fi ネットワークに接続するか、ダウンロードの設定を変�
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
-  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">サポートされているアプリストアが見つかりません。</string>
+  <string name="app_version_upgrade_app_store_unavailable">サポートされているアプリストアが見つかりません。</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">%1$s を入力してください。</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s は少なくとも %2$d 文字必要です。</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s は %2$d 文字を超えることはできません。</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">この講座はまだ開始していません。</string>
+  <string name="course_not_started">この講座はまだ開始していません。</string>
   <!--Error message shown when a user's access has expired for a course-->
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">完了していません。</string>
+  <string name="action_not_completed">完了していません。</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
-  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">あなたが使っている本アプリのバージョンはサポートが終了しています。最新バージョンにアップデートしてログインしてください。</string>
+  <string name="app_version_unsupported_login_msg">あなたが使っている本アプリのバージョンはサポートが終了しています。最新バージョンにアップデートしてログインしてください。</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
-  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">あなたが使っている本アプリのバージョンはサポートが終了しています。最新バージョンにアップデートして登録してください。</string>
+  <string name="app_version_unsupported_register_msg">あなたが使っている本アプリのバージョンはサポートが終了しています。最新バージョンにアップデートして登録してください。</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
 </resources>

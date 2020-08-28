@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Experiencia de descubrimiento mejorada",
+        "message": "Hemos mejorado la forma de buscar e inscribirse en sus cursos y programas favoritos."
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {

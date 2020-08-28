@@ -11,7 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">הירשמו עכשיו</string>
   <!--Invitation Only button text-->
-  <string name="invitation_only_button_text" tools:ignore="MissingTranslation">הזמנה בלבד</string>
+  <string name="invitation_only_button_text">הזמנה בלבד</string>
   <!--Effort field name-->
   <string name="effort_field_name">מאמץ:</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -21,24 +21,25 @@
   <string name="view_course_button_text">צפו בקורס</string>
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">כעת אתם רשומים בקורס זה.</string>
+  <!--Floating overlay text shown to user when user already enrolled in a course-->
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">לא ניתן להציג את לוח הבקרה.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
-  <string name="cannot_open_url" tools:ignore="MissingTranslation">לא ניתן לפתוח את דף האינטרנט</string>
+  <string name="cannot_open_url">לא ניתן לפתוח את דף האינטרנט</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject" tools:ignore="MissingTranslation">עיון לפי נושא</string>
+  <string name="browse_by_subject">עיון לפי נושא</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects" tools:ignore="MissingTranslation">צפו בכל הנושאים</string>
+  <string name="view_all_subjects">צפו בכל הנושאים</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects" tools:ignore="MissingTranslation">חפשו נושאר</string>
+  <string name="search_subjects">חפשו נושאר</string>
   <!--Google Cast-->
   <!--Description of a button that will cast/un-cast the app to a remote device-->
-  <string name="media_route_menu_title" tools:ignore="MissingTranslation">הפעלה ב...</string>
+  <string name="media_route_menu_title">הפעלה ב...</string>
   <!--Google cast Introduction title-->
-  <string name="introducing_cast_text" tools:ignore="MissingTranslation">נא להכיר: Cast (שידור)</string>
+  <string name="introducing_cast_text">נא להכיר: Cast (שידור)</string>
   <!--Text to describe that video is casting on the remote device-->
-  <string name="remote_device_casting_message" tools:ignore="MissingTranslation">הסרטון משודר אל התקן מרוחק</string>
+  <string name="remote_device_casting_message">הסרטון משודר אל התקן מרוחק</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">שתפו את הקורסים שלכם</string>
@@ -50,9 +51,9 @@
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">הורד תוכן רק כאשר Wi-Fi מחובר</string>
   <!--Label for the Download to sd-card setting-->
-  <string name="settings_download_to_sdcard_title" tools:ignore="MissingTranslation">הורדת הסרטון אל כרטיס SD</string>
+  <string name="settings_download_to_sdcard_title">הורדת הסרטון אל כרטיס SD</string>
   <!--Label explaining the download location setting in detail-->
-  <string name="settings_download_to_sdcard_subtitle" tools:ignore="MissingTranslation">סרטונים יורדו אל כרטיס SD, אם הוא זמין</string>
+  <string name="settings_download_to_sdcard_subtitle">סרטונים יורדו אל כרטיס SD, אם הוא זמין</string>
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">שתפו את התעודה שלכם</string>
@@ -88,15 +89,15 @@
   <string name="login_failed">אנא ודא את נכונות שם המשתמש או כתובת הדוא\"ל והסיסמה, ונסה שוב. </string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account" tools:ignore="MissingTranslation">יצירת החשבון מהווה את הסכמתך ל{license}  ול{tos_and_honor_code} והכרה מצדך בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישיים שלך בהתאם ל{privacy_policy}</string>
+  <string name="by_creating_account">יצירת החשבון מהווה את הסכמתך ל{license}  ול{tos_and_honor_code} והכרה מצדך בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישיים שלך בהתאם ל{privacy_policy}</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in" tools:ignore="MissingTranslation">כניסה אל האפליקציה מהווה הסכמה ל{license} ול{tos_and_honor_code} והכרה בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישים שלך בהתאם ל{privacy_policy}</string>
+  <string name="by_signing_in">כניסה אל האפליקציה מהווה הסכמה ל{license} ול{tos_and_honor_code} והכרה בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישים שלך בהתאם ל{privacy_policy}</string>
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement" tools:ignore="MissingTranslation">הסכם רישיון משתמש קצה ב-{platform_name}</string>
+  <string name="licensing_agreement">הסכם רישיון משתמש קצה ב-{platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code" tools:ignore="MissingTranslation">תנאי השירות וקוד הכבוד ב-{platform_name}</string>
+  <string name="tos_and_honor_code">תנאי השירות וקוד הכבוד ב-{platform_name}</string>
   <!--Label for Privacy Policy-->
-  <string name="privacy_policy" tools:ignore="MissingTranslation">מדיניות פרטיות</string>
+  <string name="privacy_policy">מדיניות פרטיות</string>
   <string name="login_title">היכנס</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">סגור</string>
@@ -104,21 +105,21 @@
   <string name="dropdown_list_prefix">רשימה נפתחת.</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads" tools:ignore="MissingTranslation">צפו בהורדות המתבצעות כעת</string>
+  <string name="label_current_downloads">צפו בהורדות המתבצעות כעת</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">פתח פרופיל</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses" tools:ignore="MissingTranslation">קורסים</string>
+  <string name="label_my_courses">קורסים</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs" tools:ignore="MissingTranslation">תכניות</string>
+  <string name="label_my_programs">תכניות</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">מצא קורסים</string>
   <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover" tools:ignore="MissingTranslation">גלו</string>
+  <string name="label_discover">גלו</string>
   <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees" tools:ignore="MissingTranslation">תארים</string>
+  <string name="label_degrees">תארים</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery" tools:ignore="MissingTranslation">גילוי</string>
+  <string name="label_discovery">גילוי</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">הגש משוב</string>
   <!--Toggle switch on state label-->
@@ -132,9 +133,9 @@
   <!--Settings screen version-->
   <string name="label_version">גרסת האפליקציה</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings" tools:ignore="MissingTranslation">הגדרות</string>
+  <string name="label_settings">הגדרות</string>
   <!--Title of Account screen-->
-  <string name="title_account" tools:ignore="MissingTranslation">חשבון</string>
+  <string name="title_account">חשבון</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">איפוס סיסמה</string>
@@ -163,10 +164,10 @@
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">אם אתם עוזבים את האפליקציה, לא תוכלו יותר לצפות בתוכן חינמי של {platform_name}. חיובי גלישה עשויים לחול.</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title" tools:ignore="MissingTranslation">הסכם רישיון למשתמש קצה </string>
+  <string name="end_user_title">הסכם רישיון למשתמש קצה </string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
-  <string name="terms_of_service_title" tools:ignore="MissingTranslation">תנאי השירות</string>
+  <string name="terms_of_service_title">תנאי השירות</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">קורס</string>
@@ -174,9 +175,9 @@
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">גישה לקבצי וידאו ולמטלות</string>
   <!--Row title of videos on dashboard screen-->
-  <string name="videos_title" tools:ignore="MissingTranslation">קבצי וידאו</string>
+  <string name="videos_title">קבצי וידאו</string>
   <!--Row subtitle of videos on dashboard screen-->
-  <string name="videos_subtitle" tools:ignore="MissingTranslation">צפו בקבצי וידאו של הקורס</string>
+  <string name="videos_subtitle">צפו בקבצי וידאו של הקורס</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">דיון</string>
   <!--Row of Discussion on dashboard screen-->
@@ -190,32 +191,32 @@
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">הודעות</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title" tools:ignore="MissingTranslation">תאריכים חשובים</string>
+  <string name="course_dates_title">תאריכים חשובים</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
-  <string name="resources_title" tools:ignore="MissingTranslation">משאבים</string>
+  <string name="resources_title">משאבים</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">התעדכנו בחדשות הטריות ביותר</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <string name="course_dates_subtitle" tools:ignore="MissingTranslation">עקבו אחר מועדי ההגשה והישארו במסלול</string>
+  <string name="course_dates_subtitle">עקבו אחר מועדי ההגשה והישארו במסלול</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">שם קורס</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">תוכן קורס חדש</string>
   <!--Label for date when course starts-->
-  <string name="label_starting" tools:ignore="MissingTranslation">התחלה {date}</string>
+  <string name="label_starting">התחלה {date}</string>
   <!--Label for course that has ended-->
-  <string name="label_ended" tools:ignore="MissingTranslation">סיום {date}</string>
+  <string name="label_ended">סיום {date}</string>
   <!--Label for date when course is ending-->
-  <string name="label_ending" tools:ignore="MissingTranslation">סיום {date}</string>
+  <string name="label_ending">סיום {date}</string>
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires" tools:ignore="MissingTranslation">תוקף הגישה לקורס יפוג {date}</string>
+  <string name="label_expires">תוקף הגישה לקורס יפוג {date}</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on" tools:ignore="MissingTranslation">תוקף הגישה לקורס יפוג ב{date}</string>
+  <string name="label_expires_on">תוקף הגישה לקורס יפוג ב{date}</string>
   <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired" tools:ignore="MissingTranslation">תוקף הכניסה לקורס פג {date}</string>
+  <string name="label_expired">תוקף הכניסה לקורס פג {date}</string>
   <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on" tools:ignore="MissingTranslation">תוקף הכניסה לקורס פג ב{date}</string>
+  <string name="label_expired_on">תוקף הכניסה לקורס פג ב{date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">תוכן הקורס</string>
@@ -226,7 +227,7 @@
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">לא קיים כעת תוכן בקורס זה.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
-  <string name="no_videos_text" tools:ignore="MissingTranslation">קורס זה אינו כולל קבצי וידאו.</string>
+  <string name="no_videos_text">קורס זה אינו כולל קבצי וידאו.</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">נראה שטרם נרשמתם בקורסים.</string>
   <!--Label shown when no announcements are available for a course-->
@@ -234,19 +235,19 @@
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">כעת אין דפי מידע לקורס זה.</string>
   <!--Label shown when no important dates are available for a course-->
-  <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">תאריכי הקורס אינם זמינים כעת.</string>
+  <string name="no_course_dates_to_display">תאריכי הקורס אינם זמינים כעת.</string>
   <!--Title of the screen where user can delete videos-->
-  <string name="delete_videos_title" tools:ignore="MissingTranslation">מחק קבצי וידאו</string>
+  <string name="delete_videos_title">מחק קבצי וידאו</string>
   <!--Label for a course item's due date for same day-->
-  <string name="due_date_today" tools:ignore="MissingTranslation">להגשה היום ב-{due_date}</string>
+  <string name="due_date_today">להגשה היום ב-{due_date}</string>
   <!--Label for a course item's due date-->
-  <string name="due_date_past_future" tools:ignore="MissingTranslation">תאריך הגשה {due_date}</string>
+  <string name="due_date_past_future">תאריך הגשה {due_date}</string>
   <!--Upgrade banner's description which appears on course outline screen.-->
-  <string name="upgrade_banner_description" tools:ignore="MissingTranslation">הערכות מלאות תוך כדי תנועה לקראת תעודה!</string>
+  <string name="upgrade_banner_description">הערכות מלאות תוך כדי תנועה לקראת תעודה!</string>
   <!--Title upgrade to verified today course outline footer-->
-  <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">שדרגו למסלול \'מאומת\' היום</string>
+  <string name="upgrade_to_verified_today_title">שדרגו למסלול \'מאומת\' היום</string>
   <!--Title of place order for course upgrade screen-->
-  <string name="place_order_title" tools:ignore="MissingTranslation">ביצוע הזמנה</string>
+  <string name="place_order_title">ביצוע הזמנה</string>
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -272,7 +273,7 @@
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">פעילות אחרונה</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">הפעילות הרבה ביותר</string>
+  <string name="discussion_posts_sort_most_activity">הפעילות הרבה ביותר</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">מספר ההצבעות הרב ביותר</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -360,9 +361,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">נושא: {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">דיון בפוסט</string>
+  <string name="discussion_add_post_button_label">דיון בפוסט</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">כפתור דיון בפוסט</string>
+  <string name="discussion_add_post_button_description">כפתור דיון בפוסט</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">שאלה בנוגע לפוסט</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -389,17 +390,17 @@
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">סובבו את המכשיר שלכם כדי לצפות בקובץ וידאו זה במצב מסך מלא.</string>
   <!--Label showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation"> שגיאת נגן</string>
+  <string name="assessment_unable_to_play_video"> שגיאת נגן</string>
   <!--Error message showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">אין אפשרות להפעיל את הסרטון. באפשרותך להציגו באפליקציית YouTube או לנסות שוב מאוחר יותר.</string>
+  <string name="assessment_unable_to_play_video_message">אין אפשרות להפעיל את הסרטון. באפשרותך להציגו באפליקציית YouTube או לנסות שוב מאוחר יותר.</string>
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">ניתן להציג קובץ וידאו זה רק ביוטיוב.</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">צפו בוידאו ביוטיוב</string>
   <!--Label showing that you need to update youtube app in order to watch the video-->
-  <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">סרטון זה דורש את עדכון האפליקציה YouTube אצלך.</string>
+  <string name="assessment_needed_updating_youtube">סרטון זה דורש את עדכון האפליקציה YouTube אצלך.</string>
   <!--Label for button to update youtube app-->
-  <string name="assessment_update_youtube" tools:ignore="MissingTranslation">עדכון YouTube</string>
+  <string name="assessment_update_youtube">עדכון YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">הורדות</string>
@@ -432,9 +433,9 @@
   <string name="no_connectivity">שגיאת חיבור</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
-  <string name="bulk_download_switch" tools:ignore="MissingTranslation">מתג הורדת קבצי וידאו במקבץ.</string>
+  <string name="bulk_download_switch">מתג הורדת קבצי וידאו במקבץ.</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
-  <string name="download_to_device" tools:ignore="MissingTranslation">הורד למכשיר</string>
+  <string name="download_to_device">הורד למכשיר</string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="one">{total_videos_count} קובץ וידאו, {total_videos_size} סך הכל</item>
@@ -443,21 +444,21 @@
     <item quantity="other">{total_videos_count} קבצי וידאו, {total_videos_size} סך הכל</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting" tools:ignore="MissingTranslation">מתחיל בהורדה...</string>
+  <string name="download_starting">מתחיל בהורדה...</string>
   <!--Title for bulk videos download view when in downloading state-->
-  <string name="downloading_videos" tools:ignore="MissingTranslation">מוריד קבצי וידאו...</string>
+  <string name="downloading_videos">מוריד קבצי וידאו...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
-  <string name="download_remaining" tools:ignore="MissingTranslation">{remaining_videos_count} נותרו, {remaining_videos_size} סך הכל</string>
+  <string name="download_remaining">{remaining_videos_count} נותרו, {remaining_videos_size} סך הכל</string>
   <!--Title for bulk videos download view when in downloaded state-->
-  <string name="download_complete" tools:ignore="MissingTranslation">כל קבצי הוידאו הורדו</string>
+  <string name="download_complete">כל קבצי הוידאו הורדו</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
-  <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">הדלקת המתג תוריד את כל קבצי הוידאו בקורס זה.</string>
+  <string name="switch_off_no_downloading">הדלקת המתג תוריד את כל קבצי הוידאו בקורס זה.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
-  <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">כיבוי המתג יבטל את הורדת כל קבצי הוידאו וימחק את כל הקבצים שכבר הורדו בקורס זה.</string>
+  <string name="switch_on_all_downloading">כיבוי המתג יבטל את הורדת כל קבצי הוידאו וימחק את כל הקבצים שכבר הורדו בקורס זה.</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
-  <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">כיבוי המתג ימחק את כל קבצי הוידאו שכבר הורדו בקורס זה.</string>
+  <string name="switch_on_all_downloaded">כיבוי המתג ימחק את כל קבצי הוידאו שכבר הורדו בקורס זה.</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
-  <string name="view_downloads" tools:ignore="MissingTranslation">הקישו פעמיים כדי לצפות בהורדות המתבצעות כעת.</string>
+  <string name="view_downloads">הקישו פעמיים כדי לצפות בהורדות המתבצעות כעת.</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">אפשר</string>
@@ -467,9 +468,9 @@
   <!--Label for closed captions in video player-->
   <string name="lbl_closed_caption">כתוביות</string>
   <!--Label for video playback speed in video player-->
-  <string name="lbl_video_speed" tools:ignore="MissingTranslation">מהירות הסרטון</string>
+  <string name="lbl_video_speed">מהירות הסרטון</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none" tools:ignore="MissingTranslation">ללא</string>
+  <string name="lbl_cc_none">ללא</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">נגן הוידאו</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -482,6 +483,8 @@
   <string name="video_player_previous">הקודם</string>
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">עצור</string>
+  <!--Accessibility Label for Rewind button on Video Player-->
+  <!--Accessibility Label for Forward button on Video Player-->
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">חזור 30 שניות אחורה</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -490,6 +493,8 @@
   <string name="video_player_enter_fullscreen">היכנס למצב מסך מלא</string>
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">צא ממצב מסך מלא</string>
+  <!--Label for video playback rewind 10 sec in video player-->
+  <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">מחפש אתגרים חדשים?</string>
   <!--Button label to bring up course finder-->
@@ -500,16 +505,17 @@
   <string name="facebook_text">פייסבוק</string>
   <!--Google login method-->
   <string name="google_text">גוגל</string>
+  <!--Microsoft login method-->
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">שלח דוא\"ל בעזרת...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">לא מותקנות תוכנות דואר אלקטרוני</string>
   <!--Search for a course prompt-->
-  <string name="search_for_courses" tools:ignore="MissingTranslation">חפש קורסים</string>
+  <string name="search_for_courses">חפש קורסים</string>
   <!--Search for a program prompt-->
-  <string name="search_for_programs" tools:ignore="MissingTranslation">חיפוש תכניות</string>
+  <string name="search_for_programs">חיפוש תכניות</string>
   <!--Search for a degree prompt-->
-  <string name="search_for_degrees" tools:ignore="MissingTranslation">חיפוש תארים</string>
+  <string name="search_for_degrees">חיפוש תארים</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">כבר יש לך חשבון? התחבר</string>
@@ -520,13 +526,12 @@
   <string name="or_register_with_email">או הירשמו באמצעות אימייל</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
-  <string name="launch_register" tools:ignore="MissingTranslation">צרו את החשבון שלכם</string>
   <!--Button leading user to log in screen-->
-  <string name="launch_login" tools:ignore="MissingTranslation">היכנס</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text" tools:ignore="MissingTranslation">קורסים מהאוניברסיטאות הטובות ביותר בעולם אצלך בכיס.</string>
+  <!--Introduction text on the launch screen when courses and program enabled-->
+  <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses" tools:ignore="MissingTranslation">חפש קורסים</string>
+  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">הצג שדות רשות</string>
@@ -577,14 +582,14 @@
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">ללא כותרת</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">התראה כללית</string>
+  <string name="default_notification_channel_title">התראה כללית</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">לא נמצאו תוצאות עבור “{search_query}”. נסו מונח חיפוש אחר או בחרו בקטגוריית דיון כדי לעיין בה.</string>
   <string name="forum_no_results_for_all_posts">לא קיימים פוסטים בדיון בקורס זה.</string>
   <string name="forum_no_results_for_following">כעת אינכם עוקבים אחר שום פוסט</string>
   <string name="forum_no_results_for_filtered_following">תוצאות הסינון אינן כוללות שום פוסט שאתם עוקבים אחריו.</string>
   <string name="forum_no_results_in_category">אין שום פוסט בקטגוריית הדיון הזו.</string>
-  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">נסו להסיר את סינון הפוסטים שלכם.</string>
+  <string name="forum_no_results_with_filter">נסו להסיר את סינון הפוסטים שלכם.</string>
   <string name="forum_post_i_am_following">פוסטים שאני עוקב\ת אחריהם</string>
   <string name="forum_follow">עקוב</string>
   <string name="forum_unfollow">הסר מעקב</string>
@@ -662,7 +667,7 @@
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">עזרו לנו להשתפר!</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar" tools:ignore="MissingTranslation">בקרת דירוג</string>
+  <string name="rating_bar">בקרת דירוג</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} מתוך {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

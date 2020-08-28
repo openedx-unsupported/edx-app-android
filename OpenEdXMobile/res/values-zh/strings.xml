@@ -11,7 +11,7 @@
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">现在加入</string>
   <!--Invitation Only button text-->
-  <string name="invitation_only_button_text" tools:ignore="MissingTranslation">仅限受邀</string>
+  <string name="invitation_only_button_text">仅限受邀</string>
   <!--Effort field name-->
   <string name="effort_field_name">预计时长：</string>
   <!--When discovering courses, some courses have an externally hosted video that describes it.
@@ -21,24 +21,25 @@
   <string name="view_course_button_text">查看课程</string>
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">您已成功加入这门课程。</string>
+  <!--Floating overlay text shown to user when user already enrolled in a course-->
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">无法显示仪表板。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
-  <string name="cannot_open_url" tools:ignore="MissingTranslation">无法打开网页</string>
+  <string name="cannot_open_url">无法打开网页</string>
   <!--Subjects Discovery-->
   <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject" tools:ignore="MissingTranslation">按科目浏览</string>
+  <string name="browse_by_subject">按科目浏览</string>
   <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects" tools:ignore="MissingTranslation">查看所有科目</string>
+  <string name="view_all_subjects">查看所有科目</string>
   <!--Label for searching subjects-->
-  <string name="search_subjects" tools:ignore="MissingTranslation">搜索科目</string>
+  <string name="search_subjects">搜索科目</string>
   <!--Google Cast-->
   <!--Description of a button that will cast/un-cast the app to a remote device-->
-  <string name="media_route_menu_title" tools:ignore="MissingTranslation">播放到…</string>
+  <string name="media_route_menu_title">播放到…</string>
   <!--Google cast Introduction title-->
-  <string name="introducing_cast_text" tools:ignore="MissingTranslation">Cast 简介</string>
+  <string name="introducing_cast_text">Cast 简介</string>
   <!--Text to describe that video is casting on the remote device-->
-  <string name="remote_device_casting_message" tools:ignore="MissingTranslation">视频将投射到远程设备上</string>
+  <string name="remote_device_casting_message">视频将投射到远程设备上</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">分享课程</string>
@@ -50,9 +51,9 @@
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">仅在Wi-Fi开启时下载内容</string>
   <!--Label for the Download to sd-card setting-->
-  <string name="settings_download_to_sdcard_title" tools:ignore="MissingTranslation">下载视频到SD卡</string>
+  <string name="settings_download_to_sdcard_title">下载视频到SD卡</string>
   <!--Label explaining the download location setting in detail-->
-  <string name="settings_download_to_sdcard_subtitle" tools:ignore="MissingTranslation">视频可用时会被下载到SD卡</string>
+  <string name="settings_download_to_sdcard_subtitle">视频可用时会被下载到SD卡</string>
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">分享您的证书</string>
@@ -88,15 +89,15 @@
   <string name="login_failed">请确保输入正确的用户名/邮箱与密码，再重试。</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account" tools:ignore="MissingTranslation">创建账号即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
+  <string name="by_creating_account">创建账号即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in" tools:ignore="MissingTranslation">登录此App即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
+  <string name="by_signing_in">登录此App即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
   <!--Label for End User License Agreement-->
-  <string name="licensing_agreement" tools:ignore="MissingTranslation">{platform_name}用户协议</string>
+  <string name="licensing_agreement">{platform_name}用户协议</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code" tools:ignore="MissingTranslation">{platform_name}免责声明</string>
+  <string name="tos_and_honor_code">{platform_name}免责声明</string>
   <!--Label for Privacy Policy-->
-  <string name="privacy_policy" tools:ignore="MissingTranslation">隐私政策</string>
+  <string name="privacy_policy">隐私政策</string>
   <string name="login_title">登录</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">关闭</string>
@@ -104,21 +105,21 @@
   <string name="dropdown_list_prefix">下拉列表。</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads" tools:ignore="MissingTranslation">查看当前下载</string>
+  <string name="label_current_downloads">查看当前下载</string>
   <!--Content description for edit profile button-->
   <string name="open_profile_button">打开您的用户资料</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses" tools:ignore="MissingTranslation">课程</string>
+  <string name="label_my_courses">课程</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs" tools:ignore="MissingTranslation">学习计划</string>
+  <string name="label_my_programs">学习计划</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">发现课程</string>
   <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover" tools:ignore="MissingTranslation">探索</string>
+  <string name="label_discover">探索</string>
   <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees" tools:ignore="MissingTranslation">学位</string>
+  <string name="label_degrees">学位</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery" tools:ignore="MissingTranslation">发现课程</string>
+  <string name="label_discovery">发现课程</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">提交反馈</string>
   <!--Toggle switch on state label-->
@@ -132,9 +133,9 @@
   <!--Settings screen version-->
   <string name="label_version">应用版本</string>
   <!--Button text to show user Settings screen-->
-  <string name="label_settings" tools:ignore="MissingTranslation">设置</string>
+  <string name="label_settings">设置</string>
   <!--Title of Account screen-->
-  <string name="title_account" tools:ignore="MissingTranslation">账号</string>
+  <string name="title_account">账号</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">重置密码</string>
@@ -160,10 +161,10 @@
   <!--Alert dialog content for users with zero rated data-->
   <string name="leaving_app_data_message">如果离开本应用，您将无法再查看免费的{platform_name}内容。可能会收取数据费用。</string>
   <!--Title of agreement users must accept to use the app-->
-  <string name="end_user_title" tools:ignore="MissingTranslation">用户协议</string>
+  <string name="end_user_title">用户协议</string>
   <!--Title of privacy policy users must accept to use the app-->
   <!--Title of terms of service & honor code users must accept to use the app-->
-  <string name="terms_of_service_title" tools:ignore="MissingTranslation">免责声明</string>
+  <string name="terms_of_service_title">免责声明</string>
   <!--My Courses-->
   <!--Row of course on dashboard screen-->
   <string name="courseware_title">课程</string>
@@ -171,9 +172,9 @@
   <!--NOTE: TODO - not final one-->
   <string name="courseware_subtitle">查看课程视频和作业</string>
   <!--Row title of videos on dashboard screen-->
-  <string name="videos_title" tools:ignore="MissingTranslation">视频</string>
+  <string name="videos_title">视频</string>
   <!--Row subtitle of videos on dashboard screen-->
-  <string name="videos_subtitle" tools:ignore="MissingTranslation">观看课程视频</string>
+  <string name="videos_subtitle">观看课程视频</string>
   <!--Row of Discussion on dashboard screen-->
   <string name="discussion_title">讨论</string>
   <!--Row of Discussion on dashboard screen-->
@@ -187,32 +188,32 @@
   <!--Row of announcement on dashboard screen-->
   <string name="announcement_title">公告</string>
   <!--Title text for the important dates section on the course dashboard-->
-  <string name="course_dates_title" tools:ignore="MissingTranslation">重要日期</string>
+  <string name="course_dates_title">重要日期</string>
   <!--Title text for the additional resources section on the tabular course dashboard-->
-  <string name="resources_title" tools:ignore="MissingTranslation">资源</string>
+  <string name="resources_title">资源</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">及时了解最新动态</string>
   <!--Subtitle text describing the important dates section on the course dashboard-->
-  <string name="course_dates_subtitle" tools:ignore="MissingTranslation">注意截止日期并保持进度</string>
+  <string name="course_dates_subtitle">注意截止日期并保持进度</string>
   <!--Accessible content description of course name label field-->
   <string name="course_name">课程名称</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">新的课程内容</string>
   <!--Label for date when course starts-->
-  <string name="label_starting" tools:ignore="MissingTranslation">即将于{date}开始</string>
+  <string name="label_starting">即将于{date}开始</string>
   <!--Label for course that has ended-->
-  <string name="label_ended" tools:ignore="MissingTranslation">{date}已结束</string>
+  <string name="label_ended">{date}已结束</string>
   <!--Label for date when course is ending-->
-  <string name="label_ending" tools:ignore="MissingTranslation">将于{date}结束</string>
+  <string name="label_ending">将于{date}结束</string>
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires" tools:ignore="MissingTranslation">课程截止日期 {date}</string>
+  <string name="label_expires">课程截止日期 {date}</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on" tools:ignore="MissingTranslation">课程截止日期 {date}</string>
+  <string name="label_expires_on">课程截止日期 {date}</string>
   <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired" tools:ignore="MissingTranslation">课程截止日期 {date}</string>
+  <string name="label_expired">课程截止日期 {date}</string>
   <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on" tools:ignore="MissingTranslation">课程截止日期 {date}</string>
+  <string name="label_expired_on">课程截止日期 {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">课程内容</string>
@@ -223,7 +224,7 @@
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">当前没有可用的课程内容。</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->
-  <string name="no_videos_text" tools:ignore="MissingTranslation">此课程没有任何视频。</string>
+  <string name="no_videos_text">此课程没有任何视频。</string>
   <!--Label shown when user is enrolled in no courses-->
   <string name="no_courses_to_display">您还没有加入任何课程</string>
   <!--Label shown when no announcements are available for a course-->
@@ -231,19 +232,19 @@
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">本课程现在尚无任何讲义。</string>
   <!--Label shown when no important dates are available for a course-->
-  <string name="no_course_dates_to_display" tools:ignore="MissingTranslation">课程日期当前不可用。</string>
+  <string name="no_course_dates_to_display">课程日期当前不可用。</string>
   <!--Title of the screen where user can delete videos-->
-  <string name="delete_videos_title" tools:ignore="MissingTranslation">删除视频</string>
+  <string name="delete_videos_title">删除视频</string>
   <!--Label for a course item's due date for same day-->
-  <string name="due_date_today" tools:ignore="MissingTranslation">截止日期为 {due_date}</string>
+  <string name="due_date_today">截止日期为 {due_date}</string>
   <!--Label for a course item's due date-->
-  <string name="due_date_past_future" tools:ignore="MissingTranslation">{due_date} 截止</string>
+  <string name="due_date_past_future">{due_date} 截止</string>
   <!--Upgrade banner's description which appears on course outline screen.-->
-  <string name="upgrade_banner_description" tools:ignore="MissingTranslation">随时随地可完成评估，获得证书！</string>
+  <string name="upgrade_banner_description">随时随地可完成评估，获得证书！</string>
   <!--Title upgrade to verified today course outline footer-->
-  <string name="upgrade_to_verified_today_title" tools:ignore="MissingTranslation">立即升级到已验证状态</string>
+  <string name="upgrade_to_verified_today_title">立即升级到已验证状态</string>
   <!--Title of place order for course upgrade screen-->
-  <string name="place_order_title" tools:ignore="MissingTranslation">下订单</string>
+  <string name="place_order_title">下订单</string>
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -269,7 +270,7 @@
   <!--Discussion posts sort by recent activity-->
   <string name="discussion_posts_sort_recent_activity">近期活动</string>
   <!--Discussion posts sort by most activity-->
-  <string name="discussion_posts_sort_most_activity" tools:ignore="MissingTranslation">最热活动</string>
+  <string name="discussion_posts_sort_most_activity">最热活动</string>
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">最多投票</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
@@ -347,9 +348,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">主题：{topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label" tools:ignore="MissingTranslation">发布讨论</string>
+  <string name="discussion_add_post_button_label">发布讨论</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description" tools:ignore="MissingTranslation">“发布讨论”按钮</string>
+  <string name="discussion_add_post_button_description">“发布讨论”按钮</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">发布问题</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -376,17 +377,17 @@
   <!--Label to notify user to rotate device for viewing a video in full screen-->
   <string name="assessment_rotate_for_fullscreen">旋转您的设备，以全屏模式观看此视频。</string>
   <!--Label showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video" tools:ignore="MissingTranslation">播放器错误</string>
+  <string name="assessment_unable_to_play_video">播放器错误</string>
   <!--Error message showing only when youtube in-app player produce error-->
-  <string name="assessment_unable_to_play_video_message" tools:ignore="MissingTranslation">无法播放此视频。您可以在 YouTube 应用上观看，或稍后再试。</string>
+  <string name="assessment_unable_to_play_video_message">无法播放此视频。您可以在 YouTube 应用上观看，或稍后再试。</string>
   <!--Label showing only youtube is available-->
   <string name="assessment_only_on_youtube">此视频只能在 YouTube 中播放。</string>
   <!--Label for button to open on youtube-->
   <string name="assessment_open_on_youtube">在 YouTube 上观看视频</string>
   <!--Label showing that you need to update youtube app in order to watch the video-->
-  <string name="assessment_needed_updating_youtube" tools:ignore="MissingTranslation">此视频要求您更新 YouTube 应用。</string>
+  <string name="assessment_needed_updating_youtube">此视频要求您更新 YouTube 应用。</string>
   <!--Label for button to update youtube app-->
-  <string name="assessment_update_youtube" tools:ignore="MissingTranslation">更新 YouTube</string>
+  <string name="assessment_update_youtube">更新 YouTube</string>
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">下载</string>
@@ -419,29 +420,29 @@
   <string name="no_connectivity">连接错误</string>
   <!--Bulk Videos Download-->
   <!--Accessibility label of bulk download switch-->
-  <string name="bulk_download_switch" tools:ignore="MissingTranslation">批量视频下载按钮。</string>
+  <string name="bulk_download_switch">批量视频下载按钮。</string>
   <!--Title for bulk videos download view when in new or partial videos' download state-->
-  <string name="download_to_device" tools:ignore="MissingTranslation">下载至设备中</string>
+  <string name="download_to_device">下载至设备中</string>
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="other">{total_videos_count}个视频，总共{total_videos_size}</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting" tools:ignore="MissingTranslation">正在开始下载...</string>
+  <string name="download_starting">正在开始下载...</string>
   <!--Title for bulk videos download view when in downloading state-->
-  <string name="downloading_videos" tools:ignore="MissingTranslation">正在下载视频...</string>
+  <string name="downloading_videos">正在下载视频...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->
-  <string name="download_remaining" tools:ignore="MissingTranslation">剩余{remaining_videos_count}个视频，总共{remaining_videos_size}</string>
+  <string name="download_remaining">剩余{remaining_videos_count}个视频，总共{remaining_videos_size}</string>
   <!--Title for bulk videos download view when in downloaded state-->
-  <string name="download_complete" tools:ignore="MissingTranslation">已下载所有视频</string>
+  <string name="download_complete">已下载所有视频</string>
   <!--Accessibility label of bulk download switch, when its state is OFF and no download is happening-->
-  <string name="switch_off_no_downloading" tools:ignore="MissingTranslation">滑动开关，您将下载所有课程视频。</string>
+  <string name="switch_off_no_downloading">滑动开关，您将下载所有课程视频。</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos are downloading-->
-  <string name="switch_on_all_downloading" tools:ignore="MissingTranslation">关闭开关，将取消您下载的所有视频和删除已下载视频。</string>
+  <string name="switch_on_all_downloading">关闭开关，将取消您下载的所有视频和删除已下载视频。</string>
   <!--Accessibility label of bulk download switch, when its state is ON and all videos have been downloaded-->
-  <string name="switch_on_all_downloaded" tools:ignore="MissingTranslation">关闭开关，将删除您的已下载视频。</string>
+  <string name="switch_on_all_downloaded">关闭开关，将删除您的已下载视频。</string>
   <!--Accessibility label of full bulk download view when videos are being downloaded-->
-  <string name="view_downloads" tools:ignore="MissingTranslation">双击查看当前下载</string>
+  <string name="view_downloads">双击查看当前下载</string>
   <!--Wifi New Message-->
   <!--Toggle to allow downloads using cellular data-->
   <string name="allow">允许</string>
@@ -451,9 +452,9 @@
   <!--Label for closed captions in video player-->
   <string name="lbl_closed_caption">字幕</string>
   <!--Label for video playback speed in video player-->
-  <string name="lbl_video_speed" tools:ignore="MissingTranslation">视频速度</string>
+  <string name="lbl_video_speed">视频速度</string>
   <!--Label for None captions selected-->
-  <string name="lbl_cc_none" tools:ignore="MissingTranslation">无</string>
+  <string name="lbl_cc_none">无</string>
   <!--Accessibility Label for Video Player-->
   <string name="video_player">视频播放器</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
@@ -466,6 +467,8 @@
   <string name="video_player_previous">上一个</string>
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">暂停</string>
+  <!--Accessibility Label for Rewind button on Video Player-->
+  <!--Accessibility Label for Forward button on Video Player-->
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">后退30秒</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -474,6 +477,8 @@
   <string name="video_player_enter_fullscreen">进入全屏模式</string>
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">退出全屏模式</string>
+  <!--Label for video playback rewind 10 sec in video player-->
+  <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">寻找新的挑战？</string>
   <!--Button label to bring up course finder-->
@@ -484,16 +489,17 @@
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
   <string name="google_text">Google</string>
+  <!--Microsoft login method-->
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">选择发邮件的应用...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">未安装任何邮箱客户端</string>
   <!--Search for a course prompt-->
-  <string name="search_for_courses" tools:ignore="MissingTranslation">搜索课程</string>
+  <string name="search_for_courses">搜索课程</string>
   <!--Search for a program prompt-->
-  <string name="search_for_programs" tools:ignore="MissingTranslation">查询专项</string>
+  <string name="search_for_programs">查询专项</string>
   <!--Search for a degree prompt-->
-  <string name="search_for_degrees" tools:ignore="MissingTranslation">查询学位</string>
+  <string name="search_for_degrees">查询学位</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">已有账号？登录</string>
@@ -504,13 +510,12 @@
   <string name="or_register_with_email">或用邮箱注册</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
-  <string name="launch_register" tools:ignore="MissingTranslation">创建账号</string>
   <!--Button leading user to log in screen-->
-  <string name="launch_login" tools:ignore="MissingTranslation">登录</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text" tools:ignore="MissingTranslation">世界最好大学的课程都在你掌中</string>
+  <!--Introduction text on the launch screen when courses and program enabled-->
+  <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses" tools:ignore="MissingTranslation">搜索课程</string>
+  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">显示可选信息</string>
@@ -561,14 +566,14 @@
   <!--Placeholder title for course content with no title-->
   <string name="untitled_block">无标题</string>
   <!--Title for default channel notifications-->
-  <string name="default_notification_channel_title" tools:ignore="MissingTranslation">常规通知</string>
+  <string name="default_notification_channel_title">常规通知</string>
   <!--Discussion/Forum-->
   <string name="forum_no_results_for_search_query">未找到“{search_query}”。请尝试其他搜索词或选择一个讨论类别以浏览。</string>
   <string name="forum_no_results_for_all_posts">此课程讨论中没有发帖。</string>
   <string name="forum_no_results_for_following">您还没有关注任何发帖。</string>
   <string name="forum_no_results_for_filtered_following">过滤结果不包含任何关注的帖子。</string>
   <string name="forum_no_results_in_category">在此讨论类别中尚无发帖。</string>
-  <string name="forum_no_results_with_filter" tools:ignore="MissingTranslation">尝试移除您的帖子过滤器。</string>
+  <string name="forum_no_results_with_filter">尝试移除您的帖子过滤器。</string>
   <string name="forum_post_i_am_following">我关注的帖子</string>
   <string name="forum_follow">关注</string>
   <string name="forum_unfollow">取消关注</string>
@@ -646,7 +651,7 @@
   <!--Dialog message for negative app review-->
   <string name="feedback_dialog_message">帮助我们改进！</string>
   <!--accessibility label for rating bar-->
-  <string name="rating_bar" tools:ignore="MissingTranslation">评价控制</string>
+  <string name="rating_bar">评价控制</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} / {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->

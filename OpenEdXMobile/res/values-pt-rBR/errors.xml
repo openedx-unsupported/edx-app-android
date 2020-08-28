@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">Erro desconhecido. Tente novamente mais tarde.</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Não é possível carregar o conteúdo do curso. Tente novamente mais tarde.</string>
+  <string name="course_error_content_invalid">Não é possível carregar o conteúdo do curso. Tente novamente mais tarde.</string>
   <!--Title of alert shown when course enrollment request fails-->
-  <string name="enrollment_error_title" tools:ignore="MissingTranslation">Erro na matrícula</string>
+  <string name="enrollment_error_title">Erro na matrícula</string>
   <!--Error message shown in alert when course enrollment request fails-->
-  <string name="enrollment_error_message" tools:ignore="MissingTranslation">Não foi possível matricular você neste curso neste momento usando a aplicação móvel {platform_name}. Por favor tente novamente pelo navegador web.</string>
+  <string name="enrollment_error_message">Não foi possível matricular você neste curso neste momento usando a aplicação móvel {platform_name}. Por favor tente novamente pelo navegador web.</string>
   <!--Error message shown when a course section is not available on mobile-->
-  <string name="not_available_on_mobile" tools:ignore="MissingTranslation">Não disponível para dispositivos móveis</string>
+  <string name="not_available_on_mobile">Não disponível para dispositivos móveis</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">Você não está conectado à Internet.</string>
@@ -40,20 +40,26 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">Certifique-se de que a sua conta esteja associada à conta do {platform_name} em {platform_destination}.</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
-  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">A sua conta no Facebok não está associada à conta {platform_name}. Por favor registre-se.</string>
+  <string name="error_account_not_linked_desc_fb_2">A sua conta no Facebok não está associada à conta {platform_name}. Por favor registre-se.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">A sua conta no Google não está associada à conta do {platform_name}.</string>
+  <string name="error_account_not_linked_title_google">A sua conta no Google não está associada à conta do {platform_name}.</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">Certifique-se de que a sua conta Google esteja associada à conta do {platform_name} em {platform_destination}.</string>
+  <string name="error_account_not_linked_desc_google">Certifique-se de que a sua conta Google esteja associada à conta do {platform_name} em {platform_destination}.</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">A sua conta no Google não está associada à conta {platform_name}. Por favor registre-se.</string>
+  <string name="error_account_not_linked_desc_google_2">A sua conta no Google não está associada à conta {platform_name}. Por favor registre-se.</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_title_microsoft">A sua conta Microsoft não está associada a sua conta {platform_name}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft">Certifique-se de que a sua conta Microsoft esteja associada com sua conta {platform_name}  no  {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft_2">Esta conta Microsoft não está conectada com nenhuma conta {platform_name}. Por favor registre-se.</string>
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">Falha ao baixar</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
   <string name="file_size_exceeded">O tamanho do arquivo a ser baixado excede o espaço de armazenagem restante no dispositivo.</string>
   <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <string name="download_exceed_message" tools:ignore="MissingTranslation">Os vídeos que você selecionou são maiores que 1 GB.
+  <string name="download_exceed_message">Os vídeos que você selecionou são maiores que 1 GB.
         Você deseja baixá-los?</string>
   <!--Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi-->
@@ -68,25 +74,27 @@
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
-  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">Nenhuma loja de aplicativos compatível foi encontrada no dispositivo.</string>
+  <string name="app_version_upgrade_app_store_unavailable">Nenhuma loja de aplicativos compatível foi encontrada no dispositivo.</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">Insira %1$s.</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
+  <string name="error_select_or_enter_field">Por favor, selecione ou insira um válido %1$s.</string>
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s deve ter ao menos %2$d caracteres.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s não deve ter mais de %2$d caracteres.</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">Este curso ainda não começou.</string>
+  <string name="course_not_started">Este curso ainda não começou.</string>
   <!--Error message shown when a user's access has expired for a course-->
-  <string name="course_access_expired" tools:ignore="MissingTranslation">Seu acesso a este curso expirou.</string>
+  <string name="course_access_expired">Seu acesso a este curso expirou.</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">A ação não pôde ser completada.</string>
+  <string name="action_not_completed">A ação não pôde ser completada.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
-  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">A versão do seu app não é mais compatível. Atualize para a última versão para entrar. </string>
+  <string name="app_version_unsupported_login_msg">A versão do seu app não é mais compatível. Atualize para a última versão para entrar. </string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
-  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">A versão do seu app não é mais compatível. Atualize para a última versão para se registrar.</string>
+  <string name="app_version_unsupported_register_msg">A versão do seu app não é mais compatível. Atualize para a última versão para se registrar.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
-  <string name="permission_not_granted" tools:ignore="MissingTranslation">Permissão não concedida</string>
+  <string name="permission_not_granted">Permissão não concedida</string>
 </resources>

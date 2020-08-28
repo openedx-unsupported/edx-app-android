@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "発見体験の向上",
+        "message": "お気に入りのコースやプログラムを検索して登録する方法が改善されました。"
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {
