@@ -1,14 +1,17 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,19 +87,49 @@ public class LoginActivity
                 environment.getConfig(), environment.getLoginPrefs(), SocialLoginDelegate.Feature.SIGN_IN);
 
         activityLoginBinding.socialAuth.facebookButton.getRoot().setOnClickListener(
-                socialLoginDelegate.createSocialButtonClickHandler(
-                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.view.SplashActivity"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.FacebookAlias"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.GoogleAlias"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.MicrosoftAlias"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        Toast.makeText(getApplicationContext(), "Facebook Launcher has been applied successfully",Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                socialLoginDelegate.createSocialButtonClickHandler(
+//                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
         activityLoginBinding.socialAuth.googleButton.getRoot().setOnClickListener(
-                socialLoginDelegate.createSocialButtonClickHandler(
-                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.view.SplashActivity"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.FacebookAlias"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.GoogleAlias"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.MicrosoftAlias"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        Toast.makeText(getApplicationContext(), "Google Launcher has been applied successfully",Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                socialLoginDelegate.createSocialButtonClickHandler(
+//                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
         activityLoginBinding.socialAuth.microsoftButton.getRoot().setOnClickListener(
-                socialLoginDelegate.createSocialButtonClickHandler(
-                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.view.SplashActivity"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.FacebookAlias"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.GoogleAlias"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        getPackageManager().setComponentEnabledSetting(new ComponentName("org.edx.mobile", "org.edx.mobile.MicrosoftAlias"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                        Toast.makeText(getApplicationContext(), "Microsoft Launcher has been applied successfully",Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                socialLoginDelegate.createSocialButtonClickHandler(
+//                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
 
         activityLoginBinding.loginButtonLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check for Validation˜
+//                         Check for Validation˜
                 callServerForLogin();
             }
         });

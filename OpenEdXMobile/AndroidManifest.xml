@@ -25,6 +25,9 @@
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+
     <!-- Setup for Code Coverage -->
     <instrumentation
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
@@ -40,9 +43,56 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="org.edx.mobile.view.SplashActivity"
-            android:label="@string/app_shortcut_name"
+            android:name=".view.SplashActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:icon="@mipmap/ic_launcher"
+            android:enabled="true"
+            android:targetActivity=".view.SplashActivity"
+            android:theme="@style/AppTheme.NoDisplayTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="edx" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name="FacebookAlias"
+            android:label="edx Facebook"
+            android:screenOrientation="portrait"
+            android:icon="@mipmap/ic_facebook"
+            android:enabled="false"
+            android:targetActivity=".view.SplashActivity"
+            android:theme="@style/AppTheme.NoDisplayTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="edx" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="GoogleAlias"
+            android:label="edX Google"
+            android:icon="@mipmap/ic_google"
+            android:enabled="false"
+            android:screenOrientation="portrait"
+            android:targetActivity=".view.SplashActivity"
             android:theme="@style/AppTheme.NoDisplayTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,7 +105,28 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <activity-alias
+            android:name="MicrosoftAlias"
+            android:label="edX Microsoft"
+            android:icon="@mipmap/ic_microsoft_img"
+            android:enabled="false"
+            android:screenOrientation="portrait"
+            android:targetActivity=".view.SplashActivity"
+            android:theme="@style/AppTheme.NoDisplayTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="edx" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name="org.edx.mobile.view.LaunchActivity"
