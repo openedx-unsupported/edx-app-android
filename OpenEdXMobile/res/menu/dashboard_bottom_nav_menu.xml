@@ -9,9 +9,9 @@
         android:title="@string/course"
         android:icon="@drawable/course"/>
 
-    <item android:id="@+id/action_search"
+    <!--<item android:id="@+id/action_search"
         android:title="@string/ideas"
-        android:icon="@drawable/search"/>
+        android:icon="@drawable/search"/>-->
 
     <!--<item android:id="@+id/action_agenda"-->
         <!--android:title="@string/agenda"-->

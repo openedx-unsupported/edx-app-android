@@ -48,10 +48,10 @@ public class ProgramViewModel extends BaseViewModel {
                 selectedId = R.id.action_feed;
                 showFeed();
                 return true;
-            case R.id.action_search:
-                selectedId = R.id.action_search;
-                showSearch();
-                return true;
+//            case R.id.action_search:
+//                selectedId = R.id.action_search;
+//                showSearch();
+//                return true;
 
             case R.id.action_profile:
                 selectedId = R.id.action_profile;

@@ -74,10 +74,10 @@ public class LandingViewModel extends BaseViewModel {
                 selectedId = R.id.action_feed;
                 showFeed();
                 return true;
-            case R.id.action_search:
+            /*case R.id.action_search:
                 selectedId = R.id.action_search;
                 showSearch();
-                return true;
+                return true;*/
 //            case R.id.action_agenda:
 //                selectedId = R.id.action_agenda;
 //                showAgenda();
@@ -116,7 +116,7 @@ public class LandingViewModel extends BaseViewModel {
         mActivity.showLoading();
         ActivityUtil.replaceFragmentInActivity(
                 mActivity.getSupportFragmentManager(),
-                LibraryFragment.newInstance(() -> selectedId = R.id.action_search),
+                LibraryFragment.newInstance(() -> selectedId = R.id.action_library),
                 R.id.dashboard_fragment,
                 LibraryFragment.TAG,
                 false,
