@@ -7,7 +7,7 @@
   <!--Label indicating that the only course content visible in the app is videos-->
   <string name="lbl_showing_only_videos">Mostrando solo videos</string>
   <!--A button's label that reloads the content on screen-->
-  <string name="lbl_reload" tools:ignore="MissingTranslation">Recargar</string>
+  <string name="lbl_reload">Recargar</string>
   <!--Dialog Fragment Labels-->
   <!--Alert dialog cancel button-->
   <string name="label_cancel">Cancelar</string>
@@ -36,9 +36,9 @@
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">Actualizar</string>
   <!--Done button label-->
-  <string name="label_done" tools:ignore="MissingTranslation">Hecho</string>
+  <string name="label_done">Hecho</string>
   <!--Undo button label-->
-  <string name="label_undo" tools:ignore="MissingTranslation">Deshacer</string>
+  <string name="label_undo">Deshacer</string>
   <!--Label denoting an error-->
-  <string name="label_error" tools:ignore="MissingTranslation">Error</string>
+  <string name="label_error">Error</string>
 </resources>

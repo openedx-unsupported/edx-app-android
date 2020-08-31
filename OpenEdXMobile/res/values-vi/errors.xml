@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">Lỗi chưa xác định. Vui lòng thử lại sau</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">Không thể tải nội dung khóa học. Vui lòng thử lại sau.</string>
+  <string name="course_error_content_invalid">Không thể tải nội dung khóa học. Vui lòng thử lại sau.</string>
   <!--Title of alert shown when course enrollment request fails-->
-  <string name="enrollment_error_title" tools:ignore="MissingTranslation">Đã có lỗi khi tham gia khóa học</string>
+  <string name="enrollment_error_title">Đã có lỗi khi tham gia khóa học</string>
   <!--Error message shown in alert when course enrollment request fails-->
-  <string name="enrollment_error_message" tools:ignore="MissingTranslation">Bạn không thể đăng ký khóa học bằng ứng dụng điện thoại {platform_name} ở thời điểm hiện tại. Vui lòng thử lại trên trình duyệt web.</string>
+  <string name="enrollment_error_message">Bạn không thể đăng ký khóa học bằng ứng dụng điện thoại {platform_name} ở thời điểm hiện tại. Vui lòng thử lại trên trình duyệt web.</string>
   <!--Error message shown when a course section is not available on mobile-->
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
@@ -39,13 +39,16 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">Hãy chắc chắn rằng tài khoản Facebook của bạn đã liên kết với tài khoản {platform_name} trên {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
-  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">Tài khoản Facebook này chưa liên kết với bất kỳ tài khoản {platform_name} nào. Vui lòng đăng ký.</string>
+  <string name="error_account_not_linked_desc_fb_2">Tài khoản Facebook này chưa liên kết với bất kỳ tài khoản {platform_name} nào. Vui lòng đăng ký.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">Tài khoản Google chưa liên kết với tài khoản {platform_name}</string>
+  <string name="error_account_not_linked_title_google">Tài khoản Google chưa liên kết với tài khoản {platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">Hãy chắc chắn rằng tài khoản Google của bạn đã liên kết với tài khoản {platform_name} trên {platform_destination}</string>
+  <string name="error_account_not_linked_desc_google">Hãy chắc chắn rằng tài khoản Google của bạn đã liên kết với tài khoản {platform_name} trên {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">Tài khoản Google này chưa liên kết với bất kỳ tài khoản {platform_name} nào. Vui lòng đăng ký.</string>
+  <string name="error_account_not_linked_desc_google_2">Tài khoản Google này chưa liên kết với bất kỳ tài khoản {platform_name} nào. Vui lòng đăng ký.</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">Tải xuống thất bại</string>
@@ -65,25 +68,26 @@
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
-  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">Không tìm thấy cửa hang ứng dụng nào trong thiết bị.</string>
+  <string name="app_version_upgrade_app_store_unavailable">Không tìm thấy cửa hang ứng dụng nào trong thiết bị.</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">Vui lòng nhập %1$s của bạn.</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s phải có ít nhất %2$d ký tự.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s không thể có nhiều hơn %2$d ký tự.</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">Khóa học này chưa bắt đầu.</string>
+  <string name="course_not_started">Khóa học này chưa bắt đầu.</string>
   <!--Error message shown when a user's access has expired for a course-->
-  <string name="course_access_expired" tools:ignore="MissingTranslation">Quyền truy cập của bạn đến khóa học này đã hết hạn.</string>
+  <string name="course_access_expired">Quyền truy cập của bạn đến khóa học này đã hết hạn.</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">Hành động của bạn không thể thực hiện.</string>
+  <string name="action_not_completed">Hành động của bạn không thể thực hiện.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
-  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">Phiên bản hiện tại của ứng dụng không còn được hỗ trợ. Cập nhật lên phiên bản mới nhất để đăng nhập.</string>
+  <string name="app_version_unsupported_login_msg">Phiên bản hiện tại của ứng dụng không còn được hỗ trợ. Cập nhật lên phiên bản mới nhất để đăng nhập.</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
-  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">Phiên bản hiện tại của ứng dụng không còn được hỗ trợ. Cập nhật lên phiên bản mới nhất để đăng ký.</string>
+  <string name="app_version_unsupported_register_msg">Phiên bản hiện tại của ứng dụng không còn được hỗ trợ. Cập nhật lên phiên bản mới nhất để đăng ký.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
-  <string name="permission_not_granted" tools:ignore="MissingTranslation">Không có quyền truy cập</string>
+  <string name="permission_not_granted">Không có quyền truy cập</string>
 </resources>

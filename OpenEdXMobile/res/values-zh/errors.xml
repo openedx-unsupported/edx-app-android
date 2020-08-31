@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--An error occurred but we don't know why-->
   <string name="error_unknown">未知错误。请稍后重试。</string>
   <!--Course related error messages-->
   <!--Error shown when a course's content is invalid or not in the format that we expect-->
-  <string name="course_error_content_invalid" tools:ignore="MissingTranslation">无法加载课程内容，请稍后重试。</string>
+  <string name="course_error_content_invalid">无法加载课程内容，请稍后重试。</string>
   <!--Title of alert shown when course enrollment request fails-->
-  <string name="enrollment_error_title" tools:ignore="MissingTranslation">选课出错</string>
+  <string name="enrollment_error_title">选课出错</string>
   <!--Error message shown in alert when course enrollment request fails-->
-  <string name="enrollment_error_message" tools:ignore="MissingTranslation">您无法通过{platform_name}客户端进行选课。请使用网页浏览器重试。</string>
+  <string name="enrollment_error_message">您无法通过{platform_name}客户端进行选课。请使用网页浏览器重试。</string>
   <!--Error message shown when a course section is not available on mobile-->
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
@@ -39,13 +39,16 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">请确保您的Facebook账号与您{platform_destination}上的{platform_name}账号匹配。</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
-  <string name="error_account_not_linked_desc_fb_2" tools:ignore="MissingTranslation">此Facebook账号尚未与任何{platform_name}账号相关联，请先注册。</string>
+  <string name="error_account_not_linked_desc_fb_2">此Facebook账号尚未与任何{platform_name}账号相关联，请先注册。</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_title_google" tools:ignore="MissingTranslation">Google账号与{platform_name}账号未关联</string>
+  <string name="error_account_not_linked_title_google">Google账号与{platform_name}账号未关联</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google" tools:ignore="MissingTranslation">请确保您的Google账号与您{platform_destination}上的{platform_name}账号匹配。</string>
+  <string name="error_account_not_linked_desc_google">请确保您的Google账号与您{platform_destination}上的{platform_name}账号匹配。</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <string name="error_account_not_linked_desc_google_2" tools:ignore="MissingTranslation">此Google账号尚未与任何{platform_name}账号相关联，请先注册。</string>
+  <string name="error_account_not_linked_desc_google_2">此Google账号尚未与任何{platform_name}账号相关联，请先注册。</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
   <!--Download error messages-->
   <!--Label shown on video list item whose download failed-->
   <string name="error_download_failed">下载失败</string>
@@ -65,25 +68,26 @@
   <!--Toast notification for when the user presses the update action button from the Snackbar
          notifications while no supported app store or browser is installed on the device with which
          the app could be updated-->
-  <string name="app_version_upgrade_app_store_unavailable" tools:ignore="MissingTranslation">在设备中未找到支持的应用商店</string>
+  <string name="app_version_upgrade_app_store_unavailable">在设备中未找到支持的应用商店</string>
   <!--Registration Error Messages-->
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">请输入您的%1$s。</string>
+  <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s 至少包含 %2$d 个字符。</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
   <string name="error_max_length">%1$s 不能超过 %2$d 个字符。</string>
   <!--Error message shown when a course hasn't started yet-->
-  <string name="course_not_started" tools:ignore="MissingTranslation">本课程尚未开始。</string>
+  <string name="course_not_started">本课程尚未开始。</string>
   <!--Error message shown when a user's access has expired for a course-->
-  <string name="course_access_expired" tools:ignore="MissingTranslation">您的访问权限已过期。</string>
+  <string name="course_access_expired">您的访问权限已过期。</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
-  <string name="action_not_completed" tools:ignore="MissingTranslation">您的操作无法完成。</string>
+  <string name="action_not_completed">您的操作无法完成。</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
-  <string name="app_version_unsupported_login_msg" tools:ignore="MissingTranslation">您的应用版本不再受支持。请更新到最新版本后再登录。</string>
+  <string name="app_version_unsupported_login_msg">您的应用版本不再受支持。请更新到最新版本后再登录。</string>
   <!--Error dialog message shown when the user try to register in app with un-supported version-->
-  <string name="app_version_unsupported_register_msg" tools:ignore="MissingTranslation">您的应用版本不再受支持。请更新到最新版本后再注册。</string>
+  <string name="app_version_unsupported_register_msg">您的应用版本不再受支持。请更新到最新版本后再注册。</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
-  <string name="permission_not_granted" tools:ignore="MissingTranslation">未授予许可</string>
+  <string name="permission_not_granted">未授予许可</string>
 </resources>

@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Geliştirilmiş Keşif Deneyimi",
+        "message": "En sevdiğiniz kursları ve programları arama ve bunlara kaydolma şeklinizi geliştirdik."
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {

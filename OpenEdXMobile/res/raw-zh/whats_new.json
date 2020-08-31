@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "改進的發現體驗",
+        "message": "我們已經改進了您搜索和註冊自己喜歡的課程的方式。"
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {

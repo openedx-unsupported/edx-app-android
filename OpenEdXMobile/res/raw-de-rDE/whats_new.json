@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.23",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Verbesserte Erkennungserfahrung",
+        "message": "Wir haben die Art und Weise, wie Sie nach Ihren Lieblingskursen und -programmen suchen und sich dafür anmelden, verbessert."
+      }
+    ]
+  },
+  {
     "version": "2.22",
     "messages": [
       {
