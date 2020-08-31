@@ -9,4 +9,4 @@ rm -rf OpenEdXMobile/build/
 echo 'Compiling Android App'
 echo -e "\n**************Java version*************\n$1\n"
 java -version
-./gradlew assembleProdDebug
+./gradlew assembleProddebuggable

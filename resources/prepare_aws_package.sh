@@ -14,6 +14,6 @@ zip -r test_bundle.zip tests/ wheelhouse/ requirements.txt
 cp test_bundle.zip ../
 
 # Move AUT(application under test) at project root
-cp "../OpenEdXMobile/build/outputs/apk/prod/debug/$AUT_NAME" ../
+cp "../OpenEdXMobile/build/outputs/apk/prod/debuggable/$AUT_NAME" ../
 
 cd ..
