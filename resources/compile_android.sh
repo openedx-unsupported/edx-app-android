@@ -7,6 +7,4 @@ rm -rf OpenEdXMobile/build/
 
 # Compile app
 echo 'Compiling Android App'
-echo -e "\n**************Java version*************\n$1\n"
-java -version
 ./gradlew assembleProddebuggable
