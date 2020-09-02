@@ -6,13 +6,17 @@ phases:
   # Default dependencies for testing frameworks supported on Device Farm are already installed.
   install:
     commands:
+      # Device Farm support two major versions of Python, each with one minor version: 2 (minor version 2.7), and 3 (minor version 3.7.4).
+      # The default Python version is 2, but you can switch to 3 by setting the following variable to 3:
+      - export PYTHON_VERSION=3
+      
       # By default, Appium server version used is 1.7.2.
       # You can switch to an alternate supported version from 1.6.5, 1.7.1, 1.7.2, 1.8.0 or 1.8.1 by using a command like "avm 1.7.1"
       # OR
       # To install a newer version of Appium use the following commands:
-      # - export APPIUM_VERSION=1.8.1
-      # - avm $APPIUM_VERSION
-      # - ln -s /usr/local/avm/versions/$APPIUM_VERSION/node_modules/.bin/appium  /usr/local/avm/versions/$APPIUM_VERSION/node_modules/appium/bin/appium.js
+      - export APPIUM_VERSION=1.18.0
+      - avm $APPIUM_VERSION
+      - ln -s /usr/local/avm/versions/$APPIUM_VERSION/node_modules/.bin/appium  /usr/local/avm/versions/$APPIUM_VERSION/node_modules/appium/bin/appium.js
 
   # The pre-test phase includes commands that setup your test environment.
   pre_test:
