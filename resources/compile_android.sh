@@ -7,4 +7,4 @@ rm -rf OpenEdXMobile/build/
 
 # Compile app
 echo 'Compiling Android App'
-./gradlew assembleProddebuggable
+./gradlew assembleProdDebuggable
