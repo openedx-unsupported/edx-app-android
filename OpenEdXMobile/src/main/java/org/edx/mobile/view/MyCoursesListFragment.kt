@@ -144,7 +144,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     loadData(showProgress = true, fromCache = false)
                 } else {
                     when {
-                        response.code() == HttpStatus.UNAUTHORIZED -> {
+                        response.code() == HttpStatus.UNAUTHORIZED && context != null -> {
                             environment.router?.forceLogout(context,
                                     environment.analyticsRegistry,
                                     environment.notificationDelegate)
