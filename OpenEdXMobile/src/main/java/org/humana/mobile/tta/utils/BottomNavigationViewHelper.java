@@ -49,6 +49,9 @@ public class BottomNavigationViewHelper {
             menuView = (BottomNavigationMenuView) view.getChildAt(0);
             item = (BottomNavigationItemView) menuView.getChildAt(position);
 
+            if(item==null)
+                return;
+
             badge = LayoutInflater.from(view.getContext())
                     .inflate(R.layout.notification_badge, item, false);
             item.addView(badge);
