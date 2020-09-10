@@ -52,6 +52,7 @@ import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -234,11 +235,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
             firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
                 final String group = firebaseRemoteConfig.getString(Analytics.Keys.AA_EXPERIMENT);
-                if (!TextUtils.isEmpty(group)) {
+                final ProfileModel profileModel = environment.getLoginPrefs().getCurrentUserProfile();
+                if (!TextUtils.isEmpty(group) && profileModel != null) {
                     final Map<String, String> values = new HashMap<>();
                     values.put(Analytics.Keys.EXPERIMENT, Analytics.Keys.AA_EXPERIMENT);
                     values.put(Analytics.Keys.GROUP, group);
-                    values.put(Analytics.Keys.USER_ID, environment.getLoginPrefs().getCurrentUserProfile().id.toString());
+                    values.put(Analytics.Keys.USER_ID, profileModel.id.toString());
                     values.put(Analytics.Keys.COURSE_ID, courseData.getCourse().getId());
                     environment.getAnalyticsRegistry().trackExperimentParams(Analytics.Events.MOBILE_EXPERIMENT_EVALUATED, values);
                 }
