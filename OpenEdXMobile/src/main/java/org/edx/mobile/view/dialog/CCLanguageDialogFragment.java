@@ -73,13 +73,15 @@ public class CCLanguageDialogFragment extends RoboDialogFragment {
                 HashMap<String, String> hm;
                 for(int i=0; i<langList.size();i++){
                     hm = new HashMap<String, String>();
-                    hm.put(langList.keySet().toArray()[i].toString(), 
+                    hm.put(langList.keySet().toArray()[i].toString(),
                             langList.values().toArray()[i].toString());
                     ccAdaptor.add(hm);
                 }
             }
             String langSelected = getArguments().getString("selectedLanguage");
-
+            if (langSelected != null && !langList.containsKey(langSelected)) {
+                langSelected = langList.keySet().toArray()[0].toString();
+            }
             ccAdaptor.selectedLanguage = langSelected;
             ccAdaptor.notifyDataSetChanged();
 

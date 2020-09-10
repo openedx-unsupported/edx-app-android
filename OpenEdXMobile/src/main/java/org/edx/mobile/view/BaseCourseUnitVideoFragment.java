@@ -138,8 +138,10 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
             }
         }
         // Only Allow handler to post the runnable when fragment is visible to user
-        if (getUserVisibleHint()) {
+        if (isVisible()) {
             subtitleDisplayHandler.postDelayed(this.subtitlesProcessorRunnable, SUBTITLES_DISPLAY_DELAY_MS);
+        } else {
+            updateClosedCaptionData(null);
         }
     };
 
@@ -217,8 +219,9 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
             initTranscriptListView();
             updateTranscript(subtitlesObj);
             String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(getActivity());
-            if (!android.text.TextUtils.isEmpty(subtitleLanguage) &&
-                    getTranscriptModel().entrySet().contains(subtitleLanguage)) {
+            if (loginPrefs.getSubtitleLanguage() == null &&
+                    !android.text.TextUtils.isEmpty(subtitleLanguage) &&
+                    getTranscriptModel().containsKey(subtitleLanguage)) {
                 loginPrefs.setSubtitleLanguage(subtitleLanguage);
             }
             showClosedCaptionData(subtitlesObj);
