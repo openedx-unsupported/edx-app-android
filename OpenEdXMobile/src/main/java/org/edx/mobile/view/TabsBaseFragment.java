@@ -163,7 +163,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 final FragmentItemModel item = fragmentItems.get(position);
-                getActivity().setTitle(item.getTitle());
+                if (getActivity() != null) {
+                    getActivity().setTitle(item.getTitle());
+                }
                 if (item.getListener() != null) {
                     item.getListener().onFragmentSelected();
                 }
