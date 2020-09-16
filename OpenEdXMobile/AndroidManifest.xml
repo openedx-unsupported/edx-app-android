@@ -4,6 +4,8 @@
     package="org.edx.mobile"
     android:installLocation="auto">
 
+
+
     <!-- Required by app for server communication and video download -->
     <!-- Required by Segment -->
     <!-- Required by NewRelic -->
