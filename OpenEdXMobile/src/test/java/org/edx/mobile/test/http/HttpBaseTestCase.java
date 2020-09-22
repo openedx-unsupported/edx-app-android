@@ -275,6 +275,9 @@ public class HttpBaseTestCase extends BaseTestCase {
                     // TODO: Return different responses based on the parameters?
                     response.setBody(MockDataUtil.getMockResponse("get_course_structure"));
                     response.setResponseCode(HttpStatus.OK);
+                }else if (urlMatches(path, "/api/course_home/v1/dates/")) {
+                    response.setBody(MockDataUtil.getMockResponse("course_dates"));
+                    response.setResponseCode(HttpStatus.OK);
                 }
             }
         } catch (IOException e) {

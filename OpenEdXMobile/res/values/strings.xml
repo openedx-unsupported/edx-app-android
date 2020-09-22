@@ -232,6 +232,8 @@
     <string name="label_ended">Ended {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending {date}</string>
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">Course dates are not currently available.</string>
 
     <!-- Label for date when course is expiring in a specific time frame like in 2 days -->
     <string name="label_expires">Course access expires {date}</string>

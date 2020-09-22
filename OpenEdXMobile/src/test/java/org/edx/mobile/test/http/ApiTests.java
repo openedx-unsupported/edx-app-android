@@ -15,6 +15,8 @@ import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseDateBlock;
+import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.DiscussionData;
@@ -23,10 +25,13 @@ import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.test.util.MockDataUtil;
+import org.edx.mobile.util.DateUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +48,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * This class contains unit tests for API calls to server.
@@ -171,6 +177,39 @@ public class ApiTests extends HttpBaseTestCase {
         executeStrict(courseService.enrollInACourse(new CourseService.EnrollBody(courseId, true)));
         print("success");
         print("test: finished: reset password");
+    }
+
+    @Test
+    public void testCourseDatesResponse() throws Exception {
+        login();
+        print("test: Course Dates Response");
+
+        CourseDates dates = executeStrict(courseAPI.getCourseDates(""));
+        assertNotNull(dates);
+        assertNotNull(dates.getCourseDateBlocks());
+
+        String todayDate = dates.getCourseDateBlocks().get(12).getDate();
+
+        try (MockedStatic mockedStatic = mockStatic(DateUtil.class)) {
+            mockedStatic.when(DateUtil::getCurrentTimeStamp).thenReturn(todayDate);
+            Mockito.when(DateUtil.isDateToday(todayDate)).thenReturn(true);
+            assertTrue(dates.isContainToday());
+        }
+
+        dates.organiseCourseDates();
+
+        assertNotNull(dates.getCourseDatesMap());
+
+        for (String key : dates.getCourseDatesMap().keySet()) {
+            assertNotNull(key);
+            ArrayList<CourseDateBlock> blocks = dates.getCourseDatesMap().get(key);
+            assertNotNull(blocks);
+            for (CourseDateBlock block : blocks) {
+                assertNotNull(block);
+            }
+        }
+        print("success");
+        print("test: Course Dates Api working fine");
     }
 
     @Test
