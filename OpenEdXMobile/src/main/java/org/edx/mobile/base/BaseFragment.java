@@ -1,6 +1,7 @@
 package org.edx.mobile.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -27,6 +28,28 @@ public class BaseFragment extends RoboFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().post(new NewRelicEvent(getClass().getSimpleName()));
+    }
+
+    /**
+     * Method to make getContext null safe
+     * @return context if not null or throw exception else wise
+     */
+    public Context getContextOrThrow() {
+        if (getContext() != null)
+            return getContext();
+        throw new IllegalStateException("Context can only be accessed when attached with activity");
+    }
+
+    /**
+     * Method to get String argument null safe
+     * @param key requested argument
+     * @return argument value if found or throw exception else wise
+     */
+    public String getStringArgument(String key) {
+        if (getArguments() != null && getArguments().getString(key) != null) {
+            return getArguments().getString(key);
+        }
+        throw new IllegalArgumentException("Arguments or key not found in bundle");
     }
 
     @Override

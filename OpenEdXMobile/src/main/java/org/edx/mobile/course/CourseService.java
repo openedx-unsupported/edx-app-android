@@ -13,6 +13,7 @@ import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.json.JSONObject;
@@ -133,6 +134,9 @@ public interface CourseService {
 
     @POST("/api/completion/v1/completion-batch")
     Call<JSONObject> markBlocksCompletion(@Body BlocksCompletionBody completionBody);
+
+    @GET("api/course_home/v1/dates/{course_key}")
+    Call<CourseDates> getCourseDates(@Path("course_key") String courseId);
 
     final class BlocksCompletionBody {
         @NonNull String username;

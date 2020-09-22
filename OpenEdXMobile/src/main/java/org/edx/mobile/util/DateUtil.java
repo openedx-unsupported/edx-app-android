@@ -63,6 +63,73 @@ public class DateUtil {
     }
 
     /**
+     * This function returns course date in the EEE, MMM dd, yyyy format
+     */
+    public static String formatCourseDate(String date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
+            Date startDate = DateUtil.convertToDate(date);
+
+            return dateFormat.format(startDate);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return "";
+    }
+
+    /**
+     * This function match the provide date with current date
+     *
+     * @return true if the provided date is today else false
+     */
+    public static boolean isDateToday(String date) {
+        return convertToSimpleDate(date).equals(convertToSimpleDate(getCurrentTimeStamp()));
+    }
+
+    /**
+     * This function compare the provide date with current date
+     *
+     * @return true if the provided date is past else false
+     */
+    public static boolean isPastDate(String date) {
+        Date currentDate = new Date();
+        Date pastDate = convertToDate(date);
+        if (pastDate != null) {
+            return pastDate.compareTo(currentDate) < 0;
+        }
+        return false;
+    }
+
+    /**
+     * This function compare the provide date with current date
+     *
+     * @return true if the provided date is due else false
+     */
+    public static boolean isDueDate(String date) {
+        Date currentDate = new Date();
+        Date dueDate = convertToDate(date);
+        if (dueDate != null) {
+            return dueDate.compareTo(currentDate) > 0;
+        }
+        return false;
+    }
+
+    /**
+     * This function returns Simple date in the yyyy-MM-dd format
+     */
+    public static String convertToSimpleDate(String date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = DateUtil.convertToDate(date);
+
+            return dateFormat.format(startDate);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return "";
+    }
+
+    /**
      * Formats a date according to 'MMMM d' format.
      * Example output is 'February 21'.
      *

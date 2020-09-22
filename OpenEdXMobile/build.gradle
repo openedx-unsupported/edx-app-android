@@ -25,6 +25,7 @@ apply plugin: 'edxapp'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt' //To enable data binding with kotlin
 apply plugin: 'jacoco-android'
 edx {
     platform = ANDROID
@@ -233,6 +234,11 @@ dependencies {
 
     // test project configuration
     testImplementation 'junit:junit:4.12'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.1'
+    testImplementation 'androidx.test:core-ktx:1.2.0'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    // To mock static classes
+    testImplementation 'org.mockito:mockito-inline:3.4.0'
     testImplementation ("org.mockito:mockito-core:2.19.0"){
         exclude group: 'org.hamcrest'
     }

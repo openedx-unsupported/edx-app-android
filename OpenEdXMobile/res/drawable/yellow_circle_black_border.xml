@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <stroke
+        android:width="@dimen/width_hairline"
+        android:color="@color/black" />
+    <solid android:color="@color/course_today_date" />
+</shape>

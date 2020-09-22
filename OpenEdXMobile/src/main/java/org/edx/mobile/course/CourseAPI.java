@@ -28,6 +28,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.DiscussionData;
@@ -96,6 +97,14 @@ public class CourseAPI {
     @NonNull
     public Call<List<EnrolledCoursesResponse>> getEnrolledCourses() {
         return courseService.getEnrolledCourses(getUsername(), config.getOrganizationCode());
+    }
+
+    /**
+     * @return Course dates against the given course Id.
+     */
+    @NonNull
+    public Call<CourseDates> getCourseDates(@NonNull String courseId) {
+        return courseService.getCourseDates(courseId);
     }
 
     /**
