@@ -1,16 +1,17 @@
 package org.humana.mobile.core;
 
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.humana.mobile.module.analytics.AnalyticsRegistry;
+import org.humana.mobile.module.analytics.ISegment;
 import org.humana.mobile.module.db.IDatabase;
 import org.humana.mobile.module.download.IDownloadManager;
 import org.humana.mobile.module.notification.NotificationDelegate;
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.prefs.UserPrefs;
 import org.humana.mobile.module.storage.IStorage;
+import org.humana.mobile.services.ServiceManager;
 import org.humana.mobile.util.Config;
 import org.humana.mobile.view.Router;
 
@@ -35,6 +36,9 @@ public class EdxEnvironment implements IEdxEnvironment {
     LoginPrefs loginPrefs;
 
     @Inject
+    ISegment segment;
+
+    @Inject
     AnalyticsRegistry analyticsRegistry;
 
     @Inject
@@ -45,6 +49,9 @@ public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
     Config config;
+
+    @Inject
+    ServiceManager serviceManager;
 
     @Inject
     EventBus eventBus;
@@ -69,6 +76,12 @@ public class EdxEnvironment implements IEdxEnvironment {
         return loginPrefs;
     }
 
+    @Override
+    public ISegment getSegment() {
+        return segment;
+    }
+
+    @Override
     public AnalyticsRegistry getAnalyticsRegistry() {
         return analyticsRegistry;
     }
@@ -95,5 +108,10 @@ public class EdxEnvironment implements IEdxEnvironment {
 
     public EventBus getEventBus() {
         return eventBus;
+    }
+
+    @Override
+    public ServiceManager getServiceManager() {
+        return serviceManager;
     }
 }

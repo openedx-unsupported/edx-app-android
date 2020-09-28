@@ -12,6 +12,8 @@ public class Resume {
 
     private String Course_Id;
 
+    private String activity_url;
+
     public String getUnit_id()
     {
         return Unit_id;
@@ -60,6 +62,14 @@ public class Resume {
     public void setCourse_Id (String Course_Id)
     {
         this.Course_Id = Course_Id;
+    }
+
+    public String getActivity_url() {
+        return activity_url;
+    }
+
+    public void setActivity_url(String activity_url) {
+        this.activity_url = activity_url;
     }
 
     @Override

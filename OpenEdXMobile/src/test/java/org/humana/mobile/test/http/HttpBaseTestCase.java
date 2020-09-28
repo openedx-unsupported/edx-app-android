@@ -16,6 +16,7 @@ import org.humana.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor;
 import org.humana.mobile.http.provider.OkHttpClientProvider;
 import org.humana.mobile.test.BaseTestCase;
 import org.humana.mobile.test.util.MockDataUtil;
+import org.humana.mobile.tta.analytics.MxAnalyticsAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
@@ -53,6 +54,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     protected boolean useArtificialDelay = false;
     protected OkHttpClient okHttpClient;
     protected LoginAPI loginAPI;
+    protected MxAnalyticsAPI mxAnalyticsAPI;
     protected LoginService loginService;
     protected CourseAPI courseAPI;
     protected CourseService courseService;
@@ -116,6 +118,7 @@ public class HttpBaseTestCase extends BaseTestCase {
         loginService = injector.getInstance(LoginService.class);
         courseAPI = injector.getInstance(CourseAPI.class);
         courseService = injector.getInstance(CourseService.class);
+        mxAnalyticsAPI = injector.getInstance(MxAnalyticsAPI.class);
     }
 
     /**

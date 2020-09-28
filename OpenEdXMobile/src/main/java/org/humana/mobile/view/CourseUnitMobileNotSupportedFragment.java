@@ -79,8 +79,8 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
             @Override
             public void onClick(View v) {
                 BrowserUtil.open(getActivity(), unit.getWebUrl());
-                environment.getAnalyticsRegistry().trackOpenInBrowser(unit.getId()
-                        , unit.getCourseId(), unit.isMultiDevice(), unit.getBlockId());
+                environment.getSegment().trackOpenInBrowser(unit.getId()
+                        , unit.getCourseId(), unit.isMultiDevice());
             }
         });
         mdataManager = DataManager.getInstance(getActivity());

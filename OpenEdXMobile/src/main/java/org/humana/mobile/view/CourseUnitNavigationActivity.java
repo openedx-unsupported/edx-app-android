@@ -21,10 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.humana.mobile.R;
+import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.logger.Logger;
 import org.humana.mobile.model.course.BlockType;
 import org.humana.mobile.model.course.CourseComponent;
 import org.humana.mobile.module.analytics.Analytics;
+import org.humana.mobile.module.analytics.ISegment;
+import org.humana.mobile.module.prefs.PrefManager;
 import org.humana.mobile.services.LastAccessManager;
 import org.humana.mobile.services.ViewPagerDownloadManager;
 import org.humana.mobile.tta.Constants;
@@ -207,10 +210,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
 
-        environment.getAnalyticsRegistry().trackScreenView(
-                Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
-        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
-                courseData.getCourse().getId(), selectedUnit.getBlockId());
+        environment.getSegment().trackScreenView(
+                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
+        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void tryToUpdateForEndOfSequential() {
@@ -264,16 +266,18 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
 
-        boolean isVideoMode = false;
-        if (getIntent() != null) {
-            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
-        }
-        if (isVideoMode) {
-            leaves = selectedUnit.getRoot().getVideos(false);
-        } else {
-            selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
-        }
-        unitList.addAll(leaves);
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        EnumSet<BlockType> types = userPrefManager.isUserPrefVideoModel() ?
+                EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
+
+        //selectedUnit.getRoot().fetchAllLeafComponents(leaves, types);
+        //unitList.addAll(leaves);
+
+        unitList.addAll(getParentCurrentleaf(selectedUnit));
+
+        // Log.i("Manprax", "Unit ID: "+ selectedUnit.getId());
+        // Log.i("Manprax", "Unit Content Count: "+ unitList.size());
+        //unitList.add(getCurrentleaf(selectedUnit,leaves));
         pagerAdapter.notifyDataSetChanged();
 
         ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
@@ -288,15 +292,22 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             pagerAdapter.notifyDataSetChanged();
 
     }
+    private  List<CourseComponent> getParentCurrentleaf(CourseComponent selecteditem)
+    {
+        List<CourseComponent> mxUnitList=new ArrayList<>();
 
+        for(int listIndex=0;listIndex<selecteditem.getParent().getChildren().size();listIndex++)
+        {
+            mxUnitList.add((CourseComponent) selecteditem.getParent().getChildren().get(listIndex));
+        }
+
+        return mxUnitList;
+    }
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
-        if (selectedUnit != null) {
-            environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
-                    courseData.getCourse().getId(), selectedUnit.getBlockId());
-        }
+        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void updateUIForOrientation() {

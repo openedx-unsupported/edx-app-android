@@ -20,6 +20,7 @@ import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.tta.analytics.AnalyticModel;
 import org.humana.mobile.tta.analytics.analytics_enums.Action;
 import org.humana.mobile.tta.analytics.db_operations.DbOperationGetAnalytic;
+import org.humana.mobile.tta.data.enums.FilePathValueForXblock;
 import org.humana.mobile.tta.data.local.db.operation.DbOperationGetTinCanPayload;
 import org.humana.mobile.tta.tincan.model.Resume;
 import org.humana.mobile.util.Sha1Util;
@@ -437,6 +438,16 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             values.put(DbStructure.Column.VIDEO_FOR_WEB_ONLY, de.isVideoForWebOnly());
             values.put(DbStructure.Column.TYPE, de.getDownloadType());
             values.put(DbStructure.Column.CONTENT_ID, de.getContent_id());
+
+            //update downloadedOn field for scrom case only ,otherwise let it go 0
+            if (de.getFilePath().equals(String.valueOf(FilePathValueForXblock.Scrom)) ||
+                    de.getFilePath().equals(String.valueOf(FilePathValueForXblock.Pdf)))
+                values.put(DbStructure.Column.DOWNLOADED_ON, de.getDownloadedOn());
+
+            //update downloadedOn field for scrom case only ,otherwise let it go 0
+            if (de.getFilePath().equals(String.valueOf(FilePathValueForXblock.Scrom)) ||
+                    de.getFilePath().equals(String.valueOf(FilePathValueForXblock.Pdf)))
+                values.put(DbStructure.Column.SCORM_UPLOADED_ON, de.getScormUploadedOn());
 
             DbOperationInsert op = new DbOperationInsert(DbStructure.Table.DOWNLOADS, values);
             op.setCallback(callback);
@@ -954,6 +965,14 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
+    public List<Resume> getTincanResumeList(DataCallback<List<Resume>> callback) {
+        DbOperationGetTincanResumeList op = new DbOperationGetTincanResumeList(false,
+                DbStructure.Table.TINCAN, null, DbStructure.Column.USER_ID + "=?",
+                new String[]{username()}, null, null);
+        return enqueue(op);
+    }
+
+    @Override
     public Long addResumePayload(Resume resume) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.USER_ID, resume.getUser_Id());
@@ -1000,6 +1019,37 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         DbStructure.Column.COURSE_ID +"=? AND "+
                         DbStructure.Column.UNIT_ID + " =? ",
                 new String[]{loginPrefs.getUsername(),course_id,unit_id},null);
+        return enqueue(op);
+    }
+    @Override
+    public List<VideoModel> getDownloadedScorm(String courseId) {
+        DbOperationGetAllScorm op = new DbOperationGetAllScorm(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "
+                        + DbStructure.Column.USERNAME + "=?",
+                new String[]{courseId, String.valueOf(
+                        DownloadedState.DOWNLOADED.ordinal()), username()},
+                null);
+        return enqueue(op);
+    }
+
+    @Override
+    public VideoModel getDownloadedScorm(String courseId, String block_id) {
+        DbOperationGetScorm op = new DbOperationGetScorm(false, DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND "
+                        + DbStructure.Column.USERNAME + "=? AND "
+                        +DbStructure.Column.VIDEO_ID + "=? ",
+                new String[]{courseId,username(),block_id},
+                null);
+        return enqueue(op);
+    }
+
+    @Override
+    public Integer deleteScorm(String courseId, String block_id) {
+        DbOperationDelete op=new DbOperationDelete(DbStructure.Table.DOWNLOADS,
+                DbStructure.Column.EID + "=? AND "
+                        + DbStructure.Column.USERNAME + "=? AND "
+                        +DbStructure.Column.VIDEO_ID + "=? ",
+                new String[]{courseId,username(),block_id});
         return enqueue(op);
     }
 }

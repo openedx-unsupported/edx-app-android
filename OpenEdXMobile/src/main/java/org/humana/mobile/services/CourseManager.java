@@ -8,9 +8,22 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.humana.mobile.course.CourseAPI;
+import org.humana.mobile.course.ScormBlockModel;
 import org.humana.mobile.logger.Logger;
 import org.humana.mobile.model.Filter;
+import org.humana.mobile.model.VideoModel;
+import org.humana.mobile.model.course.BlockModel;
+import org.humana.mobile.model.course.BlockType;
 import org.humana.mobile.model.course.CourseComponent;
+import org.humana.mobile.model.course.CourseStructureV1Model;
+import org.humana.mobile.model.course.DiscussionBlockModel;
+import org.humana.mobile.model.course.DiscussionData;
+import org.humana.mobile.model.course.HtmlBlockModel;
+import org.humana.mobile.model.course.IBlock;
+import org.humana.mobile.model.course.VideoBlockModel;
+import org.humana.mobile.model.course.VideoData;
+import org.humana.mobile.tta.scorm.PDFBlockModel;
+import org.humana.mobile.tta.scorm.ScormData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +49,10 @@ public class CourseManager {
 
     @Inject
     CourseAPI courseApi;
+
+    @Inject
+    ServiceManager serviceManager;
+
 
     public CourseManager() {
         cachedComponent = new LruCache<>(NO_OF_COURSES_TO_CACHE);
@@ -82,6 +99,50 @@ public class CourseManager {
         } catch (Exception e) {
             // Course data doesn't exist in cache
             return null;
+        }
+    }
+
+    public static IBlock normalizeCourseStructure(CourseStructureV1Model courseStructureV1Model, String courseId){
+        BlockModel topBlock = courseStructureV1Model.getBlockById(courseStructureV1Model.root);
+        CourseComponent course = new CourseComponent(topBlock, null);
+        course.setCourseId(courseId);
+        for (BlockModel m : courseStructureV1Model.getDescendants(topBlock)) {
+            normalizeCourseStructure(courseStructureV1Model,m,course);
+        }
+        return course;
+    }
+
+    private static void normalizeCourseStructure(CourseStructureV1Model courseStructureV1Model,
+                                                 BlockModel block,
+                                                 CourseComponent parent) {
+        if (block.isContainer()) {
+            CourseComponent child = new CourseComponent(block, parent);
+            for (BlockModel m : courseStructureV1Model.getDescendants(block)) {
+                normalizeCourseStructure(courseStructureV1Model, m, child);
+            }
+        } else {
+            if (BlockType.VIDEO == block.type && block.data instanceof VideoData) {
+                new VideoBlockModel(block, parent);
+            } else if (BlockType.DISCUSSION == block.type && block.data instanceof DiscussionData) {
+                new DiscussionBlockModel(block, parent);
+            } else if (BlockType.SCORM == block.type && block.data instanceof ScormData) {
+                new ScormBlockModel(block, parent);
+            }
+            //added by Arjun to integrate pdf xblock in android.
+            else if (BlockType.PDF == block.type && block.data instanceof ScormData)
+            {
+                ///TODO :need to work on Arjun
+                new PDFBlockModel(block, parent);
+                //new ScormBlockModel(block, parent);
+            }
+            else if(BlockType.OFFICEMIX == block.type)
+            {
+                new HtmlBlockModel(block, parent);
+                //new OfficeMixBlockModel(block, parent);
+            }
+            else { //everything else.. we fallback to html component
+                new HtmlBlockModel(block, parent);
+            }
         }
     }
 
@@ -144,6 +205,43 @@ public class CourseManager {
         if (component == null)
             return getBlockComponent(componentId, courseId);
 
+        return component;
+    }
+
+  /*  public CourseComponent getComponentById(String courseId, final String componentId){
+        CourseComponent courseComponent = getCourseByCourseId(courseId);
+        if ( courseComponent == null )
+            return null;
+        return courseComponent.find(new Filter<CourseComponent>() {
+            @Override
+            public boolean apply(CourseComponent courseComponent) {
+                return componentId.equals(courseComponent.getId());
+            }
+        });
+    }*/
+
+    public CourseComponent getCourseByCourseId(String courseId){
+
+
+        //if the id is null return the call:Arjun
+        if(courseId==null)
+            return null;
+
+        if(courseId.isEmpty())
+            return null;
+
+        CourseComponent component = cachedComponent.get(courseId);
+        if ( component != null )
+            return component;
+        try {
+            component = serviceManager.getCourseStructureFromCache(courseId);
+
+            //Don't put component to cash if it is null it create null crash to Lurche cache manager::Arjun
+            if (component != null)
+                cachedComponent.put(courseId, component);
+        } catch (Exception e) {
+            logger.error(e);
+        }
         return component;
     }
 

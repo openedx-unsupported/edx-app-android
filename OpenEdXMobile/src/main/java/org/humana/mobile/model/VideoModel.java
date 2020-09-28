@@ -51,13 +51,15 @@ public interface VideoModel {
     int getLastPlayedOffset();
 
     String getLmsUrl();
-    
+
     boolean isCourseActive();
 
     boolean isVideoForWebOnly();
 
     long getDownloadedOn();
     
+    String getScormUploadedOn();
+
     TranscriptModel getTranscripts();
     //TODO: write all required method of the video model
 
@@ -72,7 +74,7 @@ public interface VideoModel {
      * @param videoByUrl
      */
     void setDownloadInfo(VideoModel videoByUrl);
-    
+
     /**
      * Sets downloading information from the given download object.
      * @param download

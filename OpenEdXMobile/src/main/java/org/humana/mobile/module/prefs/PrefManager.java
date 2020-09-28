@@ -267,6 +267,31 @@ public class PrefManager {
         }
     }
 
+    public static class UserPrefManager extends PrefManager {
+
+        public UserPrefManager(Context context) {
+            super(context, Pref.USER_PREF);
+        }
+
+        public boolean isUserPrefVideoModel() {
+            //default is full mode
+            return getBoolean(Key.UserPrefVideoModel, false);
+        }
+
+        public void setUserPrefVideoModel(boolean enabled) {
+            super.put(Key.UserPrefVideoModel, enabled);
+        }
+
+        public long getLastCourseStructureFetch(String courseId) {
+            return getLong(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId);
+        }
+
+        public void setLastCourseStructureFetch(String courseId, long timestamp) {
+            super.put(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId, timestamp);
+        }
+
+    }
+
     /**
      * Contains preference key constants.
      */
@@ -300,9 +325,9 @@ public class PrefManager {
         public static final String WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION";
         // Preference to keep track of Bulk download switch for a Course ID
         public static final String BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s";
-
+        public static final String UserPrefVideoModel = "UserPrefVideoModel";
         //TTA
-
+        public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
         public static final String FIRST_LAUNCH = "first_launch";
         public static final String FIRST_LOGIN = "first_login";
         public static final String CURRENT_BREADCRUMB = "current_breadcrumb";

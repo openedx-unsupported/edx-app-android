@@ -9,6 +9,9 @@ public class DownloadedVideoDeletedEvent {
     public DownloadedVideoDeletedEvent(VideoModel model) {
         this.model = model;
     }
+ public DownloadedVideoDeletedEvent() {
+
+    }
 
     public VideoModel getModel() {
         return model;

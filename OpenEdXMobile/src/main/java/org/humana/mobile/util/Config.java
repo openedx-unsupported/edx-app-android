@@ -78,6 +78,8 @@ public class Config {
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
 
     //TTA start
+    /*Analytics base url*/
+    private static final String ANALYTICS_BASE_URL = "ANALYTICS_BASE_URL";
 
     private static final String TTA_OTP_SENDER_ADDRESS = "TTA_OTP_SENDER_ADDRESS";
     //Tincan LRS
@@ -94,6 +96,11 @@ public class Config {
     private static final String DIALOGFLOW_CLIENT_TOKEN = "DIALOGFLOW_CLIENT_TOKEN";
 
     private static  String SMS_KEY = "SMS_KEY";
+
+    public String getAnalyticsBaseUrl() {
+        return getString(ANALYTICS_BASE_URL);
+    }
+
 
     //TTA end
 

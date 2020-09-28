@@ -34,8 +34,16 @@ public abstract class DbOperationSelect<T> extends DbOperationBase<T> {
         this.limit = limit;
     }
 
+    DbOperationSelect(boolean distinct,String table, String[] columns, String whereClause, String[] whereArgs, String orderBy,String limit) {
+        this.distinct = distinct;
+        this.table = table;
+        this.columns = columns;
+        this.whereClause = whereClause;
+        this.whereArgs = whereArgs;
+        this.orderBy = orderBy;
+        this.limit=limit;
+    }
 
-    
     public Cursor getCursor(SQLiteDatabase db) {
         if (table == null) {
             throw new IllegalArgumentException("table must be provided");

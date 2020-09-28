@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.humana.mobile.exception.CourseContentNotValidException;
+import org.humana.mobile.http.IApi;
 import org.humana.mobile.http.callback.ErrorHandlingCallback;
 import org.humana.mobile.http.notifications.ErrorNotification;
 import org.humana.mobile.http.notifications.SnackbarErrorNotification;
@@ -74,6 +75,8 @@ public class CourseAPI {
     @NonNull
     public static ScormManager scormManager;
 
+    @Inject
+    IApi api;
 
     @Inject
     public CourseAPI(@NonNull CourseService courseService, @NonNull UserPrefs userPrefs) {
@@ -214,8 +217,7 @@ public class CourseAPI {
     }
 
     public String downloadScorm(String url, String file) throws Exception {
-//        return api.downloadScorm(url,file);
-        return null;
+        return api.downloadScorm(url,file);
     }
 
     public static abstract class GetCourseStructureCallback
@@ -521,7 +523,7 @@ public class CourseAPI {
             @NonNull final CourseStructureV1Model courseStructureV1Model,
             @NonNull final BlockModel block,
             @NonNull final CourseComponent parent) {
-
+          //block.data = new ScormData();
         if (block.isContainer()) {
             CourseComponent child = new CourseComponent(block, parent);
             for (BlockModel m : courseStructureV1Model.getDescendants(block)) {
@@ -714,7 +716,6 @@ public class CourseAPI {
         // private EncodingsModel encodings;
         return model;
     }
-
     /*public
     @NonNull
     List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache,Context ctx) throws Exception {

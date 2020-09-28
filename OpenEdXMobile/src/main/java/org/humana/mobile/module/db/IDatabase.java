@@ -520,10 +520,13 @@ public interface IDatabase {
      * get Tincan Analytic data
      */
     ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status, DataCallback<ArrayList<AnalyticModel>> callback);
-
+    List<Resume> getTincanResumeList(DataCallback<List<Resume>> callback);
     //for tincan resume handeling.
     Long addResumePayload(Resume resume);
     Integer updateResumePayload(Resume resume);
     Integer deleteResumePayload(String course_id, String unit_id);
     Resume getResumeInfo(String course_id, String unit_id);
+    List<VideoModel> getDownloadedScorm(String courseId);
+    VideoModel getDownloadedScorm(String courseId,String block_id);
+    Integer deleteScorm(String courseId,String block_id);
 }

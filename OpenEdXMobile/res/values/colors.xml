@@ -58,7 +58,7 @@
     <color name="edx_brand_primary_accent">#2991C3</color>
     <color name="edx_brand_primary_back">#CCE3F0</color>
 
-
+    <color name="edx_grayscale_neutral_base">#A7A4A4</color>
     <color name="edx_brand_primary_x_back">#F2F8FB</color>
     <color name="edx_brand_secondary_dark">#982C62</color>
     <color name="edx_brand_secondary_base">#C2387D</color>
@@ -78,7 +78,7 @@
     <color name="edx_error_back">#FEECED</color>
     <color name="edx_warning_accent">#FFC01F</color>
     <color name="edx_warning_back">#FFF9EB</color>
-
+    <color name="edx_grayscale_neutral_light">#D2D0D0</color>
     <!--  TTA color palette start  -->
     <color name="primary_navy">#3A495F</color>
     <color name="primary_cyan">#5c6473</color>

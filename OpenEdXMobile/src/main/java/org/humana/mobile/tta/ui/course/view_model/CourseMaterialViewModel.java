@@ -1081,8 +1081,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                         }
                     } else {
                         itemBinding.itemDuration.setText(mActivity.getString(
-                                R.string.estimated_duration) + " : " +
-                                (item.getDuration() == null ? "N/A" : item.getDuration()));
+                                R.string.estimated_duration) + " : "
+                                /*+ (item.getDuration() == null ? "N/A" : item.getDuration())*/);
                         Glide.with(mActivity)
                                 .load(content.getIcon())
                                 .placeholder(R.drawable.placeholder_course_card_image)
@@ -1090,8 +1090,8 @@ public class CourseMaterialViewModel extends BaseViewModel {
                     }
                 } else {
                     itemBinding.itemDuration.setText(mActivity.getString(
-                            R.string.estimated_duration) + " : " +
-                            (item.getDuration() == null ? "N/A" : item.getDuration()));
+                            R.string.estimated_duration) + " : "
+                            /*+ (item.getDuration() == null ? "N/A" : item.getDuration())*/);
                     Glide.with(mActivity)
                             .load(content.getIcon())
                             .placeholder(R.drawable.placeholder_course_card_image)

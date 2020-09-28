@@ -119,7 +119,7 @@ public interface CourseService {
     @GET("/api/courses/v1/blocks/?" +
             "depth=all&" +
             "requested_fields=graded,format,student_view_multi_device,due&" +
-            "student_view_data=video,discussion,pdf&" +
+            "student_view_data=video,discussion,scorm&" +
             "block_counts=video&" +
             "nav_depth=3")
     Call<CourseStructureV1Model> getCourseStructure(
@@ -130,7 +130,7 @@ public interface CourseService {
     @GET("/api/courses/v1/blocks/{block_id}/?" +
             "depth=all&" +
             "requested_fields=graded,format,student_view_multi_device,due&" +
-            "student_view_data=video,discussion,pdf&" +
+            "student_view_data=video,discussion,scorm&" +
             "block_counts=video&" +
             "nav_depth=3")
     Call<CourseStructureV1Model> getBlockComponent(

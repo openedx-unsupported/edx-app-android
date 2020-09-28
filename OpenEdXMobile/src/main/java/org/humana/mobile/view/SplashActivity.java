@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import org.humana.mobile.base.MainApplication;
 import org.humana.mobile.core.IEdxEnvironment;
 import org.humana.mobile.logger.Logger;
+import org.humana.mobile.tta.analytics.Analytic;
 import org.humana.mobile.tta.data.local.db.ILocalDataSource;
 import org.humana.mobile.tta.ui.launch.SwipeLaunchActivity;
 import org.humana.mobile.tta.ui.programs.selectprogram.SelectProgramActivity;
@@ -22,7 +23,6 @@ import static org.humana.mobile.util.BrowserUtil.appPref;
 public class SplashActivity extends Activity {
 
     private static final long DELAY = 1500;
-
     protected final Logger logger = new Logger(getClass().getName());
     private Config config = new Config(MainApplication.instance());
 
@@ -48,7 +48,7 @@ public class SplashActivity extends Activity {
         startRouting();
     }
 
-    private void startRouting(){
+    private void startRouting() {
 
         new Handler().postDelayed(() -> {
             finish();
@@ -71,7 +71,7 @@ public class SplashActivity extends Activity {
         }*/
 
 
-            if(appPref.isFirstLaunch()) {
+            if (appPref.isFirstLaunch()) {
                 ActivityUtil.gotoPage(SplashActivity.this, SwipeLaunchActivity.class);
                 appPref.setFirstLaunch(false);
                 return;
@@ -80,8 +80,7 @@ public class SplashActivity extends Activity {
             if (environment.getUserPrefs().getProfile() != null) {
                 //environment.getRouter().showMainDashboard(SplashActivity.this);
                 ActivityUtil.gotoPage(SplashActivity.this, SelectProgramActivity.class);
-            }
-            else {
+            } else {
                 environment.getRouter().showLaunchScreen(SplashActivity.this);
             }
 

@@ -29,7 +29,6 @@ import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.storage.IStorage;
 import org.humana.mobile.profiles.UserProfileActivity;
 import org.humana.mobile.tta.data.local.db.table.Unit;
-import org.humana.mobile.tta.ui.course.CourseScormViewActivity;
 import org.humana.mobile.tta.ui.survey.UserSurveyActivity;
 import org.humana.mobile.util.Config;
 import org.humana.mobile.util.EmailUtil;
@@ -200,9 +199,6 @@ public class Router {
         fragment.startActivityForResult(courseDetail, requestCode);
     }
 
-
-
-
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
                                      String courseComponentId, String type, String title) {
         Bundle courseBundle = new Bundle();
@@ -277,10 +273,16 @@ public class Router {
         return courseDetail;
     }
 
-    @NonNull
+   /* @NonNull
     public Intent getScromActivity(Activity sourceActivity, Context ctx, String folderPath, String course_name,String course_id,String unit_id) {
         sourceActivity.startActivity(CourseScormViewActivity.getLaunchIntent(ctx,folderPath,course_name,course_id,unit_id));
         return CourseScormViewActivity.getLaunchIntent(ctx,folderPath,course_name,course_id,unit_id);
+    }*/
+
+    @NonNull
+    public Intent getScromActivity(Activity sourceActivity, Context ctx, String folderPath, String course_name, String course_id, String unit_id) {
+        sourceActivity.startActivity(CourseScormViewActivity.getLaunchIntent(ctx, folderPath, course_name, course_id, unit_id));
+        return CourseScormViewActivity.getLaunchIntent(ctx, folderPath, course_name, course_id, unit_id);
     }
 
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,

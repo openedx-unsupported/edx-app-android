@@ -62,6 +62,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * This class initializes the modules of the app based on the configuration.
  */
 public abstract class MainApplication extends MultiDexApplication {
+    //FIXME - temporary solution
+    public static final boolean RETROFIT_ENABLED = false;
 
     protected final Logger logger = new Logger(getClass().getName());
 

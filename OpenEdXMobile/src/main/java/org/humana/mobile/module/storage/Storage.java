@@ -179,6 +179,14 @@ public class Storage implements IStorage {
         return deletedVideos;
     }
 
+    //remove scorm item from db
+    @Override
+    public int removeDownloadedScromEntry(String blockId) {
+        int videosDeleted = db.deleteScromEntryByScromId(blockId, null);
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+        return videosDeleted;
+    }
+
     @Override
     public void removeAllDownloads() {
         final String username = loginPrefs.getUsername();
@@ -742,6 +750,10 @@ public class Storage implements IStorage {
     }
 
     @Override
+    public List<Resume> getTincanResumeList() throws Exception {
+        return  db.getTincanResumeList(null);
+    }
+    @Override
     public Long addResumePayload(Resume resume) {
         return db.addResumePayload(resume);
     }
@@ -759,5 +771,21 @@ public class Storage implements IStorage {
     @Override
     public Resume getResumeInfo(String course_id, String unit_id) {
         return  db.getResumeInfo(course_id,unit_id);
+    }
+
+
+    @Override
+    public List<VideoModel> getDownloadedScorm(String course_id) {
+        return  db.getDownloadedScorm(course_id);
+    }
+
+    @Override
+    public VideoModel getDownloadedScorm(String courseId, String block_id) {
+        return db.getDownloadedScorm(courseId,block_id);
+    }
+
+    @Override
+    public Integer deleteScorm(String courseId, String block_id) {
+        return db.deleteScorm(courseId,block_id);
     }
 }

@@ -4,16 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewCompat;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +31,7 @@ import org.humana.mobile.BuildConfig;
 import org.humana.mobile.R;
 import org.humana.mobile.core.IEdxEnvironment;
 import org.humana.mobile.logger.Logger;
+import org.humana.mobile.model.VideoModel;
 import org.humana.mobile.model.api.EnrolledCoursesResponse;
 import org.humana.mobile.model.course.BlockPath;
 import org.humana.mobile.model.course.BlockType;
@@ -47,19 +45,16 @@ import org.humana.mobile.module.db.DataCallback;
 import org.humana.mobile.module.db.IDatabase;
 import org.humana.mobile.module.prefs.LoginPrefs;
 import org.humana.mobile.module.storage.IStorage;
-import org.humana.mobile.services.VideoDownloadHelper;
 import org.humana.mobile.tta.analytics.Analytic;
 import org.humana.mobile.tta.analytics.analytics_enums.Action;
 import org.humana.mobile.tta.analytics.analytics_enums.Source;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.enums.FilePathValueForXblock;
-import org.humana.mobile.tta.scorm.PDFBlockModel;
 import org.humana.mobile.tta.scorm.ScormBlockModel;
 import org.humana.mobile.tta.scorm.ScormManager;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.util.Config;
 import org.humana.mobile.util.DateUtil;
-import org.humana.mobile.util.MemoryUtil;
+import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.ResourceUtil;
 import org.humana.mobile.util.TimeZoneUtils;
 import org.humana.mobile.util.UiUtil;
@@ -69,8 +64,8 @@ import org.humana.mobile.util.images.TopAnchorFillWidthTransformation;
 import org.humana.mobile.view.BulkDownloadFragment;
 import org.humana.mobile.view.CourseOutlineActivity;
 import org.humana.mobile.view.ProgressDialog_TA.ProgressDialog_TA;
+import org.humana.mobile.x_block.pdfManager;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -196,7 +191,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     @Override
     public final View getView(int position, View convertView, ViewGroup parent) {
-        final int type = getItemViewType(position);
+       /* final int type = getItemViewType(position);
 
         // FIXME: Revisit better DB communication and code improvements in [MA-1640]
         // INITIALIZATION
@@ -206,280 +201,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
                     // apply a tag to this list row
                     ViewHolder holder = getItemViewHolder(convertView);
-
-                   /* if(getItem(position).component.getChildren().size()==1)
-                    {
-                        if(getItem(position).component.getChildren().get(0).getType()==BlockType.SCORM||
-                                getItem(position).component.getChildren().get(0).getType()==BlockType.PDF)
-                        {
-
-                            //show play/download scrom  layout visible
-//                            tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-
-                            if (getItem(position).component.getChildren().get(0).getType() == BlockType.PDF) {
-                                if (scormManager.hasPdf(getItem(position).component.getChildren().get(0).getId())) {
-                                    addViewButton(tag, position);
-                                } else {
-                                    addDownloadButton(tag);
-                                }
-                            } else if (getItem(position).component.getChildren().get(0).getType() == BlockType.SCORM) {
-                                if (scormManager.has(getItem(position).component.getChildren().get(0).getId())) {
-                                    addViewButton(tag, position);
-                                } else {
-                                    addDownloadButton(tag);
-                                }
-                            }
-
-
-                            //click for download /view button
-                            tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    selectedUnit = (CourseComponent) getItem(position).component.getChildren().get(0);
-
-                                    if (tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
-                                environment.getRouter().showCourseUnitDetail(fragment,
-                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());
-
-                                        doDownload(selectedUnit, tag);
-
-                                        //update UI after download
-                                    } else if (tag.mxScromDownloadorView.getContentDescription().toString().equals("view")) {
-                                        if (selectedUnit.getType() == BlockType.PDF) {
-                                            MXPDFManager manager = new MXPDFManager();
-                                            manager.viewPDF(context, scormManager.getPdf(selectedUnit.getId()));
-                                        } else if (selectedUnit.getType() == BlockType.SCORM) {
-                                            doShow(scormManager.get(selectedUnit.getId()),selectedUnit);
-                                        }
-
-                                        //analytics hit for view scorm
-                                        if (selectedUnit != null) {
-                                            //for analytics update
-                                            CourseOutlineActivity activity = (CourseOutlineActivity) context;
-
-                                            aHelper.addMxAnalytics_db(loginPrefs.getUsername()
-                                                    , selectedUnit.getDisplayName(), Action.ViewUnit,
-                                                    selectedUnit.getRoot().getDisplayName(), Source.Mobile);
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                    else if(getItem(position).component.getChildren().size()>1 && getItem(position).component.getType()==BlockType.SCORM||
-                            getItem(position).component.getType()==BlockType.PDF)
-                    {
-                        //show play/download scrom  layout visible
-                        tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-
-                        if(getItem(position).component.getType()==BlockType.PDF)
-                        {
-                            if(scormManager.hasPdf(getItem(position).component.getId()))
-                            {
-                                addViewButton(tag,position);
-                            }
-                            else
-                            {
-                                addDownloadButton(tag);
-                            }
-                        }
-                        else if(getItem(position).component.getType()==BlockType.SCORM)
-                        {
-                            if(scormManager.has(getItem(position).component.getId()))
-                            {
-                                addViewButton(tag,position);
-                            }
-                            else
-                            {
-                                addDownloadButton(tag);
-                            }
-                        }
-
-                        //click for download /view button
-                        tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                selectedUnit=(CourseComponent)getItem(position).component;
-
-                                if(tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
-                                environment.getRouter().showCourseUnitDetail(fragment,
-                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());
-
-                                    doDownload(selectedUnit,tag);
-
-                                    //update UI after download
-                                }
-                                else if(tag.mxScromDownloadorView.getContentDescription().toString().equals("view"))
-                                {
-                                    if(selectedUnit.getType()==BlockType.PDF)
-                                    {
-                                        MXPDFManager manager=new MXPDFManager();
-                                        manager.viewPDF(context,scormManager.getPdf(selectedUnit.getId()));
-                                    }
-                                    else if(selectedUnit.getType()==BlockType.SCORM)
-                                    {
-                                        doShow(scormManager.get(selectedUnit.getId()),selectedUnit);
-                                    }
-
-                                    //analytics hit for view scorm
-                                    if(selectedUnit!=null) {
-                                        //for analytics update
-                                        CourseOutlineActivity activity=(CourseOutlineActivity)context;
-
-                                        aHelper.addMxAnalytics_db(loginPrefs.getUsername()
-                                                ,selectedUnit.getDisplayName() , Action.ViewUnit,
-                                                selectedUnit.getRoot().getDisplayName() , Source.Mobile);
-                                    }
-                                }
-                            }
-                        });
-
-                    }
-                    else if(getItem(position).component.getType()==BlockType.SCORM || getItem(position).component.getType()==BlockType.PDF)
-                    {
-                        //show play/download scrom  layout visible
-                        tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-
-                        if(getItem(position).component.getType()==BlockType.PDF)
-                        {
-                            if(scormManager.hasPdf(getItem(position).component.getId()))
-                            {
-                                addViewButton(tag,position);
-                            }
-                            else
-                            {
-                                addDownloadButton(tag);
-                            }
-                        }
-                        else if(getItem(position).component.getType()==BlockType.SCORM)
-                        {
-                            if(scormManager.has(getItem(position).component.getId()))
-                            {
-                                addViewButton(tag,position);
-                            }
-                            else
-                            {
-                                addDownloadButton(tag);
-                            }
-                        }
-
-                        //click for download /view button
-                        tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                selectedUnit=(CourseComponent)getItem(position).component;
-
-                                if(tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
-                                environment.getRouter().showCourseUnitDetail(fragment,
-                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());
-
-                                    doDownload(selectedUnit,tag);
-
-                                    //update UI after download
-                                }
-                                else if(tag.mxScromDownloadorView.getContentDescription().toString().equals("view"))
-                                {
-                                    if(selectedUnit.getType()==BlockType.PDF)
-                                    {
-                                        MXPDFManager manager=new MXPDFManager();
-                                        manager.viewPDF(context,scormManager.getPdf(selectedUnit.getId()));
-                                    }
-                                    else if(selectedUnit.getType()==BlockType.SCORM)
-                                    {
-                                        doShow(scormManager.get(selectedUnit.getId()),selectedUnit);
-                                    }
-
-                                    //analytics hit for view scorm
-                                    if(selectedUnit!=null) {
-                                        //for analytics update
-                                        CourseOutlineActivity activity=(CourseOutlineActivity)context;
-
-                                        aHelper.addMxAnalytics_db(loginPrefs.getUsername()
-                                                ,selectedUnit.getDisplayName() , Action.ViewUnit,
-                                                selectedUnit.getRoot().getDisplayName() , Source.Mobile);
-                                    }
-                                }
-                            }
-                        });
-                    }*/
-                  /*  tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            selectedUnit=(CourseComponent)getItem(position).component;
-
-                            if(tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
-//                                environment.getRouter().showCourseUnitDetail(fragment,
-//                                REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());
-
-//                                doDownload(selectedUnit,tag);
-
-                                //update UI after download
-                            }
-                            else if(tag.mxScromDownloadorView.getContentDescription().toString().equals("view"))
-                            {
-                                if(selectedUnit.getType()==BlockType.PDF)
-                                {
-                                    MXPDFManager manager=new MXPDFManager();
-                                    manager.viewPDF(context,scormManager.getPdf(selectedUnit.getId()));
-                                }
-                                else if(selectedUnit.getType()==BlockType.SCORM)
-                                {
-                                    doShow(scormManager.get(selectedUnit.getId()),selectedUnit);
-                                }
-
-                                //analytics hit for view scorm
-                                if(selectedUnit!=null) {
-                                    //for analytics update
-                                    CourseOutlineActivity activity=(CourseOutlineActivity)context;
-
-                                    aHelper.addMxAnalytics_db(loginPrefs.getUsername()
-                                            ,selectedUnit.getDisplayName() , Action.ViewUnit,
-                                            selectedUnit.getRoot().getDisplayName() , Source.Mobile);
-                                }
-                            }
-                        }
-                    });*/
-//                    CourseComponent unit;
-//                    unit = getItem(position).component;
-
-//                        if (getItem(position).component.getType().equals(BlockType.PDF) &&
-//                                getItem(position).component.getDisplayName().equals("PDF")) {
-//
-//                            ScormBlockModel mDownloadbleUnit = new ScormBlockModel(getItem(position).component.getBlockModel(),
-//                                    getItem(position).component.getParent());
-//
-//                            tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-//
-//                            switch (dataManager.getScormStatus(mDownloadbleUnit)) {
-//                                case downloaded:
-//                                    tag.mx_downloadorView_layout.setVisibility(View.GONE);
-//                                    tag.mProgressLayout.setVisibility(View.GONE);
-//                                    tag.mx_Scrom_delet_layout.setVisibility(View.VISIBLE);
-//
-//                                    tag.mx_scrom_open_layout.setVisibility(View.VISIBLE);
-//                                    tag.mx_scrom_open_layout.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//                                            String filePath = mDownloadbleUnit.getDownloadEntry(
-//                                                    dataManager.getEdxEnvironment().getStorage()).getFilePath();
-//                                            ActivityUtil.viewPDF(context, new File(filePath));
-//                                        }
-//                                    });
-//                                    break;
-//                            }
-//                            tag.mx_Scrom_delet_layout.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    tag.mx_Scrom_delet_layout.setVisibility(View.GONE);
-//                                    tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-//                                    tag.mx_scrom_open_layout.setVisibility(View.GONE);
-//                                    tag.mxScromDownloadorView.setVisibility(View.VISIBLE);
-//                                    dataManager.deleteScorm(mDownloadbleUnit);
-//
-//                                }
-//                            });
-//                        }
-                    //endregion
                     convertView.setTag(holder);
                     break;
                 }
@@ -544,8 +265,304 @@ public class CourseOutlineAdapter extends BaseAdapter {
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
             }
+        }*/
+
+
+        int type = getItemViewType(position);
+
+        // FIXME: Re-enable row recycling in favor of better DB communication [MA-1640]
+        //if (convertView == null) {
+        switch (type) {
+            case SectionRow.ITEM: {
+                convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
+                // apply a tag to this list row
+                final ViewHolder tag = getTag(convertView);
+                //region Scrom handeling
+
+                if (getItem(position).component.getChildren().size() == 1) {
+                    if (getItem(position).component.getChildren().get(0).getType() == BlockType.SCORM ||
+                            getItem(position).component.getChildren().get(0).getType() == BlockType.PDF) {
+                        //show play/download scrom  layout visible
+                        tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
+
+                        if (getItem(position).component.getChildren().get(0).getType() == BlockType.PDF) {
+                            if (scormManager.hasPdf(getItem(position).component.getChildren().get(0).getId())) {
+                                addViewButton(tag, position);
+                            } else {
+                                addDownloadButton(tag);
+                            }
+                        } else if (getItem(position).component.getChildren().get(0).getType() == BlockType.SCORM) {
+
+                            ScormBlockModel scormBlockModel = null;
+                            try {
+                                scormBlockModel = (ScormBlockModel) getItem(position).component.getChildren().get(0);
+                            } catch (Exception e) {
+                                logger.error(e);
+                            }
+
+                            //get download
+                            VideoModel de = environment.getStorage().getDownloadedScorm(getItem(position).
+                                    component.getCourseId(), getItem(position).component.getChildren().get(0).getId());
+
+                            //sync local file storage and db entry
+                            syncScormEntry(de, getItem(position).component.getChildren().get(0).getId(),
+                                    scormBlockModel.getData().lastModified);
+
+                            if (!isScromUpdateExist(de, scormBlockModel.getData().lastModified)
+                                    && scormManager.has(getItem(position).component.getChildren().get(0).getId())) {
+                                addViewButton(tag, position);
+                            } else {
+                                addDownloadButton(tag);
+                            }
+                        }
+
+                        //click for download /view button
+                        tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                selectedUnit = (CourseComponent) getItem(position).component.getChildren().get(0);
+
+                                if (tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
+                                /*environment.getRouter().showCourseUnitDetail(fragment,
+                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());*/
+
+                                    doDownload(selectedUnit, tag,true);
+
+                                    //update UI after download
+                                } else if (tag.mxScromDownloadorView.getContentDescription().toString().equals("view")) {
+                                    if (selectedUnit.getType() == BlockType.PDF) {
+                                        pdfManager manager = new pdfManager();
+                                        manager.viewPDF(context, scormManager.getPdf(selectedUnit.getId()));
+                                    } else if (selectedUnit.getType() == BlockType.SCORM) {
+                                        doShow(scormManager.get(selectedUnit.getId()), selectedUnit);
+                                    }
+
+                                    //analytics hit for view scorm
+                                    if (selectedUnit != null) {
+                                        //for analytics update
+                                        CourseOutlineActivity activity = (CourseOutlineActivity) context;
+
+                                        aHelper.addMxAnalytics_db(loginPrefs.getUsername()
+                                                , selectedUnit.getDisplayName(), Action.ViewUnit,
+                                                selectedUnit.getRoot().getDisplayName(), Source.Mobile);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else if (getItem(position).component.getChildren().size() > 1 && getItem(position).component.getType() == BlockType.SCORM ||
+                        getItem(position).component.getType() == BlockType.PDF) {
+                    //show play/download scrom  layout visible
+                    tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
+
+                    if (getItem(position).component.getType() == BlockType.PDF) {
+                        if (scormManager.hasPdf(getItem(position).component.getId())) {
+                            addViewButton(tag, position);
+                        } else {
+                            addDownloadButton(tag);
+                        }
+                    } else if (getItem(position).component.getType() == BlockType.SCORM) {
+                        if (scormManager.has(getItem(position).component.getId())) {
+                            addViewButton(tag, position);
+                        } else {
+                            addDownloadButton(tag);
+                        }
+                    }
+
+                    //click for download /view button
+                    tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            selectedUnit = (CourseComponent) getItem(position).component;
+
+                            if (tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
+                                /*environment.getRouter().showCourseUnitDetail(fragment,
+                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());*/
+
+                                doDownload(selectedUnit, tag,true);
+
+                                //update UI after download
+                            } else if (tag.mxScromDownloadorView.getContentDescription().toString().equals("view")) {
+                                if (selectedUnit.getType() == BlockType.PDF) {
+                                    pdfManager manager = new pdfManager();
+                                    manager.viewPDF(context, scormManager.getPdf(selectedUnit.getId()));
+                                } else if (selectedUnit.getType() == BlockType.SCORM) {
+                                    doShow(scormManager.get(selectedUnit.getId()), selectedUnit);
+                                }
+
+                                //analytics hit for view scorm
+                                if (selectedUnit != null) {
+                                    //for analytics update
+                                    CourseOutlineActivity activity = (CourseOutlineActivity) context;
+
+                                    aHelper.addMxAnalytics_db(loginPrefs.getUsername()
+                                            , selectedUnit.getDisplayName(), Action.ViewUnit,
+                                            selectedUnit.getRoot().getDisplayName(), Source.Mobile);
+                                }
+                            }
+                        }
+                    });
+                } else if (getItem(position).component.getType() == BlockType.SCORM || getItem(position).component.getType() == BlockType.PDF) {
+                    //show play/download scrom  layout visible
+                    tag.mx_downloadorView_layout.setVisibility(View.VISIBLE);
+
+                    if (getItem(position).component.getType() == BlockType.PDF) {
+                        if (scormManager.hasPdf(getItem(position).component.getId())) {
+                            addViewButton(tag, position);
+                        } else {
+                            addDownloadButton(tag);
+                        }
+                    } else if (getItem(position).component.getType() == BlockType.SCORM) {
+                        if (scormManager.has(getItem(position).component.getId())) {
+                            addViewButton(tag, position);
+                        } else {
+                            addDownloadButton(tag);
+                        }
+                    }
+
+                    //click for download /view button
+                    tag.mxScromDownloadorView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            selectedUnit = (CourseComponent) getItem(position).component;
+
+                            if (tag.mxScromDownloadorView.getContentDescription().toString().equals("download")) {
+                                /*environment.getRouter().showCourseUnitDetail(fragment,
+                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, selectedUnit.getId());*/
+
+                                doDownload(selectedUnit, tag,true);
+
+                                //update UI after download
+                            } else if (tag.mxScromDownloadorView.getContentDescription().toString().equals("view")) {
+                                if (selectedUnit.getType() == BlockType.PDF) {
+                                    pdfManager manager = new pdfManager();
+                                    manager.viewPDF(context, scormManager.getPdf(selectedUnit.getId()));
+                                } else if (selectedUnit.getType() == BlockType.SCORM) {
+                                    doShow(scormManager.get(selectedUnit.getId()), selectedUnit);
+                                }
+
+                                //analytics hit for view scorm
+                                if (selectedUnit != null) {
+                                    //for analytics update
+                                    CourseOutlineActivity activity = (CourseOutlineActivity) context;
+
+                                    aHelper.addMxAnalytics_db(loginPrefs.getUsername()
+                                            , selectedUnit.getDisplayName(), Action.ViewUnit,
+                                            selectedUnit.getRoot().getDisplayName(), Source.Mobile);
+                                }
+                            }
+                        }
+                    });
+                }
+
+                //endregion
+                convertView.setTag(tag);
+                break;
+            }
+            case SectionRow.SECTION: {
+                convertView = inflater.inflate(R.layout.row_section_header, parent, false);
+                break;
+            } case SectionRow.COURSE_CARD: {
+                convertView = inflater.inflate(R.layout.row_course_card, parent, false);
+                break;
+            }
+            case SectionRow.COURSE_CERTIFICATE:
+                convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
+                break;
+            case SectionRow.LAST_ACCESSED_ITEM: {
+                convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
+                break;
+            }
+            case SectionRow.BULK_DOWNLOAD: {
+                final FrameLayout layout = new FrameLayout(parentFragment.getContext());
+                final int id = UiUtil.generateViewId();
+                layout.setId(id);
+
+                final BulkDownloadFragment fragment = new BulkDownloadFragment(downloadListener, environment);
+                parentFragment.getChildFragmentManager().
+                        beginTransaction().replace(id, fragment).commit();
+                convertView = layout;
+                convertView.setTag(fragment);
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException(String.valueOf(type));
+            }
+        }
+
+        switch (type) {
+            case SectionRow.ITEM: {
+                return getRowView(position, convertView);
+            }
+            case SectionRow.SECTION: {
+                return getHeaderView(position, convertView);
+            }   case SectionRow.COURSE_CARD: {
+                return getCardView(convertView);
+            }
+            case SectionRow.COURSE_CERTIFICATE:
+                return getCertificateView(position, convertView);
+            case SectionRow.LAST_ACCESSED_ITEM: {
+                return getLastAccessedView(position, convertView);
+            }
+            case SectionRow.BULK_DOWNLOAD: {
+                if (rootComponent != null) {
+                    final BulkDownloadFragment fragment = (BulkDownloadFragment) convertView.getTag();
+                    fragment.populateViewHolder(
+                            isOnCourseOutline ? rootComponent.getCourseId() : rootComponent.getId(),
+                            rootComponent.getVideos(true));
+                }
+                return convertView;
+            }
+            default: {
+                throw new IllegalArgumentException(String.valueOf(type));
+            }
         }
     }
+
+    public ViewHolder getTag(View convertView) {
+        ViewHolder holder = new ViewHolder();
+        holder.rowType = (IconImageView) convertView
+                .findViewById(R.id.row_type);
+        holder.rowTitle = (TextView) convertView
+                .findViewById(R.id.row_title);
+        holder.rowSubtitle = (TextView) convertView
+                .findViewById(R.id.row_subtitle);
+        holder.rowSubtitleIcon = (IconImageView) convertView
+                .findViewById(R.id.row_subtitle_icon);
+        holder.rowSubtitleIcon.setIconColorResource(R.color.edx_grayscale_neutral_light);
+        holder.noOfVideos = (TextView) convertView
+                .findViewById(R.id.no_of_videos);
+        holder.bulkDownload = (IconImageView) convertView
+                .findViewById(R.id.bulk_download);
+
+        //mx ::Arjun changes :start
+        holder.mx_downloadorView_layout = (LinearLayout) convertView
+                .findViewById(R.id.mx_download_layout);
+
+        holder.mxScromDownloadorView = (ImageView) convertView
+                .findViewById(R.id.mx_scrom_download);
+
+        holder.mx_Scrom_delet_layout = (LinearLayout) convertView
+                .findViewById(R.id.mx_scrom_delet_layout);
+
+        holder.mxScromDelete = (ImageView) convertView
+                .findViewById(R.id.mx_scrom_delet);
+
+        //mx ::Arjun changes :end
+
+        holder.bulkDownload.setIconColorResource(R.color.edx_grayscale_neutral_base);
+        holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
+                .findViewById(R.id.bulk_download_layout);
+        holder.rowSubtitlePanel = convertView.findViewById(R.id.row_subtitle_panel);
+        holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
+        holder.wholeSeparator = convertView.findViewById(R.id.row_whole_separator);
+
+        // Accessibility
+        ViewCompat.setImportantForAccessibility(holder.rowSubtitle, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
+        return holder;
+    }
+
 
     /**
      * Set the data for adapter to populate the listview.
@@ -656,7 +673,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowType.setVisibility(View.GONE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
-        viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
+      //  viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
 
@@ -673,14 +690,38 @@ public class CourseOutlineAdapter extends BaseAdapter {
         final CourseComponent unit = row.component;
         viewHolder.rowType.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
-        viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
+    //    viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
         viewHolder.rowTitle.setText(unit.getDisplayName());
 
+        if (row.component instanceof VideoBlockModel) {
+            final DownloadEntry videoData = ((VideoBlockModel) row.component).getDownloadEntry(storage);
+            if (null != videoData) {
+                updateUIForVideo(viewHolder, videoData);
+                return;
+            }
+        }
+        if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
+            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
+            checkAccessStatus(viewHolder, unit);
+        } else if (!unit.isMultiDevice()) {
+            // If we reach here & the type is VIDEO, it means the video is webOnly
+            viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
+            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_laptop);
+            viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
+        } else {
+            viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
+            if (unit.getType() == BlockType.PROBLEM) {
+                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_list);
+            } else {
+                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_file_o);
+            }
+            checkAccessStatus(viewHolder, unit);
+        }
 
-        if (unit.getType().equals(BlockType.PDF)){
+    /*    if (unit.getType().equals(BlockType.PDF)){
 
             viewHolder.mx_downloadorView_layout.setVisibility(View.GONE);
             viewHolder.mx_Scrom_delet_layout.setVisibility(View.GONE);
@@ -723,7 +764,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.mxScromDownloadorView.setVisibility(View.GONE);
             viewHolder.mx_scrom_open_layout.setVisibility(View.GONE);
             viewHolder.mProgressLayout.setVisibility(View.GONE);
-        }
+        }*/
 
 //            if (unit.getType().equals(BlockType.PDF)) {
 //                ScormBlockModel mDownloadbleUnit = new ScormBlockModel(unit.getBlockModel(),
@@ -804,6 +845,72 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }, unit.getId());
     }
 
+    private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData) {
+        viewHolder.rowType.setIcon(FontAwesomeIcons.fa_film);
+        viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
+        viewHolder.bulkDownload.setVisibility(View.VISIBLE);
+
+        viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
+        viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
+        viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
+
+        dbStore.getWatchedStateForVideoId(videoData.videoId,
+                new DataCallback<DownloadEntry.WatchedState>(true) {
+                    @Override
+                    public void onResult(DownloadEntry.WatchedState result) {
+                        if (result != null && result == DownloadEntry.WatchedState.WATCHED) {
+                            viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                        } else {
+                            viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
+                        }
+                    }
+
+                    @Override
+                    public void onFail(Exception ex) {
+                        logger.error(ex);
+                    }
+                });
+
+        if (videoData.isVideoForWebOnly()) {
+            viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
+        } else {
+            viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
+            dbStore.getDownloadedStateForVideoId(videoData.videoId,
+                    new DataCallback<DownloadEntry.DownloadedState>(true) {
+                        @Override
+                        public void onResult(DownloadEntry.DownloadedState state) {
+                            if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
+                                // not yet downloaded
+                                setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.ONLINE,
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                downloadListener.download(videoData);
+                                            }
+                                        });
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                                // may be download in progress
+                                setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.DOWNLOADING,
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                downloadListener.viewDownloadsStatus();
+                                            }
+                                        });
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                                setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.DOWNLOADED, null);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                            viewHolder.bulkDownload.setVisibility(View.VISIBLE);
+                        }
+                    });
+        }
+    }
+
     private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,
                                   @NonNull final VideoBlockModel videoBlockModel) {
         viewHolder.rowType.setIcon(FontAwesomeIcons.fa_film);
@@ -815,8 +922,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
         }
         if (videoData.getSize() > 0L) {
-            viewHolder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
-            viewHolder.rowSubtitleDueDate.setText(MemoryUtil.format(context, videoData.getSize()));
+    //        viewHolder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
+    //        viewHolder.rowSubtitleDueDate.setText(MemoryUtil.format(context, videoData.getSize()));
             // Set appropriate right margin of subtitle
             final int rightMargin = (int) context.getResources().getDimension(R.dimen.widget_margin_double);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
@@ -892,7 +999,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     private void getRowViewForContainer(ViewHolder holder,
                                         final SectionRow row) {
-        final CourseComponent component = row.component;
+/*        final CourseComponent component = row.component;
         String courseId = component.getCourseId();
         BlockPath path = component.getPath();
         //FIXME - we should add a new column in database - pathinfo.
@@ -920,46 +1027,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 }
             }
         }
-
-
-       /* if (component.getType().equals(BlockType.PDF) &&
-                component.getDisplayName().equals("PDF")) {
-
-            ScormBlockModel mDownloadbleUnit = new ScormBlockModel(component.getBlockModel(),
-                   component.getParent());
-
-            holder.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-
-            switch (dataManager.getScormStatus(mDownloadbleUnit)) {
-                case downloaded:
-                    holder.mx_downloadorView_layout.setVisibility(View.GONE);
-                    holder.mProgressLayout.setVisibility(View.GONE);
-                    holder.mx_Scrom_delet_layout.setVisibility(View.VISIBLE);
-
-                    holder.mx_scrom_open_layout.setVisibility(View.VISIBLE);
-                    holder.mx_scrom_open_layout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String filePath = mDownloadbleUnit.getDownloadEntry(
-                                    dataManager.getEdxEnvironment().getStorage()).getFilePath();
-                            ActivityUtil.viewPDF(context, new File(filePath));
-                        }
-                    });
-                    break;
-            }
-            holder.mx_Scrom_delet_layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.mx_Scrom_delet_layout.setVisibility(View.GONE);
-                    holder.mx_downloadorView_layout.setVisibility(View.VISIBLE);
-                    holder.mx_scrom_open_layout.setVisibility(View.GONE);
-                    holder.mxScromDownloadorView.setVisibility(View.VISIBLE);
-                    dataManager.deleteScorm(mDownloadbleUnit);
-
-                }
-            });
-        }*/
-
 
         final int totalDownloadableVideos = component.getDownloadableVideosCount();
         // support video download for video type excluding the ones only viewable on web
@@ -994,14 +1061,69 @@ public class CourseOutlineAdapter extends BaseAdapter {
                             public void onClick(View downloadView) {
                                 final List<VideoBlockModel> downloadableVideos = (List<VideoBlockModel>) (List) component.getVideos(true);
                                 for (VideoBlockModel videoBlockModel : downloadableVideos) {
-                                    /**
+                                    *//**
                                      * Assign preferred downloadable url to {@link VideoBlockModel#downloadUrl},
                                      * to use this url to download. After downloading only downloaded
                                      * video path will be used for streaming.
-                                     */
+                                     *//*
                                     videoBlockModel.setDownloadUrl(VideoUtil.getPreferredVideoUrlForDownloading(videoBlockModel.getData()));
                                 }
                                 downloadListener.download(downloadableVideos);
+                            }
+                        });
+            }
+        }*/
+
+        final CourseComponent component = row.component;
+        String courseId = component.getCourseId();
+        BlockPath path = component.getPath();
+        //FIXME - we should add a new column in database - pathinfo.
+        //then do the string match to get the record
+        String chapterId = path.get(1) == null ? "" : path.get(1).getDisplayName();
+        String sequentialId = path.get(2) == null ? "" : path.get(2).getDisplayName();
+
+        holder.rowTitle.setText(component.getDisplayName());
+        holder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
+        if (component.isGraded()) {
+            holder.bulkDownload.setVisibility(View.INVISIBLE);
+            holder.rowSubtitlePanel.setVisibility(View.VISIBLE);
+            holder.rowSubtitleIcon.setVisibility(View.VISIBLE);
+            holder.rowSubtitle.setVisibility(View.VISIBLE);
+            holder.rowSubtitle.setText(component.getFormat());
+        }
+
+        final int totalDownloadableVideos = component.getDownloadableVideosCount();
+        // support video download for video type excluding the ones only viewable on web
+        if (totalDownloadableVideos == 0) {
+            holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
+        } else {
+            holder.bulkDownload.setVisibility(View.VISIBLE);
+            holder.noOfVideos.setVisibility(View.VISIBLE);
+            holder.noOfVideos.setText("" + totalDownloadableVideos);
+
+            Integer downloadedCount = dbStore.getDownloadedVideosCountForSection(courseId,
+                    chapterId, sequentialId, null);
+
+            if (downloadedCount == totalDownloadableVideos) {
+                holder.noOfVideos.setVisibility(View.VISIBLE);
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADED, null);
+            } else if (dbStore.getDownloadingVideosCountForSection(courseId, chapterId,
+                    sequentialId, null) + downloadedCount == totalDownloadableVideos) {
+                holder.noOfVideos.setVisibility(View.GONE);
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADING,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View downloadView) {
+                                downloadListener.viewDownloadsStatus();
+                            }
+                        });
+            } else {
+                holder.noOfVideos.setVisibility(View.VISIBLE);
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.ONLINE,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View downloadView) {
+                                downloadListener.download(component.getVideos());
                             }
                         });
             }
@@ -1341,6 +1463,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
     }
 
+
     private DownloadEntry getDownloadEntery_db(CourseComponent mUnit)
     {
         if(mUnit!=null && mUnit.getChildren()!=null&& mUnit.getChildren().size()>0)
@@ -1366,6 +1489,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         return model;
     }
+    public boolean refresh() {
+        return true;
+    }
 
     private  void addViewButton(final ViewHolder tag, final int position )
     {
@@ -1374,87 +1500,80 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         //view delete button
         tag.mx_Scrom_delet_layout.setVisibility(View.VISIBLE);
-//        tag.mxScromDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CourseOutlineActivity activity=(CourseOutlineActivity)context;
-//
-//                AlertDialog.Builder deleteConfirmDialog = new AlertDialog.Builder(activity);
-//
-//                deleteConfirmDialog
-//                        .setTitle("Delete")
-//                        .setMessage("Are you sure to delete this item?")
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//                        {
-//                            public void onClick(DialogInterface dialog, int id)
-//                            {
-//
-//                                if(getItem(position).component.getChildren().size()==0) {
-//                                    selectedUnit = (CourseComponent) getItem(position).component;
-//                                    if (scormManager.has(selectedUnit.getId()) || scormManager.hasPdf(selectedUnit.getId())) {
-//                                        String path;
-//                                        path = scormManager.get(selectedUnit.getId());
-//
-//                                        //remove item from android db first
-////                                        environment.getStorage().removeDownloadedScromEntry(selectedUnit.getId());
-//
-//                                        //remove item from local storage
-////                                        scormManager.deleteUnit(path);
-//
-//                                        //update UI after delete Unit
-//                                        tag.mxScromDownloadorView.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
-//                                        tag.mxScromDownloadorView.setContentDescription("download");
-//
-//                                        //analytic update for count update
-////                                        aHelper.addScromCountAnalytic_db(context);
-//
-//                                        tag.mx_Scrom_delet_layout.setVisibility(View.GONE);
-//
-//                                    }
-//                                }
-//                                else
-//                                {
-//                                    selectedUnit=(CourseComponent)getItem(position).component.getChildren().get(0);
-//
-//                                    if(scormManager.has(selectedUnit.getId()) || scormManager.hasPdf(selectedUnit.getId()))
-//                                    {
-//                                        String path;
-////                                        path = scormManager.get(selectedUnit.getId());
-//
-//                                        //remove item from android db first
-////                                        environment.getStorage().removeDownloadedScromEntry(selectedUnit.getId());
-//
-//                                        //remove item from local storage
-////                                        scormManager.deleteUnit(path);
-//
-//                                        //update UI after delete Unit
-//                                        tag.mxScromDownloadorView.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
-//                                        tag.mxScromDownloadorView.setContentDescription("download");
-//
-//                                        //analytic update for count update
-////                                        aHelper.addScromCountAnalytic_db(context);
-//                                        //analytic update for count update
-////                                        aHelper.addScromCountAnalytic_db(context);
-//
-//                                        tag.mx_Scrom_delet_layout.setVisibility(View.GONE);
-//                                    }
-//                                }
-//                                dialog.cancel();
-//                            }
-//                        })
-//                        .setCancelable(false)
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener()
-//                        {
-//                            public void onClick(DialogInterface dialog, int id)
-//                            {
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//                AlertDialog alert = deleteConfirmDialog.create();
-//                alert.show();
-//            }
-//        });
+        tag.mxScromDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CourseOutlineActivity activity = (CourseOutlineActivity) context;
+
+                AlertDialog.Builder deleteConfirmDialog = new AlertDialog.Builder(activity);
+
+                deleteConfirmDialog
+                        .setTitle("Delete")
+                        .setMessage("Are you sure to delete this item?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                if (getItem(position).component.getChildren().size() == 0) {
+                                    selectedUnit = (CourseComponent) getItem(position).component;
+                                    if (scormManager.has(selectedUnit.getId()) || scormManager.hasPdf(selectedUnit.getId())) {
+                                        String path;
+                                        path = scormManager.get(selectedUnit.getId());
+
+                                        //remove item from android db first
+                                        environment.getStorage().removeDownloadedScromEntry(selectedUnit.getId());
+
+                                        //remove item from local storage
+                                        scormManager.deleteUnit(path);
+
+                                        //update UI after delete Unit
+                                        tag.mxScromDownloadorView.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
+                                        tag.mxScromDownloadorView.setContentDescription("download");
+
+                                        //analytic update for count update
+                                        aHelper.addScromCountAnalytic_db(context);
+
+                                        tag.mx_Scrom_delet_layout.setVisibility(View.GONE);
+
+                                    }
+                                } else {
+                                    selectedUnit = (CourseComponent) getItem(position).component.getChildren().get(0);
+
+                                    if (scormManager.has(selectedUnit.getId()) || scormManager.hasPdf(selectedUnit.getId())) {
+                                        String path;
+                                        path = scormManager.get(selectedUnit.getId());
+
+                                        //remove item from android db first
+                                        environment.getStorage().removeDownloadedScromEntry(selectedUnit.getId());
+
+                                        //remove item from local storage
+                                        scormManager.deleteUnit(path);
+
+                                        //update UI after delete Unit
+                                        tag.mxScromDownloadorView.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
+                                        tag.mxScromDownloadorView.setContentDescription("download");
+
+                                        //analytic update for count update
+                                        aHelper.addScromCountAnalytic_db(context);
+                                        //analytic update for count update
+                                        aHelper.addScromCountAnalytic_db(context);
+
+                                        tag.mx_Scrom_delet_layout.setVisibility(View.GONE);
+                                    }
+                                }
+                                dialog.cancel();
+                            }
+                        })
+                        .setCancelable(false)
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = deleteConfirmDialog.create();
+                alert.show();
+            }
+        });
 
     }
 
@@ -1465,7 +1584,99 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     }
 
-    public void doDownload(CourseComponent unit, final ViewHolder tag) {
+    public void doDownload(CourseComponent unit, final ViewHolder tag,boolean bool) {
+
+        final CourseOutlineActivity activity = (CourseOutlineActivity) context;
+
+        if (selectedUnit != null) {
+            //for analytics update scorm download start
+            aHelper.addMxAnalytics_db(loginPrefs.getUsername(),
+                    unit.getDisplayName(), Action.StartScormDownload,
+                    unit.getRoot().getDisplayName(), Source.Mobile);
+        }
+
+        showWaitingDialog();
+
+        loginPrefs.storeCurrentDownloadingScromInfo(selectedUnit.getDisplayName() +
+                "::" + selectedUnit.getRoot().getDisplayName() + "::" + Action.StartScormDownload);
+        ScormBlockModel mDownloadbleUnit = null;
+        try {
+                mDownloadbleUnit = (ScormBlockModel) unit;
+
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        scormManager.startScormDownload(mDownloadbleUnit, new ScormManager.DownloadListener() {
+            @Override
+            public void handle(final Exception ex) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissWaitingDialog();
+                        reloadData();
+
+                        if (selectedUnit.getType() == BlockType.PDF) {
+                            String path = scormManager.get(selectedUnit.getId());
+                            //remove item from local storage
+                            scormManager.deleteUnit(path);
+                        }
+
+                        //do analytics hit on server
+                        updateAnalyticsforScromDownload(selectedUnit, false);
+
+                        //to tackle missing scrom event i.e in case of user close app during download or net got disconnected.
+                        //store it in "meta::page::action" format
+                        //remove we log it to server no need to save in cache
+                        if (NetworkUtil.isConnected(context))
+                            loginPrefs.removeCurrentDownloadingScromInfo();
+                        else {
+
+                            loginPrefs.storeCurrentDownloadingScromInfo(selectedUnit.getDisplayName() +
+                                    "::" + selectedUnit.getRoot().getDisplayName() + "::" + String.valueOf(Action.ScormDownloadIncomplete));
+                        }
+
+                        //Toast.makeText(context,"Unable to download file",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onDownloadComplete(String response) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissWaitingDialog();
+
+                        //first do count update then update local db
+                        //aHelper.addScromDownload_db(context, getDownloadEntery_db(selectedUnit));
+
+                        environment.getStorage().addDownload(getDownloadEntery_db(selectedUnit));
+
+                        //do entry to database //local android_db
+                        //doDownloadEntery_db(selectedUnit);
+
+                        //do analytics hit on server
+                        updateAnalyticsforScromDownload(selectedUnit, true);
+
+                        //to tackle missing scrom event i.e in case of user close app during download or net got disconnected.
+                        //store it in "meta::page::action" format
+                        //remove we log it to server no need to save in cache
+                        if (NetworkUtil.isConnected(context))
+                            loginPrefs.removeCurrentDownloadingScromInfo();
+                        else {
+                            loginPrefs.storeCurrentDownloadingScromInfo(selectedUnit.getDisplayName() + "::" + selectedUnit.getRoot().getDisplayName() +
+                                    "::" + String.valueOf(Action.ScromDownloadCompleted));
+                        }
+
+                        reloadData();
+                    }
+                });
+            }
+        });
+    }
+
+  /*  public void doDownload(CourseComponent unit, final ViewHolder tag) {
 
         final CourseOutlineActivity activity=(CourseOutlineActivity)context;
 
@@ -1524,7 +1735,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 });
         }
 
-        /*scormManager.startScormDownload(mDownloadbleUnit, new ScormManager.DownloadListener() {
+        *//*scormManager.startScormDownload(mDownloadbleUnit, new ScormManager.DownloadListener() {
             @Override
             public void handle(final Exception ex) {
                 activity.runOnUiThread(new Runnable() {
@@ -1590,9 +1801,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     }
                 });
             }
-        });*/
+        });*//*
     }
-
+*/
     public void showWaitingDialog() {
         final CourseOutlineActivity activity=(CourseOutlineActivity)context;
 //        if (progressDialog == null) {
@@ -1659,5 +1870,37 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 break;
             }
         }*/
+    }
+    private void syncScormEntry(VideoModel download, String block_id, String server_modified_date_str) {
+        if (download != null && block_id != null && server_modified_date_str != null) {
+            if (isScromUpdateExist(download, server_modified_date_str)) {
+                if (scormManager.has(block_id)) {
+                    //remove scorm from local
+                    String path = scormManager.get(block_id);
+                    scormManager.deleteUnit(path);
+                }
+            }
+        }
+    }
+
+    private boolean isScromUpdateExist(VideoModel download, String server_modified_date_str) {
+        boolean is_exist = false;
+        if (download == null || (download.getScormUploadedOn() == null || server_modified_date_str == null))
+            return true;
+
+        if (download.getScormUploadedOn().trim().toLowerCase().
+                equals(server_modified_date_str.trim().toLowerCase())) {
+            is_exist = false;
+        } else {
+            is_exist = true;
+            //we need remove old download entry  and downloaded package
+            if (download.getEnrollmentId() != null && download.getVideoId() != null) {
+                storage.deleteScorm(download.getEnrollmentId(), download.getVideoId());
+                //remove scorm from local
+                String path = scormManager.get(download.getVideoId());
+                scormManager.deleteUnit(path);
+            }
+        }
+        return is_exist;
     }
 }

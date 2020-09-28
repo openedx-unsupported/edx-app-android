@@ -56,7 +56,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public boolean isVideoForWebOnly; //default is FALSE
     public String lmsUrl;
     public TranscriptModel transcript;
-
+    public String scormUploadedOn;
     @Inject
     IEdxEnvironment environment;
 
@@ -122,7 +122,10 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         }
         return title;
     }
-
+    @Override
+    public String getScormUploadedOn() {
+        return scormUploadedOn;
+    }
     @Override
     public String getVideoId() {
         return videoId;
@@ -453,5 +456,49 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
         //downloadedOn it will be null for fresh download and set only for update case
         this.downloadedOn=0;
+    }
+
+    public void setDownloadEntryForScrom(String username,String  title,String  filepath,String  videoId,
+                                         String  url,String  eid,String  chapter,
+                                         String  section,long downloadedOn ,String scormUploadedOn)
+    {
+        this.username=username;
+        this.title=title;
+        //null for fresh download but because we are not changing default behaviour so we put "Scrom" to identify that entry is for scrom
+        this.filepath=filepath;
+
+        //it will be that block which contain data i.e comp.id
+        this.videoId=videoId;
+
+        this.size=0;
+        this.duration=0;
+
+        this.url_high_quality="";
+        this.url_low_quality="";
+        this.url_youtube="";
+        this.watched=WatchedState.UNWATCHED;
+        this.downloaded=DownloadedState.DOWNLOADED;
+        this.dmId=-1;
+
+        //it will be root course .courseId.
+        this.eid=eid;
+
+        //it will be chapter name
+        this.chapter=chapter;
+
+        //it will be section name
+        this.section=section;
+
+        this.lastPlayedOffset=0;
+
+        //lms url or unit url
+        this.url="http://connect.theteacherapp.org/wp-content/uploads/2017/03/%E0%A4%85%E0%A4%AA%E0%A4%A8%E0%A5%80-%E0%A4%95%E0%A4%B9%E0%A4%BE%E0%A4%A8%E0%A5%80-%E0%A4%B9%E0%A4%AE%E0%A4%BE%E0%A4%B0%E0%A5%87-%E0%A4%B8%E0%A4%BE%E0%A4%A5-%E0%A4%AC%E0%A4%BE%E0%A4%9F%E0%A5%87%E0%A4%82_8385993839_1488535120_VID-20170303-WA0039.mp4";//url;
+
+        this.isCourseActive=1;
+        this.isVideoForWebOnly=false;
+
+        //downloadedOn it will be null for fresh download and set only for update case
+        this.downloadedOn=System.currentTimeMillis();
+        this.scormUploadedOn=scormUploadedOn;
     }
 }

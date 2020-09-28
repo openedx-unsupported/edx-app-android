@@ -49,7 +49,9 @@ public final class DbStructure {
         public static final String IS_COURSE_ACTIVE = "is_course_active";
         public static final String UNIT_URL = "unit_url";
         public static final String VIDEO_FOR_WEB_ONLY = "video_for_web_only";
-
+        // date in unix timestamp format used for tracking scorm package modification.
+        // So that we can show download button and remove old from db
+        public static final String SCORM_UPLOADED_ON = "scorm_uploaded_on";
         //for differnciating content (wordpress,scrom,pdf)
         public static final String TYPE = "type";
 

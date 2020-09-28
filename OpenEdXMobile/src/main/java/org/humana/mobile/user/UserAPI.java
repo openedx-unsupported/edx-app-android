@@ -13,6 +13,7 @@ import org.humana.mobile.http.callback.CallTrigger;
 import org.humana.mobile.http.callback.ErrorHandlingCallback;
 import org.humana.mobile.http.notifications.ErrorNotification;
 import org.humana.mobile.module.prefs.LoginPrefs;
+import org.humana.mobile.util.Config;
 import org.humana.mobile.view.common.TaskMessageCallback;
 import org.humana.mobile.view.common.TaskProgressCallback;
 
@@ -28,6 +29,8 @@ import retrofit2.Call;
 public class UserAPI {
     @Inject
     private UserService userService;
+    @Inject
+    private Config config;
 
     public static class AccountDataUpdatedCallback extends ErrorHandlingCallback<Account> {
         @Inject
@@ -75,6 +78,14 @@ public class UserAPI {
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
                 RequestBody.create(MediaType.parse(mimeType), file));
     }
+
+    public
+    @NonNull
+    String getUserEnrolledCoursesURL(@NonNull String username) {
+        return config.getApiHostURL() + "/api/mobile/v0.5/users/" + username + "/course_enrollments";
+        //return config.getApiHostURL() + "/api/mobile/v0.5/users/" + "ArjunManprax" + "/course_enrollments";
+    }
+
 
     //TTA
 

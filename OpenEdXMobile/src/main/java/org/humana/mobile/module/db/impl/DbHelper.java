@@ -52,6 +52,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.URL_YOUTUBE            + " TEXT, "
                 + DbStructure.Column.WATCHED                + " INTEGER, "
                 + DbStructure.Column.DOWNLOADED             + " INTEGER, "
+                + DbStructure.Column.SCORM_UPLOADED_ON      + " TEXT, "
                 + DbStructure.Column.DM_ID                  + " INTEGER, "
                 + DbStructure.Column.EID                    + " TEXT, "
                 + DbStructure.Column.CHAPTER                + " TEXT, "
@@ -107,6 +108,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String upgradeToV7 = "ALTER TABLE " + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
                         + DbStructure.Column.URL_HLS + " TEXT ";
+
+
+        String upgradeToV9 =
+                "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
+                        + DbStructure.Column.SCORM_UPLOADED_ON + " TEXT ";
 
         if (oldVersion == 1) {
             // upgrade from 1 to 2
@@ -218,6 +224,10 @@ public class DbHelper extends SQLiteOpenHelper {
             db.delete(DbStructure.Table.DOWNLOADS,
                     DbStructure.Column.DOWNLOADED + "=?",
                     new String[]{String.valueOf(DownloadEntry.DownloadedState.ONLINE.ordinal())});
+        }
+        if(oldVersion < 9)
+        {
+            db.execSQL(upgradeToV9);
         }
 
     }

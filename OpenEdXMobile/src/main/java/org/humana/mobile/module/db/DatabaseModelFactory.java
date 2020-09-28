@@ -61,7 +61,7 @@ public class DatabaseModelFactory {
         de.lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
         de.type = c.getString(c.getColumnIndex(DbStructure.Column.TYPE));
         de.content_id = c.getLong(c.getColumnIndex(DbStructure.Column.CONTENT_ID));
-
+        de.scormUploadedOn = c.getString(c.getColumnIndex(DbStructure.Column.SCORM_UPLOADED_ON));
         return de;
     }
 

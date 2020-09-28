@@ -11,9 +11,13 @@ import org.humana.mobile.tta.analytics.analytics_enums.Page;
 import org.humana.mobile.tta.analytics.analytics_enums.Source;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.task.content.course.scorm.GetAllDownloadedScromCountTask;
+import org.humana.mobile.tta.tincan.model.Resume;
 import org.humana.mobile.tta.utils.BreadcrumbUtil;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import roboguice.RoboGuice;
 
 import static org.humana.mobile.util.BrowserUtil.environment;
 import static org.humana.mobile.util.BrowserUtil.loginPrefs;
@@ -26,6 +30,9 @@ public class Analytic {
 
     private Context ctx;
     private int analyticBatchCount = 100;
+
+    @Inject
+    MxAnalyticsAPI mxAnalyticsAPI;
 
     @Inject
     public Analytic(Context mctx) {
@@ -91,6 +98,27 @@ public class Analytic {
 
             environment.getStorage().addAnalytic(model);
         }
+    }
+
+    public void addTinCanAnalyticDB(String user, String tincan_obj, String course_id) {
+        //save Tincan analytics to  local db first
+        //download entry to db
+        if (user.isEmpty() || tincan_obj.isEmpty()) {
+            Log.d("TinCanDbEntry", "unable to add");
+            return;
+        }
+
+        AnalyticModel model = new AnalyticModel();
+        model.user_id = user;
+        model.action = String.valueOf(Action.TinCanObject);
+        model.metadata = tincan_obj;
+        //we are adding courseid to page in case of tincan
+        model.page = course_id;
+        model.source = String.valueOf(Source.Mobile);
+        model.setEvent_date();
+        model.setStatus(0);
+
+        environment.getStorage().addAnalytic(model);
     }
 
     public void addTinCanAnalyticDB(String tincan_obj, String course_id) {
@@ -203,7 +231,16 @@ public class Analytic {
         }
         return list;
     }
-
+    private List<Resume> getTincanResumeList() {
+        List<Resume> list = new ArrayList<>();
+        try {
+            list = environment.getStorage().getTincanResumeList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("TincanAnaltics", "Dbfetch fail");
+        }
+        return list;
+    }
     private void syncMXAnalytics() {
         ArrayList<AnalyticModel> list = getMxAnalytics();
 
@@ -262,5 +299,29 @@ public class Analytic {
             }
         };
         task.execute();
+    }
+
+    public void syncTincanResume() {
+        List<Resume> list = getTincanResumeList();
+
+        if (list == null || list.size() == 0)
+            return;
+
+        RoboGuice.getInjector(ctx).injectMembersWithoutViews(this);
+
+        final List<Resume> finalList = list;
+      /*  final TincanResumeTask task = new TincanResumeTask(ctx, finalList, mxAnalyticsAPI) {
+            @Override
+            protected void onSuccess(Mx_Response mx_AnalyticsResponse) throws Exception {
+                super.onSuccess(mx_AnalyticsResponse);
+                Log.d("MXTincanResume", "successfully update tincan resume");
+            }
+
+            @Override
+            protected void onException(Exception ex) {
+                Log.d("MXTincanResume", "fail to update tincan resume");
+            }
+        };
+        task.execute();*/
     }
 }

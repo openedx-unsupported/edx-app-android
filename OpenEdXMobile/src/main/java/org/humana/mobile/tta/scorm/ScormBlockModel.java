@@ -46,5 +46,4 @@ public class ScormBlockModel extends CourseComponent implements HasDownloadEntry
         return data.scormData;
         //"https://www.nationallibertyalliance.org/files/docs/Books/Atlas%20Shrugged.pdf"
     }
-
 }

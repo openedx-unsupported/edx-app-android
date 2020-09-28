@@ -145,6 +145,9 @@ public class ApiConstants {
     //TinCan batch update
     public static final String URL_TINCAN_ANALYTIC_BATCH = "/analytics/add-tincan-data/";
 
+    //Tincan resume payload update
+    public static final String URL_TINCAN_RESUME_BATCH = "analytics/save_coursestate/";
+
     public static final String URL_MX_GET_FEEDS = "api/mx_feed/v1/feeds/";
 
     public static final String URL_MX_SET_USER_CONTENT = "api/mx_content_analytics/v1/setusercontent/";

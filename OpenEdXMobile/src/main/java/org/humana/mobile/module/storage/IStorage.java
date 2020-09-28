@@ -59,7 +59,7 @@ public interface IStorage {
      */
     int deleteAllUnenrolledVideos();
 
-
+    int removeDownloadedScromEntry(String blockId);
     /**
      * Returns Download Progress percent of all the Videos
      * which are currently being downloaded
@@ -179,10 +179,15 @@ public interface IStorage {
     ArrayList<AnalyticModel> getMxAnalytics(int batch_count, int status) throws Exception;
 
     ArrayList<AnalyticModel> getTincanAnalytics(int batch_count, int status) throws Exception;
+    List<Resume> getTincanResumeList() throws Exception;
 
     //for tincan resume handeling.
     Long addResumePayload(Resume resume);
     Integer updateResumePayload(Resume resume);
     Integer deleteResumePayload(String course_id, String unit_id);
+
+    List<VideoModel> getDownloadedScorm(String courseId);
+    VideoModel getDownloadedScorm(String courseId,String block_id);
     Resume getResumeInfo(String course_id, String unit_id);
+    Integer deleteScorm(String courseId,String block_id);
 }

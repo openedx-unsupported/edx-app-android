@@ -212,7 +212,7 @@
                 app:iconName="fa-remove"
                 tools:targetApi="17"/>-->
 
-            <ImageView
+           <!-- <ImageView
                 android:id="@+id/mx_scrom_delet"
                 android:layout_height="match_parent"
                 android:contentDescription="delete scrom button"
@@ -222,6 +222,17 @@
                 android:src="@drawable/t_icon_delete"
                 android:visibility="visible"
                 android:tint="@color/material_red_500"
+                tools:targetApi="17"
+                android:layout_width="42dp" />-->
+            <ImageView
+                android:id="@+id/mx_scrom_delet"
+                android:layout_height="match_parent"
+                android:contentDescription="delete scrom button"
+                android:baselineAlignBottom="true"
+                android:paddingLeft="4dp"
+                android:paddingRight="12dp"
+                android:src="@drawable/delete"
+                android:visibility="visible"
                 tools:targetApi="17"
                 android:layout_width="42dp" />
         </LinearLayout>

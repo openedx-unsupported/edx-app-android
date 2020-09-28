@@ -13,6 +13,11 @@ import okio.Okio;
 
 public class IOUtils {
     @NonNull
+    public static String toString(@NonNull InputStream in, @NonNull Charset charset) throws IOException {
+        return Okio.buffer(Okio.source(in)).readString(charset);
+    }
+
+    @NonNull
     public static String toString(@NonNull File file, @NonNull Charset charset) throws IOException {
         return Okio.buffer(Okio.source(file)).readString(charset);
     }

@@ -15,8 +15,11 @@ import org.humana.mobile.util.Sha1Util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +44,7 @@ public class CacheManager {
      * The logger for this class.
      */
     private final Logger logger = new Logger(getClass().getName());
-
+    private File cacheFolder;
     /**
      * The application context.
      */
@@ -56,6 +59,10 @@ public class CacheManager {
     @Inject
     public CacheManager(@NonNull final Context context) {
         this.context = context;
+        cacheFolder = new File(context.getFilesDir(), "http-cache");
+        if (!cacheFolder.exists()) {
+            cacheFolder.mkdirs();
+        }
     }
 
     /**
@@ -119,6 +126,17 @@ public class CacheManager {
             return new File(cacheDir, hash);
         }
         return null;
+    }
+
+    public void put(String url, String response)
+            throws NoSuchAlgorithmException, UnsupportedEncodingException,
+            IOException {
+        String hash = Sha1Util.SHA1(url);
+        File file = new File(cacheFolder, hash);
+        FileOutputStream out = new FileOutputStream(file);
+        out.write(response.getBytes());
+        out.close();
+        logger.debug("Cache.put = " + hash);
     }
 
     /**

@@ -1,18 +1,15 @@
 package org.humana.mobile.view;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.IntentFilter;
 import android.databinding.ObservableField;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -20,6 +17,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -37,7 +35,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,32 +79,18 @@ import org.humana.mobile.tta.analytics.analytics_enums.Source;
 import org.humana.mobile.tta.data.DataManager;
 import org.humana.mobile.tta.data.model.SuccessResponse;
 import org.humana.mobile.tta.interfaces.OnResponseCallback;
-import org.humana.mobile.tta.scorm.PDFBlockModel;
-import org.humana.mobile.tta.scorm.ScormBlockModel;
-import org.humana.mobile.tta.scorm.ScormData;
 import org.humana.mobile.tta.scorm.ScormManager;
 import org.humana.mobile.tta.ui.custom.DropDownFilterView;
-import org.humana.mobile.tta.ui.programs.pendingUnits.PendingUnitsListActivity;
-import org.humana.mobile.tta.ui.programs.pendingUnits.viewModel.PendingUnitsListViewModel;
-import org.humana.mobile.tta.utils.ActivityUtil;
 import org.humana.mobile.tta.utils.AppUtil;
-import org.humana.mobile.tta.utils.MXPDFManager;
-import org.humana.mobile.tta.wordpress_client.model.Link;
 import org.humana.mobile.util.NetworkUtil;
 import org.humana.mobile.util.PermissionsUtil;
 import org.humana.mobile.util.UiUtil;
 import org.humana.mobile.view.adapters.CourseOutlineAdapter;
 import org.humana.mobile.view.common.TaskProgressCallback;
+import org.humana.mobile.x_block.pdfManager;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -165,12 +148,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private String unidId, unitType, unitTitle, unitDesc;
     private LinearLayout linearLayout;
 
-    @Inject
-    Analytic aHelper;
+   // @Inject
+    private Analytic aHelper;
 
     @Inject
     public LoginPrefs loginPrefs;
-
+    private BroadcastReceiver scormReceiver;
     @Inject
     @NonNull
     ScormManager scormManager;
@@ -197,7 +180,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDataManager = DataManager.getInstance(getActivity().getApplicationContext());
+        aHelper =new Analytic(getActivity());
+        mDataManager = DataManager.getInstance(getActivity());
     }
 
     @Override
@@ -210,9 +194,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         linearLayout = view.findViewById(R.id.ll_approval);
         mfab = view.findViewById(R.id.fab);
-
-
-
         final Bundle bundle;
         {
             if (savedInstanceState != null) {
@@ -248,6 +229,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         restore(bundle);
         initListView(view);
         fetchCourseComponent();
+        loadData(getView());
 
 
 //        getUserUnitResponse();
@@ -286,6 +268,19 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 isOnCourseOutline = isOnCourseOutline();
             }
         }
+    }
+
+    protected CourseComponent getCourseComponent(){
+        return courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
+    }
+
+    private void loadData(final View view) {
+        if ( courseData == null )
+            return;
+        CourseComponent courseComponent = getCourseComponent();
+        //component = courseComponent;
+        adapter.setData(courseComponent);
+      //  updateMessageView(view);
     }
 
     private void fetchCourseComponent() {
@@ -452,7 +447,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             aHelper.addMxAnalytics_db(loginPrefs.getUsername()
                                     , adapter.selectedUnit.getDisplayName(), Action.ViewUnit,
                                     adapter.selectedUnit.getRoot().getDisplayName(), Source.Mobile);
-                            try {
+                            pdfManager manager=new pdfManager();
+                            manager.viewPDF(getActivity(),scormManager.getPdf(comp.getId()));
+                      /*      try {
 
                                 PDFBlockModel model = comp.getPDFs().get(0);
                                 boolean containURl = false;
@@ -530,7 +527,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                                 // When no scrom data is available for download navigate to Url
                                 environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
                                         REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), unitType, unitTitle);
-                            }
+                            }*/
                         }
                         else if(comp.getType()==BlockType.SCORM && scormManager.has(comp.getId()))
                         {
@@ -549,9 +546,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 //                                adapter.reloadData();
                                 return;
                             }
-//
-//                            CourseOutlineAdapter.ViewHolder viewHolder = (CourseOutlineAdapter.ViewHolder) view.getItemViewHolder();
-//                            adapter.doDownload(comp, viewHolder);
+                            CourseOutlineAdapter.ViewHolder viewHolder = (CourseOutlineAdapter.ViewHolder) view.getTag();
+                            adapter.doDownload(comp, viewHolder,true);
                         }
                         return;
 
@@ -614,6 +610,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
         });
     }
+
+
 
     private void initAdapter() {
         if (adapter == null) {
@@ -785,9 +783,35 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onResume(){
+        scormReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String message = intent.getStringExtra("Progress");
+                adapter.setProgressDialogStatus(message);
+            }
+        };
 
+        adapter.refresh();
+
+        IntentFilter scorm_download_ifilter= new IntentFilter("org.firki.mobile.scorm");
+        scorm_download_ifilter.setPriority(999);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(scormReceiver, scorm_download_ifilter);
+
+        super.onResume();
+        //check if mode is changed
+       /* if ( adapter != null ){
+            boolean listRebuilt = adapter.checkModeChange();
+            if ( !listRebuilt ){
+                adapter.notifyDataSetChanged();
+            }
+        }*/
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(scormReceiver);
+        super.onPause();
     }
 
     /**

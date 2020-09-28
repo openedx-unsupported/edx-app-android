@@ -1333,19 +1333,19 @@ public class DataManager extends BaseRoboInjector {
     public void downloadSingle(ScormBlockModel scorm,
                                FragmentActivity activity,
                                VideoDownloadHelper.DownloadManagerCallback callback) {
-        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
-        de.url = scorm.getDownloadUrl();
-        de.title = scorm.getParent().getDisplayName();
-        downloadManager.downloadVideo(de, activity, callback);
+    //    DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+     //   de.url = scorm.getDownloadUrl();
+    //    de.title = scorm.getParent().getDisplayName();
+   //     downloadManager.downloadVideo(de, activity, callback);
     }
 
     public void downloadSingle(PDFBlockModel scorm,
                                FragmentActivity activity,
                                VideoDownloadHelper.DownloadManagerCallback callback) {
-        DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
-        de.url = scorm.getDownloadUrl();
-        de.title = scorm.getDisplayName();
-        downloadManager.downloadVideo(de, activity, callback);
+    //    DownloadEntry de = scorm.getDownloadEntry(edxEnvironment.getStorage());
+    //    de.url = scorm.getDownloadUrl();
+    //    de.title = scorm.getDisplayName();
+   //     downloadManager.downloadVideo(de, activity, callback);
     }
 
     public void downloadSingle(String url,
@@ -2937,7 +2937,6 @@ public class DataManager extends BaseRoboInjector {
     }
 
     public void syncAnalytics() {
-
         try {
             Analytic analytic = new Analytic(context);
             analytic.syncAnalytics();
