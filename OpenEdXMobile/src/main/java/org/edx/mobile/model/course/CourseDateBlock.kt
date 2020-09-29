@@ -7,6 +7,7 @@ import org.edx.mobile.util.DateUtil
 data class CourseDateBlock(
         @SerializedName("complete") var complete: Boolean = false,
         @SerializedName("date") val date: String = "",
+        @SerializedName("assignment_type") val assignmentType: String? = "",
         @SerializedName("date_type") var dateType: String? = "",
         @SerializedName("description") val description: String = "",
         @SerializedName("learner_has_access") var learnerHasAccess: Boolean = false,

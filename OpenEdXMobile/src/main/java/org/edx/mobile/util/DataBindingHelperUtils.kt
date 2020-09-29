@@ -1,7 +1,9 @@
 package org.edx.mobile.util
 
 import android.content.Context
-import android.graphics.Paint
+import android.text.SpannableString
+import android.text.TextUtils
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -61,15 +63,23 @@ class DataBindingHelperUtils {
                 list.forEach { item ->
                     val childView = inflater.inflate(R.layout.sub_item_course_date_block, null)
 
-                    setText(childView.title, item.title)
+                    var labelType = ""
+                    val title = SpannableString(item.title)
+
+                    if (item.assignmentType.isNullOrBlank().not()) {
+                        labelType = "${item.assignmentType}: "
+                    }
+
+                    if (item.showLink()) {
+                        title.setSpan(UnderlineSpan(), 0, title.length, 0)
+                    }
+
+                    isViewVisible(childView.title, item.title.isNullOrBlank().not())
+                    childView.title.text = TextUtils.concat(labelType, title)
                     isViewAccessible(childView.title, item.dateBlockBadge)
 
                     setText(childView.description, item.description)
                     isViewAccessible(childView.description, item.dateBlockBadge)
-
-                    if (item.showLink()) {
-                        childView.title.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                    }
 
                     childView.setOnClickListener {
                         if (item.showLink()) {
