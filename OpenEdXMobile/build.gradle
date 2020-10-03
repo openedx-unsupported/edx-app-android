@@ -207,7 +207,7 @@ dependencies {
     }
 
     // Firebase Crashlytics SDK
-    implementation ('com.google.firebase:firebase-crashlytics:17.0.0'){
+    implementation ('com.google.firebase:firebase-crashlytics:17.2.2'){
         exclude group: 'javax.inject'
         transitive = true
     }
