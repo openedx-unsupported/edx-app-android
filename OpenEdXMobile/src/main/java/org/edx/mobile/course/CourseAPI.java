@@ -29,12 +29,14 @@ import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseDates;
+import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.DiscussionData;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.model.course.ResetCourseDates;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
@@ -105,6 +107,22 @@ public class CourseAPI {
     @NonNull
     public Call<CourseDates> getCourseDates(@NonNull String courseId) {
         return courseService.getCourseDates(courseId);
+    }
+
+    /**
+     * @return Course dates banner info against the given course Id.
+     */
+    @NonNull
+    public Call<CourseBannerInfoModel> getCourseBannerInfo(@NonNull String courseId) {
+        return courseService.getCourseBannerInfo(courseId);
+    }
+
+    /**
+     * @return Reset course dates against the given course Id.
+     */
+    @NonNull
+    public Call<ResetCourseDates> resetCourseDates(@NonNull HashMap<String, String> courseBody) {
+        return courseService.resetCourseDates(courseBody);
     }
 
     /**

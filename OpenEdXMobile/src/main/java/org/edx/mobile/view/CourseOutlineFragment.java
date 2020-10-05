@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import androidx.core.view.ViewCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -40,11 +40,17 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.databinding.LayoutCourseDatesBannerBinding;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.CourseContentNotValidException;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
@@ -54,9 +60,11 @@ import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.BlockPath;
+import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
+import org.edx.mobile.model.course.ResetCourseDates;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.Analytics;
@@ -73,6 +81,7 @@ import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +106,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
     private boolean isVideoMode;
+    // Flag to check if the course dates banner is visible or not
+    private boolean isBannerVisible = false;
     private boolean isOnCourseOutline;
     private boolean isFetchingLastAccessed;
     // Flag to differentiate between single or multiple video download
@@ -171,10 +182,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 loadingIndicator.setVisibility(View.GONE);
                 errorNotification.hideError();
                 getCourseComponentFromServer(false);
+                if (!isVideoMode && isOnCourseOutline)
+                    getCourseDatesBannerInfo(false);
             }
         });
         UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
         restore(bundle);
+        if (!isVideoMode && isOnCourseOutline) {
+            getCourseDatesBannerInfo(true);
+        }
         initListView(view);
         fetchCourseComponent();
         // Track CourseOutline for A/A test
@@ -315,6 +331,64 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         });
     }
 
+    private void getCourseDatesBannerInfo(boolean showProgress) {
+        final TaskProgressCallback progressCallback = showProgress ?
+                new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
+        final String courseId = courseData.getCourse().getId();
+        courseApi.getCourseBannerInfo(courseId).enqueue(new ErrorHandlingCallback<CourseBannerInfoModel>(getContextOrThrow(),
+                progressCallback, errorNotification, null, null) {
+            @Override
+            protected void onResponse(@NonNull CourseBannerInfoModel responseBody) {
+                initDatesBanner(responseBody);
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                super.onFailure(error);
+                if (error instanceof AuthException || error instanceof HttpStatusException &&
+                        ((HttpStatusException) error).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                    environment.getRouter().forceLogout(getContextOrThrow(),
+                            environment.getAnalyticsRegistry(),
+                            environment.getNotificationDelegate());
+                } else {
+                    initDatesBanner(null);
+                }
+            }
+        });
+    }
+
+    private void resetCourseDatesBanner() {
+        final TaskProgressCallback progressCallback = new TaskProgressCallback.ProgressViewController(loadingIndicator);
+        final String courseId = courseData.getCourse().getId();
+        HashMap<String, String> courseBody = new HashMap<>();
+        courseBody.put(ApiConstants.COURSE_KEY, courseId);
+        courseApi.resetCourseDates(courseBody).enqueue(new ErrorHandlingCallback<ResetCourseDates>(getContextOrThrow(),
+                progressCallback, errorNotification, null, null) {
+            @Override
+            protected void onResponse(@NonNull ResetCourseDates responseBody) {
+                AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
+                        getString(R.string.course_dates_reset_successful),
+                        null)
+                        .show(getChildFragmentManager(), null);
+                getCourseDatesBannerInfo(false);
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                super.onFailure(error);
+                if (error instanceof AuthException || error instanceof HttpStatusException &&
+                        ((HttpStatusException) error).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                    environment.getRouter().forceLogout(getContextOrThrow(),
+                            environment.getAnalyticsRegistry(),
+                            environment.getNotificationDelegate());
+                } else {
+                    AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
+                            getString(R.string.course_dates_reset_unsuccessful), null);
+                }
+            }
+        });
+    }
+
     /**
      * Validates the course component that we should load on screen i.e. based on
      * {@link #isOnCourseOutline} validates that the CourseComponent we are about to load on screen
@@ -339,6 +413,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Checking if the onItemClick action performed on course dates banner
+                if (!isVideoMode && isBannerVisible && position == 0) {
+                    return;
+                }
                 if (deleteMode != null) {
                     deleteMode.finish();
                 }
@@ -357,6 +435,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Checking if the onItemLongClick action performed on course dates banner
+                if (!isVideoMode && isBannerVisible && position == 0) {
+                    return false;
+                }
                 final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
                 if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
@@ -395,6 +477,54 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             };
             adapter = new CourseOutlineAdapter(getActivity(), courseData, environment, downloadListener,
                     isVideoMode, isOnCourseOutline);
+        }
+    }
+
+    /**
+     * Initialized dates info banner on CourseOutlineFragment
+     *
+     * @param courseBannerInfo object of course deadline info
+     */
+    private void initDatesBanner(CourseBannerInfoModel courseBannerInfo) {
+        LayoutCourseDatesBannerBinding bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
+        if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
+            String buttonText = "";
+            // Currently we are only handling RESET_DATES case,
+            // TODO UPGRADE_TO_GRADED & UPGRADE_TO_RESET will be enable once we are allowed to do payment through mobile
+            switch (courseBannerInfo.getDatesBannerInfo().getCourseBannerType()) {
+                case UPGRADE_TO_GRADED:
+                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_banner_upgrade_to_graded));
+                    break;
+                case UPGRADE_TO_RESET:
+                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_banner_upgrade_to_reset));
+                    break;
+                case RESET_DATES:
+                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_banner_reset_date));
+                    buttonText = getContextOrThrow().getString(R.string.course_dates_banner_reset_date_button);
+                    break;
+                case INFO_BANNER:
+                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_info_banner));
+                    break;
+                case BLANK:
+                    listView.removeHeaderView(bannerViewBinding.getRoot());
+                    isBannerVisible = false;
+                    break;
+            }
+
+            if (listView.getHeaderViewsCount() == 0 && !TextUtils.isEmpty(bannerViewBinding.bannerInfo.getText())) {
+                if (!TextUtils.isEmpty(buttonText)) {
+                    bannerViewBinding.btnShiftDates.setText(buttonText);
+                    bannerViewBinding.btnShiftDates.setVisibility(View.VISIBLE);
+                    bannerViewBinding.btnShiftDates.setOnClickListener(v -> {
+                        resetCourseDatesBanner();
+                    });
+                }
+                listView.addHeaderView(bannerViewBinding.getRoot());
+                isBannerVisible = true;
+            }
+        } else {
+            listView.removeHeaderView(bannerViewBinding.getRoot());
+            isBannerVisible = false;
         }
     }
 
