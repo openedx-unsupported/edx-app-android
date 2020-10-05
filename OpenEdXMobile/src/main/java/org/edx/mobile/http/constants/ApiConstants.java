@@ -44,6 +44,8 @@ public class ApiConstants {
 
     public static final String VALIDATION_DECISIONS = "validation_decisions";
 
+    public static final String COURSE_KEY = "course_key";
+
     @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TokenType {}
