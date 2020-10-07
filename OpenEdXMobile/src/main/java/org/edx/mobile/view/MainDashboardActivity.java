@@ -1,18 +1,22 @@
 package org.edx.mobile.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SearchView;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SearchView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -27,6 +31,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.Version;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.text.ParseException;
 
@@ -63,6 +68,25 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
         super.onCreate(savedInstanceState);
         initWhatsNew();
         addClickListenerOnProfileButton();
+        showThemeDialog();
+    }
+
+    private void showThemeDialog() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialogFragment.newInstance("Switch Theme", "", "Switch", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        }
+                    }
+                }, null, null).show(getSupportFragmentManager(), "test");
+            }
+        }, 5000);
     }
 
     @Override

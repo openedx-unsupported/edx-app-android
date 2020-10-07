@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">@android:color/black</color>
+    <color name="black">@android:color/white</color>
+    <color name="edx_brand_gray_back">#9d9d9d</color>
+    <color name="edx_success_accent">#00B900</color>
+    <color name="grey_act_background">#353536</color>
+    <color name="edx_brand_gray_base">#E7E6E6</color>
+    <color name="transparent_white_85">#9D000000</color>
+
+    <color name="edx_brand_primary_dark">#454545</color>
+    <color name="edx_brand_primary_base">#B4B4B4</color>
+    <color name="edx_brand_primary_accent">#5D8395</color>
+
+
+</resources>

@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.webkit.WebSettingsCompat;
+import androidx.webkit.WebViewFeature;
+
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 
@@ -27,5 +30,8 @@ public class EdxWebView extends WebView {
                         BuildConfig.VERSION_NAME
         );
         setLayerType(LAYER_TYPE_HARDWARE, null);
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON);
+        }
     }
 }
