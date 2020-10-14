@@ -276,6 +276,8 @@ dependencies {
         exclude group: 'org.hamcrest'
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
+    // Required by Chips compact elements.
+    implementation 'com.google.android.material:material:1.2.1'
 }
 
 configurations {
