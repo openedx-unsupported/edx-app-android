@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.authentication.LoginService;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.logger.Logger;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.Authenticator;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -40,6 +42,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     private final static String TOKEN_EXPIRED_ERROR_MESSAGE = "token_expired";
     private final static String TOKEN_NONEXISTENT_ERROR_MESSAGE = "token_nonexistent";
     private final static String TOKEN_INVALID_GRANT_ERROR_MESSAGE = "invalid_grant";
+    private final static String DISABLED_USER_ERROR_MESSAGE = "user_is_disabled";
     private Context context;
 
     @Inject
@@ -88,6 +91,9 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
                                 .header("Authorization", currentAuth.token_type + " " + currentAuth.access_token)
                                 .build();
                     }
+                case DISABLED_USER_ERROR_MESSAGE:
+                    EventBus.getDefault().post(new LogoutEvent());
+                    break;
             }
         }
         return null;

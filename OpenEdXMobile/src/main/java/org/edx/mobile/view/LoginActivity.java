@@ -357,17 +357,28 @@ public class LoginActivity
                     errorMessage.getMessageLine1(),
                     (errorMessage.getMessageLine2() != null) ?
                             errorMessage.getMessageLine2() : getString(R.string.login_failed));
-        } else if (ex != null && ex instanceof HttpStatusException &&
-                ((HttpStatusException) ex).getStatusCode() == HttpStatus.UPGRADE_REQUIRED) {
-            LoginActivity.this.showAlertDialog(null,
-                    getString(R.string.app_version_unsupported_login_msg),
-                    getString(R.string.label_update),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            AppStoreUtils.openAppInAppStore(LoginActivity.this);
-                        }
-                    }, getString(android.R.string.cancel), null);
+        } else if (ex != null && ex instanceof HttpStatusException) {
+            switch (((HttpStatusException) ex).getStatusCode()) {
+                case HttpStatus.UPGRADE_REQUIRED:
+                    LoginActivity.this.showAlertDialog(null,
+                            getString(R.string.app_version_unsupported_login_msg),
+                            getString(R.string.label_update),
+                            (dialog, which) -> AppStoreUtils
+                                    .openAppInAppStore(LoginActivity.this),
+                            getString(android.R.string.cancel), null);
+                    break;
+                case HttpStatus.FORBIDDEN:
+                    LoginActivity.this.showAlertDialog(getString(R.string.login_error),
+                            getString(R.string.auth_provider_disabled_user_error),
+                            getString(R.string.CUSTOMER_SUPPORT),
+                            (dialog, which) -> environment.getRouter()
+                                    .showFeedbackScreen(LoginActivity.this,
+                                            getString(R.string.email_subject)), getString(android.R.string.cancel), null);
+                    break;
+                default:
+                    showAlertDialog(getString(R.string.login_error), ErrorUtils.getErrorMessage(ex, LoginActivity.this));
+                    logger.error(ex);
+            }
         } else {
             showAlertDialog(getString(R.string.login_error), ErrorUtils.getErrorMessage(ex, LoginActivity.this));
             logger.error(ex);

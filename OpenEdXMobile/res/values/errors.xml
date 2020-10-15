@@ -115,4 +115,6 @@
     <!-- Error message shown when a permission is not granted -->
     <string name="permission_not_granted">Permission not granted</string>
 
+    <!-- This error message will be shown if user tried to login with third party (facebook/google) and server returns 403 status code, Disabled user-->
+    <string name="auth_provider_disabled_user_error">Your account is disabled. Please contact customer support for assistance.</string>
 </resources>
