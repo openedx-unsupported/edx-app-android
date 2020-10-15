@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chip xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:chipCornerRadius="@dimen/date_block_badge_corner_margin"
+    app:chipEndPadding="@dimen/dates_badge_end_padding"
+    app:chipStartPadding="@dimen/dates_badge_start_padding"
+    app:closeIconVisible="false" />

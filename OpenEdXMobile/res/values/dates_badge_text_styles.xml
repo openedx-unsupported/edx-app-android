@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dates_badge_text_appearance">
+        <item name="android:textSize">@dimen/edx_small</item>
+        <!--  This is not working      -->
+        <item name="fontPath">fonts/OpenSans-SemiboldItalic.ttf</item>
+    </style>
+
+    <style name="today_date_badge_text_appearance" parent="dates_badge_text_appearance">
+        <item name="android:textColor">@color/course_date_badge_black</item>
+    </style>
+
+    <style name="verified_only_badge_text_appearance" parent="dates_badge_text_appearance">
+        <item name="android:textColor">@color/course_date_badge_white</item>
+    </style>
+
+    <style name="completed_badge_text_appearance" parent="dates_badge_text_appearance">
+        <item name="android:textColor">@color/course_date_badge_gray</item>
+    </style>
+
+    <style name="past_due_badge_text_appearance" parent="dates_badge_text_appearance">
+        <item name="android:textColor">@color/course_date_badge_gray</item>
+    </style>
+
+    <style name="due_next_badge_text_appearance" parent="dates_badge_text_appearance">
+        <item name="android:textColor">@color/course_date_badge_white</item>
+    </style>
+
+    <style name="not_yet_released_badge_text_appearance" parent="dates_badge_text_appearance">
+        <item name="android:textColor">@color/course_date_badge_silver</item>
+    </style>
+</resources>

@@ -266,5 +266,7 @@
     <dimen name="width_hairline">0.8dp</dimen>
     <dimen name="date_block_badge_corner_margin">6dp</dimen>
     <dimen name="date_block_half_x_margin">10dp</dimen>
+    <dimen name="dates_badge_end_padding">4dp</dimen>
+    <dimen name="dates_badge_start_padding">2dp</dimen>
 
 </resources>

@@ -101,27 +101,9 @@
                     android:text="@{dateBlock.getFormattedDate()}"
                     android:textColor="@color/switch_text_color"
                     android:textSize="@dimen/edx_large"
-                    tools:text="Wed, Aug 12, 2020" />
-
-                <TextView
-                    android:id="@+id/date_tag"
-                    fontPath="fonts/OpenSans-SemiboldItalic.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/edx_half_margin"
-                    android:layout_marginBottom="@dimen/widget_margin_half"
-                    android:drawablePadding="@dimen/widget_margin_half"
-                    android:paddingStart="@dimen/edx_half_margin"
-                    android:paddingTop="3dp"
-                    android:paddingEnd="@dimen/edx_half_margin"
-                    android:paddingBottom="3dp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/edx_small"
                     binding:badgeBackground="@{dateBlock.dateBlockBadge}"
                     binding:isToday="@{dateBlock.today}"
-                    tools:background="@drawable/yellow_roundedbg"
-                    tools:text="Today"
-                    tools:visibility="visible" />
+                    tools:text="Wed, Aug 12, 2020" />
 
             </LinearLayout>
         </LinearLayout>
