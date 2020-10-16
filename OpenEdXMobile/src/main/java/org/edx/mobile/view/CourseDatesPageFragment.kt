@@ -11,13 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.edx.mobile.R
 import org.edx.mobile.core.EdxEnvironment
 import org.edx.mobile.databinding.FragmentCourseDatesPageBinding
+import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
 import org.edx.mobile.interfaces.OnDateBlockListener
+import org.edx.mobile.model.course.CourseBannerInfoModel
+import org.edx.mobile.model.course.CourseBannerType
 import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.UiUtil
 import org.edx.mobile.view.adapters.CourseDatesAdapter
+import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
 import org.edx.mobile.viewModel.ViewModelFactory
 import javax.inject.Inject
@@ -77,9 +81,13 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             binding.loadingIndicator.loadingIndicator.visibility = if (showLoader) View.VISIBLE else View.GONE
         })
 
+        viewModel.bannerInfo.observe(this, Observer {
+            initDatesBanner(it)
+        })
+
         viewModel.courseDates.observe(this, Observer { dates ->
             if (dates.courseDateBlocks.isNullOrEmpty()) {
-                viewModel.setError(HttpStatus.NO_CONTENT, getString(R.string.course_dates_unavailable_message))
+                viewModel.setError(ErrorMessage.COURSE_DATES_CODE, HttpStatus.NO_CONTENT, getString(R.string.course_dates_unavailable_message))
             } else {
                 dates.organiseCourseDates()
                 binding.rvDates.apply {
@@ -89,24 +97,75 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             }
         })
 
-        viewModel.errorMessage.observe(this, Observer { throwable ->
-            if (throwable != null) {
-                if (throwable is HttpStatusException) {
-                    when (throwable.statusCode) {
+        viewModel.resetCourseDates.observe(this, Observer { resetCourseDates ->
+            if (resetCourseDates != null) {
+                AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
+                        getString(R.string.course_dates_reset_successful),
+                        null)
+                        .show(childFragmentManager, null)
+            }
+        })
+
+        viewModel.errorMessage.observe(this, Observer { errorMsg ->
+            if (errorMsg != null) {
+                if (errorMsg.throwable is HttpStatusException) {
+                    when (errorMsg.throwable.statusCode) {
                         HttpStatus.UNAUTHORIZED -> {
                             environment.router?.forceLogout(contextOrThrow,
                                     environment.analyticsRegistry,
                                     environment.notificationDelegate)
                             return@Observer
                         }
+                        else ->
+                            errorNotification.showError(contextOrThrow, errorMsg.throwable, -1, null)
+                    }
+                } else {
+                    when (errorMsg.errorCode) {
+                        ErrorMessage.COURSE_DATES_CODE ->
+                            errorNotification.showError(contextOrThrow, errorMsg.throwable, -1, null)
+                        ErrorMessage.BANNER_INFO_CODE ->
+                            initDatesBanner(null)
+                        ErrorMessage.COURSE_RESET_DATES_CODE ->
+                            AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
+                                    getString(R.string.course_dates_reset_unsuccessful), null)
                     }
                 }
-                errorNotification.showError(contextOrThrow, throwable, -1, null)
             }
         })
 
         viewModel.swipeRefresh.observe(this, Observer { enableSwipeListener ->
             binding.swipeContainer.isRefreshing = enableSwipeListener
         })
+    }
+
+    /**
+     * Initialized dates info banner on CourseDatesPageFragment
+     *
+     * @param courseBannerInfo object of course deadline info
+     */
+    private fun initDatesBanner(courseBannerInfo: CourseBannerInfoModel?) {
+        var buttonText: String? = ""
+        when (courseBannerInfo?.datesBannerInfo?.getCourseBannerType()) {
+            CourseBannerType.UPGRADE_TO_GRADED -> binding.banner.bannerInfo.text = getText(R.string.course_dates_banner_upgrade_to_graded)
+            CourseBannerType.UPGRADE_TO_RESET -> binding.banner.bannerInfo.text = getText(R.string.course_dates_banner_upgrade_to_reset)
+            CourseBannerType.RESET_DATES -> {
+                binding.banner.bannerInfo.text = getText(R.string.course_dates_banner_reset_date)
+                buttonText = contextOrThrow.getString(R.string.course_dates_banner_reset_date_button)
+            }
+            CourseBannerType.INFO_BANNER -> binding.banner.bannerInfo.text = getText(R.string.course_dates_info_banner)
+            CourseBannerType.BLANK -> {
+                binding.banner.containerLayout.visibility = View.GONE
+            }
+        }
+        if (binding.banner.bannerInfo.text.isNullOrBlank().not()) {
+            if (buttonText.isNullOrBlank().not()) {
+                binding.banner.btnShiftDates.text = buttonText
+                binding.banner.btnShiftDates.visibility = View.VISIBLE
+                binding.banner.btnShiftDates.setOnClickListener {
+                    viewModel.resetCourseDatesBanner(getStringArgument(Router.EXTRA_COURSE_ID))
+                }
+            }
+            binding.banner.containerLayout.visibility = View.VISIBLE
+        }
     }
 }
