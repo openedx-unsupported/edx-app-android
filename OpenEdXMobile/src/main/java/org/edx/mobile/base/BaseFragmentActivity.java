@@ -282,6 +282,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         environment.getRouter().forceLogout(this,
                 environment.getAnalyticsRegistry(),
                 environment.getNotificationDelegate());
+        finish();
     }
 
     /**
