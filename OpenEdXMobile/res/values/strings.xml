@@ -659,6 +659,8 @@
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
     <string name="email_subject">Customer Feedback</string>
+    <!--  Email subject line when user account is disabled to submit feedback about the app -->
+    <string name="email_subject_account_disabled">Account Disabled</string>
     <!--  Email subject line when a user attempts to submit a review using the app review workflow -->
     <string name="review_email_subject">Customer Review</string>
     <!--  Submit Feedback app version text -->

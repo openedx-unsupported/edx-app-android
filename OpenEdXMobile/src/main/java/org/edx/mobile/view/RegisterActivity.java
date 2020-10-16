@@ -656,10 +656,10 @@ public class RegisterActivity extends BaseFragmentActivity
         if (ex instanceof HttpStatusException && ((HttpStatusException) ex).getStatusCode() == HttpStatus.FORBIDDEN) {
             RegisterActivity.this.showAlertDialog(getString(R.string.login_error),
                     getString(R.string.auth_provider_disabled_user_error),
-                    getString(R.string.CUSTOMER_SUPPORT),
+                    getString(R.string.label_customer_support),
                     (dialog, which) -> environment.getRouter()
                             .showFeedbackScreen(RegisterActivity.this,
-                                    getString(R.string.email_subject)), getString(android.R.string.cancel), null);
+                                    getString(R.string.email_subject_account_disabled)), getString(android.R.string.cancel), null);
         } else {
             SocialFactory.SOCIAL_SOURCE_TYPE socialType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backend);
             updateUIOnSocialLoginToEdxFailure(socialType, accessToken);

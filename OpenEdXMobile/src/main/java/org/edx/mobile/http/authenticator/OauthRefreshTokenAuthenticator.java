@@ -92,6 +92,8 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
                                 .build();
                     }
                 case DISABLED_USER_ERROR_MESSAGE:
+                    // If the user is logged-in & marked as disabled then on the next server response
+                    // app will force the user to logout and navigate it to the launcher screen.
                     EventBus.getDefault().post(new LogoutEvent());
                     break;
             }

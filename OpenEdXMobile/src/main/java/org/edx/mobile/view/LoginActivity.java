@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -370,10 +369,10 @@ public class LoginActivity
                 case HttpStatus.FORBIDDEN:
                     LoginActivity.this.showAlertDialog(getString(R.string.login_error),
                             getString(R.string.auth_provider_disabled_user_error),
-                            getString(R.string.CUSTOMER_SUPPORT),
+                            getString(R.string.label_customer_support),
                             (dialog, which) -> environment.getRouter()
                                     .showFeedbackScreen(LoginActivity.this,
-                                            getString(R.string.email_subject)), getString(android.R.string.cancel), null);
+                                            getString(R.string.email_subject_account_disabled)), getString(android.R.string.cancel), null);
                     break;
                 default:
                     showAlertDialog(getString(R.string.login_error), ErrorUtils.getErrorMessage(ex, LoginActivity.this));
