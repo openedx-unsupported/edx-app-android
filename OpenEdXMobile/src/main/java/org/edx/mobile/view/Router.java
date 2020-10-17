@@ -351,8 +351,6 @@ public class Router {
     public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         loginPrefs.clear();
 
-        EventBus.getDefault().post(new LogoutEvent());
-
         analyticsRegistry.trackUserLogout();
         analyticsRegistry.resetIdentifyUser();
 

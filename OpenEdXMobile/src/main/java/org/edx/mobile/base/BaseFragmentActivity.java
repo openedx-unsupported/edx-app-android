@@ -279,6 +279,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      */
     @SuppressWarnings("unused")
     public void onEvent(LogoutEvent event) {
+        environment.getRouter().forceLogout(this,
+                environment.getAnalyticsRegistry(),
+                environment.getNotificationDelegate());
         finish();
     }
 
