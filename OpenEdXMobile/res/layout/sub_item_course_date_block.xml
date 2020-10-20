@@ -11,7 +11,7 @@
 
         <TextView
             android:id="@+id/title"
-            fontPath="fonts/OpenSans-Semibold.ttf"
+            android:fontFamily="@font/open_sans_semi_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingMultiplier="@dimen/course_date_title_line_spacing"
@@ -23,7 +23,7 @@
 
         <TextView
             android:id="@+id/description"
-            fontPath="fonts/OpenSans-Semi.ttf"
+            android:fontFamily="@font/open_sans_semi_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/switch_text_color"

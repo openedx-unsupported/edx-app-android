@@ -14,18 +14,12 @@ import org.edx.mobile.googlecast.GoogleCastDelegate;
 import org.edx.mobile.logger.Logger;
 
 import de.greenrobot.event.EventBus;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseAppActivity extends RoboAppCompatActivity implements CastStateListener {
 
     private GoogleCastDelegate googleCastDelegate;
     private MenuItem mediaRouteMenuItem;
     private final Logger logger = new Logger(BaseAppActivity.class.getName());
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

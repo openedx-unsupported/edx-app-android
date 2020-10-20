@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,9 +21,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @ColorInt
@@ -45,7 +44,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         edx_grayscale_neutral_dark = context.getResources().getColor(R.color.edx_brand_gray_base);
         edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
         edx_utility_success_dark = context.getResources().getColor(R.color.edx_success_text);
-        openSansSemiBoldFont = TypefaceUtils.load(context.getAssets(), "fonts/OpenSans-Semibold.ttf");
+        openSansSemiBoldFont = ResourcesCompat.getFont(context, R.font.open_sans_semi_bold);
     }
 
     @Override
@@ -73,8 +72,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
         {
             final CharSequence threadTitle = discussionThread.getTitle();
-            holder.discussionPostTitle.setText(discussionThread.isRead() ? threadTitle :
-                    CalligraphyUtils.applyTypefaceSpan(threadTitle, openSansSemiBoldFont));
+            holder.discussionPostTitle.setText(threadTitle);
+            if (!discussionThread.isRead()) {
+                holder.discussionPostTitle.setTypeface(openSansSemiBoldFont);
+            }
         }
 
         holder.discussionPostClosedIcon.setVisibility(discussionThread.isClosed() ? View.VISIBLE : View.GONE);

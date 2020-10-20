@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import com.google.android.material.appbar.AppBarLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,8 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI, OnActivityResultListener {
@@ -100,7 +100,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             final View child = toolbar.getChildAt(i);
             if (child instanceof TextView) {
                 final TextView textView = (TextView) child;
-                CalligraphyUtils.applyFontToTextView(textView, TypefaceUtils.load(getAssets(), "fonts/OpenSans-Semibold.ttf"));
+                textView.setTypeface(ResourcesCompat.getFont(this, R.font.open_sans_semi_bold));
             }
         }
     }
