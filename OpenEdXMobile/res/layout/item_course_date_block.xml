@@ -93,6 +93,7 @@
                 fontPath="fonts/OpenSans-Semibold.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.25"
                 android:textColor="@color/switch_text_color"
                 android:textSize="@dimen/edx_large"
                 binding:badge="@{dateBlock.dateBlockBadge}"

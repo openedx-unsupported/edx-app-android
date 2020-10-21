@@ -130,6 +130,7 @@ class DataBindingHelperUtils {
                 return
             }
             var courseDateType = type
+            // check isToday is true then enforce the course dateType to add `TODAY` badge
             if (isToday) {
                 courseDateType = CourseDateType.TODAY
             }
@@ -171,6 +172,8 @@ class DataBindingHelperUtils {
                 }
             }
             addDateBadge(textView, courseDateType.getTitle(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
+            // Check to add multiple badges if course date is match to the current date and also
+            // marked as completed
             if (isToday && type == CourseDateType.COMPLETED) {
                 setBadge(textView, type, false, dateBlockItems)
             }
