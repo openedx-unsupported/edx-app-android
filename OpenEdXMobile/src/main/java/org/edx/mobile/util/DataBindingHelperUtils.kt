@@ -130,8 +130,7 @@ class DataBindingHelperUtils {
                 return
             }
             var courseDateType = type
-            // check dateBlockItems not null its means we can adding the badge in Parent date view
-            if (isToday && dateBlockItems != null) {
+            if (isToday) {
                 courseDateType = CourseDateType.TODAY
             }
             val badgeBackground: Int
@@ -177,6 +176,11 @@ class DataBindingHelperUtils {
             }
         }
 
+        /**
+         * Method to check that all Date Items have same badge status or not
+         *
+         * @return true if all the date items have update badge status else false
+         * */
         private fun hasSameDateTypes(dateBlockItems: ArrayList<CourseDateBlock>?): Boolean {
             if (dateBlockItems != null && dateBlockItems.isEmpty().not() && dateBlockItems.size > 1) {
                 val dateType = dateBlockItems[0].dateBlockBadge
@@ -212,17 +216,20 @@ class DataBindingHelperUtils {
             chipDrawable.setTextAppearanceResource(textAppearance)
             if (badgeIcon != null) {
                 chipDrawable.chipIcon = badgeIcon
+                chipDrawable.chipIconSize = textView.context.resources.getDimension(R.dimen.small_icon_size)
+                chipDrawable.setIconStartPaddingResource(R.dimen.dates_badge_icon_start_padding)
+                chipDrawable.setIconEndPaddingResource(R.dimen.dates_badge_icon_end_padding)
             }
             if (badgeStrokeColor != -1) {
                 chipDrawable.setChipStrokeColorResource(badgeStrokeColor)
                 chipDrawable.strokeWidth = ParsingUtil.dpToPx(textView.context, 1.0F)
             }
-            // Reduce the chip height to match with the provided design.
-            chipDrawable.setBounds(0, (chipDrawable.intrinsicHeight * .1).toInt(),
-                    chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * .9).toInt())
+            // Reduce the chip height and vertical margins to match the design.
+            chipDrawable.setBounds(0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
+                    chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt())
 
             val length = textView.text.toString().length
-            // Find & replace the badge
+            // Find & replace the badge title with actual badge drawable
             string.setSpan(ImageSpan(chipDrawable), textView.text.indexOf(title), length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             textView.setText(string, TextView.BufferType.SPANNABLE)

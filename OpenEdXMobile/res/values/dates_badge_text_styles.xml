@@ -3,6 +3,7 @@
 
     <style name="dates_badge_text_appearance">
         <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textStyle">bold|italic</item>
         <!--  This is not working      -->
         <item name="fontPath">fonts/OpenSans-SemiboldItalic.ttf</item>
     </style>
