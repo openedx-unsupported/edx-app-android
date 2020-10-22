@@ -80,7 +80,7 @@ class DataBindingHelperUtils {
                         title.setSpan(UnderlineSpan(), 0, title.length, 0)
                     }
 
-                    isViewVisible(childView.title, item.title.isNullOrBlank().not())
+                    if (item.title.isNotBlank()) childView.title.visibility = View.VISIBLE
                     childView.title.setText(TextUtils.concat(labelType, title), TextView.BufferType.SPANNABLE)
                     isViewAccessible(childView.title, item.dateBlockBadge)
 

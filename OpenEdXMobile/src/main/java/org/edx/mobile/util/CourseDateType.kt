@@ -5,7 +5,7 @@ package org.edx.mobile.util
  */
 enum class CourseDateType {
     TODAY, BLANK, VERIFIED_ONLY, COMPLETED, PAST_DUE, DUE_NEXT, NOT_YET_RELEASED,
-    // No badge title and icon
+    // Handling the expired course as a separate entity when a different set of blocks lay in a single date.
     COURSE_EXPIRED_DATE;
 
     fun getTitle(): String {
