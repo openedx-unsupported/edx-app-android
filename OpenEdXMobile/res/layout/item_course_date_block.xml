@@ -26,7 +26,6 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
-
         <View
             android:id="@+id/line_above_dot"
             android:layout_width="@dimen/width_hairline"
@@ -36,6 +35,16 @@
             app:layout_constraintEnd_toEndOf="@+id/bullet_today"
             app:layout_constraintStart_toStartOf="@+id/bullet_today"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/line_below_dot"
+            android:layout_width="@dimen/width_hairline"
+            android:layout_height="0dp"
+            android:background="@drawable/black_line_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/date_info_container"
+            app:layout_constraintEnd_toEndOf="@+id/bullet_today"
+            app:layout_constraintStart_toStartOf="@+id/bullet_today"
+            app:layout_constraintTop_toBottomOf="@+id/bullet" />
 
         <View
             android:id="@+id/bullet"
@@ -65,16 +74,6 @@
             tools:ignore="ContentDescription"
             tools:visibility="visible" />
 
-        <View
-            android:id="@+id/line_below_dot"
-            android:layout_width="@dimen/width_hairline"
-            android:layout_height="0dp"
-            android:background="@drawable/black_line_vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/date_info_container"
-            app:layout_constraintEnd_toEndOf="@+id/bullet_today"
-            app:layout_constraintStart_toStartOf="@+id/bullet_today"
-            app:layout_constraintTop_toBottomOf="@+id/bullet" />
-
         <LinearLayout
             android:id="@+id/date_info_container"
             android:layout_width="0dp"
@@ -96,9 +95,8 @@
                 android:lineSpacingMultiplier="1.25"
                 android:textColor="@color/switch_text_color"
                 android:textSize="@dimen/edx_large"
-                binding:badge="@{dateBlock.dateBlockBadge}"
+                binding:badge="@{dateBlock}"
                 binding:dateBlockItems="@{dateBlockList}"
-                binding:isToday="@{dateBlock.today}"
                 binding:spanText="@{dateBlock.getFormattedDate()}"
                 tools:text="Wed, Aug 12, 2020" />
         </LinearLayout>

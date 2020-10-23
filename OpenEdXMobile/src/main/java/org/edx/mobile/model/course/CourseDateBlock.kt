@@ -22,7 +22,9 @@ data class CourseDateBlock(
         fun getTodayDateBlock() = CourseDateBlock(date = DateUtil.getCurrentTimeStamp(), dateType = DateTypes.TODAY_DATE)
     }
 
-    fun isToday(): Boolean = (DateUtil.isDateToday(date) || dateType.equals(DateTypes.TODAY_DATE))
+    fun isToday(): Boolean = (DateUtil.isDateToday(date) || isDateTypeToday())
+
+    fun isDateTypeToday(): Boolean = dateType.equals(DateTypes.TODAY_DATE)
 
     fun getFormattedDate(): String = DateUtil.formatCourseDate(date)
 

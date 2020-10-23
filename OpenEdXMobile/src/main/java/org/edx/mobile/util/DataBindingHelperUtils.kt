@@ -64,7 +64,7 @@ class DataBindingHelperUtils {
         fun addView(linearLayout: LinearLayout, list: ArrayList<CourseDateBlock>, clickListener: OnDateBlockListener) {
             val inflater: LayoutInflater = linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             if (linearLayout.childCount < 2) {
-                // if all the item has the same date type so it means badge is already added to parent
+                // if all the item has the same date type so it means badge is already added in parent view
                 val parentBadgeAdded = hasSameDateTypes(list)
                 list.forEach { item ->
                     val childView = inflater.inflate(R.layout.sub_item_course_date_block, null)
@@ -92,9 +92,9 @@ class DataBindingHelperUtils {
                             clickListener.onClick(item.link)
                         }
                     }
-                    if (!parentBadgeAdded || item.dateBlockBadge == CourseDateType.DUE_NEXT) {
-                        // Pass isToday is always false cuz today block should not placed with sub date item
-                        setBadge(childView.title, item.dateBlockBadge, false, null)
+                    if (!parentBadgeAdded) {
+                        // Set update badge with sub date items
+                        setBadge(childView.title, item, null, true)
                     }
                     linearLayout.addView(childView)
                 }
@@ -124,17 +124,24 @@ class DataBindingHelperUtils {
         }
 
         @JvmStatic
-        @BindingAdapter("binding:badge", "binding:isToday", "binding:dateBlockItems", requireAll = true)
-        fun setBadge(textView: TextView, type: CourseDateType, isToday: Boolean,
-                     dateBlockItems: ArrayList<CourseDateBlock>?) {
-            if (!hasSameDateTypes(dateBlockItems) && !isToday) {
-                return
+        @BindingAdapter("binding:badge", "binding:dateBlockItems", "binding:badgeAdded", requireAll = false)
+        fun setBadge(textView: TextView, dateBlock: CourseDateBlock,
+                     dateBlockItems: ArrayList<CourseDateBlock>?,
+                     parentBadgeAdded: Boolean = false) {
+            // Check Today's badge is already added or not
+            if (dateBlock.isToday() && !parentBadgeAdded) {
+                createBadge(textView, CourseDateType.TODAY)
             }
-            var courseDateType = type
-            // check isToday is true then enforce the course dateType to add `TODAY` badge
-            if (isToday) {
-                courseDateType = CourseDateType.TODAY
+            // add date badge at second position OR sub date item other then Today's badge
+            if (hasSameDateTypes(dateBlockItems) && !dateBlock.isDateTypeToday()) {
+                createBadge(textView, dateBlock.dateBlockBadge)
             }
+        }
+
+        /**
+         * Method to create the Date badge as per given DateType
+         */
+        private fun createBadge(textView: TextView, courseDateType: CourseDateType) {
             val badgeBackground: Int
             val textAppearance: Int
             var badgeStrokeColor: Int = -1
@@ -173,11 +180,6 @@ class DataBindingHelperUtils {
                 }
             }
             addDateBadge(textView, courseDateType.getTitle(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
-            // Check to add multiple badges if course date is match to the current date and also
-            // marked as completed
-            if (isToday && type == CourseDateType.COMPLETED) {
-                setBadge(textView, type, false, dateBlockItems)
-            }
         }
 
         /**
