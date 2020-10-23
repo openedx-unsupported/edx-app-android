@@ -8,11 +8,12 @@ import androidx.test.rule.ActivityTestRule;
 import com.facebook.testing.screenshot.Screenshot;
 
 import org.edx.mobile.view.LaunchActivity;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
-
+@Ignore
 @RunWith(AndroidJUnit4.class)
 public class LaunchScreenshotTests {
 

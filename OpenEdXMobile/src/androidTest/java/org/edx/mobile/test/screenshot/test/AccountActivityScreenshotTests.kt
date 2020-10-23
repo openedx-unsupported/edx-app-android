@@ -9,10 +9,12 @@ import org.edx.mobile.base.MainApplication
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.test.feature.data.TestValues
 import org.edx.mobile.view.AccountActivity
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.TestName
 
-@Ignore
 class AccountActivityScreenshotTests {
 
     @get:Rule
