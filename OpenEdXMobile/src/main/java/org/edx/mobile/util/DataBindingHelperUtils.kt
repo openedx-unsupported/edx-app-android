@@ -2,7 +2,7 @@ package org.edx.mobile.util
 
 import android.content.Context
 import android.text.Spannable
-import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.ImageSpan
 import android.text.style.UnderlineSpan
@@ -42,10 +42,11 @@ class DataBindingHelperUtils {
         }
 
         @JvmStatic
-        @BindingAdapter("binding:setText")
-        fun setText(textView: TextView, text: String?) {
+        @BindingAdapter("binding:spanText")
+        fun setSpanText(textView: TextView, text: String?) {
             if (text.isNullOrBlank().not()) {
-                textView.text = text
+                // set text as SPANNABLE so can add more SPANNABLE text e.g `addDateBadge`
+                textView.setText(SpannableStringBuilder(text), TextView.BufferType.SPANNABLE)
                 textView.visibility = View.VISIBLE
             } else {
                 textView.visibility = View.GONE
@@ -63,11 +64,13 @@ class DataBindingHelperUtils {
         fun addView(linearLayout: LinearLayout, list: ArrayList<CourseDateBlock>, clickListener: OnDateBlockListener) {
             val inflater: LayoutInflater = linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             if (linearLayout.childCount < 2) {
+                // if all the item has the same date type so it means badge is already added to parent
+                val parentBadgeAdded = hasSameDateTypes(list)
                 list.forEach { item ->
                     val childView = inflater.inflate(R.layout.sub_item_course_date_block, null)
 
                     var labelType = ""
-                    val title = SpannableString(item.title)
+                    val title = SpannableStringBuilder(item.title)
 
                     if (item.assignmentType.isNullOrBlank().not()) {
                         labelType = "${item.assignmentType}: "
@@ -78,16 +81,19 @@ class DataBindingHelperUtils {
                     }
 
                     isViewVisible(childView.title, item.title.isNullOrBlank().not())
-                    childView.title.text = TextUtils.concat(labelType, title)
+                    childView.title.setText(TextUtils.concat(labelType, title), TextView.BufferType.SPANNABLE)
                     isViewAccessible(childView.title, item.dateBlockBadge)
 
-                    setText(childView.description, item.description)
+                    setSpanText(childView.description, item.description)
                     isViewAccessible(childView.description, item.dateBlockBadge)
 
                     childView.setOnClickListener {
                         if (item.showLink()) {
                             clickListener.onClick(item.link)
                         }
+                    }
+                    if (!parentBadgeAdded || (item.isToday() && item.dateBlockBadge == CourseDateType.DUE_NEXT)) {
+                        setBadge(childView.title, item.dateBlockBadge, item.isToday(), null)
                     }
                     linearLayout.addView(childView)
                 }
@@ -117,10 +123,15 @@ class DataBindingHelperUtils {
         }
 
         @JvmStatic
-        @BindingAdapter("binding:badgeBackground", "binding:isToday", requireAll = true)
-        fun setBadgeBackground(textView: TextView, type: CourseDateType, isToday: Boolean) {
+        @BindingAdapter("binding:badge", "binding:isToday", "binding:dateBlockItems", requireAll = true)
+        fun setBadge(textView: TextView, type: CourseDateType, isToday: Boolean,
+                     dateBlockItems: ArrayList<CourseDateBlock>?) {
+            if (!hasSameDateTypes(dateBlockItems) && !isToday) {
+                return
+            }
             var courseDateType = type
-            if (isToday) {
+            // check dateBlockItems not null its means we can adding the badge in Parent date view
+            if (isToday && dateBlockItems != null) {
                 courseDateType = CourseDateType.TODAY
             }
             val badgeBackground: Int
@@ -160,22 +171,40 @@ class DataBindingHelperUtils {
                     return
                 }
             }
-            addBadge(textView, type.getTitle(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
+            addDateBadge(textView, courseDateType.getTitle(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
+            if (isToday && type == CourseDateType.COMPLETED) {
+                setBadge(textView, type, false, dateBlockItems)
+            }
+        }
+
+        private fun hasSameDateTypes(dateBlockItems: ArrayList<CourseDateBlock>?): Boolean {
+            if (dateBlockItems != null && dateBlockItems.isEmpty().not() && dateBlockItems.size > 1) {
+                val dateType = dateBlockItems[0].dateBlockBadge
+                for (i in 1 until dateBlockItems.size) {
+                    if (dateBlockItems[i].dateBlockBadge != dateType &&
+                            dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK) {
+                        return false
+                    }
+                }
+            }
+            return true
         }
 
         /**
          * Method to add the date badge at the end in given title with styles attributes
          */
-        private fun addBadge(textView: TextView, title: String, badgeBackground: Int,
-                             textAppearance: Int,
-                             badgeIcon: IconDrawable?,
-                             badgeStrokeColor: Int) {
+        private fun addDateBadge(textView: TextView, title: String, badgeBackground: Int,
+                                 textAppearance: Int,
+                                 badgeIcon: IconDrawable?,
+                                 badgeStrokeColor: Int) {
             // add badge title so can identify the actual badge position
-            val titleWithBadge = textView.text.toString() + "  " + title
-            textView.text = titleWithBadge
+            val titleWithBadge = SpannableStringBuilder((textView.text as Spannable))
+            // add space before badge title
+            titleWithBadge.append("  $title")
+            textView.setText(titleWithBadge, TextView.BufferType.SPANNABLE)
 
             // setup the date badge
-            val string = SpannableString(textView.text)
+            val string = textView.text as Spannable
             val chipDrawable = ChipDrawable.createFromResource(textView.context,
                     R.xml.dates_badge_chip)
             chipDrawable.text = title
@@ -196,7 +225,7 @@ class DataBindingHelperUtils {
             // Find & replace the badge
             string.setSpan(ImageSpan(chipDrawable), textView.text.indexOf(title), length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            textView.text = string
+            textView.setText(string, TextView.BufferType.SPANNABLE)
         }
     }
 }
