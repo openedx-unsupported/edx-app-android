@@ -84,24 +84,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         if (toolbar != null && toolbar instanceof Toolbar) {
             setSupportActionBar((Toolbar) toolbar);
             configureActionBar();
-            setToolBarFont();
             setToolbarShadowBasedOnOS();
-        }
-    }
-
-    /**
-     * Sets the font of any TextView found within the ToolBar.
-     * <br/>
-     * TODO: Remove this function when this issue gets resolved: https://github.com/chrisjenx/Calligraphy/issues/295
-     */
-    private void setToolBarFont() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            final View child = toolbar.getChildAt(i);
-            if (child instanceof TextView) {
-                final TextView textView = (TextView) child;
-                textView.setTypeface(ResourcesCompat.getFont(this, R.font.open_sans_semi_bold));
-            }
         }
     }
 
