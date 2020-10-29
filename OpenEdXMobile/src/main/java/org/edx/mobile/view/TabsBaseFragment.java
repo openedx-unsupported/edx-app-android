@@ -204,20 +204,18 @@ public abstract class TabsBaseFragment extends BaseFragment {
     }
 
     protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
+        // Tabs doesn't support `IconDrawable.colorRes` with material theme so use custom view having `ImageView`
         final IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
         iconDrawable.colorRes(getContext(), TAB_COLOR_SELECTOR_RES);
+        final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
+        final ImageView icon = (ImageView) tabItem.findViewById(R.id.icon);
         if (showTitleInTabs()) {
             iconDrawable.sizeRes(getContext(), R.dimen.edx_small);
-            final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
             final TextView title = (TextView) tabItem.findViewById(R.id.title);
-            final ImageView icon = (ImageView) tabItem.findViewById(R.id.icon);
             title.setText(fragmentItem.getTitle());
-
             title.setTextColor(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
-            icon.setImageDrawable(iconDrawable);
-            tab.setCustomView(tabItem);
         } else {
-            tab.setIcon(iconDrawable);
+            iconDrawable.sizeRes(getContext(), R.dimen.edx_x_large);
             // set tab view ids for the course dash board screen for the automation.
             int id;
             if (fragmentItem.getIcon() == FontAwesomeIcons.fa_list_alt) {
@@ -226,8 +224,10 @@ public abstract class TabsBaseFragment extends BaseFragment {
                 String resourceString = fragmentItem.getTitle().toString().toLowerCase().replace(" ", "_");
                 id = getResources().getIdentifier(resourceString, "id", BuildConfig.APPLICATION_ID);
             }
-            tab.view.setId(id);
+            tabItem.setId(id);
         }
+        icon.setImageDrawable(iconDrawable);
+        tab.setCustomView(tabItem);
         tab.setContentDescription(fragmentItem.getTitle());
     }
 
