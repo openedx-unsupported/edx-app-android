@@ -28,7 +28,7 @@
             android:id="@+id/option_one"
             style="@style/edX.Widget.SegmentedControlSegment.Start"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/radio_tab_height"
             android:layout_weight="1"
             tools:text="Option One"/>
 
@@ -36,7 +36,7 @@
             android:id="@+id/option_two"
             style="@style/edX.Widget.SegmentedControlSegment.End"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/radio_tab_height"
             android:layout_weight="1"
             tools:text="Option Two" />
     </RadioGroup>
