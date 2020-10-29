@@ -111,7 +111,9 @@ data class CourseDates(
                         }
                     }
                 }
-                CourseDateBlock.DateTypes.COURSE_EXPIRED_DATE,
+                CourseDateBlock.DateTypes.COURSE_EXPIRED_DATE ->
+                    dateBlockTag = CourseDateType.COURSE_EXPIRED_DATE
+
                 CourseDateBlock.DateTypes.CERTIFICATE_AVAILABLE_DATE,
                 CourseDateBlock.DateTypes.VERIFIED_UPGRADE_DEADLINE,
                 CourseDateBlock.DateTypes.VERIFICATION_DEADLINE_DATE ->

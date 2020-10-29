@@ -1,18 +1,21 @@
 package org.edx.mobile.util
 
 import android.content.Context
-import android.text.SpannableString
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.ImageSpan
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
+import com.google.android.material.chip.ChipDrawable
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.FontAwesomeIcons
+import com.joanzapata.iconify.internal.ParsingUtil
 import kotlinx.android.synthetic.main.sub_item_course_date_block.view.*
 import org.edx.mobile.R
 import org.edx.mobile.interfaces.OnDateBlockListener
@@ -39,10 +42,11 @@ class DataBindingHelperUtils {
         }
 
         @JvmStatic
-        @BindingAdapter("binding:setText")
-        fun setText(textView: TextView, text: String?) {
+        @BindingAdapter("binding:spanText")
+        fun setSpanText(textView: TextView, text: String?) {
             if (text.isNullOrBlank().not()) {
-                textView.text = text
+                // set text as SPANNABLE so can add more SPANNABLE text e.g `addDateBadge`
+                textView.setText(SpannableStringBuilder(text), TextView.BufferType.SPANNABLE)
                 textView.visibility = View.VISIBLE
             } else {
                 textView.visibility = View.GONE
@@ -60,11 +64,13 @@ class DataBindingHelperUtils {
         fun addView(linearLayout: LinearLayout, list: ArrayList<CourseDateBlock>, clickListener: OnDateBlockListener) {
             val inflater: LayoutInflater = linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             if (linearLayout.childCount < 2) {
+                // if all the item has the same date type so it means badge is already added in parent view
+                val parentBadgeAdded = hasSameDateTypes(list)
                 list.forEach { item ->
                     val childView = inflater.inflate(R.layout.sub_item_course_date_block, null)
 
                     var labelType = ""
-                    val title = SpannableString(item.title)
+                    val title = SpannableStringBuilder(item.title)
 
                     if (item.assignmentType.isNullOrBlank().not()) {
                         labelType = "${item.assignmentType}: "
@@ -74,17 +80,21 @@ class DataBindingHelperUtils {
                         title.setSpan(UnderlineSpan(), 0, title.length, 0)
                     }
 
-                    isViewVisible(childView.title, item.title.isNullOrBlank().not())
-                    childView.title.text = TextUtils.concat(labelType, title)
+                    if (item.title.isNotBlank()) childView.title.visibility = View.VISIBLE
+                    childView.title.setText(TextUtils.concat(labelType, title), TextView.BufferType.SPANNABLE)
                     isViewAccessible(childView.title, item.dateBlockBadge)
 
-                    setText(childView.description, item.description)
+                    setSpanText(childView.description, item.description)
                     isViewAccessible(childView.description, item.dateBlockBadge)
 
                     childView.setOnClickListener {
                         if (item.showLink()) {
                             clickListener.onClick(item.link)
                         }
+                    }
+                    if (!parentBadgeAdded) {
+                        // Set update badge with sub date items
+                        setBadge(childView.title, item, null, true)
                     }
                     linearLayout.addView(childView)
                 }
@@ -114,47 +124,121 @@ class DataBindingHelperUtils {
         }
 
         @JvmStatic
-        @BindingAdapter("binding:badgeBackground", "binding:isToday", requireAll = true)
-        fun setBadgeBackground(textView: TextView, type: CourseDateType, isToday: Boolean) {
-            if (isToday || type == CourseDateType.TODAY) {
-                textView.text = CourseDateType.TODAY.getTitle()
-                textView.setTextColor(ContextCompat.getColor(textView.context, R.color.course_date_badge_black))
-                textView.background = ContextCompat.getDrawable(textView.context, R.drawable.yellow_roundedbg)
-            } else {
-                setText(textView, type.getTitle())
-                when (type) {
-                    CourseDateType.VERIFIED_ONLY -> {
-                        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.course_date_badge_white))
-                        textView.background = ContextCompat.getDrawable(textView.context, R.drawable.black_roundedbg)
-                        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                                IconDrawable(textView.context, FontAwesomeIcons.fa_lock)
-                                        .sizeRes(textView.context, R.dimen.small_icon_size)
-                                        .colorRes(textView.context, R.color.white),
-                                null, null, null
-                        )
-                    }
-                    CourseDateType.COMPLETED -> {
-                        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.course_date_badge_gray))
-                        textView.background = ContextCompat.getDrawable(textView.context, R.drawable.light_silver_roundedbg)
-                    }
-                    CourseDateType.PAST_DUE -> {
-                        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.course_date_badge_gray))
-                        textView.background = ContextCompat.getDrawable(textView.context, R.drawable.light_gray_roundedbg)
-                    }
-                    CourseDateType.DUE_NEXT -> {
-                        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.course_date_badge_white))
-                        textView.background = ContextCompat.getDrawable(textView.context, R.drawable.dark_gray_roundedbg)
-                    }
-                    CourseDateType.NOT_YET_RELEASED -> {
-                        textView.setTextColor(ContextCompat.getColor(textView.context, R.color.course_date_badge_silver))
-                        textView.background = ContextCompat.getDrawable(textView.context, R.drawable.silver_border_transparent_roundedbg)
-                    }
-                    else -> {
-                        textView.visibility = View.INVISIBLE
+        @BindingAdapter("binding:badge", "binding:dateBlockItems", "binding:badgeAdded", requireAll = false)
+        fun setBadge(textView: TextView, dateBlock: CourseDateBlock,
+                     dateBlockItems: ArrayList<CourseDateBlock>?,
+                     parentBadgeAdded: Boolean = false) {
+            // Check Today's badge is already added or not
+            if (dateBlock.isToday() && !parentBadgeAdded) {
+                createBadge(textView, CourseDateType.TODAY)
+            }
+            // add date badge at second position OR sub date item other then Today's badge
+            if (hasSameDateTypes(dateBlockItems) && !dateBlock.isDateTypeToday()) {
+                createBadge(textView, dateBlock.dateBlockBadge)
+            }
+        }
+
+        /**
+         * Method to create the Date badge as per given DateType
+         */
+        private fun createBadge(textView: TextView, courseDateType: CourseDateType) {
+            val badgeBackground: Int
+            val textAppearance: Int
+            var badgeStrokeColor: Int = -1
+            var badgeIcon: IconDrawable? = null
+            when (courseDateType) {
+                CourseDateType.TODAY -> {
+                    badgeBackground = R.color.course_today_date
+                    textAppearance = R.style.today_date_badge_text_appearance
+                }
+                CourseDateType.VERIFIED_ONLY -> {
+                    badgeBackground = R.color.black
+                    textAppearance = R.style.verified_only_badge_text_appearance
+                    badgeIcon = IconDrawable(textView.context, FontAwesomeIcons.fa_lock)
+                            .sizeRes(textView.context, R.dimen.small_icon_size)
+                            .colorRes(textView.context, R.color.white)
+                }
+                CourseDateType.COMPLETED -> {
+                    badgeBackground = R.color.tag_light_silver
+                    textAppearance = R.style.completed_badge_text_appearance
+                }
+                CourseDateType.PAST_DUE -> {
+                    badgeBackground = R.color.bullet_light_gray
+                    textAppearance = R.style.past_due_badge_text_appearance
+                }
+                CourseDateType.DUE_NEXT -> {
+                    badgeBackground = R.color.bullet_dark_gray
+                    textAppearance = R.style.due_next_badge_text_appearance
+                }
+                CourseDateType.NOT_YET_RELEASED -> {
+                    badgeBackground = android.R.color.transparent
+                    textAppearance = R.style.not_yet_released_badge_text_appearance
+                    badgeStrokeColor = R.color.tag_light_silver_border
+                }
+                else -> {
+                    return
+                }
+            }
+            addDateBadge(textView, courseDateType.getTitle(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
+        }
+
+        /**
+         * Method to check that all Date Items have same badge status or not
+         *
+         * @return true if all the date items have update badge status else false
+         * */
+        private fun hasSameDateTypes(dateBlockItems: ArrayList<CourseDateBlock>?): Boolean {
+            if (dateBlockItems != null && dateBlockItems.isNotEmpty() && dateBlockItems.size > 1) {
+                val dateType = dateBlockItems.first().dateBlockBadge
+                for (i in 1 until dateBlockItems.size) {
+                    if (dateBlockItems[i].dateBlockBadge != dateType &&
+                            dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK) {
+                        return false
                     }
                 }
             }
-            textView.visibility = View.VISIBLE
+            return true
+        }
+
+        /**
+         * Method to add the date badge at the end in given title with styles attributes
+         */
+        private fun addDateBadge(textView: TextView, title: String, badgeBackground: Int,
+                                 textAppearance: Int,
+                                 badgeIcon: IconDrawable?,
+                                 badgeStrokeColor: Int) {
+            // add badge title so can identify the actual badge position
+            val titleWithBadge = SpannableStringBuilder((textView.text as Spannable))
+            // add space before badge title
+            titleWithBadge.append("  $title")
+            textView.setText(titleWithBadge, TextView.BufferType.SPANNABLE)
+
+            // setup the date badge
+            val string = textView.text as Spannable
+            val chipDrawable = ChipDrawable.createFromResource(textView.context,
+                    R.xml.dates_badge_chip)
+            chipDrawable.text = title
+            chipDrawable.setChipBackgroundColorResource(badgeBackground)
+            chipDrawable.setTextAppearanceResource(textAppearance)
+            if (badgeIcon != null) {
+                chipDrawable.chipIcon = badgeIcon
+                chipDrawable.chipIconSize = textView.context.resources.getDimension(R.dimen.small_icon_size)
+                chipDrawable.setIconStartPaddingResource(R.dimen.dates_badge_icon_start_padding)
+                chipDrawable.setIconEndPaddingResource(R.dimen.dates_badge_icon_end_padding)
+            }
+            if (badgeStrokeColor != -1) {
+                chipDrawable.setChipStrokeColorResource(badgeStrokeColor)
+                chipDrawable.strokeWidth = ParsingUtil.dpToPx(textView.context, 1.0F)
+            }
+            // Reduce the chip height and vertical margins to match the design.
+            chipDrawable.setBounds(0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
+                    chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt())
+
+            val length = textView.text.toString().length
+            // Find & replace the badge title with actual badge drawable
+            string.setSpan(ImageSpan(chipDrawable), textView.text.indexOf(title), length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            textView.setText(string, TextView.BufferType.SPANNABLE)
         }
     }
 }

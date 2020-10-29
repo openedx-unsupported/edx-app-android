@@ -4,7 +4,8 @@ package org.edx.mobile.util
  * This enum defines the Date type of Course Dates
  */
 enum class CourseDateType {
-    TODAY, BLANK, VERIFIED_ONLY, COMPLETED, PAST_DUE, DUE_NEXT, NOT_YET_RELEASED;
+    TODAY, BLANK, VERIFIED_ONLY, COMPLETED, PAST_DUE, DUE_NEXT, NOT_YET_RELEASED,
+    COURSE_EXPIRED_DATE;
 
     fun getTitle(): String {
         return when (this) {

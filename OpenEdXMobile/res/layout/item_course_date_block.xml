@@ -26,7 +26,6 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
-
         <View
             android:id="@+id/line_above_dot"
             android:layout_width="@dimen/width_hairline"
@@ -36,6 +35,16 @@
             app:layout_constraintEnd_toEndOf="@+id/bullet_today"
             app:layout_constraintStart_toStartOf="@+id/bullet_today"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/line_below_dot"
+            android:layout_width="@dimen/width_hairline"
+            android:layout_height="0dp"
+            android:background="@drawable/black_line_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/date_info_container"
+            app:layout_constraintEnd_toEndOf="@+id/bullet_today"
+            app:layout_constraintStart_toStartOf="@+id/bullet_today"
+            app:layout_constraintTop_toBottomOf="@+id/bullet" />
 
         <View
             android:id="@+id/bullet"
@@ -65,16 +74,6 @@
             tools:ignore="ContentDescription"
             tools:visibility="visible" />
 
-        <View
-            android:id="@+id/line_below_dot"
-            android:layout_width="@dimen/width_hairline"
-            android:layout_height="0dp"
-            android:background="@drawable/black_line_vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/date_info_container"
-            app:layout_constraintEnd_toEndOf="@+id/bullet_today"
-            app:layout_constraintStart_toStartOf="@+id/bullet_today"
-            app:layout_constraintTop_toBottomOf="@+id/bullet" />
-
         <LinearLayout
             android:id="@+id/date_info_container"
             android:layout_width="0dp"
@@ -88,42 +87,18 @@
             binding:addView="@{dateBlockList}"
             binding:clickListener="@{dateItemListener}">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/date"
+                fontPath="fonts/OpenSans-Semibold.ttf"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/date"
-                    fontPath="fonts/OpenSans-Semibold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{dateBlock.getFormattedDate()}"
-                    android:textColor="@color/switch_text_color"
-                    android:textSize="@dimen/edx_large"
-                    tools:text="Wed, Aug 12, 2020" />
-
-                <TextView
-                    android:id="@+id/date_tag"
-                    fontPath="fonts/OpenSans-SemiboldItalic.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/edx_half_margin"
-                    android:layout_marginBottom="@dimen/widget_margin_half"
-                    android:drawablePadding="@dimen/widget_margin_half"
-                    android:paddingStart="@dimen/edx_half_margin"
-                    android:paddingTop="3dp"
-                    android:paddingEnd="@dimen/edx_half_margin"
-                    android:paddingBottom="3dp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/edx_small"
-                    binding:badgeBackground="@{dateBlock.dateBlockBadge}"
-                    binding:isToday="@{dateBlock.today}"
-                    tools:background="@drawable/yellow_roundedbg"
-                    tools:text="Today"
-                    tools:visibility="visible" />
-
-            </LinearLayout>
+                android:lineSpacingMultiplier="@dimen/course_date_title_line_spacing"
+                android:textColor="@color/switch_text_color"
+                android:textSize="@dimen/edx_large"
+                binding:badge="@{dateBlock}"
+                binding:dateBlockItems="@{dateBlockList}"
+                binding:spanText="@{dateBlock.getFormattedDate()}"
+                tools:text="Wed, Aug 12, 2020" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

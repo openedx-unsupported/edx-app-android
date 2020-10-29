@@ -266,5 +266,11 @@
     <dimen name="width_hairline">0.8dp</dimen>
     <dimen name="date_block_badge_corner_margin">6dp</dimen>
     <dimen name="date_block_half_x_margin">10dp</dimen>
+    <dimen name="dates_badge_end_padding">4dp</dimen>
+    <dimen name="dates_badge_start_padding">0dp</dimen>
+    <dimen name="dates_badge_icon_start_padding">4dp</dimen>
+    <dimen name="dates_badge_icon_end_padding">-4dp</dimen>
+    <item name="course_date_title_line_spacing" type="dimen" format="float">1.25</item>
+    <item name="course_date_desc_line_spacing" type="dimen" format="float">1.125</item>
 
 </resources>

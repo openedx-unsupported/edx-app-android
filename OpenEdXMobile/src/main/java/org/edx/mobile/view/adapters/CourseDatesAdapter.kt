@@ -53,14 +53,13 @@ class CourseDatesAdapter(private val data: LinkedHashMap<String, ArrayList<Cours
                 holder.binding.lineBelowDot.visibility = View.INVISIBLE
             }
             val key = data.keys.toList()[position]
-            holder.bind(data[key]?.first(), data[key])
+            holder.bind(data[key])
         }
     }
 
     class CourseDateHolder(var binding: ItemCourseDateBlockBinding, private val onDateItemClick: OnDateBlockListener) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: CourseDateBlock?, list: ArrayList<CourseDateBlock>?) {
-            binding.dateBlock = item
-            binding.bulletToday.bringToFront()
+        fun bind(list: ArrayList<CourseDateBlock>?) {
+            binding.dateBlock = list?.first()
             binding.dateBlockList = if (list.isNullOrEmpty().not()) list else arrayListOf()
             binding.dateItemListener = onDateItemClick
         }
