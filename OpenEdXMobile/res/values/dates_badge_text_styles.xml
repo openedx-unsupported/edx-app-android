@@ -3,8 +3,7 @@
 
     <style name="dates_badge_text_appearance">
         <item name="android:textSize">@dimen/edx_small</item>
-        <item name="android:textStyle">bold|italic</item>
-        <item name="fontFamily">@font/open_sans_semi_bold_italic</item>
+        <item name="android:fontFamily">@font/open_sans_semi_bold_italic</item>
     </style>
 
     <style name="today_date_badge_text_appearance" parent="dates_badge_text_appearance">
