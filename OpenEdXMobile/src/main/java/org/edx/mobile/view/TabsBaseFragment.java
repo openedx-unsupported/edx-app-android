@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -217,6 +218,15 @@ public abstract class TabsBaseFragment extends BaseFragment {
             tab.setCustomView(tabItem);
         } else {
             tab.setIcon(iconDrawable);
+            // set tab view ids for the course dash board screen for the automation.
+            int id;
+            if (fragmentItem.getIcon() == FontAwesomeIcons.fa_list_alt) {
+                id = R.id.course_outline;
+            } else {
+                String resourceString = fragmentItem.getTitle().toString().toLowerCase().replace(" ", "_");
+                id = getResources().getIdentifier(resourceString, "id", BuildConfig.APPLICATION_ID);
+            }
+            tab.view.setId(id);
         }
         tab.setContentDescription(fragmentItem.getTitle());
     }
