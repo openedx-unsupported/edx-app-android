@@ -42,6 +42,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.LayoutCourseDatesBannerBinding;
+import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
@@ -52,6 +53,7 @@ import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
@@ -75,12 +77,12 @@ import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.ConfigUtil;
+import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
-import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
 
@@ -217,10 +219,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         courseDateViewModel.getResetCourseDates().observe(this, resetCourseDates -> {
             if (resetCourseDates != null) {
-                AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
-                        getString(R.string.course_dates_reset_successful),
-                        null)
-                        .show(getChildFragmentManager(), null);
+                showShiftDateSnackBar(true);
             }
         });
 
@@ -237,8 +236,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             initDatesBanner(null);
                             break;
                         case ErrorMessage.COURSE_RESET_DATES_CODE:
-                            AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
-                                    getString(R.string.course_dates_reset_unsuccessful), null);
+                            showShiftDateSnackBar(false);
                             break;
                     }
                 }
@@ -470,43 +468,30 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private void initDatesBanner(CourseBannerInfoModel courseBannerInfo) {
         LayoutCourseDatesBannerBinding bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
         if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
-            String buttonText = "";
-            // Currently we are only handling RESET_DATES case,
-            // TODO UPGRADE_TO_GRADED & UPGRADE_TO_RESET will be enable once we are allowed to do payment through mobile
-            switch (courseBannerInfo.getDatesBannerInfo().getCourseBannerType()) {
-                case UPGRADE_TO_GRADED:
-                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_banner_upgrade_to_graded));
-                    break;
-                case UPGRADE_TO_RESET:
-                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_banner_upgrade_to_reset));
-                    break;
-                case RESET_DATES:
-                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_banner_reset_date));
-                    buttonText = getContextOrThrow().getString(R.string.course_dates_banner_reset_date_button);
-                    break;
-                case INFO_BANNER:
-                    bannerViewBinding.bannerInfo.setText(getText(R.string.course_dates_info_banner));
-                    break;
-                case BLANK:
-                    listView.removeHeaderView(bannerViewBinding.getRoot());
-                    isBannerVisible = false;
-                    break;
-            }
+            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(), courseBannerInfo, v -> {
+                courseDateViewModel.resetCourseDatesBanner(courseData.getCourse().getId());
+            });
 
             if (listView.getHeaderViewsCount() == 0 && !TextUtils.isEmpty(bannerViewBinding.bannerInfo.getText())) {
-                if (!TextUtils.isEmpty(buttonText)) {
-                    bannerViewBinding.btnShiftDates.setText(buttonText);
-                    bannerViewBinding.btnShiftDates.setVisibility(View.VISIBLE);
-                    bannerViewBinding.btnShiftDates.setOnClickListener(v -> {
-                        courseDateViewModel.resetCourseDatesBanner(courseData.getCourse().getId());
-                    });
-                }
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;
             }
         } else {
             listView.removeHeaderView(bannerViewBinding.getRoot());
             isBannerVisible = false;
+        }
+    }
+
+    private void showShiftDateSnackBar(boolean isSuccess) {
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(listView);
+        if (isSuccess) {
+            snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
+                    null, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
+                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, courseData.getCourse().getId(),
+                            null, null, false, Screen.COURSE_DATES));
+        } else {
+            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
+                    0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
     }
 

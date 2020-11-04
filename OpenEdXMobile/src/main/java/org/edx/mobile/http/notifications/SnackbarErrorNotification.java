@@ -16,8 +16,6 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.util.NetworkUtil;
 
-import static com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE;
-
 /**
  * A persistent Snackbar notification error message.
  */
@@ -33,6 +31,8 @@ public class SnackbarErrorNotification extends ErrorNotification {
      */
     @Nullable
     private Snackbar snackbar = null;
+
+    public static int COURSE_DATE_MESSAGE_DURATION = 5000;
 
     /**
      * Construct a new instance of the notification.
@@ -54,12 +54,28 @@ public class SnackbarErrorNotification extends ErrorNotification {
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
+    public void showError(int errorResId, @Nullable Icon icon, int actionTextResId, @Nullable View.OnClickListener actionListener) {
+        showError(errorResId, icon, actionTextResId, Snackbar.LENGTH_INDEFINITE, actionListener);
+    }
+
+    /**
+     * Show the error notification as a persistent Snackbar, according to the provided details.
+     *
+     * @param errorResId      The resource ID of the error message.
+     * @param icon            The error icon. This is ignored here, since Snackbar doesn't really support
+     *                        icons.
+     * @param actionTextResId The resource ID of the action button text.
+     * @param duration        The duration of the error message visibility
+     * @param actionListener  The callback to be invoked when the action button is clicked.
+     */
+    @Override
     public void showError(@StringRes final int errorResId,
                           @Nullable final Icon icon,
                           @StringRes final int actionTextResId,
+                          final int duration,
                           @Nullable final View.OnClickListener actionListener) {
         if (snackbar == null) {
-            snackbar = Snackbar.make(view, errorResId, LENGTH_INDEFINITE);
+            snackbar = Snackbar.make(view, errorResId, duration);
             if (actionTextResId != 0) {
                 // SnackBar automatically dimisses when the action item is pressed.
                 // This workaround has been implemented to by pass that behaviour.
