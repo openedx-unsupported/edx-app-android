@@ -1,23 +1,36 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.edx.mobile.R;
+import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.event.UnitLoadedEvent;
+import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.exception.ErrorMessage;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
+import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+import org.edx.mobile.viewModel.CourseDateViewModel;
+import org.edx.mobile.viewModel.ViewModelFactory;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
@@ -27,9 +40,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @InjectView(R.id.auth_webview)
     private AuthenticatedWebView authWebView;
 
+    @InjectView(R.id.info_banner)
+    private LinearLayout infoBanner;
+
     @InjectView(R.id.swipe_container)
     protected SwipeRefreshLayout swipeContainer;
 
+    private CourseDateViewModel courseDateViewModel;
     private PreLoadingListener preloadingListener;
     private boolean isPageLoading = false;
 
@@ -67,6 +84,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             @Override
             public void onPageFinished() {
                 if (authWebView.isPageLoaded()) {
+                    fetchDateBannerInfo();
                     if (getUserVisibleHint()) {
                         preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADED);
                     }
@@ -93,6 +111,75 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         // Only load the unit if it is currently visible to user or the visible unit has finished loading
         if (getUserVisibleHint() || preloadingListener.isMainUnitLoaded()) {
             loadUnit();
+        }
+        if (unit.getType() == BlockType.PROBLEM) {
+            initObserver();
+        }
+    }
+
+    private void fetchDateBannerInfo() {
+        if (unit.getType() == BlockType.PROBLEM) {
+            courseDateViewModel.fetchCourseDatesBannerInfo(unit.getCourseId(), true);
+        }
+    }
+
+    private void initInfoBanner(CourseBannerInfoModel courseBannerInfo) {
+        if (courseBannerInfo == null) {
+            infoBanner.setVisibility(View.GONE);
+            return;
+        }
+        CourseDateUtil.INSTANCE.setupCourseDatesBanner(infoBanner, courseBannerInfo,
+                v -> courseDateViewModel.resetCourseDatesBanner(unit.getCourseId()));
+    }
+
+    private void initObserver() {
+        courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
+
+        courseDateViewModel.getBannerInfo().observe(this, this::initInfoBanner);
+
+        courseDateViewModel.getShowLoader().observe(this, flag ->
+                preloadingListener.setLoadingState(flag ?
+                        PreLoadingListener.State.MAIN_UNIT_LOADING :
+                        PreLoadingListener.State.MAIN_UNIT_LOADED));
+
+        courseDateViewModel.getResetCourseDates().observe(this, resetCourseDates -> {
+            if (resetCourseDates != null) {
+                showShiftDateSnackBar(true);
+                authWebView.loadUrl(true, unit.getBlockUrl());
+            }
+        });
+
+        courseDateViewModel.getErrorMessage().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                if (errorMessage.getThrowable() instanceof AuthException || errorMessage.getThrowable() instanceof HttpStatusException &&
+                        ((HttpStatusException) errorMessage.getThrowable()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                    environment.getRouter().forceLogout(getContextOrThrow(),
+                            environment.getAnalyticsRegistry(),
+                            environment.getNotificationDelegate());
+                } else {
+                    switch (errorMessage.getErrorCode()) {
+                        case ErrorMessage.BANNER_INFO_CODE:
+                            initInfoBanner(null);
+                            break;
+                        case ErrorMessage.COURSE_RESET_DATES_CODE:
+                            showShiftDateSnackBar(false);
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    private void showShiftDateSnackBar(boolean isSuccess) {
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(authWebView);
+        if (isSuccess) {
+            snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
+                    null, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
+                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, unit.getCourseId(),
+                            null, null, false, Screen.COURSE_DATES));
+        } else {
+            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
+                    0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
     }
 

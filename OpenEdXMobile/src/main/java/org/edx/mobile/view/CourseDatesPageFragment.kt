@@ -15,13 +15,13 @@ import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
+import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.course.CourseBannerInfoModel
-import org.edx.mobile.model.course.CourseBannerType
 import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.CourseDateUtil
 import org.edx.mobile.util.UiUtil
 import org.edx.mobile.view.adapters.CourseDatesAdapter
-import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
 import org.edx.mobile.viewModel.ViewModelFactory
 import javax.inject.Inject
@@ -99,10 +99,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
 
         viewModel.resetCourseDates.observe(this, Observer { resetCourseDates ->
             if (resetCourseDates != null) {
-                AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
-                        getString(R.string.course_dates_reset_successful),
-                        null)
-                        .show(childFragmentManager, null)
+                showShiftDateSnackBar(true)
             }
         })
 
@@ -126,8 +123,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                         ErrorMessage.BANNER_INFO_CODE ->
                             initDatesBanner(null)
                         ErrorMessage.COURSE_RESET_DATES_CODE ->
-                            AlertDialogFragment.newInstance(getString(R.string.course_dates_reset_title),
-                                    getString(R.string.course_dates_reset_unsuccessful), null)
+                            showShiftDateSnackBar(false)
                     }
                 }
             }
@@ -144,28 +140,18 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
      * @param courseBannerInfo object of course deadline info
      */
     private fun initDatesBanner(courseBannerInfo: CourseBannerInfoModel?) {
-        var buttonText: String? = ""
-        when (courseBannerInfo?.datesBannerInfo?.getCourseBannerType()) {
-            CourseBannerType.UPGRADE_TO_GRADED -> binding.banner.bannerInfo.text = getText(R.string.course_dates_banner_upgrade_to_graded)
-            CourseBannerType.UPGRADE_TO_RESET -> binding.banner.bannerInfo.text = getText(R.string.course_dates_banner_upgrade_to_reset)
-            CourseBannerType.RESET_DATES -> {
-                binding.banner.bannerInfo.text = getText(R.string.course_dates_banner_reset_date)
-                buttonText = contextOrThrow.getString(R.string.course_dates_banner_reset_date_button)
-            }
-            CourseBannerType.INFO_BANNER -> binding.banner.bannerInfo.text = getText(R.string.course_dates_info_banner)
-            CourseBannerType.BLANK -> {
-                binding.banner.containerLayout.visibility = View.GONE
-            }
+        if (courseBannerInfo == null) {
+            binding.banner.containerLayout.visibility = View.GONE
+            return
         }
-        if (binding.banner.bannerInfo.text.isNullOrBlank().not()) {
-            if (buttonText.isNullOrBlank().not()) {
-                binding.banner.btnShiftDates.text = buttonText
-                binding.banner.btnShiftDates.visibility = View.VISIBLE
-                binding.banner.btnShiftDates.setOnClickListener {
-                    viewModel.resetCourseDatesBanner(getStringArgument(Router.EXTRA_COURSE_ID))
-                }
-            }
-            binding.banner.containerLayout.visibility = View.VISIBLE
-        }
+        CourseDateUtil.setupCourseDatesBanner(binding.banner.root, courseBannerInfo,
+                View.OnClickListener { viewModel.resetCourseDatesBanner(getStringArgument(Router.EXTRA_COURSE_ID)) })
+    }
+
+    private fun showShiftDateSnackBar(isSuccess: Boolean) {
+        val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
+        snackbarErrorNotification.showError(
+                if (isSuccess) R.string.assessment_shift_dates_success_msg else R.string.course_dates_reset_unsuccessful,
+                null, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null)
     }
 }

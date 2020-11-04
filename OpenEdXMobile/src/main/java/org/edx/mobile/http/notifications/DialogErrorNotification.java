@@ -57,4 +57,19 @@ public class DialogErrorNotification extends ErrorNotification {
             ).show(baseFragment.getChildFragmentManager(), null);
         }
     }
+
+    /**
+     * Show the error dialog according to the provided details.
+     *
+     * @param errorResId      The resource ID of the error message.
+     * @param icon            The error icon.
+     * @param actionTextResId The resource ID of the action button text.
+     * @param duration        The duration of the error message visibility
+     * @param actionListener  The callback to be invoked when the action button is clicked.
+     */
+    @Override
+    public void showError(int errorResId, @Nullable Icon icon, int actionTextResId, int duration, @Nullable View.OnClickListener actionListener) {
+        // Ignoring the duration as it won't be use in Dialog
+        showError(errorResId, icon, actionTextResId, actionListener);
+    }
 }
