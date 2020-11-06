@@ -13,6 +13,7 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 import com.segment.analytics.android.integrations.firebase.FirebaseIntegration;
+import com.segment.analytics.integrations.BasePayload;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -48,7 +49,24 @@ public class SegmentAnalytics implements Analytics {
                 .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE);
         if (config.getFirebaseConfig().isAnalyticsSourceSegment()) {
             // If Segment & Firebase Analytics are enabled, we'll use Segment's Firebase integration
-            builder = builder.use(FirebaseIntegration.FACTORY);
+            builder = builder.use(FirebaseIntegration.FACTORY)
+                    // Ref: https://segment.com/docs/connections/sources/catalog/libraries/mobile/android/middleware/
+                    .useSourceMiddleware(chain -> {
+                        BasePayload newPayload = chain.payload().toBuilder().build();
+                        // remove special char from `Name and Event Name` that are not support by Firebase
+                        if (newPayload.get(Keys.NAME) instanceof String) {
+                            String name = String.valueOf(newPayload.get(Keys.NAME));
+                            newPayload.putValue(Keys.NAME, Analytics.Util.removeUnSupportedCharacters(name));
+                        }
+                        if (newPayload.get(Keys.EVENT) instanceof String) {
+                            String name = String.valueOf(newPayload.get(Keys.EVENT));
+                            newPayload.putValue(Keys.EVENT, Analytics.Util.removeUnSupportedCharacters(name));
+                        }
+                        if (newPayload.get(Keys.PROPERTIES) instanceof Properties) {
+                            newPayload.put(Keys.PROPERTIES, Analytics.Util.formatFirebaseAnalyticsData(newPayload.get(Keys.PROPERTIES)));
+                        }
+                        chain.proceed(newPayload);
+                    });
         }
         tracker = builder.build();
     }

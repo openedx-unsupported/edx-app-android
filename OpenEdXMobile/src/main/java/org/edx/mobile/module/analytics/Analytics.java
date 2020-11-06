@@ -3,6 +3,8 @@ package org.edx.mobile.module.analytics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.segment.analytics.Properties;
+
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
@@ -502,6 +504,9 @@ public interface Analytics {
         String AA_EXPERIMENT = "aa_experiment";
         // Video Play Medium
         String PLAY_MEDIUM = "play_medium";
+        // Used to access the analytics data in middle ware
+        String EVENT = "event";
+        String PROPERTIES = "properties";
     }
 
     interface Values {
@@ -746,6 +751,35 @@ public interface Analytics {
                 default:
                     return "other";
             }
+        }
+
+        /**
+         * Method to remove the un-supported characters by the Firebase Analytics from the
+         * given string.
+         */
+        public static String removeUnSupportedCharacters(String value) {
+            return value.replaceAll(":", "_")
+                    .replaceAll("-", "_")
+                    .replaceAll("__", "_");
+        }
+
+        /**
+         * Method used to format the Analytics data as per firebase recommendations
+         * Ref: https://stackoverflow.com/questions/44421234/firebase-analytics-custom-list-of-values
+         */
+        public static Properties formatFirebaseAnalyticsData(Object object) {
+            Properties properties = (Properties) object;
+            Properties newProperties = new Properties();
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                String key = entry.getKey();
+                String entryValueString = String.valueOf(entry.getValue());
+                if (entryValueString.length() > 100) {
+                    // Truncate to first 100 characters
+                    entryValueString = entryValueString.trim().substring(0, 100);
+                }
+                newProperties.put(Analytics.Util.removeUnSupportedCharacters(key), entryValueString);
+            }
+            return newProperties;
         }
     }
 
