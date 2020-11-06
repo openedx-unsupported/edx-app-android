@@ -4,4 +4,11 @@
     <item name="option_courses" type="id" />
     <item name="option_programs" type="id" />
     <item name="option_degrees" type="id" />
+
+    <!--  Course Outline screen tabs ids-->
+    <item name="course_outline" type="id" />
+    <item name="videos" type="id" />
+    <item name="discussion" type="id" />
+    <item name="important_dates" type="id" />
+    <item name="resources" type="id" />
 </resources>
