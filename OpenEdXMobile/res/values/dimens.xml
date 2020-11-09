@@ -244,6 +244,7 @@
     <dimen name="whats_new_image_horizontal_margin">25dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>
     <dimen name="container_padding">12dp</dimen>
+    <dimen name="radio_tab_height">32dp</dimen>
 
     <!-- Social platforms -->
     <dimen name="social_btn_radius">3dp</dimen>
@@ -272,8 +273,5 @@
     <dimen name="dates_badge_icon_end_padding">-4dp</dimen>
     <item name="course_date_title_line_spacing" type="dimen" format="float">1.25</item>
     <item name="course_date_desc_line_spacing" type="dimen" format="float">1.125</item>
-
-    <!-- Course Discovery  -->
-    <dimen name="radio_tab_height">32dp</dimen>
 
 </resources>

@@ -26,7 +26,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
-import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.AppUpdatedEvent;

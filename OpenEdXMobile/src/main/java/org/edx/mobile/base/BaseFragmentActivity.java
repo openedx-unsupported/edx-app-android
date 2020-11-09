@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.appbar.AppBarLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
 
 import android.view.MenuItem;
 import android.view.View;

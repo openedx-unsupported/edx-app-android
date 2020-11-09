@@ -20,7 +20,7 @@
         android:textSize="@dimen/edx_base"
         tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback."/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_enroll_now"
         style="@style/edX.Widget.EnrollButton"
         android:layout_width="match_parent"
