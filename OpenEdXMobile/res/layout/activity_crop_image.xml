@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cancel"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
@@ -40,7 +40,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/edx_base" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/save"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"

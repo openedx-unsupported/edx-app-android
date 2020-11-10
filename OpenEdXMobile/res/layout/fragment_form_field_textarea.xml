@@ -37,7 +37,7 @@
         android:layout_marginTop="@dimen/edx_margin"
         android:contentDescription="@string/edit_user_profile_textarea_submit_button">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/edX.Widget.CreationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

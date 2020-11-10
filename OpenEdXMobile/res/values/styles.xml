@@ -45,6 +45,7 @@
         </item>
         <item name="mediaRouteTheme">@style/MediaRouterTheme</item>
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
+        <item name="android:fontFamily">@font/open_sans_regular</item>
     </style>
 
     <!-- Customize Cast Button -->
@@ -67,7 +68,7 @@
     <style name="CastMiniControllerTitle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/toolbar_controls_color</item>
         <item name="android:textSize">@dimen/edx_base</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+        <item name="android:fontFamily">@font/open_sans_semi_bold</item>
     </style>
 
     <style name="CastExpandedControllerTheme" parent="CastExpandedController">
@@ -121,15 +122,15 @@
 
     <style name="AppTheme.ToolBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/toolbar_controls_color</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+        <item name="android:fontFamily">@font/open_sans_semi_bold</item>
     </style>
 
     <style name="AppTheme.ToolBar.SubTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textColor">@color/toolbar_controls_color</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+        <item name="android:fontFamily">@font/open_sans_semi_bold</item>
     </style>
 
-    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AppTheme.Dialog.Alert" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/dialog_button_selector</item>
@@ -139,7 +140,7 @@
     <style name="MyActionBarButton" parent="Widget.AppCompat.ActionButton">
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/edx_base</item>
-        <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
+        <item name="android:fontFamily">@font/open_sans_semi_bold</item>
     </style>
 
     <style name="MyMenuTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">

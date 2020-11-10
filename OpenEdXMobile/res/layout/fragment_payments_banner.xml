@@ -42,7 +42,7 @@
 
             <TextView
                 style="@style/edX.Widget.Button"
-                fontPath="fonts/OpenSans-Semibold.ttf"
+                android:fontFamily="@font/open_sans_semi_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/upgrade_to_verified_today_title"

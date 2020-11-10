@@ -26,7 +26,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
-import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.AppUpdatedEvent;
@@ -60,7 +59,6 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import io.branch.referral.Branch;
 import roboguice.RoboGuice;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * This class initializes the modules of the app based on the configuration.
@@ -146,12 +144,6 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // Register Font Awesome module in android-iconify library
         Iconify.with(new FontAwesomeModule());
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/OpenSans-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
 
         // Init Branch
         if (config.getBranchConfig().isEnabled()) {

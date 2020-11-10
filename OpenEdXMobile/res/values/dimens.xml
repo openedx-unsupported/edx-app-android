@@ -244,6 +244,7 @@
     <dimen name="whats_new_image_horizontal_margin">25dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>
     <dimen name="container_padding">12dp</dimen>
+    <dimen name="radio_tab_height">32dp</dimen>
 
     <!-- Social platforms -->
     <dimen name="social_btn_radius">3dp</dimen>

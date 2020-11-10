@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
             style="@style/bold_text"
             android:layout_width="0dp"
@@ -89,7 +89,7 @@
             android:layout_height="match_parent"
             android:background="@color/grey_act_background" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/positiveButton"
             style="@style/bold_text"
             android:layout_width="0dp"

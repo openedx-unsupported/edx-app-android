@@ -30,7 +30,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sign_up_btn"
                 style="@style/bold_white_text"
                 android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sign_in_tv"
                 style="@style/bold_text"
                 android:layout_width="match_parent"

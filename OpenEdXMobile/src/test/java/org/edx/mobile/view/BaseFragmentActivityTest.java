@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import androidx.annotation.AnimRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -117,8 +119,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         ActionBar bar = activity.getSupportActionBar();
         assumeNotNull(bar);
         assumeNotNull(title);
-        Typeface type = Typeface.createFromAsset(
-                activity.getAssets(), "fonts/OpenSans-Semibold.ttf");
+        Typeface type = ResourcesCompat.getFont(activity, R.font.open_sans_semi_bold);
         int titleId = activity.getResources().getIdentifier(
                 "action_bar_title", "id", "android");
         TextView titleTextView = (TextView) activity.findViewById(titleId);

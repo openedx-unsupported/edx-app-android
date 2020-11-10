@@ -21,7 +21,7 @@
             android:visibility="visible"
             tools:text="@string/reset_no_network_message" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/content_error_action"
             style="@style/edX.Widget.RegularButton"
             android:layout_width="wrap_content"

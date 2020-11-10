@@ -10,6 +10,7 @@
 
     <org.edx.mobile.view.custom.EdxTextInputLayout
         android:id="@+id/input_wrapper_auto_complete"
+        style="@style/Widget.Design.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColorHint="@color/grey_text">

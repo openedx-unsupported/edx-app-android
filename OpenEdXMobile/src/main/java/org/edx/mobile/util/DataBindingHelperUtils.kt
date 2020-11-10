@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.resources.TextAppearanceConfig
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import com.joanzapata.iconify.internal.ParsingUtil
@@ -219,7 +220,12 @@ class DataBindingHelperUtils {
                     R.xml.dates_badge_chip)
             chipDrawable.text = title
             chipDrawable.setChipBackgroundColorResource(badgeBackground)
+            // Load font Synchronously
+            // Ref: https://stackoverflow.com/a/64433789
+            TextAppearanceConfig.setShouldLoadFontSynchronously(true)
             chipDrawable.setTextAppearanceResource(textAppearance)
+            TextAppearanceConfig.setShouldLoadFontSynchronously(false)
+
             if (badgeIcon != null) {
                 chipDrawable.chipIcon = badgeIcon
                 chipDrawable.chipIconSize = textView.context.resources.getDimension(R.dimen.small_icon_size)

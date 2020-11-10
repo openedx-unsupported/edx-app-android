@@ -57,7 +57,7 @@
         android:orientation="horizontal"
         android:paddingTop="0.5dp" >
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
             style="@style/bold_text"
             android:layout_width="0dp"
@@ -73,7 +73,7 @@
             android:textSize="15sp"
             tools:targetApi="17" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/positiveButton"
             style="@style/bold_text"
             android:layout_width="0dp"

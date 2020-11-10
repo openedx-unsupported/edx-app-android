@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
-@Ignore("TODO: Add fonts in xml after that enable test class again as part of LEARNER-7964")
 @RunWith(AndroidJUnit4.class)
 public class LaunchScreenshotTests {
 
