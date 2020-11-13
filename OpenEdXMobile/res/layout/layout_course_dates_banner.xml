@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/widget_margin"
             android:background="@drawable/blue_border_white_roundedbg"
-            android:fontFamily="@font/open_sans_semi_bold"
+            android:fontFamily="?attr/fontSemiBold"
             android:padding="@dimen/edx_half_margin"
             android:textColor="@android:color/black"
             android:textSize="@dimen/edx_small"

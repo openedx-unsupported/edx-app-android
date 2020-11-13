@@ -28,4 +28,10 @@
         <attr name="contourColor" format="color"/>
         <attr name="contourSize" format="dimension"/>
     </declare-styleable>
+
+    <!--  Font attributes for the app  -->
+    <attr name="fontItalic" format="reference" />
+    <attr name="fontRegular" format="reference" />
+    <attr name="fontSemiBold" format="reference" />
+    <attr name="fontSemiBoldItalic" format="reference" />
 </resources>

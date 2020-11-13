@@ -119,7 +119,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         ActionBar bar = activity.getSupportActionBar();
         assumeNotNull(bar);
         assumeNotNull(title);
-        Typeface type = ResourcesCompat.getFont(activity, R.font.open_sans_semi_bold);
+        Typeface type = ResourcesCompat.getFont(activity, R.font.inter_semi_bold);
         int titleId = activity.getResources().getIdentifier(
                 "action_bar_title", "id", "android");
         TextView titleTextView = (TextView) activity.findViewById(titleId);
