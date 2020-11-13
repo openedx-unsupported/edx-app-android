@@ -138,15 +138,15 @@
     </style>
 
     <style name="bold_text">
-        <item name="android:fontFamily">@font/open_sans_semi_bold</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
     <style name="semibold_text">
-        <item name="android:fontFamily">@font/open_sans_semi_bold</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
     <style name="regular_text">
-        <item name="android:fontFamily">@font/open_sans_regular</item>
+        <item name="android:fontFamily">?attr/fontRegular</item>
     </style>
 
      <style name="text_network_error" parent="@style/semibold_white_text">

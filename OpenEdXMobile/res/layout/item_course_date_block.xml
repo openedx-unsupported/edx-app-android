@@ -91,7 +91,7 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/open_sans_semi_bold"
+                android:fontFamily="?attr/fontSemiBold"
                 android:lineSpacingMultiplier="@dimen/course_date_title_line_spacing"
                 android:textColor="@color/switch_text_color"
                 android:textSize="@dimen/edx_large"

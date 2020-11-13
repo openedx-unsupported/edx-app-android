@@ -35,7 +35,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
 
-    private final Typeface openSansSemiBoldFont;
+    private final Typeface semiBoldFont;
 
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
@@ -44,7 +44,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         edx_grayscale_neutral_dark = context.getResources().getColor(R.color.edx_brand_gray_base);
         edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
         edx_utility_success_dark = context.getResources().getColor(R.color.edx_success_text);
-        openSansSemiBoldFont = ResourcesCompat.getFont(context, R.font.open_sans_semi_bold);
+        semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             final CharSequence threadTitle = discussionThread.getTitle();
             holder.discussionPostTitle.setText(threadTitle);
             if (!discussionThread.isRead()) {
-                holder.discussionPostTitle.setTypeface(openSansSemiBoldFont);
+                holder.discussionPostTitle.setTypeface(semiBoldFont);
             }
         }
 
