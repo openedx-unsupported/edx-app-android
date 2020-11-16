@@ -43,7 +43,7 @@
 
                 <Button
                     android:id="@+id/parental_consent_edit_profile_button"
-                    style="@style/edX.Widget.BorderedButton"
+                    style="@style/edX.Widget.ActionBorderedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/edx_margin"
@@ -67,7 +67,7 @@
 
                 <Button
                     android:id="@+id/incomplete_edit_profile_button"
-                    style="@style/edX.Widget.BorderedButton"
+                    style="@style/edX.Widget.ActionBorderedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/edx_margin"

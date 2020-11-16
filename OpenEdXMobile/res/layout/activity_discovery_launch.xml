@@ -33,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin_double"
+                android:fontFamily="?attr/fontSemiBold"
                 android:text="@string/launch_text"
                 android:textColor="@color/edx_brand_primary_base"
                 android:textSize="@dimen/edx_xx_large" />
@@ -43,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin_quadruple"
                 android:text="@string/launch_search_title"
+                android:fontFamily="?attr/fontSemiBold"
                 android:textColor="@color/edx_brand_primary_base"
                 android:textSize="@dimen/edx_large" />
 

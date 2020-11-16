@@ -37,7 +37,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/course_btn"
-                    style="@style/edX.Widget.BrandPillButton"
+                    style="@style/edX.Widget.ActionBrandPillButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/edx_margin"

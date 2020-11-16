@@ -24,7 +24,7 @@
     <color name="cyan_text_navigation_20">#20299ED7</color>
     <color name="disabled_chapter_list">#EBEBED</color>
     <color name="grey_light">#3c4045</color>
-    <color name="grey_medium">#666666</color>
+    <color name="grey_medium">#707070</color>
     <color name="light_gray">#CCCCCC</color>
     <color name="grey_text">#464A50</color>
     <color name="grey_video_size_text">#9EA7B3</color>
@@ -51,28 +51,35 @@
     <color name="toolbar_controls_color">@color/edx_brand_primary_base</color>
 
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
-    <color name="edx_brand_primary_dark">#065683</color>
-    <color name="edx_brand_primary_base">#0075B4</color>
-    <color name="edx_brand_primary_accent">#2991C3</color>
+    <color name="edx_brand_primary_dark">#00262B</color>
+    <color name="edx_brand_primary_base">#00262B</color>
+    <color name="edx_brand_primary_accent">#F0CC00</color>
+    <color name="edx_brand_action_color">#D23228</color>
     <color name="edx_brand_primary_back">#CCE3F0</color>
     <color name="edx_brand_primary_x_back">#F2F8FB</color>
+
     <color name="edx_brand_secondary_dark">#982C62</color>
     <color name="edx_brand_secondary_base">#C2387D</color>
     <color name="edx_brand_secondary_accent">#E09BBE</color>
     <color name="edx_brand_secondary_back">#F3D7E5</color>
     <color name="edx_brand_secondary_x_back">#FCF5F8</color>
+
     <color name="edx_brand_gray_dark">#111111</color>
-    <color name="edx_brand_gray_base">#414141</color>
-    <color name="edx_brand_gray_accent">#A0A0A0</color>
-    <color name="edx_brand_gray_back">#D9D9D9</color>
-    <color name="edx_brand_gray_x_back">#F5F5F5</color>
-    <color name="edx_success_text">#008100</color>
+    <color name="edx_brand_gray_base">#00262B</color>
+    <color name="edx_brand_gray2">#454545</color>
+    <color name="edx_brand_gray_accent">#475B65</color>
+    <color name="edx_brand_gray_back">#2D494E</color>
+    <color name="edx_brand_gray_x_back">#2D494E</color>
+
+    <color name="edx_success_text">#F0CC00</color>
     <color name="edx_success_accent">#009B00</color>
     <color name="edx_success_back">#ECFAEC</color>
-    <color name="edx_error_text">#B20610</color>
-    <color name="edx_error_accent">#CB0712</color>
+
+    <color name="edx_error_text">#D23228</color>
+    <color name="edx_error_accent">#D23228</color>
     <color name="edx_error_back">#FEECED</color>
-    <color name="edx_warning_accent">#FFC01F</color>
+
+    <color name="edx_warning_accent">#F0CC00</color>
     <color name="edx_warning_back">#FFF9EB</color>
 
     <!-- Social platform colors -->

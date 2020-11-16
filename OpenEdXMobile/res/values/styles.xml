@@ -312,7 +312,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="queryHint">@string/launch_search_courses</item>
         <item name="iconifiedByDefault">false</item>
-        <item name="android:background">@drawable/edx_bordered_button</item>
+        <item name="android:background">@drawable/edx_primary_bordered_button</item>
     </style>
 
     <style name="search_view_theme" parent="Theme.AppCompat.Light">
@@ -323,6 +323,7 @@
         <item name="editTextColor">@color/edx_brand_primary_base</item>
         <item name="android:editTextColor">@color/edx_brand_primary_base</item>
         <item name="android:textColorHint">@color/edx_brand_primary_base</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
     <style name="footer_action_button">
@@ -393,7 +394,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="edX.Widget.BrandPillButton" parent="@style/edX.Widget.Button">
+    <style name="edX.Widget.ActionBrandPillButton" parent="@style/edX.Widget.Button">
         <item name="android:paddingLeft">@dimen/widget_margin</item>
         <item name="android:paddingRight">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
@@ -453,10 +454,10 @@
         <item name="android:text">@string/enroll_now_button_text</item>
     </style>
 
-    <style name="edX.Widget.BorderedButton" parent="edX.Widget.Button">
+    <style name="edX.Widget.ActionBorderedButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/edx_brand_primary_base</item>
-        <item name="android:background">@drawable/edx_bordered_button</item>
+        <item name="android:textColor">@color/edx_brand_action_color</item>
+        <item name="android:background">@drawable/edx_action_bordered_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>

@@ -9,7 +9,7 @@
 
         <Button
             android:id="@+id/bt_view_subjects"
-            style="@style/edX.Widget.BrandPillButton"
+            style="@style/edX.Widget.ActionBrandPillButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/view_all_subjects"

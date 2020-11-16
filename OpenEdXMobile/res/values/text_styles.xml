@@ -221,7 +221,11 @@
     </style>
 
     <style name="discussion_responses_small_text" parent="discussion_regular_text">
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
+        <item name="android:textColor">@color/edx_brand_gray2</item>
+    </style>
+
+    <style name="discussion_responses_read" parent="discussion_regular_text">
+        <item name="android:textColor">@color/grey_medium</item>
     </style>
 
     <style name="discussion_responses_action_bar_small_text" parent="discussion_responses_small_text">

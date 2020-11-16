@@ -60,7 +60,7 @@
 
         <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/info"
-            style="@style/edX.Widget.BorderedButton"
+            style="@style/edX.Widget.ActionBorderedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/edx_half_margin"
