@@ -35,7 +35,7 @@
                 android:layout_marginTop="@dimen/widget_margin_double"
                 android:fontFamily="?attr/fontSemiBold"
                 android:text="@string/launch_text"
-                android:textColor="@color/edx_brand_primary_base"
+                android:textColor="@color/primaryBaseColor"
                 android:textSize="@dimen/edx_xx_large" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_marginTop="@dimen/widget_margin_quadruple"
                 android:text="@string/launch_search_title"
                 android:fontFamily="?attr/fontSemiBold"
-                android:textColor="@color/edx_brand_primary_base"
+                android:textColor="@color/primaryBaseColor"
                 android:textSize="@dimen/edx_large" />
 
             <androidx.appcompat.widget.SearchView

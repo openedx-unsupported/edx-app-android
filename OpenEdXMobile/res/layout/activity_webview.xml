@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/widget_margin"
             android:layout_marginRight="@dimen/widget_margin"
-            android:background="@color/edx_brand_gray_x_back" />
+            android:background="@color/neutralLight" />
 
         <include layout="@layout/loading_indicator" />
 

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/grey_text_mycourse"
+            android:textColor="@color/neutralXXDark"
             android:textSize="@dimen/edx_small"
             tools:text="@string/download_pending" />
 
@@ -41,7 +41,7 @@
                 android:layout_marginEnd="@dimen/edx_margin"
                 android:layout_marginRight="@dimen/edx_margin"
                 android:singleLine="true"
-                android:textColor="@color/grey_video_size_text"
+                android:textColor="@color/neutralXDark"
                 android:textSize="@dimen/edx_x_small"
                 tools:targetApi="17"
                 tools:text="53:59:21" />
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@color/grey_video_size_text"
+                android:textColor="@color/neutralXDark"
                 android:textSize="@dimen/edx_x_small"
                 tools:targetApi="17"
                 tools:text="45.20/200MB" />
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/download_failed_text"
-            android:textColor="@color/edx_error_text"
+            android:textColor="@color/errorBase"
             android:textSize="@dimen/edx_x_small"
             tools:targetApi="17" />
 

@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_wifi_top"
-                    android:textColor="@color/grey_6"
+                    android:textColor="@color/neutralBlack"
                     android:textSize="@dimen/edx_small"/>
 
                 <TextView
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_wifi_bottom"
-                    android:textColor="@color/grey_4"
+                    android:textColor="@color/neutralXDark"
                     android:textSize="@dimen/edx_xx_small" />
             </LinearLayout>
 
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_download_to_sdcard_title"
-                    android:textColor="@color/grey_6"
+                    android:textColor="@color/neutralBlack"
                     android:textSize="@dimen/edx_small" />
 
                 <TextView
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/edx_half_margin"
                     android:text="@string/settings_download_to_sdcard_subtitle"
-                    android:textColor="@color/grey_4"
+                    android:textColor="@color/neutralXDark"
                     android:textSize="@dimen/edx_xx_small" />
             </LinearLayout>
 

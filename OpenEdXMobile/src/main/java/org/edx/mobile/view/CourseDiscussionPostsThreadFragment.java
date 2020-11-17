@@ -178,9 +178,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                         Context context = getActivity();
                         LayerDrawable layeredIcon = new LayerDrawable(new Drawable[]{
                                 new IconDrawable(context, FontAwesomeIcons.fa_long_arrow_up)
-                                        .colorRes(context, R.color.edx_brand_primary_base),
+                                        .colorRes(context, R.color.primaryBaseColor),
                                 new IconDrawable(context, FontAwesomeIcons.fa_long_arrow_down)
-                                        .colorRes(context, R.color.edx_brand_primary_base)
+                                        .colorRes(context, R.color.primaryBaseColor)
                         });
                         Resources resources = context.getResources();
                         final int width = resources.getDimensionPixelSize(

@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_closedcaption"
-        style="@style/regular_grey_text"
+        style="@style/regular_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_cc_option"
         android:background="@drawable/white_rounded_selector"
@@ -19,11 +19,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/video_player_settings_divider_height"
-        android:background="@color/grey_act_background" />
+        android:background="@color/neutralLight" />
 
     <TextView
         android:id="@+id/tv_video_speed"
-        style="@style/regular_grey_text"
+        style="@style/regular_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_cc_option"
         android:background="@drawable/white_rounded_selector"

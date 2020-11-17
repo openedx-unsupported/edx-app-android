@@ -3,18 +3,18 @@
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/edx_brand_primary_base</item>
-        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
-        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+        <item name="colorPrimary">@color/primaryBaseColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/neutralBlackT</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
-        <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
+        <item name="actionModeBackground">@color/primaryBaseColor</item>
         <item name="actionMenuTextColor">@color/toolbar_controls_color</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionButtonStyle">@style/MyActionBarButton</item>
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
-        <item name="android:windowBackground">@color/edx_brand_gray_x_back</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="disableableButtonTextColor">@color/disableable_button_text</item>
@@ -27,7 +27,7 @@
         <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
-        <item name="android:textColorLink">@color/edx_brand_primary_base</item>
+        <item name="android:textColorLink">@color/infoBase</item>
         <!-- Default progress bar style is currently the same as large. Which means
              that there is no attribute for the medium one. But since we're not using
              any of the other sizes anywhere currently, it doesn't matter for now. -->
@@ -64,9 +64,9 @@
     <style name="CastMiniControllerTheme" parent="CastMiniController">
         <item name="castShowImageThumbnail">true</item>
         <item name="castTitleTextAppearance">@style/CastMiniControllerTitle</item>
-        <item name="castProgressBarColor">@color/edx_brand_primary_base</item>
-        <item name="castMiniControllerLoadingIndicatorColor">@color/edx_brand_primary_base</item>
-        <item name="castButtonColor">@color/edx_brand_primary_base</item>
+        <item name="castProgressBarColor">@color/primaryBaseColor</item>
+        <item name="castMiniControllerLoadingIndicatorColor">@color/primaryBaseColor</item>
+        <item name="castButtonColor">@color/primaryBaseColor</item>
     </style>
 
     <style name="CastMiniControllerTitle" parent="TextAppearance.AppCompat.Title">
@@ -76,8 +76,8 @@
     </style>
 
     <style name="CastExpandedControllerTheme" parent="CastExpandedController">
-        <item name="castSeekBarProgressAndThumbColor">@color/edx_brand_primary_base</item>
-        <item name="castSeekBarSecondaryProgressColor">@color/edx_brand_primary_dark</item>
+        <item name="castSeekBarProgressAndThumbColor">@color/primaryBaseColor</item>
+        <item name="castSeekBarSecondaryProgressColor">@color/primaryBaseColor</item>
         <item name="castControlButtons">
             @array/cast_expanded_controller_control_buttons
         </item>
@@ -87,9 +87,9 @@
         <item name="castExpandedControllerToolbarStyle">
             @style/ThemeOverlay.AppCompat.Dark.ActionBar
         </item>
-        <item name="colorPrimary">@color/edx_brand_primary_base</item>
-        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
-        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+        <item name="colorPrimary">@color/primaryBaseColor</item>
+        <item name="colorPrimaryDark">@color/primaryBaseColor</item>
+        <item name="colorAccent">@color/accentAColor</item>
         <item name="castExpandedControllerStyle">@style/CastExpandedControllerTheme</item>
     </style>
 
@@ -135,8 +135,8 @@
     </style>
 
     <style name="AppTheme.Dialog.Alert" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/edx_brand_primary_base</item>
-        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
+        <item name="colorPrimary">@color/primaryBaseColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/dialog_button_selector</item>
     </style>
 
@@ -160,19 +160,19 @@
     </style>
 
     <style name="blue_separator" parent="separator_base">
-        <item name="android:background">@color/edx_brand_primary_base</item>
+        <item name="android:background">@color/primaryBaseColor</item>
     </style>
 
     <style name="gray_separator" parent="separator_base">
-        <item name="android:background">@color/edx_brand_gray_back</item>
+        <item name="android:background">@color/neutralDark</item>
     </style>
 
     <style name="light_gray_separator" parent="separator_base">
-        <item name="android:background">@color/edx_brand_gray_x_back</item>
+        <item name="android:background">@color/neutralLight</item>
     </style>
 
     <style name="red_separator" parent="separator_base">
-        <item name="android:background">@color/edx_brand_secondary_base</item>
+        <item name="android:background">@color/errorBase</item>
     </style>
 
     <style name="hairline_separator_style">
@@ -181,7 +181,7 @@
     </style>
 
     <style name="gray_hairline_separator" parent="hairline_separator_style">
-        <item name="android:background">@color/edx_brand_gray_back</item>
+        <item name="android:background">@color/neutralDark</item>
     </style>
 
     <style name="video_player_panel">
@@ -282,7 +282,7 @@
     </style>
 
     <style name="bulk_download_switch" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/edx_success_accent</item>
+        <item name="colorAccent">@color/primaryXLightColor</item>
     </style>
 
     <style name="section_lbl">
@@ -291,7 +291,7 @@
         <item name="android:maxWidth">150dp</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/edx_brand_gray_accent</item>
+        <item name="android:textColor">@color/primaryXLightColor</item>
         <item name="android:layout_marginTop">-5dp</item>
     </style>
 
@@ -317,13 +317,12 @@
 
     <style name="search_view_theme" parent="Theme.AppCompat.Light">
         <!-- Following is the cursor color -->
-        <item name="colorAccent">@color/edx_brand_primary_base</item>
+        <item name="colorAccent">@color/primaryBaseColor</item>
         <!-- Following is the icons' color -->
-        <item name="colorControlNormal">@color/edx_brand_primary_base</item>
-        <item name="editTextColor">@color/edx_brand_primary_base</item>
-        <item name="android:editTextColor">@color/edx_brand_primary_base</item>
-        <item name="android:textColorHint">@color/edx_brand_primary_base</item>
-        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="colorControlNormal">@color/primaryBaseColor</item>
+        <item name="editTextColor">@color/primaryBaseColor</item>
+        <item name="android:editTextColor">@color/primaryBaseColor</item>
+        <item name="android:textColorHint">@color/primaryBaseColor</item>
     </style>
 
     <style name="footer_action_button">
@@ -344,7 +343,7 @@
         <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginRight">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginTop">@dimen/discussion_posts_icon_margin</item>
-        <item name="iconColor">@color/edx_brand_gray_base</item>
+        <item name="iconColor">@color/neutralXXDark</item>
     </style>
 
     <style name="discussion_responses_nested_card_layout">
@@ -361,14 +360,14 @@
     </style>
 
     <style name="profile_image">
-        <item name="android:src">@color/edx_brand_gray_accent</item>
-        <item name="civ_border_color">@color/edx_brand_primary_base</item>
+        <item name="android:src">@color/primaryXLightColor</item>
+        <item name="civ_border_color">@color/primaryBaseColor</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@drawable/white_circle</item>
     </style>
 
     <style name="agreement_text_style">
-        <item name="android:color">@color/edx_brand_gray_base</item>
+        <item name="android:textColor">@color/neutralBlack</item>
         <item name="android:layout_marginTop">@dimen/widget_margin</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/edx_xx_small</item>
@@ -401,6 +400,11 @@
         <item name="android:background">@drawable/edx_brand_button</item>
         <item name="android:textColor">@color/edx_brand_button_text</item>
         <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+    </style>
+
+    <style name="edX.Widget.PrimaryRoundPillButton" parent="edX.Widget.ActionBrandPillButton">
+        <item name="android:background">@drawable/edx_primary_button</item>
     </style>
 
     <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
@@ -414,7 +418,7 @@
         <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
-    <style name="edX.Widget.SignInButton" parent="regular_white_text">
+    <style name="edX.Widget.SignInButton" parent="bold_white_text">
         <!-- When this style is used, it is always wrapped by edX.Widget.SignInButtonLayout -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -442,6 +446,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:duplicateParentState">true</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
     <style name="edX.Widget.EnrollButton" parent="edX.Widget.Button">
@@ -456,20 +461,16 @@
 
     <style name="edX.Widget.ActionBorderedButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/edx_brand_action_color</item>
-        <item name="android:background">@drawable/edx_action_bordered_button</item>
+        <item name="android:textColor">@color/secondaryBaseColor</item>
+        <item name="android:background">@drawable/edx_neutral_dark_bordered_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
-    <style name="edX.Widget.RegularButton" parent="edX.Widget.Button">
-        <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
-        <item name="android:background">@drawable/gray_bordered_button_background</item>
+    <style name="edX.Widget.BaseSizeButton" parent="edX.Widget.ActionBorderedButton">
         <item name="android:textSize">@dimen/edx_base</item>
-        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
     </style>
 
     <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
@@ -521,7 +522,7 @@
              Since, this should be used everywhere, it's set up as the
              default style for ProgressBar as well. -->
         <item name="indeterminateIconName">fa-spinner</item>
-        <item name="indeterminateIconColor">@color/edx_brand_primary_base</item>
+        <item name="indeterminateIconColor">@color/primaryBaseColor</item>
         <item name="indeterminateIconPulse">true</item>
         <item name="android:indeterminateDuration">600</item>
         <item name="android:mirrorForRtl">true</item>
@@ -571,17 +572,10 @@
         <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
         <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
-    </style>
-
-    <style name="edX.Widget.SegmentedControlSegment.Start" parent="edX.Widget.SegmentedControlSegment">
-        <item name="android:background">@drawable/edx_segmented_control_left_background</item>
-    </style>
-
-    <style name="edX.Widget.SegmentedControlSegment.End" parent="edX.Widget.SegmentedControlSegment">
-        <item name="android:background">@drawable/edx_segmented_control_right_background</item>
+        <item name="android:background">@drawable/edx_segmented_control_middle_background</item>
     </style>
 
     <style name="edX.Widget.TextInputLayout.HintTextAppearance" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/edx_brand_primary_base</item>
+        <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 </resources>

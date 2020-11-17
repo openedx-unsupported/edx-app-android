@@ -8,5 +8,5 @@
     android:drawablePadding="@dimen/x_small_icon_margin"
     android:gravity="center_vertical"
     android:padding="@dimen/edx_margin"
-    android:textColor="@color/edx_brand_gray_base"
+    android:textColor="@color/primaryBaseColor"
     android:textSize="@dimen/edx_base" />

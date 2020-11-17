@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/white" />
     <stroke android:width="@dimen/popup_spinner_border"
-        android:color="@color/edx_brand_gray_accent" />
+        android:color="@color/primaryXLightColor" />
     <corners android:radius="@dimen/popup_spinner_border" />
     <padding android:top="@dimen/popup_spinner_border"
         android:bottom="@dimen/popup_spinner_border"

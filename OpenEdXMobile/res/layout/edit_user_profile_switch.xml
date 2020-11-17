@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Label"
-        android:textColor="@color/edx_brand_gray_base"
+        android:textColor="@color/neutralBlackT"
         android:textSize="@dimen/edx_small" />
 
     <RadioGroup
@@ -26,7 +26,7 @@
 
         <RadioButton
             android:id="@+id/option_one"
-            style="@style/edX.Widget.SegmentedControlSegment.Start"
+            style="@style/edX.Widget.SegmentedControlSegment"
             android:layout_width="0dp"
             android:layout_height="@dimen/radio_tab_height"
             android:layout_weight="1"
@@ -34,7 +34,7 @@
 
         <RadioButton
             android:id="@+id/option_two"
-            style="@style/edX.Widget.SegmentedControlSegment.End"
+            style="@style/edX.Widget.SegmentedControlSegment"
             android:layout_width="0dp"
             android:layout_height="@dimen/radio_tab_height"
             android:layout_weight="1"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/edx_margin"
         tools:text="Instructions"
-        android:textColor="@color/edx_brand_gray_base"
+        android:textColor="@color/neutralBlackT"
         android:textSize="@dimen/edx_x_small" />
 
 </LinearLayout>

@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/edx_margin"
                     android:adjustViewBounds="true"
-                    android:background="@color/grey_act_background"
+                    android:background="@color/neutralLight"
                     android:contentDescription="@string/tab_label_certificate"
                     android:padding="@dimen/image_border_width"
                     android:src="@drawable/payment_certificate" />
@@ -82,7 +82,7 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:background="@color/edx_success_accent"
+            tools:background="@color/successLight"
             tools:layout_height="150dp" />
 
     </LinearLayout>

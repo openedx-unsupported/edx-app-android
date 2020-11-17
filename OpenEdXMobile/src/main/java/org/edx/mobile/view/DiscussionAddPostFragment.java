@@ -152,7 +152,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
             }
         });
 
-        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.edx_brand_gray_base));
+        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.primaryBaseColor));
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -58,6 +58,7 @@ import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.Version;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.BaseCourseUnitVideoFragment;
+import org.edx.mobile.view.custom.IconProgressBar;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.RatingDialogFragment;
@@ -176,7 +177,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_player, null);
-
+        ((IconProgressBar)view.findViewById(R.id.loading_indicator)).setIndeterminateIconColor(getResources().getColor(R.color.white));
         return view;
     }
 

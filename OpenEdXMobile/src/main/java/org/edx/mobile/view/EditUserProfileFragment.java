@@ -262,7 +262,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
             viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
-            viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_accent);
+            viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.primaryBaseColor : R.color.primaryXLightColor);
 
             if (account.getProfileImage().hasImage()) {
                 Glide.with(viewHolder.profileImage.getContext())
@@ -488,7 +488,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
     private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull final FormField field, @NonNull final String value, boolean readOnly, @NonNull View.OnClickListener onClickListener) {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
         final SpannableString formattedValue = new SpannableString(value);
-        formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_brand_gray_base)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.neutralXXDark)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(ResourceUtil.getFormattedString(parent.getResources(), R.string.edit_user_profile_field, new HashMap<String, CharSequence>() {{
             put("label", field.getLabel());
             put("value", formattedValue);
@@ -496,7 +496,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         Context context = parent.getContext();
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, new IconDrawable(context, FontAwesomeIcons.fa_angle_right)
-                        .colorRes(context, R.color.edx_brand_gray_back)
+                        .colorRes(context, R.color.neutralXDark)
                         .sizeDp(context, 24), null);
         if (readOnly) {
             textView.setEnabled(false);

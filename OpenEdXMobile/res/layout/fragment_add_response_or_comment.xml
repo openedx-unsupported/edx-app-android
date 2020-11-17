@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/edx_brand_gray_x_back"
+    android:background="@color/neutralLight"
     android:fillViewport="true">
 
     <LinearLayout
@@ -44,11 +44,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/white"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/widget_margin"
             android:paddingLeft="@dimen/edx_margin"
+            android:paddingTop="@dimen/widget_margin"
             android:paddingRight="@dimen/edx_margin"
-            android:paddingTop="@dimen/widget_margin">
+            android:paddingBottom="@dimen/widget_margin">
 
             <EditText
                 android:id="@+id/etNewComment"

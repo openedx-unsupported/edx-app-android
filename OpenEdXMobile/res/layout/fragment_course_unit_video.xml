@@ -32,7 +32,7 @@
             android:layout_height="140dp"
             android:background="@color/white"
             android:rotation="90"
-            app:iconColor="@color/edx_brand_gray_back"
+            app:iconColor="@color/neutralDark"
             app:iconName="fa-mobile-phone" />
 
         <TextView
@@ -48,9 +48,8 @@
             android:singleLine="false"
             android:text="@string/assessment_rotate_for_fullscreen"
             android:textAlignment="center"
-            android:textColor="@color/edx_brand_gray_base"
-            android:textSize="16sp"
-            tools:targetApi="17" />
+            android:textColor="@color/primaryBaseColor"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <ListView

@@ -70,7 +70,7 @@
                         android:paddingLeft="-4dp"
                         android:paddingRight="-4dp"
                         android:paddingStart="-4dp"
-                        android:textColorHint="@color/grey_text">
+                        android:textColorHint="@color/neutralXXDark">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/email_et"
@@ -91,7 +91,7 @@
                         android:paddingLeft="-4dp"
                         android:paddingRight="-4dp"
                         android:paddingStart="-4dp"
-                        android:textColorHint="@color/grey_text">
+                        android:textColorHint="@color/neutralXXDark">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/password_et"
@@ -113,7 +113,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="@string/forgot_password"
-                        android:textColor="@color/text_navigation"
+                        android:textColor="@color/infoBase"
                         android:textSize="12sp" />
 
                     <FrameLayout

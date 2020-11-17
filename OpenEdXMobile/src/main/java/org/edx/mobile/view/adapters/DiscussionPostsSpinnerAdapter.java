@@ -48,7 +48,7 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
         public IconDrawable createIcon() {
             return new IconDrawable(context, icon)
                     .sizeRes(context, R.dimen.small_icon_size)
-                    .colorRes(context, R.color.edx_brand_primary_base);
+                    .colorRes(context, R.color.primaryBaseColor);
         }
     }
 

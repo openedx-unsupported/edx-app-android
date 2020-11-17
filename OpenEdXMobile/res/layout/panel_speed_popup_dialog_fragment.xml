@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_header_speed"
-        style="@style/regular_grey_text"
+        style="@style/regular_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/grey_top_roundedbg"
@@ -21,18 +21,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:divider="@color/grey_act_background"
+        android:divider="@color/neutralLight"
         android:dividerHeight="@dimen/video_player_settings_divider_height" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/video_player_settings_divider_height"
-        android:background="@color/grey_act_background" />
+        android:background="@color/neutralLight" />
 
     <TextView
         android:id="@+id/tv_cancel"
-        style="@style/regular_grey_text"
+        style="@style/regular_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/white_roundedbg"

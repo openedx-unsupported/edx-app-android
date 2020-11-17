@@ -68,7 +68,7 @@ public abstract class DiscussionTextUtils {
                 if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
                     // Change the author text color and style
                     authorSpan.setSpan(new ForegroundColorSpan(context.getResources().
-                                    getColor(R.color.edx_brand_primary_base)), 0,
+                                    getColor(R.color.primaryBaseColor)), 0,
                             authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -119,7 +119,7 @@ public abstract class DiscussionTextUtils {
                 // Change the author text color and style
                 if (!authorData.isAuthorAnonymous()) {
                     authorSpan.setSpan(new ForegroundColorSpan(context.getResources().
-                                    getColor(R.color.edx_brand_primary_base)), 0,
+                                    getColor(R.color.primaryBaseColor)), 0,
                             authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),

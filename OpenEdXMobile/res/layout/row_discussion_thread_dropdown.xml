@@ -10,5 +10,5 @@
     android:singleLine="true"
     android:ellipsize="end"
     android:textSize="@dimen/edx_x_small"
-    android:textColor="@color/edx_brand_primary_base"
+    android:textColor="@color/primaryBaseColor"
     tools:text="All Posts" />

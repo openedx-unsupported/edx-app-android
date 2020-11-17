@@ -13,7 +13,7 @@
         style="@style/Widget.Design.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/grey_text">
+        android:textColorHint="@color/neutralXXDark">
 
         <org.edx.mobile.module.registration.view.RegistrationOptionAutoCompleteTextView
             android:id="@+id/input_auto_complete"
@@ -24,7 +24,7 @@
             android:imeOptions="actionDone"
             android:inputType="textAutoComplete"
             android:maxLines="1"
-            android:textColorHint="@color/grey_text" />
+            android:textColorHint="@color/neutralXXDark" />
     </org.edx.mobile.view.custom.EdxTextInputLayout>
 
     <TextView

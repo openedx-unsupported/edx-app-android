@@ -47,7 +47,7 @@
                         android:layout_width="@dimen/edx_base"
                         android:layout_height="@dimen/edx_base"
                         android:layout_gravity="center"
-                        app:iconColor="@color/edx_brand_primary_accent"
+                        app:iconColor="@color/accentAColor"
                         app:iconName="fa-spinner" />
                 </FrameLayout>
 
@@ -58,7 +58,7 @@
                     android:layout_marginLeft="@dimen/edx_margin"
                     android:layout_marginStart="@dimen/edx_margin"
                     android:layout_weight="1"
-                    android:textColor="@color/edx_brand_gray_base"
+                    android:textColor="@color/primaryBaseColor"
                     android:textSize="@dimen/edx_base"
                     tools:text="username" />
 

@@ -102,7 +102,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             Context context = getActivity();
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(header,
                     new IconDrawable(context, FontAwesomeIcons.fa_star)
-                            .colorRes(context, R.color.edx_brand_gray_base)
+                            .colorRes(context, R.color.primaryBaseColor)
                             .sizeRes(context, R.dimen.edx_base),
                     null, null, null);
             final DiscussionTopic discussionTopic = new DiscussionTopic();

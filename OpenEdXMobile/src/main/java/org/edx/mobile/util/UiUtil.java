@@ -110,8 +110,8 @@ public class UiUtil {
      * @param swipeRefreshLayout The SwipeRefreshLayout to set the color scheme of.
      */
     public static void setSwipeRefreshLayoutColors(@NonNull SwipeRefreshLayout swipeRefreshLayout) {
-        swipeRefreshLayout.setColorSchemeResources(R.color.edx_brand_primary_accent,
-                R.color.edx_brand_gray_x_back);
+        swipeRefreshLayout.setColorSchemeResources(R.color.primaryDarkColor,
+                R.color.neutralBlack);
     }
 
     /**

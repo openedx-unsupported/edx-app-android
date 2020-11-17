@@ -1,101 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="grey_6">#333435</color>
-    <color name="grey_4">#8c8c8c</color>
-    <color name="grey_3">#cccccc</color>
-    <color name="grey_2">#e6e6e6</color>
 
-    <color name="edx_white">#fafafa</color>
+    <!--  ** edx Brand Colors ** -->
+    <!--  ** Core Colors **  -->
+    <!--  Dark 200  -->
+    <color name="primaryXXLightColor">#475B65</color>
+    <!--  Primary 300 | Dark 300  -->
+    <color name="primaryXLightColor">#2D494E</color>
+    <!--  Dark 400  -->
+    <color name="primaryLightColor">#0E3639</color>
+    <!--  Primary 500 | Dark 500 | Elm  -->
+    <color name="primaryBaseColor">#00262B</color>
+    <!--  Primary 700 | Dark 700  -->
+    <color name="primaryDarkColor">#002121</color>
 
-    <color name="white">@android:color/white</color>
-    <color name="black">@android:color/black</color>
-    <color name="transparent_black">#90000000</color>
-    <color name="transparent_black_80">#CC000000</color>
-    <color name="transparent_black_90">#e5000000</color>
-    <color name="transparent_black_50">#80000000</color>
-    <color name="transparent_black_26">#42000000</color>
-    <color name="transparent_black_13">#21000000</color>
-    <color name="transparent_white_90">#E6FFFFFF</color>
-    <color name="transparent_white_85">#D9FFFFFF</color>
-    <color name="transparent_white_30">#4DFFFFFF</color>
-    <color name="transparent_white_26">#42FFFFFF</color>
-    <color name="transparent_white_20">#33FFFFFF</color>
-    <color name="transparent_white_13">#21ffffff</color>
-    <color name="cyan_text_navigation_20">#20299ED7</color>
-    <color name="disabled_chapter_list">#EBEBED</color>
-    <color name="grey_light">#3c4045</color>
-    <color name="grey_medium">#707070</color>
-    <color name="light_gray">#CCCCCC</color>
-    <color name="grey_text">#464A50</color>
-    <color name="grey_video_size_text">#9EA7B3</color>
-    <color name="grey_text_mycourse">#454951</color>
-    <color name="grey_act_background">#E2E3E5</color>
-    <color name="text_navigation">@color/edx_brand_primary_base</color>
-    <color name="grey_text_tab">#898B8E</color>
-    <color name="white_list_clicked">#F1F1F2</color>
-    <color name="transparent_download_bg">#E63E4247</color>
-    <color name="tab_bg">#3E4247</color>
-    <color name="switch_default_button_color">#C3C3C3</color>
-    <color name="switch_default_bg_color">#3C4045</color>
-    <color name="switch_disabled_bg_color_off">@color/grey_4</color>
-    <color name="transparent_cc_bg">#661F2124</color>
+    <!--  Brand 500  -->
+    <color name="secondaryBaseColor">#D23228</color>
+    <!--  Brand 700  -->
+    <color name="secondaryDarkColor">#921108</color>
 
-    <color name="crop_circle_border_color">@color/white</color>
-    <color name="crop_circle_overlay_color">#c8000000</color>
+    <!--  Accent A Isotope Blue  -->
+    <color name="accentAColor">#03C7E8</color>
+    <!--  Accent B Oxide Yellow -->
+    <color name="accentBColor">#F0CC00</color>
 
-    <color name="hint_grey_text">#8c8e90</color>
-    <color name="last_accessed_row_blue">#E5F5FC</color>
+    <!--  Black  -->
+    <color name="neutralBlackT">#000000</color>
+    <color name="neutralBlack">#101010</color>
+    <!--  Gray 700  -->
+    <color name="neutralXXDark">#454545</color>
+    <!--  Gray 500  -->
+    <color name="neutralXDark">#707070</color>
+    <!--  Light 700  -->
+    <color name="neutralDark">#D7D3D1</color>
+    <!--  Light 500  -->
+    <color name="neutralBase">#E1DDDB</color>
+
+    <!--  Light 400  -->
+    <color name="neutralLight">#EAE6E5</color>
+    <!-- Light 300   -->
+    <color name="neutralXLight">#F2F0EF</color>
+    <!--  Light 200  -->
+    <color name="neutralWhite">#FBFAF9</color>
+    <!--  White  -->
+    <color name="neutralWhiteT">#FFFFFF</color>
+
+    <!--  ** Utility Colors **  -->
+    <!--  Success 100  -->
+    <color name="successXXLight">#F2FAF7</color>
+    <!--  Success 200  -->
+    <color name="successXLight">#BBE6D7</color>
+    <!--  Success 300  -->
+    <color name="successLight">#30A171</color>
+    <!--  Success 500  -->
+    <color name="successBase">#0D7D4D</color>
+    <!--  Success 700  -->
+    <color name="successDark">#175B3C</color>
+    <!--  Success 900  -->
+    <color name="successXDark">#0F4D0F</color>
+
+    <!--  Warning 100  -->
+    <color name="warningXXLight">#FFFADB</color>
+    <!--  Warning 200  -->
+    <color name="warningXLight">#FFEA75</color>
+    <!--  Warning 300  -->
+    <color name="warningLight">#F0CC00</color>
+    <!--  Warning 500  -->
+    <color name="warningBase">#D6B600</color>
+    <!--  Warning 700  -->
+    <color name="warningDark">#998200</color>
+    <!--  Warning 900  -->
+    <color name="warningXDark">#7A6800</color>
+
+    <!--  Danger 100  -->
+    <color name="errorXXLight">#FCF1F4</color>
+    <!--  Danger 200  -->
+    <color name="errorXLight">#F3AEA9</color>
+    <!--  Danger 300  -->
+    <color name="errorLight">#CA3A2F</color>
+    <!--  Danger 500  -->
+    <color name="errorBase">#AB0D02</color>
+    <!--  Danger 700  -->
+    <color name="errorDark">#951C13</color>
+    <!--  Danger 900  -->
+    <color name="errorXDark">#690E07</color>
+
+    <!--  Info 100  -->
+    <color name="infoXXLight">#EFF8FA</color>
+    <!--  Info 200  -->
+    <color name="infoXLight">#9CD2E6</color>
+    <!--  Info 300  -->
+    <color name="infoLight">#1C8DBE</color>
+    <!--  Info 500  -->
+    <color name="infoBase">#0A7DA3</color>
+    <!--  Info 700  -->
+    <color name="infoDark">#004972</color>
+    <!--  Info 900  -->
+    <color name="infoXDark">#002F4A</color>
+    <!--  ** edx Brand Colors end ** -->
+
+    <color name="primaryBaseColor_30">#4D00262B</color>
+    <color name="white">@color/neutralWhiteT</color>
+    <color name="black">@color/neutralBlackT</color>
+
+    <!--  Switch button colors  -->
+    <color name="switch_default_button_color">@color/neutralDark</color>
+    <color name="switch_default_bg_color">@color/neutralXXDark</color>
+    <color name="switch_disabled_bg_color_off">@color/neutralXDark</color>
+
+    <color name="hint_grey_text">@color/neutralXDark</color>
 
     <!-- Toolbar colors -->
     <color name="toolbar_background_color">@color/white</color>
-    <color name="toolbar_controls_color">@color/edx_brand_primary_base</color>
-
-    <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
-    <color name="edx_brand_primary_dark">#00262B</color>
-    <color name="edx_brand_primary_base">#00262B</color>
-    <color name="edx_brand_primary_accent">#F0CC00</color>
-    <color name="edx_brand_action_color">#D23228</color>
-    <color name="edx_brand_primary_back">#CCE3F0</color>
-    <color name="edx_brand_primary_x_back">#F2F8FB</color>
-
-    <color name="edx_brand_secondary_dark">#982C62</color>
-    <color name="edx_brand_secondary_base">#C2387D</color>
-    <color name="edx_brand_secondary_accent">#E09BBE</color>
-    <color name="edx_brand_secondary_back">#F3D7E5</color>
-    <color name="edx_brand_secondary_x_back">#FCF5F8</color>
-
-    <color name="edx_brand_gray_dark">#111111</color>
-    <color name="edx_brand_gray_base">#00262B</color>
-    <color name="edx_brand_gray2">#454545</color>
-    <color name="edx_brand_gray_accent">#475B65</color>
-    <color name="edx_brand_gray_back">#2D494E</color>
-    <color name="edx_brand_gray_x_back">#2D494E</color>
-
-    <color name="edx_success_text">#F0CC00</color>
-    <color name="edx_success_accent">#009B00</color>
-    <color name="edx_success_back">#ECFAEC</color>
-
-    <color name="edx_error_text">#D23228</color>
-    <color name="edx_error_accent">#D23228</color>
-    <color name="edx_error_back">#FEECED</color>
-
-    <color name="edx_warning_accent">#F0CC00</color>
-    <color name="edx_warning_back">#FFF9EB</color>
+    <color name="toolbar_controls_color">@color/primaryBaseColor</color>
 
     <!-- Social platform colors -->
     <color name="fb_blue">#4267B2</color>
     <color name="microsoft_dark">#333333</color>
     <color name="google_blue">#4285F4</color>
 
+
+
+<!--    Under discussion    -->
+    <color name="crop_circle_border_color">@color/white</color>
+
+    <color name="crop_circle_overlay_color">#c8000000</color>
+
+    <color name="transparent_black">#90000000</color>
+    <color name="transparent_black_80">#CC000000</color>
+    <color name="transparent_black_50">#80000000</color>
+    <color name="transparent_black_26">#42000000</color>
+    <color name="transparent_black_13">#21000000</color>
+    <color name="transparent_white_85">#D9FFFFFF</color>
+    <color name="transparent_white_30">#4DFFFFFF</color>
+    <color name="transparent_white_26">#42FFFFFF</color>
+    <color name="transparent_white_20">#33FFFFFF</color>
+    <color name="transparent_white_13">#21ffffff</color>
+
+    <color name="cyan_text_navigation_20">#20299ED7</color>
+    <color name="transparent_download_bg">#E63E4247</color>
+    <color name="transparent_cc_bg">#661F2124</color>
+
     <!-- Dates Page View -->
-    <color name="bullet_light_gray">#d1d2d4</color>
-    <color name="bullet_transparent_white">#f5f5f5</color>
-    <color name="bullet_dark_gray">#686b73</color>
-    <color name="tag_light_silver">#f3f3f4</color>
-    <color name="tag_light_silver_border">#767676</color>
-    <color name="course_today_date">#ffdb87</color>
-    <color name="course_date_badge_black">#000000</color>
-    <color name="course_date_badge_white">#ffffff</color>
-    <color name="course_date_badge_silver">#767676</color>
-    <color name="course_date_badge_gray">#2d323e</color>
+    <color name="bullet_light_gray">@color/neutralDark</color>
+    <color name="bullet_transparent_white">@color/neutralXLight</color>
+    <color name="bullet_dark_gray">@color/neutralXDark</color>
+    <color name="tag_light_silver">@color/neutralXLight</color>
+    <color name="tag_light_silver_border">@color/neutralXDark</color>
+    <color name="course_today_date">@color/warningBase</color>
+    <color name="today_course_date_badge">@color/primaryBaseColor</color>
+    <color name="course_date_badge_white">@color/neutralWhiteT</color>
+    <color name="course_date_badge_silver">@color/neutralXDark</color>
+    <color name="course_date_badge_gray">@color/neutralXXDark</color>
+
 </resources>

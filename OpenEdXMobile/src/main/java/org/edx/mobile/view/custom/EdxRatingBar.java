@@ -17,11 +17,11 @@ import java.util.Map;
 
 public class EdxRatingBar extends AppCompatRatingBar {
     @ColorInt
-    private final int UNSELECTED_STAR_COLOR = ContextCompat.getColor(getContext(), R.color.edx_brand_gray_back);
+    private final int UNSELECTED_STAR_COLOR = ContextCompat.getColor(getContext(), R.color.neutralDark);
     @ColorInt
-    private final int SELECTED_STAR_COLOR = ContextCompat.getColor(getContext(), R.color.edx_brand_primary_base);
+    private final int SELECTED_STAR_COLOR = ContextCompat.getColor(getContext(), R.color.primaryBaseColor);
     @ColorInt
-    private final int SELECTED_STAR_COLOR_DARK = ContextCompat.getColor(getContext(), R.color.edx_brand_primary_dark);
+    private final int SELECTED_STAR_COLOR_DARK = ContextCompat.getColor(getContext(), R.color.primaryBaseColor);
 
     public EdxRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);

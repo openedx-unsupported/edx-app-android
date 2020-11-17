@@ -64,6 +64,7 @@
         <item name="android:gravity">center</item>
         <item name="android:visibility">gone</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="content_unavailable_error_text" parent="bold_text">
@@ -75,13 +76,13 @@
         <item name="android:maxWidth">@dimen/fullscreen_message_max_width</item>
         <item name="android:drawablePadding">@dimen/edx_margin</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
+        <item name="android:textColor">@color/neutralBlackT</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:visibility">gone</item>
     </style>
 
     <style name="bold_grey_text" parent="@style/bold_text">
-        <item name="android:textColor">@color/grey_text_mycourse</item>
+        <item name="android:textColor">@color/neutralXXDark</item>
     </style>
 
     <style name="bold_white_text" parent="@style/bold_text">
@@ -93,7 +94,7 @@
     </style>
 
     <style name="regular_grey_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/grey_text_mycourse</item>
+        <item name="android:textColor">@color/neutralDark</item>
     </style>
 
     <style name="regular_white_text" parent="@style/regular_text">
@@ -101,33 +102,37 @@
     </style>
 
     <style name="bold_edx_brand_primary_base_text" parent="@style/bold_text">
-        <item name="android:textColor">@color/edx_brand_primary_base</item>
+        <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 
     <style name="bold_regular_edx_black_text" parent="@style/bold_text">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/neutralBlackT</item>
     </style>
 
     <style name="regular_edx_black_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/neutralBlackT</item>
     </style>
 
-    <style name="regular_edx_gray_xdark_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
+    <style name="regular_primary_base_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 
     <style name="regular_edx_gray_dark_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
+        <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 
-    <style name="regular_edx_gray_base_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_brand_gray_accent</item>
+    <style name="regular_primary_x_light_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/primaryXLightColor</item>
+    </style>
+
+    <style name="regular_neutral_xx_dark_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/neutralXXDark</item>
     </style>
 
     <style name="account_option" parent="@style/regular_white_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_drawer_menu</item>
-        <item name="android:textColor">@color/edx_brand_gray_base</item>
+        <item name="android:textColor">@color/primaryBaseColor</item>
         <item name="android:background">@drawable/selectable_box_overlay</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingBottom">@dimen/widget_margin</item>
@@ -157,7 +162,7 @@
      </style>
 
     <style name="avatar_overflow_style" parent="@style/semibold_text">
-        <item name="android:textColor">@color/grey_4</item>
+        <item name="android:textColor">@color/neutralXDark</item>
     </style>
 
     <style name="custom_activity_title" parent="@style/semibold_text">
@@ -173,7 +178,7 @@
     <style name="registration_error_message" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/edx_error_text</item>
+        <item name="android:textColor">@color/errorBase</item>
         <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
         <item name="android:textSize">11sp</item>
         <item name="android:paddingRight">5dp</item>
@@ -186,7 +191,7 @@
     </style>
 
     <!-- Course Card styles -->
-    <style name="course_card_title" parent="@style/regular_edx_black_text">
+    <style name="course_card_title" parent="@style/regular_primary_base_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">3dp</item>
@@ -195,7 +200,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="course_card_course_run" parent="@style/regular_edx_gray_xdark_text">
+    <style name="course_card_course_run" parent="@style/regular_primary_x_light_text">
         <item name="android:singleLine">true</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
@@ -207,7 +212,7 @@
     </style>
 
     <!-- Discussion text styles -->
-    <style name="discussion_regular_text" parent="regular_edx_gray_xdark_text">
+    <style name="discussion_regular_text" parent="regular_edx_black_text">
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -221,16 +226,17 @@
     </style>
 
     <style name="discussion_responses_small_text" parent="discussion_regular_text">
-        <item name="android:textColor">@color/edx_brand_gray2</item>
+        <item name="android:textColor">@color/neutralXDark</item>
     </style>
 
     <style name="discussion_responses_read" parent="discussion_regular_text">
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/neutralXDark</item>
     </style>
 
     <style name="discussion_responses_action_bar_small_text" parent="discussion_responses_small_text">
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/infoBase</item>
     </style>
 
 </resources>

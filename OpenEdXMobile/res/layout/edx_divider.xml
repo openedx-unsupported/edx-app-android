@@ -2,4 +2,4 @@
 <View xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/edx_hairline"
-    android:background="@color/edx_brand_gray_back" />
+    android:background="@color/neutralDark" />

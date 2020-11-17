@@ -4,6 +4,5 @@
     <solid android:color="@color/white" />
     <stroke
         android:width="@dimen/edx_hairline"
-        android:color="@color/edx_brand_gray_back" />
-    <corners android:radius="@dimen/edx_box_radius" />
+        android:color="@color/neutralDark" />
 </shape>

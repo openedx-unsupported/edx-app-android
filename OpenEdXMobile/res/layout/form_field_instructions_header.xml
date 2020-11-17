@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/edx_brand_gray_x_back"
+    android:background="@color/neutralLight"
     android:orientation="vertical"
     android:padding="@dimen/edx_margin">
 
@@ -10,7 +10,7 @@
         android:id="@+id/instructions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/edx_brand_gray_base"
+        android:textColor="@color/primaryBaseColor"
         android:textSize="@dimen/edx_base" />
 
     <TextView
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/widget_margin"
-        android:textColor="@color/edx_brand_gray_accent"
+        android:textColor="@color/primaryXLightColor"
         android:textSize="@dimen/edx_x_small" />
 
 </LinearLayout>

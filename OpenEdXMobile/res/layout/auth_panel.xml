@@ -37,7 +37,7 @@
             android:paddingLeft="@dimen/auth_panel_login_btn_horizontal_padding"
             android:paddingRight="@dimen/auth_panel_login_btn_horizontal_padding"
             android:text="@string/launch_login"
-            android:textColor="@color/edx_brand_action_color"
+            android:textColor="@color/secondaryBaseColor"
             android:textSize="@dimen/edx_base" />
     </LinearLayout>
 </layout>

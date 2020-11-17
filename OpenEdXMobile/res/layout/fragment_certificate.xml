@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_act_background">
+    android:background="@color/neutralLight">
 
     <org.edx.mobile.view.custom.EdxWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_act_background" />
+        android:background="@color/neutralLight" />
 
     <include layout="@layout/loading_indicator" />
 </FrameLayout>

@@ -6,7 +6,7 @@
         android:id="@+id/ll_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/edx_brand_primary_base"
+        android:background="@color/primaryBaseColor"
         android:orientation="vertical">
 
         <FrameLayout
@@ -24,7 +24,7 @@
                 android:layout_marginRight="@dimen/edx_double_margin"
                 android:gravity="center"
                 android:padding="@dimen/widget_margin"
-                android:textColor="@color/edx_white"
+                android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base"
                 tools:text="Version 2.8.1 New Features" />
 
@@ -69,7 +69,7 @@
                 android:background="@drawable/selectable_box_overlay"
                 android:padding="@dimen/widget_margin"
                 android:text="@string/label_done"
-                android:textColor="@color/white"
+                android:textColor="@color/accentAColor"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </FrameLayout>

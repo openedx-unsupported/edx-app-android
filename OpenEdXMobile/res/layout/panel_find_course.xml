@@ -25,14 +25,14 @@
 
                 <TextView
                     android:id="@+id/findcourse_tv"
-                    style="@style/semibold_text"
+                    style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/edx_margin"
                     android:layout_marginTop="@dimen/edx_margin"
                     android:gravity="center"
                     android:text="@string/find_course_text"
-                    android:textColor="@color/edx_brand_gray_base"
+                    android:textColor="@color/primaryBaseColor"
                     android:textSize="@dimen/edx_base" />
 
                 <androidx.appcompat.widget.AppCompatButton

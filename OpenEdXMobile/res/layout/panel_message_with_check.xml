@@ -17,7 +17,7 @@
         android:contentDescription="@null"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/check"
+        android:background="@drawable/ic_round_primary_check"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginLeft="5dp"

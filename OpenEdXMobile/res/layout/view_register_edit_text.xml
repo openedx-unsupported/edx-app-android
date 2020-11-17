@@ -12,13 +12,14 @@
         style="@style/Widget.Design.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/grey_text">
+        android:textColorHint="@color/neutralXXDark">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/register_edit_text_tilEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
+            android:textColor="@color/neutralBlack"
             android:focusableInTouchMode="true"/>
     </org.edx.mobile.view.custom.EdxTextInputLayout>
 

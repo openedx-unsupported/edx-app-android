@@ -201,7 +201,7 @@ public class UserProfileFragment
             @Override
             public void showLoading() {
                 ((AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
-                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_x_back));
+                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.neutralLight));
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
@@ -212,7 +212,7 @@ public class UserProfileFragment
             @Override
             public void showError(@NonNull Throwable error) {
                 ((AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
-                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_x_back));
+                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.neutralLight));
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);

@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/edx_margin"
             android:gravity="center_horizontal"
-            android:textColor="@color/edx_brand_gray_base"
+            android:textColor="@color/primaryBaseColor"
             android:textSize="@dimen/drawer_app_version_text"
             tools:text="Version Major.Minor.Patch" />
     </LinearLayout>

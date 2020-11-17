@@ -1,13 +1,16 @@
 package org.edx.mobile.http.notifications;
 
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import android.view.View;
-import android.widget.Button;
-
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -101,6 +104,12 @@ public class SnackbarErrorNotification extends ErrorNotification {
             // doesn't automatically dismiss and we have to manually dismiss it.
             final Button actionButton = (Button) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_action);
             actionButton.setOnClickListener(actionListener);
+            actionButton.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.inter_semi_bold));
+
+            TextView snackTextView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+            snackTextView.setMaxLines(3);
+
+            snackbar.setActionTextColor(view.getResources().getColor(R.color.accentAColor));
             snackbar.show();
         }
     }

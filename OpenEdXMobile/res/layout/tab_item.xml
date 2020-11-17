@@ -20,7 +20,7 @@
         android:paddingLeft="@dimen/widget_margin_half"
         android:paddingStart="@dimen/widget_margin_half"
         android:textAlignment="center"
-        android:textColor="@color/edx_brand_primary_base"
+        android:textColor="@color/primaryBaseColor"
         android:textSize="@dimen/edx_small"
         android:maxLines="1"
         android:ellipsize="end"
