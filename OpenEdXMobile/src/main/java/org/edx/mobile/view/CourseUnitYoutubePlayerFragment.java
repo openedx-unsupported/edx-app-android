@@ -310,9 +310,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
             if (getActivity() != null) {
                 if (!fullScreen && orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                } else {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                }
+                } 
             }
             if (videoModel != null) {
                 environment.getAnalyticsRegistry().trackVideoOrientation(videoModel.videoId,
