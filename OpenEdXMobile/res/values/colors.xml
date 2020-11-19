@@ -67,9 +67,9 @@
     <color name="edx_brand_gray_dark">#111111</color>
     <color name="edx_brand_gray_base">#00262B</color>
     <color name="edx_brand_gray2">#454545</color>
-    <color name="edx_brand_gray_accent">#475B65</color>
-    <color name="edx_brand_gray_back">#2D494E</color>
-    <color name="edx_brand_gray_x_back">#2D494E</color>
+    <color name="edx_brand_gray_accent">#707070</color>
+    <color name="edx_brand_gray_back">#E1DDDB</color>
+    <color name="edx_brand_gray_x_back">#D7D3D1</color>
 
     <color name="edx_success_text">#F0CC00</color>
     <color name="edx_success_accent">#009B00</color>

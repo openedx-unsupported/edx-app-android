@@ -26,7 +26,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @ColorInt
     private final int edx_brand_primary_base;
     @ColorInt
-    private final int grey_medium;
+    private final int edx_grayscale_neutral_dark;
     @ColorInt
     private final int edx_brand_secondary_dark;
     @ColorInt
@@ -41,7 +41,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
         edx_brand_primary_base = context.getResources().getColor(R.color.edx_brand_primary_base);
-        grey_medium = context.getResources().getColor(R.color.grey_medium);
+        edx_grayscale_neutral_dark = context.getResources().getColor(R.color.edx_brand_gray_accent);
         edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
         edx_utility_success_dark = context.getResources().getColor(R.color.edx_success_text);
         semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
@@ -64,7 +64,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 }
             } else {
                 icon = FontAwesomeIcons.fa_comments;
-                iconColor = (discussionThread.isRead() ? grey_medium : edx_brand_primary_base);
+                iconColor = (discussionThread.isRead() ? edx_grayscale_neutral_dark : edx_brand_primary_base);
             }
             holder.discussionPostTypeIcon.setIcon(icon);
             holder.discussionPostTypeIcon.setIconColor(iconColor);
@@ -80,10 +80,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 holder.discussionPostRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionPostDateTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionUnreadRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
-                holder.discussionPostTypeIcon.setIconColor(grey_medium);
-                holder.discussionPostClosedIcon.setIconColor(grey_medium);
-                holder.discussionPostPinIcon.setIconColor(grey_medium);
-                holder.discussionPostFollowIcon.setIconColor(grey_medium);
+                holder.discussionPostTypeIcon.setIconColor(edx_grayscale_neutral_dark);
+                holder.discussionPostClosedIcon.setIconColor(edx_grayscale_neutral_dark);
+                holder.discussionPostPinIcon.setIconColor(edx_grayscale_neutral_dark);
+                holder.discussionPostFollowIcon.setIconColor(edx_grayscale_neutral_dark);
             }
         }
 
