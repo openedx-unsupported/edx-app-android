@@ -52,7 +52,6 @@ switch_to_virtual_env
 install_requirements
 print_message "calling AWS Test run"
 print_message $JENKINS_USER_NAME
-print_message $JENKINS_PASSWORD
 print_message "calling AWS login credentials"
 printenv
 python -v ./resources/trigger_aws_test_run.py $AUT_NAME
