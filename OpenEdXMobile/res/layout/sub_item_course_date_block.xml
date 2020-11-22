@@ -14,7 +14,7 @@
             fontPath="fonts/OpenSans-Semibold.ttf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.25"
+            android:lineSpacingMultiplier="@dimen/course_date_title_line_spacing"
             android:textColor="@color/switch_text_color"
             android:textSize="@dimen/edx_base"
             android:visibility="gone"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/switch_text_color"
             android:textSize="@dimen/edx_small"
-            android:lineSpacingMultiplier="1.125"
+            android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
             android:visibility="gone"
             tools:text="After this date, course content will be archived"
             tools:visibility="visible" />

@@ -188,8 +188,8 @@ class DataBindingHelperUtils {
          * @return true if all the date items have update badge status else false
          * */
         private fun hasSameDateTypes(dateBlockItems: ArrayList<CourseDateBlock>?): Boolean {
-            if (dateBlockItems != null && dateBlockItems.isEmpty().not() && dateBlockItems.size > 1) {
-                val dateType = dateBlockItems[0].dateBlockBadge
+            if (dateBlockItems != null && dateBlockItems.isNotEmpty() && dateBlockItems.size > 1) {
+                val dateType = dateBlockItems.first().dateBlockBadge
                 for (i in 1 until dateBlockItems.size) {
                     if (dateBlockItems[i].dateBlockBadge != dateType &&
                             dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK) {
