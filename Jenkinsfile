@@ -67,18 +67,12 @@ pipeline {
         }
 
         stage('setup virtual env and trigger run on aws device farm') {
-            steps {
-                sh 'bash ./resources/setup_virtual_env.sh'
-            }
-        }
-
-        stage('get login credentials') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('AUTOMATION_USERNAME')
             }
 
             steps {
-                // tests
+                sh 'bash ./resources/setup_virtual_env.sh'
             }
         }
     }
