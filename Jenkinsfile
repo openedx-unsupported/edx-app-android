@@ -12,10 +12,7 @@ pipeline {
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
             AUT_NAME = 'edx-debuggable-2.23.2.apk'
-    }
-
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('AUTOMATION_USERNAME')
+            AWS_ACCESS_KEY_ID = credentials('AUTOMATION_USERNAME')
     }
 
     stages {
