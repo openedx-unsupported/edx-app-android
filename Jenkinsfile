@@ -12,7 +12,7 @@ pipeline {
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
             AUT_NAME = 'edx-debuggable-2.23.2.apk'
-            AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+            AWS_ACCESS_KEY_ID = credentials('jenkins-aws-secret-key-id')
             AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
 
