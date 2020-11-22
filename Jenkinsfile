@@ -76,6 +76,10 @@ pipeline {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('AUTOMATION_USERNAME')
             }
+
+            steps {
+                // tests
+            }
         }
     }
 } 
