@@ -394,8 +394,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Checking if the onItemClick action performed on course dates banner
-                if (!isVideoMode && isBannerVisible && position == 0) {
-                    return;
+                if (!isVideoMode && isBannerVisible) {
+                    if (position == 0)
+                        return;
+                    else
+                        position -= 1;
                 }
                 if (deleteMode != null) {
                     deleteMode.finish();
@@ -416,8 +419,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // Checking if the onItemLongClick action performed on course dates banner
-                if (!isVideoMode && isBannerVisible && position == 0) {
-                    return false;
+                if (!isVideoMode && isBannerVisible) {
+                    if (position == 0)
+                        return false;
+                    else
+                        position -= 1;
                 }
                 final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
                 if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
