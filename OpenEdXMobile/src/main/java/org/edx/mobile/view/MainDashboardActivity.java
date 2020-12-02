@@ -119,8 +119,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
     @Override
     public Fragment getFirstFragment() {
         final Fragment fragment = new MainTabsDashboardFragment();
-        final Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_SCREEN_NAME, getIntent().getStringExtra(EXTRA_SCREEN_NAME));
+        final Bundle bundle = getIntent().getExtras();
         fragment.setArguments(bundle);
         return fragment;
     }

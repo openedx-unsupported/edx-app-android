@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,7 +26,6 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -39,8 +40,6 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
-
-import de.greenrobot.event.EventBus;
 
 @Singleton
 public class Router {
@@ -64,6 +63,7 @@ public class Router {
     public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
     public static final String EXTRA_PATH_ID = "path_id";
     public static final String EXTRA_SCREEN_NAME = "screen_name";
+    public static final String EXTRA_SCREEN_SELECTED = "screen_selected";
     public static final String EXTRA_DEEP_LINK = "deep_link";
 
     @Inject
@@ -153,7 +153,11 @@ public class Router {
 
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
                                   @Nullable String pathId) {
-        sourceActivity.startActivity(MainDashboardActivity.newIntent(screenName, pathId));
+        Intent intent = MainDashboardActivity.newIntent(screenName, pathId);
+        if (!TextUtils.isEmpty(screenName)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+        sourceActivity.startActivity(intent);
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
