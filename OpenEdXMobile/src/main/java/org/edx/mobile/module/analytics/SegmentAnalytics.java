@@ -14,6 +14,7 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 import com.segment.analytics.android.integrations.firebase.FirebaseIntegration;
 import com.segment.analytics.integrations.BasePayload;
+import com.segment.analytics.integrations.Integration;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -49,9 +50,11 @@ public class SegmentAnalytics implements Analytics {
                 .logLevel(debugging ? com.segment.analytics.Analytics.LogLevel.VERBOSE : com.segment.analytics.Analytics.LogLevel.NONE);
         if (config.getFirebaseConfig().isAnalyticsSourceSegment()) {
             // If Segment & Firebase Analytics are enabled, we'll use Segment's Firebase integration
-            builder = builder.use(FirebaseIntegration.FACTORY)
+            Integration.Factory firebaseFactory = FirebaseIntegration.FACTORY;
+            builder = builder.use(firebaseFactory)
+                    // Add middleware only for Firebase Integration.
                     // Ref: https://segment.com/docs/connections/sources/catalog/libraries/mobile/android/middleware/
-                    .useSourceMiddleware(chain -> {
+                    .useDestinationMiddleware(firebaseFactory.key(), chain -> {
                         BasePayload newPayload = chain.payload().toBuilder().build();
                         // remove special char from `Name and Event Name` that are not support by Firebase
                         if (newPayload.get(Keys.NAME) instanceof String) {
