@@ -80,6 +80,10 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
         }
         UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
         initObserver()
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.fetchCourseDates(courseID = courseId, isSwipeRefresh = false)
     }
 
@@ -147,7 +151,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
      * @param courseBannerInfo object of course deadline info
      */
     private fun initDatesBanner(courseBannerInfo: CourseBannerInfoModel?) {
-        if (courseBannerInfo == null) {
+        if (courseBannerInfo == null || courseBannerInfo.hasEnded) {
             binding.banner.containerLayout.visibility = View.GONE
             return
         }

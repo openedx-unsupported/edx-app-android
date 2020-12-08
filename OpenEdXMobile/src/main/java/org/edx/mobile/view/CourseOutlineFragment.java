@@ -106,9 +106,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private CourseOutlineAdapter adapter;
     private ListView listView;
+    private LayoutCourseDatesBannerBinding bannerViewBinding;
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
     private boolean isVideoMode;
+    // Flag to check whether the course dates banner info api call can be made or not
+    private boolean canFetchBannerInfo = true;
     // Flag to check if the course dates banner is visible or not
     private boolean isBannerVisible = false;
     private boolean isOnCourseOutline;
@@ -187,6 +190,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 // Hide the progress bar as swipe layout has its own progress indicator
                 loadingIndicator.setVisibility(View.GONE);
                 errorNotification.hideError();
+                canFetchBannerInfo = true;
                 getCourseComponentFromServer(false);
             }
         });
@@ -266,7 +270,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             final CourseComponent courseComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId);
             if (courseComponent != null) {
                 // Course data exist in app session cache
-                loadData(courseComponent, false);
+                loadData(courseComponent);
                 return;
             }
         }
@@ -274,7 +278,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         final CourseComponent courseComponent = courseManager.getCourseDataFromAppLevelCache(courseId);
         if (courseComponent != null) {
             // Course data exist in app session cache
-            loadData(courseComponent, false);
+            loadData(courseComponent);
             return;
         }
         // Check if course data is available in persistable cache
@@ -314,7 +318,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         final CourseComponent courseComponent = result.getResult();
         if (courseComponent != null) {
             // Course data exist in persistable cache
-            loadData(validateCourseComponent(courseComponent), false);
+            loadData(validateCourseComponent(courseComponent));
             loadingIndicator.setVisibility(View.GONE);
             // Send a server call in background for refreshed data
             getCourseComponentFromServer(false);
@@ -343,7 +347,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onResponse(@NonNull final CourseComponent courseComponent) {
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
-                loadData(validateCourseComponent(courseComponent), true);
+                loadData(validateCourseComponent(courseComponent));
                 swipeContainer.setRefreshing(false);
             }
 
@@ -472,7 +476,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
      * @param courseBannerInfo object of course deadline info
      */
     private void initDatesBanner(CourseBannerInfoModel courseBannerInfo) {
-        LayoutCourseDatesBannerBinding bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
+        if (bannerViewBinding == null)
+            bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
+
         if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
             CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(), courseData.getCourse().getId(),
                     courseData.getMode(), Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
@@ -653,9 +659,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     /**
      * Load data to the adapter
      * @param courseComponent Components of course to be load
-     * @param isServerCall    indicate whether the call is from server or cache
      */
-    private void loadData(@NonNull CourseComponent courseComponent, boolean isServerCall) {
+    private void loadData(@NonNull CourseComponent courseComponent) {
         courseComponentId = courseComponent.getId();
         if (courseData == null || getActivity() == null)
             return;
@@ -666,8 +671,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             // We only need to set the title of Course Outline screen, where we show a subsection's units
             getActivity().setTitle(courseComponent.getDisplayName());
         }
-        if (!isVideoMode && isOnCourseOutline && isServerCall) {
+        if (!isVideoMode && isOnCourseOutline && canFetchBannerInfo) {
             courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourse().getId(), swipeContainer.isRefreshing());
+            canFetchBannerInfo = false;
         }
 
         adapter.setData(courseComponent);

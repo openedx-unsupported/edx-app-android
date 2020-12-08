@@ -128,7 +128,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void initInfoBanner(CourseBannerInfoModel courseBannerInfo) {
-        if (courseBannerInfo == null) {
+        if (courseBannerInfo == null || courseBannerInfo.getHasEnded()) {
             infoBanner.setVisibility(View.GONE);
             return;
         }
