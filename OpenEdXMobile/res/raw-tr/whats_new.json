@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.24",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Yeni Görünüş ve Hissiyat",
+        "message": "Farklı bir şeyler dikkatinizi çekti mi? Görünüşümüzü modern hale getirdik ve öğrenme hedeflerinizi başarmanızı daha kolay hale getirecek güncellemeler yapmaya başladık."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Bir Bakışta Tüm Ders Tarihleri",
+        "message": "Tarihler sekmesinde bir bakışta dersinize dair tüm önemli tarihleri görün. Bir daha hiçbir son teslim tarihini kaçırmayacaksınız!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Kişiselleştirilmiş Öğrenme Programları",
+        "message": "Kendi hızınıza uygun bir derse kayıt olduğunuzda, artık kişiselleştirilmiş öğrenme programınızı bitiş tarihleri ile birlikte telefonunuzda görebilirsiniz. Ayrıca programınızı düzenlemek isterseniz bitiş tarihlerini kaydırabilirsiniz; sizin dersiniz, sizin tarzınız!"
+      }
+    ]
+  },
+  {
     "version": "2.23",
     "messages": [
       {

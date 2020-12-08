@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.24",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Nouvelle interface",
+        "message": "Vous avez remarqué une différence ? Nous avons modernisé notre apparence et effectué des mises à jour pour vous permettre d'atteindre plus facilement vos objectifs d'apprentissage."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Toutes les dates du cours en un coup d’œil",
+        "message": "Dans l'onglet des dates, consultez toutes les dates importantes de votre cours en un coup d'œil. Vous ne manquerez plus jamais une date d'échéance."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Calendrier d'apprentissage personnalisé",
+        "message": "Si vous êtes inscrit dans un cours à la progression autocontrôlée, vous pouvez désormais consulter votre calendrier d'apprentissage personnalisé avec les dates d'échéance sur votre téléphone. Vous pouvez également changer les dates d'échéance si vous devez modifier votre calendrier. Votre cours s'adapte à vos besoins."
+      }
+    ]
+  },
+  {
     "version": "2.23",
     "messages": [
       {
