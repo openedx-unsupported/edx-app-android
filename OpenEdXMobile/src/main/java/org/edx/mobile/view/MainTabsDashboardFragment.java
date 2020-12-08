@@ -150,12 +150,8 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                 ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
-                    new FragmentItemModel.FragmentStateListener() {
-                        @Override
-                        public void onFragmentSelected() {
-                            EventBus.getDefault().post(new DiscoveryTabSelectedEvent());
-                        }
-                    }
+                    getArguments(),
+                    () -> EventBus.getDefault().post(new DiscoveryTabSelectedEvent())
             ));
         }
 

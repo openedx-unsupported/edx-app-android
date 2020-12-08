@@ -85,7 +85,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
     private void handleTabSelection(@Nullable Bundle bundle) {
         if (bundle != null && binding != null) {
             @ScreenDef String screenName = bundle.getString(Router.EXTRA_SCREEN_NAME);
-            if (screenName != null) {
+            if (screenName != null && !bundle.getBoolean(Router.EXTRA_SCREEN_SELECTED, false)) {
                 final List<FragmentItemModel> fragmentItems = getFragmentItems();
                 for (int i = 0; i < fragmentItems.size(); i++) {
                     final FragmentItemModel item = fragmentItems.get(i);
@@ -94,9 +94,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
                         break;
                     }
                 }
-                // Setting this to null, so that upon recreation of the fragment the tab defined in
+                // Setting `EXTRA_SCREEN_SELECTED` to true, so that upon recreation of the fragment the tab defined in
                 // the deep link is not auto-selected again.
-                bundle.putString(Router.EXTRA_SCREEN_NAME, null);
+                bundle.putBoolean(Router.EXTRA_SCREEN_SELECTED, true);
             }
         }
     }
