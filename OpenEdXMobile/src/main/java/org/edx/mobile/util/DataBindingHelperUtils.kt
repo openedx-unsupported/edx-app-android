@@ -114,6 +114,7 @@ class DataBindingHelperUtils {
                 CourseDateType.COMPLETED,
                 CourseDateType.DUE_NEXT,
                 CourseDateType.NOT_YET_RELEASED,
+                CourseDateType.COURSE_EXPIRED_DATE,
                 CourseDateType.VERIFIED_ONLY -> {
                     if (isDatePast && (type == CourseDateType.VERIFIED_ONLY).not()) {
                         bulletView.background = ContextCompat.getDrawable(bulletView.context, R.drawable.black_border_white_circle)
