@@ -894,4 +894,41 @@ public class SegmentAnalytics implements Analytics {
         }
         trackSegmentEvent(eventName, aEvent.properties);
     }
+
+    @Override
+    public void trackPLSCourseDatesBanner(@NonNull String biValue, @NonNull String courseId,
+                                          @NonNull String enrollmentMode, @NonNull String screenName,
+                                          @NonNull String bannerType) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.COURSE_DATES);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.MODE, enrollmentMode);
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        aEvent.data.putValue(Keys.BANNER_TYPE, bannerType);
+        trackSegmentEvent(Events.PLS_BANNER_VIEWED, aEvent.properties);
+    }
+
+    @Override
+    public void trackPLSShiftButtonTapped(@NonNull String courseId, @NonNull String enrollmentMode,
+                                          @NonNull String screenName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.CATEGORY, Values.COURSE_DATES);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.MODE, enrollmentMode);
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        trackSegmentEvent(Events.PLS_SHIFT_DATES_BUTTON_TAPPED, aEvent.properties);
+    }
+
+    @Override
+    public void trackPLSCourseDatesShift(@NonNull String courseId, @NonNull String enrollmentMode,
+                                         @NonNull String screenName, boolean isSuccess) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.CATEGORY, Values.COURSE_DATES);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.MODE, enrollmentMode);
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        aEvent.data.putValue(Keys.SUCCESS, isSuccess);
+        trackSegmentEvent(Events.PLS_SHIFT_DATES, aEvent.properties);
+    }
 }

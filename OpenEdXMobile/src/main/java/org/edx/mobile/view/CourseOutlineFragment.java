@@ -266,7 +266,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             final CourseComponent courseComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId);
             if (courseComponent != null) {
                 // Course data exist in app session cache
-                loadData(courseComponent);
+                loadData(courseComponent, false);
                 return;
             }
         }
@@ -274,7 +274,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         final CourseComponent courseComponent = courseManager.getCourseDataFromAppLevelCache(courseId);
         if (courseComponent != null) {
             // Course data exist in app session cache
-            loadData(courseComponent);
+            loadData(courseComponent, false);
             return;
         }
         // Check if course data is available in persistable cache
@@ -314,7 +314,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         final CourseComponent courseComponent = result.getResult();
         if (courseComponent != null) {
             // Course data exist in persistable cache
-            loadData(validateCourseComponent(courseComponent));
+            loadData(validateCourseComponent(courseComponent), false);
             loadingIndicator.setVisibility(View.GONE);
             // Send a server call in background for refreshed data
             getCourseComponentFromServer(false);
@@ -343,7 +343,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onResponse(@NonNull final CourseComponent courseComponent) {
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
-                loadData(validateCourseComponent(courseComponent));
+                loadData(validateCourseComponent(courseComponent), true);
                 swipeContainer.setRefreshing(false);
             }
 
@@ -474,9 +474,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private void initDatesBanner(CourseBannerInfoModel courseBannerInfo) {
         LayoutCourseDatesBannerBinding bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
         if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
-            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(), courseBannerInfo, v -> {
-                courseDateViewModel.resetCourseDatesBanner(courseData.getCourse().getId());
-            });
+            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(), courseData.getCourse().getId(),
+                    courseData.getMode(), Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
+                    v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourse().getId()));
 
             if (listView.getHeaderViewsCount() == 0 && !TextUtils.isEmpty(bannerViewBinding.bannerInfo.getText())) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
@@ -499,6 +499,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
+        environment.getAnalyticsRegistry().trackPLSCourseDatesShift(courseData.getCourse().getId(),
+                courseData.getMode(), Analytics.Screens.PLS_COURSE_DASHBOARD, isSuccess);
     }
 
     @Override
@@ -650,8 +652,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     /**
      * Load data to the adapter
+     * @param courseComponent Components of course to be load
+     * @param isServerCall    indicate whether the call is from server or cache
      */
-    private void loadData(@NonNull CourseComponent courseComponent) {
+    private void loadData(@NonNull CourseComponent courseComponent, boolean isServerCall) {
         courseComponentId = courseComponent.getId();
         if (courseData == null || getActivity() == null)
             return;
@@ -662,8 +666,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             // We only need to set the title of Course Outline screen, where we show a subsection's units
             getActivity().setTitle(courseComponent.getDisplayName());
         }
-        if (!isVideoMode && isOnCourseOutline)
+        if (!isVideoMode && isOnCourseOutline && isServerCall) {
             courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourse().getId(), swipeContainer.isRefreshing());
+        }
 
         adapter.setData(courseComponent);
         if (adapter.hasCourseData()) {

@@ -25,6 +25,7 @@ import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
@@ -49,11 +50,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private CourseDateViewModel courseDateViewModel;
     private PreLoadingListener preloadingListener;
     private boolean isPageLoading = false;
+    private String enrollmentMode = "";
 
-    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
+    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String enrollmentMode) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putString(Router.EXTRA_ENROLLMENT_MODE, enrollmentMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +71,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        enrollmentMode = getStringArgument(Router.EXTRA_ENROLLMENT_MODE);
         if (getActivity() instanceof PreLoadingListener) {
             preloadingListener = (PreLoadingListener) getActivity();
         } else {
@@ -128,7 +132,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             infoBanner.setVisibility(View.GONE);
             return;
         }
-        CourseDateUtil.INSTANCE.setupCourseDatesBanner(infoBanner, courseBannerInfo,
+        CourseDateUtil.INSTANCE.setupCourseDatesBanner(infoBanner, unit.getCourseId(), enrollmentMode,
+                Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, environment.getAnalyticsRegistry(), courseBannerInfo,
                 v -> courseDateViewModel.resetCourseDatesBanner(unit.getCourseId()));
     }
 
@@ -181,6 +186,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
+        environment.getAnalyticsRegistry().trackPLSCourseDatesShift(unit.getCourseId(), enrollmentMode,
+                Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, isSuccess);
     }
 
     private void loadUnit() {
