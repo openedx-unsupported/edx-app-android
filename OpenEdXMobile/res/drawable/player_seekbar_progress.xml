@@ -4,7 +4,7 @@
         <shape android:shape="line">
             <stroke
                 android:width="@dimen/video_player_seekbar_line_width"
-                android:color="@color/edx_brand_gray_base" />
+                android:color="@color/primaryBaseColor" />
         </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">
@@ -12,7 +12,7 @@
             <shape android:shape="line">
                 <stroke
                     android:width="@dimen/video_player_seekbar_line_width"
-                    android:color="@color/edx_brand_primary_dark" />
+                    android:color="@color/primaryBaseColor" />
             </shape>
         </scale>
     </item>
@@ -21,7 +21,7 @@
             <shape android:shape="line">
                 <stroke
                     android:width="@dimen/video_player_seekbar_line_width"
-                    android:color="@color/edx_brand_primary_accent" />
+                    android:color="@color/accentAColor" />
             </shape>
         </scale>
     </item>

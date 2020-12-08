@@ -15,7 +15,7 @@
         <clip>
             <shape>
                 <corners android:radius="0dip" />
-                <solid android:color="@color/edx_success_accent" />
+                <solid android:color="@color/successLight" />
             </shape>
         </clip>
     </item>

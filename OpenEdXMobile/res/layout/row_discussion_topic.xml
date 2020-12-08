@@ -2,7 +2,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discussion_topic_name_text_view"
-    style="@style/regular_grey_text"
+    style="@style/regular_edx_black_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:drawablePadding="@dimen/edx_margin"

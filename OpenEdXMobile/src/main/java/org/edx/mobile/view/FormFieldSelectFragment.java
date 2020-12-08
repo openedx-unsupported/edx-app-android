@@ -138,14 +138,14 @@ public class FormFieldSelectFragment extends BaseFragment {
         final TextView textView = (TextView) LayoutInflater.from(listView.getContext()).inflate(R.layout.edx_selectable_list_item, listView, false);
         {
             final SpannableString labelValueSpan = new SpannableString(labelValue);
-            labelValueSpan.setSpan(new ForegroundColorSpan(listView.getResources().getColor(R.color.edx_brand_gray_base)), 0, labelValueSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            labelValueSpan.setSpan(new ForegroundColorSpan(listView.getResources().getColor(R.color.primaryBaseColor)), 0, labelValueSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(ResourceUtil.getFormattedString(listView.getContext().getResources(), labelRes, labelKey, labelValueSpan));
         }
         Context context = textView.getContext();
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
                 new IconDrawable(context, icon)
                         .sizeRes(context, R.dimen.edx_base)
-                        .colorRes(context, R.color.edx_brand_gray_back)
+                        .colorRes(context, R.color.neutralDark)
                 , null, null, null);
         listView.addHeaderView(textView, new FormOption(labelValue, value), true);
     }

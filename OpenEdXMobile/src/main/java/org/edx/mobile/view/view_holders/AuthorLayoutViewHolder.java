@@ -46,7 +46,7 @@ public class AuthorLayoutViewHolder {
                 answerTextView,
                 new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
                         .sizeRes(context, R.dimen.edx_base)
-                        .colorRes(context, R.color.edx_success_accent),
+                        .colorRes(context, R.color.successLight),
                 null, null, null);
         RoboGuice.getInjector(context).injectMembers(this);
     }

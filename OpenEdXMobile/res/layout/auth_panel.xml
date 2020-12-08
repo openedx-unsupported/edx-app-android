@@ -10,15 +10,15 @@
         android:orientation="horizontal"
         android:padding="@dimen/widget_margin_double">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sign_up"
-            style="@style/edX.Widget.BrandPillButton"
+            style="@style/edX.Widget.ActionBrandPillButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/auth_panel_btn_height"
-            android:paddingLeft="@dimen/auth_panel_login_btn_horizontal_padding"
-            android:paddingRight="@dimen/auth_panel_login_btn_horizontal_padding"
             android:layout_weight="1"
             android:focusable="true"
+            android:paddingLeft="@dimen/auth_panel_login_btn_horizontal_padding"
+            android:paddingRight="@dimen/auth_panel_login_btn_horizontal_padding"
             android:text="@string/launch_register"
             android:textColor="@color/white"
             android:textSize="@dimen/edx_base" />
@@ -28,16 +28,16 @@
             android:layout_width="@dimen/widget_margin_double"
             android:layout_height="match_parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/log_in"
-            style="@style/edX.Widget.BorderedButton"
+            style="@style/edX.Widget.ActionBorderedButton"
             android:layout_width="@dimen/auth_panel_login_btn_width"
             android:layout_height="@dimen/auth_panel_btn_height"
+            android:focusable="true"
             android:paddingLeft="@dimen/auth_panel_login_btn_horizontal_padding"
             android:paddingRight="@dimen/auth_panel_login_btn_horizontal_padding"
-            android:focusable="true"
             android:text="@string/launch_login"
-            android:textColor="@color/edx_brand_primary_accent"
+            android:textColor="@color/secondaryBaseColor"
             android:textSize="@dimen/edx_base" />
     </LinearLayout>
 </layout>

@@ -13,7 +13,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/edx_divider_length"
-            android:background="@color/edx_success_accent"
+            android:background="@color/successLight"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -60,13 +60,13 @@
 
         <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/info"
-            style="@style/edX.Widget.BorderedButton"
+            style="@style/edX.Widget.ActionBorderedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/edx_half_margin"
             android:focusable="true"
             android:visibility="gone"
-            app:iconColor="@color/edx_brand_primary_base"
+            app:iconColor="@color/primaryBaseColor"
             app:iconName="fa-info-circle"
             app:layout_constraintBottom_toBottomOf="@+id/ll_upgrade_button"
             app:layout_constraintDimensionRatio="1:1"

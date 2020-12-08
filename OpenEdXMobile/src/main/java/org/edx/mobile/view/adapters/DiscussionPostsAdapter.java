@@ -24,11 +24,11 @@ import org.edx.mobile.util.ResourceUtil;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @ColorInt
-    private final int edx_brand_primary_base;
+    private final int primaryBaseColor;
     @ColorInt
-    private final int edx_grayscale_neutral_dark;
+    private final int neutral_x_dark;
     @ColorInt
-    private final int edx_brand_secondary_dark;
+    private final int secondary_dark_color;
     @ColorInt
     private final int edx_utility_success_dark;
 
@@ -40,10 +40,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
-        edx_brand_primary_base = context.getResources().getColor(R.color.edx_brand_primary_base);
-        edx_grayscale_neutral_dark = context.getResources().getColor(R.color.edx_brand_gray_base);
-        edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
-        edx_utility_success_dark = context.getResources().getColor(R.color.edx_success_text);
+        primaryBaseColor = context.getResources().getColor(R.color.primaryBaseColor);
+        neutral_x_dark = context.getResources().getColor(R.color.neutralXDark);
+        secondary_dark_color = context.getResources().getColor(R.color.secondaryDarkColor);
+        edx_utility_success_dark = context.getResources().getColor(R.color.successBase);
         semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
     }
 
@@ -60,11 +60,11 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                     iconColor = edx_utility_success_dark;
                 } else {
                     icon = FontAwesomeIcons.fa_question;
-                    iconColor = edx_brand_secondary_dark;
+                    iconColor = secondary_dark_color;
                 }
             } else {
                 icon = FontAwesomeIcons.fa_comments;
-                iconColor = (discussionThread.isRead() ? edx_grayscale_neutral_dark : edx_brand_primary_base);
+                iconColor = (discussionThread.isRead() ? neutral_x_dark : primaryBaseColor);
             }
             holder.discussionPostTypeIcon.setIcon(icon);
             holder.discussionPostTypeIcon.setIconColor(iconColor);
@@ -74,7 +74,17 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             final CharSequence threadTitle = discussionThread.getTitle();
             holder.discussionPostTitle.setText(threadTitle);
             if (!discussionThread.isRead()) {
+                holder.discussionPostTitle.setTextAppearance(getContext(), R.style.discussion_title_text);
                 holder.discussionPostTitle.setTypeface(semiBoldFont);
+            } else {
+                holder.discussionPostTitle.setTextAppearance(getContext(), R.style.discussion_responses_read);
+                holder.discussionPostRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
+                holder.discussionPostDateTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
+                holder.discussionUnreadRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
+                holder.discussionPostTypeIcon.setIconColor(neutral_x_dark);
+                holder.discussionPostClosedIcon.setIconColor(neutral_x_dark);
+                holder.discussionPostPinIcon.setIconColor(neutral_x_dark);
+                holder.discussionPostFollowIcon.setIconColor(neutral_x_dark);
             }
         }
 

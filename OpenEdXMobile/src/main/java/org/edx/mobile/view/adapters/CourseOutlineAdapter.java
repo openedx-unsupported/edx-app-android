@@ -341,7 +341,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             } else if (videoBlockModel.getData().encodedVideos.youtube != null) {
                 final boolean isYoutubePlayerEnabled = config.getYoutubePlayerConfig().isYoutubePlayerEnabled();
                 viewHolder.rowType.setIcon(isYoutubePlayerEnabled ? FontAwesomeIcons.fa_youtube_play : FontAwesomeIcons.fa_laptop);
-                viewHolder.rowType.setIconColorResource(isYoutubePlayerEnabled ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_accent);
+                viewHolder.rowType.setIconColorResource(isYoutubePlayerEnabled ? R.color.primaryBaseColor : R.color.primaryXLightColor);
             }
         } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
@@ -350,7 +350,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_laptop);
-            viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
+            viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             if (unit.getType() == BlockType.PROBLEM) {
@@ -363,7 +363,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         if (isDenialFeatureBasedEnrolments) {
             viewHolder.rowSubtitle.setText(R.string.not_available_on_mobile);
-            viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
+            viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
             viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
         }
@@ -375,9 +375,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 @Override
                 public void onResult(Boolean accessed) {
                     if (accessed) {
-                        viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
+                        viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
                     } else {
-                        viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
+                        viewHolder.rowType.setIconColorResource(R.color.primaryBaseColor);
                     }
                 }
 
@@ -415,9 +415,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
                         if (result != null && result == DownloadEntry.WatchedState.WATCHED) {
-                            viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
+                            viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
                         } else {
-                            viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
+                            viewHolder.rowType.setIconColorResource(R.color.primaryBaseColor);
                         }
                     }
 
@@ -507,7 +507,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             holder.rowSubtitle.setText(component.getFormat());
             holder.rowSubtitle.setTypeface(holder.rowSubtitle.getTypeface(), Typeface.BOLD);
             holder.rowSubtitle.setTextColor(ContextCompat.getColor(context,
-                    R.color.edx_brand_gray_dark));
+                    R.color.neutralBlack));
             if (!TextUtils.isEmpty(component.getDueDate())) {
                 try {
                     holder.rowSubtitleDueDate.setText(getFormattedDueDate(component.getDueDate()));
@@ -595,17 +595,17 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_spinner);
                 // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
                 row.bulkDownload.setIconAnimation(Animation.SPIN);
-                row.bulkDownload.setIconColorResource(R.color.edx_brand_primary_base);
+                row.bulkDownload.setIconColorResource(R.color.primaryBaseColor);
                 break;
             case DOWNLOADED:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_check);
                 row.bulkDownload.setIconAnimation(Animation.NONE);
-                row.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
+                row.bulkDownload.setIconColorResource(R.color.primaryBaseColor);
                 break;
             case ONLINE:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_download);
                 row.bulkDownload.setIconAnimation(Animation.NONE);
-                row.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
+                row.bulkDownload.setIconColorResource(R.color.primaryXLightColor);
                 break;
         }
         row.numOfVideoAndDownloadArea.setOnClickListener(listener);
@@ -739,12 +739,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.row_subtitle_due_date);
         holder.rowSubtitleIcon = (IconImageView) convertView
                 .findViewById(R.id.row_subtitle_icon);
-        holder.rowSubtitleIcon.setIconColorResource(R.color.edx_brand_primary_base);
+        holder.rowSubtitleIcon.setIconColorResource(R.color.primaryBaseColor);
         holder.noOfVideos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (IconImageView) convertView
                 .findViewById(R.id.bulk_download);
-        holder.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
+        holder.bulkDownload.setIconColorResource(R.color.primaryXLightColor);
         holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel = convertView.findViewById(R.id.row_subtitle_panel);

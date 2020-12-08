@@ -124,7 +124,7 @@
     <dimen name="row_height_cc_option">40dp</dimen>
 
     <!-- Discussion -->
-    <dimen name="discussion_create_new_item_icon_margin">3dp</dimen>
+    <dimen name="discussion_create_new_item_icon_margin">6dp</dimen>
 
     <dimen name="discussion_post_refine_layout_height">40dp</dimen>
     <dimen name="discussion_posts_filter_popup_icon_margin">5dp</dimen>

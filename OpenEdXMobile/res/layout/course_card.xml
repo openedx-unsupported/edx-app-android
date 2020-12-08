@@ -14,7 +14,7 @@
         android:contentDescription="@null"
         android:minHeight="@dimen/course_card_height"
         android:scaleType="fitXY"
-        tools:background="@color/edx_brand_primary_base" />
+        tools:background="@color/primaryBaseColor" />
 
     <LinearLayout
         android:id="@+id/course_item_detail"
@@ -29,8 +29,7 @@
         android:paddingLeft="@dimen/widget_margin"
         android:paddingRight="@dimen/widget_margin"
         android:paddingStart="@dimen/widget_margin"
-        android:paddingTop="@dimen/widget_margin"
-        tools:targetApi="17">
+        android:paddingTop="@dimen/widget_margin">
 
         <TextView
             android:id="@+id/course_name"
@@ -42,7 +41,6 @@
             style="@style/course_card_course_run"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:targetApi="17"
             tools:text="Starting October 19" />
 
         <LinearLayout
@@ -50,7 +48,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:targetApi="17"
             tools:visibility="visible">
 
             <ImageView
@@ -71,7 +68,7 @@
                 android:paddingStart="@dimen/widget_margin_half"
                 android:text="@string/new_course_content"
                 android:textAllCaps="true"
-                android:textColor="@color/edx_brand_primary_accent"
+                android:textColor="@color/infoBase"
                 android:textSize="@dimen/edx_x_small"
                 tools:targetApi="17" />
         </LinearLayout>

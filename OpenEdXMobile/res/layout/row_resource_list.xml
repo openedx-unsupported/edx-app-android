@@ -8,10 +8,8 @@
     android:background="@drawable/view_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/dashboard_nav_element_right_margin"
-    android:paddingLeft="@dimen/dashboard_nav_element_left_margin"
-    android:paddingRight="@dimen/dashboard_nav_element_right_margin"
     android:paddingStart="@dimen/dashboard_nav_element_left_margin"
+    android:paddingEnd="@dimen/dashboard_nav_element_right_margin"
     tools:targetApi="17">
 
     <org.edx.mobile.view.custom.IconImageViewXml
@@ -20,13 +18,12 @@
         android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
-        app:iconColor="@color/edx_brand_gray_back" />
+        app:iconColor="@color/neutralXXDark" />
 
     <LinearLayout
         style="@style/regular_grey_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dashboard_nav_element_text_left_margin"
         android:layout_marginStart="@dimen/dashboard_nav_element_text_left_margin"
         android:layout_weight="1"
         android:orientation="vertical"
@@ -34,7 +31,7 @@
 
         <TextView
             android:id="@+id/row_title"
-            style="@style/regular_edx_gray_xdark_text"
+            style="@style/regular_edx_black_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -46,7 +43,7 @@
 
         <TextView
             android:id="@+id/row_subtitle"
-            style="@style/regular_edx_gray_base_text"
+            style="@style/regular_neutral_xx_dark_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -61,7 +58,7 @@
         android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
-        app:iconColor="@color/edx_brand_gray_back"
+        app:iconColor="@color/neutralXDark"
         app:iconName="fa-angle-right" />
 
 </LinearLayout>

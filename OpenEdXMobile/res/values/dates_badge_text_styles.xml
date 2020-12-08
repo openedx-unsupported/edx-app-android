@@ -7,7 +7,7 @@
     </style>
 
     <style name="today_date_badge_text_appearance" parent="dates_badge_text_appearance">
-        <item name="android:textColor">@color/course_date_badge_black</item>
+        <item name="android:textColor">@color/today_course_date_badge</item>
     </style>
 
     <style name="verified_only_badge_text_appearance" parent="dates_badge_text_appearance">

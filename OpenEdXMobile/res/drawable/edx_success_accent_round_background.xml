@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="4dp" />
-            <solid android:color="@color/edx_success_accent" />
+            <solid android:color="@color/successLight" />
         </shape>
     </item>
     <item android:drawable="@drawable/light_selectable_rounded_box_overlay" />

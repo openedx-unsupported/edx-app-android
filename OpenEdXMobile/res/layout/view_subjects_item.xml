@@ -7,9 +7,9 @@
         android:layout_height="@dimen/subject_item_height"
         android:padding="@dimen/widget_margin_half">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_view_subjects"
-            style="@style/edX.Widget.BrandPillButton"
+            style="@style/edX.Widget.PrimaryRoundPillButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/view_all_subjects"

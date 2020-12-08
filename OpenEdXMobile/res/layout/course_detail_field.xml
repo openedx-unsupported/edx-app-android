@@ -21,7 +21,7 @@
             android:baselineAlignBottom="true"
             android:gravity="left"
             app:iconColor="@color/black"
-            tools:src="@color/edx_brand_primary_base" />
+            tools:src="@color/primaryBaseColor" />
 
         <TextView
             android:id="@+id/course_detail_field_name"
@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/course_detail_field_text"
-            style="@style/regular_edx_gray_xdark_text"
+            style="@style/regular_primary_base_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ellipsize="end"

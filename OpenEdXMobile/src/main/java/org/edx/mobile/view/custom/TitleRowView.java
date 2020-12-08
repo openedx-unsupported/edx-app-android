@@ -49,8 +49,8 @@ public class TitleRowView extends LinearLayout {
         float fontSize = attrArray.getDimension(styleable.TitleRowView_titleFontSize, 12.0f);
         DecorationStyle decorationStyle =DecorationStyle.values()[attrArray.getInt(styleable.TitleRowView_decorationStyle, DecorationStyle.CENTER.ordinal())];
         int textColor = attrArray.getColor(styleable.TitleRowView_android_textColor, Color.BLACK);
-        int leftColor = attrArray.getColor(styleable.TitleRowView_leftColor, ContextCompat.getColor(context, color.grey_act_background));
-        int rightColor = attrArray.getColor(styleable.TitleRowView_rightColor, ContextCompat.getColor(context, color.grey_act_background));
+        int leftColor = attrArray.getColor(styleable.TitleRowView_leftColor, ContextCompat.getColor(context, color.neutralLight));
+        int rightColor = attrArray.getColor(styleable.TitleRowView_rightColor, ContextCompat.getColor(context, color.neutralLight));
 
         if ( decorationStyle !=  DecorationStyle.LEFT ) {
             View leftDashView = new View(context);

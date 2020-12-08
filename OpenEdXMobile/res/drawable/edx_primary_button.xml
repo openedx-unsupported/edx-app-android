@@ -4,13 +4,17 @@
         <selector>
             <item android:state_enabled="false">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/accentAColor" />
-                    <stroke android:color="@color/secondaryBaseColor" android:width="@dimen/edx_hairline" />
+                    <solid android:color="@color/primaryLightColor" />
+                    <corners android:radius="@dimen/edx_box_radius" />
+                    <stroke
+                        android:width="@dimen/edx_hairline"
+                        android:color="@color/primaryBaseColor" />
                 </shape>
             </item>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/secondaryBaseColor" />
+                    <corners android:radius="@dimen/edx_box_radius" />
+                    <solid android:color="@color/primaryBaseColor" />
                 </shape>
             </item>
         </selector>

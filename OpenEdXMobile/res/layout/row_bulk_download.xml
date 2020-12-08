@@ -7,7 +7,7 @@
         android:id="@+id/cl_bulk_download_view_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/edx_brand_gray_x_back"
+        android:background="@color/neutralXLight"
         android:contentDescription="@string/view_downloads"
         android:minHeight="@dimen/bulk_download_view_height"
         android:orientation="vertical"
@@ -20,7 +20,7 @@
             android:layout_height="@dimen/fa_large"
             android:layout_marginLeft="@dimen/widget_margin_double"
             android:layout_marginStart="@dimen/widget_margin_double"
-            app:iconColor="@color/edx_brand_primary_base"
+            app:iconColor="@color/primaryBaseColor"
             app:iconName="fa-film"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -47,7 +47,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_brand_primary_base"
+                android:textColor="@color/primaryBaseColor"
                 android:textSize="@dimen/edx_small"
                 tools:text="1 of 17 Videos Downloaded" />
 
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bulk_download_description_top_margin"
-                android:textColor="@color/edx_brand_gray_accent"
+                android:textColor="@color/primaryXLightColor"
                 android:textSize="@dimen/edx_small"
                 tools:text="5.5MB of 67.5MB total" />
 
@@ -67,7 +67,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/edx_margin"
-            android:layout_marginRight="@dimen/edx_margin"
             android:padding="@dimen/widget_margin_half"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

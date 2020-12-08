@@ -6,7 +6,7 @@
         android:id="@+id/container_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/edx_brand_primary_back"
+        android:background="@color/infoXXLight"
         android:orientation="vertical"
         android:padding="@dimen/container_padding">
 
@@ -14,7 +14,7 @@
             android:id="@+id/banner_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey_text_mycourse"
+            android:textColor="@color/neutralBlackT"
             android:textSize="@dimen/edx_small"
             tools:text="@string/course_dates_banner_reset_date" />
 
@@ -24,11 +24,12 @@
             android:id="@+id/btn_shift_dates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="@dimen/widget_margin"
-            android:background="@drawable/blue_border_white_roundedbg"
+            android:background="@color/primaryBaseColor"
             android:fontFamily="?attr/fontSemiBold"
             android:padding="@dimen/edx_half_margin"
-            android:textColor="@android:color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/edx_small"
             android:visibility="gone"
             tools:text="@string/course_dates_banner_reset_date_button"

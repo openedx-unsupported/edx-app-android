@@ -5,7 +5,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/edx_white"
+        android:background="@color/neutralWhite"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/edx_margin">
@@ -17,7 +17,7 @@
             android:layout_marginEnd="@dimen/edx_margin"
             android:layout_marginRight="@dimen/edx_margin"
             tools:ignore="ContentDescription"
-            tools:src="@color/edx_brand_primary_base" />
+            tools:src="@color/primaryBaseColor" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -29,7 +29,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_brand_gray_base"
+                android:textColor="@color/primaryBaseColor"
                 android:textSize="@dimen/edx_small"
                 android:textStyle="bold"
                 tools:text="Name" />
@@ -38,7 +38,7 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_brand_gray_accent"
+                android:textColor="@color/primaryXLightColor"
                 android:textSize="@dimen/edx_x_small"
                 tools:text="Description that is long enough to wrap onto another line." />
 
@@ -46,7 +46,7 @@
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_brand_gray_back"
+                android:textColor="@color/neutralDark"
                 android:textSize="@dimen/edx_x_small"
                 tools:text="Date" />
 
@@ -61,6 +61,6 @@
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
-            android:tint="@color/edx_brand_gray_base" />
+            android:tint="@color/primaryBaseColor" />
     </LinearLayout>
 </layout>

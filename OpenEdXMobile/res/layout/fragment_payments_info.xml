@@ -115,7 +115,7 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:background="@color/edx_success_accent"
+            tools:background="@color/successLight"
             tools:layout_height="150dp" />
 
     </LinearLayout>

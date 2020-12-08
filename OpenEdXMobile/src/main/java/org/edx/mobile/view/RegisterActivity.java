@@ -253,7 +253,7 @@ public class RegisterActivity extends BaseFragmentActivity
         errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
                 new IconDrawable(this, errorIcon)
                         .sizeRes(this, R.dimen.content_unavailable_error_icon_size)
-                        .colorRes(this, R.color.edx_brand_gray_back),
+                        .colorRes(this, R.color.neutralDark),
                 null, null
         );
     }

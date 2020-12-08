@@ -12,13 +12,11 @@
         android:id="@+id/chapter_row_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="@dimen/edx_margin"
         android:layout_marginStart="@dimen/edx_margin"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
         android:paddingBottom="@dimen/course_item_vertical_padding"
-        android:paddingLeft="@dimen/course_item_horizontal_padding"
         android:paddingStart="@dimen/course_item_horizontal_padding"
         android:paddingTop="@dimen/course_item_vertical_padding"
         tools:targetApi="17">
@@ -28,10 +26,9 @@
             android:layout_width="40dp"
             android:layout_height="18dp"
             android:baselineAlignBottom="true"
+            app:iconColor="@color/primaryBaseColor"
             android:gravity="center_vertical"
             android:paddingEnd="21dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="21dp"
             android:paddingStart="0dp"
             android:visibility="gone" />
 
@@ -46,7 +43,7 @@
 
             <TextView
                 android:id="@+id/row_title"
-                style="@style/regular_grey_text"
+                style="@style/regular_edx_black_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -67,7 +64,6 @@
                     android:id="@+id/row_subtitle_icon"
                     android:layout_width="@dimen/fa_large"
                     android:layout_height="@dimen/fa_large"
-                    android:layout_marginRight="@dimen/widget_margin_half"
                     android:layout_marginEnd="@dimen/widget_margin_half"
                     android:layout_gravity="top"
                     android:visibility="gone"
@@ -76,10 +72,9 @@
 
                 <TextView
                     android:id="@+id/row_subtitle"
-                    android:textColor="@color/edx_brand_gray_accent"
+                    android:textColor="@color/neutralXXDark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/widget_margin_half"
                     android:layout_marginEnd="@dimen/widget_margin_half"
                     android:ellipsize="end"
                     android:singleLine="true"
@@ -94,7 +89,7 @@
                     android:id="@+id/row_subtitle_due_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/edx_brand_gray_accent"
+                    android:textColor="@color/neutralXXDark"
                     android:textDirection="locale"
                     android:textSize="@dimen/edx_small"
                     android:layout_gravity="top"
@@ -111,11 +106,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
             android:background="@android:color/transparent"
             android:gravity="center"
             android:paddingEnd="5dp"
-            android:paddingRight="5dp"
             tools:targetApi="17">
 
             <TextView
@@ -127,7 +120,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginStart="5dp"
-                android:textColor="@color/edx_brand_gray_accent"
+                android:textColor="@color/primaryXLightColor"
                 android:textSize="15sp"
                 android:visibility="gone"
                 tools:targetApi="17"
@@ -137,12 +130,10 @@
                 android:id="@+id/bulk_download"
                 android:layout_width="34dp"
                 android:layout_height="48dp"
+                app:iconColor="@color/primaryBaseColor"
                 android:baselineAlignBottom="true"
                 android:paddingEnd="14dp"
-                android:paddingRight="14dp"
-                android:paddingLeft="4dp"
-                android:paddingStart="4dp"
-                tools:targetApi="17"/>
+                android:paddingStart="4dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -150,7 +141,6 @@
     <View
         android:id="@+id/row_half_separator"
         style="@style/gray_separator"
-        android:layout_marginLeft="@dimen/course_item_half_separator_left_margin"
         android:layout_marginStart="@dimen/course_item_half_separator_left_margin" />
 
     <View

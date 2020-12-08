@@ -923,7 +923,7 @@ public class PlayerController extends FrameLayout {
     public void setSettingsBtnDrawable(boolean isSettingEnabled){
         if (mSettingsButton != null) {
             if (isSettingEnabled) {
-                mSettingsButton.setIconColor(getResources().getColor(R.color.edx_brand_primary_accent));
+                mSettingsButton.setIconColor(getResources().getColor(R.color.accentAColor));
             } else {
                 mSettingsButton.setIconColor(getResources().getColor(R.color.white));
             }

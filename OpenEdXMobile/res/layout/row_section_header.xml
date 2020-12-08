@@ -8,16 +8,17 @@
     <View
         android:id="@+id/row_separator"
         android:layout_width="match_parent"
-        android:background="@color/grey_2"
+        android:background="@color/neutralLight"
         android:layout_height="1dp"/>
 
     <TextView
         android:id="@+id/row_header"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
+        android:fontFamily="?attr/fontSemiBold"
         android:layout_height="@dimen/row_height_cc_option"
         android:gravity="center_vertical|start"
-        android:textColor="@color/grey_4"
+        android:textColor="@color/neutralXDark"
         android:textDirection="locale"
         android:padding="10dp" />
 </LinearLayout>

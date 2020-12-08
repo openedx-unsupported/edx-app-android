@@ -21,7 +21,7 @@ public class NumberResponsesViewHolder extends RecyclerView.ViewHolder {
                 findViewById(R.id.number_responses_or_comments_label);
         Context context = numberResponsesOrCommentsLabel.getContext();
         Drawable iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_comment)
-                .colorRes(context, R.color.edx_brand_gray_base)
+                .colorRes(context, R.color.primaryBaseColor)
                 .sizeRes(context, R.dimen.edx_small);
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 numberResponsesOrCommentsLabel, iconDrawable, null, null, null);

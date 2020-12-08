@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:paddingTop="@dimen/common_course_display_margin_top"
-        android:textColor="@color/edx_brand_gray_base"
+        android:textColor="@color/primaryBaseColor"
         android:textSize="@dimen/edx_base"
         tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback."/>
 
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/common_course_display_margin_top"
             android:layout_marginTop="@dimen/common_course_display_margin_top"
-            android:background="@color/grey_act_background"
+            android:background="@color/neutralLight"
 
             android:orientation="vertical"
             android:visibility="gone">
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
-                android:background="@color/grey_act_background"/>
+                android:background="@color/neutralLight"/>
 
             <TextView
                 android:id="@+id/flying_message"

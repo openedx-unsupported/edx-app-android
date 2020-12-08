@@ -64,7 +64,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         if (threadFollowContainer.isSelected() != follow) {
             threadFollowContainer.setSelected(follow);
             threadFollowTextView.setText(follow ? R.string.forum_unfollow : R.string.forum_follow);
-            threadFollowIconImageView.setIconColorResource(follow ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
+            threadFollowIconImageView.setIconColorResource(R.color.infoBase);
         }
     }
 
@@ -72,6 +72,6 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         voteViewContainer.setSelected(vote);
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, vote ? otherUserVotes + 1 : otherUserVotes));
-        threadVoteIconImageView.setIconColorResource(vote ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
+        threadVoteIconImageView.setIconColorResource(R.color.infoBase);
     }
 }

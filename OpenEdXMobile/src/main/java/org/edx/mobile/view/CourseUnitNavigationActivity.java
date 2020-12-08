@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
@@ -197,6 +198,17 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         } else {
             // we have reached the start and previous button is disabled
             mPreviousUnitLbl.setVisibility(View.GONE);
+        }
+        if(mPreviousBtn.isEnabled()){
+            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
+        } else{
+            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
+        }
+
+        if(mNextBtn.isEnabled()){
+            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
+        } else{
+            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
         }
     }
 

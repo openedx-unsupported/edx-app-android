@@ -39,6 +39,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:padding="@dimen/discussion_responses_box_padding"
+                android:textColor="@color/infoBase"
                 tools:text="@string/discussion_responses_report_label" />
         </FrameLayout>
     </LinearLayout>

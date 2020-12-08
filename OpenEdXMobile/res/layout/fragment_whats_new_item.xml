@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.3"
-            android:background="@color/edx_brand_primary_base"
+            android:background="@color/primaryBaseColor"
             android:gravity="top|center_horizontal"
             android:orientation="vertical"
             android:paddingLeft="@dimen/edx_margin"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/edx_white"
+                android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base"
                 tools:text="App Feedback" />
 
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="@dimen/widget_margin"
-                android:textColor="@color/edx_white"
+                android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base"
                 android:scrollbars = "vertical"
                 tools:text="This is the description." />

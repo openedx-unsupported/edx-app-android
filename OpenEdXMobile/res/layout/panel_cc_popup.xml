@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/tv_header_cc"
-        style="@style/regular_grey_text"
+        style="@style/regular_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_cc_option"
         android:background="@drawable/grey_top_roundedbg"
@@ -22,16 +22,16 @@
         android:layout_below="@id/tv_header_cc"
         android:background="@android:color/white"
         android:cacheColorHint="@color/white"
-        android:divider="@color/grey_act_background"
+        android:divider="@color/neutralLight"
         android:dividerHeight="1.0sp" />
 
     <TextView
         android:id="@+id/tv_cc_cancel"
-        style="@style/regular_grey_text"
+        style="@style/regular_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_cc_option"
         android:layout_below="@id/cc_list"
-        android:background="@color/grey_act_background"
+        android:background="@color/neutralLight"
         android:gravity="start|center_vertical"
         android:padding="@dimen/widget_margin"
         android:text="@string/lbl_cc_none" />
@@ -41,5 +41,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@id/tv_cc_cancel"
-        android:background="@color/grey_act_background" />
+        android:background="@color/neutralLight" />
 </RelativeLayout>

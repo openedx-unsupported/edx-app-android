@@ -4,22 +4,22 @@
     <style name="default_list">
         <item name="android:cacheColorHint">#00000000</item>
         <item name="android:transcriptMode">normal</item>
-        <item name="android:background">@color/grey_act_background</item>
+        <item name="android:background">@color/neutralLight</item>
     </style>
 
     <style name="list_courses">
         <item name="android:cacheColorHint">#00000000</item>
         <item name="android:transcriptMode">normal</item>
-        <item name="android:background">@color/grey_act_background</item>
-        <item name="android:divider">@color/grey_act_background</item>
+        <item name="android:background">@color/neutralLight</item>
+        <item name="android:divider">@color/neutralLight</item>
         <item name="android:dividerHeight">1.0sp</item>
     </style>
 
     <style name="list_downloads">
         <item name="android:cacheColorHint">#00000000</item>
         <item name="android:transcriptMode">normal</item>
-        <item name="android:background">@color/grey_act_background</item>
-        <item name="android:divider">@color/grey_act_background</item>
+        <item name="android:background">@color/neutralLight</item>
+        <item name="android:divider">@color/neutralLight</item>
         <item name="android:dividerHeight">1.0sp</item>
     </style>
 

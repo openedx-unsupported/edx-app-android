@@ -39,7 +39,7 @@
             style="@style/discussion_regular_text"
             android:drawablePadding="@dimen/discussion_endorsed_response_icon_padding"
             android:text="@string/discussion_responses_answer"
-            android:textColor="@color/edx_success_accent"
+            android:textColor="@color/successLight"
             android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>

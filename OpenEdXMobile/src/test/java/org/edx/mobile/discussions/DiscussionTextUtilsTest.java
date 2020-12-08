@@ -140,7 +140,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
                     assertEquals(1, colorSpans.length);
                     assertEquals(start, text.getSpanStart(colorSpans[0]));
                     assertEquals(end, text.getSpanEnd(colorSpans[0]));
-                    assertEquals(context.getResources().getColor(R.color.edx_brand_primary_base),
+                    assertEquals(context.getResources().getColor(R.color.primaryBaseColor),
                             colorSpans[0].getForegroundColor());
 
                     // Verify that the whole text view is clickable
@@ -208,7 +208,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
                 assertEquals(1, colorSpans.length);
                 assertEquals(start, text.getSpanStart(colorSpans[0]));
                 assertEquals(end, text.getSpanEnd(colorSpans[0]));
-                assertEquals(context.getResources().getColor(R.color.edx_brand_primary_base),
+                assertEquals(context.getResources().getColor(R.color.primaryBaseColor),
                         colorSpans[0].getForegroundColor());
             }
         }

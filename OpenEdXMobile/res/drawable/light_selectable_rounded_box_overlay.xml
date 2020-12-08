@@ -2,19 +2,16 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/edx_box_radius" />
             <solid android:color="@color/transparent_white_26" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/edx_box_radius" />
             <solid android:color="@color/transparent_white_13" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/edx_box_radius" />
             <solid android:color="@android:color/transparent" />
         </shape>
     </item>

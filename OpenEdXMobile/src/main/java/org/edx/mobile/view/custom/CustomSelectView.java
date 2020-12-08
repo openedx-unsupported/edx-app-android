@@ -134,7 +134,7 @@ public class CustomSelectView<T> extends AppCompatTextView implements View.OnCli
             showHint();
         } else {
             setText(item.toString());
-            setTextColor(getResources().getColor(R.color.grey_text));
+            setTextColor(getResources().getColor(R.color.neutralXXDark));
             setContentDescription(getResources().getString(R.string.dropdown_list_prefix) + item.toString());
         }
     }

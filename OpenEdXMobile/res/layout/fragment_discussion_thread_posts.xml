@@ -28,7 +28,7 @@
                 android:layout_marginLeft="@dimen/edx_margin"
                 android:layout_marginStart="@dimen/edx_margin"
                 android:text="@string/discussion_posts_refine"
-                android:textColor="@color/edx_brand_gray_accent" />
+                android:textColor="@color/primaryXLightColor" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/discussion_posts_filter_spinner"

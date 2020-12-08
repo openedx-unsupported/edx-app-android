@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
-        tools:background="@color/edx_success_accent"
+        tools:background="@color/successLight"
         tools:layout_height="150dp" />
 
 </RelativeLayout>

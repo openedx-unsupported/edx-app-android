@@ -92,21 +92,21 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
                 holder.next_arrow.setBackgroundResource(R.drawable.ic_next_default_mirrored);
                 holder.chapterLayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                 holder.chapterName.setTextColor(context.getResources()
-                        .getColor(R.color.grey_text_mycourse));
+                        .getColor(R.color.neutralXXDark));
             }else{
                 holder.next_arrow
                 .setBackgroundResource(R.drawable.ic_next_deactive_mirrored);
                 holder.chapterLayout
-                        .setBackgroundResource(R.color.disabled_chapter_list);
+                        .setBackgroundResource(R.color.neutralLight);
                 holder.chapterName.setTextColor(context.getResources()
-                        .getColor(R.color.light_gray));
+                        .getColor(R.color.neutralDark));
             }
 
         } else {
             holder.chapterLayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
             holder.next_arrow.setVisibility(View.GONE);
             holder.chapterName.setTextColor(context.getResources().getColor(
-                    R.color.grey_text_mycourse));
+                    R.color.neutralXXDark));
         }
     }
 

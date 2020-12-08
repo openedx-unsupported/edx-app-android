@@ -12,7 +12,7 @@
             android:id="@+id/content_error_icon"
             android:layout_width="@dimen/content_unavailable_error_icon_size"
             android:layout_height="@dimen/content_unavailable_error_icon_size"
-            app:iconColor="@color/edx_brand_gray_back"
+            app:iconColor="@color/neutralXXDark"
             app:iconName="fa-wifi" />
 
         <TextView
@@ -23,7 +23,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/content_error_action"
-            style="@style/edX.Widget.RegularButton"
+            style="@style/edX.Widget.BaseSizeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
