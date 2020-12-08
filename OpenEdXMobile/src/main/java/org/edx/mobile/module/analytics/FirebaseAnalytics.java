@@ -621,4 +621,40 @@ public class FirebaseAnalytics implements Analytics {
         }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackPLSCourseDatesBanner(@NonNull String biValue, @NonNull String courseId,
+                                          @NonNull String enrollmentMode, @NonNull String screenName,
+                                          @NonNull String bannerType) {
+        final FirebaseEvent event = new FirebaseEvent(Events.PLS_BANNER_VIEWED, biValue);
+        event.putCourseId(courseId);
+        event.putString(Keys.MODE, enrollmentMode);
+        event.putString(Keys.SCREEN_NAME, screenName);
+        event.putString(Keys.BANNER_TYPE, bannerType);
+        event.putString(Keys.CATEGORY, Values.COURSE_DATES);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackPLSShiftButtonTapped(@NonNull String courseId, @NonNull String enrollmentMode,
+                                          @NonNull String screenName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.PLS_SHIFT_DATES_BUTTON_TAPPED);
+        event.putCourseId(courseId);
+        event.putString(Keys.MODE, enrollmentMode);
+        event.putString(Keys.SCREEN_NAME, screenName);
+        event.putString(Keys.CATEGORY, Values.COURSE_DATES);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackPLSCourseDatesShift(@NonNull String courseId, @NonNull String enrollmentMode,
+                                         @NonNull String screenName, boolean isSuccess) {
+        final FirebaseEvent event = new FirebaseEvent(Events.PLS_SHIFT_DATES);
+        event.putCourseId(courseId);
+        event.putString(Keys.MODE, enrollmentMode);
+        event.putString(Keys.SCREEN_NAME, screenName);
+        event.putBoolean(Keys.SUCCESS, isSuccess);
+        event.putString(Keys.CATEGORY, Values.COURSE_DATES);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

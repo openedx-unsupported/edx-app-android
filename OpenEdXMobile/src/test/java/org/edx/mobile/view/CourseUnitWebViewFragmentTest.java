@@ -28,19 +28,27 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CourseUnitWebViewFragmentTest extends UiTest {
+
+    EnrolledCoursesResponse courseData;
+
     /**
-     * Method for iterating through the mock course response data, and
-     * returning the first video block leaf.
-     *
-     * @return The first {@link HtmlBlockModel} leaf in the mock course data
+     * Method to initialize Course Data from API
      */
-    private HtmlBlockModel getHtmlUnit() throws CourseContentNotValidException {
-        EnrolledCoursesResponse courseData;
+    private void initializeCourseData(){
         try {
             courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Method for iterating through the mock course response data, and
+     * returning the first block leaf.
+     *
+     * @return The first {@link HtmlBlockModel} leaf in the mock course data
+     */
+    private HtmlBlockModel getHtmlUnit() throws CourseContentNotValidException {
         String courseId = courseData.getCourse().getId();
         CourseStructureV1Model model;
         try {
@@ -61,7 +69,8 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() throws CourseContentNotValidException {
-        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit());
+        initializeCourseData();
+        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getMode());
         SupportFragmentTestUtil.startVisibleFragment(fragment, PreLoadingListenerActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);

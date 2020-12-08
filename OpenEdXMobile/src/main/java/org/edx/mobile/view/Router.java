@@ -65,6 +65,7 @@ public class Router {
     public static final String EXTRA_PATH_ID = "path_id";
     public static final String EXTRA_SCREEN_NAME = "screen_name";
     public static final String EXTRA_DEEP_LINK = "deep_link";
+    public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
 
     @Inject
     Config config;

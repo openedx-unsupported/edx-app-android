@@ -434,6 +434,39 @@ public interface Analytics {
     void trackCastDeviceConnectionChanged(@NonNull String eventName, @NonNull String connectionState,
                                           @NonNull String playMedium);
 
+    /**
+     * Track the PLS Course Dates Banner appearance
+     *
+     * @param biValue        biValue of course date banner type
+     * @param courseId       course id of the course where banner appears
+     * @param enrollmentMode enrollment mode of the course where banner appears
+     * @param screenName     The screen name where banner appears
+     * @param bannerType     Type of course date banner
+     */
+    void trackPLSCourseDatesBanner(@NonNull String biValue, @NonNull String courseId, @NonNull String enrollmentMode,
+                                   @NonNull String screenName, @NonNull String bannerType);
+
+    /**
+     * Track the Shift Dates button tapped on PLS Course Dates Banner
+     *
+     * @param courseId       course id of the course where banner appears
+     * @param enrollmentMode enrollment mode of the course where button will be tapped
+     * @param screenName     The screen name on which button will be tapped
+     */
+    void trackPLSShiftButtonTapped(@NonNull String courseId, @NonNull String enrollmentMode,
+                                   @NonNull String screenName);
+
+    /**
+     * Track that PLS Course Dates Shifted successfully or not
+     *
+     * @param courseId       course id of the course where banner appears
+     * @param enrollmentMode enrollment mode of the course on which dates will be shifted
+     * @param screenName     The screen name on which dates will be shifted
+     * @param isSuccess      Does the shifted successful or not
+     */
+    void trackPLSCourseDatesShift(@NonNull String courseId, @NonNull String enrollmentMode,
+                                  @NonNull String screenName, boolean isSuccess);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -467,6 +500,10 @@ public interface Analytics {
         String UNIT_ID = "unit_id";
         String SUPPORTED = "supported";
         String DEVICE_ORIENTATION = "device-orientation";
+        String MODE = "mode";
+        String SCREEN_NAME = "screen_name";
+        String BANNER_TYPE = "banner_type";
+        String SUCCESS = "success";
 
         String CELL_CARRIER = "cell_carrier";
         String CELL_ZERO_RATED = "cell_zero_rated";
@@ -619,6 +656,16 @@ public interface Analytics {
         String GOOGLE_CAST = "google_cast";
         // YouTube Player Type
         String YOUTUBE = "youtube";
+        // PLS Course Dates Banner
+        String COURSE_DATES = "course_dates";
+        String COURSE_DATES_BANNER_INFO = "edx.bi.app.coursedates.info";
+        String COURSE_DATES_BANNER_UPGRADE_TO_PARTICIPATE = "edx.bi.app.coursedates.upgrade.participate";
+        String COURSE_DATES_BANNER_UPGRADE_TO_SHIFT = "edx.bi.app.coursedates.shift";
+        String COURSE_DATES_BANNER_SHIFT_DATES = "edx.bi.app.coursedates.upgrade.shift";
+        String PLS_BANNER_TYPE_INFO = "info";
+        String PLS_BANNER_TYPE_UPGRADE_TO_PARTICIPATE = "upgrade_to_participate";
+        String PLS_BANNER_TYPE_UPGRADE_TO_SHIFT = "upgrade_to_shift";
+        String PLS_BANNER_TYPE_SHIFT_DATES = "shift_dates";
 
     }
 
@@ -664,6 +711,9 @@ public interface Analytics {
         String PAYMENTS_INFO_SCREEN = "Payments info";
         String COURSE_UNIT_LOCKED = "Course unit locked";
         String PLACE_ORDER_COURSE_UPGRADE = "Place order: course upgrade";
+        String PLS_COURSE_DASHBOARD = "course_dashboard";
+        String PLS_COURSE_DATES = "dates_screen";
+        String PLS_COURSE_UNIT_ASSIGNMENT = "assignments_screen";
     }
 
     interface Events {
@@ -729,6 +779,10 @@ public interface Analytics {
         String CAST_CONNECTED = "Cast: Connected";
         String CAST_DISCONNECTED = "Cast: Disconnected";
         String VIDEO_CASTED = "Cast: Video Casted";
+        // PLS Course Dates Banner
+        String PLS_BANNER_VIEWED = "PLS Banner Viewed";
+        String PLS_SHIFT_DATES_BUTTON_TAPPED = "PLS Shift Button Tapped";
+        String PLS_SHIFT_DATES = "PLS Shift Dates";
     }
 
     /**

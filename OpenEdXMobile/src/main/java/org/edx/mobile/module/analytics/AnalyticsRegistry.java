@@ -439,4 +439,29 @@ public class AnalyticsRegistry implements Analytics {
             service.trackCastDeviceConnectionChanged(eventName, connectionState, playMedium);
         }
     }
+
+    @Override
+    public void trackPLSCourseDatesBanner(@NonNull String biValue, @NonNull String courseId,
+                                          @NonNull String enrollmentMode, @NonNull String screenName,
+                                          @NonNull String bannerType) {
+        for (Analytics service : services) {
+            service.trackPLSCourseDatesBanner(biValue, courseId, enrollmentMode, screenName, bannerType);
+        }
+    }
+
+    @Override
+    public void trackPLSShiftButtonTapped(@NonNull String courseId, @NonNull String enrollmentMode,
+                                          @NonNull String screenName) {
+        for (Analytics service : services) {
+            service.trackPLSShiftButtonTapped(courseId, enrollmentMode, screenName);
+        }
+    }
+
+    @Override
+    public void trackPLSCourseDatesShift(@NonNull String courseId, @NonNull String enrollmentMode,
+                                         @NonNull String screenName, boolean isSuccess) {
+        for (Analytics service : services) {
+            service.trackPLSCourseDatesShift(courseId, enrollmentMode, screenName, isSuccess);
+        }
+    }
 }

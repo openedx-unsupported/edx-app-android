@@ -18,6 +18,7 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.course.CourseBannerInfoModel
+import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.CourseDateUtil
 import org.edx.mobile.util.UiUtil
@@ -39,12 +40,15 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             BrowserUtil.open(activity, link)
         }
     }
+    private var courseId: String = ""
+    private var enrollmentMode: String = ""
 
     companion object {
         @JvmStatic
-        fun makeArguments(courseId: String): Bundle {
+        fun makeArguments(courseId: String, enrollmentMode: String): Bundle {
             val courseBundle = Bundle()
             courseBundle.putString(Router.EXTRA_COURSE_ID, courseId)
+            courseBundle.putString(Router.EXTRA_ENROLLMENT_MODE, enrollmentMode)
             return courseBundle
         }
     }
@@ -63,17 +67,20 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, ViewModelFactory()).get(CourseDateViewModel::class.java)
 
+        courseId = getStringArgument(Router.EXTRA_COURSE_ID)
+        enrollmentMode = getStringArgument(Router.EXTRA_ENROLLMENT_MODE)
+
         errorNotification = FullScreenErrorNotification(binding.swipeContainer)
 
         binding.swipeContainer.setOnRefreshListener {
             // Hide the progress bar as swipe layout has its own progress indicator
             binding.loadingIndicator.loadingIndicator.visibility = View.GONE
             errorNotification.hideError()
-            viewModel.fetchCourseDates(courseID = getStringArgument(Router.EXTRA_COURSE_ID), isSwipeRefresh = true)
+            viewModel.fetchCourseDates(courseID = courseId, isSwipeRefresh = true)
         }
         UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
         initObserver()
-        viewModel.fetchCourseDates(courseID = getStringArgument(Router.EXTRA_COURSE_ID), isSwipeRefresh = false)
+        viewModel.fetchCourseDates(courseID = courseId, isSwipeRefresh = false)
     }
 
     private fun initObserver() {
@@ -144,8 +151,10 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             binding.banner.containerLayout.visibility = View.GONE
             return
         }
-        CourseDateUtil.setupCourseDatesBanner(binding.banner.root, courseBannerInfo,
-                View.OnClickListener { viewModel.resetCourseDatesBanner(getStringArgument(Router.EXTRA_COURSE_ID)) })
+        CourseDateUtil.setupCourseDatesBanner(view = binding.banner.root, courseId = courseId,
+                enrollmentMode = enrollmentMode, screenName = Analytics.Screens.PLS_COURSE_DATES,
+                analyticsRegistry = environment.analyticsRegistry, courseBannerInfoModel = courseBannerInfo,
+                clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseId) })
     }
 
     private fun showShiftDateSnackBar(isSuccess: Boolean) {
@@ -153,5 +162,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
         snackbarErrorNotification.showError(
                 if (isSuccess) R.string.assessment_shift_dates_success_msg else R.string.course_dates_reset_unsuccessful,
                 null, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null)
+        environment.analyticsRegistry.trackPLSCourseDatesShift(courseId, enrollmentMode, Analytics.Screens.PLS_COURSE_DATES, isSuccess)
     }
 }
