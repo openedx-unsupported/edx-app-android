@@ -567,6 +567,8 @@
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:button">@null</item>
+        <!--  work on lower API <= 19 devices  -->
+        <item name="buttonCompat">@null</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
         <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
