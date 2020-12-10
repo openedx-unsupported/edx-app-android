@@ -24,6 +24,7 @@ import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
+import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.CourseDateUtil;
@@ -128,7 +129,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void initInfoBanner(CourseBannerInfoModel courseBannerInfo) {
-        if (courseBannerInfo == null || courseBannerInfo.getHasEnded()) {
+        if (courseBannerInfo == null || courseBannerInfo.getHasEnded()
+                || courseBannerInfo.getDatesBannerInfo().getCourseBannerType() != CourseBannerType.RESET_DATES) {
             infoBanner.setVisibility(View.GONE);
             return;
         }
