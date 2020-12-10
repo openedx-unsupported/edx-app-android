@@ -20,13 +20,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/edx_double_margin"
-                android:layout_marginRight="@dimen/edx_double_margin"
                 android:gravity="center"
                 android:padding="@dimen/widget_margin"
                 android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base"
-                tools:text="Version 2.8.1 New Features" />
+                android:text="@string/whats_new_title" />
 
             <com.joanzapata.iconify.widget.IconButton
                 android:id="@+id/close_btn"
