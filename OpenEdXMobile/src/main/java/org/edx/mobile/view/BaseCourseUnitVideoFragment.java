@@ -502,7 +502,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         if (transcriptListView != null && transcriptAdapter != null) {
             if (visibility == View.VISIBLE) {
                 transcriptListView.setVisibility(visibility);
-                messageContainer.setVisibility(visibility);
+                messageContainer.setVisibility(View.GONE);
             } else if (getActivity() != null) {
                 updateUI(getActivity().getRequestedOrientation());
             }
