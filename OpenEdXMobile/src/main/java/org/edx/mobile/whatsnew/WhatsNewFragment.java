@@ -60,12 +60,8 @@ public class WhatsNewFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final CharSequence title = ResourceUtil.getFormattedString(getResources(),
-                R.string.whats_new_title, "version_number", BuildConfig.VERSION_NAME);
-
         // Setting activity's title for accessibility
-        getActivity().setTitle(title);
-        binding.screenTitle.setText(title);
+        getActivity().setTitle(getString(R.string.whats_new_title));
 
         initViewPager();
         initButtons();

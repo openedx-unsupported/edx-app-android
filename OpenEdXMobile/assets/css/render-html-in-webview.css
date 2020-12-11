@@ -6,7 +6,7 @@ body {
 }
 
 a, a:link {
-  color: #1D9DD9;
+  color: #0A7DA3;
   text-decoration: none;
 }
 
@@ -55,7 +55,7 @@ p {
 
 ol {
   list-style: number inside none;
-  margin: 5px 10px;
+  margin: 5px 25px 5px 25px;
   padding: 0;
 }
 

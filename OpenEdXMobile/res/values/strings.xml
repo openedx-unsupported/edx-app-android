@@ -772,5 +772,5 @@
     <!-- accessibility label for rating selection on rating bar -->
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
-    <string name="whats_new_title">Version {version_number} New Features</string>
+    <string name="whats_new_title">What\'s New</string>
 </resources>
