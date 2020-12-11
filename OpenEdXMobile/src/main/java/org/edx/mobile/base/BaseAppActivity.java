@@ -1,6 +1,6 @@
 package org.edx.mobile.base;
 
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,7 +41,7 @@ public abstract class BaseAppActivity extends RoboAppCompatActivity implements C
                 mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
                         menu, R.id.media_route_menu_item);
                 // show the introduction overlay.
-                if (isInForeground()) {
+                if (isInForeground() && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     googleCastDelegate.showIntroductoryOverlay(this, mediaRouteMenuItem);
                 }
             }
