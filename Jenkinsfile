@@ -12,8 +12,8 @@ pipeline {
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
             AUT_NAME = 'edx-debuggable-2.23.2.apk'
-            login_user_name = credentials('AUTOMATION_USERNAME')
-            login_user_password = credentials('AUTOMATION_PASSWORD')
+            USER_NAME = credentials('AUTOMATION_USERNAME')
+            USER_PASSWORD = credentials('AUTOMATION_PASSWORD')
     }
 
     stages {
