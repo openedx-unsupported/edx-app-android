@@ -329,7 +329,7 @@ android {
 
     defaultConfig {
         applicationId APPLICATION_ID
-        // minimum version is Android 4.1
+        // minimum version is Android 5.0
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
 

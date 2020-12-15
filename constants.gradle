@@ -7,7 +7,7 @@ project.ext {
     // API Level that the application will target
     TARGET_SDK_VERSION = 29
     // Minimum API Level required for the application to run
-    MIN_SDK_VERSION = 19
+    MIN_SDK_VERSION = 21
 
     // App dependencies
     androidXVersion = '1.0.0'
