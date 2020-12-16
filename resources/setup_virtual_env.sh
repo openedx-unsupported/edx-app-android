@@ -51,4 +51,6 @@ create_virtual_environment
 switch_to_virtual_env
 install_requirements
 print_message "calling AWS Test run"
+print_message $USER_NAME
+print_message $USER_PASSWORD
 python -v ./resources/trigger_aws_test_run.py $AUT_NAME
