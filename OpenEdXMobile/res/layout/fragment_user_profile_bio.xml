@@ -14,8 +14,8 @@
             android:layout_height="wrap_content"
 
             android:paddingBottom="@dimen/edx_margin"
-            android:paddingLeft="@dimen/edx_double_margin"
-            android:paddingRight="@dimen/edx_double_margin"
+            android:paddingStart="@dimen/edx_double_margin"
+            android:paddingEnd="@dimen/edx_double_margin"
             android:paddingTop="@dimen/edx_margin"
             android:visibility="gone"
             tools:visibility="visible">

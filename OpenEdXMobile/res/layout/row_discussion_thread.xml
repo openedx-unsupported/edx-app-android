@@ -12,9 +12,9 @@
         android:id="@+id/discussion_post_type_icon"
         style="@style/icon_view_standard_size"
         android:layout_height="12dp"
-        android:layout_marginLeft="@dimen/edx_margin"
+        android:layout_marginStart="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"
-        android:layout_marginRight="@dimen/edx_margin"
+        android:layout_marginEnd="@dimen/edx_margin"
         app:iconColor="@color/primaryBaseColor"
         app:iconName="fa-comments" />
 
@@ -57,7 +57,6 @@
                 android:id="@+id/discussion_subtitle_first_pipe"
                 style="@style/discussion_responses_small_text"
                 android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
                 android:contentDescription="@null"
                 android:text="|"
                 tools:ignore="HardcodedText" />
@@ -66,14 +65,12 @@
                 android:id="@+id/discussion_post_replies_count"
                 style="@style/discussion_responses_small_text"
                 android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
                 tools:text="Total: 20" />
 
             <TextView
                 android:id="@+id/discussion_subtitle_second_pipe"
                 style="@style/discussion_responses_small_text"
                 android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
                 android:contentDescription="@null"
                 android:text="|"
                 tools:ignore="HardcodedText" />
@@ -91,8 +88,8 @@
         android:id="@+id/discussion_unread_replies_text"
         style="@style/discussion_title_text"
         android:fontFamily="?attr/fontSemiBold"
-        android:layout_marginLeft="@dimen/edx_margin"
-        android:layout_marginRight="@dimen/edx_margin"
+        android:layout_marginStart="@dimen/edx_margin"
+        android:layout_marginEnd="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"
         android:textColor="@color/primaryBaseColor"
         android:textStyle="bold"

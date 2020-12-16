@@ -8,8 +8,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/widget_margin"
-            android:layout_marginRight="@dimen/widget_margin"
+            android:layout_marginStart="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/widget_margin"
             style="@style/edX.Widget.CardView">
 
             <LinearLayout
@@ -20,8 +20,8 @@
                 android:descendantFocusability="blocksDescendants"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/edx_margin"
-                android:paddingRight="@dimen/edx_margin">
+                android:paddingStart="@dimen/edx_margin"
+                android:paddingEnd="@dimen/edx_margin">
 
                 <TextView
                     android:id="@+id/findcourse_tv"

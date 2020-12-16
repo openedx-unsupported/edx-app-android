@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/common_course_display_margin_side"
+    android:paddingStart="@dimen/common_course_display_margin_side"
     android:paddingTop="@dimen/common_course_display_margin_top"
-    android:paddingRight="@dimen/common_course_display_margin_side"
+    android:paddingEnd="@dimen/common_course_display_margin_side"
     android:paddingBottom="@dimen/common_course_display_margin_top">
 
     <org.edx.mobile.view.custom.EdxWebView

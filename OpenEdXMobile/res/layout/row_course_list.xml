@@ -4,8 +4,8 @@
     android:id="@+id/fl_row_course_list_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/widget_margin"
-    android:paddingRight="@dimen/widget_margin">
+    android:paddingStart="@dimen/widget_margin"
+    android:paddingEnd="@dimen/widget_margin">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_background"
@@ -16,14 +16,6 @@
         android:foreground="@drawable/selectable_rounded_box_overlay">
 
         <include layout="@layout/course_card" />
-
-        <View
-            android:id="@+id/view_foreground_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/fg_course_row"
-            android:visibility="gone"
-            tools:ignore="ContentDescription" />
 
     </androidx.cardview.widget.CardView>
 

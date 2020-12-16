@@ -203,16 +203,14 @@
     <style name="video_player_top_control">
         <item name="android:layout_width">@dimen/video_player_top_control_width</item>
         <item name="android:layout_height">@dimen/video_player_top_control_height</item>
-        <item name="android:layout_marginRight">@dimen/video_player_control_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_control_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/video_player_control_right_margin</item>
         <item name="iconColor">@color/white</item>
     </style>
 
     <style name="video_player_side_control">
         <item name="android:layout_width">@dimen/video_player_side_control_width</item>
         <item name="android:layout_height">@dimen/video_player_side_control_height</item>
-        <item name="android:layout_marginRight">@dimen/video_player_control_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_control_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/video_player_control_right_margin</item>
         <item name="android:padding">@dimen/video_player_side_control_padding</item>
         <item name="android:background">@drawable/semi_transparent_gray_circle</item>
         <item name="iconColor">@color/white</item>
@@ -232,25 +230,20 @@
         <item name="android:layout_weight">1</item>
         <item name="android:minHeight">@dimen/video_player_seekbar_height</item>
         <item name="android:maxHeight">@dimen/video_player_seekbar_height</item>
-        <item name="android:layout_marginRight">@dimen/video_player_seekbar_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_seekbar_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/video_player_seekbar_right_margin</item>
         <item name="android:progressDrawable">@drawable/player_seekbar_progress</item>
         <item name="android:thumb">@drawable/player_seekbar_thumb</item>
         <item name="android:thumbOffset">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart" tools:targetApi="17">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-        <item name="android:paddingEnd" tools:targetApi="17">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
         <item name="android:max">100</item>
     </style>
 
     <style name="video_player_bottom_control">
         <item name="android:layout_width">@dimen/video_player_bottom_control_width</item>
         <item name="android:layout_height">@dimen/video_player_bottom_control_height</item>
-        <item name="android:layout_marginLeft">@dimen/video_player_bottom_control_left_margin</item>
-        <item name="android:layout_marginStart" tools:targetApi="17">@dimen/video_player_bottom_control_left_margin</item>
-        <item name="android:layout_marginRight">@dimen/video_player_bottom_control_right_margin</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_bottom_control_right_margin</item>
+        <item name="android:layout_marginStart">@dimen/video_player_bottom_control_left_margin</item>
+        <item name="android:layout_marginEnd">@dimen/video_player_bottom_control_right_margin</item>
         <item name="iconColor">@color/white</item>
     </style>
 
@@ -268,7 +261,7 @@
 
     <style name="edX.Widget.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="android:switchTextAppearance">@style/edX.TextAppearance.Switch</item>
-        <item name="android:showText" tools:targetApi="21">true</item>
+        <item name="android:showText">true</item>
         <item name="android:textOff">@string/toggle_turn_off</item>
         <item name="android:textOn">@string/toggle_turn_on</item>
         <item name="android:thumb">@drawable/switch_inner</item>
@@ -340,23 +333,21 @@
     <style name="discussion_thread_icon">
         <item name="android:layout_width">@dimen/edx_small</item>
         <item name="android:layout_height">@dimen/edx_small</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/discussion_posts_icon_margin</item>
-        <item name="android:layout_marginRight">@dimen/discussion_posts_icon_margin</item>
+        <item name="android:layout_marginEnd">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginTop">@dimen/discussion_posts_icon_margin</item>
         <item name="iconColor">@color/neutralXXDark</item>
     </style>
 
     <style name="discussion_responses_nested_card_layout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingLeft">@dimen/discussion_responses_box_padding</item>
-        <item name="android:paddingRight">@dimen/discussion_responses_box_padding</item>
+        <item name="android:paddingStart">@dimen/discussion_responses_box_padding</item>
+        <item name="android:paddingEnd">@dimen/discussion_responses_box_padding</item>
     </style>
 
     <style name="discussion_action_bar_icon">
         <item name="android:layout_width">@dimen/edx_small</item>
         <item name="android:layout_height">@dimen/edx_small</item>
-        <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/discussion_responses_action_bar_icon_margin</item>
-        <item name="android:layout_marginRight">@dimen/discussion_responses_action_bar_icon_margin</item>
+        <item name="android:layout_marginEnd">@dimen/discussion_responses_action_bar_icon_margin</item>
     </style>
 
     <style name="profile_image">
@@ -381,8 +372,8 @@
     <style name="edX.Widget.EditText">
         <item name="android:background">@drawable/edx_input_background</item>
         <item name="android:textSize">@dimen/edx_small</item>
-        <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
-        <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
+        <item name="android:paddingStart">@dimen/horizontal_input_padding</item>
+        <item name="android:paddingEnd">@dimen/horizontal_input_padding</item>
         <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
     </style>
@@ -394,8 +385,8 @@
     </style>
 
     <style name="edX.Widget.ActionBrandPillButton" parent="@style/edX.Widget.Button">
-        <item name="android:paddingLeft">@dimen/widget_margin</item>
-        <item name="android:paddingRight">@dimen/widget_margin</item>
+        <item name="android:paddingStart">@dimen/widget_margin</item>
+        <item name="android:paddingEnd">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:background">@drawable/edx_brand_button</item>
         <item name="android:textColor">@color/edx_brand_button_text</item>
@@ -432,8 +423,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/widget_margin</item>
-        <item name="android:paddingLeft">@dimen/widget_margin</item>
-        <item name="android:paddingRight">@dimen/widget_margin</item>
+        <item name="android:paddingStart">@dimen/widget_margin</item>
+        <item name="android:paddingEnd">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
@@ -464,8 +455,8 @@
         <item name="android:textColor">@color/secondaryBaseColor</item>
         <item name="android:background">@drawable/edx_neutral_dark_bordered_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
-        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
@@ -476,7 +467,7 @@
     <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
         <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
         <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->
-        <item name="android:layout_marginRight">3dp</item>
+        <item name="android:layout_marginEnd">3dp</item>
         <item name="android:spinnerMode">dropdown</item>
     </style>
 
@@ -496,7 +487,7 @@
              order to maintain the expected anchor for centered gravity. -->
         <item name="android:layout_marginTop">@dimen/popup_spinner_border</item>
         <item name="android:paddingBottom">@dimen/popup_spinner_border</item>
-        <item name="android:overlapAnchor" tools:targetApi="21">true</item>
+        <item name="android:overlapAnchor">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
@@ -512,7 +503,7 @@
     <!-- Spinner with the popup style -->
     <style name="edX.Widget.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow">
         <item name="android:popupBackground">@drawable/popup_window_background</item>
-        <item name="android:overlapAnchor" tools:targetApi="21">true</item>
+        <item name="android:overlapAnchor">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
@@ -567,11 +558,9 @@
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:button">@null</item>
-        <!--  work on lower API <= 19 devices  -->
-        <item name="buttonCompat">@null</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
-        <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
+        <item name="android:paddingStart">@dimen/horizontal_input_padding</item>
+        <item name="android:paddingEnd">@dimen/horizontal_input_padding</item>
         <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
         <item name="android:background">@drawable/edx_segmented_control_middle_background</item>

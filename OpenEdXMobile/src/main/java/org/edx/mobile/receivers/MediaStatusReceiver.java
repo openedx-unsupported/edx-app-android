@@ -2,7 +2,6 @@ package org.edx.mobile.receivers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
 import com.google.inject.Inject;
@@ -46,9 +45,6 @@ public class MediaStatusReceiver extends RoboBroadcastReceiver {
 
     @Override
     public void handleReceive(Context context, Intent intent) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            return;
-        }
         prefManager = new PrefManager(context, PrefManager.Pref.USER_PREF);
         final String username = loginPrefs.getUsername();
         final String hashedUsername = (username != null) ? Sha1Util.SHA1(username) : null;

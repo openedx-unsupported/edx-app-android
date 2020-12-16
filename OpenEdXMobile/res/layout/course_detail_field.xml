@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/edx_margin"
+        android:layout_marginBottom="@dimen/edx_margin"
         android:orientation="horizontal">
 
         <com.joanzapata.iconify.widget.IconImageView
@@ -19,7 +19,7 @@
             android:layout_width="@dimen/fa_xxx_large"
             android:layout_height="@dimen/fa_xxx_large"
             android:baselineAlignBottom="true"
-            android:gravity="left"
+            android:gravity="start"
             app:iconColor="@color/black"
             tools:src="@color/primaryBaseColor" />
 
@@ -28,8 +28,8 @@
             style="@style/regular_edx_black_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:paddingLeft="10dp"
+            android:gravity="center|start"
+            android:paddingStart="@dimen/widget_margin"
             android:textDirection="locale"
             android:textSize="@dimen/edx_base"
             tools:text="Field:" />
@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ellipsize="end"
-            android:gravity="center|left"
-            android:paddingLeft="10dp"
+            android:gravity="center|start"
+            android:paddingStart="@dimen/widget_margin"
             android:singleLine="true"
             android:textDirection="locale"
             android:textSize="@dimen/edx_base"

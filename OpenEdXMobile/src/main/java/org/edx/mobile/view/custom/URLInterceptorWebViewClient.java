@@ -5,14 +5,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
@@ -20,9 +21,9 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.links.WebViewLink;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -159,19 +160,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         }
     }
 
-    @Deprecated
-    @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        return shouldOverrideUrlLoadingWrapper(view, url);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-        return shouldOverrideUrlLoadingWrapper(view, request.getUrl().toString());
+        return shouldOverrideUrlLoadingWrapper(request.getUrl().toString());
     }
 
-    private boolean shouldOverrideUrlLoadingWrapper(WebView view, String url) {
+    private boolean shouldOverrideUrlLoadingWrapper(String url) {
         if (actionListener == null) {
             logger.warn("you have not set IActionLister to this WebViewClient, " +
                     "you might miss some event");
@@ -234,24 +228,18 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
         Context context = view.getContext().getApplicationContext();
 
         // suppress external links on ZeroRated network
+        String url = request.getUrl().toString();
         if (isExternalLink(url)
                 && !ConfigUtil.Companion.isWhiteListedURL(url, config)
                 && NetworkUtil.isOnZeroRatedNetwork(context, config)
                 && NetworkUtil.isConnectedMobile(context)) {
             return new WebResourceResponse("text/html", StandardCharsets.UTF_8.name(), null);
         }
-        return super.shouldInterceptRequest(view, url);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        return shouldInterceptRequest(view, request.getUrl().toString());
+        return super.shouldInterceptRequest(view, request);
     }
 
     /**

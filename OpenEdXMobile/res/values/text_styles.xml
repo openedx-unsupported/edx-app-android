@@ -1,30 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="section_title" parent="@style/regular_white_text">
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">13dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:paddingTop">14dp</item>
-        <item name="android:paddingBottom">7dp</item>
-    </style>
-
-    <style name="video_player_title" parent="@style/semibold_white_text" tools:targetApi="17">
+    <style name="video_player_title" parent="@style/semibold_white_text">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">13dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingStart">@dimen/edx_margin</item>
+        <item name="android:paddingEnd">@dimen/video_player_controls_horizontal_padding</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:paddingTop">@dimen/edx_half_margin</item>
+        <item name="android:paddingBottom">@dimen/edx_half_margin</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_marginRight">40dp</item>
-        <item name="android:layout_marginEnd">40dp</item>
+        <item name="android:layout_marginStart">@dimen/widget_margin_half</item>
+        <item name="android:layout_marginEnd">@dimen/widget_margin_quadruple</item>
     </style>
 
     <style name="video_duration_text" parent="@style/semibold_white_text">
@@ -34,23 +23,14 @@
         <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
 
-    <style name="video_desc" parent="@style/regular_text">
-        <item name="android:textColor">@color/transparent_white_30</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:paddingLeft">13dp</item>
-        <item name="android:paddingRight">13dp</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:paddingBottom">14dp</item>
-    </style>
-
     <style name="flying_message">
         <item name="android:gravity">center</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingStart">@dimen/edx_margin</item>
+        <item name="android:paddingEnd">@dimen/edx_margin</item>
+        <item name="android:paddingTop">@dimen/widget_margin_double</item>
+        <item name="android:paddingBottom">@dimen/widget_margin_double</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/edx_medium</item>
         <item name="android:background">@color/transparent_download_bg</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -105,7 +85,7 @@
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 
-    <style name="bold_regular_edx_black_text" parent="@style/bold_text">
+    <style name="bold_edx_black_text" parent="@style/bold_text">
         <item name="android:textColor">@color/neutralBlackT</item>
     </style>
 
@@ -140,8 +120,8 @@
         <item name="android:background">@drawable/selectable_box_overlay</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingBottom">@dimen/widget_margin</item>
-        <item name="android:paddingLeft">@dimen/edx_margin</item>
-        <item name="android:paddingRight">@dimen/edx_margin</item>
+        <item name="android:paddingStart">@dimen/edx_margin</item>
+        <item name="android:paddingEnd">@dimen/edx_margin</item>
         <item name="android:paddingTop">@dimen/widget_margin</item>
         <item name="android:textSize">@dimen/edx_base</item>
     </style>
@@ -158,24 +138,11 @@
         <item name="android:fontFamily">?attr/fontRegular</item>
     </style>
 
-     <style name="text_network_error" parent="@style/semibold_white_text">
-        <item name="android:textSize">12sp</item>
+    <style name="text_network_error" parent="@style/semibold_white_text">
+        <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-     </style>
-
-    <style name="avatar_overflow_style" parent="@style/semibold_text">
-        <item name="android:textColor">@color/neutralXDark</item>
-    </style>
-
-    <style name="custom_activity_title" parent="@style/semibold_text">
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:textColor">@color/white</item>
     </style>
 
     <!-- Registration Error Message below fields-->
@@ -183,10 +150,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/errorBase</item>
-        <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:paddingEnd">@dimen/widget_margin_half</item>
+        <item name="android:paddingStart">@dimen/widget_margin_half</item>
     </style>
 
     <!-- Registration Instruction Message below fields-->
@@ -220,7 +187,8 @@
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing</item>
+        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing
+        </item>
     </style>
 
     <style name="discussion_title_text" parent="discussion_regular_text">

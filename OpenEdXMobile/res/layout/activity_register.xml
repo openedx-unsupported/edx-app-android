@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cl_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:fitsSystemWindows="true"
     android:paddingBottom="@dimen/widget_margin">
-
 
     <include layout="@layout/toolbar" />
 
@@ -29,8 +28,8 @@
                 android:id="@+id/registrationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/widget_margin_double"
-                android:layout_marginRight="@dimen/widget_margin_double"
+                android:layout_marginStart="@dimen/widget_margin_double"
+                android:layout_marginEnd="@dimen/widget_margin_double"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -76,10 +75,8 @@
                         style="@style/semibold_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/edx_x_small"
-                        android:layout_marginLeft="@dimen/edx_x_small"
-                        android:layout_marginRight="@dimen/edx_x_small"
                         android:layout_marginStart="@dimen/edx_x_small"
+                        android:layout_marginEnd="@dimen/edx_x_small"
                         android:focusable="true"
                         android:text="@string/show_optional_text"
                         android:textSize="@dimen/edx_small" />

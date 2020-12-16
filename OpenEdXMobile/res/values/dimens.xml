@@ -75,9 +75,13 @@
     <dimen name="login_edx_logo_height">125dp</dimen>
     <dimen name="login_logo_margin_top">20dp</dimen>
     <dimen name="login_logo_margin_bottom">15dp</dimen>
-    <dimen name="login_logo_margin_horizontal">44dp</dimen>
+    <dimen name="login_margin_horizontal">44dp</dimen>
     <dimen name="login_social_divider_margin_top">20dp</dimen>
     <dimen name="login_social_divider_margin_bottom">15dp</dimen>
+    <dimen name="login_field_horizontal_padding">-4dp</dimen>
+    <dimen name="login_layout_bottom_margin">3dp</dimen>
+    <dimen name="launch_button_top_margin">25dp</dimen>
+    <dimen name="launch_button_bottom_margin">35dp</dimen>
 
     <!-- Sign up -->
     <dimen name="signup_social_title_margin">5dp</dimen>
@@ -85,6 +89,7 @@
     <dimen name="signup_social_title_margin_bottom">6dp</dimen>
     <dimen name="registration_field_vertical_padding">2dp</dimen>
     <dimen name="registration_field_horizontal_padding">2dp</dimen>
+    <dimen name="registration_message_panel_margin">2dp</dimen>
     <dimen name="registration_spinner_horizontal_padding_start">-10dp</dimen>
     <dimen name="registration_spinner_horizontal_padding_end">24dp</dimen>
     <dimen name="social_auth_bottom_margin">5dp</dimen>
@@ -115,10 +120,15 @@
     <dimen name="video_player_seekbar_right_margin">6dp</dimen>
     <dimen name="video_player_duration_padding">4dp</dimen>
     <dimen name="video_player_settings_divider_height">@dimen/edx_divider_length</dimen>
+    <dimen name="video_player_controls_padding">7dp</dimen>
+    <dimen name="video_player_controls_horizontal_padding">13dp</dimen>
 
     <!-- Video Player Settings popup dimen values-->
     <dimen name="settings_popup_height">80dp</dimen>
     <dimen name="settings_popup_width">150dp</dimen>
+    <dimen name="video_dialog_margin">0.5dp</dimen>
+    <dimen name="video_dialog_layout_divider_height">2dp</dimen>
+    <dimen name="video_dialog_layout_width">250dp</dimen>
 
     <!-- row height for CC language options, NONE option and the header of popup -->
     <dimen name="row_height_cc_option">40dp</dimen>
@@ -133,6 +143,7 @@
     <dimen name="discussion_endorsed_response_icon_padding">4dp</dimen>
     <dimen name="discussion_responses_box_padding">10dp</dimen>
     <dimen name="discussion_responses_thread_text_view_spacing">3dp</dimen>
+    <dimen name="discussion_responses_layout_bottom_padding">3dp</dimen>
     <dimen name="discussion_responses_standard_margin">10dp</dimen>
     <dimen name="discussion_responses_standard_half_margin">5dp</dimen>
     <dimen name="discussion_responses_secondary_actions_bar_height">30dp</dimen>
@@ -151,6 +162,7 @@
     <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
     <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
+    <dimen name="course_unit_message_icon_size">140dp</dimen>
 
     <dimen name="tab_indicator_unselected_height">1.5dp</dimen>
     <dimen name="tab_indicator_selected_height">6dp</dimen>
@@ -162,6 +174,7 @@
     <dimen name="edx_x_large">21sp</dimen>
     <dimen name="edx_large">18sp</dimen>
     <dimen name="edx_base">16sp</dimen>
+    <dimen name="edx_medium">15sp</dimen>
     <dimen name="edx_small">14sp</dimen>
     <dimen name="edx_x_small">12sp</dimen>
     <dimen name="edx_xx_small">11sp</dimen>
@@ -194,6 +207,9 @@
 
     <!-- Horizontal Progress -->
     <dimen name="progress_bar_height">3dp</dimen>
+    <dimen name="progress_bar_width">5dp</dimen>
+    <dimen name="progress_bar_length">70dp</dimen>
+    <dimen name="progress_bar_rim_width">4dp</dimen>
 
     <!-- Bulk Download View -->
     <dimen name="bulk_download_view_height">72dp</dimen>
@@ -217,10 +233,6 @@
     <dimen name="subject_item_height">60dp</dimen>
     <dimen name="subject_item_width_in_grid">155dp</dimen>
     <dimen name="subject_item_height_in_grid">80dp</dimen>
-    <!--<dimen name="subject_item_width">155dp</dimen>
-    <dimen name="subject_item_height">80dp</dimen>
-    <dimen name="subject_item_width_in_grid">170dp</dimen>
-    <dimen name="subject_item_height_in_grid">97dp</dimen>-->
     <dimen name="subject_item_corner_radius">5dp</dimen>
 
     <!-- Unorganized -->
@@ -273,6 +285,8 @@
     <dimen name="dates_badge_start_padding">0dp</dimen>
     <dimen name="dates_badge_icon_start_padding">4dp</dimen>
     <dimen name="dates_badge_icon_end_padding">-4dp</dimen>
+    <dimen name="accomplishment_image_size">50dp</dimen>
+    <dimen name="accomplishment_button_size">36dp</dimen>
     <item name="course_date_title_line_spacing" type="dimen" format="float">1.25</item>
     <item name="course_date_desc_line_spacing" type="dimen" format="float">1.125</item>
 

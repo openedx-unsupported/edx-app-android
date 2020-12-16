@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
@@ -20,9 +19,8 @@
         android:padding="@dimen/edx_margin"
         android:text="@string/video_only_on_web_label"
         android:textAllCaps="true"
-        android:textColor="@color/primaryBaseColor"
-        android:textSize="14sp"
-        tools:targetApi="17" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/edx_small" />
 
     <org.edx.mobile.view.custom.IconImageViewXml
         android:layout_width="@dimen/fa_x_large"

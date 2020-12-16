@@ -20,5 +20,5 @@
         android:gravity="center_vertical|start"
         android:textColor="@color/neutralXDark"
         android:textDirection="locale"
-        android:padding="10dp" />
+        android:padding="@dimen/widget_margin" />
 </LinearLayout>

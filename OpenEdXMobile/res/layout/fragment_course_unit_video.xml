@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/course_unit_video"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,8 +27,8 @@
         android:orientation="vertical">
 
         <org.edx.mobile.view.custom.IconImageViewXml
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="@dimen/course_unit_message_icon_size"
+            android:layout_height="@dimen/course_unit_message_icon_size"
             android:background="@color/white"
             android:rotation="90"
             app:iconColor="@color/neutralDark"
@@ -38,18 +37,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="@dimen/edx_quadruple_margin"
+            android:layout_marginEnd="@dimen/edx_quadruple_margin"
+            android:layout_marginBottom="@dimen/widget_margin"
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:singleLine="false"
             android:text="@string/assessment_rotate_for_fullscreen"
             android:textAlignment="center"
             android:textColor="@color/primaryBaseColor"
-            android:textSize="16sp" />
+            android:textSize="@dimen/edx_base" />
     </LinearLayout>
 
     <ListView
@@ -59,14 +56,14 @@
         android:layout_weight="1"
         android:divider="@null"
         android:importantForAccessibility="noHideDescendants"
-        android:paddingBottom="@dimen/widget_margin_half"
-        android:paddingTop="@dimen/widget_margin_half" />
+        android:paddingTop="@dimen/widget_margin_half"
+        android:paddingBottom="@dimen/widget_margin_half" />
 
     <FrameLayout
         android:id="@+id/fl_mini_controller"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <fragment
             android:id="@+id/cast_mini_controller"

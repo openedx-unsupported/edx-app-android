@@ -39,8 +39,8 @@ public class ProgressWheel extends View {
     //Padding (with defaults)
     private int paddingTop = 5;
     private int paddingBottom = 5;
-    private int paddingLeft = 5;
-    private int paddingRight = 5;
+    private int paddingStart = 5;
+    private int paddingEnd = 5;
 
     //Colors (with defaults)
     private int barColor = 0xAA000000;
@@ -106,7 +106,7 @@ public class ProgressWheel extends View {
         int size = 0;
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
+        int widthWithoutPadding = width - getPaddingStart() - getPaddingEnd();
         int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
         // Finally we have some simple logic that calculates the size of the view
@@ -138,7 +138,7 @@ public class ProgressWheel extends View {
         // change the default behaviour and to do that we need to call
         // setMeasuredDimension() with our own values.
         setMeasuredDimension(
-                size + getPaddingLeft() + getPaddingRight(),
+                size + getPaddingStart() + getPaddingEnd(),
                 size + getPaddingTop() + getPaddingBottom());
     }
 
@@ -201,21 +201,21 @@ public class ProgressWheel extends View {
         // Add the offset
         paddingTop = this.getPaddingTop() + (yOffset / 2);
         paddingBottom = this.getPaddingBottom() + (yOffset / 2);
-        paddingLeft = this.getPaddingLeft() + (xOffset / 2);
-        paddingRight = this.getPaddingRight() + (xOffset / 2);
+        paddingStart = this.getPaddingStart() + (xOffset / 2);
+        paddingEnd = this.getPaddingEnd() + (xOffset / 2);
 
         int width = getWidth();
         int height = getHeight();
 
         innerCircleBounds = new RectF(
-                paddingLeft + (1.5f * barWidth),
+                paddingStart + (1.5f * barWidth),
                 paddingTop + (1.5f * barWidth),
-                width - paddingRight - (1.5f * barWidth),
+                width - paddingEnd - (1.5f * barWidth),
                 height - paddingBottom - (1.5f * barWidth));
         circleBounds = new RectF(
-                paddingLeft + barWidth,
+                paddingStart + barWidth,
                 paddingTop + barWidth,
-                width - paddingRight - barWidth,
+                width - paddingEnd - barWidth,
                 height - paddingBottom - barWidth);
         circleInnerContour = new RectF(
                 circleBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f),
@@ -228,7 +228,7 @@ public class ProgressWheel extends View {
                 circleBounds.right + (rimWidth / 2.0f) + (contourSize / 2.0f),
                 circleBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
 
-        fullRadius = (width - paddingRight - barWidth) / 2;
+        fullRadius = (width - paddingEnd - barWidth) / 2;
         circleRadius = (fullRadius - barWidth) + 1;
     }
 
@@ -444,20 +444,20 @@ public class ProgressWheel extends View {
         this.paddingBottom = paddingBottom;
     }
 
-    public int getPaddingLeft() {
-        return paddingLeft;
+    public int getPaddingStart() {
+        return paddingStart;
     }
 
-    public void setPaddingLeft(int paddingLeft) {
-        this.paddingLeft = paddingLeft;
+    public void setPaddingStart(int paddingStart) {
+        this.paddingStart = paddingStart;
     }
 
-    public int getPaddingRight() {
-        return paddingRight;
+    public int getPaddingEnd() {
+        return paddingEnd;
     }
 
-    public void setPaddingRight(int paddingRight) {
-        this.paddingRight = paddingRight;
+    public void setPaddingEnd(int paddingEnd) {
+        this.paddingEnd = paddingEnd;
     }
 
     public int getBarColor() {

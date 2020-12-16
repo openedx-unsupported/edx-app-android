@@ -36,7 +36,7 @@
         android:id="@+id/panel_bottom"
         style="@style/video_player_panel"
         android:layout_gravity="bottom"
-        android:padding="7dp">
+        android:padding="@dimen/video_player_controls_padding">
 
         <SeekBar
             android:id="@+id/mediacontroller_progress"
@@ -48,7 +48,6 @@
             android:id="@+id/time_current"
             style="@style/video_duration_text"
             android:paddingStart="@dimen/video_player_duration_padding"
-            android:paddingEnd="0dp"
             tools:text="00:00" />
 
         <TextView
@@ -61,7 +60,6 @@
         <TextView
             android:id="@+id/time"
             style="@style/video_duration_text"
-            android:paddingStart="0dp"
             android:paddingEnd="@dimen/video_player_duration_padding"
             android:textStyle="bold"
             tools:text="02:05" />

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
+    android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:clickable="true">
+    android:padding="@dimen/widget_margin">
 
     <TextView
         style="@style/text_network_error"
         android:text="@string/msg_video_not_available"
-        android:textSize="15sp" />
+        android:textSize="@dimen/edx_medium" />
 
 </LinearLayout>

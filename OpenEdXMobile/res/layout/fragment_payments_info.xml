@@ -92,7 +92,7 @@
 
                     <TextView
                         android:id="@+id/tv_audit_access_expires_on"
-                        style="@style/bold_regular_edx_black_text"
+                        style="@style/bold_edx_black_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/edx_large" />

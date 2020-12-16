@@ -6,9 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/x_small_icon_margin"
-    android:layout_marginRight="@dimen/x_small_icon_margin"
-    android:padding="@dimen/x_small_icon_margin"
-    tools:targetApi="17">
+    android:padding="@dimen/x_small_icon_margin">
 
     <org.edx.mobile.view.custom.IconImageViewXml
         android:layout_width="@dimen/fa_x_small"

@@ -40,7 +40,6 @@ import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -49,6 +48,7 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import okhttp3.ResponseBody;

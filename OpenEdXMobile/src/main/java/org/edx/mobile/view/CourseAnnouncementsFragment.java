@@ -25,11 +25,11 @@ import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
