@@ -666,6 +666,4 @@ Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <string name="rating_bar">Bewertungssteuerelement</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} von {num_of_stars}</string>
-  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
-  <string name="whats_new_title">Version {version_number}, Neue Funktionen</string>
 </resources>

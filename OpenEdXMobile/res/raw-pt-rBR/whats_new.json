@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.24",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Novo visual",
+        "message": "Percebeu algo diferente? Modernizamos nosso visual e começamos a fazer algumas atualizações que ajudarão você a alcançar suas metas de aprendizado com mais facilidade."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Todas as datas do curso em um só lugar",
+        "message": "Veja todas as datas importantes do seu curso em um só lugar na guia \\\"Datas\\\". Você nunca mais perderá um prazo!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Cronogramas de aprendizado personalizados",
+        "message": "Quando você está matriculado em um curso que segue o seu ritmo, agora é possível ver seu cronograma de aprendizado personalizado com as datas de entrega no seu telefone. Também é possível alterar as datas de entrega quando você precisa ajustar seu cronograma: é o seu curso do seu jeito!"
+      }
+    ]
+  },
+  {
     "version": "2.23",
     "messages": [
       {

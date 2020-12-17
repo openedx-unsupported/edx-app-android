@@ -659,6 +659,4 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="rating_bar">Controle de avaliação</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} de {num_of_stars}</string>
-  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
-  <string name="whats_new_title">Versão {version_number}, Novos recursos</string>
 </resources>

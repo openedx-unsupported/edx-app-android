@@ -1,5 +1,34 @@
 [
   {
+    "version": "2.24",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "New Look and Feel",
+        "message": "Notice something different? We’ve modernized our look and started making updates that make it easier for you to achieve your learning goals."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "All Course Dates at a Glance",
+        "message": "See all the important dates of your course at a glance in the dates tab. You'll never miss another deadline!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Personalized Learning Schedules",
+        "message": "When you are enrolled in a self-paced course, you can now see your personalized learning schedule with due dates on your phone. You can also shift due dates if you need to adjust your schedule - your course, your way!"
+      }
+    ]
+  },
+  {
     "version": "2.23",
     "messages": [
       {
