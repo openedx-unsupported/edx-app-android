@@ -13,11 +13,7 @@ import requests
 import sys
 
 AUT_NAME = sys.argv[1]
-USER_NAME = sys.argv[2]
-USER_PASSWORD = sys.argv[3]
 print('AUT name - {}'.format(AUT_NAME))
-print('USER name - {}'.format(USER_NAME))
-print('USER password - {}'.format(USER_PASSWORD))
 
 REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
