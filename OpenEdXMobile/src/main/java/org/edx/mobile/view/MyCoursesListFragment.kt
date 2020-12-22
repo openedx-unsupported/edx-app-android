@@ -27,10 +27,12 @@ import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.module.db.DataCallback
+import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.ConfigUtil.Companion.isCourseDiscoveryEnabled
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.UiUtil
 import org.edx.mobile.view.adapters.MyCoursesAdapter
+import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,6 +67,11 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     environment.router.showCourseDashboardTabs(activity, model, true)
                 }
             }
+
+            override fun onLearnMoreClicked(courseId: String) {
+                CourseModalDialogFragment.newInstance(environment.config.platformName, courseId)
+                        .show(childFragmentManager, CourseModalDialogFragment.TAG)
+            }
         }
     }
 
@@ -81,13 +88,24 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
         // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(View(context), null, false)
-        binding.myCourseList.adapter = adapter
+        binding.myCourseList.adapter = adapter.also {
+            it.setValuePropEnabled(environment.remoteFeaturePrefs.isValuePropEnabled())
+        }
         binding.myCourseList.onItemClickListener = adapter
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ConfigUtil.checkValuePropEnabled(environment.config, object : ConfigUtil.OnValuePropStatusListener {
+            override fun isValuePropEnabled(isEnabled: Boolean) {
+                if (isEnabled != environment.remoteFeaturePrefs.isValuePropEnabled()) {
+                    environment.remoteFeaturePrefs.setValuePropEnabled(isEnabled)
+                    adapter.setValuePropEnabled(isEnabled)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        })
         loadData(showProgress = true, fromCache = true)
     }
 

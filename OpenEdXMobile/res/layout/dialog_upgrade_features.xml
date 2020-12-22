@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/dialog_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/dialog_padding_top_material">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/dialog_dismiss"
+                android:layout_width="@dimen/fa_x_large"
+                android:layout_height="@dimen/fa_x_large"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_close"
+                android:tint="@color/primaryBaseColor" />
+
+            <TextView
+                android:id="@+id/dialog_title"
+                style="@style/semi_bold_primary_base_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/widget_margin_double"
+                android:gravity="center"
+                android:textSize="@dimen/edx_x_large"
+                tools:text="@string/course_dashboard_modal_title" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/container_padding"
+                android:src="@drawable/course_certificate" />
+
+            <TextView
+                style="@style/regular_primary_base_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_double"
+                android:gravity="start"
+                android:text="@string/course_modal_heading"
+                android:textSize="@dimen/edx_large" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_double"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/widget_margin_x_half"
+                    android:src="@drawable/ic_check_circle" />
+
+                <TextView
+                    style="@style/regular_primary_base_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/widget_margin_half"
+                    android:gravity="start"
+                    android:text="@string/course_modal_earn_certificate"
+                    android:textSize="@dimen/edx_base" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_double"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/widget_margin_x_half"
+                    android:src="@drawable/ic_check_circle" />
+
+                <TextView
+                    style="@style/regular_primary_base_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/widget_margin_half"
+                    android:gravity="start"
+                    android:text="@string/course_modal_unlock_access"
+                    android:textSize="@dimen/edx_base" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_double"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/widget_margin_x_half"
+                    android:src="@drawable/ic_check_circle" />
+
+                <TextView
+                    style="@style/regular_primary_base_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/widget_margin_half"
+                    android:gravity="start"
+                    android:text="@string/course_modal_full_access_course"
+                    android:textSize="@dimen/edx_base" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_double"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/widget_margin_x_half"
+                    android:src="@drawable/ic_check_circle" />
+
+                <TextView
+                    android:id="@+id/support_non_profit"
+                    style="@style/regular_primary_base_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/widget_margin_half"
+                    android:gravity="start"
+                    android:text="@string/course_modal_support_non_profit"
+                    android:textSize="@dimen/edx_base" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

@@ -467,6 +467,27 @@ public interface Analytics {
     void trackPLSCourseDatesShift(@NonNull String courseId, @NonNull String enrollmentMode,
                                   @NonNull String screenName, boolean isSuccess);
 
+    /**
+     * Track the Value Prop Modal appearance
+     *
+     * @param courseId     course id of the course through which the modal is appeared
+     * @param assignmentId Assignment id of course unit
+     * @param screenName   The screen name through which Modal will appear
+     */
+    void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId,
+                                 @NonNull String screenName);
+
+    /**
+     * Track the Value Prop Learn more button tapped
+     *
+     * @param courseId     course id of the course on which button is tapped
+     * @param assignmentId Assignment id of course unit
+     * @param screenName   The screen name on which button will be tapped
+     */
+    void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId,
+                                       @NonNull String screenName);
+
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -498,6 +519,7 @@ public interface Analytics {
         String BLOCK_ID = "block_id";
         String SUBSECTION_ID = "subsection_id";
         String UNIT_ID = "unit_id";
+        String ASSIGNMENT_ID = "assignment_id";
         String SUPPORTED = "supported";
         String DEVICE_ORIENTATION = "device-orientation";
         String MODE = "mode";
@@ -582,6 +604,7 @@ public interface Analytics {
         String USER_COURSE_ENROLL_CLICKED = "edx.bi.app.course.enroll.clicked";
         String USER_COURSE_ENROLL_SUCCESS = "edx.bi.app.course.enroll.success";
         String USER_COURSE_UPGRADE_SUCCESS = "edx.bi.app.course.upgrade.success";
+        String VALUE_PROP_LEARN_MORE_CLICKED = "edx.bi.app.value.prop.learn.more.clicked";
         String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
         String CONVERSION = "conversion";
         String USER_ENGAGEMENT = "user-engagement";
@@ -675,6 +698,7 @@ public interface Analytics {
         String LAUNCH_ACTIVITY = "Launch";
         String REGISTER = "Register";
         String LOGIN = "Login";
+        String COURSE_ENROLLMENT = "course_enrollment";
         String COURSE_DASHBOARD = "Course Dashboard";
         String COURSE_OUTLINE = "Course Outline";
         String COURSE_HANDOUTS = "Course Handouts";
@@ -783,6 +807,9 @@ public interface Analytics {
         String PLS_BANNER_VIEWED = "PLS Banner Viewed";
         String PLS_SHIFT_DATES_BUTTON_TAPPED = "PLS Shift Button Tapped";
         String PLS_SHIFT_DATES = "PLS Shift Dates";
+        // Value Prop
+        String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
+        String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
     }
 
     /**
