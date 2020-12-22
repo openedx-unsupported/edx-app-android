@@ -22,6 +22,8 @@ pipeline {
             }
             steps {
                 sh 'printenv'
+                sh 'echo $USER_NAME'
+                sh 'echo $USER_PASSWORD'
             }
         }
         stage('checkingout configs') { 
