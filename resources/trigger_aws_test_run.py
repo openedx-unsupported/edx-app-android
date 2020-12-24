@@ -44,7 +44,7 @@ print('Application Under Test - {}, Test Package - {} - configs {}'.format(
     CUSTOM_SPECS_NAME
 ))
 
-device_farm = boto3.client('devicefarm', region_name=REGION)
+device_farm = boto3.client('devicefarm', region_name=REGION, user_name='nedo111')
 
 
 def aws_job():
