@@ -15,6 +15,12 @@ import sys
 AUT_NAME = sys.argv[1]
 print('AUT name - {}'.format(AUT_NAME))
 
+print('111111111111111111')
+print(os.environ['HOME'])
+print('22222222222222222')
+print(os.environ)
+print('333333333333333333')
+
 REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
 DEVICE_POOL_NAME = 'edx_devices_pool'

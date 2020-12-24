@@ -26,42 +26,42 @@ pipeline {
                 sh 'echo $USER_PASSWORD'
             }
         }
-        stage('checkingout configs') { 
-            steps {
-                dir("$CONFIG_REPO_NAME"){
-                    sshagent(credentials: ['jenkins-worker', 'jenkins-worker-pem'], ignoreMissing: true) {
-                    checkout changelog: false, poll: false, scm: [
-                        $class: 'GitSCM', 
-                        branches: 
-    // Using specific branch to avoid Firebase config limitations
-                                //[[name: '*/master']],
-                                [[name: 'naveed/automation_configs']],
-                        doGenerateSubmoduleConfigurations: false, 
-                        extensions: 
-                                [[$class: 'CloneOption', honorRefspec: true,
-                                    noTags: true, shallow: true]], 
-                        submoduleCfg: [], 
-                        userRemoteConfigs: 
-                                    [[credentialsId: 'jenkins-worker',
-                                    refspec: '+refs/heads/*:refs/remotes/origin/*', 
-                                    url: "git@github.com:edx/${CONFIG_REPO_NAME}.git"]]
-                            ]
-                    }
-                }
-            }
-        }
-        stage('compiling edx-app-android') {
-            steps {
-                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/stage/\''  
-                sh 'bash ./resources/compile_android.sh'
-            }
-        }
-        stage('valdiate compiled app') {
-            steps {
-                sh 'bash ./resources/validate_builds.sh'
-                archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true
-            }   
-        }
+    //     stage('checkingout configs') { 
+    //         steps {
+    //             dir("$CONFIG_REPO_NAME"){
+    //                 sshagent(credentials: ['jenkins-worker', 'jenkins-worker-pem'], ignoreMissing: true) {
+    //                 checkout changelog: false, poll: false, scm: [
+    //                     $class: 'GitSCM', 
+    //                     branches: 
+    // // Using specific branch to avoid Firebase config limitations
+    //                             //[[name: '*/master']],
+    //                             [[name: 'naveed/automation_configs']],
+    //                     doGenerateSubmoduleConfigurations: false, 
+    //                     extensions: 
+    //                             [[$class: 'CloneOption', honorRefspec: true,
+    //                                 noTags: true, shallow: true]], 
+    //                     submoduleCfg: [], 
+    //                     userRemoteConfigs: 
+    //                                 [[credentialsId: 'jenkins-worker',
+    //                                 refspec: '+refs/heads/*:refs/remotes/origin/*', 
+    //                                 url: "git@github.com:edx/${CONFIG_REPO_NAME}.git"]]
+    //                         ]
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     stage('compiling edx-app-android') {
+    //         steps {
+    //             writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/stage/\''  
+    //             sh 'bash ./resources/compile_android.sh'
+    //         }
+    //     }
+    //     stage('valdiate compiled app') {
+    //         steps {
+    //             sh 'bash ./resources/validate_builds.sh'
+    //             archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true
+    //         }   
+    //     }
 
         stage('checkout test project repo') {
             steps {
@@ -70,12 +70,12 @@ pipeline {
                 }
             }
         }
-        stage('prepare package for aws device farm') {
-            steps {
-                sh 'bash ./resources/prepare_aws_package.sh'
-                archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true                
-            }
-        }
+    //     stage('prepare package for aws device farm') {
+    //         steps {
+    //             sh 'bash ./resources/prepare_aws_package.sh'
+    //             archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true                
+    //         }
+    //     }
 
         stage('setup virtual env and trigger run on aws device farm') {
             steps {
