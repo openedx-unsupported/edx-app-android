@@ -11,6 +11,7 @@ import time
 import boto3
 import requests
 import sys
+from botocore.config import Config
 
 AUT_NAME = sys.argv[1]
 print('AUT name - {}'.format(AUT_NAME))
@@ -44,7 +45,12 @@ print('Application Under Test - {}, Test Package - {} - configs {}'.format(
     CUSTOM_SPECS_NAME
 ))
 
-device_farm = boto3.client('devicefarm', region_name=REGION, user_name='nedo111')
+
+my_config = Config(
+    region_name = REGION,
+    user_name = 'nedo111'
+)
+device_farm = boto3.client('devicefarm', config=my_config)
 
 
 def aws_job():
