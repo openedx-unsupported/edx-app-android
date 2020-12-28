@@ -182,6 +182,7 @@
     <!-- Icons -->
     <dimen name="x_small_icon_margin">5dp</dimen>
     <dimen name="small_icon_size">15dp</dimen>
+    <dimen name="medium_icon_size">35dp</dimen>
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>
     <dimen name="content_unavailable_error_icon_size">80dp</dimen>
@@ -231,6 +232,7 @@
     <dimen name="edx_half_margin">8dp</dimen>
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
+    <dimen name="widget_margin_x_half">3dp</dimen>
     <dimen name="widget_margin_half">5dp</dimen>
     <dimen name="widget_margin">10dp</dimen>
     <dimen name="widget_margin_double">20dp</dimen>

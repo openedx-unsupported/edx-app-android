@@ -8,6 +8,7 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
+import org.edx.mobile.module.prefs.RemoteFeaturePrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
@@ -33,6 +34,9 @@ public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
     LoginPrefs loginPrefs;
+
+    @Inject
+    RemoteFeaturePrefs remoteFeaturePrefs;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
@@ -67,6 +71,11 @@ public class EdxEnvironment implements IEdxEnvironment {
     @Override
     public LoginPrefs getLoginPrefs() {
         return loginPrefs;
+    }
+
+    @Override
+    public RemoteFeaturePrefs getRemoteFeaturePrefs() {
+        return remoteFeaturePrefs;
     }
 
     public AnalyticsRegistry getAnalyticsRegistry() {

@@ -1,10 +1,11 @@
 package org.edx.mobile.module.analytics;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -930,5 +931,30 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         aEvent.data.putValue(Keys.SUCCESS, isSuccess);
         trackSegmentEvent(Events.PLS_SHIFT_DATES, aEvent.properties);
+    }
+
+    @Override
+    public void trackValuePropModalView(@NonNull String courseId,
+                                        @Nullable String assignmentId, @NonNull String screenName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        if (TextUtils.isEmpty(assignmentId)) {
+            aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
+        }
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        trackSegmentEvent(Events.VALUE_PROP_MODAL_VIEW, aEvent.properties);
+    }
+
+    @Override
+    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId,
+                                              @NonNull String screenName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.VALUE_PROP_LEARN_MORE_CLICKED);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        if (TextUtils.isEmpty(assignmentId)) {
+            aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
+        }
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        trackSegmentEvent(Events.VALUE_PROP_LEARN_MORE_CLICKED, aEvent.properties);
     }
 }

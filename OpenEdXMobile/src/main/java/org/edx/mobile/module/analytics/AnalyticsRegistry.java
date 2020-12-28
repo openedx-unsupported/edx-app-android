@@ -464,4 +464,18 @@ public class AnalyticsRegistry implements Analytics {
             service.trackPLSCourseDatesShift(courseId, enrollmentMode, screenName, isSuccess);
         }
     }
+
+    @Override
+    public void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+        for (Analytics service : services) {
+            service.trackValuePropModalView(courseId, assignmentId, screenName);
+        }
+    }
+
+    @Override
+    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+        for (Analytics service : services) {
+            service.trackValuePropLearnMoreTapped(courseId, assignmentId, screenName);
+        }
+    }
 }

@@ -257,6 +257,19 @@
         To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Shift due dates</string>
+    <!-- Label My Courses Graded content message -->
+    <string name="course_value_prop_message">Get the most out of your course! Upgrade to get full access to the course material, unlock both graded and non-graded assignments, and earn a verified certificate to showcase on your resume.</string>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">Learn more</string>
+    <!-- Title Course Dashboard Modal  -->
+    <string name="course_dashboard_modal_title">Access to edX course features</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">When you upgrade, you:</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">Earn a verified certificate of completion to showcase on your resume</string>
+    <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
+    <string name="course_modal_full_access_course">Full access to course content and materials, even after the course ends</string>
+    <string name="course_modal_support_non_profit">Support our non-profit mission at {platform_name}</string>
 
 
     <!-- Label for date when course is expiring in a specific time frame like in 2 days -->

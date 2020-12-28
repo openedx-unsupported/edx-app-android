@@ -35,6 +35,11 @@ public enum AppConstants {
          * Feature flag for whitelisted releases for course upgrade.
          */
         public static final String REV_934_WHITELISTED_RELEASES = "REV_934_Whitelisted_Releases";
+
+        /**
+         * Feature flag for value prop
+         */
+        public static final String VALUE_PROP_ENABLED = "VALUE_PROP_ENABLED";
     }
 
     /**

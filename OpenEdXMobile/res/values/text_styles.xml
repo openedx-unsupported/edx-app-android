@@ -109,6 +109,10 @@
         <item name="android:textColor">@color/neutralBlackT</item>
     </style>
 
+    <style name="semi_bold_primary_base_text" parent="@style/semibold_text">
+        <item name="android:textColor">@color/primaryBaseColor</item>
+    </style>
+
     <style name="regular_edx_black_text" parent="@style/regular_text">
         <item name="android:textColor">@color/neutralBlackT</item>
     </style>

@@ -4,15 +4,18 @@ import android.content.Context;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
@@ -24,6 +27,8 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     private final ImageView courseImage;
     private final TextView courseTitle;
     private final TextView courseDetails;
+    private final LinearLayout propContainer;
+    private final AppCompatButton learnMore;
     private final View newCourseContent;
 
     public CourseCardViewHolder(View convertView) {
@@ -40,6 +45,10 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
             // Overlay foreground image is used as a hack for it.
             convertView.findViewById(R.id.view_foreground_overlay).setVisibility(View.VISIBLE);
         }
+        this.propContainer = (LinearLayout) convertView
+                .findViewById(R.id.ll_graded_content_layout);
+        this.learnMore = (AppCompatButton) convertView
+                .findViewById(R.id.btn_learn_more);
     }
 
     public void setCourseTitle(@NonNull String title) {
@@ -68,5 +77,14 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
         newCourseContent.setVisibility(View.GONE);
         courseDetails.setVisibility(View.VISIBLE);
         courseDetails.setText(date);
+    }
+
+    public void setHasUpgradeOption(String mode, View.OnClickListener onLearnMoreClick) {
+        if (mode.equalsIgnoreCase(EnrollmentMode.AUDIT.toString())) {
+            propContainer.setVisibility(View.VISIBLE);
+            learnMore.setOnClickListener(onLearnMoreClick);
+        } else {
+            propContainer.setVisibility(View.GONE);
+        }
     }
 }

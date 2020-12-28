@@ -2,9 +2,10 @@ package org.edx.mobile.module.analytics;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,8 +37,8 @@ public class FirebaseAnalytics implements Analytics {
     /**
      * This function is used to send the event to Firebase and log the output.
      *
-     * @param eventName     The name of the event.
-     * @param eventBundle   The Bundle for the event.
+     * @param eventName   The name of the event.
+     * @param eventBundle The Bundle for the event.
      */
     private void logFirebaseEvent(@NonNull String eventName, @NonNull Bundle eventBundle) {
         String csv = eventName;
@@ -655,6 +656,29 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.SCREEN_NAME, screenName);
         event.putBoolean(Keys.SUCCESS, isSuccess);
         event.putString(Keys.CATEGORY, Values.COURSE_DATES);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_MODAL_VIEW);
+        event.putCourseId(courseId);
+        if (TextUtils.isEmpty(assignmentId)) {
+            event.putString(Keys.ASSIGNMENT_ID, assignmentId);
+        }
+        event.putString(Keys.SCREEN_NAME, screenName);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+
+    @Override
+    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_LEARN_MORE_CLICKED, Values.VALUE_PROP_LEARN_MORE_CLICKED);
+        event.putCourseId(courseId);
+        if (TextUtils.isEmpty(assignmentId)) {
+            event.putString(Keys.ASSIGNMENT_ID, assignmentId);
+        }
+        event.putString(Keys.SCREEN_NAME, screenName);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }
