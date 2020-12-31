@@ -47,8 +47,7 @@ print('Application Under Test - {}, Test Package - {} - configs {}'.format(
 
 
 my_config = Config(
-    region_name = REGION,
-    credentials = 'nedo111'
+    region_name = REGION
 )
 device_farm = boto3.client('devicefarm', config=my_config)
 
