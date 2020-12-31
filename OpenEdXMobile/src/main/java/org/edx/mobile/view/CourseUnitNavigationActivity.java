@@ -1,13 +1,12 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,20 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseUpgradedEvent;
+import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
@@ -33,6 +39,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements
@@ -199,15 +206,15 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             // we have reached the start and previous button is disabled
             mPreviousUnitLbl.setVisibility(View.GONE);
         }
-        if(mPreviousBtn.isEnabled()){
+        if (mPreviousBtn.isEnabled()) {
             mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
-        } else{
+        } else {
             mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
         }
 
-        if(mNextBtn.isEnabled()){
+        if (mNextBtn.isEnabled()) {
             mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
-        } else{
+        } else {
             mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
         }
     }
@@ -295,5 +302,26 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     public void onEvent(CourseUpgradedEvent event) {
         finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE && resultCode == Activity.RESULT_OK) {
+            ArrayList<Uri> results = new ArrayList<>();
+            if (data != null) {
+                String dataString = data.getDataString();
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results.add(item.getUri());
+                    }
+                }
+//                if (dataString != null)
+//                    results.add(Uri.parse(dataString));
+            }
+            EventBus.getDefault().post(new FileSelectionEvent(results));
+        }
     }
 }

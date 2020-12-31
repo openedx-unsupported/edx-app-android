@@ -786,4 +786,6 @@
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">What\'s New</string>
+    <!-- Title of the selector while the choosing file -->
+    <string name="choose_file_title">Choose Files</string>
 </resources>

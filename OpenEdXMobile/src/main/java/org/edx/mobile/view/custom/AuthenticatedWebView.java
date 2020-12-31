@@ -25,6 +25,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
+import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
@@ -315,6 +316,13 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     @SuppressWarnings("unused")
     public void onEventMainThread(MainDashboardRefreshEvent event) {
         onRefresh();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(FileSelectionEvent event) {
+        if (webViewClient != null) {
+            webViewClient.onFilesSelection(event.getFiles());
+        }
     }
 
     public void onResume() {

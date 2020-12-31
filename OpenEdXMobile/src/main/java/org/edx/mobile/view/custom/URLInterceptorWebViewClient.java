@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -20,10 +21,12 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
+import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.links.WebViewLink;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,6 +72,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private Set<String> internalLinkHosts = new HashSet<>();
 
+    private ValueCallback<Uri[]> filePathCallback;
+
     public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
         this.activity = activity;
         config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
@@ -111,6 +116,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 if (pageStatusListener != null) {
                     pageStatusListener.onPageLoadProgressChanged(view, progress);
                 }
+            }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                URLInterceptorWebViewClient.this.filePathCallback = filePathCallback;
+                FileUtil.chooseFiles(activity, fileChooserParams.getAcceptTypes());
+                return true;
             }
         });
     }
@@ -282,6 +294,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     public void setHostForThisPage(@Nullable String hostForThisPage) {
         this.hostForThisPage = hostForThisPage;
+    }
+
+    public void onFilesSelection(ArrayList<Uri> files) {
+        if (filePathCallback != null) {
+            Uri[] filesArray = new Uri[files.size()];
+            files.toArray(filesArray);
+            filePathCallback.onReceiveValue(filesArray);
+        }
     }
 
     /**
