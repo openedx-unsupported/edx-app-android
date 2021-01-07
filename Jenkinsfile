@@ -14,7 +14,7 @@ pipeline {
             AUT_NAME = 'edx-debuggable-2.23.2.apk'
             USER_NAME = credentials('AUTOMATION_USERNAME')
             USER_PASSWORD = credentials('AUTOMATION_PASSWORD')
-            BITBUCKET_COMMON_CREDS = credentials('jenkins-bitbucket-common-creds'
+            BITBUCKET_COMMON_CREDS = credentials('jenkins-bitbucket-common-creds')
     }
 
     stages {
