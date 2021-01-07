@@ -59,6 +59,7 @@ pipeline {
                 dir("$TEST_PROJECT_REPO_NAME"){
                         checkout([$class: 'GitSCM', branches: [[name: '*/jenkins_credentials_env']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
                 }
+                withCredentials([string(credentialsId: $USER_NAME, variable: $USER_PASSWORD)]) { echo "My password is '${USERPASSWORD}'!" }
             }
         }
         stage('prepare package for aws device farm') {
