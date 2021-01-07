@@ -53,4 +53,5 @@ install_requirements
 print_message "calling AWS Test run"
 print_message $USER_NAME
 print_message $USER_PASSWORD
+print_message $BITBUCKET_COMMON_CREDS
 python -v ./resources/trigger_aws_test_run.py $AUT_NAME
