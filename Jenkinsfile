@@ -60,6 +60,9 @@ pipeline {
                         checkout([$class: 'GitSCM', branches: [[name: '*/jenkins_credentials_env']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
                 }
             }
+            steps {
+                shell(dslFactory.readFileFromWorkspace('resources/setup_virtualenv.sh'))
+            }
         }
         stage('prepare package for aws device farm') {
             steps {
