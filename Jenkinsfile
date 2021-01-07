@@ -61,11 +61,6 @@ pipeline {
                 }
             }
         }
-        stage('read from shell') {
-            steps {
-                shell(dslFactory.readFileFromWorkspace('resources/setup_virtualenv.sh'))
-            }
-        }
         stage('prepare package for aws device farm') {
             steps {
                 sh 'bash ./resources/prepare_aws_package.sh'
