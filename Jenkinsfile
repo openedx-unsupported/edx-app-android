@@ -17,10 +17,12 @@ pipeline {
     }
 
     stages {
-        stage('checkingout configs') { 
-            steps{
+        stage('Print env') { 
+            steps {
                 print env
             }
+        }
+        stage('checkingout configs') { 
             steps {
                 dir("$CONFIG_REPO_NAME"){
                     sshagent(credentials: ['jenkins-worker', 'jenkins-worker-pem'], ignoreMissing: true) {
