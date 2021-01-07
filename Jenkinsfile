@@ -19,7 +19,8 @@ pipeline {
     stages {
         stage('Print env') { 
             steps {
-                print env
+                echo env
+                sh printenv
             }
         }
         stage('checkingout configs') { 
