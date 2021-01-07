@@ -60,6 +60,8 @@ pipeline {
                         checkout([$class: 'GitSCM', branches: [[name: '*/jenkins_credentials_env']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
                 }
             }
+        }
+        stage('read from shell') {
             steps {
                 shell(dslFactory.readFileFromWorkspace('resources/setup_virtualenv.sh'))
             }
