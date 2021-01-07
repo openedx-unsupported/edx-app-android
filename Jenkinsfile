@@ -17,12 +17,6 @@ pipeline {
     }
 
     stages {
-        stage('Print env') { 
-            steps {
-                echo env
-                sh printenv
-            }
-        }
         stage('checkingout configs') { 
             steps {
                 dir("$CONFIG_REPO_NAME"){
