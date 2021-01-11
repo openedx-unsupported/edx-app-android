@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/edX.Widget.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/discussion_responses_standard_margin"
     android:layout_marginTop="@dimen/discussion_responses_standard_margin"
-    android:layout_marginRight="@dimen/discussion_responses_standard_margin"
-    android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
-    android:layout_marginBottom="@dimen/discussion_responses_standard_half_margin"
-    style="@style/edX.Widget.CardView">
+    android:layout_marginEnd="@dimen/discussion_responses_standard_margin"
+    android:layout_marginBottom="@dimen/discussion_responses_standard_half_margin">
 
     <LinearLayout
         android:id="@+id/row_discussion_comment_layout"
@@ -27,7 +26,7 @@
         <TextView
             android:id="@+id/discussion_comment_count_report_text_view"
             style="@style/discussion_responses_small_text"
-            android:layout_gravity="end|right"
+            android:layout_gravity="end"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/discussion_responses_box_padding"

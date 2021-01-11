@@ -31,7 +31,6 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/edx_margin"
                     android:layout_marginStart="@dimen/edx_margin">
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -55,7 +54,6 @@
                     android:id="@+id/username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/edx_margin"
                     android:layout_marginStart="@dimen/edx_margin"
                     android:layout_weight="1"
                     android:textColor="@color/primaryBaseColor"
@@ -71,8 +69,8 @@
                     android:contentDescription="@string/edit_user_profile_change_photo_description"
                     android:drawablePadding="@dimen/x_small_icon_margin"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/edx_margin"
-                    android:paddingRight="@dimen/edx_margin"
+                    android:paddingStart="@dimen/edx_margin"
+                    android:paddingEnd="@dimen/edx_margin"
                     android:text="@string/edit_user_profile_change_photo"
                     android:focusable="true"
                     android:textColor="@color/disableable_button_text"

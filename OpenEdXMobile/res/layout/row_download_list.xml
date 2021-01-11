@@ -11,10 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/widget_margin"
-        android:layout_marginRight="@dimen/widget_margin"
         android:layout_weight="1"
-        android:orientation="vertical"
-        tools:targetApi="17">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/downloads_name"
@@ -39,11 +37,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/edx_margin"
-                android:layout_marginRight="@dimen/edx_margin"
                 android:singleLine="true"
                 android:textColor="@color/neutralXDark"
                 android:textSize="@dimen/edx_x_small"
-                tools:targetApi="17"
                 tools:text="53:59:21" />
 
             <TextView
@@ -54,7 +50,6 @@
                 android:singleLine="true"
                 android:textColor="@color/neutralXDark"
                 android:textSize="@dimen/edx_x_small"
-                tools:targetApi="17"
                 tools:text="45.20/200MB" />
 
         </LinearLayout>
@@ -67,8 +62,7 @@
             android:layout_marginBottom="@dimen/widget_margin_half"
             android:layout_marginTop="@dimen/widget_margin_half"
             android:max="100"
-            android:progress="40"
-            tools:targetApi="17" />
+            tools:progress="40" />
 
         <TextView
             android:id="@+id/txtDownloadFailed"
@@ -77,8 +71,7 @@
             android:layout_height="wrap_content"
             android:text="@string/download_failed_text"
             android:textColor="@color/errorBase"
-            android:textSize="@dimen/edx_x_small"
-            tools:targetApi="17" />
+            android:textSize="@dimen/edx_x_small" />
 
     </LinearLayout>
 
@@ -87,12 +80,10 @@
         android:layout_width="@dimen/fa_xxxx_large"
         android:layout_height="@dimen/fa_xxxx_large"
         android:background="@drawable/selectable_box_overlay"
-        android:layout_marginLeft="@dimen/widget_margin_half"
         android:layout_marginStart="@dimen/widget_margin_half"
         android:contentDescription="@string/cancel_download"
         android:padding="@dimen/widget_margin"
         android:layout_gravity="center"
-        android:src="@drawable/ic_close"
-        tools:targetApi="17" />
+        android:src="@drawable/ic_close" />
 
 </LinearLayout>

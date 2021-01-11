@@ -1,10 +1,9 @@
 package org.edx.mobile.services;
 
 import android.content.Context;
-import android.os.Build;
-import androidx.annotation.NonNull;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
+
+import androidx.annotation.NonNull;
 
 import com.google.inject.Inject;
 
@@ -55,10 +54,6 @@ public class EdxCookieManager {
         if ( instance == null ) {
             instance = new EdxCookieManager();
             RoboGuice.getInjector(context).injectMembers(instance);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                CookieSyncManager.createInstance(context);
-            }
         }
         return instance;
     }

@@ -15,10 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/edx_double_margin"
-            android:paddingLeft="@dimen/edx_double_margin"
-            android:paddingRight="@dimen/edx_double_margin"
-            android:paddingStart="@dimen/edx_double_margin">
+            android:paddingStart="@dimen/edx_double_margin"
+            android:paddingEnd="@dimen/edx_double_margin">
 
             <ImageView
                 android:id="@+id/iv_edx_logo"
@@ -43,8 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin_quadruple"
-                android:text="@string/launch_search_title"
                 android:fontFamily="?attr/fontSemiBold"
+                android:text="@string/launch_search_title"
                 android:textColor="@color/primaryBaseColor"
                 android:textSize="@dimen/edx_large" />
 

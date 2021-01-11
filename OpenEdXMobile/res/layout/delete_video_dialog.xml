@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_layout"
-    android:layout_width="250dp"
+    android:layout_width="@dimen/video_dialog_layout_width"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:minWidth="250dp"
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
     <TextView
         android:id="@+id/tv_dialog_title"
-        style="@style/bold_grey_text"
+        style="@style/bold_edx_black_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="@dimen/widget_margin"
+        android:layout_marginTop="@dimen/widget_margin_double"
+        android:layout_marginEnd="@dimen/widget_margin"
+        android:layout_marginBottom="@dimen/widget_margin"
         android:gravity="center"
         android:textAllCaps="true"
-        android:textSize="17sp" />
+        android:textSize="@dimen/edx_large" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_height="@dimen/video_dialog_layout_divider_height"
+        android:layout_marginStart="@dimen/widget_margin"
+        android:layout_marginEnd="@dimen/widget_margin"
         android:background="@color/neutralLight" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:orientation="horizontal" >
+        android:layout_margin="@dimen/widget_margin_half"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_dialog_message1"
-            style="@style/regular_grey_text"
+            style="@style/bold_edx_black_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/widget_margin_double"
+            android:layout_marginTop="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/widget_margin_double"
+            android:layout_marginBottom="@dimen/widget_margin"
             android:gravity="center_horizontal"
-            android:textSize="14sp" />
+            android:textSize="@dimen/edx_small" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,7 +53,7 @@
         android:layout_height="wrap_content"
         android:background="@color/neutralLight"
         android:orientation="horizontal"
-        android:paddingTop="0.5dp" >
+        android:paddingTop="@dimen/video_dialog_margin">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
@@ -63,15 +61,13 @@
             android:layout_width="0dp"
             android:layout_height="35dip"
             android:layout_gravity="center|center_horizontal"
-            android:layout_marginRight="0.5dp"
-            android:layout_marginEnd="0.5dp"
+            android:layout_marginEnd="@dimen/video_dialog_margin"
             android:layout_weight="0.5"
             android:background="@android:color/white"
             android:gravity="center"
             android:text="@string/label_no"
             android:textAllCaps="true"
-            android:textSize="15sp"
-            tools:targetApi="17" />
+            android:textSize="@dimen/edx_medium" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/positiveButton"
@@ -83,7 +79,7 @@
             android:background="@android:color/white"
             android:text="@string/label_yes"
             android:textAllCaps="true"
-            android:textSize="15sp" />
+            android:textSize="@dimen/edx_medium" />
     </LinearLayout>
 
 </LinearLayout>

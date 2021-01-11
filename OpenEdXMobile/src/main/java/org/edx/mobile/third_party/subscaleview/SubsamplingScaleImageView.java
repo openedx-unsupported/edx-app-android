@@ -1313,7 +1313,7 @@ public class SubsamplingScaleImageView extends View {
         }
 
         // Asymmetric padding adjustments
-        float xPaddingRatio = getPaddingLeft() > 0 || getPaddingRight() > 0 ? getPaddingLeft() / (float) (getPaddingLeft() + getPaddingRight()) : 0.5f;
+        float xPaddingRatio = getPaddingStart() > 0 || getPaddingEnd() > 0 ? getPaddingStart() / (float) (getPaddingStart() + getPaddingEnd()) : 0.5f;
         float yPaddingRatio = getPaddingTop() > 0 || getPaddingBottom() > 0 ? getPaddingTop() / (float) (getPaddingTop() + getPaddingBottom()) : 0.5f;
 
         float maxTx;
@@ -1999,7 +1999,7 @@ public class SubsamplingScaleImageView extends View {
      * translate and scale. The result is fitted to bounds, putting the image point as near to the screen center as permitted.
      */
     private PointF vTranslateForSCenter(float sCenterX, float sCenterY, float scale) {
-        int vxCenter = getPaddingLeft() + (getWidth() - getPaddingRight() - getPaddingLeft()) / 2;
+        int vxCenter = getPaddingStart() + (getWidth() - getPaddingEnd() - getPaddingStart()) / 2;
         int vyCenter = getPaddingTop() + (getHeight() - getPaddingBottom() - getPaddingTop()) / 2;
         if (satTemp == null) {
             satTemp = new ScaleAndTranslate(0, new PointF(0, 0));
@@ -2016,7 +2016,7 @@ public class SubsamplingScaleImageView extends View {
      */
     private PointF limitedSCenter(float sCenterX, float sCenterY, float scale, PointF sTarget) {
         PointF vTranslate = vTranslateForSCenter(sCenterX, sCenterY, scale);
-        int vxCenter = getPaddingLeft() + (getWidth() - getPaddingRight() - getPaddingLeft()) / 2;
+        int vxCenter = getPaddingStart() + (getWidth() - getPaddingEnd() - getPaddingStart()) / 2;
         int vyCenter = getPaddingTop() + (getHeight() - getPaddingBottom() - getPaddingTop()) / 2;
         float sx = (vxCenter - vTranslate.x) / scale;
         float sy = (vyCenter - vTranslate.y) / scale;
@@ -2029,7 +2029,7 @@ public class SubsamplingScaleImageView extends View {
      */
     private float minScale() {
         int vPadding = getPaddingBottom() + getPaddingTop();
-        int hPadding = getPaddingLeft() + getPaddingRight();
+        int hPadding = getPaddingStart() + getPaddingEnd();
         if (minimumScaleType == SCALE_TYPE_CENTER_CROP) {
             return Math.max((getWidth() - hPadding) / (float) sWidth(), (getHeight() - vPadding) / (float) sHeight());
         } else if (minimumScaleType == SCALE_TYPE_CUSTOM && minScale > 0) {
@@ -2672,7 +2672,7 @@ public class SubsamplingScaleImageView extends View {
                 }
             }
 
-            int vxCenter = getPaddingLeft() + (getWidth() - getPaddingRight() - getPaddingLeft()) / 2;
+            int vxCenter = getPaddingStart() + (getWidth() - getPaddingEnd() - getPaddingStart()) / 2;
             int vyCenter = getPaddingTop() + (getHeight() - getPaddingBottom() - getPaddingTop()) / 2;
             float targetScale = limitedScale(this.targetScale);
             PointF targetSCenter = panLimited ? limitedSCenter(this.targetSCenter.x, this.targetSCenter.y, targetScale, new PointF()) : this.targetSCenter;

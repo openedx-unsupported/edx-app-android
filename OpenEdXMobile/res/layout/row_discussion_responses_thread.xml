@@ -12,8 +12,6 @@
         android:orientation="vertical"
         android:paddingBottom="3dp"
         android:paddingEnd="@dimen/discussion_responses_box_padding"
-        android:paddingLeft="@dimen/discussion_responses_box_padding"
-        android:paddingRight="@dimen/discussion_responses_box_padding"
         android:paddingStart="@dimen/discussion_responses_box_padding"
         android:paddingTop="@dimen/discussion_responses_box_padding">
 

@@ -17,8 +17,8 @@
             android:background="@color/white"
             android:orientation="vertical"
             android:paddingBottom="@dimen/widget_margin"
-            android:paddingLeft="@dimen/edx_margin"
-            android:paddingRight="@dimen/edx_margin"
+            android:paddingStart="@dimen/edx_margin"
+            android:paddingEnd="@dimen/edx_margin"
             android:paddingTop="@dimen/widget_margin">
 
             <include layout="@layout/row_discussion_user_profile" />
@@ -46,9 +46,9 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/edx_margin"
+            android:paddingStart="@dimen/edx_margin"
             android:paddingTop="@dimen/widget_margin"
-            android:paddingRight="@dimen/edx_margin"
+            android:paddingEnd="@dimen/edx_margin"
             android:paddingBottom="@dimen/widget_margin">
 
             <EditText

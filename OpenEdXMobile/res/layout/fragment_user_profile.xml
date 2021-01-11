@@ -60,7 +60,6 @@
                             android:layout_width="@dimen/edx_x_small"
                             android:layout_height="@dimen/edx_x_small"
                             android:layout_marginEnd="@dimen/x_small_icon_margin"
-                            android:layout_marginRight="@dimen/x_small_icon_margin"
                             app:iconColor="@color/primaryBaseColor"
                             app:iconName="fa-comment" />
 
@@ -87,7 +86,6 @@
                             android:layout_width="@dimen/edx_x_small"
                             android:layout_height="@dimen/edx_x_small"
                             android:layout_marginEnd="@dimen/x_small_icon_margin"
-                            android:layout_marginRight="@dimen/x_small_icon_margin"
                             app:iconColor="@color/primaryBaseColor"
                             app:iconName="fa-map-marker" />
 

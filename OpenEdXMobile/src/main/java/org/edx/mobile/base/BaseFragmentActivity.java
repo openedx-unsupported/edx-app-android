@@ -83,19 +83,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         if (toolbar != null && toolbar instanceof Toolbar) {
             setSupportActionBar((Toolbar) toolbar);
             configureActionBar();
-            setToolbarShadowBasedOnOS();
-        }
-    }
-
-    /**
-     * Decides whether a shadow needs to be shown beneath the {@link Toolbar} or not.
-     * <br/>
-     * {@link AppBarLayout} on pre-lollipop devices doesn't add a shadow at its bottom. To work
-     * around it, a shadow view explicitly needs to be added.
-     */
-    private void setToolbarShadowBasedOnOS() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            findViewById(R.id.shadow_view).setVisibility(View.VISIBLE);
         }
     }
 
@@ -103,11 +90,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * Hides the shadow that appears below {@link Toolbar}.
      */
     protected void hideToolbarShadow() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            findViewById(R.id.shadow_view).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.appbar).setOutlineProvider(null);
-        }
+        findViewById(R.id.appbar).setOutlineProvider(null);
     }
 
     protected void configureActionBar() {

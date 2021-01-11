@@ -20,8 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
-                android:paddingLeft="@dimen/whats_new_image_horizontal_margin"
-                android:paddingRight="@dimen/whats_new_image_horizontal_margin"
+                android:paddingStart="@dimen/whats_new_image_horizontal_margin"
+                android:paddingEnd="@dimen/whats_new_image_horizontal_margin"
                 tools:ignore="ContentDescription"
                 tools:src="@drawable/screen_1" />
         </FrameLayout>
@@ -34,8 +34,8 @@
             android:background="@color/primaryBaseColor"
             android:gravity="top|center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/edx_margin"
-            android:paddingRight="@dimen/edx_margin"
+            android:paddingStart="@dimen/edx_margin"
+            android:paddingEnd="@dimen/edx_margin"
             android:paddingTop="@dimen/edx_margin">
 
             <TextView

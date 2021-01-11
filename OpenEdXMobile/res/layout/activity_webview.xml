@@ -18,8 +18,8 @@
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/widget_margin"
-            android:layout_marginRight="@dimen/widget_margin"
+            android:layout_marginStart="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/widget_margin"
             android:background="@color/neutralLight" />
 
         <include layout="@layout/loading_indicator" />

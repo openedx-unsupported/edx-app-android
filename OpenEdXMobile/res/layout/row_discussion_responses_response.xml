@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/edX.Widget.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/edX.Widget.CardView"
-    android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
-    android:layout_marginRight="@dimen/discussion_responses_standard_margin"
-    android:layout_marginTop="@dimen/discussion_responses_standard_margin">
+    android:layout_marginStart="@dimen/discussion_responses_standard_margin"
+    android:layout_marginTop="@dimen/discussion_responses_standard_margin"
+    android:layout_marginEnd="@dimen/discussion_responses_standard_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,8 +18,8 @@
             style="@style/discussion_responses_nested_card_layout"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="3dp"
-            android:paddingTop="@dimen/discussion_responses_box_padding">
+            android:paddingTop="@dimen/discussion_responses_box_padding"
+            android:paddingBottom="@dimen/discussion_responses_layout_bottom_padding">
 
             <include layout="@layout/row_discussion_user_profile" />
 

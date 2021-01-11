@@ -7,8 +7,8 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/dialog_padding_material"
-        android:paddingRight="@dimen/dialog_padding_material"
+        android:paddingStart="@dimen/dialog_padding_material"
+        android:paddingEnd="@dimen/dialog_padding_material"
         android:paddingTop="@dimen/dialog_padding_top_material">
 
         <TextView

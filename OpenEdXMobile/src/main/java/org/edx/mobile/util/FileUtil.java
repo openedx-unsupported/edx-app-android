@@ -3,8 +3,8 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RawRes;
@@ -53,13 +53,10 @@ public class FileUtil {
      */
     @Nullable
     public static File getRemovableStorageAppDir(@NonNull Context context) {
-        final int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentApiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-            final File[] fileList = context.getExternalFilesDirs(null);
-            for (File extFile : fileList) {
-                if (extFile != null && Environment.isExternalStorageRemovable(extFile)) {
-                    return extFile;
-                }
+        final File[] fileList = context.getExternalFilesDirs(null);
+        for (File extFile : fileList) {
+            if (extFile != null && Environment.isExternalStorageRemovable(extFile)) {
+                return extFile;
             }
         }
         return null;

@@ -68,7 +68,7 @@ public class CropImageView extends org.edx.mobile.third_party.subscaleview.Subsa
             vTranslate.x = Math.max(vTranslate.x, getWidth() / 2 - scaleWidth);
             vTranslate.y = Math.max(vTranslate.y, getHeight() / 2 - scaleHeight);
         } else if (center) {
-            vTranslate.x = Math.max(vTranslate.x, getWidth() - scaleWidth - getPaddingRight());
+            vTranslate.x = Math.max(vTranslate.x, getWidth() - scaleWidth - getPaddingEnd());
             vTranslate.y = Math.max(vTranslate.y, getHeight() - scaleHeight - getPaddingBottom());
         } else {
             vTranslate.x = Math.max(vTranslate.x, -scaleWidth);
@@ -81,7 +81,7 @@ public class CropImageView extends org.edx.mobile.third_party.subscaleview.Subsa
             maxTx = Math.max(0, getWidth() / 2);
             maxTy = Math.max(0, getHeight() / 2);
         } else if (center) {
-            maxTx = Math.max(0, getPaddingLeft());
+            maxTx = Math.max(0, getPaddingStart());
             maxTy = Math.max(0, getPaddingTop());
         } else {
             maxTx = Math.max(0, getWidth());
@@ -96,8 +96,8 @@ public class CropImageView extends org.edx.mobile.third_party.subscaleview.Subsa
 
     @NonNull
     public Rect getCropRect() {
-        final PointF topLeft = this.viewToSourceCoord(getPaddingLeft(), getPaddingTop());
-        final PointF bottomRight = this.viewToSourceCoord(getWidth() - getPaddingRight(), getHeight() - getPaddingBottom());
+        final PointF topLeft = this.viewToSourceCoord(getPaddingStart(), getPaddingTop());
+        final PointF bottomRight = this.viewToSourceCoord(getWidth() - getPaddingEnd(), getHeight() - getPaddingBottom());
         return new Rect((int) topLeft.x, (int) topLeft.y, (int) bottomRight.x, (int) bottomRight.y);
     }
 

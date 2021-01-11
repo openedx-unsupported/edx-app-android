@@ -81,5 +81,4 @@
         app:tabMaxWidth="0dp"
         tools:visibility="visible" />
 
-    <include layout="@layout/toolbar_shadow_view" />
 </com.google.android.material.appbar.AppBarLayout>

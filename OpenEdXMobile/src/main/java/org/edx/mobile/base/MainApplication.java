@@ -150,13 +150,6 @@ public abstract class MainApplication extends MultiDexApplication {
             Branch.getAutoInstance(this);
         }
 
-        // Force Glide to use our version of OkHttp which now supports TLS 1.2 out-of-the-box for
-        // Pre-Lollipop devices
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Glide.get(this).getRegistry().replace(GlideUrl.class, InputStream.class,
-                    new OkHttpUrlLoader.Factory(injector.getInstance(OkHttpClientProvider.class).get()));
-        }
-
         // Initialize Facebook SDK
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
         if (!isOnZeroRatedNetwork && config.getFacebookConfig().isEnabled()) {

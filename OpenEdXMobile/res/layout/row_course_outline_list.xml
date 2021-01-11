@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/activatedBackgroundIndicator"
-    android:orientation="vertical"
     android:minHeight="@dimen/course_outline_list_item_min_height"
+    android:orientation="vertical"
     android:paddingTop="@dimen/widget_margin_half">
 
     <LinearLayout
@@ -16,21 +16,20 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center_vertical"
-        android:paddingBottom="@dimen/course_item_vertical_padding"
         android:paddingStart="@dimen/course_item_horizontal_padding"
         android:paddingTop="@dimen/course_item_vertical_padding"
-        tools:targetApi="17">
+        android:paddingBottom="@dimen/course_item_vertical_padding">
 
         <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/row_type"
             android:layout_width="40dp"
             android:layout_height="18dp"
             android:baselineAlignBottom="true"
-            app:iconColor="@color/primaryBaseColor"
             android:gravity="center_vertical"
-            android:paddingEnd="21dp"
             android:paddingStart="0dp"
-            android:visibility="gone" />
+            android:paddingEnd="21dp"
+            android:visibility="gone"
+            app:iconColor="@color/primaryBaseColor" />
 
         <LinearLayout
             style="@style/regular_grey_text"
@@ -38,8 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            tools:targetApi="17">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/row_title"
@@ -49,7 +47,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textDirection="locale"
-                android:textSize="16sp"
+                android:textSize="@dimen/edx_base"
                 tools:text="Title" />
 
             <LinearLayout
@@ -57,45 +55,45 @@
                 style="@style/regular_grey_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/row_subtitle_icon"
                     android:layout_width="@dimen/fa_large"
                     android:layout_height="@dimen/fa_large"
-                    android:layout_marginEnd="@dimen/widget_margin_half"
                     android:layout_gravity="top"
+                    android:layout_marginEnd="@dimen/widget_margin_half"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    app:iconName="fa-edit" />
+                    app:iconName="fa-edit"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/row_subtitle"
-                    android:textColor="@color/neutralXXDark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top"
                     android:layout_marginEnd="@dimen/widget_margin_half"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:textColor="@color/neutralXXDark"
                     android:textDirection="locale"
                     android:textSize="@dimen/edx_small"
-                    android:layout_gravity="top"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    tools:text="Subtitle" />
+                    tools:text="Subtitle"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/row_subtitle_due_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top"
                     android:textColor="@color/neutralXXDark"
                     android:textDirection="locale"
                     android:textSize="@dimen/edx_small"
-                    android:layout_gravity="top"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    tools:text="due today at 17:00 PKT" />
+                    tools:text="due today at 17:00 PKT"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 
@@ -108,32 +106,28 @@
             android:layout_marginEnd="2dp"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:paddingEnd="5dp"
-            tools:targetApi="17">
+            android:paddingEnd="5dp">
 
             <TextView
                 android:id="@+id/no_of_videos"
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:textColor="@color/primaryXLightColor"
-                android:textSize="15sp"
+                android:textSize="@dimen/edx_medium"
                 android:visibility="gone"
-                tools:targetApi="17"
                 tools:text="0" />
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/bulk_download"
                 android:layout_width="34dp"
                 android:layout_height="48dp"
-                app:iconColor="@color/primaryBaseColor"
                 android:baselineAlignBottom="true"
+                android:paddingStart="4dp"
                 android:paddingEnd="14dp"
-                android:paddingStart="4dp" />
+                app:iconColor="@color/primaryBaseColor" />
         </LinearLayout>
 
     </LinearLayout>

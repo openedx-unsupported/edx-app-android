@@ -6,18 +6,18 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="@dimen/widget_margin">
 
     <TextView
         android:id="@+id/error_header"
         style="@style/text_network_error"
         android:text="@string/network_error_header"
-        android:textSize="15sp" />
+        android:textSize="@dimen/edx_medium" />
 
     <TextView
         android:id="@+id/error_message"
         style="@style/text_network_error"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/widget_margin_half"
         android:text="@string/network_error_message" />
 
 </LinearLayout>

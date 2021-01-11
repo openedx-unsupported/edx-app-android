@@ -9,8 +9,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/dashboard_nav_element_left_margin"
-    android:paddingEnd="@dimen/dashboard_nav_element_right_margin"
-    tools:targetApi="17">
+    android:paddingEnd="@dimen/dashboard_nav_element_right_margin">
 
     <org.edx.mobile.view.custom.IconImageViewXml
         android:id="@+id/row_type"
@@ -26,8 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dashboard_nav_element_text_left_margin"
         android:layout_weight="1"
-        android:orientation="vertical"
-        tools:targetApi="17">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/row_title"

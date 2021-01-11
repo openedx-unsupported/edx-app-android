@@ -6,27 +6,27 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:minWidth="250dp"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_dialog_title"
-        tools:text="@string/wifi_dialog_title_help"
         style="@style/bold_grey_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="@dimen/widget_margin"
+        android:layout_marginTop="@dimen/widget_margin_double"
+        android:layout_marginEnd="@dimen/widget_margin"
+        android:layout_marginBottom="@dimen/widget_margin"
         android:gravity="center"
         android:textAllCaps="true"
-        android:textSize="17sp" />
+        android:textSize="@dimen/edx_large"
+        tools:text="@string/wifi_dialog_title_help" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginStart="@dimen/widget_margin_double"
+        android:layout_marginEnd="@dimen/widget_margin_double"
         android:background="@color/neutralLight" />
 
     <LinearLayout
@@ -34,17 +34,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_dialog_message1"
-            tools:text="@string/wifi_dialog_message_help"
             style="@style/regular_edx_black_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/widget_margin_double"
             android:gravity="center_horizontal"
-            android:textSize="14sp" />
+            android:textSize="@dimen/edx_small"
+            tools:text="@string/wifi_dialog_message_help" />
     </LinearLayout>
 
     <TextView
@@ -56,7 +56,7 @@
         android:gravity="center"
         android:text="@string/error_invalid_email"
         android:textColor="@color/errorBase"
-        android:textSize="16sp"
+        android:textSize="@dimen/edx_base"
         android:visibility="gone" />
 
 
@@ -69,7 +69,7 @@
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
@@ -79,10 +79,10 @@
             android:layout_weight="1"
             android:background="@android:color/white"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/widget_margin"
             android:text="@string/do_not_allow"
             android:textAllCaps="true"
-            android:textSize="15sp" />
+            android:textSize="@dimen/edx_medium" />
 
         <View
             android:layout_width="1dp"
@@ -94,13 +94,13 @@
             style="@style/bold_edx_brand_primary_base_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_weight="1"
             android:background="@android:color/white"
+            android:gravity="center"
+            android:padding="@dimen/widget_margin"
             android:text="@string/allow"
             android:textAllCaps="true"
-            android:padding="10dp"
-            android:textSize="15sp" />
+            android:textSize="@dimen/edx_medium" />
     </LinearLayout>
 
 </LinearLayout>
