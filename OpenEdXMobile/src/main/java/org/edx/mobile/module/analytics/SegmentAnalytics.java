@@ -19,14 +19,13 @@ import com.segment.analytics.integrations.Integration;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static org.edx.mobile.module.analytics.Analytics.Util.getShareTypeValue;
 
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Segment.
@@ -60,14 +59,14 @@ public class SegmentAnalytics implements Analytics {
                         // remove special char from `Name and Event Name` that are not support by Firebase
                         if (newPayload.get(Keys.NAME) instanceof String) {
                             String name = String.valueOf(newPayload.get(Keys.NAME));
-                            newPayload.putValue(Keys.NAME, Analytics.Util.removeUnSupportedCharacters(name));
+                            newPayload.putValue(Keys.NAME, AnalyticsUtils.Companion.removeUnSupportedCharacters(name));
                         }
                         if (newPayload.get(Keys.EVENT) instanceof String) {
                             String name = String.valueOf(newPayload.get(Keys.EVENT));
-                            newPayload.putValue(Keys.EVENT, Analytics.Util.removeUnSupportedCharacters(name));
+                            newPayload.putValue(Keys.EVENT, AnalyticsUtils.Companion.removeUnSupportedCharacters(name));
                         }
                         if (newPayload.get(Keys.PROPERTIES) instanceof Properties) {
-                            newPayload.put(Keys.PROPERTIES, Analytics.Util.formatFirebaseAnalyticsData(newPayload.get(Keys.PROPERTIES)));
+                            newPayload.put(Keys.PROPERTIES, AnalyticsUtils.Companion.formatFirebaseAnalyticsData(newPayload.get(Keys.PROPERTIES)));
                         }
                         chain.proceed(newPayload);
                     });
@@ -593,7 +592,7 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.NAME, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, aboutUrl);
-        aEvent.data.putValue(Keys.TYPE, getShareTypeValue(method));
+        aEvent.data.putValue(Keys.TYPE, AnalyticsUtils.Companion.getShareTypeValue(method));
         trackSegmentEvent(Events.SOCIAL_COURSE_DETAIL_SHARED, aEvent.properties);
     }
 
@@ -604,7 +603,7 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, certificateUrl);
-        aEvent.data.putValue(Keys.TYPE, getShareTypeValue(method));
+        aEvent.data.putValue(Keys.TYPE, AnalyticsUtils.Companion.getShareTypeValue(method));
         trackSegmentEvent(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
     }
 

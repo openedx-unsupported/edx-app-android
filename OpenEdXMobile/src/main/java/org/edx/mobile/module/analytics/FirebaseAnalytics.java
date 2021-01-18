@@ -11,12 +11,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
 
-import static org.edx.mobile.module.analytics.Analytics.Util.getShareTypeValue;
 
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Firebase.
@@ -380,7 +380,7 @@ public class FirebaseAnalytics implements Analytics {
         event.putCourseId(courseId);
         event.putString(Keys.CATEGORY, Values.SOCIAL_SHARING);
         event.putString(Keys.URL, aboutUrl);
-        event.putString(Keys.TYPE, getShareTypeValue(method));
+        event.putString(Keys.TYPE, AnalyticsUtils.Companion.getShareTypeValue(method));
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
@@ -391,7 +391,7 @@ public class FirebaseAnalytics implements Analytics {
         event.putCourseId(courseId);
         event.putString(Keys.CATEGORY, Values.SOCIAL_SHARING);
         event.putString(Keys.URL, certificateUrl);
-        event.putString(Keys.TYPE, getShareTypeValue(method));
+        event.putString(Keys.TYPE, AnalyticsUtils.Companion.getShareTypeValue(method));
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
