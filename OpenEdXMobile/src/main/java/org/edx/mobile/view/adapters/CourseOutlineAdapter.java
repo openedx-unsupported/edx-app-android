@@ -360,6 +360,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
             }
             checkAccessStatus(isDenialFeatureBasedEnrolments, viewHolder, unit);
         }
+        if (unit.getType() == BlockType.OPENASSESSMENT) {
+            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_edit);
+        }
 
         if (isDenialFeatureBasedEnrolments) {
             viewHolder.rowSubtitle.setText(R.string.not_available_on_mobile);
