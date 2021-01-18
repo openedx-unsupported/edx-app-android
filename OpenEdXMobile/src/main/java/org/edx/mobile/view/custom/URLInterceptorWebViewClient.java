@@ -296,11 +296,9 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         this.hostForThisPage = hostForThisPage;
     }
 
-    public void onFilesSelection(ArrayList<Uri> files) {
+    public void onFilesSelection(Uri[] files) {
         if (filePathCallback != null) {
-            Uri[] filesArray = new Uri[files.size()];
-            files.toArray(filesArray);
-            filePathCallback.onReceiveValue(filesArray);
+            filePathCallback.onReceiveValue(files);
         }
     }
 

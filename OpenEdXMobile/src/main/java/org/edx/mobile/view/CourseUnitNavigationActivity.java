@@ -307,19 +307,22 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE && resultCode == Activity.RESULT_OK) {
-            ArrayList<Uri> results = new ArrayList<>();
-            if (data != null) {
-                String dataString = data.getDataString();
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        results.add(item.getUri());
+        Uri[] results = null;
+        if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    String dataString = data.getDataString();
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        results = new Uri[clipData.getItemCount()];
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            results[i] = item.getUri();
+                        }
                     }
+                    if (dataString != null)
+                        results = new Uri[]{Uri.parse(dataString)};
                 }
-//                if (dataString != null)
-//                    results.add(Uri.parse(dataString));
             }
             EventBus.getDefault().post(new FileSelectionEvent(results));
         }
