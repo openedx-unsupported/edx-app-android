@@ -3,8 +3,6 @@ package org.edx.mobile.module.analytics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.segment.analytics.Properties;
-
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
@@ -810,58 +808,6 @@ public interface Analytics {
         // Value Prop
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
-    }
-
-    /**
-     * We can't have concrete functions inside interfaces till Java 8, therefore this
-     * class has been defined to add static utilities to this interface.
-     */
-    class Util {
-        /**
-         * Resolves and returns the string alternative of the given share type.
-         *
-         * @param shareType The share type.
-         * @return The string alternative of the given share type.
-         */
-        public static String getShareTypeValue(@NonNull ShareUtils.ShareType shareType) {
-            switch (shareType) {
-                case FACEBOOK:
-                    return "facebook";
-                case TWITTER:
-                    return "twitter";
-                default:
-                    return "other";
-            }
-        }
-
-        /**
-         * Method to remove the un-supported characters by the Firebase Analytics from the
-         * given string.
-         */
-        public static String removeUnSupportedCharacters(String value) {
-            return value.replaceAll(":", "_")
-                    .replaceAll("-", "_")
-                    .replaceAll("__", "_");
-        }
-
-        /**
-         * Method used to format the Analytics data as per firebase recommendations
-         * Ref: https://stackoverflow.com/questions/44421234/firebase-analytics-custom-list-of-values
-         */
-        public static Properties formatFirebaseAnalyticsData(Object object) {
-            Properties properties = (Properties) object;
-            Properties newProperties = new Properties();
-            for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                String key = entry.getKey();
-                String entryValueString = String.valueOf(entry.getValue());
-                if (entryValueString.length() > 100) {
-                    // Truncate to first 100 characters
-                    entryValueString = entryValueString.trim().substring(0, 100);
-                }
-                newProperties.put(Analytics.Util.removeUnSupportedCharacters(key), entryValueString);
-            }
-            return newProperties;
-        }
     }
 
     /**
