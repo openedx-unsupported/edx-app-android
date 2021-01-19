@@ -18,6 +18,7 @@ print('AUT name - {}'.format(AUT_NAME))
 
 print('111111111111111111')
 print(os.environ['HOME'])
+print(os.environ['USER_NAME'])
 print('22222222222222222')
 print(os.environ)
 print('333333333333333333')
@@ -225,8 +226,12 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         name=name,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn
-              },
+              'testSpecArn': test_specs_arn,
+              'parameters': {
+                  'USER_NAME': os.environ['USER_NAME'],
+                  'USER_PASSWORD': os.environ['USER_PASSWORD']
+                }
+            },
     )
 
     run_arn = schedule_run_result['run']['arn']
