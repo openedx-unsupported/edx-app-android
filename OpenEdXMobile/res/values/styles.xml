@@ -395,7 +395,19 @@
     </style>
 
     <style name="edX.Widget.PrimaryRoundPillButton" parent="edX.Widget.ActionBrandPillButton">
+        <item name="android:background">@drawable/edx_primary_button_rounded_corners</item>
+    </style>
+
+
+    <style name="edX.Widget.PrimaryActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginTop">@dimen/widget_margin</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
         <item name="android:background">@drawable/edx_primary_button</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
     <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">

@@ -937,7 +937,7 @@ public class SegmentAnalytics implements Analytics {
                                         @Nullable String assignmentId, @NonNull String screenName) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        if (TextUtils.isEmpty(assignmentId)) {
+        if (!TextUtils.isEmpty(assignmentId)) {
             aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
         }
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
@@ -950,10 +950,19 @@ public class SegmentAnalytics implements Analytics {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.VALUE_PROP_LEARN_MORE_CLICKED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        if (TextUtils.isEmpty(assignmentId)) {
+        if (!TextUtils.isEmpty(assignmentId)) {
             aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
         }
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         trackSegmentEvent(Events.VALUE_PROP_LEARN_MORE_CLICKED, aEvent.properties);
+    }
+
+    @Override
+    public void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
+        aEvent.data.putValue(Keys.SCREEN_NAME, Screens.COURSE_UNIT);
+        trackSegmentEvent(Events.COURSE_UNIT_LOCKED_CONTENT, aEvent.properties);
     }
 }
