@@ -21,7 +21,6 @@ print(os.environ['HOME'])
 print(os.environ['USER_NAME'])
 print('22222222222222222')
 print(os.environ)
-print('333333333333333333')
 
 REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
