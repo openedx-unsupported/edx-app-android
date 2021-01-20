@@ -237,13 +237,12 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
     run_arn = schedule_run_result['run']['arn']
 
     test_run = device_farm.get_run(arn=run_arn)
-    print('Run Name - {} on {} is started at {} with status - {} & results - {} & parameters - {}'.format(
+    print('Run Name - {} on {} is started at {} with status - {} & results - {}'.format(
         test_run['run']['name'],
         test_run['run']['platform'],
         str(test_run['run']['created']),
         test_run['run']['status'],
-        test_run['run']['result'],
-        test_run['run']['parameters'])
+        test_run['run']['result'])
     )
     return run_arn
 
