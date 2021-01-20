@@ -1,14 +1,19 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RawRes;
+import androidx.fragment.app.FragmentActivity;
 
+import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -29,6 +34,7 @@ public class FileUtil {
     protected static final Logger logger = new Logger(FileUtil.class.getName());
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+    public static final int FILE_CHOOSER_RESULT_CODE = 0x001;
 
     // Make this class non-instantiable
     private FileUtil() {
@@ -273,5 +279,39 @@ public class FileUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * Method to initiate the file selector with given supported file extensions.
+     */
+    public static void chooseFiles(FragmentActivity activity, String[] acceptTypes) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, getSupportedFileMimeType(acceptTypes));
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.choose_file_title)),
+                FILE_CHOOSER_RESULT_CODE);
+    }
+
+    /**
+     * Utility method use to get the list of system support MimeTypes against the given file extensions.
+     *
+     * @param acceptTypes file extensions
+     * @return array of string having system supported MimeTypes
+     */
+    private static String[] getSupportedFileMimeType(String[] acceptTypes) {
+        ArrayList<String> mimeTypes = new ArrayList<>();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        String mimeType;
+        for (String type : acceptTypes) {
+            if (!TextUtils.isEmpty(type)) {
+                // Get system supported Mime types from the given extension
+                mimeType = mimeTypeMap.getMimeTypeFromExtension(type.replace(".", ""));
+                if (!TextUtils.isEmpty(mimeType)) {
+                    mimeTypes.add(mimeType);
+                }
+            }
+        }
+        return Arrays.copyOf(mimeTypes.toArray(), mimeTypes.size(), String[].class);
     }
 }
