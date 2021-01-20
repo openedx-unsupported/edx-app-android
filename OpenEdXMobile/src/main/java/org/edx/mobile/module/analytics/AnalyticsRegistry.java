@@ -478,4 +478,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackValuePropLearnMoreTapped(courseId, assignmentId, screenName);
         }
     }
+
+    @Override
+    public void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId) {
+        for (Analytics service : services) {
+            service.trackLockedContentTapped(courseId, assignmentId);
+        }
+    }
 }

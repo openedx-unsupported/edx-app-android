@@ -663,7 +663,7 @@ public class FirebaseAnalytics implements Analytics {
     public void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
         final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_MODAL_VIEW);
         event.putCourseId(courseId);
-        if (TextUtils.isEmpty(assignmentId)) {
+        if (!TextUtils.isEmpty(assignmentId)) {
             event.putString(Keys.ASSIGNMENT_ID, assignmentId);
         }
         event.putString(Keys.SCREEN_NAME, screenName);
@@ -675,10 +675,19 @@ public class FirebaseAnalytics implements Analytics {
     public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
         final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_LEARN_MORE_CLICKED, Values.VALUE_PROP_LEARN_MORE_CLICKED);
         event.putCourseId(courseId);
-        if (TextUtils.isEmpty(assignmentId)) {
+        if (!TextUtils.isEmpty(assignmentId)) {
             event.putString(Keys.ASSIGNMENT_ID, assignmentId);
         }
         event.putString(Keys.SCREEN_NAME, screenName);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_UNIT_LOCKED_CONTENT, Values.LOCKED_CONTENT_CLICKED);
+        event.putCourseId(courseId);
+        event.putString(Keys.ASSIGNMENT_ID, assignmentId);
+        event.putString(Keys.SCREEN_NAME, Screens.COURSE_UNIT);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

@@ -270,6 +270,15 @@
     <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
     <string name="course_modal_full_access_course">Full access to course content and materials, even after the course ends</string>
     <string name="course_modal_support_non_profit">Support our non-profit mission at {platform_name}</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">Learn more about locked features</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>How to unlock graded assignments</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">Graded assignments are locked</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">Upgrade to gain access to locked features like this one and get the most out of your course.</string>
+
 
 
     <!-- Label for date when course is expiring in a specific time frame like in 2 days -->

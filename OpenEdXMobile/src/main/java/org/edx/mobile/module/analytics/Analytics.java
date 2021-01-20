@@ -485,6 +485,14 @@ public interface Analytics {
     void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId,
                                        @NonNull String screenName);
 
+    /**
+     * Track the tapped occurrence on locked content
+     *
+     * @param courseId     course id of the course on which button is tapped
+     * @param assignmentId Assignment id of course unit
+     */
+    void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId);
+
 
     interface Keys {
         String NAME = "name";
@@ -603,6 +611,7 @@ public interface Analytics {
         String USER_COURSE_ENROLL_SUCCESS = "edx.bi.app.course.enroll.success";
         String USER_COURSE_UPGRADE_SUCCESS = "edx.bi.app.course.upgrade.success";
         String VALUE_PROP_LEARN_MORE_CLICKED = "edx.bi.app.value.prop.learn.more.clicked";
+        String LOCKED_CONTENT_CLICKED = "edx.bi.app.course.unit.locked.content.clicked";
         String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
         String CONVERSION = "conversion";
         String USER_ENGAGEMENT = "user-engagement";
@@ -697,6 +706,7 @@ public interface Analytics {
         String REGISTER = "Register";
         String LOGIN = "Login";
         String COURSE_ENROLLMENT = "course_enrollment";
+        String COURSE_UNIT = "course_unit";
         String COURSE_DASHBOARD = "Course Dashboard";
         String COURSE_OUTLINE = "Course Outline";
         String COURSE_HANDOUTS = "Course Handouts";
@@ -808,6 +818,7 @@ public interface Analytics {
         // Value Prop
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
+        String COURSE_UNIT_LOCKED_CONTENT = "Value Prop Locked Content Clicked";
     }
 
     /**

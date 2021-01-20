@@ -114,15 +114,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_learn_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/widget_margin"
-            android:background="@color/primaryBaseColor"
-            android:fontFamily="?attr/fontSemiBold"
+            style="@style/edX.Widget.PrimaryActionButton"
             android:padding="@dimen/edx_half_margin"
-            android:text="@string/course_value_prop_button"
-            android:textColor="@color/white"
-            android:textSize="@dimen/edx_small" />
+            android:text="@string/course_value_prop_button" />
     </LinearLayout>
 </LinearLayout>

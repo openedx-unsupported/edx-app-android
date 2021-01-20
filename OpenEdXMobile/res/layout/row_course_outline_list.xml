@@ -27,7 +27,7 @@
             android:baselineAlignBottom="true"
             android:gravity="center_vertical"
             android:paddingStart="0dp"
-            android:paddingEnd="21dp"
+            android:paddingEnd="@dimen/widget_margin_double"
             android:visibility="gone"
             app:iconColor="@color/primaryBaseColor" />
 
@@ -99,22 +99,34 @@
 
         </LinearLayout>
 
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/locked_content"
+            android:layout_width="@dimen/course_unit_block_listing_icon_width"
+            android:layout_height="@dimen/course_unit_block_listing_icon_height"
+            android:baselineAlignBottom="true"
+            android:paddingStart="@dimen/edx_quarter_margin"
+            android:paddingEnd="@dimen/course_unit_block_listing_icon_padding_end"
+            android:visibility="gone"
+            app:iconColor="@color/primaryBaseColor"
+            app:iconName="fa-lock" />
+
         <LinearLayout
             android:id="@+id/bulk_download_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="@dimen/edx_x_quarter_margin"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:paddingEnd="5dp">
+            android:paddingEnd="@dimen/widget_margin_half"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/no_of_videos"
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="@dimen/widget_margin_half"
+                android:layout_marginEnd="@dimen/widget_margin_half"
                 android:textColor="@color/primaryXLightColor"
                 android:textSize="@dimen/edx_medium"
                 android:visibility="gone"
@@ -122,11 +134,11 @@
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/bulk_download"
-                android:layout_width="34dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/course_unit_block_listing_icon_width"
+                android:layout_height="@dimen/course_unit_block_listing_icon_height"
                 android:baselineAlignBottom="true"
-                android:paddingStart="4dp"
-                android:paddingEnd="14dp"
+                android:paddingStart="@dimen/edx_quarter_margin"
+                android:paddingEnd="@dimen/course_unit_block_listing_icon_padding_end"
                 app:iconColor="@color/primaryBaseColor" />
         </LinearLayout>
 

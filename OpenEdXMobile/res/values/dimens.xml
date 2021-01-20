@@ -200,6 +200,9 @@
     <dimen name="large_indicator_icon_height">100dp</dimen>
     <dimen name="content_unavailable_error_icon_size">80dp</dimen>
     <dimen name="unit_unavailable_error_icon_size">90dp</dimen>
+    <dimen name="course_unit_block_listing_icon_width">34dp</dimen>
+    <dimen name="course_unit_block_listing_icon_height">48dp</dimen>
+    <dimen name="course_unit_block_listing_icon_padding_end">14dp</dimen>
 
     <!-- Stray dimensions -->
     <dimen name="notification_settings_margin">12dp</dimen>
@@ -241,6 +244,8 @@
     <dimen name="edx_divider_length">1dp</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
     <dimen name="edx_margin">15dp</dimen>
+    <dimen name="edx_x_quarter_margin">2dp</dimen>
+    <dimen name="edx_quarter_margin">4dp</dimen>
     <dimen name="edx_half_margin">8dp</dimen>
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
