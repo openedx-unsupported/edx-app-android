@@ -281,19 +281,25 @@ public class FileUtil {
         return false;
     }
 
+    /**
+     * Method to initiate the file selector with given supported file extensions.
+     */
     public static void chooseFiles(FragmentActivity activity, String[] acceptTypes) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, prepareSupportedMimeType(acceptTypes));
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, getSupportedFileMimeType(acceptTypes));
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.choose_file_title)),
                 FILE_CHOOSER_RESULT_CODE);
     }
 
     /**
+     * Utility method use to get the list of system support MimeTypes against the given file extensions.
      *
+     * @param acceptTypes file extensions
+     * @return array of string having system supported MimeTypes
      */
-    private static String[] prepareSupportedMimeType(String[] acceptTypes) {
+    private static String[] getSupportedFileMimeType(String[] acceptTypes) {
         ArrayList<String> mimeTypes = new ArrayList<>();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         String mimeType;

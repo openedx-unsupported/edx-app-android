@@ -309,19 +309,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         Uri[] results = null;
         if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-                    String dataString = data.getDataString();
-                    ClipData clipData = data.getClipData();
-                    if (clipData != null) {
-                        results = new Uri[clipData.getItemCount()];
-                        for (int i = 0; i < clipData.getItemCount(); i++) {
-                            ClipData.Item item = clipData.getItemAt(i);
-                            results[i] = item.getUri();
-                        }
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    results = new Uri[clipData.getItemCount()];
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results[i] = item.getUri();
                     }
-                    if (dataString != null)
-                        results = new Uri[]{Uri.parse(dataString)};
                 }
             }
             EventBus.getDefault().post(new FileSelectionEvent(results));
