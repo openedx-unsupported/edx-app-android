@@ -310,6 +310,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         Uri[] results = null;
         if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
+                String dataString = data.getDataString();
                 ClipData clipData = data.getClipData();
                 if (clipData != null) {
                     results = new Uri[clipData.getItemCount()];
@@ -317,6 +318,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                         ClipData.Item item = clipData.getItemAt(i);
                         results[i] = item.getUri();
                     }
+                }
+                // Executed when user select only one file.
+                if (dataString != null) {
+                    results = new Uri[]{Uri.parse(dataString)};
                 }
             }
             EventBus.getDefault().post(new FileSelectionEvent(results));
