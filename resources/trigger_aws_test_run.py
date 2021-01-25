@@ -229,7 +229,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
               'testPackageArn': test_package_arn,
               'testSpecArn': test_specs_arn,
               'parameters': {
-                'username': os.environ['USER_NAME']
+                'username': 'nedo111'
                 }
             }
     )
