@@ -88,7 +88,9 @@ def aws_job():
         device_pool_arn=device_pool_arn,
         app_arn=aut_arn,
         test_package_arn=package_arn,
-        test_specs_arn=test_specs_arn)
+        test_specs_arn=test_specs_arn,
+        parameters={'USER_NAME': os.environ['USER_NAME'],
+                  'USER_PASSWORD': os.environ['USER_PASSWORD']})
 
     get_test_run(test_run_arn)
 
@@ -202,7 +204,7 @@ def get_device_pool(project_arn, name):
 
 
 def schedule_run(project_arn, name, device_pool_arn, app_arn,
-                 test_package_arn, test_specs_arn):
+                 test_package_arn, test_specs_arn, parameters):
     """
     schedule test run
 
@@ -225,13 +227,9 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         name=name,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn,
-              'parameters': {
-                  'USER_NAME': os.environ['USER_NAME'],
-                  'USER_PASSWORD': os.environ['USER_PASSWORD']
-                }
+              'testSpecArn': test_specs_arn
             },
-        parameters={'USER_NAME': os.environ['USER_NAME']}
+        parameters=parameters
     )
 
     run_arn = schedule_run_result['run']['arn']
