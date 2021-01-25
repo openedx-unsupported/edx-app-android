@@ -231,6 +231,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
                   'USER_PASSWORD': os.environ['USER_PASSWORD']
                 }
             },
+        parameters={'USER_NAME': os.environ['USER_NAME']}
     )
 
     run_arn = schedule_run_result['run']['arn']
