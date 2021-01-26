@@ -111,7 +111,7 @@ def update_credentials():
     commands[0]['user_password'] = os.environ['USER_PASSWORD']
 
     with open(CUSTOM_SPECS_NAME, 'w') as fp:
-        yaml.dump(config, fp)
+        ruamel.yaml.dump(config, fp)
 
     config1, ind1, bsi1 = ruamel.yaml.util.load_yaml_guess_indent(open(CUSTOM_SPECS_NAME))
     print('111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
