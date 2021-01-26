@@ -105,10 +105,10 @@ def update_credentials():
 
     print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     print('config:', config)
-    commands = config['phases']['pre_test']['commands']
+    commands = config['variables']
     print('commands:', commands)
     commands[0]['user_name'] = os.environ['USER_NAME']
-    commands[1]['user_password'] = os.environ['USER_PASSWORD']
+    commands[0]['user_password'] = os.environ['USER_PASSWORD']
 
     with open(CUSTOM_SPECS_NAME, 'w') as fp:
         yaml.dump(config, fp)
@@ -116,7 +116,7 @@ def update_credentials():
     config1, ind1, bsi1 = ruamel.yaml.util.load_yaml_guess_indent(open(CUSTOM_SPECS_NAME))
     print('111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     print('config11:', config1)
-    commands1 = config1['phases']['pre_test']['commands']
+    commands1 = config1['variables']
     print('commands111:', commands1)
 
 def get_project_arn(project_name):
