@@ -61,8 +61,8 @@ phases:
             fi;
         done;
       #Setting up user credentials for testing repo
-      - export USER_NAME="AutomationTester"
-      - export USER_PASSWORD="qwERt12#$5"
+      - export USER_NAME="nedo111"
+      - export USER_PASSWORD="1234qwer"
 
   # The test phase includes commands that run your test suite execution.
   test:
