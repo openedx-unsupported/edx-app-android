@@ -1,2 +1,3 @@
 boto3==1.9.253 
 requests==2.22.0 
+ruamel.yaml==0.16.12

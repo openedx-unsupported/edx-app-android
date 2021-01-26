@@ -11,6 +11,7 @@ import time
 import boto3
 import requests
 import sys
+import ruamel.yaml
 from botocore.config import Config
 
 AUT_NAME = sys.argv[1]
@@ -68,6 +69,8 @@ def aws_job():
         PACKAGE_NAME
     )
 
+    update_credentials()
+
     test_specs_arn = upload_file(
         project_arn,
         CUSTOM_SPECS_UPLOAD_TYPE,
@@ -82,20 +85,34 @@ def aws_job():
 
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
-    test_run_arn = schedule_run(
-        project_arn=project_arn,
-        name=RUN_NAME,
-        device_pool_arn=device_pool_arn,
-        app_arn=aut_arn,
-        test_package_arn=package_arn,
-        test_specs_arn=test_specs_arn,
-        parameters={'USER_NAME': os.environ['USER_NAME'],
-                  'USER_PASSWORD': os.environ['USER_PASSWORD']})
+    # test_run_arn = schedule_run(
+    #     project_arn=project_arn,
+    #     name=RUN_NAME,
+    #     device_pool_arn=device_pool_arn,
+    #     app_arn=aut_arn,
+    #     test_package_arn=package_arn,
+    #     test_specs_arn=test_specs_arn,
+    #     parameters={'USER_NAME': os.environ['USER_NAME'],
+    #               'USER_PASSWORD': os.environ['USER_PASSWORD']})
 
-    get_test_run(test_run_arn)
+    # get_test_run(test_run_arn)
 
-    get_test_run_artifacts(RUN_NAME, test_run_arn)
+    # get_test_run_artifacts(RUN_NAME, test_run_arn)
 
+
+def update_credentials():
+    file_name = 'trigger_aws.yml'
+    config, ind, bsi = ruamel.yaml.util.load_yaml_guess_indent(open(file_name))
+
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    print('config:', config)
+    commands = config['phases']['pre_test']['commands']
+    print('commands:', commands)
+    # instances[0]['user_name'] = 'Username'
+    # instances[0]['user_password'] = 'Password'
+
+    # with open('output.yaml', 'w') as fp:
+    #     yaml.dump(config, fp)
 
 def get_project_arn(project_name):
     """
