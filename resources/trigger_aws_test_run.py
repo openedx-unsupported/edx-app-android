@@ -107,8 +107,8 @@ def update_credentials():
     print('config:', config)
     commands = config['phases']['pre_test']['commands']
     print('commands:', commands)
-    instances[0]['user_name'] = os.environ['USER_NAME']
-    instances[1]['user_password'] = os.environ['USER_PASSWORD']
+    commands[0]['user_name'] = os.environ['USER_NAME']
+    commands[1]['user_password'] = os.environ['USER_PASSWORD']
 
     with open(CUSTOM_SPECS_NAME, 'w') as fp:
         yaml.dump(config, fp)
