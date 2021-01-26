@@ -28,6 +28,10 @@ phases:
   # The pre-test phase includes commands that setup your test environment.
   pre_test:
     commands:
+      #Setting up user credentials for testing repo
+      - export USER_NAME=<user_name>
+      - export USER_PASSWORD=<user_password>
+
       # We recommend starting appium server process in the background using the command below.
       # Appium server log will go to $DEVICEFARM_LOG_DIR directory.
       # The environment variables below will be auto-populated during run time.
@@ -60,9 +64,6 @@ phases:
                 start_appium_timeout=$((start_appium_timeout+1));
             fi;
         done;
-      #Setting up user credentials for testing repo
-      - export USER_NAME=<user_name>
-      - export USER_PASSWORD=<user_password>
 
   # The test phase includes commands that run your test suite execution.
   test:
