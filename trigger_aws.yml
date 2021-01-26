@@ -1,9 +1,5 @@
 version: 0.1
 
-variables:
-- USER_NAME: <user_name>
-  USER_PASSWORD: <user_password>
-
 # Phases are collection of commands that get executed on Device Farm.
 phases:
   # The install phase includes commands that install dependencies that your tests use.
@@ -32,10 +28,6 @@ phases:
   # The pre-test phase includes commands that setup your test environment.
   pre_test:
     commands:
-      #Setting up user credentials for testing repo
-      - export {{USER_NAME}}
-      - export {{USER_PASSWORD}}
-
       # We recommend starting appium server process in the background using the command below.
       # Appium server log will go to $DEVICEFARM_LOG_DIR directory.
       # The environment variables below will be auto-populated during run time.
