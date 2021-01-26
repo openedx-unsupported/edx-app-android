@@ -60,6 +60,9 @@ phases:
                 start_appium_timeout=$((start_appium_timeout+1));
             fi;
         done;
+      #Setting up user credentials for testing repo
+      - export USER_NAME="AutomationTester"
+      - export USER_PASSWORD="qwERt12#$5"
 
   # The test phase includes commands that run your test suite execution.
   test:
