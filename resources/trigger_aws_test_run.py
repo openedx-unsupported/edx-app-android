@@ -11,7 +11,7 @@ import time
 import boto3
 import requests
 import sys
-import ruamel.yaml
+import yaml
 from botocore.config import Config
 
 AUT_NAME = sys.argv[1]
@@ -101,23 +101,40 @@ def aws_job():
 
 
 def update_credentials():
-    config, ind, bsi = ruamel.yaml.util.load_yaml_guess_indent(open(CUSTOM_SPECS_NAME))
+    with open(CUSTOM_SPECS_NAME, 'r') as stream:
+        try:
+            loaded = yaml.load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
 
-    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    print('config:', config)
-    commands = config['variables']
-    print('commands:', commands)
-    commands[0]['user_name'] = os.environ['USER_NAME']
-    commands[0]['user_password'] = os.environ['USER_PASSWORD']
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded)
+        # Modify the fields from the dict
+        loaded['variables']['USER_NAME'] = os.environ['USER_NAME']
+        loaded['variables']['USER_PASSWORD'] = os.environ['USER_PASSWORD']
 
-    with open(CUSTOM_SPECS_NAME, 'w') as fp:
-        ruamel.yaml.dump(config, fp)
+        # Save it again
+        with open(CUSTOM_SPECS_NAME, 'w') as stream:
+            try:
+                yaml.dump(loaded, stream, default_flow_style=False)
+            except yaml.YAMLError as exc:
+                print(exc)
+    # config, ind, bsi = ruamel.yaml.util.load_yaml_guess_indent(open(CUSTOM_SPECS_NAME))
 
-    config1, ind1, bsi1 = ruamel.yaml.util.load_yaml_guess_indent(open(CUSTOM_SPECS_NAME))
-    print('111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    print('config11:', config1)
-    commands1 = config1['variables']
-    print('commands111:', commands1)
+    # print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    # print('config:', config)
+    # commands = config['variables']
+    # print('commands:', commands)
+    # commands[0]['user_name'] = os.environ['USER_NAME']
+    # commands[0]['user_password'] = os.environ['USER_PASSWORD']
+
+    # with open(CUSTOM_SPECS_NAME, 'w') as fp:
+    #     ruamel.yaml.dump(config, fp)
+
+    # config1, ind1, bsi1 = ruamel.yaml.util.load_yaml_guess_indent(open(CUSTOM_SPECS_NAME))
+    # print('111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    # print('config11:', config1)
+    # commands1 = config1['variables']
+    # print('commands111:', commands1)
 
 def get_project_arn(project_name):
     """
