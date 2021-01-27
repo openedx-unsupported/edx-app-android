@@ -248,10 +248,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         name=name,
         test={'type': RUN_TYPE,
               'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn,
-              'parameters': {
-                'USER_NAME': 'nedo111'
-                }
+              'testSpecArn': test_specs_arn
             }
     )
 
