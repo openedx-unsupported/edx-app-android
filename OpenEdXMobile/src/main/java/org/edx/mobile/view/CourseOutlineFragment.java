@@ -423,11 +423,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // Checking if the onItemLongClick action performed on course dates banner
-                if (!isVideoMode && isBannerVisible) {
-                    if (position == 0)
+                if (!isVideoMode && isBannerVisible && position == 0) {
                         return false;
-                    else
-                        position -= 1;
                 }
                 final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
                 if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
@@ -659,6 +656,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     /**
      * Load data to the adapter
+     *
      * @param courseComponent Components of course to be load
      */
     private void loadData(@NonNull CourseComponent courseComponent) {
