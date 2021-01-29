@@ -116,7 +116,7 @@ def update_credentials():
                 yaml.dump(loaded, stream, default_flow_style=False)
             except yaml.YAMLError as exc:
                 print(exc)
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded)
 
 def get_project_arn(project_name):
     """
