@@ -289,8 +289,8 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         if (environment.getConfig().isCourseDatesEnabled()) {
             items.add(new FragmentItemModel(CourseDatesPageFragment.class,
                     getResources().getString(R.string.course_dates_title), FontAwesomeIcons.fa_calendar,
-                    CourseDatesPageFragment.makeArguments(courseData.getCourse().getId(), courseData.getMode()),
-                    new FragmentItemModel.FragmentStateListener() {
+                    CourseDatesPageFragment.makeArguments(courseData.getCourse().getId(), courseData.getMode(),
+                    courseData.getCourse().isSelfPaced()), new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
                             analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,

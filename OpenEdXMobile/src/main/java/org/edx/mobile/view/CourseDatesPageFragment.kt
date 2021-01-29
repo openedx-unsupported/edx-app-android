@@ -42,13 +42,15 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     }
     private var courseId: String = ""
     private var enrollmentMode: String = ""
+    private var isSelfPaced: Boolean = true
 
     companion object {
         @JvmStatic
-        fun makeArguments(courseId: String, enrollmentMode: String): Bundle {
+        fun makeArguments(courseId: String, enrollmentMode: String, isSelfPaced: Boolean): Bundle {
             val courseBundle = Bundle()
             courseBundle.putString(Router.EXTRA_COURSE_ID, courseId)
             courseBundle.putString(Router.EXTRA_ENROLLMENT_MODE, enrollmentMode)
+            courseBundle.putBoolean(Router.EXTRA_IS_SELF_PACED, isSelfPaced)
             return courseBundle
         }
     }
@@ -69,6 +71,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
 
         courseId = getStringArgument(Router.EXTRA_COURSE_ID)
         enrollmentMode = getStringArgument(Router.EXTRA_ENROLLMENT_MODE)
+        isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, true)
 
         errorNotification = FullScreenErrorNotification(binding.swipeContainer)
 
@@ -156,7 +159,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             return
         }
         CourseDateUtil.setupCourseDatesBanner(view = binding.banner.root, courseId = courseId,
-                enrollmentMode = enrollmentMode, screenName = Analytics.Screens.PLS_COURSE_DATES,
+                enrollmentMode = enrollmentMode, isSelfPaced = isSelfPaced, screenName = Analytics.Screens.PLS_COURSE_DATES,
                 analyticsRegistry = environment.analyticsRegistry, courseBannerInfoModel = courseBannerInfo,
                 clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseId) })
     }

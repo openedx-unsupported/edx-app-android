@@ -480,11 +480,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
 
         if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
-            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(), courseData.getCourse().getId(),
-                    courseData.getMode(), Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
+            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
+                    courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
+                    Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
                     v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourse().getId()));
 
-            if (listView.getHeaderViewsCount() == 0 && !TextUtils.isEmpty(bannerViewBinding.bannerInfo.getText())) {
+            if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;
             }
