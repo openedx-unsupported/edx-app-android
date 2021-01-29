@@ -1,6 +1,7 @@
 package org.edx.mobile.model.api;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -38,6 +39,7 @@ public class CourseEntry implements Serializable {
     private String discussion_url;
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
+    private boolean is_self_paced;
     @Nullable private Map<String, String> course_sharing_utm_parameters;
 
     public LatestUpdateModel getLatest_updates() {
@@ -150,6 +152,8 @@ public class CourseEntry implements Serializable {
     public CoursewareAccess getCoursewareAccess() { return courseware_access; }
 
     public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
+
+    public boolean isSelfPaced() { return is_self_paced; }
 
     public boolean isStarted() {
         return CourseCardUtils.isDatePassed(new Date(), start);

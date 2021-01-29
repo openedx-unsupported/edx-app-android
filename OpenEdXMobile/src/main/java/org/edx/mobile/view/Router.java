@@ -66,6 +66,7 @@ public class Router {
     public static final String EXTRA_SCREEN_SELECTED = "screen_selected";
     public static final String EXTRA_DEEP_LINK = "deep_link";
     public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
+    public static final String EXTRA_IS_SELF_PACED = "is_self_paced";
 
     @Inject
     Config config;
