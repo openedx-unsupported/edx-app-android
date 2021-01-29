@@ -52,6 +52,18 @@ public class BaseFragment extends RoboFragment {
         throw new IllegalArgumentException("Arguments or key not found in bundle");
     }
 
+    /**
+     * Method to get Boolean argument null safe
+     * @param key requested argument
+     * @return argument value if found or throw exception else wise
+     */
+    public boolean getBooleanArgument(String key, boolean defaultValue) {
+        if (getArguments() != null) {
+            return getArguments().getBoolean(key, defaultValue);
+        }
+        throw new IllegalArgumentException("Arguments or key not found in bundle");
+    }
+
     @Override
     public void onResume() {
         super.onResume();

@@ -52,12 +52,14 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private PreLoadingListener preloadingListener;
     private boolean isPageLoading = false;
     private String enrollmentMode = "";
+    private boolean isSelfPaced = true;
 
-    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String enrollmentMode) {
+    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String enrollmentMode, boolean isSelfPaced) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
         args.putString(Router.EXTRA_ENROLLMENT_MODE, enrollmentMode);
+        args.putBoolean(Router.EXTRA_IS_SELF_PACED, isSelfPaced);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,6 +75,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         enrollmentMode = getStringArgument(Router.EXTRA_ENROLLMENT_MODE);
+        isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, true);
         if (getActivity() instanceof PreLoadingListener) {
             preloadingListener = (PreLoadingListener) getActivity();
         } else {
@@ -123,7 +126,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void fetchDateBannerInfo() {
-        if (unit.getType() == BlockType.PROBLEM) {
+        // Show course dates banner in assignment view only if the course is self paced
+        if (unit.getType() == BlockType.PROBLEM && isSelfPaced) {
             courseDateViewModel.fetchCourseDatesBannerInfo(unit.getCourseId(), true);
         }
     }
@@ -134,7 +138,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             infoBanner.setVisibility(View.GONE);
             return;
         }
-        CourseDateUtil.INSTANCE.setupCourseDatesBanner(infoBanner, unit.getCourseId(), enrollmentMode,
+        CourseDateUtil.INSTANCE.setupCourseDatesBanner(infoBanner, unit.getCourseId(), enrollmentMode, isSelfPaced,
                 Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, environment.getAnalyticsRegistry(), courseBannerInfo,
                 v -> courseDateViewModel.resetCourseDatesBanner(unit.getCourseId()));
     }
