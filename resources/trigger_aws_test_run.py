@@ -108,8 +108,8 @@ def update_credentials():
             print(exc)
         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded['phases']['pre_test']['commands'])
         # Modify the fields from the dict
-        loaded['phases']['pre_test']['commands'].append("export USER_NAME="+ " "+ os.environ['USER_NAME'])
-        loaded['phases']['pre_test']['commands'].append("export USER_PASSWORD="+" "+ os.environ['USER_PASSWORD'])
+        loaded['phases']['pre_test']['commands'].append("export USER_NAME="+ os.environ['USER_NAME']+"\n")
+        loaded['phases']['pre_test']['commands'].append("export USER_PASSWORD="+ os.environ['USER_PASSWORD'])
         # Save it again
         with open(CUSTOM_SPECS_NAME, 'w') as stream:
             try:
