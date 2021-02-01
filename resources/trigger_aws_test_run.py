@@ -236,9 +236,9 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         devicePoolArn=device_pool_arn,
         name=name,
         test={'type': RUN_TYPE,
-            'testPackageArn': test_package_arn,
-            'testSpecArn': test_specs_arn
-            },
+              'testPackageArn': test_package_arn,
+              'testSpecArn': test_specs_arn
+              },
     )
 
     run_arn = schedule_run_result['run']['arn']
