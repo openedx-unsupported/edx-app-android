@@ -43,7 +43,7 @@ pipeline {
         }
         stage('compiling edx-app-android') {
             steps {
-                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/stage/\''  
+                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/prod/\''  
                 sh 'bash ./resources/compile_android.sh'
             }
         }
