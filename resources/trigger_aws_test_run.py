@@ -108,8 +108,10 @@ def update_credentials():
             print(exc)
         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded['phases']['pre_test']['commands'])
         # Modify the fields from the dict
-        loaded['phases']['pre_test']['commands'].append("export USER_NAME="+ os.environ['USER_NAME'])
-        loaded['phases']['pre_test']['commands'].append("export USER_PASSWORD="+ os.environ['USER_PASSWORD'])
+        # Need to wrap the USER_NAME/USER_PASSWORD with single qoute because it didnt recognize as variable/reserve
+        # words when found some special charaters
+        loaded['phases']['pre_test']['commands'].append("export USER_NAME=" + "\'" + os.environ['USER_NAME']  + "\'")
+        loaded['phases']['pre_test']['commands'].append("export USER_PASSWORD=" + "\'" + os.environ['USER_PASSWORD'] + "\'")
         # Save it again
         with open(CUSTOM_SPECS_NAME, 'w') as stream:
             try:
