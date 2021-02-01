@@ -12,16 +12,9 @@ import boto3
 import requests
 import sys
 import yaml
-from botocore.config import Config
 
 AUT_NAME = sys.argv[1]
 print('AUT name - {}'.format(AUT_NAME))
-
-print('111111111111111111')
-print(os.environ['HOME'])
-print(os.environ['USER_NAME'])
-print('22222222222222222')
-print(os.environ)
 
 REGION = 'us-west-2'
 PROJECT_NAME = 'edx-app-test'
@@ -46,11 +39,7 @@ print('Application Under Test - {}, Test Package - {} - configs {}'.format(
     CUSTOM_SPECS_NAME
 ))
 
-
-my_config = Config(
-    region_name = REGION
-)
-device_farm = boto3.client('devicefarm', config=my_config)
+device_farm = boto3.client('devicefarm', region_name=REGION)
 
 
 def aws_job():
@@ -91,9 +80,7 @@ def aws_job():
         device_pool_arn=device_pool_arn,
         app_arn=aut_arn,
         test_package_arn=package_arn,
-        test_specs_arn=test_specs_arn,
-        parameters={'USER_NAME': os.environ['USER_NAME'],
-                  'USER_PASSWORD': os.environ['USER_PASSWORD']})
+        test_specs_arn=test_specs_arn)
 
     get_test_run(test_run_arn)
 
@@ -106,19 +93,19 @@ def update_credentials():
             loaded = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded['phases']['pre_test']['commands'])
+
         # Modify the fields from the dict
         # Need to wrap the USER_NAME/USER_PASSWORD with single qoute because it didnt recognize as variable/reserve
         # words when found some special charaters
         loaded['phases']['pre_test']['commands'].append("export USER_NAME=" + "\'" + os.environ['USER_NAME']  + "\'")
         loaded['phases']['pre_test']['commands'].append("export USER_PASSWORD=" + "\'" + os.environ['USER_PASSWORD'] + "\'")
+
         # Save it again
         with open(CUSTOM_SPECS_NAME, 'w') as stream:
             try:
                 yaml.dump(loaded, stream, default_flow_style=False)
             except yaml.YAMLError as exc:
                 print(exc)
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', loaded)
 
 def get_project_arn(project_name):
     """
@@ -227,7 +214,7 @@ def get_device_pool(project_arn, name):
 
 
 def schedule_run(project_arn, name, device_pool_arn, app_arn,
-                 test_package_arn, test_specs_arn, parameters):
+                 test_package_arn, test_specs_arn):
     """
     schedule test run
 
@@ -249,9 +236,9 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         devicePoolArn=device_pool_arn,
         name=name,
         test={'type': RUN_TYPE,
-              'testPackageArn': test_package_arn,
-              'testSpecArn': test_specs_arn
-            }
+            'testPackageArn': test_package_arn,
+            'testSpecArn': test_specs_arn
+            },
     )
 
     run_arn = schedule_run_result['run']['arn']
