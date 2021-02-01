@@ -3,7 +3,7 @@
 cd .. 
 cd edx-app-android-build
 print_message(){
-echo -e "\n**********************************************\n$1\n"
+echo -e "\n************************************************\n$1\n"
 }
 
 virtual_env_dir="virtual_env"
@@ -53,4 +53,4 @@ install_requirements
 print_message "calling AWS Test run"
 print_message $USER_NAME
 print_message $USER_PASSWORD
-python -v ./resources/trigger_aws_test_run.py $AUT_NAME --user_name ${USER_NAME} --user_password ${USER_PASSWORD}
+python -v ./resources/trigger_aws_test_run.py $AUT_NAME
