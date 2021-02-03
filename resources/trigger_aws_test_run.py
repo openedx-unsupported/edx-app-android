@@ -87,6 +87,11 @@ def aws_job():
     get_test_run_artifacts(RUN_NAME, test_run_arn)
 
 def update_credentials():
+    """
+    Inject login credentials in "trigger_aws.yml" that used by the automation test cases
+
+    """
+
     with open(CUSTOM_SPECS_NAME, 'r') as stream:
         try:
             loaded = yaml.load(stream)
