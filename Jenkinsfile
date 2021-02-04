@@ -11,7 +11,7 @@ pipeline {
             APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
-            AUT_NAME = 'edx-debuggable-2.23.2.apk'
+            AUT_NAME = 'edx-debuggable-2.24.3.apk'
             USER_NAME = credentials('AUTOMATION_USERNAME')
             USER_PASSWORD = credentials('AUTOMATION_PASSWORD')
     }
@@ -43,7 +43,7 @@ pipeline {
         }
         stage('compiling edx-app-android') {
             steps {
-                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/stage/\''  
+                writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/prod/\''
                 sh 'bash ./resources/compile_android.sh'
             }
         }

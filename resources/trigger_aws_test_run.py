@@ -11,6 +11,7 @@ import time
 import boto3
 import requests
 import sys
+import yaml
 
 AUT_NAME = sys.argv[1]
 print('AUT name - {}'.format(AUT_NAME))
@@ -57,6 +58,8 @@ def aws_job():
         PACKAGE_NAME
     )
 
+    update_credentials()
+
     test_specs_arn = upload_file(
         project_arn,
         CUSTOM_SPECS_UPLOAD_TYPE,
@@ -82,6 +85,31 @@ def aws_job():
     get_test_run(test_run_arn)
 
     get_test_run_artifacts(RUN_NAME, test_run_arn)
+
+def update_credentials():
+    """
+    Inject login credentials in "trigger_aws.yml" that is used to set up the environment
+    for automation test cases execution
+
+    """
+
+    with open(CUSTOM_SPECS_NAME, 'r') as stream:
+        try:
+            loaded = yaml.load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+        # Need to wrap the USER_NAME/USER_PASSWORD with single qoute because it didnt recognize as variable/reserve
+        # words when found some special charaters
+        loaded['phases']['pre_test']['commands'].append("export USER_NAME=" + "\'" + os.environ['USER_NAME']  + "\'")
+        loaded['phases']['pre_test']['commands'].append("export USER_PASSWORD=" + "\'" + os.environ['USER_PASSWORD'] + "\'")
+
+        # Save it again
+        with open(CUSTOM_SPECS_NAME, 'w') as stream:
+            try:
+                yaml.dump(loaded, stream, default_flow_style=False)
+            except yaml.YAMLError as exc:
+                print(exc)
 
 
 def get_project_arn(project_name):
