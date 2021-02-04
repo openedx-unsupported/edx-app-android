@@ -88,7 +88,8 @@ def aws_job():
 
 def update_credentials():
     """
-    Inject login credentials in "trigger_aws.yml" that used by the automation test cases
+    Inject login credentials in "trigger_aws.yml" that is used to set up the environment
+    for automation test cases execution
 
     """
 
