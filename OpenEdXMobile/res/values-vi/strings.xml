@@ -219,8 +219,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="course_content">Nội dung khóa học</string>
   <!--Tab title for course handouts section-->
   <string name="tab_label_handouts">Tư liệu</string>
-  <!--Button for last accessed course section. Will be followed by course name-->
-  <string name="last_accessed">Lần truy cập cuối</string>
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">Nội dung khóa học hiện chưa sẵn sàng</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->

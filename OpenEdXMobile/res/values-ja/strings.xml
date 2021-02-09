@@ -183,8 +183,6 @@
   <string name="course_content">講座コンテンツ</string>
   <!--Tab title for course handouts section-->
   <string name="tab_label_handouts">ハンドアウト</string>
-  <!--Button for last accessed course section. Will be followed by course name-->
-  <string name="last_accessed">最新アクセス</string>
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">現在受講できる講座コンテンツはありません。</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->

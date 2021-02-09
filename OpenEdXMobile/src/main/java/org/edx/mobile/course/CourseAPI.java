@@ -23,7 +23,7 @@ import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SummaryModel;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
@@ -206,17 +206,8 @@ public class CourseAPI {
     }
 
     @NonNull
-    public Call<SyncLastAccessedSubsectionResponse> syncLastAccessedSubsection(
-            @NonNull final String courseId,
-            @NonNull final String lastVisitedModuleId) {
-        return courseService.syncLastAccessedSubsection(getUsername(), courseId,
-                new CourseService.SyncLastAccessedSubsectionBody(lastVisitedModuleId));
-    }
-
-    @NonNull
-    public Call<SyncLastAccessedSubsectionResponse> getLastAccessedSubsection(
-            @NonNull final String courseId) {
-        return courseService.getLastAccessedSubsection(getUsername(), courseId);
+    public Call<CourseComponentStatusResponse> getCourseStatusInfo(@NonNull final String courseId) {
+        return courseService.getCourseStatusInfo(getUsername(), courseId);
     }
 
     @NonNull

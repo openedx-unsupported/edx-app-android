@@ -12,7 +12,7 @@ import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -20,7 +20,6 @@ import org.edx.mobile.model.course.ResetCourseDates;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +30,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -108,14 +106,8 @@ public interface CourseService {
             @Path("username") final String username,
             @Query("org") final String org);
 
-    @PATCH("/api/mobile/v0.5/users/{username}/course_status_info/{course_id}")
-    Call<SyncLastAccessedSubsectionResponse> syncLastAccessedSubsection(
-            @Path("username") final String username,
-            @Path("course_id") final String courseId,
-            @Body final SyncLastAccessedSubsectionBody body);
-
-    @GET("/api/mobile/v0.5/users/{username}/course_status_info/{course_id}")
-    Call<SyncLastAccessedSubsectionResponse> getLastAccessedSubsection(
+    @GET("/api/mobile/v1/users/{username}/course_status_info/{course_id}")
+    Call<CourseComponentStatusResponse> getCourseStatusInfo(
             @Path("username") final String username,
             @Path("course_id") final String courseId);
 
@@ -157,17 +149,6 @@ public interface CourseService {
             for (int index = 0; index < blockIds.length; index++) {
                 blocks.put(blockIds[index], "1");
             }
-        }
-    }
-
-    final class SyncLastAccessedSubsectionBody {
-        @NonNull
-        private final String lastVisitedModuleId;
-        @NonNull
-        private final Date modificationDate = new Date();
-
-        public SyncLastAccessedSubsectionBody(@NonNull final String lastVisitedModuleId) {
-            this.lastVisitedModuleId = lastVisitedModuleId;
         }
     }
 

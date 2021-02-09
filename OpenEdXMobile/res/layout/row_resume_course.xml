@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/last_accessed_bar"
+    android:id="@+id/resume_course_bar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/last_accessed_bar_height"
+    android:layout_height="@dimen/resume_course_bar_height"
     android:background="@color/primaryBaseColor"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/last_accessed_bar_left_margin"
+        android:layout_marginStart="@dimen/resume_course_bar_left_margin"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -25,32 +25,32 @@
                 style="@style/bold_white_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/last_accessed_header_unit_vertical_margin"
-                android:text="@string/last_accessed"
-                android:textSize="@dimen/last_accessed_header_text_size" />
+                android:layout_marginBottom="@dimen/resume_course_header_unit_vertical_margin"
+                android:text="@string/resume_course"
+                android:textSize="@dimen/resume_course_header_text_size" />
 
             <TextView
-                android:id="@+id/last_accessed_text"
+                android:id="@+id/resume_course_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/white"
-                android:textSize="@dimen/last_accessed_unit_text_size"
+                android:textSize="@dimen/edx_base"
                 tools:text="Course Name" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/last_accessed_button"
+            android:id="@+id/resume_course_button"
             style="@style/bold_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/last_accessed_button_right_margin"
+            android:layout_marginEnd="@dimen/resume_course_button_right_margin"
             android:background="@drawable/selectable_box_overlay"
-            android:padding="@dimen/last_accessed_button_padding"
+            android:padding="@dimen/resume_course_button_padding"
             android:text="@string/view_button_text"
             android:textColor="@color/accentAColor"
-            android:textSize="@dimen/last_accessed_button_text_size" />
+            android:textSize="@dimen/resume_course_button_text_size" />
 
     </LinearLayout>
 

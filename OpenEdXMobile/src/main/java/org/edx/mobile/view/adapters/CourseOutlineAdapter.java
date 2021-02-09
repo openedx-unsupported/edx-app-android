@@ -175,8 +175,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 case SectionRow.COURSE_CERTIFICATE:
                     convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
                     break;
-                case SectionRow.LAST_ACCESSED_ITEM: {
-                    convertView = inflater.inflate(R.layout.row_last_accessed, parent, false);
+                case SectionRow.RESUME_COURSE_ITEM: {
+                    convertView = inflater.inflate(R.layout.row_resume_course, parent, false);
                     break;
                 }
                 default: {
@@ -198,8 +198,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
             }
             case SectionRow.COURSE_CERTIFICATE:
                 return getCertificateView(position, convertView);
-            case SectionRow.LAST_ACCESSED_ITEM: {
-                return getLastAccessedView(position, convertView);
+            case SectionRow.RESUME_COURSE_ITEM: {
+                return getResumeCourseView(position, convertView);
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
@@ -665,39 +665,39 @@ public class CourseOutlineAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View getLastAccessedView(int position, View convertView) {
+    private View getResumeCourseView(int position, View convertView) {
         final SectionRow sectionRow = getItem(position);
-        final TextView lastAccessTextView = (TextView) convertView.findViewById(R.id.last_accessed_text);
-        final View viewButton = convertView.findViewById(R.id.last_accessed_button);
-        lastAccessTextView.setText(sectionRow.component.getDisplayName());
+        final TextView tvResumeCourseComponentTitle = (TextView) convertView.findViewById(R.id.resume_course_text);
+        final View viewButton = convertView.findViewById(R.id.resume_course_button);
+        tvResumeCourseComponentTitle.setText(sectionRow.component.getDisplayName());
         viewButton.setOnClickListener(sectionRow.clickListener);
         return convertView;
     }
 
     /**
-     * Adds last accessed course item view in the ListView.
+     * Adds resume course item view in the ListView.
      *
      * @param lastAccessedComponent The last accessed component.
      * @param onClickListener       The listener to invoke when the `view` button is pressed.
      */
-    public void addLastAccessedView(CourseComponent lastAccessedComponent, View.OnClickListener onClickListener) {
-        final int lastAccessedItemPlace = getNonCourseWareItemPlace(SectionRow.LAST_ACCESSED_ITEM);
+    public void addResumeCourseView(CourseComponent lastAccessedComponent, View.OnClickListener onClickListener) {
+        final int resumeCourseItemPlace = getNonCourseWareItemPlace(SectionRow.RESUME_COURSE_ITEM);
         // Update the last accessed item, if its already there in the list
-        if (lastAccessedItemPlace >= 0) {
-            adapterData.set(lastAccessedItemPlace, new SectionRow(SectionRow.LAST_ACCESSED_ITEM, lastAccessedComponent, onClickListener));
+        if (resumeCourseItemPlace >= 0) {
+            adapterData.set(resumeCourseItemPlace, new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent, onClickListener));
         } else {
             // Add it otherwise
-            adapterData.add(getLastAccessedItemPlace(), new SectionRow(SectionRow.LAST_ACCESSED_ITEM, lastAccessedComponent, onClickListener));
+            adapterData.add(getResumeCourseItemPlace(), new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent, onClickListener));
         }
         notifyDataSetChanged();
     }
 
     /**
-     * Tells the appropriate place for a {@link SectionRow#LAST_ACCESSED_ITEM} to put in the adapter's list.
+     * Tells the appropriate place for a {@link SectionRow#RESUME_COURSE_ITEM} to put in the adapter's list.
      *
-     * @return List index (non-negative number) for a {@link SectionRow#LAST_ACCESSED_ITEM}.
+     * @return List index (non-negative number) for a {@link SectionRow#RESUME_COURSE_ITEM}.
      */
-    public int getLastAccessedItemPlace() {
+    public int getResumeCourseItemPlace() {
         return isNonCourseWareItemExist(SectionRow.COURSE_CERTIFICATE) ? 2 : 1;
     }
 
@@ -787,7 +787,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     public static class SectionRow {
         public static final int COURSE_CARD = 0;
         public static final int COURSE_CERTIFICATE = 1;
-        public static final int LAST_ACCESSED_ITEM = 2;
+        public static final int RESUME_COURSE_ITEM = 2;
         public static final int SECTION = 3;
         public static final int ITEM = 4;
 

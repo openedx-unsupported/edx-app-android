@@ -222,8 +222,6 @@
   <string name="course_content">תוכן הקורס</string>
   <!--Tab title for course handouts section-->
   <string name="tab_label_handouts">דפי מידע</string>
-  <!--Button for last accessed course section. Will be followed by course name-->
-  <string name="last_accessed">ביקרתם לאחרונה</string>
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">לא קיים כעת תוכן בקורס זה.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->

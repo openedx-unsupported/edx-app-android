@@ -27,7 +27,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
@@ -36,8 +35,6 @@ import org.edx.mobile.view.custom.PreLoadingListener;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
@@ -62,9 +59,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private TextView mPreviousUnitLbl;
 
     private PreLoadingListener.State viewPagerState = PreLoadingListener.State.DEFAULT;
-
-    @Inject
-    LastAccessManager lastAccessManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,8 +150,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
 
         updateUIForOrientation();
-
-        lastAccessManager.setLastAccessed(selectedUnit.getCourseId(), this.selectedUnit.getId());
 
         Intent resultData = new Intent();
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
