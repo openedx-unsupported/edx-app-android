@@ -52,12 +52,14 @@ import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
@@ -74,11 +76,9 @@ import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.EdxCookieManager;
-import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.CourseDateUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
@@ -96,8 +96,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CourseOutlineFragment extends OfflineSupportBaseFragment
-        implements LastAccessManager.LastAccessManagerCallback, RefreshListener,
-        VideoDownloadHelper.DownloadManagerCallback,
+        implements RefreshListener, VideoDownloadHelper.DownloadManagerCallback,
         LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>, BaseFragment.PermissionListener {
     private final Logger logger = new Logger(getClass().getName());
     private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
@@ -115,7 +114,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     // Flag to check if the course dates banner is visible or not
     private boolean isBannerVisible = false;
     private boolean isOnCourseOutline;
-    private boolean isFetchingLastAccessed;
     // Flag to differentiate between single or multiple video download
     private boolean isSingleVideoDownload;
     private ActionMode deleteMode;
@@ -134,9 +132,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private CourseAPI courseApi;
 
     @Inject
-    private LastAccessManager lastAccessManager;
-
-    @Inject
     private VideoDownloadHelper downloadManager;
 
     private CourseDateViewModel courseDateViewModel;
@@ -151,15 +146,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private CourseUpgradeResponse courseUpgradeData;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
-                                       @Nullable String courseComponentId,
-                                       @Nullable String lastAccessedId, boolean isVideosMode) {
+                                       @Nullable String courseComponentId, boolean isVideosMode) {
         final Bundle arguments = new Bundle();
         final Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(Router.EXTRA_COURSE_DATA, model);
         courseBundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         arguments.putBundle(Router.EXTRA_BUNDLE, courseBundle);
-        arguments.putString(Router.EXTRA_LAST_ACCESSED_ID, lastAccessedId);
         arguments.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
         return arguments;
@@ -265,7 +258,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void fetchCourseComponent() {
-        final String courseId = courseData.getCourse().getId();
+        final String courseId = courseData.getCourseId();
         if (courseComponentId != null) {
             final CourseComponent courseComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId);
             if (courseComponent != null) {
@@ -299,7 +292,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     values.put(Analytics.Keys.EXPERIMENT, Analytics.Keys.AA_EXPERIMENT);
                     values.put(Analytics.Keys.GROUP, group);
                     values.put(Analytics.Keys.USER_ID, profileModel.id.toString());
-                    values.put(Analytics.Keys.COURSE_ID, courseData.getCourse().getId());
+                    values.put(Analytics.Keys.COURSE_ID, courseData.getCourseId());
                     environment.getAnalyticsRegistry().trackExperimentParams(Analytics.Events.MOBILE_EXPERIMENT_EVALUATED, values);
                 }
             });
@@ -310,7 +303,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public Loader<AsyncTaskResult<CourseComponent>> onCreateLoader(int id, Bundle args) {
         final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
-        return new CourseOutlineAsyncLoader(getContext(), blocksApiVersion, courseData.getCourse().getId());
+        return new CourseOutlineAsyncLoader(getContext(), blocksApiVersion, courseData.getCourseId());
     }
 
     @Override
@@ -340,7 +333,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         final TaskProgressCallback progressCallback = showProgress ?
                 new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
         final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
-        final String courseId = courseData.getCourse().getId();
+        final String courseId = courseData.getCourseId();
         getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
                 progressCallback, errorNotification, null, this) {
@@ -385,7 +378,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private CourseComponent validateCourseComponent(@NonNull CourseComponent courseComponent) {
         if (!isOnCourseOutline) {
             final CourseComponent cached = courseManager.getComponentByIdFromAppLevelCache(
-                    courseData.getCourse().getId(), courseComponentId);
+                    courseData.getCourseId(), courseComponentId);
             courseComponent = cached != null ? cached : courseComponent;
         }
         return courseComponent;
@@ -480,7 +473,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
                     courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
                     Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
-                    v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourse().getId()));
+                    v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourseId()));
 
             if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
@@ -497,13 +490,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
                     null, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
-                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, courseData.getCourse().getId(),
+                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, courseData.getCourseId(),
                             null, null, false, Screen.COURSE_DATES));
         } else {
             snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
-        environment.getAnalyticsRegistry().trackPLSCourseDatesShift(courseData.getCourse().getId(),
+        environment.getAnalyticsRegistry().trackPLSCourseDatesShift(courseData.getCourseId(),
                 courseData.getMode(), Analytics.Screens.PLS_COURSE_DASHBOARD, isSuccess);
     }
 
@@ -581,10 +574,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
                     if (isOnCourseOutline) {
                         environment.getAnalyticsRegistry().trackSubsectionVideosDelete(
-                                courseData.getCourse().getId(), rowItem.component.getId());
+                                courseData.getCourseId(), rowItem.component.getId());
                     } else {
                         environment.getAnalyticsRegistry().trackUnitVideoDelete(
-                                courseData.getCourse().getId(), rowItem.component.getId());
+                                courseData.getCourseId(), rowItem.component.getId());
                     }
 
                     /*
@@ -595,8 +588,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     https://stackoverflow.com/a/30552666
                     https://github.com/material-components/material-components-android/commit/2cb77c9331cc3c6a5034aace0238b96508acf47d
                      */
-                    @SuppressLint("WrongConstant")
-                    final Snackbar snackbar = Snackbar.make(listView,
+                    @SuppressLint("WrongConstant") final Snackbar snackbar = Snackbar.make(listView,
                             getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
                             SNACKBAR_SHOWTIME_MS);
                     snackbar.setAction(R.string.label_undo, new View.OnClickListener() {
@@ -628,10 +620,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             } else {
                                 if (isOnCourseOutline) {
                                     environment.getAnalyticsRegistry().trackUndoingSubsectionVideosDelete(
-                                            courseData.getCourse().getId(), rowItem.component.getId());
+                                            courseData.getCourseId(), rowItem.component.getId());
                                 } else {
                                     environment.getAnalyticsRegistry().trackUndoingUnitVideoDelete(
-                                            courseData.getCourse().getId(), rowItem.component.getId());
+                                            courseData.getCourseId(), rowItem.component.getId());
                                 }
                             }
                             adapter.notifyDataSetChanged();
@@ -671,7 +663,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             getActivity().setTitle(courseComponent.getDisplayName());
         }
         if (!isVideoMode && isOnCourseOutline && canFetchBannerInfo) {
-            courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourse().getId(), swipeContainer.isRefreshing());
+            courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), swipeContainer.isRefreshing());
             canFetchBannerInfo = false;
         }
 
@@ -687,10 +679,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         if (!isOnCourseOutline) {
             environment.getAnalyticsRegistry().trackScreenView(
-                    Analytics.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
-
-            // Update the last accessed item reference if we are in the course subsection view
-            lastAccessManager.setLastAccessed(courseComponent.getCourseId(), courseComponent.getId());
+                    Analytics.Screens.SECTION_OUTLINE, courseData.getCourseId(), courseComponent.getInternalName());
         }
 
         fetchLastAccessed();
@@ -712,7 +701,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private void fetchCourseUpgradeStatus() {
         if (getCourseUpgradeStatus == null) {
-            getCourseUpgradeStatus = courseApi.getCourseUpgradeStatus(courseData.getCourse().getId());
+            getCourseUpgradeStatus = courseApi.getCourseUpgradeStatus(courseData.getCourseId());
             getCourseUpgradeStatus.enqueue(new Callback<CourseUpgradeResponse>() {
                 @Override
                 public void onResponse(Call<CourseUpgradeResponse> call, Response<CourseUpgradeResponse> response) {
@@ -788,7 +777,20 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     public void fetchLastAccessed() {
         if (isOnCourseOutline && !isVideoMode) {
-            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
+            courseApi.getCourseStatusInfo(courseData.getCourseId()).enqueue(
+                    new ErrorHandlingCallback<CourseComponentStatusResponse>(
+                            getContextOrThrow()) {
+                        @Override
+                        protected void onResponse(@NonNull final CourseComponentStatusResponse result) {
+                            showResumeCourseView(result);
+                        }
+
+                        @Override
+                        protected void onFailure(@NonNull Throwable error) {
+                            //In case of failure no view will be added
+                        }
+                    });
+
         }
     }
 
@@ -839,10 +841,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 switch (resultCode) {
                     case Activity.RESULT_OK: {
                         final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
-                                courseData.getCourse().getId(), courseComponentId);
+                                courseData.getCourseId(), courseComponentId);
                         final String leafCompId = (String) data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID);
                         final CourseComponent leafComp = courseManager.getComponentByIdFromAppLevelCache(
-                                courseData.getCourse().getId(), leafCompId);
+                                courseData.getCourseId(), leafCompId);
                         final BlockPath outlinePath = outlineComp.getPath();
                         final BlockPath leafPath = leafComp.getPath();
                         final int outlinePathSize = outlinePath.getPath().size();
@@ -873,7 +875,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     protected boolean isOnCourseOutline() {
         if (courseComponentId == null) return true;
         final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
-                courseData.getCourse().getId(), courseComponentId);
+                courseData.getCourseId(), courseComponentId);
         final BlockPath outlinePath = outlineComp.getPath();
         final int outlinePathSize = outlinePath.getPath().size();
 
@@ -916,56 +918,26 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         getCourseComponentFromServer(true);
     }
 
-    @Override
-    public boolean isFetchingLastAccessed() {
-        return isFetchingLastAccessed;
-    }
-
-    @Override
-    public void setFetchingLastAccessed(boolean accessed) {
-        isFetchingLastAccessed = accessed;
-    }
-
-    @Override
-    public void showLastAccessedView(String lastAccessedSubSectionId, String courseId, View view) {
-        if (getActivity() == null)
+    public void showResumeCourseView(CourseComponentStatusResponse response) {
+        if (getActivity() == null || TextUtils.isEmpty(response.getLastVisitedBlockId()))
             return;
-        if (NetworkUtil.isConnected(getContext())) {
-            if (courseId != null && lastAccessedSubSectionId != null) {
-                CourseComponent lastAccessComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, lastAccessedSubSectionId);
-                if (lastAccessComponent != null) {
-                    if (!lastAccessComponent.isContainer()) {   // true means its a course unit
-                        // getting subsection
-                        if (lastAccessComponent.getParent() != null)
-                            lastAccessComponent = lastAccessComponent.getParent();
-                        // now getting section
-                        if (lastAccessComponent.getParent() != null) {
-                            lastAccessComponent = lastAccessComponent.getParent();
-                        }
-                    }
+        CourseComponent lastAccessComponent = courseManager.getComponentByIdFromAppLevelCache(courseData.getCourseId(), response.getLastVisitedBlockId());
+        if (lastAccessComponent != null) {
+            adapter.addResumeCourseView(lastAccessComponent, new View.OnClickListener() {
+                long lastClickTime = 0;
 
-                    // Handling the border case that if the Last Accessed component turns out
-                    // to be the course root component itself, then we don't need to show it
-                    if (!lastAccessComponent.getId().equals(courseId)) {
-                        final CourseComponent finalLastAccessComponent = lastAccessComponent;
-                        adapter.addLastAccessedView(finalLastAccessComponent, new View.OnClickListener() {
-                            long lastClickTime = 0;
-
-                            @Override
-                            public void onClick(View v) {
-                                //This has been used so that if user clicks continuously on the screen,
-                                //two activities should not be opened
-                                long currentTime = SystemClock.elapsedRealtime();
-                                if (currentTime - lastClickTime > 1000) {
-                                    lastClickTime = currentTime;
-                                    environment.getRouter().showCourseContainerOutline(getActivity(),
-                                            courseData, courseUpgradeData, finalLastAccessComponent.getId());
-                                }
-                            }
-                        });
+                @Override
+                public void onClick(View v) {
+                    //This has been used so that if user clicks continuously on the screen,
+                    //two activities should not be opened
+                    long currentTime = SystemClock.elapsedRealtime();
+                    if (currentTime - lastClickTime > 1000) {
+                        lastClickTime = currentTime;
+                        environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
+                                REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, response.getLastVisitedBlockId(), isVideoMode);
                     }
                 }
-            }
+            });
         }
     }
 

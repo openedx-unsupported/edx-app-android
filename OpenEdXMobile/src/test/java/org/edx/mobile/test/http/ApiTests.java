@@ -11,7 +11,7 @@ import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -85,8 +85,8 @@ public class ApiTests extends HttpBaseTestCase {
 
         print(String.format("course= %s", courseId));
 
-        SyncLastAccessedSubsectionResponse model = executeStrict(
-                courseAPI.getLastAccessedSubsection(courseId));
+        CourseComponentStatusResponse model = executeStrict(
+                courseAPI.getCourseStatusInfo(courseId));
         assertNotNull(model);
         //  print(model.json);
     }

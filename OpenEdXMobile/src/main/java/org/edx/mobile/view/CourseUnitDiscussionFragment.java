@@ -1,19 +1,30 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.DiscussionBlockModel;
+import org.json.JSONObject;
 
 public class CourseUnitDiscussionFragment extends CourseUnitFragment {
+
+    @Inject
+    private CourseAPI courseApi;
+
     public static CourseUnitDiscussionFragment newInstance(CourseComponent unit, EnrolledCoursesResponse courseData) {
         CourseUnitDiscussionFragment f = new CourseUnitDiscussionFragment();
         Bundle args = new Bundle();
@@ -36,6 +47,12 @@ public class CourseUnitDiscussionFragment extends CourseUnitFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState == null) {
+            courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
+                @Override
+                protected void onResponse(@NonNull JSONObject responseBody) {
+                    // Nothing to do here
+                }
+            });
             // First we need to get the discussion topic id to send to the posts fragment
             String topicId = ((DiscussionBlockModel) unit).getData().topicId;
 

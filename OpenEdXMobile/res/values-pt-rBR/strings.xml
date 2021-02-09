@@ -220,8 +220,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="course_content">Conteúdo do curso</string>
   <!--Tab title for course handouts section-->
   <string name="tab_label_handouts">Apostilas</string>
-  <!--Button for last accessed course section. Will be followed by course name-->
-  <string name="last_accessed">Último acesso</string>
   <!--Label shown when no courseware content is available-->
   <string name="no_chapter_text">Atualmente, não há materiais didáticos disponíveis.</string>
   <!--Label shown when no mobile-friendly videos are available in a course-->

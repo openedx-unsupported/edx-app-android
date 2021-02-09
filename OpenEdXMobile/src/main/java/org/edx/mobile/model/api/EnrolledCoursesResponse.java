@@ -60,6 +60,10 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         this.course = course;
     }
 
+    public String getCourseId(){
+        return course.getId();
+    }
+
     @Override
     public boolean isChapter() {
         return false;

@@ -1,11 +1,8 @@
 package org.edx.mobile.view;
 
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,6 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -247,7 +248,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         // Add course outline tab
         items.add(new FragmentItemModel(CourseOutlineFragment.class, courseData.getCourse().getName(),
                 FontAwesomeIcons.fa_list_alt,
-                CourseOutlineFragment.makeArguments(courseData, null, null, false),
+                CourseOutlineFragment.makeArguments(courseData, null, false),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
@@ -260,7 +261,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         if (environment.getConfig().isCourseVideosEnabled()) {
             items.add(new FragmentItemModel(CourseOutlineFragment.class,
                     getResources().getString(R.string.videos_title), FontAwesomeIcons.fa_film
-                    , CourseOutlineFragment.makeArguments(courseData, null, null, true),
+                    , CourseOutlineFragment.makeArguments(courseData, null, true),
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {

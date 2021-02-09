@@ -32,15 +32,14 @@
     <!-- Course Outline -->
     <dimen name="width_chapter_text">185dp</dimen>
 
-    <!-- Last Accessed Bar-->
-    <dimen name="last_accessed_bar_left_margin">26dp</dimen>
-    <dimen name="last_accessed_bar_height">72dp</dimen>
-    <dimen name="last_accessed_header_text_size">@dimen/edx_small</dimen>
-    <dimen name="last_accessed_unit_text_size">@dimen/edx_base</dimen>
-    <dimen name="last_accessed_header_unit_vertical_margin">2dp</dimen>
-    <dimen name="last_accessed_button_text_size">@dimen/edx_base</dimen>
-    <dimen name="last_accessed_button_padding">12dp</dimen>
-    <dimen name="last_accessed_button_right_margin">14dp</dimen>
+    <!-- Resume Course Bar-->
+    <dimen name="resume_course_bar_left_margin">26dp</dimen>
+    <dimen name="resume_course_bar_height">72dp</dimen>
+    <dimen name="resume_course_header_text_size">@dimen/edx_small</dimen>
+    <dimen name="resume_course_header_unit_vertical_margin">2dp</dimen>
+    <dimen name="resume_course_button_text_size">@dimen/edx_base</dimen>
+    <dimen name="resume_course_button_padding">12dp</dimen>
+    <dimen name="resume_course_button_right_margin">14dp</dimen>
 
     <!-- Course Card -->
     <dimen name="course_card_height">190dp</dimen>
@@ -69,7 +68,7 @@
     <!-- Course Outline -->
     <dimen name="course_item_vertical_padding">8dp</dimen>
     <dimen name="course_item_horizontal_padding">9dp</dimen>
-    <dimen name="course_item_half_separator_left_margin">@dimen/last_accessed_bar_left_margin</dimen>
+    <dimen name="course_item_half_separator_left_margin">@dimen/resume_course_bar_left_margin</dimen>
 
     <!-- Sign in dimensions-->
     <dimen name="login_edx_logo_height">125dp</dimen>
