@@ -40,13 +40,13 @@
     },
     {
               "name" : "language_proficiencies",
-              "label" : "主要语言",
+              "label" : "口语",
               "type" : "select",
               "data_type" : "language",
               "options" : {
                 "reference" : "languages",
                 "allows_none" : true,
-                "none_label" : "没有主要语言"
+                "none_label" : "没有口语"
               }
     },
     {

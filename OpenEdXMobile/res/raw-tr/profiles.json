@@ -40,13 +40,13 @@
     },
     {
               "name" : "language_proficiencies",
-              "label" : "Tercih edilen dil",
+              "label" : "Konuşulan dil",
               "type" : "select",
               "data_type" : "language",
               "options" : {
                 "reference" : "languages",
                 "allows_none" : true,
-                "none_label" : "Tercih edilen dil yok"
+                "none_label" : "Konuşma dili yok"
               }
     },
     {

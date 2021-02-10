@@ -40,13 +40,13 @@
     },
     {
               "name" : "language_proficiencies",
-              "label" : "Ngôn ngữ chính",
+              "label" : "Ngôn ngư noi",
               "type" : "select",
               "data_type" : "language",
               "options" : {
                 "reference" : "languages",
                 "allows_none" : true,
-                "none_label" : "Chưa có ngôn ngữ chính"
+                "none_label" : "Không có ngôn ngữ nói"
               }
     },
     {

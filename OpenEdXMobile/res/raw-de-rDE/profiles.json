@@ -40,13 +40,13 @@
     },
     {
               "name" : "language_proficiencies",
-              "label" : "Muttersprache",
+              "label" : "Gesprochene Sprache",
               "type" : "select",
               "data_type" : "language",
               "options" : {
                 "reference" : "languages",
                 "allows_none" : true,
-                "none_label" : "Keine Muttersprache"
+                "none_label" : "Keine gesprochene Sprache"
               }
     },
     {

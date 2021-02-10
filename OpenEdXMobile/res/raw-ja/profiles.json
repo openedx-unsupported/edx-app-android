@@ -40,13 +40,13 @@
     },
     {
               "name" : "language_proficiencies",
-              "label" : "第一言語",
+              "label" : "口頭言語",
               "type" : "select",
               "data_type" : "language",
               "options" : {
                 "reference" : "languages",
                 "allows_none" : true,
-                "none_label" : "第一言語なし"
+                "none_label" : "口頭言語なし"
               }
     },
     {
