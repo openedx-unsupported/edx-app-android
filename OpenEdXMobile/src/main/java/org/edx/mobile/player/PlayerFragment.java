@@ -11,10 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +26,11 @@ import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.inject.Inject;
@@ -107,8 +109,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private transient IPlayerEventCallback callback;
     @Nullable
     private transient TranscriptListener transcriptListener;
-    private View.OnClickListener nextListner;
-    private View.OnClickListener prevListner;
+    private OnClickListener nextListener;
+    private OnClickListener prevListener;
     private AudioManager audioManager;
     private boolean playOnFocusGain = false;
     private CCLanguageDialogFragment ccFragment;
@@ -127,6 +129,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private boolean pauseDueToDialog;
     private boolean closedCaptionsEnabled = false;
     private long lastSavedPosition;
+    private boolean playWhenReady = true;
 
     private GoogleCastDelegate googleCastDelegate;
     private RelativeLayout rlRemoteCasting;
@@ -135,7 +138,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private final transient Handler handler = new Handler() {
         @Override
-        public void handleMessage(android.os.Message msg) {
+        public void handleMessage(Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
                     if(player!=null && player.isPlaying()) {
@@ -165,6 +168,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     public void setTranscriptCallback(TranscriptListener listener) {
         this.transcriptListener = listener;
+    }
+
+    public void setPlayWhenReady(boolean playWhenReady) {
+        this.playWhenReady = playWhenReady;
     }
 
     @Override
@@ -561,7 +568,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             // changed to true after Lou's comments to hide the controllers
             controller.setAutoHide(true);
 
-            controller.setNextPreviousListeners(nextListner, prevListner);
+            controller.setNextPreviousListeners(nextListener, prevListener);
             player.setController(controller);
             reAttachPlayEventListener();
 
@@ -570,16 +577,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     }
 
-    public void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev) {
-        this.prevListner = prev;
-        this.nextListner = next;
+    public void setNextPreviousListeners(OnClickListener next, OnClickListener prev) {
+        this.prevListener = prev;
+        this.nextListener = next;
         updateNextPreviousListeners();
     }
 
     private void updateNextPreviousListeners() {
         if (player != null) {
             if (isScreenLandscape()) {
-                player.setNextPreviousListeners(nextListner, prevListner);
+                player.setNextPreviousListeners(nextListener, prevListener);
             }
             else {
                 player.setNextPreviousListeners(null, null);
@@ -973,14 +980,15 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         public void run() {
             if (isResumed() && !isRemoving()) {
                 if (player != null) {
-
-                    player.unfreeze();
+                    if(playWhenReady) {
+                        player.unfreeze();
+                    }
                     hideProgress();
                     if (player.isPlaying() || getTouchExploreEnabled()) {
                         updateController("player unfreezed");
                     }
 
-                    if (isPrepared && !isAutoPlayDone) {
+                    if (isPrepared && !isAutoPlayDone && playWhenReady) {
                         isAutoPlayDone = true;
                         player.start();
                     }
@@ -1341,7 +1349,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 if ((langList != null) && (langList.size() > 0))
                 {
                     tv_closedCaption.setBackgroundResource(R.drawable.white_rounded_selector);
-                    tv_closedCaption.setOnClickListener(new View.OnClickListener(){
+                    tv_closedCaption.setOnClickListener(new OnClickListener(){
                         public void onClick(View paramAnonymousView) {
                             showCCFragmentPopup();
                         }

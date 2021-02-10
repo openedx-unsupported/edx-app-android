@@ -18,25 +18,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
+import org.edx.mobile.event.VideoPlaybackEvent;
+import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
+import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.Call;
 import roboguice.inject.InjectView;
 
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements
@@ -58,7 +69,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     @InjectView(R.id.prev_unit_title)
     private TextView mPreviousUnitLbl;
 
+    @Inject
+    private CourseAPI courseApi;
+
     private PreLoadingListener.State viewPagerState = PreLoadingListener.State.DEFAULT;
+
+    private boolean isFirstSection = false;
+    private boolean isVideoMode = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +113,58 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         mPreviousBtn.setOnClickListener(view -> navigatePreviousComponent());
         mNextBtn.setOnClickListener(view -> navigateNextComponent());
+
+        if (getIntent() != null) {
+            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
+        }
+        if (!isVideoMode) {
+            getCourseCelebrationStatus();
+        }
+    }
+
+    private void getCourseCelebrationStatus() {
+        Call<CourseStatus> courseStatusCall = courseApi.getCourseStatus(courseData.getCourseId());
+        courseStatusCall.enqueue(new ErrorHandlingCallback<CourseStatus>(this) {
+            @Override
+            protected void onResponse(@NonNull CourseStatus responseBody) {
+                isFirstSection = responseBody.getCelebrationStatus().getFirstSection();
+            }
+        });
+    }
+
+    private void showCelebrationModal(boolean reCreate) {
+        CelebratoryModalDialogFragment celebrationDialog = CelebratoryModalDialogFragment
+                .newInstance(new CelebratoryModalDialogFragment.CelebratoryModelCallback() {
+                    @Override
+                    public void onKeepGoing() {
+                        EventBus.getDefault().postSticky(new VideoPlaybackEvent(false));
+                    }
+
+                    @Override
+                    public void onCelebrationShare(@NotNull View anchor) {
+                        ShareUtils.showCelebrationShareMenu(CourseUnitNavigationActivity.this,
+                                anchor, courseData, shareType -> environment.getAnalyticsRegistry()
+                                        .trackCourseCelebrationShareClicked(courseData.getCourseId(),
+                                                shareType.getUtmParamKey()));
+                    }
+
+                    @Override
+                    public void celebratoryModalViewed() {
+                        EventBus.getDefault().postSticky(new VideoPlaybackEvent(true));
+                        if (!reCreate) {
+                            courseApi.updateCourseCelebration(courseData.getCourseId())
+                                    .enqueue(new ErrorHandlingCallback<Void>(CourseUnitNavigationActivity.this) {
+                                        @Override
+                                        protected void onResponse(@NonNull Void responseBody) {
+                                            isFirstSection = false;
+                                        }
+                                    });
+                            environment.getAnalyticsRegistry().trackCourseSectionCelebration(courseData.getCourseId());
+                        }
+                    }
+                });
+        celebrationDialog.setCancelable(false);
+        celebrationDialog.show(getSupportFragmentManager(), CelebratoryModalDialogFragment.TAG);
     }
 
     @Override
@@ -132,6 +201,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         int index = pager2.getCurrentItem();
         if (index < pagerAdapter.getItemCount() - 1) {
             pager2.setCurrentItem(index + 1);
+        }
+        if (selectedUnit.isLastChild() && isFirstSection && !isVideoMode) {
+            showCelebrationModal(false);
         }
     }
 
@@ -223,10 +295,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
 
-        boolean isVideoMode = false;
-        if (getIntent() != null) {
-            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
-        }
         if (isVideoMode) {
             leaves = selectedUnit.getRoot().getVideos(false);
         } else {
@@ -253,6 +321,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (selectedUnit != null) {
             environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
                     courseData.getCourse().getId(), selectedUnit.getBlockId());
+        }
+        // Remove the celebration modal on configuration change before create a new one for landscape mode.
+        Fragment celebrationModal = getSupportFragmentManager().findFragmentByTag(CelebratoryModalDialogFragment.TAG);
+        if (celebrationModal != null) {
+            getSupportFragmentManager().beginTransaction().remove(celebrationModal).commit();
+            showCelebrationModal(true);
         }
     }
 

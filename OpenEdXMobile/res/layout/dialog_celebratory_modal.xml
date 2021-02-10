@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/celebratory_modal_padding">
+
+        <TextView
+            android:id="@+id/tv_celebratory_modal_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="?attr/fontSemiBold"
+            android:text="@string/celebratory_modal_title"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="@dimen/edx_x_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_celebratory_modal_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_margin"
+            android:gravity="center"
+            android:text="@string/celebratory_modal_message"
+            android:textColor="@color/neutralXXDark"
+            android:textSize="@dimen/edx_small"
+            app:layout_constraintTop_toBottomOf="@+id/tv_celebratory_modal_title" />
+
+        <ImageView
+            android:id="@+id/iv_celebrate_clap"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/edx_margin"
+            app:layout_constraintDimensionRatio="1:0.725"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_celebratory_modal_message"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/login_screen_image" />
+
+        <LinearLayout
+            android:id="@+id/ll_celebratory_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_margin"
+            android:background="@color/infoXXLight"
+            android:orientation="horizontal"
+            android:padding="@dimen/celebratory_modal_padding"
+            app:layout_constraintTop_toBottomOf="@+id/iv_celebrate_clap">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_share"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/widget_margin"
+                android:fontFamily="?attr/fontRegular"
+                android:text="@string/celebratory_share_message"
+                android:textColor="@color/neutralXXDark"
+                android:textSize="@dimen/edx_small" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_keep_going"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/celebratory_modal_padding"
+            android:background="@color/primaryBaseColor"
+            android:text="@string/keep_going_text"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edx_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_celebratory_share" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

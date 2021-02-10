@@ -720,4 +720,23 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.CATEGORY, Values.COURSE_DATES);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackCourseSectionCelebration(@NonNull String courseId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_SECTION_COMPLETION_CELEBRATION,
+                Values.COURSE_SECTION_COMPLETION_CELEBRATION);
+        event.putCourseId(courseId);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackCourseCelebrationShareClicked(@NonNull String courseId, @Nullable String socialService) {
+        final FirebaseEvent event = new FirebaseEvent(Events.CELEBRATION_SOCIAL_SHARE_CLICKED,
+                Values.COURSE_SECTION_CELEBRATION_SHARE_CLICKED);
+        event.putCourseId(courseId);
+        if (!TextUtils.isEmpty(socialService)) {
+            event.putString(Keys.SERVICE, socialService);
+        }
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

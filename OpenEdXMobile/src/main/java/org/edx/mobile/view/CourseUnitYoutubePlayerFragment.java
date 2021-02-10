@@ -129,6 +129,17 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
         }
     }
 
+    @Override
+    protected void playPauseVideoPlayback(boolean pauseVideo) {
+        if (youTubePlayer != null) {
+            if (pauseVideo) {
+                youTubePlayer.pause();
+            } else {
+                youTubePlayer.play();
+            }
+        }
+    }
+
     protected void updateClosedCaptionData(Caption caption) {
     }
 
