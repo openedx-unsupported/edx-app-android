@@ -485,4 +485,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackLockedContentTapped(courseId, assignmentId);
         }
     }
+
+    @Override
+    public void trackExploreAllCoursesTapped(String versionName) {
+        for (Analytics service : services) {
+            service.trackExploreAllCoursesTapped(versionName);
+        }
+    }
 }

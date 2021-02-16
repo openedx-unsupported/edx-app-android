@@ -965,4 +965,15 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.SCREEN_NAME, Screens.COURSE_UNIT);
         trackSegmentEvent(Events.COURSE_UNIT_LOCKED_CONTENT, aEvent.properties);
     }
+
+    @Override
+    public void trackExploreAllCoursesTapped(String versionName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_ALL_COURSES);
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                Values.USER_ENGAGEMENT, Values.DISCOVERY);
+        aEvent.data.putValue(Keys.APP_VERSION, versionName);
+        aEvent.data.putValue(Keys.ACTION, Values.DISCOVERY_COURSES_SEARCH_LANDING);
+        trackSegmentEvent(Events.EXPLORE_ALL_COURSES, aEvent.properties);
+    }
 }

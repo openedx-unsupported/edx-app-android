@@ -51,6 +51,16 @@
                 style="@style/launch_search_bar"
                 android:layout_marginTop="@dimen/widget_margin"
                 app:theme="@style/search_view_theme" />
+
+            <TextView
+                android:id="@+id/tv_explore_all_courses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin"
+                android:fontFamily="?attr/fontRegular"
+                android:text="@string/label_explore_all_courses"
+                android:textColor="@color/primaryBaseColor"
+                android:textSize="@dimen/edx_base" />
         </LinearLayout>
 
         <Space

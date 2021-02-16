@@ -641,9 +641,9 @@
     <!-- Search View title on the launch screen -->
     <string name="launch_search_title">What do you want to learn?</string>
     <!-- Search view leading user to Find Courses screen from the launch screen upon searching some text -->
-    <string name="launch_search_courses">Search courses</string>
-    <!-- Search view leading user to Find Courses & Program screen from the launch screen upon searching some text -->
-    <string name="launch_search_courses_program">Search courses and programs</string>
+    <string name="launch_search_courses">Search our 3000+ courses</string>
+    <!-- Label Explore all courses on the launch screen -->
+    <string name="label_explore_all_courses"><u>Explore all courses</u></string>
 
     <!-- Registration Screen -->
     <!-- Button text allowing user to show hidden optional registration fields -->
