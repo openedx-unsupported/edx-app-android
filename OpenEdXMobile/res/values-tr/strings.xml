@@ -536,9 +536,7 @@
   <!--Search View title on the launch screen-->
   <string name="launch_search_title">Ne öğrenmek istiyorsun?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses">Kurs ara</string>
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses_program">Kurs ve Program ara</string>
+  <string name="launch_search_courses">3000+ kursumuzda arama yapın</string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Seçimlik alanları göster</string>

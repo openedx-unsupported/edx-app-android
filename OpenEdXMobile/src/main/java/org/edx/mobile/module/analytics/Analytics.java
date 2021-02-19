@@ -299,7 +299,7 @@ public interface Analytics {
      * This function is used to track if user submits rating on the App Rating view.
      *
      * @param versionName Version name of app.
-     * @param rating Rating given by user.
+     * @param rating      Rating given by user.
      */
     void trackUserSubmitRating(String versionName, int rating);
 
@@ -307,7 +307,7 @@ public interface Analytics {
      * This function is used to track if user selects Send Feedback after rating the app.
      *
      * @param versionName Version name of app.
-     * @param rating Rating given by user.
+     * @param rating      Rating given by user.
      */
     void trackUserSendFeedback(String versionName, int rating);
 
@@ -316,7 +316,7 @@ public interface Analytics {
      * could be either from Feedback dialog or Rate The App dialog.
      *
      * @param versionName Version name of app.
-     * @param rating Rating given by user.
+     * @param rating      Rating given by user.
      */
     void trackUserMayReviewLater(String versionName, int rating);
 
@@ -324,7 +324,7 @@ public interface Analytics {
      * This function is used to track if user gives positive rating and selects Rate The App option.
      *
      * @param versionName Version name of app.
-     * @param rating Rating given by user.
+     * @param rating      Rating given by user.
      */
     void trackRateTheAppClicked(String versionName, int rating);
 
@@ -418,7 +418,7 @@ public interface Analytics {
      * Ref: https://openedx.atlassian.net/browse/LEARNER-7394
      *
      * @param experimentName
-     * @param values any custom key-value pairs we need to send with event
+     * @param values         any custom key-value pairs we need to send with event
      */
     void trackExperimentParams(String experimentName, Map<String, String> values);
 
@@ -492,6 +492,13 @@ public interface Analytics {
      * @param assignmentId Assignment id of course unit
      */
     void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId);
+
+    /**
+     * Tracks explore all courses tapped on landing screen.
+     *
+     * @param versionName App's version.
+     */
+    void trackExploreAllCoursesTapped(String versionName);
 
 
     interface Keys {
@@ -604,6 +611,7 @@ public interface Analytics {
         String USERLOGIN = "edx.bi.app.user.login";
         String APP_NAME = "edx.mobileapp.android";
         String DISCOVERY_COURSES_SEARCH = "edx.bi.app.discovery.courses_search";
+        String EXPLORE_ALL_COURSES = "edx.bi.app.discovery.explore.all.courses";
         String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
         String CREATE_ACCOUNT_CLICKED = "edx.bi.app.user.register.clicked";
         String USER_REGISTRATION_SUCCESS = "edx.bi.app.user.register.success";
@@ -773,6 +781,7 @@ public interface Analytics {
         String COURSE_ENROLL_SUCCESS = "Course Enroll Success";
         String COURSE_UPGRADE_SUCCESS = "Course Upgrade Success";
         String DISCOVERY_COURSES_SEARCH = "Discovery: Courses Search";
+        String EXPLORE_ALL_COURSES = "Explore All Courses";
         String SPEED = "Connected Speed Report";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
         String SOCIAL_COURSE_DETAIL_SHARED = "Shared a course";

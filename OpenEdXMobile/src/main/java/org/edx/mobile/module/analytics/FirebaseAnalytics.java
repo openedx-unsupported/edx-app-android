@@ -690,4 +690,13 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.SCREEN_NAME, Screens.COURSE_UNIT);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackExploreAllCoursesTapped(String versionName) {
+        final FirebaseEvent event = new FirebaseEvent(Events.EXPLORE_ALL_COURSES, Values.EXPLORE_ALL_COURSES);
+        event.addCategoryToBiEvents(Values.USER_ENGAGEMENT, Values.DISCOVERY);
+        event.putString(Keys.APP_VERSION, versionName);
+        event.putString(Keys.ACTION, Values.DISCOVERY_COURSES_SEARCH_LANDING);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

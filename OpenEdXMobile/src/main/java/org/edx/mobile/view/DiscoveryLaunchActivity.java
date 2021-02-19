@@ -36,7 +36,6 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                     // Update the text based on Program discovery enabled
                     if (programDiscoveryEnabled) {
                         binding.tvLaunchText.setText(getString(R.string.launch_text_courses_and_program));
-                        binding.svSearchCourses.setQueryHint(getString(R.string.launch_search_courses_program));
                     }
                     binding.svSearchCourses.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
@@ -58,9 +57,14 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                             return false;
                         }
                     });
+                    binding.tvExploreAllCourses.setOnClickListener(v -> {
+                        environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this, "");
+                        environment.getAnalyticsRegistry().trackExploreAllCoursesTapped(BuildConfig.VERSION_NAME);
+                    });
                 } else {
                     binding.tvSearchTitle.setVisibility(View.GONE);
                     binding.svSearchCourses.setVisibility(View.GONE);
+                    binding.tvExploreAllCourses.setVisibility(View.GONE);
                 }
             }
 
