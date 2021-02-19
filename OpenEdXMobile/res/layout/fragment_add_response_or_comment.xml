@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/brand_bg_color"
             android:orientation="vertical"
             android:paddingBottom="@dimen/widget_margin"
             android:paddingStart="@dimen/edx_margin"
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@color/brand_bg_color"
             android:orientation="vertical"
             android:paddingStart="@dimen/edx_margin"
             android:paddingTop="@dimen/widget_margin"

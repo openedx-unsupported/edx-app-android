@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/primaryBaseColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/neutralBlackT</item>
@@ -358,7 +358,7 @@
     </style>
 
     <style name="agreement_text_style">
-        <item name="android:textColor">@color/neutralBlack</item>
+        <item name="android:textColor">@color/brand_body_text_color</item>
         <item name="android:layout_marginTop">@dimen/widget_margin</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/edx_xx_small</item>
@@ -464,8 +464,8 @@
 
     <style name="edX.Widget.ActionBorderedButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/secondaryBaseColor</item>
-        <item name="android:background">@drawable/edx_neutral_dark_bordered_button</item>
+        <item name="android:textColor">@color/brand_bordered_button_text_color</item>
+        <item name="android:background">@drawable/brand_action_bordered_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
         <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors to support Dark Mode -->
+
+    <color name="brand_bg_color">@color/neutralWhiteT</color>
+
+    <!-- Buttons -->
+    <color name="brand_button_text_color">@color/neutralWhiteT</color>
+    <color name="brand_bordered_button_border_color">@color/neutralDark</color>
+    <color name="brand_bordered_button_text_color">@color/secondaryBaseColor</color>
+
+    <!-- Links -->
+    <color name="brand_link_color">@color/infoBase</color>
+
+    <!-- Texts -->
+    <color name="brand_heading_text_color">@color/primaryBaseColor</color>
+    <color name="brand_body_text_color">@color/neutralXXDark</color>
+</resources>

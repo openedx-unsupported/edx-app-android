@@ -3,13 +3,13 @@
     android:id="@+id/content_error_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/brand_bg_color">
 
     <org.edx.mobile.view.custom.EdxAssessmentWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white" />
+        android:background="@color/brand_bg_color" />
 
     <include layout="@layout/loading_indicator" />
 

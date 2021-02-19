@@ -14,7 +14,7 @@
             android:id="@+id/root_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/brand_bg_color"
             android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -109,7 +109,7 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="@string/forgot_password"
-                        android:textColor="@color/infoBase"
+                        android:textColor="@color/brand_link_color"
                         android:textSize="@dimen/edx_x_small" />
 
                     <FrameLayout

@@ -6,7 +6,7 @@
         android:id="@+id/ll_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/brand_bg_color"
         android:orientation="vertical"
         android:splitMotionEvents="false">
 
@@ -33,7 +33,7 @@
                 android:layout_marginTop="@dimen/widget_margin_double"
                 android:fontFamily="?attr/fontSemiBold"
                 android:text="@string/launch_text"
-                android:textColor="@color/primaryBaseColor"
+                android:textColor="@color/brand_heading_text_color"
                 android:textSize="@dimen/edx_xx_large" />
 
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_marginTop="@dimen/widget_margin_quadruple"
                 android:fontFamily="?attr/fontSemiBold"
                 android:text="@string/launch_search_title"
-                android:textColor="@color/primaryBaseColor"
+                android:textColor="@color/brand_heading_text_color"
                 android:textSize="@dimen/edx_large" />
 
             <androidx.appcompat.widget.SearchView

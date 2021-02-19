@@ -5,7 +5,7 @@
         android:id="@+id/ll_root"
         android:layout_width="match_parent"
         android:layout_height="@dimen/auth_panel_height"
-        android:background="@color/white"
+        android:background="@color/brand_bg_color"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/widget_margin_double">
@@ -20,7 +20,6 @@
             android:paddingStart="@dimen/auth_panel_login_btn_horizontal_padding"
             android:paddingEnd="@dimen/auth_panel_login_btn_horizontal_padding"
             android:text="@string/launch_register"
-            android:textColor="@color/white"
             android:textSize="@dimen/edx_base" />
 
         <View
@@ -37,7 +36,6 @@
             android:paddingStart="@dimen/auth_panel_login_btn_horizontal_padding"
             android:paddingEnd="@dimen/auth_panel_login_btn_horizontal_padding"
             android:text="@string/launch_login"
-            android:textColor="@color/secondaryBaseColor"
             android:textSize="@dimen/edx_base" />
     </LinearLayout>
 </layout>

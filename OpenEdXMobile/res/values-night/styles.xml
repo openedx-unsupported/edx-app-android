@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Dark" parent="AppTheme">
+        <item name="colorPrimary">#F00</item> <!--// ListOverflow, TabsHairline, DialogBtns-->
+        <item name="colorPrimaryVariant">#FAF</item>
+        <item name="colorPrimaryDark">#0F0</item> <!-- Nav Bar -->
+        <item name="colorSecondary">#ff4f00</item>
+        <item name="colorSecondaryVariant">#6600cc</item>
+        <item name="colorAccent">#EF0</item> <!--// Spinners, Focused TIL underline-->
+    </style>
+
+</resources>

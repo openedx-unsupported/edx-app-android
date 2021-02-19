@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center"
-        android:background="@color/neutralXXDark"
+        android:background="@color/brand_body_text_color"
         android:layout_weight="1"/>
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/neutralXXDark"
+        android:textColor="@color/brand_body_text_color"
         android:textSize="@dimen/edx_small"/>
 
     <View
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center"
-        android:background="@color/neutralXXDark"
+        android:background="@color/brand_body_text_color"
         android:layout_weight="1"/>
 
 </LinearLayout>

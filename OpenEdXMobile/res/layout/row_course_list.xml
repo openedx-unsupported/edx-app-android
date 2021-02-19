@@ -12,7 +12,7 @@
         style="@style/edX.Widget.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/brand_bg_color"
         android:foreground="@drawable/selectable_rounded_box_overlay">
 
         <include layout="@layout/course_card" />

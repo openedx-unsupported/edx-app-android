@@ -4,7 +4,7 @@
     android:id="@+id/course_unit_video"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/brand_bg_color"
     android:baselineAligned="false"
     android:orientation="vertical">
 
@@ -22,14 +22,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/white"
+        android:background="@color/brand_bg_color"
         android:gravity="center"
         android:orientation="vertical">
 
         <org.edx.mobile.view.custom.IconImageViewXml
             android:layout_width="@dimen/course_unit_message_icon_size"
             android:layout_height="@dimen/course_unit_message_icon_size"
-            android:background="@color/white"
+            android:background="@color/brand_bg_color"
             android:rotation="90"
             app:iconColor="@color/neutralDark"
             app:iconName="fa-mobile-phone" />
@@ -40,7 +40,7 @@
             android:layout_marginStart="@dimen/edx_quadruple_margin"
             android:layout_marginEnd="@dimen/edx_quadruple_margin"
             android:layout_marginBottom="@dimen/widget_margin"
-            android:background="@color/white"
+            android:background="@color/brand_bg_color"
             android:gravity="center_horizontal"
             android:singleLine="false"
             android:text="@string/assessment_rotate_for_fullscreen"
