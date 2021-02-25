@@ -90,7 +90,7 @@ class DataBindingHelperUtils {
 
                     childView.setOnClickListener {
                         if (item.showLink()) {
-                            clickListener.onClick(item.link)
+                            clickListener.onClick(item.link, item.blockId)
                         }
                     }
                     if (!parentBadgeAdded) {

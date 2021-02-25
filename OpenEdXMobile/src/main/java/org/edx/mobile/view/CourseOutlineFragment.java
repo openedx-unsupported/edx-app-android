@@ -39,7 +39,6 @@ import com.joanzapata.iconify.widget.IconImageView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.LayoutCourseDatesBannerBinding;
 import org.edx.mobile.deeplink.Screen;
@@ -74,7 +73,6 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.ConfigUtil;
@@ -99,7 +97,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         implements RefreshListener, VideoDownloadHelper.DownloadManagerCallback,
         LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>, BaseFragment.PermissionListener {
     private final Logger logger = new Logger(getClass().getName());
-    private static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
 
@@ -126,18 +123,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private FullScreenErrorNotification errorNotification;
 
     @Inject
-    private CourseManager courseManager;
-
-    @Inject
     private CourseAPI courseApi;
 
     @Inject
     private VideoDownloadHelper downloadManager;
 
     private CourseDateViewModel courseDateViewModel;
-
-    @Inject
-    protected IEdxEnvironment environment;
 
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
@@ -417,7 +408,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // Checking if the onItemLongClick action performed on course dates banner
                 if (!isVideoMode && isBannerVisible && position == 0) {
-                        return false;
+                    return false;
                 }
                 final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
                 if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
@@ -816,7 +807,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
     }
 
-    private void updateRowSelection(@Nullable String lastAccessedId) {
+    public void updateRowSelection(@Nullable String lastAccessedId) {
         if (!TextUtils.isEmpty(lastAccessedId)) {
             final int selectedItemPosition = adapter.getPositionByItemId(lastAccessedId);
             if (selectedItemPosition != -1) {
@@ -834,41 +825,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            // If user has navigated to a different unit, then we need to rearrange
-            // the activity stack to point to it.
-            case REQUEST_SHOW_COURSE_UNIT_DETAIL: {
-                switch (resultCode) {
-                    case Activity.RESULT_OK: {
-                        final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
-                                courseData.getCourseId(), courseComponentId);
-                        final String leafCompId = (String) data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID);
-                        final CourseComponent leafComp = courseManager.getComponentByIdFromAppLevelCache(
-                                courseData.getCourseId(), leafCompId);
-                        final BlockPath outlinePath = outlineComp.getPath();
-                        final BlockPath leafPath = leafComp.getPath();
-                        final int outlinePathSize = outlinePath.getPath().size();
-                        if (!outlineComp.equals(leafPath.get(outlinePathSize - 1))) {
-                            getActivity().setResult(Activity.RESULT_OK, data);
-                            getActivity().finish();
-                        } else {
-                            final int leafPathSize = leafPath.getPath().size();
-                            if (outlinePathSize == leafPathSize - 2) {
-                                updateRowSelection(leafCompId);
-                            } else {
-                                for (int i = outlinePathSize + 1; i < leafPathSize - 1; i += 2) {
-                                    final CourseComponent nextComp = leafPath.get(i);
-                                    environment.getRouter().showCourseContainerOutline(
-                                            CourseOutlineFragment.this,
-                                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData,
-                                            nextComp.getId(), leafCompId, isVideoMode);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            }
+        if (requestCode == REQUEST_SHOW_COURSE_UNIT_DETAIL && resultCode == Activity.RESULT_OK
+                && data != null) {
+            final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
+                    courseData.getCourseId(), courseComponentId);
+            navigateToCourseUnit(data, courseData, outlineComp);
         }
     }
 
@@ -1014,5 +975,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             getCourseUpgradeStatus.cancel();
             getCourseUpgradeStatus = null;
         }
+    }
+
+    public boolean canUpdateRowSelection() {
+        return true;
     }
 }

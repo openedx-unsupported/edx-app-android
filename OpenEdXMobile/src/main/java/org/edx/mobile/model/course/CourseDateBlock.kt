@@ -14,6 +14,8 @@ data class CourseDateBlock(
         @SerializedName("link") val link: String = "",
         @SerializedName("link_text") val linkText: String = "",
         @SerializedName("title") val title: String = "",
+        // component block id in-case of navigating inside the app for xblocks available in mobile
+        @SerializedName("first_component_block_id") val blockId: String = "",
         // Local property to assign a badge to a date block according to desired result
         var dateBlockBadge: CourseDateType = CourseDateType.BLANK
 
