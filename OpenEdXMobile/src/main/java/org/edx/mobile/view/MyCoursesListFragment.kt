@@ -46,9 +46,6 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private var refreshOnResume = false
 
     @Inject
-    private lateinit var environment: IEdxEnvironment
-
-    @Inject
     private lateinit var courseAPI: CourseAPI
     private lateinit var errorNotification: FullScreenErrorNotification
     private lateinit var enrolledCoursesCall: Call<List<EnrolledCoursesResponse>>
