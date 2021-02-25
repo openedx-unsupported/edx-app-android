@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
@@ -262,7 +264,8 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
             viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
-            viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.primaryBaseColor : R.color.primaryXLightColor);
+            viewHolder.profileImage.setBorderColor(ContextCompat.getColor(getContextOrThrow(),
+                    viewHolder.changePhoto.isEnabled() ? R.color.primaryBaseColor : R.color.primaryXLightColor));
 
             if (account.getProfileImage().hasImage()) {
                 Glide.with(viewHolder.profileImage.getContext())

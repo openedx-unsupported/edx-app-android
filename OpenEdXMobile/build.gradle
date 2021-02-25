@@ -15,16 +15,16 @@ buildscript {
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
         //Screenshot testing library
         classpath 'com.facebook.testing.screenshot:plugin:0.11.0'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.google.gms:google-services:4.3.5'
         // Jacoco-android Wrapper : https://github.com/arturdm/jacoco-android-gradle-plugin
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
     }
 }
 
 apply plugin: 'edxapp'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt' //To enable data binding with kotlin
 apply plugin: 'jacoco-android'
 edx {
@@ -130,24 +130,24 @@ dependencies {
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases
-    implementation "com.google.android.gms:play-services-plus:16.0.0"
-    implementation "com.google.android.gms:play-services-analytics:16.0.8"
-    implementation "com.google.android.gms:play-services-auth:16.0.1"
+    implementation "com.google.android.gms:play-services-plus:17.0.0"
+    implementation "com.google.android.gms:play-services-analytics:17.0.0"
+    implementation "com.google.android.gms:play-services-auth:19.0.0"
     // Google Firebase
-    implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation ("com.google.firebase:firebase-messaging:20.2.0") {
+    implementation "com.google.firebase:firebase-core:18.0.2"
+    implementation ("com.google.firebase:firebase-messaging:21.0.1") {
         // This exclusion has been added due to a conflict between this library and Roboguice
         // (which has already added the javax.inject group) causing the following error during
         // compile time: Error: Program type already present: javax.inject.Inject
         exclude group: 'javax.inject'
     }
     // Add the dependency for the Performance Monitoring library
-    implementation 'com.google.firebase:firebase-perf:17.0.2'
+    implementation 'com.google.firebase:firebase-perf:19.0.8'
     // Firebase remote config
-    implementation 'com.google.firebase:firebase-config:16.5.0'
+    implementation 'com.google.firebase:firebase-config:20.0.3'
 
     // Add the In-App Messaging dependency:
-    implementation('com.google.firebase:firebase-inappmessaging-display:17.2.0') {
+    implementation('com.google.firebase:firebase-inappmessaging-display:19.1.0') {
         // This exclusion has been added due to a conflict between this library and Roboguice
         // (which has already added the javax.inject group) causing the following error during
         // compile time: Error: Program type already present: javax.inject.Inject
@@ -158,13 +158,21 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
 
     // Google cast sdk
-    implementation "androidx.mediarouter:mediarouter:$androidXVersion"
-    implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
+//    implementation "androidx.mediarouter:mediarouter:$androidXVersion"
+    implementation "androidx.mediarouter:mediarouter:1.2.2"
+//    implementation 'com.google.android.gms:play-services-cast-framework:18.0.0'
+    implementation ('com.google.android.gms:play-services-cast-framework:19.0.0'){
+        // This exclusion has been added due to a conflict between this library and Roboguice
+        // (which has already added the javax.inject group) causing the following error during
+        // compile time: Error: Program type already present: javax.inject.Inject
+        exclude group: 'javax.inject'
+    }
+    implementation 'com.google.guava:guava:27.0.1-android'
 
     implementation 'com.facebook.android:facebook-login:5.9.0'
     implementation 'com.microsoft.identity.client:msal:0.3+'
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'de.greenrobot:eventbus:2.4.1'
     implementation 'com.squareup.phrase:phrase:1.1.0'
     /*
@@ -175,8 +183,8 @@ dependencies {
      * backport critical fixes to the 3.12.x branch through December 31, 2020.
      * Ref: https://square.github.io/okhttp/#requirements
      */
-    implementation 'com.squareup.okhttp3:okhttp:3.12.8'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.8'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
     /* Exclude dependencies defined statically at the top-
      * level, to prevent them from being resolved to the
      * latest version as a result of dynamic version
@@ -189,9 +197,9 @@ dependencies {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
-    implementation 'androidx.multidex:multidex:2.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'de.hdodenhof:circleimageview:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation ('com.github.bumptech.glide:okhttp3-integration:4.11.0')
 
@@ -206,13 +214,13 @@ dependencies {
     }
 
     // Firebase Crashlytics SDK
-    implementation ('com.google.firebase:firebase-crashlytics:17.2.2'){
+    implementation ('com.google.firebase:firebase-crashlytics:17.3.1'){
         exclude group: 'javax.inject'
         transitive = true
     }
 
     // Recommended: Add the Google Analytics SDK along Firebase Crashlytics SDK
-    implementation 'com.google.firebase:firebase-analytics:17.4.2'
+    implementation 'com.google.firebase:firebase-analytics:18.0.2'
 
     // Branch SDK
     // Check this link for guide to updating Branch integration:
@@ -228,7 +236,7 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Material components like Chips and TabLayoutMediator
-    implementation 'com.google.android.material:material:1.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.3.0'
 
     // test project configuration
     testImplementation 'junit:junit:4.12'

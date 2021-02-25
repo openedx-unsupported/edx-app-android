@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import de.greenrobot.event.EventBus
-import okhttp3.MediaType
-import okhttp3.ResponseBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.course.CourseAPI
@@ -170,12 +170,12 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         response.code() == HttpStatus.UPGRADE_REQUIRED -> {
                             context?.let { context ->
                                 errorNotification.showError(context, HttpStatusException(Response.error<Any>(response.code(),
-                                        ResponseBody.create(MediaType.parse("text/plain"), ""))), 0, null)
+                                        "".toResponseBody("text/plain".toMediaTypeOrNull()))), 0, null)
                             }
                         }
                         adapter.isEmpty -> {
                             showError(HttpStatusException(Response.error<Any>(response.code(),
-                                    ResponseBody.create(MediaType.parse("text/plain"), response.message()))))
+                                    response.message().toResponseBody("text/plain".toMediaTypeOrNull()))))
                         }
                     }
                     invalidateView()

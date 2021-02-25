@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.constants.ApiConstants
@@ -127,6 +129,6 @@ class CourseDateViewModel(
 
     fun setError(errorCode: Int, httpStatusCode: Int, msg: String) {
         _errorMessage.value = ErrorMessage(errorCode, HttpStatusException(Response.error<Any>(httpStatusCode,
-                ResponseBody.create(MediaType.parse("text/plain"), msg))))
+                msg.toResponseBody("text/plain".toMediaTypeOrNull()))))
     }
 }

@@ -11,9 +11,9 @@ class RegistrationOptionAutoCompleteTextView : AppCompatAutoCompleteTextView {
     private var adapter: ArrayAdapter<RegistrationOption>? = null
     var selectedItem: RegistrationOption? = null
 
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     fun hasValue(value: String?): Boolean {
         value?.let {
