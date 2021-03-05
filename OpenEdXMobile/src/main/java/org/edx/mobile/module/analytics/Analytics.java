@@ -500,6 +500,24 @@ public interface Analytics {
      */
     void trackExploreAllCoursesTapped(String versionName);
 
+    /**
+     * Track the mobile supported components tapped on course dates
+     *
+     * @param courseId  Course id of the course
+     * @param blockId   BlockId of tapped block
+     * @param blockType BlockType of tapped block
+     * @param link      weblink of the component
+     */
+    void trackDatesCourseComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String blockType, @NonNull String link);
+
+    /**
+     * Track the mobile unsupported components tapped on course dates
+     *
+     * @param courseId Course id of the course
+     * @param blockId  BlockId of tapped block
+     * @param link     link of tapped block
+     */
+    void trackUnsupportedComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String link);
 
     interface Keys {
         String NAME = "name";
@@ -523,6 +541,7 @@ public interface Analytics {
         String LANGUAGE = "language";
         String TARGET_URL = "target_url";
         String URL = "url";
+        String LINK = "link";
         String CONTEXT = "context";
         String DATA = "data";
         String METHOD = "method";
@@ -530,6 +549,7 @@ public interface Analytics {
         String EMAIL_OPT_IN = "email_opt_in";
         String PROVIDER = "provider";
         String BLOCK_ID = "block_id";
+        String BLOCK_TYPE = "block_type";
         String SUBSECTION_ID = "subsection_id";
         String UNIT_ID = "unit_id";
         String ASSIGNMENT_ID = "assignment_id";
@@ -700,6 +720,8 @@ public interface Analytics {
         String COURSE_DATES_BANNER_UPGRADE_TO_PARTICIPATE = "edx.bi.app.coursedates.upgrade.participate";
         String COURSE_DATES_BANNER_UPGRADE_TO_SHIFT = "edx.bi.app.coursedates.shift";
         String COURSE_DATES_BANNER_SHIFT_DATES = "edx.bi.app.coursedates.upgrade.shift";
+        String COURSE_DATES_COMPONENT_TAPPED = "edx.bi.app.coursedates.component.tapped";
+        String COURSE_DATES_UNSUPPORTED_COMPONENT_TAPPED = "edx.bi.app.coursedates.unsupported.component.tapped";
         String PLS_BANNER_TYPE_INFO = "info";
         String PLS_BANNER_TYPE_UPGRADE_TO_PARTICIPATE = "upgrade_to_participate";
         String PLS_BANNER_TYPE_UPGRADE_TO_SHIFT = "upgrade_to_shift";
@@ -824,6 +846,8 @@ public interface Analytics {
         String PLS_BANNER_VIEWED = "PLS Banner Viewed";
         String PLS_SHIFT_DATES_BUTTON_TAPPED = "PLS Shift Button Tapped";
         String PLS_SHIFT_DATES = "PLS Shift Dates";
+        String DATES_COURSE_COMPONENT_TAPPED = "Dates: Course Component Tapped";
+        String DATES_UNSUPPORTED_COMPONENT_TAPPED = "Dates: Unsupported Component Tapped";
         // Value Prop
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";

@@ -699,4 +699,25 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.ACTION, Values.DISCOVERY_COURSES_SEARCH_LANDING);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackDatesCourseComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String blockType, @NonNull String link) {
+        final FirebaseEvent event = new FirebaseEvent(Events.DATES_COURSE_COMPONENT_TAPPED, Values.COURSE_DATES_COMPONENT_TAPPED);
+        event.putCourseId(courseId);
+        event.putString(Keys.BLOCK_ID, blockId);
+        event.putString(Keys.BLOCK_TYPE, blockType);
+        event.putString(Keys.LINK, link);
+        event.putString(Keys.CATEGORY, Values.COURSE_DATES);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackUnsupportedComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String link) {
+        final FirebaseEvent event = new FirebaseEvent(Events.DATES_UNSUPPORTED_COMPONENT_TAPPED, Values.COURSE_DATES_UNSUPPORTED_COMPONENT_TAPPED);
+        event.putCourseId(courseId);
+        event.putString(Keys.BLOCK_ID, blockId);
+        event.putString(Keys.LINK, link);
+        event.putString(Keys.CATEGORY, Values.COURSE_DATES);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }
