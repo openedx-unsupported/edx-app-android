@@ -39,11 +39,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private lateinit var viewModel: CourseDateViewModel
     private var onDateItemClick: OnDateBlockListener = object : OnDateBlockListener {
         override fun onClick(link: String, blockId: String) {
-            if (blockId.isNotEmpty() && courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId) != null) {
+            val component = courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
+            if (blockId.isNotEmpty() && component != null) {
                 environment.router.showCourseUnitDetail(this@CourseDatesPageFragment,
                         REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, null, blockId, false)
+                environment.analyticsRegistry.trackDatesCourseComponentTapped(courseData.courseId, component.id, component.type.toString().toLowerCase(), link)
             } else {
                 showOpenInBrowserDialog(link)
+                if (blockId.isNotEmpty()) {
+                    environment.analyticsRegistry.trackUnsupportedComponentTapped(courseData.courseId, blockId, link)
+                }
             }
         }
     }

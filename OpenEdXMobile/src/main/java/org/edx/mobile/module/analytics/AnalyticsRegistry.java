@@ -492,4 +492,18 @@ public class AnalyticsRegistry implements Analytics {
             service.trackExploreAllCoursesTapped(versionName);
         }
     }
+
+    @Override
+    public void trackDatesCourseComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String blockType, @NonNull String link) {
+        for (Analytics service : services) {
+            service.trackDatesCourseComponentTapped(courseId, blockId, blockType, link);
+        }
+    }
+
+    @Override
+    public void trackUnsupportedComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String link) {
+        for (Analytics service : services) {
+            service.trackUnsupportedComponentTapped(courseId, blockId, link);
+        }
+    }
 }

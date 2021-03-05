@@ -976,4 +976,27 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.ACTION, Values.DISCOVERY_COURSES_SEARCH_LANDING);
         trackSegmentEvent(Events.EXPLORE_ALL_COURSES, aEvent.properties);
     }
+
+    @Override
+    public void trackDatesCourseComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String blockType, @NonNull String link) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.COURSE_DATES_COMPONENT_TAPPED);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.COURSE_DATES);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        aEvent.data.putValue(Keys.BLOCK_TYPE, blockType);
+        aEvent.data.putValue(Keys.LINK, link);
+        trackSegmentEvent(Events.DATES_COURSE_COMPONENT_TAPPED, aEvent.properties);
+    }
+
+    @Override
+    public void trackUnsupportedComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String link) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.COURSE_DATES_UNSUPPORTED_COMPONENT_TAPPED);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.COURSE_DATES);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        aEvent.data.putValue(Keys.LINK, link);
+        trackSegmentEvent(Events.DATES_UNSUPPORTED_COMPONENT_TAPPED, aEvent.properties);
+    }
 }
