@@ -122,7 +122,9 @@ dependencies {
     // with module updates.
     implementation project (':android-iconify-fontawesome')
 
-    implementation "androidx.appcompat:appcompat:$androidXVersion"
+    // Webview crash fix after update the library
+    // Inspiration: https://github.com/PierfrancescoSoffritti/android-youtube-player/issues/461#issuecomment-696772172
+    implementation "androidx.appcompat:appcompat:$androidXAppCompactVersion"
     implementation "androidx.recyclerview:recyclerview:$androidXVersion"
     implementation "androidx.cardview:cardview:$androidXVersion"
     // For the optional Nullable annotation

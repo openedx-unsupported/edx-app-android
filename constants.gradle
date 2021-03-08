@@ -11,4 +11,5 @@ project.ext {
 
     // App dependencies
     androidXVersion = '1.0.0'
+    androidXAppCompactVersion = '1.2.0'
 }
