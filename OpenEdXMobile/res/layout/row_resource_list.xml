@@ -51,12 +51,4 @@
             tools:text="Course Subtitle" />
     </LinearLayout>
 
-    <org.edx.mobile.view.custom.IconImageViewXml
-        android:layout_width="@dimen/fa_xxx_small"
-        android:layout_height="@dimen/fa_xx_large"
-        android:baselineAlignBottom="true"
-        android:gravity="center_vertical"
-        app:iconColor="@color/neutralXDark"
-        app:iconName="fa-angle-right" />
-
 </LinearLayout>

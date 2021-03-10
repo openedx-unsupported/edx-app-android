@@ -2,15 +2,10 @@ package org.edx.mobile.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.TextViewCompat;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -22,6 +17,11 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.widget.TextViewCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -35,9 +35,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
-import de.greenrobot.event.EventBus;
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
@@ -46,8 +43,16 @@ import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.user.*;
+import org.edx.mobile.user.Account;
+import org.edx.mobile.user.DataType;
+import org.edx.mobile.user.DeleteAccountImageTask;
+import org.edx.mobile.user.FormDescription;
+import org.edx.mobile.user.FormField;
+import org.edx.mobile.user.GetProfileFormDescriptionTask;
+import org.edx.mobile.user.LanguageProficiency;
+import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.PermissionsUtil;
@@ -57,12 +62,14 @@ import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
 
-import retrofit2.Call;
-import roboguice.inject.InjectExtra;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import roboguice.inject.InjectExtra;
 
 
 public class EditUserProfileFragment extends BaseFragment implements BaseFragment.PermissionListener {
@@ -493,11 +500,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             put("label", field.getLabel());
             put("value", formattedValue);
         }}));
-        Context context = parent.getContext();
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, new IconDrawable(context, FontAwesomeIcons.fa_angle_right)
-                        .colorRes(context, R.color.neutralXDark)
-                        .sizeDp(context, 24), null);
+
         if (readOnly) {
             textView.setEnabled(false);
         } else {
