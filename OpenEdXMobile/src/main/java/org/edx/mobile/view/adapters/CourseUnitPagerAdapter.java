@@ -112,7 +112,8 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
                 minifiedUnit.getType() != BlockType.OTHERS &&
                 minifiedUnit.getType() != BlockType.DISCUSSION &&
                 minifiedUnit.getType() != BlockType.PROBLEM &&
-                minifiedUnit.getType() != BlockType.OPENASSESSMENT) {
+                minifiedUnit.getType() != BlockType.OPENASSESSMENT &&
+                minifiedUnit.getType() != BlockType.DRAG_AND_DROP_V2) {
             unitFragment = CourseUnitEmptyFragment.newInstance(minifiedUnit);
         } else if (minifiedUnit instanceof HtmlBlockModel) {
             minifiedUnit.setCourseId(courseData.getCourse().getId());
