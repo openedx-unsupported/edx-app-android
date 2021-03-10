@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Value to check the current device type is tablet -->
+    <!--  ref: https://stackoverflow.com/a/9308284 -->
+    <bool name="isTablet">true</bool>
+</resources>

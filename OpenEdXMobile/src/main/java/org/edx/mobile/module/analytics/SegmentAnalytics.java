@@ -999,4 +999,23 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.LINK, link);
         trackSegmentEvent(Events.DATES_UNSUPPORTED_COMPONENT_TAPPED, aEvent.properties);
     }
+
+    @Override
+    public void trackCourseSectionCelebration(@NonNull String courseId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.properties.putValue(Keys.NAME, Values.COURSE_SECTION_COMPLETION_CELEBRATION);
+        trackSegmentEvent(Events.COURSE_SECTION_COMPLETION_CELEBRATION, aEvent.properties);
+    }
+
+    @Override
+    public void trackCourseCelebrationShareClicked(@NonNull String courseId, @Nullable String socialService) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        if (!TextUtils.isEmpty(socialService)) {
+            aEvent.data.putValue(Keys.SERVICE, socialService);
+        }
+        aEvent.properties.putValue(Keys.NAME, Values.COURSE_SECTION_CELEBRATION_SHARE_CLICKED);
+        trackSegmentEvent(Events.CELEBRATION_SOCIAL_SHARE_CLICKED, aEvent.properties);
+    }
 }

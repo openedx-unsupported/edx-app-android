@@ -1,6 +1,7 @@
 package org.edx.mobile.course;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -15,6 +16,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseDates;
+import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.ResetCourseDates;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -137,6 +139,12 @@ public interface CourseService {
 
     @POST("/api/course_experience/v1/reset_course_deadlines")
     Call<ResetCourseDates> resetCourseDates(@Body HashMap<String, String> courseBody);
+
+    @GET("/api/courseware/course/{course_id}")
+    Call<CourseStatus> getCourseStatus(@Path("course_id") final String courseId);
+
+    @POST("/api/courseware/celebration/{course_id}")
+    Call<Void> updateCoursewareCelebration(@Path("course_id") final String courseId, @Body HashMap<String, Boolean> courseBody);
 
     final class BlocksCompletionBody {
         @NonNull String username;

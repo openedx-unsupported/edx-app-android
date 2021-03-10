@@ -519,6 +519,21 @@ public interface Analytics {
      */
     void trackUnsupportedComponentTapped(@NonNull String courseId, @NonNull String blockId, @NonNull String link);
 
+    /**
+     * Track the Course Celebration Modal appearance
+     *
+     * @param courseId course id of the course through which the modal is appeared
+     */
+    void trackCourseSectionCelebration(@NonNull String courseId);
+
+    /**
+     * Track the share button clicked while sharing course section completion celebration
+     *
+     * @param courseId      course id of the course through which the modal is appeared
+     * @param socialService the social service selected by the user.
+     */
+    void trackCourseCelebrationShareClicked(@NonNull String courseId, @Nullable String socialService);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -599,6 +614,7 @@ public interface Analytics {
         // Used to access the analytics data in middle ware
         String EVENT = "event";
         String PROPERTIES = "properties";
+        String SERVICE = "service";
     }
 
     interface Values {
@@ -726,7 +742,9 @@ public interface Analytics {
         String PLS_BANNER_TYPE_UPGRADE_TO_PARTICIPATE = "upgrade_to_participate";
         String PLS_BANNER_TYPE_UPGRADE_TO_SHIFT = "upgrade_to_shift";
         String PLS_BANNER_TYPE_SHIFT_DATES = "shift_dates";
-
+        // Course Celebration Modal
+        String COURSE_SECTION_COMPLETION_CELEBRATION = "edx.ui.lms.celebration.first_section.opened";
+        String COURSE_SECTION_CELEBRATION_SHARE_CLICKED = "edx.ui.lms.celebration.social_share.clicked";
     }
 
     interface Screens {
@@ -852,6 +870,9 @@ public interface Analytics {
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
         String COURSE_UNIT_LOCKED_CONTENT = "Value Prop Locked Content Clicked";
+        // Course Celebration Modal
+        String COURSE_SECTION_COMPLETION_CELEBRATION = "Celebration: First Section Opened";
+        String CELEBRATION_SOCIAL_SHARE_CLICKED = "Celebration: Social Share Clicked";
     }
 
     /**

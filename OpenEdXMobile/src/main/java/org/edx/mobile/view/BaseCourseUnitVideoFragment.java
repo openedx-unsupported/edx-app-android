@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.event.VideoPlaybackEvent;
 import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -40,6 +41,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
@@ -77,6 +79,12 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
      * This method send the downloaded transcript to the player screen.
      */
     protected abstract void showClosedCaptionData(TimedTextObject subtitles);
+
+    /**
+     * Method to pause the video player from external call.
+     * @param pauseVideo
+     */
+    protected abstract void playPauseVideoPlayback(boolean pauseVideo);
 
     protected final static Logger logger = new Logger(BaseCourseUnitVideoFragment.class.getName());
     private final static int UNFREEZE_AUTOSCROLL_DELAY_MS = 3500;
@@ -154,6 +162,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         setRetainInstance(true);
         unit = getArguments() == null ? null :
                 (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+        EventBus.getDefault().registerSticky(this);
     }
 
     /**
@@ -248,6 +257,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         super.onDestroy();
         transcriptManager.cancelTranscriptDownloading();
         updateTranscriptCallbackStatus(false);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -507,6 +517,11 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                 updateUI(getActivity().getRequestedOrientation());
             }
         }
+    }
+
+    public void onEvent(VideoPlaybackEvent event) {
+        playPauseVideoPlayback(event.getPauseVideo());
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
     public boolean showCastMiniController() {

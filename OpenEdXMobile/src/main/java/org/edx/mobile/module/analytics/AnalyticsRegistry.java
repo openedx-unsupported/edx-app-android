@@ -506,4 +506,18 @@ public class AnalyticsRegistry implements Analytics {
             service.trackUnsupportedComponentTapped(courseId, blockId, link);
         }
     }
+
+    @Override
+    public void trackCourseSectionCelebration(@NonNull String courseId) {
+        for (Analytics service : services) {
+            service.trackCourseSectionCelebration(courseId);
+        }
+    }
+
+    @Override
+    public void trackCourseCelebrationShareClicked(@NonNull String courseId, @Nullable String socialService) {
+        for (Analytics service : services) {
+            service.trackCourseCelebrationShareClicked(courseId, socialService);
+        }
+    }
 }

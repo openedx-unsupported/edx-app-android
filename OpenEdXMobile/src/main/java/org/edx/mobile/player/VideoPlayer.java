@@ -274,6 +274,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
 
         if (videoUri != null) {
             final MediaSource mediaSource = getMediaSource(videoUri);
+            exoPlayer.setPlayWhenReady(playWhenPrepared);
             exoPlayer.prepare(mediaSource);
             state = PlayerState.URI_SET;
             isPlayingLocally = !videoUri.startsWith("http");

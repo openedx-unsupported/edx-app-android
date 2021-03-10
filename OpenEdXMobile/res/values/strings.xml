@@ -797,4 +797,14 @@
     <string name="whats_new_title">What\'s New</string>
     <!-- Title of the selector while the choosing file -->
     <string name="choose_file_title">Choose Files</string>
+    <!-- Title of the dialog appears on course first Section completion(Celebration Modal) -->
+    <string name="celebratory_modal_title">Congratulations!</string>
+    <!-- Completion message for Celebration Modal -->
+    <string name="celebratory_modal_message">You just completed the first section of your course.</string>
+    <!-- Celebration message for Celebration Modal -->
+    <string name="celebratory_share_message"><b>You earned it!</b> Take a moment to celebrate and share your progress.</string>
+    <!-- Button title appears on Celebration Modal to continue -->
+    <string name="keep_going_text">Keep going</string>
+    <!-- Sharing message when user wants to share the celebration -->
+    <string name="celebration_share_message">I\'m on my way to completing {course_name} online with @{platform_name}online. What are you spending your time learning? #my{platform_name}journey</string>
 </resources>

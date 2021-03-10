@@ -1,21 +1,24 @@
 package org.edx.mobile.course;
 
 import android.content.Context;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.notifications.ErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.IPathNode;
@@ -23,13 +26,13 @@ import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SummaryModel;
-import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseDates;
-import org.edx.mobile.model.course.CourseBannerInfoModel;
+import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.DiscussionData;
@@ -226,6 +229,18 @@ public class CourseAPI {
         CourseStructureV1Model model = executeStrict(
                 courseService.getCourseStructure("only-if-cached, max-stale", blocksApiVersion, getUsername(), courseId));
         return (CourseComponent) normalizeCourseStructure(model, courseId);
+    }
+
+    @NonNull
+    public Call<CourseStatus> getCourseStatus(@NonNull String courseId) {
+        return courseService.getCourseStatus(courseId);
+    }
+
+    @NonNull
+    public Call<Void> updateCourseCelebration(@NonNull String courseId) {
+        HashMap<String, Boolean> body = new HashMap<>();
+        body.put(ApiConstants.FIRST_SECTION_KEY, false);
+        return courseService.updateCoursewareCelebration(courseId, body);
     }
 
     public static abstract class GetCourseStructureCallback

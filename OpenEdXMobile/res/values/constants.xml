@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="eula_file_link">file:///android_asset/eula_en.html</string>
     <string name="privacy_file_link" translatable="false">file:///android_asset/privacy_policy_en.html</string>
     <string name="terms_file_link" translatable="false">file:///android_asset/terms_of_services_en.html</string>
@@ -9,4 +9,8 @@
     <integer name="threshold_kbps_for_video">9</integer>
     <integer name="delay_speed_test_in_milliseconds">10000</integer>
     <string name="speed_test_url" translatable="false">http://bnotions.s3.amazonaws.com/128kb.file</string>
+
+    <!-- Value to check the current device type is mobile -->
+    <!--  ref: https://stackoverflow.com/a/9308284 -->
+    <bool name="isTablet">false</bool>
 </resources>

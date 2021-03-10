@@ -319,4 +319,18 @@ public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
     public boolean showCastMiniController() {
         return true;
     }
+
+    @Override
+    protected void playPauseVideoPlayback(boolean pauseVideo) {
+        if (pauseVideo) {
+            if (playerFragment.isPlaying()) {
+                playerFragment.onPause();
+            } else {
+                playerFragment.setPlayWhenReady(false);
+            }
+        } else {
+            playerFragment.setPlayWhenReady(true);
+            playerFragment.onResume();
+        }
+    }
 }

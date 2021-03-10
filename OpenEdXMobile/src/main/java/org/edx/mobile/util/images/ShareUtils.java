@@ -5,14 +5,15 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.text.TextUtils;
+import android.view.MenuItem;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
-import android.text.TextUtils;
-import android.view.MenuItem;
-import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -20,6 +21,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.ResourceUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 public enum ShareUtils {
@@ -127,6 +129,34 @@ public enum ShareUtils {
         menuHelper.show();
     }
 
+    public static void showCelebrationShareMenu(Activity activity, View anchor,
+                                                EnrolledCoursesResponse course,
+                                                ShareTypeSelectedListener shareTypeSelectedListener) {
+        final String shareTextWithPlatformName = ResourceUtil.getFormattedString(
+                activity.getResources(),
+                R.string.celebration_share_message, new HashMap<String, CharSequence>() {{
+                    put("course_name", course.getCourse().getName());
+                    put("platform_name", activity.getString(R.string.platform_name));
+                }}).toString() + "\n\n" + course.getCourse().getCourse_about();
+        ShareUtils.showShareMenu(activity, ShareUtils.newShareIntent(shareTextWithPlatformName), anchor, (componentName, shareType) -> {
+            final String shareText = shareTextWithPlatformName +
+                    (shareType != ShareType.UNKNOWN ? "?utm_campaign=" +
+                            activity.getString(R.string.platform_name).toLowerCase() +
+                            "milestone&utm_medium=social&utm_source=" + shareType.utmParamKey : "");
+            final Intent intent = ShareUtils.newShareIntent(shareText);
+            intent.setComponent(componentName);
+            activity.startActivity(intent);
+            if (shareTypeSelectedListener != null) {
+                shareTypeSelectedListener.onShareTypeSelected(shareType);
+            }
+        });
+
+    }
+
+    public interface ShareTypeSelectedListener {
+        void onShareTypeSelected(ShareType shareType);
+    }
+
     public interface ShareMenuItemListener {
         void onMenuItemClick(@NonNull ComponentName componentName, @NonNull ShareType shareType);
     }
@@ -134,8 +164,10 @@ public enum ShareUtils {
     public enum ShareType {
         TWITTER("twitter"),
         FACEBOOK("facebook"),
-        UNKNOWN(null)
-        ;
+        LINKEDIN("linkedin"),
+        REDDIT("reddit"),
+        WHATSAPP("whatsapp"),
+        UNKNOWN(null);
 
         private String utmParamKey;
 
@@ -157,6 +189,13 @@ public enum ShareUtils {
                 return ShareType.FACEBOOK;
             case "com.twitter.android":
                 return ShareType.TWITTER;
+            case "com.linkedin.android":
+                return ShareType.LINKEDIN;
+            case "com.reddit.frontpage":
+                return ShareType.REDDIT;
+            case "com.whatsapp":
+            case "com.whatsapp.w4b":
+                return ShareType.WHATSAPP;
             default:
                 return ShareType.UNKNOWN;
         }
