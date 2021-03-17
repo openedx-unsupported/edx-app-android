@@ -25,7 +25,8 @@ public enum  BlockType {
     PROBLEM{ @Override public boolean isContainer() {return false;} },
     DISCUSSION{ @Override public boolean isContainer() {return false;} },
     OTHERS{ @Override public boolean isContainer() {return false;} },
-    OPENASSESSMENT{ @Override public boolean isContainer() {return false;} };
+    OPENASSESSMENT{ @Override public boolean isContainer() {return false;} },
+    DRAG_AND_DROP_V2{ @Override public boolean isContainer() {return false;} };
 
     abstract boolean isContainer();
 
@@ -37,6 +38,8 @@ public enum  BlockType {
                                      JsonDeserializationContext context) throws JsonParseException {
             String value = json.getAsString();
             try {
+                // As enum don't support the "-", so replacing it with "_"
+                value = value.contains("-") ? value.replace("-", "_") : value;
                 //we force the String.toUpperCase to use English local.
                 //as it is just a mapping from english string to constants.
                 return BlockType.valueOf(value.toUpperCase(Locale.US));
