@@ -50,7 +50,7 @@ pipeline {
         stage('valdiate compiled app') {
             steps {
                 sh 'bash ./resources/validate_builds.sh'
-                // archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true
+                // archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true //
             }   
         }
 
