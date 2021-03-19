@@ -564,6 +564,12 @@ android.applicationVariants.all { variant ->
         }
     }
 
+    def mandatoryFileTask = "verify$variantName" + "MandatoryFiles"
+    project.task(mandatoryFileTask).doFirst {
+        AndroidHelper.checkRequiredFileExistence(project)
+    }
+    generateTask.dependsOn(mandatoryFileTask)
+
     tasks.all { task ->
         if (task.name.startsWith("test")) {
             task.mustRunAfter(configureTask)
