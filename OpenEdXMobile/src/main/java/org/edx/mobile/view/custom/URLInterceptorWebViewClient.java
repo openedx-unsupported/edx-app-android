@@ -26,7 +26,6 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.links.WebViewLink;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -170,6 +169,17 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             pageStatusListener.onPageLoadError(view, request, errorResponse,
                     request.getUrl().toString().equals(view.getUrl()));
         }
+    }
+
+    /**
+     * Method is usable for Android 6.0 and below otherwise app didn't get the control when a URL is
+     * about to be loaded in the current WebView.
+     * Ref: https://developer.android.com/reference/android/webkit/WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView,%20java.lang.String)
+     */
+    @Deprecated
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        return shouldOverrideUrlLoadingWrapper(url);
     }
 
     @Override

@@ -158,6 +158,43 @@ class AndroidHelper {
         }
         return available
     }
+
+    /**
+     * Utility method to check that the mandatory file existence, that shows unused by the
+     * android studio.
+     * */
+    static def checkRequiredFileExistence(project) {
+        def mandatoryFiles = getListOfMandatoryFiles()
+        for (item in mandatoryFiles) {
+            if (!new File(project.projectDir.toString() + item.filePath).exists()) {
+                throw new GradleException(item.errorMessage)
+            }
+        }
+    }
+
+    static def getListOfMandatoryFiles() {
+        def list = new ArrayList()
+        def file = new MandatoryFile("/src/main/java/org/edx/mobile/googlecast/CastOptionsProvider.java",
+                "App must implement the OptionsProvider interface to supply options needed to initialize the CastContext singleton.",
+                "https://developers.google.com/cast/docs/android_sender/integrate#initialize_the_cast_context")
+        list.add(file)
+        return list
+    }
+}
+
+
+/**
+ * Class having file information that are mandatory for the codebase but android studio shows
+ * them unused.
+ */
+class MandatoryFile {
+    String filePath
+    String errorMessage
+
+    MandatoryFile(filePath, errorMessage, refLink) {
+        this.filePath = filePath
+        this.errorMessage = errorMessage + "\nReference: " + refLink
+    }
 }
 
 ext.AndroidHelper = AndroidHelper

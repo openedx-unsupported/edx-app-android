@@ -33,6 +33,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStatus;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtil;
@@ -359,9 +360,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public boolean showGoogleCastButton() {
-        if (pager2 != null && pagerAdapter != null) {
-            CourseUnitFragment fragment = ((CourseUnitFragment) pagerAdapter.getItem(pager2.getCurrentItem()));
-            return fragment != null && fragment.hasCastSupportedVideoContent();
+        if(selectedUnit != null && selectedUnit instanceof VideoBlockModel){
+            // Showing casting button only for native video block
+            // Currently casting for youtube video isn't available
+            return ((VideoBlockModel) selectedUnit).getData().encodedVideos.getPreferredVideoInfo() != null;
         }
         return super.showGoogleCastButton();
     }
