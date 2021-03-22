@@ -141,7 +141,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     @Override
     public boolean isEnabled(int position) {
-        return getItemViewType(position) == SectionRow.ITEM;
+        return getItemViewType(position) == SectionRow.ITEM || getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM;
     }
 
     @Override
@@ -668,9 +668,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private View getResumeCourseView(int position, View convertView) {
         final SectionRow sectionRow = getItem(position);
         final TextView tvResumeCourseComponentTitle = (TextView) convertView.findViewById(R.id.resume_course_text);
-        final View viewButton = convertView.findViewById(R.id.resume_course_button);
         tvResumeCourseComponentTitle.setText(sectionRow.component.getDisplayName());
-        viewButton.setOnClickListener(sectionRow.clickListener);
         return convertView;
     }
 
@@ -678,16 +676,15 @@ public class CourseOutlineAdapter extends BaseAdapter {
      * Adds resume course item view in the ListView.
      *
      * @param lastAccessedComponent The last accessed component.
-     * @param onClickListener       The listener to invoke when the `view` button is pressed.
      */
-    public void addResumeCourseView(CourseComponent lastAccessedComponent, View.OnClickListener onClickListener) {
+    public void addResumeCourseView(CourseComponent lastAccessedComponent) {
         final int resumeCourseItemPlace = getNonCourseWareItemPlace(SectionRow.RESUME_COURSE_ITEM);
         // Update the last accessed item, if its already there in the list
         if (resumeCourseItemPlace >= 0) {
-            adapterData.set(resumeCourseItemPlace, new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent, onClickListener));
+            adapterData.set(resumeCourseItemPlace, new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
         } else {
             // Add it otherwise
-            adapterData.add(getResumeCourseItemPlace(), new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent, onClickListener));
+            adapterData.add(getResumeCourseItemPlace(), new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
         }
         notifyDataSetChanged();
     }

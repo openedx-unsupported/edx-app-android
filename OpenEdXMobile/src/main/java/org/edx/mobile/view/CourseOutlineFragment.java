@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -884,21 +883,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             return;
         CourseComponent lastAccessComponent = courseManager.getComponentByIdFromAppLevelCache(courseData.getCourseId(), response.getLastVisitedBlockId());
         if (lastAccessComponent != null) {
-            adapter.addResumeCourseView(lastAccessComponent, new View.OnClickListener() {
-                long lastClickTime = 0;
-
-                @Override
-                public void onClick(View v) {
-                    //This has been used so that if user clicks continuously on the screen,
-                    //two activities should not be opened
-                    long currentTime = SystemClock.elapsedRealtime();
-                    if (currentTime - lastClickTime > 1000) {
-                        lastClickTime = currentTime;
-                        environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                                REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, response.getLastVisitedBlockId(), isVideoMode);
-                    }
-                }
-            });
+            adapter.addResumeCourseView(lastAccessComponent);
         }
     }
 
