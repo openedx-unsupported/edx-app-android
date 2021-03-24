@@ -203,7 +203,16 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (index < pagerAdapter.getItemCount() - 1) {
             pager2.setCurrentItem(index + 1);
         }
-        if (selectedUnit.isLastChild() && isFirstSection && !isVideoMode) {
+        // CourseComponent#getAncestor(2) returns the section of a component
+        CourseComponent currentBlockSection = selectedUnit.getAncestor(2);
+        CourseComponent nextBlockSection = pagerAdapter.getUnit(pager2.getCurrentItem()).getAncestor(2);
+        /*
+         * Show celebratory modal when:
+         * 1. We haven't arrived at component navigation from the Videos tab.
+         * 2. The current section is the first section being completed (not necessarily the actual first section of the course).
+         * 3. Section of the current and next components are different.
+         */
+        if (!isVideoMode && isFirstSection && !currentBlockSection.equals(nextBlockSection)) {
             showCelebrationModal(false);
         }
     }
@@ -360,7 +369,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public boolean showGoogleCastButton() {
-        if(selectedUnit != null && selectedUnit instanceof VideoBlockModel){
+        if (selectedUnit != null && selectedUnit instanceof VideoBlockModel) {
             // Showing casting button only for native video block
             // Currently casting for youtube video isn't available
             return ((VideoBlockModel) selectedUnit).getData().encodedVideos.getPreferredVideoInfo() != null;
