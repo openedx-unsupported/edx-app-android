@@ -125,7 +125,7 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
                 final String javascript = getArguments().getString(ARG_JAVASCRIPT);
                 final boolean isManuallyReloadable = getArguments().getBoolean(ARG_IS_MANUALLY_RELOADABLE);
 
-                authWebView.initWebView(getActivity(), false, isManuallyReloadable);
+                authWebView.initWebView(getActivity(), false, isManuallyReloadable, false, null);
                 authWebView.loadUrlWithJavascript(true, url, javascript);
             }
         }

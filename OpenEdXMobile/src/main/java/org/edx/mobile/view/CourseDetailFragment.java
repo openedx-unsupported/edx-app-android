@@ -246,7 +246,7 @@ public class CourseDetailFragment extends BaseFragment {
     private void populateAboutThisCourse(String overview) {
         courseAbout.setVisibility(View.VISIBLE);
         URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(
-                getActivity(), courseAboutWebView);
+                getActivity(), courseAboutWebView, false, null);
         client.setAllLinksAsExternal(true);
 
         StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(getActivity(), logger);

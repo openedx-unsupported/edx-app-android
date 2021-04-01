@@ -62,7 +62,7 @@ public class CourseAnnouncementsFragment extends BaseFragment implements Refresh
 
         webView = view.findViewById(R.id.webview);
         URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(
-                getActivity(), webView);
+                getActivity(), webView, false, null);
         // treat every link as external link in this view, so that all links will open in external browser
         client.setAllLinksAsExternal(true);
 

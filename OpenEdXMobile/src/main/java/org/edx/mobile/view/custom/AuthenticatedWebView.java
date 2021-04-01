@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -18,6 +14,11 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.inject.Inject;
 import com.joanzapata.iconify.Icon;
@@ -104,15 +105,18 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
      * @param fragmentActivity     Reference of fragment activity.
      * @param isAllLinksExternal   A flag to treat every link as external link and open in external
      *                             web browser.
-     * @param isManuallyReloadable A flag that decides if we should give show/hide reload button
-     *                             with full screen error.
+     * @param isManuallyReloadable A flag that decides if we should give show/hide reload button.
+     * @param interceptAjaxRequest A flag that decides if webview intercept the webpage ajax request.
+     * @param completionCallback
      */
     @SuppressLint("SetJavaScriptEnabled")
     public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
-                            boolean isManuallyReloadable) {
+                            boolean isManuallyReloadable, boolean interceptAjaxRequest,
+                            URLInterceptorWebViewClient.CompletionCallback completionCallback) {
         this.isManuallyReloadable = isManuallyReloadable;
         webView.getSettings().setJavaScriptEnabled(true);
-        webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView) {
+        webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView, interceptAjaxRequest,
+                completionCallback) {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 didReceiveError = true;

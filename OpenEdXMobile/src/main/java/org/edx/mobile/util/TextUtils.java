@@ -1,14 +1,18 @@
 package org.edx.mobile.util;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.URLSpan;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
@@ -151,5 +155,42 @@ public class TextUtils {
         }
 
         return formattedHtml;
+    }
+
+    public static void setTextAppearance(Context context, TextView textView, int resId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextAppearance(resId);
+        } else {
+            textView.setTextAppearance(context, resId);
+        }
+    }
+
+    /**
+     * Converts and returns the provided duration into a readable format (i.e. 1 hour 55 mins)
+     * OR returns null if the duration is zero or negative.
+     *
+     * @param duration Video duration in seconds.
+     * @return Formatted duration.
+     */
+    @Nullable
+    public static String getVideoDurationString(Context context, long duration) {
+        if (duration <= 0) {
+            return null;
+        }
+        long d = duration;
+        int hours = (int) (d / 3600f);
+        d = d % 3600;
+        int mins = (int) (d / 60f);
+        int secs = (int) (d % 60);
+        if (secs >= 30) {
+            mins += 1;
+        } else if (mins == 0 && secs > 0) {
+            // below 1 minute = 1 minute
+            mins = 1;
+        }
+        if (hours <= 0) {
+            return context.getResources().getQuantityString(R.plurals.video_duration_minutes, mins, mins);
+        }
+        return String.format("%s %s", context.getResources().getQuantityString(R.plurals.video_duration_hour, hours, hours), context.getResources().getQuantityString(R.plurals.video_duration_minutes, mins, mins));
     }
 }

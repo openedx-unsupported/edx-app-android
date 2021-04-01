@@ -22,8 +22,6 @@
         <item name="listChoiceBackgroundIndicator">@drawable/view_selector</item>
         <item name="android:selectableItemBackground">@drawable/view_selector</item>
         <item name="selectableItemBackground">@drawable/view_selector</item>
-        <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
-        <!--<item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>-->
         <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>

@@ -82,6 +82,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
 
     /**
      * Method to pause the video player from external call.
+     *
      * @param pauseVideo
      */
     protected abstract void playPauseVideoPlayback(boolean pauseVideo);
@@ -360,7 +361,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                             watchedStateCallback);
         }
-
+        markComponentCompleted();
         courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
             @Override
             protected void onResponse(@NonNull JSONObject responseBody) {

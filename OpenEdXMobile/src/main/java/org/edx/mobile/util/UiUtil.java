@@ -3,6 +3,7 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
@@ -12,11 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -65,6 +70,7 @@ public class UiUtil {
 
     /**
      * Utility method to check the screen direction
+     *
      * @return true if direction is LTR false else wise
      */
     public static boolean isDirectionLeftToRight() {
@@ -85,6 +91,13 @@ public class UiUtil {
         params.leftMargin -= cardView.getPaddingStart();
         params.rightMargin -= cardView.getPaddingEnd();
         cardView.setLayoutParams(params);
+    }
+
+
+    public static Drawable getFontAwesomeDrawable(Context context, Icon icon, int dimenSize, int colorRes) {
+        return new IconDrawable(context, icon)
+                .sizeRes(context, dimenSize)
+                .colorRes(context, colorRes);
     }
 
     @Nullable

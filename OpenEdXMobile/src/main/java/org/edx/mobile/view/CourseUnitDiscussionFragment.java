@@ -47,6 +47,7 @@ public class CourseUnitDiscussionFragment extends CourseUnitFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState == null) {
+            markComponentCompleted();
             courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
                 @Override
                 protected void onResponse(@NonNull JSONObject responseBody) {

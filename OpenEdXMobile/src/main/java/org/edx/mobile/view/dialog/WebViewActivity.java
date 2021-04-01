@@ -54,7 +54,7 @@ public class WebViewActivity extends BaseFragmentActivity {
 
         webView = (WebView) findViewById(R.id.webView);
         final URLInterceptorWebViewClient client =
-                new URLInterceptorWebViewClient(this, webView);
+                new URLInterceptorWebViewClient(this, webView, false, null);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
 
             @Override

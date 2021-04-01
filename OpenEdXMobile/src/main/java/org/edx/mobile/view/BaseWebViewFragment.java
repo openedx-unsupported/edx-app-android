@@ -83,7 +83,7 @@ public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
     }
 
     private void initWebView() {
-        client = new URLInterceptorWebViewClient(getActivity(), webView);
+        client = new URLInterceptorWebViewClient(getActivity(), webView, false, null);
 
         // if all the links are to be treated as external
         client.setAllLinksAsExternal(isAllLinksExternal());

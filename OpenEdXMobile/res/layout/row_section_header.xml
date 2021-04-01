@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:orientation="vertical"
+    android:layout_height="@dimen/course_section_header_height"
     android:background="@color/white">
-
-    <View
-        android:id="@+id/row_separator"
-        android:layout_width="match_parent"
-        android:background="@color/neutralLight"
-        android:layout_height="1dp"/>
 
     <TextView
         android:id="@+id/row_header"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/course_section_header_height"
         android:fontFamily="?attr/fontSemiBold"
-        android:layout_height="@dimen/row_height_cc_option"
         android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/course_section_header_margin"
+        android:paddingTop="@dimen/widget_margin"
+        android:paddingEnd="@dimen/widget_margin"
+        android:paddingBottom="@dimen/widget_margin"
         android:textColor="@color/neutralXDark"
-        android:textDirection="locale"
-        android:padding="@dimen/widget_margin" />
-</LinearLayout>
+        android:textDirection="locale" />
+</FrameLayout>

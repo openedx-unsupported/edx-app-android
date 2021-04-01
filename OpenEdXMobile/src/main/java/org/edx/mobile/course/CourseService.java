@@ -118,7 +118,7 @@ public interface CourseService {
 
     @GET("/api/courses/{api_version}/blocks/?" +
             "depth=all&" +
-            "requested_fields=graded,format,student_view_multi_device,due&" +
+            "requested_fields=graded,format,student_view_multi_device,due,completion&" +
             "student_view_data=video,discussion&" +
             "block_counts=video&" +
             "nav_depth=3")

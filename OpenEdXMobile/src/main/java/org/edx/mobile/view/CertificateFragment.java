@@ -93,7 +93,7 @@ public class CertificateFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_certificate, container, false);
         webview = (WebView) view.findViewById(R.id.webview);
         final View loadingIndicator = view.findViewById(R.id.loading_indicator);
-        final URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(), webview);
+        final URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(), webview, false, null);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
             public void onPageStarted() {

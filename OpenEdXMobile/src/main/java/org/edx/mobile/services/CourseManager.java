@@ -1,8 +1,9 @@
 package org.edx.mobile.services;
 
+import android.util.LruCache;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.LruCache;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -63,9 +64,8 @@ public class CourseManager {
      * {@link CourseManager#getCourseDataFromAppLevelCache} can be used as an alternate, specially
      * if its sure course data will be available in app level cache.
      *
-     *
      * @param blocksApiVersion Version of the API.
-     * @param courseId Id of the course.
+     * @param courseId         Id of the course.
      * @return Cached course data. In case course data is not present in cache it will return null.
      */
     @Nullable

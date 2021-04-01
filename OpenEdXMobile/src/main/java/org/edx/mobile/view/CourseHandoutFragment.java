@@ -76,7 +76,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         super.onViewCreated(view, savedInstanceState);
         errorNotification = new FullScreenErrorNotification(webView);
         snackbarErrorNotification = new SnackbarErrorNotification(webView);
-        new URLInterceptorWebViewClient(getActivity(), webView).setAllLinksAsExternal(true);
+        new URLInterceptorWebViewClient(getActivity(), webView, false, null).setAllLinksAsExternal(true);
         loadData();
     }
 

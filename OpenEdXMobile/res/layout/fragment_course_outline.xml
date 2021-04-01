@@ -26,12 +26,15 @@
             android:choiceMode="singleChoice"
             android:divider="@null"
             android:dividerHeight="0dp"
+            tools:listitem="@layout/row_course_outline_list"
             tools:visibility="visible" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include layout="@layout/loading_indicator" />
 
-    <include layout="@layout/content_error" />
+    <include
+        layout="@layout/content_error"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

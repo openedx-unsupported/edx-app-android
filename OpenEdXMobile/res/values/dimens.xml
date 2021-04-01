@@ -68,7 +68,10 @@
     <!-- Course Outline -->
     <dimen name="course_item_vertical_padding">8dp</dimen>
     <dimen name="course_item_horizontal_padding">9dp</dimen>
-    <dimen name="course_item_half_separator_left_margin">@dimen/resume_course_bar_left_margin</dimen>
+    <dimen name="course_item_half_separator_left_margin">@dimen/resume_course_bar_left_margin
+    </dimen>
+    <dimen name="course_section_header_margin">22dp</dimen>
+    <dimen name="course_section_header_height">40dp</dimen>
 
     <!-- Sign in dimensions-->
     <dimen name="login_edx_logo_height">125dp</dimen>
@@ -217,6 +220,7 @@
     <dimen name="bulk_download_view_height">72dp</dimen>
     <dimen name="bulk_download_progress_height">@dimen/progress_bar_height</dimen>
     <dimen name="bulk_download_description_top_margin">4dp</dimen>
+    <dimen name="download_background_size">30dp</dimen>
 
     <!-- Logistration Launch screen -->
     <dimen name="logo_top_margin">90dp</dimen>
@@ -291,8 +295,8 @@
     <dimen name="dates_badge_icon_end_padding">-4dp</dimen>
     <dimen name="accomplishment_image_size">50dp</dimen>
     <dimen name="accomplishment_button_size">36dp</dimen>
-    <item name="course_date_title_line_spacing" type="dimen" format="float">1.25</item>
-    <item name="course_date_desc_line_spacing" type="dimen" format="float">1.125</item>
+    <item name="course_date_title_line_spacing" format="float" type="dimen">1.25</item>
+    <item name="course_date_desc_line_spacing" format="float" type="dimen">1.125</item>
 
     <!--  Course Celebratory Modal  -->
     <dimen name="celebratory_modal_padding">16dp</dimen>
