@@ -13,11 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.annotation.Nullable;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
@@ -31,6 +35,9 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     @Nullable
     @InjectView(R.id.loading_indicator)
     private ProgressBar progressWheel;
+
+    @Inject
+    private IEdxEnvironment environment;
 
     private ViewTreeObserver.OnScrollChangedListener onScrollChangedListener;
     private boolean refreshOnResume = false;
@@ -149,6 +156,9 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             // Swipe refresh shouldn't work while the page is refreshing
             swipeContainer.setEnabled(false);
             authWebView.loadUrl(true, authWebView.getWebView().getUrl());
+        }
+        if(isVisible()){
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
         }
     }
 
