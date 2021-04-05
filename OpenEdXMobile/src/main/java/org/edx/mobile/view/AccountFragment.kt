@@ -16,6 +16,7 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.FragmentAccountBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
+import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.util.Config
 
@@ -68,6 +69,8 @@ class AccountFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handleIntentBundle(arguments)
+
+        environment?.analyticsRegistry?.trackScreenView(Analytics.Screens.ACCOUNT_SETTINGS)
     }
 
     override fun onNewIntent(intent: Intent) {

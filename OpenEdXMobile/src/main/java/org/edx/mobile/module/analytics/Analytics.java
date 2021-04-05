@@ -768,7 +768,9 @@ public interface Analytics {
         String FIND_PROGRAMS = "Find Programs";
         String FIND_DEGREES = "Find Degrees";
         String MY_COURSES = "My Courses";
+        String MY_PROGRAM = "My Programs";
         String SETTINGS = "Settings";
+        String ACCOUNT_SETTINGS = "Account Settings";
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";
         String FORUM_VIEW_TOPIC_THREADS = "Forum: View Topic Threads";
