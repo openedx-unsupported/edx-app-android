@@ -534,6 +534,14 @@ public interface Analytics {
      */
     void trackCourseCelebrationShareClicked(@NonNull String courseId, @Nullable String socialService);
 
+    /**
+     * Track the resume course banner tapped
+     *
+     * @param courseId Id of the course where banner tapped
+     * @param blockId  Id of the resumed block.
+     */
+    void trackResumeCourseBannerTapped(@NonNull String courseId, @NonNull String blockId);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -745,6 +753,8 @@ public interface Analytics {
         // Course Celebration Modal
         String COURSE_SECTION_COMPLETION_CELEBRATION = "edx.ui.lms.celebration.first_section.opened";
         String COURSE_SECTION_CELEBRATION_SHARE_CLICKED = "edx.ui.lms.celebration.social_share.clicked";
+        // Resume Course Banner Tapped
+        String RESUME_COURSE_BANNER_TAPPED = "edx.bi.app.course.resume.tapped";
     }
 
     interface Screens {
@@ -873,6 +883,8 @@ public interface Analytics {
         // Course Celebration Modal
         String COURSE_SECTION_COMPLETION_CELEBRATION = "Celebration: First Section Opened";
         String CELEBRATION_SOCIAL_SHARE_CLICKED = "Celebration: Social Share Clicked";
+        // Resume Course Banner
+        String RESUME_COURSE_TAPPED = "Resume Course Tapped";
     }
 
     /**

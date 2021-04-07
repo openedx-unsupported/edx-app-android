@@ -396,6 +396,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, component.getId(), null, isVideoMode);
                 } else {
+                    if(adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM){
+                        environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
+                    }
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, component.getId(), isVideoMode);
                 }

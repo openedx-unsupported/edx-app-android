@@ -520,4 +520,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackCourseCelebrationShareClicked(courseId, socialService);
         }
     }
+
+    @Override
+    public void trackResumeCourseBannerTapped(@NonNull String courseId, @NonNull String blockId) {
+        for (Analytics service : services) {
+            service.trackResumeCourseBannerTapped(courseId, blockId);
+        }
+    }
 }

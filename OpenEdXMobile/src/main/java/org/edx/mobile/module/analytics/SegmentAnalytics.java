@@ -1018,4 +1018,14 @@ public class SegmentAnalytics implements Analytics {
         aEvent.properties.putValue(Keys.NAME, Values.COURSE_SECTION_CELEBRATION_SHARE_CLICKED);
         trackSegmentEvent(Events.CELEBRATION_SOCIAL_SHARE_CLICKED, aEvent.properties);
     }
+
+    @Override
+    public void trackResumeCourseBannerTapped(@NonNull String courseId, @NonNull String blockId) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.RESUME_COURSE_BANNER_TAPPED);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.NAVIGATION);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        trackSegmentEvent(Events.RESUME_COURSE_TAPPED, aEvent.properties);
+    }
 }
