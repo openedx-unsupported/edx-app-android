@@ -10,10 +10,12 @@ import android.databinding.ObservableLong;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.inject.Inject;
@@ -104,6 +106,28 @@ public class AccountFragment extends BaseFragment {
         }
 
         binding.settingsBtn.setOnClickListener(v -> environment.getRouter().showSettings(getActivity()));
+
+        binding.certificateBtn.setOnClickListener(v -> {
+            mDataManager.getPrograms(new OnResponseCallback<List<Program>>() {
+                @Override
+                public void onSuccess(List<Program> data) {
+                    if (data!=null && data.size()>0){
+                        if (data.get(0).getId()!=null && data.get(0).getId()!=""){
+                            String url = environment.getConfig().getApiHostURL() + "certificates/user/" /*+  "https://staging-dmm.humana.school/certificates/user/"*/ + environment.getLoginPrefs().getCurrentUserProfile().id + "/course/" + data.get(0).getId() /*"course-v1:humana+hm11+2020-22"*/;
+                            environment.getRouter().showAuthenticatedWebviewActivity(getActivity(),
+                                    url ,"View Certificate");
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                    ActivityUtil.gotoPage(getActivity(), LandingActivity.class,
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                }
+            });
+        });
 
         binding.feedbackBtn.setOnClickListener(v ->
                 environment.getRouter()

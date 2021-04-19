@@ -87,6 +87,11 @@
                 android:text="@string/profile_title" />
 
             <TextView
+                android:id="@+id/certificate_btn"
+                style="@style/account_option"
+                android:text="View Certificate" />
+
+            <TextView
                 android:id="@+id/settings_btn"
                 style="@style/account_option"
                 android:text="@string/label_settings" />
