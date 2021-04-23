@@ -44,6 +44,9 @@ public class BlockModel implements Serializable {
     @SerializedName("due")
     public String dueDate;
 
+    @SerializedName("completion")
+    public int completion;
+
     @SerializedName("authorization_denial_message")
     public String authorizationDenialMessage;
 

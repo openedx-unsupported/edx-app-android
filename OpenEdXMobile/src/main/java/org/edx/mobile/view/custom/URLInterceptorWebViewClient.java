@@ -25,6 +25,7 @@ import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.links.WebViewLink;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private final Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private final FragmentActivity activity;
+    private boolean interceptAjaxRequest;
     private ActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
@@ -73,10 +75,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private ValueCallback<Uri[]> filePathCallback;
 
-    public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
+    public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView,
+                                       boolean interceptAjaxRequest, CompletionCallback completionCallback) {
         this.activity = activity;
+        this.interceptAjaxRequest = interceptAjaxRequest;
         config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
-        setupWebView(webView);
+        setupWebView(webView, completionCallback);
     }
 
     /**
@@ -103,8 +107,9 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * sets this class itself as WebViewClient.
      *
      * @param webView
+     * @param completionCallback
      */
-    private void setupWebView(WebView webView) {
+    private void setupWebView(WebView webView, CompletionCallback completionCallback) {
         webView.setWebViewClient(this);
         //We need to hide the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
@@ -124,6 +129,9 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 return true;
             }
         });
+        if (interceptAjaxRequest) {
+            webView.addJavascriptInterface(new AjaxNativeCallback(completionCallback), "nativeAjaxCallback");
+        }
     }
 
     @Override
@@ -150,6 +158,15 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         // Page loading has finished.
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
+        }
+        if (interceptAjaxRequest) {
+            // setup native callback to intercept the ajax requests.
+            try {
+                String nativeAjaxCallbackJS = FileUtil.loadTextFileFromAssets(activity, "js/nativeAjaxCallback.js");
+                view.loadUrl(nativeAjaxCallbackJS);
+            } catch (IOException e) {
+                logger.error(e);
+            }
         }
     }
 
@@ -359,5 +376,9 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param progress Progress of the page being loaded.
          */
         void onPageLoadProgressChanged(WebView webView, int progress);
+    }
+
+    public interface CompletionCallback {
+        void blockCompletionHandler();
     }
 }

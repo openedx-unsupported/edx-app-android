@@ -36,6 +36,12 @@ public interface IBlock extends Serializable {
 
     void setBlockCount(BlockCount count);
 
+    boolean isCompleted();
+
+    void setCompleted(int completion);
+
+    boolean isCompletedForVideos();
+
     IBlock getParent();
 
     List<IBlock> getChildren();

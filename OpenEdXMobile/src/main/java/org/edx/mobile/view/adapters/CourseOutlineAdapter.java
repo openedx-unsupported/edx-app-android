@@ -45,6 +45,7 @@ import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -294,19 +295,15 @@ public class CourseOutlineAdapter extends BaseAdapter {
         final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
         if (nextRow == null) {
-            viewHolder.halfSeparator.setVisibility(View.GONE);
             viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
         } else {
             viewHolder.wholeSeparator.setVisibility(View.GONE);
             boolean isLastChildInBlock = !row.component.getParent().getId().equals(nextRow.component.getParent().getId());
-            if (isLastChildInBlock) {
-                viewHolder.halfSeparator.setVisibility(View.GONE);
-            } else {
-                viewHolder.halfSeparator.setVisibility(View.VISIBLE);
+            if (!isLastChildInBlock) {
+                viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
             }
         }
 
-        viewHolder.rowType.setVisibility(View.GONE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
@@ -323,13 +320,15 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     private void getRowViewForLeaf(ViewHolder viewHolder, final SectionRow row) {
         final CourseComponent unit = row.component;
-        viewHolder.rowType.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
         viewHolder.rowTitle.setText(unit.getDisplayName());
+        viewHolder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        viewHolder.rowCompleted.setVisibility(View.INVISIBLE);
+        viewHolder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.neutralDark));
 
         boolean isDenialFeatureBasedEnrolments =
                 row.component.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS;
@@ -341,28 +340,30 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
             } else if (videoBlockModel.getData().encodedVideos.youtube != null) {
                 final boolean isYoutubePlayerEnabled = config.getYoutubePlayerConfig().isYoutubePlayerEnabled();
-                viewHolder.rowType.setIcon(isYoutubePlayerEnabled ? FontAwesomeIcons.fa_youtube_play : FontAwesomeIcons.fa_laptop);
-                viewHolder.rowType.setIconColorResource(isYoutubePlayerEnabled ? R.color.primaryBaseColor : R.color.primaryXLightColor);
+                viewHolder.rowTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+                        UiUtil.getFontAwesomeDrawable(context, isYoutubePlayerEnabled ? FontAwesomeIcons.fa_youtube_play : FontAwesomeIcons.fa_laptop,
+                                R.dimen.small_icon_size, R.color.neutralXDark), null);
             }
         } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
-            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
-            checkAccessStatus(isDenialFeatureBasedEnrolments, viewHolder, unit);
+            viewHolder.rowTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+                    UiUtil.getFontAwesomeDrawable(context, FontAwesomeIcons.fa_comments_o,
+                            R.dimen.small_icon_size, R.color.neutralXDark), null);
         } else if (!unit.isMultiDevice()) {
             // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_laptop);
-            viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
+            viewHolder.rowTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+                    UiUtil.getFontAwesomeDrawable(context, FontAwesomeIcons.fa_laptop,
+                            R.dimen.small_icon_size, R.color.neutralXDark), null);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            if (unit.getType() == BlockType.PROBLEM) {
-                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_list);
-            } else {
-                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_book);
-            }
-            checkAccessStatus(isDenialFeatureBasedEnrolments, viewHolder, unit);
+            viewHolder.rowTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+                    UiUtil.getFontAwesomeDrawable(context, unit.getType() == BlockType.PROBLEM ? FontAwesomeIcons.fa_list : FontAwesomeIcons.fa_book,
+                            R.dimen.small_icon_size, R.color.neutralXDark), null);
         }
         if (unit.getType() == BlockType.OPENASSESSMENT) {
-            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_edit);
+            viewHolder.rowTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+                    UiUtil.getFontAwesomeDrawable(context, FontAwesomeIcons.fa_edit,
+                            R.dimen.small_icon_size, R.color.neutralXDark), null);
         }
 
         if (isDenialFeatureBasedEnrolments) {
@@ -372,42 +373,31 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 viewHolder.lockedContent.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.rowSubtitle.setText(R.string.not_available_on_mobile);
-                viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
             }
             viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void checkAccessStatus(boolean isDenialFeatureBasedEnrolments, final ViewHolder viewHolder, final CourseComponent unit) {
-        if (!isDenialFeatureBasedEnrolments) {
-            dbStore.isUnitAccessed(new DataCallback<Boolean>(true) {
-                @Override
-                public void onResult(Boolean accessed) {
-                    if (accessed) {
-                        viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
-                    } else {
-                        viewHolder.rowType.setIconColorResource(R.color.primaryBaseColor);
-                    }
-                }
-
-                @Override
-                public void onFail(Exception ex) {
-                    logger.error(ex);
-                }
-            }, unit.getId());
+        viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
+        if (unit.isCompleted() || (isVideoMode && unit.isCompletedForVideos())) {
+            viewHolder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.successXXLight));
+            viewHolder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.successXLight));
+            viewHolder.rowCompleted.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_green_check));
+            viewHolder.rowCompleted.setVisibility(View.VISIBLE);
         }
     }
 
     private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,
                                   @NonNull final VideoBlockModel videoBlockModel) {
-        viewHolder.rowType.setIcon(FontAwesomeIcons.fa_film);
+        viewHolder.rowTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+                UiUtil.getFontAwesomeDrawable(context, FontAwesomeIcons.fa_film,
+                        R.dimen.small_icon_size, R.color.neutralXDark), null);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
         if (videoData.getDuration() > 0L) {
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
-            viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
+            org.edx.mobile.util.TextUtils.setTextAppearance(context, viewHolder.rowSubtitle, R.style.semibold_text);
+            viewHolder.rowSubtitle.setText(org.edx.mobile.util.TextUtils.getVideoDurationString(context, videoData.duration));
         }
         if (videoData.getSize() > 0L) {
             viewHolder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
@@ -419,23 +409,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
             params.setMargins(0, 0, rightMargin, 0);
             params.setMarginEnd(rightMargin);
         }
-
-        dbStore.getWatchedStateForVideoId(videoData.videoId,
-                new DataCallback<DownloadEntry.WatchedState>(true) {
-                    @Override
-                    public void onResult(DownloadEntry.WatchedState result) {
-                        if (result != null && result == DownloadEntry.WatchedState.WATCHED) {
-                            viewHolder.rowType.setIconColorResource(R.color.primaryXLightColor);
-                        } else {
-                            viewHolder.rowType.setIconColorResource(R.color.primaryBaseColor);
-                        }
-                    }
-
-                    @Override
-                    public void onFail(Exception ex) {
-                        logger.error(ex);
-                    }
-                });
         if (!VideoUtil.isVideoDownloadable(videoBlockModel.getData())) {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
@@ -507,6 +480,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
         String chapterId = path.get(1) == null ? "" : path.get(1).getDisplayName();
         String sequentialId = path.get(2) == null ? "" : path.get(2).getDisplayName();
 
+        holder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        holder.rowCompleted.setVisibility(View.INVISIBLE);
+        holder.wholeSeparator.setVisibility(View.VISIBLE);
+        holder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.neutralDark));
+
         holder.rowTitle.setText(component.getDisplayName());
         holder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         if (component.isGraded()) {
@@ -573,6 +551,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
                         });
             }
         }
+        if (component.isCompleted() || (isVideoMode && component.isCompletedForVideos())) {
+            holder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.successXXLight));
+            holder.rowCompleted.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_green_check));
+            holder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.successXLight));
+            holder.rowCompleted.setVisibility(View.VISIBLE);
+        }
     }
 
     private String getFormattedDueDate(final String date) throws IllegalArgumentException {
@@ -603,19 +587,20 @@ public class CourseOutlineAdapter extends BaseAdapter {
         switch (state) {
             case DOWNLOADING:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_spinner);
+                row.downloadBackground.setVisibility(View.GONE);
                 // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
                 row.bulkDownload.setIconAnimation(Animation.SPIN);
                 row.bulkDownload.setIconColorResource(R.color.primaryBaseColor);
                 break;
             case DOWNLOADED:
+                row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_check);
                 row.bulkDownload.setIconAnimation(Animation.NONE);
                 row.bulkDownload.setIconColorResource(R.color.primaryBaseColor);
                 break;
             case ONLINE:
-                row.bulkDownload.setIcon(FontAwesomeIcons.fa_download);
-                row.bulkDownload.setIconAnimation(Animation.NONE);
-                row.bulkDownload.setIconColorResource(R.color.primaryXLightColor);
+                row.downloadBackground.setVisibility(View.GONE);
+                row.bulkDownload.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_holo_download));
                 break;
         }
         row.numOfVideoAndDownloadArea.setOnClickListener(listener);
@@ -627,12 +612,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
     public View getHeaderView(int position, View convertView) {
         final SectionRow row = this.getItem(position);
         TextView titleView = (TextView) convertView.findViewById(R.id.row_header);
-        View separator = convertView.findViewById(R.id.row_separator);
         titleView.setText(row.component.getDisplayName());
-        if (position == 0) {
-            separator.setVisibility(View.GONE);
+        if (row.component.isCompleted() || (isVideoMode && row.component.isCompletedForVideos())) {
+            titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.successXXLight));
         } else {
-            separator.setVisibility(View.VISIBLE);
+            titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
         return convertView;
     }
@@ -736,8 +720,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     public ViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.rowType = (IconImageView) convertView
-                .findViewById(R.id.row_type);
+        holder.rowContainer = (LinearLayout) convertView
+                .findViewById(R.id.chapter_row_container);
+        holder.rowCompleted = (IconImageView) convertView
+                .findViewById(R.id.completed);
         holder.rowTitle = (TextView) convertView
                 .findViewById(R.id.row_title);
         holder.rowSubtitle = (TextView) convertView
@@ -753,11 +739,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (IconImageView) convertView
                 .findViewById(R.id.bulk_download);
+        holder.downloadBackground = (View) convertView
+                .findViewById(R.id.download_background);
         holder.bulkDownload.setIconColorResource(R.color.primaryXLightColor);
         holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel = convertView.findViewById(R.id.row_subtitle_panel);
-        holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
         holder.wholeSeparator = convertView.findViewById(R.id.row_whole_separator);
 
         // Accessibility
@@ -767,17 +754,18 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        IconImageView rowType;
+        LinearLayout rowContainer;
+        IconImageView rowCompleted;
         TextView rowTitle;
         TextView rowSubtitle;
         TextView rowSubtitleDueDate;
         IconImageView rowSubtitleIcon;
         IconImageView bulkDownload;
+        View downloadBackground;
         IconImageView lockedContent;
         TextView noOfVideos;
         LinearLayout numOfVideoAndDownloadArea;
         View rowSubtitlePanel;
-        View halfSeparator;
         View wholeSeparator;
     }
 

@@ -82,7 +82,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             throw new RuntimeException("Parent activity of this Fragment should implement the PreLoadingListener interface");
         }
         swipeContainer.setEnabled(false);
-        authWebView.initWebView(getActivity(), true, false);
+        authWebView.initWebView(getActivity(), true, false, true,
+                this::markComponentCompleted);
         authWebView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
             public void onPageStarted() {
