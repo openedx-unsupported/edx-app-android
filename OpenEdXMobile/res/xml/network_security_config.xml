@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--    Added the support for the non secure urls  -->
+    <!--    https://developer.android.com/training/articles/security-config  -->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
