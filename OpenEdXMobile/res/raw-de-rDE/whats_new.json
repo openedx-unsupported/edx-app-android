@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Kurs wieder aufnehmen",
+        "message": "Verlieren Sie nie wieder Ihren Platz - es ist jetzt ganz einfach, dort weiter zu lernen, wo immer Sie aufgehört haben."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Häkchen",
+        "message": "Wir werden die Dinge abhaken, sobald Sie sie abgeschlossen haben, damit Sie Ihren Fortschritt verfolgen können."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Feiern",
+        "message": "Teilen Sie Ihre Lernreise mit Ihren Freunden und feiern Sie, was Sie erreicht haben."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "Seite mit verbesserten Daten",
+        "message": "Sie können jetzt über Quicklinks direkt von der Datumsseite auf Einheiten zugreifen."
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {

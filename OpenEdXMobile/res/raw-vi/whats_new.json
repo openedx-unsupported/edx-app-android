@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Tiếp tục khóa học",
+        "message": "Không bao giờ đánh mất chỗ của bạn nữa—giờ đây, thật dễ dàng để quay lại học ở nơi bạn đã dừng lại lúc trước."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Dấu tích",
+        "message": "Chúng tôi sẽ đánh dấu tích các bài bạn đã hoàn thành để bạn có thể theo dõi tiến độ của mình."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Chúc mừng",
+        "message": "Chia sẻ hành trình học tập của bạn với bạn bè và ăn mừng những gì bạn đã đạt được."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "Cải tiến trang ngày",
+        "message": "Giờ đây, bạn có thể truy cập các bài học trực tiếp từ trang ngày tháng qua các liên kết nhanh."
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {

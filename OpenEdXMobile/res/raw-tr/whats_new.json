@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Kursa Devam Edin",
+        "message": "Kaldığınız yeri hiç kaybetmeyin. Artık kaldığınız yerden öğrenmeye devam etmek çok kolay."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Onay İşaretleri",
+        "message": "İlerlemenizi takip edebilmeniz için tamamladıklarınızı işaretleyeceğiz."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Kutlamalar",
+        "message": "Öğrenme yolculuğunuzu arkadaşlarınızla paylaşın ve başarınızı kutlayın."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "Geliştirilmiş Tarihler Sayfası",
+        "message": "Artık hızlı bağlantılar aracılığıyla ünitelere doğrudan tarihler sayfasından erişebilirsiniz."
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {

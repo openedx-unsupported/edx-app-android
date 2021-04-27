@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Continuer le cours",
+        "message": "Ne perdez plus jamais votre progression, vous pouvez désormais reprendre facilement votre cours où vous l'aviez laissé."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Coche",
+        "message": "Nous cocherons les éléments au fur et à mesure que vous les terminez pour que vous puissiez suivre votre progression."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Célébrations",
+        "message": "Partagez votre chemin d'apprentissage avec vos amis et célébrez vos accomplissements."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "Amélioration de la page des dates",
+        "message": "Vous pouvez désormais accéder aux unités directement à partir de la page des dates avec des liens rapides."
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {

@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Retomar curso",
+        "message": "Nunca mais perca seu lugar: agora ficou fácil retomar os estudos de onde você parou."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Marcas de seleção",
+        "message": "Para que você possa acompanhar seu progresso, marcaremos os itens à medida que eles forem concluídos."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Celebrações",
+        "message": "Compartilhe sua jornada de aprendizado com seus amigos e comemore o que você conquistou."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "Melhorias na página de datas",
+        "message": "Agora você pode acessar as unidades diretamente na página de datas, por meio de links rápidos."
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {

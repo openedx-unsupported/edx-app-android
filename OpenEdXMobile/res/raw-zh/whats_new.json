@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "履历课程",
+        "message": "永远不会再迷失自己的位置 — 现在，无论你是先前是在哪里止步的，都可以轻松地重新开始学习。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "勾选框",
+        "message": "在你完成某个任务时，我们会将该任务划去以便于你跟踪进度。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "庆祝所取得的成就",
+        "message": "与朋友分享学习历程、庆祝所取得的成绩。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "改进后的日期页面",
+        "message": "现在，你可以通过快速链接直接从日期页面访问学习单元中的内容。"
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {
