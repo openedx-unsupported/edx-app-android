@@ -1,5 +1,43 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "講座の再開",
+        "message": "停止した場所へ簡単に戻り、学習の続きを再開できるようになりました。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "チェックマーク",
+        "message": "完了した項目をチェックマークでお知らせ。進捗をわかりやすく確認できます。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "祝福",
+        "message": "学習の達成を友達に共有して一緒にお祝いしましょう。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "日付ページの改善",
+        ,
+        "message": "クイックリンクを使用して、日付ページから直接ユニットへアクセスできます。"
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {

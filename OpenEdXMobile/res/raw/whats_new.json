@@ -1,5 +1,42 @@
 [
   {
+    "version": "2.25",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Resume Course",
+        "message": "Never lose your place again—it’s now easy to get back to learning wherever you left off."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Checkmarks",
+        "message": "We'll check things off as you complete them so you can keep track of your progress."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "Celebrations",
+        "message": "Share your learning journey with your friends and celebrate what you’ve accomplished."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "Improved Dates Page",
+        "message": "You can now access units directly from the dates page via quick links."
+      }
+    ]
+  },
+  {
     "version": "2.24",
     "messages": [
       {
