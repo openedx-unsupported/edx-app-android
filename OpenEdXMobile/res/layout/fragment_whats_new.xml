@@ -22,9 +22,9 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="@dimen/widget_margin"
+                android:text="@string/whats_new_title"
                 android:textColor="@color/neutralWhite"
-                android:textSize="@dimen/edx_base"
-                android:text="@string/whats_new_title" />
+                android:textSize="@dimen/edx_base" />
 
             <com.joanzapata.iconify.widget.IconButton
                 android:id="@+id/close_btn"
@@ -50,7 +50,8 @@
         <FrameLayout
             android:id="@+id/fl_bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/whats_new_bottom_bar_min_height">
 
             <FrameLayout
                 android:id="@+id/indicator_container"
