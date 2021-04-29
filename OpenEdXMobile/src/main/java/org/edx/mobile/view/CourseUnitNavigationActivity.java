@@ -125,7 +125,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     private void getCourseCelebrationStatus() {
         Call<CourseStatus> courseStatusCall = courseApi.getCourseStatus(courseData.getCourseId());
-        courseStatusCall.enqueue(new ErrorHandlingCallback<CourseStatus>(this) {
+        courseStatusCall.enqueue(new ErrorHandlingCallback<CourseStatus>(this, null, null) {
             @Override
             protected void onResponse(@NonNull CourseStatus responseBody) {
                 isFirstSection = responseBody.getCelebrationStatus().getFirstSection();
