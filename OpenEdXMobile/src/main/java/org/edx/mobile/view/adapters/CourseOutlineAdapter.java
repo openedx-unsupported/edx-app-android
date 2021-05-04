@@ -603,6 +603,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 row.bulkDownload.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_holo_download));
                 break;
         }
+        row.bulkDownload.setContentDescription(state.toString());
         row.numOfVideoAndDownloadArea.setOnClickListener(listener);
         if (listener == null) {
             row.numOfVideoAndDownloadArea.setClickable(false);
