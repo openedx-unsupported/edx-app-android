@@ -99,6 +99,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
             @Override
             public void onPageSelected(int position) {
+                // Disable ViewPager2 scrolling to enable horizontal scrolling to for the WebView (Specific HTML Components).
+                pager2.setUserInputEnabled(pagerAdapter.getUnit(position).getType() != BlockType.DRAG_AND_DROP_V2);
             }
 
             @Override
