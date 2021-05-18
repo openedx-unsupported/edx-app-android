@@ -46,6 +46,11 @@ before_script:
   # Begin spinning up an emulator in the background
   - make emulator
 
+addons:
+  apt:
+    packages:
+      - python3.7
+
 script:
   - make quality
   - make test
@@ -73,9 +78,10 @@ cache:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install python3
+  - sudo apt purge python2.7-minimal
+  - sudo apt-get install python3 python3-pip python3-setuptools
+  - pip3 install --upgrade pip
   - python --version
-  - echo python --version
   - mkdir "$ANDROID_HOME/licenses" || true
   # Added cuz Travis doesn't accept license agreements of ConstraintLayout.
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
