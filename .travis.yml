@@ -46,11 +46,6 @@ before_script:
   # Begin spinning up an emulator in the background
   - make emulator
 
-addons:
-  apt:
-    packages:
-      - python3.7
-
 script:
   - make quality
   - make test
@@ -77,7 +72,7 @@ cache:
     - $HOME/.gradle
 
 before_install:
-  - sudo apt-get install python3 python3-pip python3-setuptools
+  - sudo apt-get install python3-pip python3-setuptools
   - pip3 install --upgrade pip
   - python --version
   - mkdir "$ANDROID_HOME/licenses" || true
