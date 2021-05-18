@@ -81,8 +81,8 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-  - pip install --user codecov
-  - pip install --user pillow # For screenshot tests
+  - pip3 install --user codecov
+  - pip3 install --user pillow # For screenshot tests
 
 after_success:
   - codecov
