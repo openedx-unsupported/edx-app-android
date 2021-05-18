@@ -80,7 +80,7 @@ before_install:
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
   - pip3 install --user codecov
-  - pip3 install --user pillow # For screenshot tests
+  - pip install --user pillow # For screenshot tests
 
 after_success:
   - codecov
