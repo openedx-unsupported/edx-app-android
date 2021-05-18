@@ -73,7 +73,6 @@ cache:
 
 before_install:
   - sudo apt-get install python3-pip python3-setuptools
-  - pip3 install --upgrade pip
   - python --version
   - mkdir "$ANDROID_HOME/licenses" || true
   # Added cuz Travis doesn't accept license agreements of ConstraintLayout.
