@@ -1,6 +1,6 @@
 language: android
 jdk: oraclejdk8
-sudo: required
+sudo: true
 # Use trusty distribution to resolve the adb(requires at least GLIBC_2.16 version) execution failure
 # Reference: https://github.com/atom/atom/issues/14440#issuecomment-302158430
 # Reference: https://docs.travis-ci.com/user/reference/trusty/
@@ -72,6 +72,10 @@ cache:
     - $HOME/.gradle
 
 before_install:
+  - sudo apt-get update
+  - sudo apt-get install python3
+  - python --version
+  - echo python --version
   - mkdir "$ANDROID_HOME/licenses" || true
   # Added cuz Travis doesn't accept license agreements of ConstraintLayout.
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
