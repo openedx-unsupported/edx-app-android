@@ -1,2 +1,1 @@
 codecov==2.1.11
-Pillow==8.1.1
