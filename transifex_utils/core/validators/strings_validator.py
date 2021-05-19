@@ -21,7 +21,7 @@ def validate_translation(source_file_placeholders_dict, translation_file):
     root = ET.parse(translation_file).getroot()
     for str_element in root.findall('string'):
         str_name = str_element.get('name')
-        str_value = str_element.text
+        str_value = ''.join(str_element.itertext())
         if str_name in source_file_placeholders_dict.keys():
             for placeholder in source_file_placeholders_dict[str_name]:
                 if not placeholder in str_value:
@@ -36,7 +36,7 @@ def get_source_file_placeholders_dict(file):
     root = ET.parse(file).getroot()
     for str_element in root.findall('string'):
         str_name = str_element.get('name')
-        str_value = str_element.text
+        str_value = ''.join(str_element.itertext())
         placeholders = get_placeholders(str_value)
         if len(placeholders) > 0:
             dict[str_name] = placeholders
