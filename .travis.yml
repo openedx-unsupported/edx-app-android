@@ -81,8 +81,8 @@ before_install:
 #  - python --version
   - sudo apt-get install python3
   - sudo apt-get install python3-pip python3-setuptools
+    - python --version
   - pip3 install --user pillow # For screenshot tests
-#  - python --version
 #  - pip3 install --user codecov
 
 after_success:
