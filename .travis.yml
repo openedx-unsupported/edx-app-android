@@ -80,7 +80,7 @@ before_install:
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
 #  - python --version
   - sudo apt-get update
-  - sudo apt-get install python3.6
+  - sudo apt install python3
   - python --version
   - sudo apt-get install python3-pip python3-setuptools
   - python --version
