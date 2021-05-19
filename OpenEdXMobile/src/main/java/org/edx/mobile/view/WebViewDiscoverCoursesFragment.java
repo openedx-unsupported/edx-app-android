@@ -3,10 +3,13 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -109,6 +112,22 @@ public class WebViewDiscoverCoursesFragment extends WebViewDiscoverFragment {
                     LinearLayoutManager.HORIZONTAL, false);
             panelBinding.rvSubjects.setLayoutManager(linearLayoutManager);
             panelBinding.rvSubjects.setAdapter(adapter);
+            panelBinding.rvSubjects.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                @Override
+                public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                        recyclerView.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+
+                @Override
+                public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+                }
+
+                @Override
+                public void onRequestDisallowInterceptTouchEvent(boolean b) {
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
