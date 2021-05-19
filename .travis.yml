@@ -79,7 +79,7 @@ before_install:
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
 #  - python --version
-  - sudo apt update
+  - sudo apt-get update
   - sudo apt-get install python3.6
   - python --version
   - sudo apt-get install python3-pip python3-setuptools
