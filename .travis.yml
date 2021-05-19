@@ -79,8 +79,10 @@ before_install:
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
 #  - python --version
-  - sudo apt install python3.6
-  - sudo apt install python3-pip python3-setuptools
+  - sudo apt update
+  - sudo apt-get install python3.6
+  - python --version
+  - sudo apt-get install python3-pip python3-setuptools
   - python --version
   - pip3 install --user pillow # For screenshot tests
 #  - pip3 install --user codecov
