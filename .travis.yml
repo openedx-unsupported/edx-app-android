@@ -72,15 +72,17 @@ cache:
     - $HOME/.gradle
 
 before_install:
-  - sudo apt-get install python3-pip python3-setuptools
   - python --version
   - mkdir "$ANDROID_HOME/licenses" || true
   # Added cuz Travis doesn't accept license agreements of ConstraintLayout.
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
+  - pip install --user pillow # For screenshot tests
+  - python --version
+  - sudo apt-get install python3-pip python3-setuptools
+  - python --version
   - pip3 install --user codecov
-#  - pip install --user pillow # For screenshot tests
 
 after_success:
   - codecov
