@@ -28,8 +28,8 @@ clean :
 requirements :
 	@echo 'Installing python requirements'
 #	@python -m pip install --upgrade pip
-#	@python -m pip --version
-	@python -m pip install -r requirements.txt --exists-action w
+	@pip --version
+	@pip install --user -r requirements.txt --exists-action w
 
 emulator :
 	@echo 'Creating and initializing an Android emulator for testing the app'

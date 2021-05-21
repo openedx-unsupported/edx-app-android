@@ -88,8 +88,8 @@ before_install:
   - sudo apt-get upgrade
 
 install:
-  - sudo -H pip install --upgrade pip
-  - sudo python -m pip install pip --upgrade --force
+  - python -m pip --version
+  - sudo -H pip install --user --upgrade pip
   - python -m pip --version
   #  - python --version
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
