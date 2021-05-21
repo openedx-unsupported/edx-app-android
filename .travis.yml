@@ -86,6 +86,8 @@ before_install:
   - python -m pip --version
   - sudo apt-get update
   - sudo apt-get upgrade
+
+install:
   - sudo -H pip install --upgrade pip
   - sudo python -m pip install pip --upgrade --force
   - python -m pip --version
