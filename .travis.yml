@@ -83,11 +83,12 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-#  - sudo apt-get update
-#  - python --version
-#  - sudo apt-get install python3.7 python3-pip python3-setuptools
-#  - pip3 install --upgrade pip
-#  - python --version
+  - sudo apt-get update
+  - sudo -H pip install --upgrade pip
+  #  - python --version
+  #  - sudo apt-get install python3.7 python3-pip python3-setuptools
+  #  - pip3 install --upgrade pip
+  #  - python --version
   - make requirements
 
 after_success:
