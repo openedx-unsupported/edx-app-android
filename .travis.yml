@@ -94,14 +94,12 @@ install:
   #  - python --version
   #  - pip3 install --upgrade pip
   - sudo apt-get install python3-pip python3-setuptools
-  - pip install --upgrade --user pip
-  - pip3 install --upgrade --user pip3
   - python --version
   - pip --version
   - python3 --version
   - pip3 --version
   #  - make requirements
-  - pip install --user Pillow -v
+  - pip3 install --user Pillow -v
 
 after_success:
   - codecov
