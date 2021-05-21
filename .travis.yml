@@ -71,6 +71,10 @@ cache:
   directories:
     - $HOME/.gradle
 
+addons:
+  apt:
+    update: true
+
 #addons:
 #  apt:
 #    packages:
@@ -90,6 +94,8 @@ install:
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
   #  - pip3 install --upgrade pip
   - pip install --upgrade --user pip
+  - python --version
+  - pip --version
   - make requirements
 
 after_success:
