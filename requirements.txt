@@ -1,1 +1,2 @@
+#codecov==2.0.5
 Pillow==7.1.0
