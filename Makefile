@@ -27,7 +27,7 @@ clean :
 
 requirements :
 	@echo 'Installing python requirements'
-	@pip -Wi install -r requirements.txt --exists-action w
+	@pip install -r requirements.txt --exists-action w
 
 emulator :
 	@echo 'Creating and initializing an Android emulator for testing the app'
