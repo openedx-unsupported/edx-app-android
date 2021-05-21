@@ -28,7 +28,9 @@ clean :
 requirements :
 	@echo 'Installing python requirements'
 	@pip --version
-	@pip install --trusted-host pypi.org -r requirements.txt --exists-action w
+	@pip install --upgrade pip
+	@pip --version
+	@pip install -r requirements.txt --exists-action w
 
 emulator :
 	@echo 'Creating and initializing an Android emulator for testing the app'
