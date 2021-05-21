@@ -1,6 +1,6 @@
 language: android
 jdk: oraclejdk8
-sudo: true
+sudo: required
 # Use trusty distribution to resolve the adb(requires at least GLIBC_2.16 version) execution failure
 # Reference: https://github.com/atom/atom/issues/14440#issuecomment-302158430
 # Reference: https://docs.travis-ci.com/user/reference/trusty/
@@ -71,10 +71,10 @@ cache:
   directories:
     - $HOME/.gradle
 
-addons:
-  apt:
-    packages:
-      - python3.7
+#addons:
+#  apt:
+#    packages:
+#      - python3.7
 
 before_install:
   - python --version
@@ -83,14 +83,12 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-#  - python --version
   - sudo apt-get update
   - python --version
   - sudo apt-get install python3.7 python3-pip python3-setuptools
   - pip3 install --upgrade pip
   - python --version
-  - pip3 install --user pillow # For screenshot tests
-#  - pip3 install --user codecov
+  - make requirements
 
 after_success:
   - codecov
