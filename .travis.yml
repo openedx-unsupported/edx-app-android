@@ -93,13 +93,10 @@ install:
   - python3 --version
   #  - python --version
   #  - pip3 install --upgrade pip
-  - sudo apt-get install python3-pip python3-setuptools
   - python --version
   - pip --version
-  - python3 --version
-  - pip3 --version
   #  - make requirements
-  - python -m pip3 install --user Pillow -v
+  - pip install --user Pillow -v
 
 after_success:
   - codecov
