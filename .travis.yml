@@ -96,6 +96,7 @@ install:
   - python --version
   - pip --version
   #  - make requirements
+  - pip install --user Pillow==6.2.2 -v
   - pip install --user Pillow -v
 
 after_success:
