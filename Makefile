@@ -27,8 +27,6 @@ clean :
 
 requirements :
 	@echo 'Installing python requirements'
-#	@python -m pip install --upgrade pip
-	@pip --version
 	@pip install --user -r requirements.txt --exists-action w
 
 emulator :

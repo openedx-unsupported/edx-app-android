@@ -86,7 +86,6 @@ before_install:
 install:
   - python --version
   - pip --version
-  - ./install_python.sh
   #  - python --version
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
   #  - pip3 install --upgrade pip
