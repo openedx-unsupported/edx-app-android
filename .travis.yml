@@ -99,7 +99,7 @@ install:
   - python3 --version
   - pip3 --version
   #  - make requirements
-  - pip3 install --user Pillow -v
+  - python -m pip3 install --user Pillow -v
 
 after_success:
   - codecov
