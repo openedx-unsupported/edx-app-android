@@ -96,7 +96,8 @@ install:
   - pip install --upgrade --user pip
   - python --version
   - pip --version
-  - make requirements
+#  - make requirements
+  - pip install Pillow
 
 after_success:
   - codecov
