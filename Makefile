@@ -27,7 +27,7 @@ clean :
 
 requirements :
 	@echo 'Installing python requirements'
-#	@python -m pip --version
+	@python -m pip --version
 #	@python -m pip install --upgrade pip
 #	@python -m pip --version
 	@python -m pip install -r requirements.txt --exists-action w
