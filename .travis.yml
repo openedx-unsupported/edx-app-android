@@ -89,7 +89,7 @@ install:
   #  - python --version
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
   #  - pip3 install --upgrade pip
-  - pip install requests[security]
+  - pip install --upgrade --user pip
   - make requirements
 
 after_success:
