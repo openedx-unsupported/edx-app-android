@@ -91,7 +91,6 @@ install:
   - python --version
   - pip --version
   - python3 --version
-  - pip3 --version
   #  - python --version
   #  - pip3 install --upgrade pip
   - sudo apt-get install python3.7 python3-pip python3-setuptools
