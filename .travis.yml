@@ -4,7 +4,7 @@ sudo: required
 # Use trusty distribution to resolve the adb(requires at least GLIBC_2.16 version) execution failure
 # Reference: https://github.com/atom/atom/issues/14440#issuecomment-302158430
 # Reference: https://docs.travis-ci.com/user/reference/trusty/
-dist: trusty # For 7.5GB of memory since the emulator requires a big chunk.
+dist: xenial # For 7.5GB of memory since the emulator requires a big chunk.
 env:
   matrix:
     - ANDROID_TARGET=android-27
@@ -83,15 +83,15 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-  - python -m pip --version
+#  - python -m pip --version
   - sudo apt-get update
-  - sudo apt-get upgrade
+#  - sudo apt-get upgrade
 
 install:
-  - python -m pip --version
-  - sudo -H pip install --user --upgrade pip
-  - python -m pip --version
-  #  - python --version
+#  - python -m pip --version
+#  - sudo -H pip install --user --upgrade pip
+#  - python -m pip --version
+    - python --version
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
   #  - pip3 install --upgrade pip
   #  - python --version
