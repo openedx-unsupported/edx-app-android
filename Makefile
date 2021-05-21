@@ -27,6 +27,7 @@ clean :
 
 requirements :
 	@echo 'Installing python requirements'
+	@pip --version
 	@pip install --trusted-host pypi.org -r requirements.txt --exists-action w
 
 emulator :
