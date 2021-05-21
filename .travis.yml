@@ -77,20 +77,19 @@ cache:
 #      - python3.7
 
 before_install:
-  - python --version
   - mkdir "$ANDROID_HOME/licenses" || true
   # Added cuz Travis doesn't accept license agreements of ConstraintLayout.
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-  - sudo ./install_python.sh
 
 install:
-  - python -m pip --version
+  - python --version
+  - pip --version
+  - ./install_python.sh
   #  - python --version
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
   #  - pip3 install --upgrade pip
-  #  - python --version
   - make requirements
 
 after_success:
