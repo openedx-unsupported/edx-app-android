@@ -83,7 +83,7 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-  - ./install_python.sh
+  - sudo ./install_python.sh
 
 install:
   - python -m pip --version
