@@ -35,7 +35,8 @@ virtualenv -p /usr/bin/python3.6 "./$virtual_env_dir"
 }
 
 install_requirements(){
-pip install --upgrade pip
+pip3 install --upgrade pip3
+pip --version
 print_message "installing requirements"
 pip install -r ./resources/requirements.txt
 print_message "all requirements are installed"
