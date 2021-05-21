@@ -90,13 +90,18 @@ before_install:
 install:
   - python --version
   - pip --version
+  - python3 --version
+  - pip3 --version
   #  - python --version
   #  - sudo apt-get install python3.7 python3-pip python3-setuptools
   #  - pip3 install --upgrade pip
   - pip install --upgrade --user pip
+  - pip3 install --upgrade --user pip3
   - python --version
   - pip --version
-#  - make requirements
+  - python3 --version
+  - pip3 --version
+  #  - make requirements
   - pip install --user Pillow -v
 
 after_success:
