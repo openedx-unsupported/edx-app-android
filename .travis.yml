@@ -91,10 +91,14 @@ install:
   - python --version
   - pip --version
   - python3 --version
+  - which pyhton3
   #  - python --version
-  #  - pip3 install --upgrade pip
+  - sudo apt-get update
+  - sudo apt install python3-pip
+  - pip3 install --upgrade pip
   - python --version
   - pip --version
+  - pip3 --version
   #  - make requirements
   - pip install --user Pillow==6.2.2 -v
   - pip install --user Pillow -v
