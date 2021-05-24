@@ -91,9 +91,7 @@ install:
   - python --version
   - pip --version
   - python3 --version
-  - curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py -v
-  - python get-pip.py pip==20.3.4 --user --use-deprecated=legacy-resolver -v
-  - which get-pip.py
+  - pip install --trusted-host files.pythonhosted.org https://files.pythonhosted.org/packages/53/7f/55721ad0501a9076dbc354cc8c63ffc2d6f1ef360f49ad0fbcce19d68538/pip-20.3.4.tar.gz#sha256=6773934e5f5fc3eaa8c5a44949b5b924fc122daa0a8aa9f80c835b4ca2a543fc
   - pip install --trusted-host files.pythonhosted.org "https://files.pythonhosted.org/packages/b3/d0/a20d8440b71adfbf133452d4f6e0fe80de2df7c2578c9b498fb812083383/Pillow-6.2.2.tar.gz#sha256=db9ff0c251ed066d367f53b64827cc9e18ccea001b986d08c265e53625dab950" -v
   - pip install https://github.com/python-pillow/Pillow/releases/tag/6.2.2 -v
   - sudo apt-get update
