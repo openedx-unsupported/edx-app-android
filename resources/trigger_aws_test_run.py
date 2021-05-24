@@ -95,7 +95,7 @@ def update_credentials():
 
     with open(CUSTOM_SPECS_NAME, 'r') as stream:
         try:
-            loaded = yaml.load(stream)
+            loaded = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
 
