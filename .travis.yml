@@ -91,7 +91,7 @@ install:
   - python --version
   - pip --version
   - python3 --version
-  - which pyhton3
+#  - which pyhton3
   #  - python --version
   - sudo apt-get update
   - sudo apt install python3-pip
