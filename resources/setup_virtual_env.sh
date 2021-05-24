@@ -36,14 +36,14 @@ virtualenv -p /usr/bin/python3.6 "./$virtual_env_dir"
 
 install_requirements(){
 print_message "installing requirements"
-pip install -r ./resources/requirements.txt
+pip3 install -r ./resources/requirements.txt
 print_message "all requirements are installed"
 }
 
 switch_to_virtual_env(){
 print_message "switching to virtual environment with following python version"
 source "./$virtual_env_dir/bin/activate"
-python --version
+python3 --version
 }
 
 check_and_install_virtualenv
@@ -51,4 +51,4 @@ create_virtual_environment
 switch_to_virtual_env
 install_requirements
 print_message "calling AWS Test run"
-python -v ./resources/trigger_aws_test_run.py $AUT_NAME
+python3 -v ./resources/trigger_aws_test_run.py $AUT_NAME

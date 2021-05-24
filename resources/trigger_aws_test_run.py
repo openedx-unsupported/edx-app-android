@@ -235,6 +235,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
 
     """
 
+    print('testSpecArn status {} '.format(test_specs_arn))
     schedule_run_result = device_farm.schedule_run(
         projectArn=project_arn,
         appArn=app_arn,
