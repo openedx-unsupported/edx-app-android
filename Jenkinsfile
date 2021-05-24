@@ -65,7 +65,6 @@ pipeline {
             steps {
                 sh 'bash ./resources/prepare_aws_package.sh'
                 archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true
-                archiveArtifacts artifacts: "edX_test_run_artifacts", onlyIfSuccessful: true
             }
         }
 
