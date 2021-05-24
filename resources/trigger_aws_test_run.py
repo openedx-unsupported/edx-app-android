@@ -58,7 +58,7 @@ def aws_job():
         PACKAGE_NAME
     )
 
-    # update_credentials()
+    update_credentials()
 
     test_specs_arn = upload_file(
         project_arn,
