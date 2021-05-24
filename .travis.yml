@@ -91,8 +91,7 @@ install:
   - python --version
   - pip --version
   - python3 --version
-#  - which pyhton3
-  #  - python --version
+  - pip install https://github.com/python-pillow/Pillow/releases/tag/6.2.2
   - sudo apt-get update
   - sudo apt install python3-pip
   - pip3 install --upgrade pip
@@ -101,7 +100,7 @@ install:
   - pip3 --version
   #  - make requirements
   - pip install --user Pillow==6.2.2 -v
-  - pip install --user Pillow -v
+#  - pip install --user Pillow -v
 
 after_success:
   - codecov
