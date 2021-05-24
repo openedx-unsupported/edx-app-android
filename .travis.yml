@@ -92,7 +92,7 @@ install:
   - pip --version
   - pip3 --version
   #  - make requirements
-  - pip install --user Pillow -v
+  - pip3 install --user Pillow -v
 #  - pip install --user Pillow -v
 
 after_success:
