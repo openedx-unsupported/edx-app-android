@@ -58,7 +58,7 @@ def aws_job():
         PACKAGE_NAME
     )
 
-    update_credentials()
+    # update_credentials()
 
     test_specs_arn = upload_file(
         project_arn,
@@ -95,7 +95,7 @@ def update_credentials():
 
     with open(CUSTOM_SPECS_NAME, 'r') as stream:
         try:
-            loaded = yaml.safe_load(stream)
+            loaded = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
 
