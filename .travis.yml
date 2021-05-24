@@ -96,7 +96,7 @@ install:
   #  - pip install https://github.com/python-pillow/Pillow/releases/tag/6.2.2 -v
   #  - sudo apt-get update
   - sudo apt install python3-pip
-  - pip3 install --upgrade pip3
+  - pip3 install --upgrade pip
   - python --version
   - pip --version
   - pip3 --version
