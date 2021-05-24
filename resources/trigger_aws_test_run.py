@@ -161,7 +161,7 @@ def upload_file(project_arn, upload_type, target_file_name):
     check_every_seconds = 10 if timeout_seconds == RUN_TIMEOUT_SECONDS else 1
     start = time.time()
     while True:
-        get_upload_status = device_farm.get_upload(arn=upload_arn)
+        get_upload_status = device_farm.create_upload(arn=upload_arn)
         current_status = get_upload_status['upload']['status']
         if current_status in UPLOAD_SUCCESS_STATUS:
             print('{} upload status - {}'.format(
