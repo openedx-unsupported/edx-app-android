@@ -86,7 +86,7 @@ install:
   - python --version
   - pip --version
   - python3 --version
-  - sudo pip3 uninstall pip
+  - sudo pip uninstall pip -y -r
   - sudo apt install python3-pip
   - pip3 install --upgrade pip
   - python --version
