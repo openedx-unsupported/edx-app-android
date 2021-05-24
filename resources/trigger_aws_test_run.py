@@ -157,7 +157,7 @@ def upload_file(project_arn, upload_type, target_file_name):
 
     _upload_presigned_url(pre_signed_url, name)
 
-    timeout_seconds = 120
+    timeout_seconds = 200
     check_every_seconds = 10 if timeout_seconds == RUN_TIMEOUT_SECONDS else 1
     start = time.time()
     while True:
