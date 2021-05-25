@@ -1,10 +1,6 @@
 language: android
 jdk: oraclejdk8
 sudo: required
-# Use trusty distribution to resolve the adb(requires at least GLIBC_2.16 version) execution failure
-# Reference: https://github.com/atom/atom/issues/14440#issuecomment-302158430
-# Reference: https://docs.travis-ci.com/user/reference/trusty/
-dist: trusty # For 7.5GB of memory since the emulator requires a big chunk.
 env:
   matrix:
     - ANDROID_TARGET=android-27
@@ -77,8 +73,16 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-  - pip install --user codecov
-  - pip install --user pillow # For screenshot tests
+
+  # Python 2.7 is deprecated and no more maintained.
+  # Install the pip3 for python and install codecov
+  - sudo apt-get install python3-pip python3-setuptools
+  - pip3 install --user codecov
+
+  # Pillow Library for image manipulation in snapshot tests, install from local file cuz Python 2.7 is
+  # deprecated and no more maintained.
+  # Ref: https://github.com/facebook/screenshot-tests-for-android#requirements
+  - python -m pip install tools/Pillow-6.2.2-cp27-cp27mu-manylinux1_x86_64.whl --user
 
 after_success:
   - codecov
