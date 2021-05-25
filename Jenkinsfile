@@ -50,7 +50,7 @@ pipeline {
         stage('valdiate compiled app') {
             steps {
                 sh 'bash ./resources/validate_builds.sh'
-                // archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true //
+                archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true //
             }   
         }
 
@@ -64,7 +64,7 @@ pipeline {
         stage('prepare package for aws device farm') {
             steps {
                 sh 'bash ./resources/prepare_aws_package.sh'
-                // archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true
+                archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true
             }
         }
 
