@@ -55,7 +55,7 @@ def aws_job():
     print('package_arn')
     package_arn = upload_file(
         project_arn,
-        PACKAGE_UPLOAD_TYPE,
+        CUSTOM_SPECS_UPLOAD_TYPE,
         PACKAGE_NAME
     )
 
