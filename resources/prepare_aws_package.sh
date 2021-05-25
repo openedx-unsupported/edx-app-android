@@ -5,7 +5,7 @@ set -e
 cd $TEST_PROJECT_REPO_NAME
 
 # prepare wheel house 
-pip wheel --wheel-dir wheelhouse -r requirements.txt
+python -m pip wheel --wheel-dir wheelhouse -r requirements.txt
 
 # zip pacakge for aws device farm 
 zip -r test_bundle.zip tests/ wheelhouse/ requirements.txt

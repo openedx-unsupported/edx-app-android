@@ -16,7 +16,7 @@ phases:
       # Install dependencies (required to execute the tests and supported by automation codebase) that
       # specified in requirements.txt file, as Device Farm is preconfigured that are not supported by
       # automation codebase.
-      - pip install -r requirements.txt
+      - python -m pip install -r requirements.txt
       # This test execution environment uses Appium version 1.9.1 by default, however we enable you to change it using the Appium version manager (avm). An
       # example "avm" command below changes the version to 1.14.2.
       # For your convenience, we have preinstalled the following versions: 1.9.1, 1.10.1, 1.11.1, 1.12.1, 1.13.0, 1.14.1, 1.14.2, 1.15.1 or 1.16.0.
