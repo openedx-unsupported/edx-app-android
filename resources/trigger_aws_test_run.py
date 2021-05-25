@@ -52,14 +52,18 @@ def aws_job():
 
     project_arn = get_project_arn(PROJECT_NAME)
 
+    print('package_arn')
     package_arn = upload_file(
         project_arn,
         PACKAGE_UPLOAD_TYPE,
         PACKAGE_NAME
     )
 
+    print('before update credentials')
     update_credentials()
+    print('after update credentials')
 
+    print('test_specs_arn')
     test_specs_arn = upload_file(
         project_arn,
         CUSTOM_SPECS_UPLOAD_TYPE,
@@ -68,14 +72,17 @@ def aws_job():
 
     print('testSpecArn status {} '.format(test_specs_arn))
 
+    print('aut_arn')
     aut_arn = upload_file(
         project_arn,
         ANDROID_APP_UPLOAD_TYPE,
         AUT_NAME
     )
 
+    print('device pool arn')
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
+    print('test_run_arn')
     test_run_arn = schedule_run(
         project_arn=project_arn,
         name=RUN_NAME,
