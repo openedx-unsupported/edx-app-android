@@ -66,7 +66,7 @@ def aws_job():
         CUSTOM_SPECS_NAME
     )
 
-    print('testSpecArn status {} '.format(test_specs_arn))
+    print('test status {} '.format(test_specs_arn))
 
     aut_arn = upload_file(
         project_arn,
