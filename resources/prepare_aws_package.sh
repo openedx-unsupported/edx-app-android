@@ -5,10 +5,11 @@ set -e
 cd $TEST_PROJECT_REPO_NAME
 
 # prepare wheel house 
-pip wheel --wheel-dir wheelhouse -r requirements.txt
+# pip wheel --wheel-dir wheelhouse -r requirements.txt
 
 # zip pacakge for aws device farm 
-zip -r test_bundle.zip tests/ requirements.txt
+zip -r my_tests.zip tests/ requirements.txt
+
 # Move AWS Package at project root
 cp my_tests.zip ../
 
