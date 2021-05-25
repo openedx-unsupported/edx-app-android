@@ -90,10 +90,12 @@ install:
   #  - sudo apt install python3-pip
   #  - pip3 install --upgrade pip
   - python --version
+  - easy_install --version
+  - easy_install pip
 #  - pip --version
   #  - pip3 --version
   #  - make requirements
-  - pip install --user Pillow --pre -v
+  - pip install --user Pillow==3.1.0 --pre -v
 #  - pip install --user Pillow -v
 
 after_success:
