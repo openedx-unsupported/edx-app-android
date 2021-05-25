@@ -89,7 +89,7 @@ def aws_job():
         name=RUN_NAME,
         device_pool_arn=device_pool_arn,
         app_arn=aut_arn,
-        # test_package_arn=package_arn,
+        test_package_arn='',
         test_specs_arn=test_specs_arn)
 
     get_test_run(test_run_arn)
