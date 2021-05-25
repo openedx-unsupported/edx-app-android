@@ -53,12 +53,12 @@ def aws_job():
     project_arn = get_project_arn(PROJECT_NAME)
 
     print('package_arn')
-    package_arn = upload_file(
-        project_arn,
-        PACKAGE_UPLOAD_TYPE,
-        CUSTOM_SPECS_NAME
-    )
-    print('package_arn: ', package_arn)
+    # package_arn = upload_file(
+    #     project_arn,
+    #     PACKAGE_UPLOAD_TYPE,
+    #     PACKAGE_NAME
+    # )
+    # print('package_arn: ',)
 
     print('before update credentials')
     update_credentials()
@@ -89,7 +89,7 @@ def aws_job():
         name=RUN_NAME,
         device_pool_arn=device_pool_arn,
         app_arn=aut_arn,
-        test_package_arn=package_arn,
+        # test_package_arn=package_arn,
         test_specs_arn=test_specs_arn)
 
     get_test_run(test_run_arn)
