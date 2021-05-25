@@ -86,27 +86,14 @@ install:
   - python --version
   - pip --version
   #  - python3 --version
-  # usage
-  # bash install-python-2.7.14.sh
-  - sudo apt-get update
-  - sudo apt-get install build-essential checkinstall -y
-  - sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev -y
-  - cd /usr/src
-  - sudo wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
-  - sudo tar xzf Python-2.7.14.tgz
-  - cd Python-2.7.14
-  - sudo ./configure --enable-optimizations
-  - sudo make install
-  - sudo rm -rf /usr/src/Python-2.7.14*
   #  - sudo pip uninstall pip -y
   #  - sudo apt install python3-pip
   #  - pip3 install --upgrade pip
   - python --version
-  - pip --version
+#  - pip --version
   #  - pip3 --version
   #  - make requirements
-  - pip install --user Pillow==3.0.0 -v
-  - pip install --user Pillow -v
+  - pip install --user Pillow --pre -v
 #  - pip install --user Pillow -v
 
 after_success:
