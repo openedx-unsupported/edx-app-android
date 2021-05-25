@@ -85,18 +85,20 @@ before_install:
 install:
   - python --version
   - pip --version
-  #  - python3 --version
+  - python3 --version
+  - sudo add-apt-repository ppa:jonathonf/python-3.7
+  - sudo apt-get update
+  - sudo apt-get install python3.7
   #  - sudo pip uninstall pip -y
-  #  - sudo apt install python3-pip
+  - sudo apt install python3-pip
   #  - pip3 install --upgrade pip
   - python --version
-  - easy_install --version
-  - sudo easy_install pip
-#  - pip --version
-  #  - pip3 --version
+  - pip --version
+  - pip3 --version
+  - python -m pip --version
   #  - make requirements
-  - pip install --user Pillow==3.1.0 --pre -v
-#  - pip install --user Pillow -v
+  - pip3 install --user Pillow==3.0.0 -v
+  - python -m pip install --user Pillow -v
 
 after_success:
   - codecov
