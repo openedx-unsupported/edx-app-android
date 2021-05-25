@@ -20,7 +20,7 @@ fi
 
 install_virtualenv(){
 print_message "installing virtualenv"
-pip install virtualenv
+pip3 install virtualenv
 }
 
 create_virtual_environment(){
