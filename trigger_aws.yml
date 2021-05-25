@@ -8,7 +8,7 @@ phases:
     commands:
       # Device Farm support two major versions of Python, each with one minor version: 2 (minor version 2.7), and 3 (minor version 3.7.4).
       # The default Python version is 2, but you can switch to 3 by setting the following variable to 3:
-      - export PYTHON_VERSION=3
+      - export PYTHON_VERSION=3.6
       # Move into the project directory
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
       # Activate the virtual environment
