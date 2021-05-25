@@ -66,6 +66,8 @@ def aws_job():
         CUSTOM_SPECS_NAME
     )
 
+    print('testSpecArn bundle status {} '.format(test_specs_arn))
+
     aut_arn = upload_file(
         project_arn,
         ANDROID_APP_UPLOAD_TYPE,
