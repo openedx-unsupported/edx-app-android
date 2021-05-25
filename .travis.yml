@@ -81,21 +81,21 @@ before_install:
   # To fix it, we are copying the licenses that come with the SDK to Travis's directory.
   # Reference: https://github.com/wolkenschieber/License/blob/master/.travis.yml#L35
   - cp ./android-sdk-licenses/* "$ANDROID_HOME/licenses/"
-
-install:
   - python --version
   - pip --version
-#  - python3 --version
-#  #  - sudo pip uninstall pip -y
-#  - sudo apt install python3-pip
-#  #  - pip3 install --upgrade pip
-#  - python --version
-#  - pip --version
-#  - pip3 --version
-#  - python -m pip --version
+  #  - python3 --version
+  #  #  - sudo pip uninstall pip -y
+  #  - sudo apt install python3-pip
+  #  #  - pip3 install --upgrade pip
+  #  - python --version
+  #  - pip --version
+  #  - pip3 --version
+  #  - python -m pip --version
   #  - make requirements
+  - sudo apt-get install python2.7
+  - python --version
   - python -m pip install Tools/Pillow-6.2.2-cp27-cp27mu-manylinux1_x86_64.whl --user -v # library for image manipulation in snapshot tests
-  - python -m pip install Tools/codecov-2.1.11-py2.py3-none-any.whl --user -v # library for image manipulation in snapshot tests
+  #  - python -m pip install Tools/codecov-2.1.11-py2.py3-none-any.whl --user -v # library for image manipulation in snapshot tests
 
 after_success:
   - codecov
