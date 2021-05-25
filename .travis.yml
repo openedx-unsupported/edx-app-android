@@ -4,7 +4,7 @@ sudo: required
 # Use trusty distribution to resolve the adb(requires at least GLIBC_2.16 version) execution failure
 # Reference: https://github.com/atom/atom/issues/14440#issuecomment-302158430
 # Reference: https://docs.travis-ci.com/user/reference/trusty/
-dist: trusty # For 7.5GB of memory since the emulator requires a big chunk.
+#dist: trusty # For 7.5GB of memory since the emulator requires a big chunk.
 env:
   matrix:
     - ANDROID_TARGET=android-27
