@@ -91,7 +91,7 @@ install:
   #  - pip3 install --upgrade pip
   - python --version
   - easy_install --version
-  - easy_install pip
+  - sudo easy_install pip
 #  - pip --version
   #  - pip3 --version
   #  - make requirements
