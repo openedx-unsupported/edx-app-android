@@ -64,7 +64,7 @@ pipeline {
         stage('prepare package for aws device farm') {
             steps {
                 sh 'bash ./resources/prepare_aws_package.sh'
-                archiveArtifacts artifacts: "my_tests.zip", onlyIfSuccessful: true
+                archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true
             }
         }
 
