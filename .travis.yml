@@ -86,9 +86,6 @@ install:
   - python --version
   - pip --version
   - python3 --version
-  - sudo add-apt-repository ppa:jonathonf/python-3.7
-  - sudo apt-get update
-  - sudo apt-get install python3.7
   #  - sudo pip uninstall pip -y
   - sudo apt install python3-pip
   #  - pip3 install --upgrade pip
