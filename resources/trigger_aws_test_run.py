@@ -95,7 +95,7 @@ def update_credentials():
 
     with open(CUSTOM_SPECS_NAME, 'r') as stream:
         try:
-            loaded = yaml.safe_load(stream)
+            loaded = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
 
@@ -157,7 +157,7 @@ def upload_file(project_arn, upload_type, target_file_name):
 
     _upload_presigned_url(pre_signed_url, name)
 
-    timeout_seconds = 200
+    timeout_seconds = 60
     check_every_seconds = 10 if timeout_seconds == RUN_TIMEOUT_SECONDS else 1
     start = time.time()
     while True:
