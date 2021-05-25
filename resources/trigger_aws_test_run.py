@@ -28,7 +28,7 @@ RUN_TIMEOUT_SECONDS = 60 * 30
 UPLOAD_SUCCESS_STATUS = 'SUCCEEDED'
 RUN_COMPLETED_STATUS = 'COMPLETED'
 TARGET_AVAILABILITY = 'HIGHLY_AVAILABLE'
-PACKAGE_NAME = 'test_suit.zip'
+PACKAGE_NAME = 'my_tests.zip'
 CUSTOM_SPECS_NAME = 'trigger_aws.yml'
 status_flag = False
 
@@ -53,12 +53,12 @@ def aws_job():
     project_arn = get_project_arn(PROJECT_NAME)
 
     print('package_arn')
-    # package_arn = upload_file(
-    #     project_arn,
-    #     PACKAGE_UPLOAD_TYPE,
-    #     PACKAGE_NAME
-    # )
-    # print('package_arn: ',)
+    package_arn = upload_file(
+        project_arn,
+        PACKAGE_UPLOAD_TYPE,
+        PACKAGE_NAME
+    )
+    print('package_arn: ',)
 
     print('before update credentials')
     update_credentials()
@@ -89,7 +89,7 @@ def aws_job():
         name=RUN_NAME,
         device_pool_arn=device_pool_arn,
         app_arn=aut_arn,
-        test_package_arn='',
+        test_package_arn=package_arn,
         test_specs_arn=test_specs_arn)
 
     get_test_run(test_run_arn)
