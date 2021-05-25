@@ -95,7 +95,7 @@ install:
   - python -m pip --version
   #  - make requirements
   - pip3 install --user Pillow==3.0.0 -v
-  - python -m pip install --user Pillow -v
+  - python3 -m pip install --user Pillow --pre -v
 
 after_success:
   - codecov
