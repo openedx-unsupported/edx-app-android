@@ -157,6 +157,11 @@ def upload_file(project_arn, upload_type, target_file_name):
         projectArn=project_arn,
         name=target_file_name,
         type=upload_type)
+    
+    print('project_arn', project_arn)
+    print('upload_type', upload_type)
+    print('target_file_name', target_file_name)
+    print('upload_response', upload_response)
 
     upload_arn = upload_response['upload']['arn']
     status = upload_response['upload']['status']
