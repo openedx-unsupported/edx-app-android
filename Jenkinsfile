@@ -74,7 +74,7 @@ pipeline {
             }
         }
 
-        stage('setup virtual env and trigger run on aws device farm') {
+        stage('Download') {
             steps {
                 archiveArtifacts artifacts: "report.html", onlyIfSuccessful: true
             }
