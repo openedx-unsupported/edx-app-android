@@ -73,11 +73,5 @@ pipeline {
                 sh 'bash ./resources/setup_virtual_env.sh'
             }
         }
-
-        stage('Download') {
-            steps {
-                archiveArtifacts artifacts: "*.html", onlyIfSuccessful: true
-            }
-        }
     }
 } 
