@@ -76,7 +76,7 @@ pipeline {
 
         stage('Download') {
             steps {
-                archiveArtifacts artifacts: "report.html", onlyIfSuccessful: true
+                archiveArtifacts artifacts: "**.html", onlyIfSuccessful: true
             }
         }
     }
