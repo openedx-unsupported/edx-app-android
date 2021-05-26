@@ -73,5 +73,11 @@ pipeline {
                 sh 'bash ./resources/setup_virtual_env.sh'
             }
         }
+
+        stage('setup virtual env and trigger run on aws device farm') {
+            steps {
+                archiveArtifacts artifacts: "report.html", onlyIfSuccessful: true
+            }
+        }
     }
 } 
