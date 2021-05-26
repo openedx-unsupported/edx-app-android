@@ -52,38 +52,28 @@ def aws_job():
 
     project_arn = get_project_arn(PROJECT_NAME)
 
-    print('package_arn')
     package_arn = upload_file(
         project_arn,
         PACKAGE_UPLOAD_TYPE,
         PACKAGE_NAME
     )
-    print('package_arn: ',)
 
-    print('before update credentials')
     update_credentials()
-    print('after update credentials')
 
-    print('test_specs_arn')
     test_specs_arn = upload_file(
         project_arn,
         CUSTOM_SPECS_UPLOAD_TYPE,
         CUSTOM_SPECS_NAME
     )
 
-    print('testSpecArn status {} '.format(test_specs_arn))
-
-    print('aut_arn')
     aut_arn = upload_file(
         project_arn,
         ANDROID_APP_UPLOAD_TYPE,
         AUT_NAME
     )
 
-    print('device pool arn')
     device_pool_arn = get_device_pool(project_arn, DEVICE_POOL_NAME)
 
-    print('test_run_arn')
     test_run_arn = schedule_run(
         project_arn=project_arn,
         name=RUN_NAME,
@@ -158,11 +148,6 @@ def upload_file(project_arn, upload_type, target_file_name):
         projectArn=project_arn,
         name=target_file_name,
         type=upload_type)
-    
-    print('project_arn', project_arn)
-    print('upload_type', upload_type)
-    print('target_file_name', target_file_name)
-    print('upload_response', upload_response)
 
     upload_arn = upload_response['upload']['arn']
     status = upload_response['upload']['status']
@@ -250,7 +235,6 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
 
     """
 
-    print('testSpecArn bundle status {} '.format(test_specs_arn))
     schedule_run_result = device_farm.schedule_run(
         projectArn=project_arn,
         appArn=app_arn,
