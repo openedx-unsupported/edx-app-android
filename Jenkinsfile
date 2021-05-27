@@ -11,7 +11,7 @@ pipeline {
             APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
-            AUT_NAME = 'edx-debuggable-2.24.3.apk'
+            AUT_NAME = 'edx-debuggable-2.25.1.apk'
             USER_NAME = credentials('AUTOMATION_USERNAME')
             USER_PASSWORD = credentials('AUTOMATION_PASSWORD')
     }
@@ -50,7 +50,7 @@ pipeline {
         stage('valdiate compiled app') {
             steps {
                 sh 'bash ./resources/validate_builds.sh'
-                // archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true //
+                archiveArtifacts artifacts: "$APK_PATH/*.apk", onlyIfSuccessful: true //
             }   
         }
 
@@ -64,7 +64,7 @@ pipeline {
         stage('prepare package for aws device farm') {
             steps {
                 sh 'bash ./resources/prepare_aws_package.sh'
-                // archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true
+                archiveArtifacts artifacts: "test_bundle.zip", onlyIfSuccessful: true
             }
         }
 
