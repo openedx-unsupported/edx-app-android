@@ -124,6 +124,12 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         if (unit.getType() == BlockType.PROBLEM) {
             initObserver();
         }
+        // Enable Pan & Zoom for specific HTML components
+        if (unit.getType() == BlockType.DRAG_AND_DROP_V2) {
+            authWebView.getWebView().getSettings().setSupportZoom(true);
+            authWebView.getWebView().getSettings().setDisplayZoomControls(false);
+            authWebView.getWebView().getSettings().setBuiltInZoomControls(true);
+        }
     }
 
     private void fetchDateBannerInfo() {
