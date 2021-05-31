@@ -10,6 +10,9 @@ import android.net.wifi.WifiManager;
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
 
+import com.appboy.Appboy;
+import com.appboy.AppboyLifecycleCallbackListener;
+import com.appboy.configuration.AppboyConfig;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -139,6 +142,16 @@ public abstract class MainApplication extends MultiDexApplication {
             // to manually initialize the sdk here.
             FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
             FacebookSdk.sdkInitialize(getApplicationContext());
+        }
+
+        // Braze SDK Initialization
+        if (config.getBrazeConfig().isEnabled()) {
+            AppboyConfig appboyConfig = new AppboyConfig.Builder()
+                    .setApiKey(config.getBrazeConfig().getApiKey())
+                    .setCustomEndpoint(config.getBrazeConfig().getEndPointKey())
+                    .build();
+            Appboy.configure(this, appboyConfig);
+            registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener(true, false));
         }
     }
 

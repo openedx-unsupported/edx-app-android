@@ -61,6 +61,7 @@ public class Config {
     private static final String API_URL_VERSION = "API_URL_VERSION";
     private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
     private static final String AGREEMENT_URLS = "AGREEMENT_URLS";
+    private static final String BRAZE = "BRAZE";
 
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
@@ -500,6 +501,30 @@ public class Config {
         }
     }
 
+    public static class BrazeConfig {
+        @SerializedName("ENABLED")
+        private boolean enabled;
+
+        @SerializedName("API_KEY")
+        private String apiKey;
+
+        @SerializedName("END_POINT_KEY")
+        private String endPointKey;
+
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public String getEndPointKey() {
+            return endPointKey;
+        }
+    }
+
     public static class ApiUrlVersionConfig {
         private static final String DEFAULT_API_VERSION = "v1";
         @SerializedName("BLOCKS")
@@ -806,6 +831,11 @@ public class Config {
     @NonNull
     public FirebaseConfig getFirebaseConfig() {
         return getObjectOrNewInstance(FIREBASE, FirebaseConfig.class);
+    }
+
+    @NonNull
+    public BrazeConfig getBrazeConfig() {
+        return getObjectOrNewInstance(BRAZE, BrazeConfig.class);
     }
 
     @NonNull

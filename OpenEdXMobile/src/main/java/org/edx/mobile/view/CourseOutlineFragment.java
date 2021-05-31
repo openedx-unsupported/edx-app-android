@@ -196,21 +196,21 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void initObserver() {
-        courseDateViewModel.getBannerInfo().observe(this, this::initDatesBanner);
+        courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initDatesBanner);
 
-        courseDateViewModel.getShowLoader().observe(this, flag ->
+        courseDateViewModel.getShowLoader().observe(getViewLifecycleOwner(), flag ->
                 loadingIndicator.setVisibility(flag ? View.VISIBLE : View.GONE));
 
-        courseDateViewModel.getSwipeRefresh().observe(this, canRefresh ->
+        courseDateViewModel.getSwipeRefresh().observe(getViewLifecycleOwner(), canRefresh ->
                 swipeContainer.setRefreshing(canRefresh));
 
-        courseDateViewModel.getResetCourseDates().observe(this, resetCourseDates -> {
+        courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
                 showShiftDateSnackBar(true);
             }
         });
 
-        courseDateViewModel.getErrorMessage().observe(this, errorMessage -> {
+        courseDateViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 if (errorMessage.getThrowable() instanceof AuthException || errorMessage.getThrowable() instanceof HttpStatusException &&
                         ((HttpStatusException) errorMessage.getThrowable()).getStatusCode() == HttpStatus.UNAUTHORIZED) {

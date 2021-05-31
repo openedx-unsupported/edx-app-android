@@ -153,21 +153,21 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void initObserver() {
         courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
 
-        courseDateViewModel.getBannerInfo().observe(this, this::initInfoBanner);
+        courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initInfoBanner);
 
-        courseDateViewModel.getShowLoader().observe(this, flag ->
+        courseDateViewModel.getShowLoader().observe(getViewLifecycleOwner(), flag ->
                 preloadingListener.setLoadingState(flag ?
                         PreLoadingListener.State.MAIN_UNIT_LOADING :
                         PreLoadingListener.State.MAIN_UNIT_LOADED));
 
-        courseDateViewModel.getResetCourseDates().observe(this, resetCourseDates -> {
+        courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
                 showShiftDateSnackBar(true);
                 authWebView.loadUrl(true, unit.getBlockUrl());
             }
         });
 
-        courseDateViewModel.getErrorMessage().observe(this, errorMessage -> {
+        courseDateViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 if (errorMessage.getThrowable() instanceof AuthException || errorMessage.getThrowable() instanceof HttpStatusException &&
                         ((HttpStatusException) errorMessage.getThrowable()).getStatusCode() == HttpStatus.UNAUTHORIZED) {

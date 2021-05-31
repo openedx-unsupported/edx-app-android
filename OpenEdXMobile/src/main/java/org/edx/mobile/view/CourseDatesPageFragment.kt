@@ -110,15 +110,15 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     }
 
     private fun initObserver() {
-        viewModel.showLoader.observe(this, Observer { showLoader ->
+        viewModel.showLoader.observe(viewLifecycleOwner, Observer { showLoader ->
             binding.loadingIndicator.loadingIndicator.visibility = if (showLoader) View.VISIBLE else View.GONE
         })
 
-        viewModel.bannerInfo.observe(this, Observer {
+        viewModel.bannerInfo.observe(viewLifecycleOwner, Observer {
             initDatesBanner(it)
         })
 
-        viewModel.courseDates.observe(this, Observer { dates ->
+        viewModel.courseDates.observe(viewLifecycleOwner, Observer { dates ->
             if (dates.courseDateBlocks.isNullOrEmpty()) {
                 viewModel.setError(ErrorMessage.COURSE_DATES_CODE, HttpStatus.NO_CONTENT, getString(R.string.course_dates_unavailable_message))
             } else {
@@ -130,13 +130,13 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             }
         })
 
-        viewModel.resetCourseDates.observe(this, Observer { resetCourseDates ->
+        viewModel.resetCourseDates.observe(viewLifecycleOwner, Observer { resetCourseDates ->
             if (resetCourseDates != null) {
                 showShiftDateSnackBar(true)
             }
         })
 
-        viewModel.errorMessage.observe(this, Observer { errorMsg ->
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer { errorMsg ->
             if (errorMsg != null) {
                 if (errorMsg.throwable is HttpStatusException) {
                     when (errorMsg.throwable.statusCode) {
@@ -162,7 +162,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             }
         })
 
-        viewModel.swipeRefresh.observe(this, Observer { enableSwipeListener ->
+        viewModel.swipeRefresh.observe(viewLifecycleOwner, Observer { enableSwipeListener ->
             binding.swipeContainer.isRefreshing = enableSwipeListener
         })
     }

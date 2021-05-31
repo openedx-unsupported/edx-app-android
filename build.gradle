@@ -5,6 +5,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
+        maven { url "https://appboy.github.io/appboy-android-sdk/sdk" }
     }
     project.apply from: "${rootDir}/constants.gradle"
 }
