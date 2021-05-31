@@ -26,7 +26,8 @@ public enum  BlockType {
     DISCUSSION{ @Override public boolean isContainer() {return false;} },
     OTHERS{ @Override public boolean isContainer() {return false;} },
     OPENASSESSMENT{ @Override public boolean isContainer() {return false;} },
-    DRAG_AND_DROP_V2{ @Override public boolean isContainer() {return false;} };
+    DRAG_AND_DROP_V2{ @Override public boolean isContainer() {return false;} },
+    WORD_CLOUD{ @Override public boolean isContainer() {return false;} };
 
     abstract boolean isContainer();
 
