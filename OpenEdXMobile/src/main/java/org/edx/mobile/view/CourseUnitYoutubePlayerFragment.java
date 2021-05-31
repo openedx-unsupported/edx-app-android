@@ -193,7 +193,7 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
                             getString(R.string.assessment_open_on_youtube),
                             (dialog, which) -> BrowserUtil
                                     .open(getActivity(),
-                                            unit.getData().encodedVideos.getYoutubeVideoInfo().url),
+                                            unit.getData().encodedVideos.getYoutubeVideoInfo().url, true),
                             getString(R.string.label_ok), null
                     );
         }

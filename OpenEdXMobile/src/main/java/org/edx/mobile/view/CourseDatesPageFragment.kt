@@ -193,7 +193,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
 
     private fun showOpenInBrowserDialog(link: String) {
         AlertDialogFragment.newInstance(null, getString(R.string.assessment_not_available),
-                getString(R.string.assessment_view_on_web), { dialogInterface: DialogInterface, i: Int -> BrowserUtil.open(activity, link) },
+                getString(R.string.assessment_view_on_web), { dialogInterface: DialogInterface, i: Int -> BrowserUtil.open(activity, link, true) },
                 getString(R.string.label_cancel), null).show(childFragmentManager, null)
     }
 }

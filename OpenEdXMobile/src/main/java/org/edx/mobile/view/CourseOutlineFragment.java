@@ -74,6 +74,7 @@ import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.util.PermissionsUtil;
@@ -396,7 +397,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, component.getId(), null, isVideoMode);
                 } else {
-                    if(adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM){
+                    if (adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM) {
                         environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
                     }
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
@@ -667,7 +668,23 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         } else {
             // Remove bulk video download if the course has NO downloadable videos
             UiUtil.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
-            errorNotification.showError(isVideoMode ? R.string.no_videos_text : R.string.no_chapter_text, null, -1, null);
+            if (isVideoMode) {
+                errorNotification.showError(R.string.no_videos_text, null, -1, null);
+            } else {
+                boolean isSpecialExamInfo = courseComponent.getSpecialExamInfo() != null;
+                Map<String, String> values = new HashMap<>();
+                values.put(Analytics.Keys.SUBSECTION_ID, courseComponent.getBlockId());
+                environment.getAnalyticsRegistry().trackScreenView(isSpecialExamInfo ? Analytics.Screens.SPECIAL_EXAM_BLOCK : Analytics.Screens.EMPTY_SUBSECTION_OUTLINE,
+                        courseComponent.getCourseId(), null, values);
+
+                errorNotification.showError(R.string.assessment_not_available, null, R.string.assessment_view_on_web, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        environment.getAnalyticsRegistry().trackSubsectionViewOnWebTapped(courseComponent.getCourseId(), courseComponent.getBlockId(), isSpecialExamInfo);
+                        BrowserUtil.open(getActivity(), courseComponent.getWebUrl(), false);
+                    }
+                });
+            }
         }
 
         if (!isOnCourseOutline) {

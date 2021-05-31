@@ -542,6 +542,15 @@ public interface Analytics {
      */
     void trackResumeCourseBannerTapped(@NonNull String courseId, @NonNull String blockId);
 
+    /**
+     * Track the View on Web tapped on Subsection screen in case of non supported xBlocks
+     *
+     * @param courseId          Id of the course
+     * @param subsectionId      Id of the non-supported subsection.
+     * @param isSpecialExamInfo Whether the subsection is special exam info or not
+     */
+    void trackSubsectionViewOnWebTapped(@NonNull String courseId, @NonNull String subsectionId, boolean isSpecialExamInfo);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -623,6 +632,7 @@ public interface Analytics {
         String EVENT = "event";
         String PROPERTIES = "properties";
         String SERVICE = "service";
+        String SPECIAL_EXAM_INFO = "special_exam_info";
     }
 
     interface Values {
@@ -755,6 +765,7 @@ public interface Analytics {
         String COURSE_SECTION_CELEBRATION_SHARE_CLICKED = "edx.ui.lms.celebration.social_share.clicked";
         // Resume Course Banner Tapped
         String RESUME_COURSE_BANNER_TAPPED = "edx.bi.app.course.resume.tapped";
+        String SUBSECTION_VIEW_ON_WEB_TAPPED = "edx.bi.app.course.subsection.view_on_web.tapped";
     }
 
     interface Screens {
@@ -806,6 +817,8 @@ public interface Analytics {
         String PLS_COURSE_DASHBOARD = "course_dashboard";
         String PLS_COURSE_DATES = "dates_screen";
         String PLS_COURSE_UNIT_ASSIGNMENT = "assignments_screen";
+        String SPECIAL_EXAM_BLOCK = "Special Exam Blocked Screen";
+        String EMPTY_SUBSECTION_OUTLINE = "Empty Section Outline";
     }
 
     interface Events {
@@ -887,6 +900,7 @@ public interface Analytics {
         String CELEBRATION_SOCIAL_SHARE_CLICKED = "Celebration: Social Share Clicked";
         // Resume Course Banner
         String RESUME_COURSE_TAPPED = "Resume Course Tapped";
+        String SUBSECTION_VIEW_ON_WEB_TAPPED = "Subsection View On Web Tapped";
     }
 
     /**

@@ -253,7 +253,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         urlStringBuffer.append( videoEntry.url);
                     }
                     BrowserUtil.open(getActivity(),
-                            urlStringBuffer.toString());
+                            urlStringBuffer.toString(), true);
                 }
 
             });
