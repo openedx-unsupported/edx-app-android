@@ -66,7 +66,7 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
         }
 
         binding.viewOnWebButton.setOnClickListener(v -> {
-            BrowserUtil.open(getActivity(), unit.getWebUrl());
+            BrowserUtil.open(getActivity(), unit.getWebUrl(), true);
             environment.getAnalyticsRegistry().trackOpenInBrowser(unit.getId(), unit.getCourseId(),
                     unit.isMultiDevice(), unit.getBlockId());
         });

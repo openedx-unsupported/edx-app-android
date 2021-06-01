@@ -36,14 +36,14 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
             tvYouTubeMessage.setText(R.string.assessment_needed_updating_youtube);
             view.findViewById(R.id.update_youtube_button).setVisibility(View.VISIBLE);
             view.findViewById(R.id.update_youtube_button).setOnClickListener(v -> {
-                BrowserUtil.open(getActivity(), AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI);
+                BrowserUtil.open(getActivity(), AppConstants.BROWSER_PLAYSTORE_YOUTUBE_URI, true);
             });
         } else {
             tvYouTubeMessage.setText(R.string.assessment_only_on_youtube);
         }
 
         view.findViewById(R.id.view_on_youtube_button).setOnClickListener(v -> {
-            BrowserUtil.open(getActivity(), ((VideoBlockModel) unit).getData().encodedVideos.youtube.url);
+            BrowserUtil.open(getActivity(), ((VideoBlockModel) unit).getData().encodedVideos.youtube.url, true);
         });
 
         return view;

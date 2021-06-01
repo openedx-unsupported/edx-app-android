@@ -1028,4 +1028,14 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         trackSegmentEvent(Events.RESUME_COURSE_TAPPED, aEvent.properties);
     }
+
+    @Override
+    public void trackSubsectionViewOnWebTapped(@NonNull String courseId, @NonNull String subsectionId, boolean isSpecialExamInfo) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.SUBSECTION_VIEW_ON_WEB_TAPPED);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.SUBSECTION_ID, subsectionId);
+        aEvent.data.putValue(Keys.SPECIAL_EXAM_INFO, isSpecialExamInfo);
+        trackSegmentEvent(Events.SUBSECTION_VIEW_ON_WEB_TAPPED, aEvent.properties);
+    }
 }

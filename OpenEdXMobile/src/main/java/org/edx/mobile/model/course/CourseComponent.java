@@ -41,6 +41,7 @@ public class CourseComponent implements IBlock, IPathNode {
     private String dueDate;
     private String authorizationDenialMessage;
     private AuthorizationDenialReason authorizationDenialReason;
+    private SpecialExamInfo specialExamInfo;
 
     public CourseComponent() {
     }
@@ -65,6 +66,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.dueDate = other.dueDate;
         this.authorizationDenialMessage = other.authorizationDenialMessage;
         this.authorizationDenialReason = other.authorizationDenialReason;
+        this.specialExamInfo = other.specialExamInfo;
     }
 
     /**
@@ -86,6 +88,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.authorizationDenialReason = blockModel.authorizationDenialReason;
         this.blockCount = blockModel.blockCounts == null ? new BlockCount() : blockModel.blockCounts;
         this.completion = blockModel.completion;
+        this.specialExamInfo = blockModel.specialExamInfo;
         this.parent = parent;
         if (parent == null) {
             this.root = this;
@@ -545,5 +548,9 @@ public class CourseComponent implements IBlock, IPathNode {
 
     public AuthorizationDenialReason getAuthorizationDenialReason() {
         return authorizationDenialReason;
+    }
+
+    public SpecialExamInfo getSpecialExamInfo() {
+        return specialExamInfo;
     }
 }

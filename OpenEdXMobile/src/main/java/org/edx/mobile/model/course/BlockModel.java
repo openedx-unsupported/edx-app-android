@@ -63,6 +63,9 @@ public class BlockModel implements Serializable {
     @SerializedName("student_view_data")
     public BlockData data;
 
+    @SerializedName("special_exam_info")
+    public SpecialExamInfo specialExamInfo;
+
     public boolean isContainer() {
         return type != null ? type.isContainer() : (descendants != null && descendants.size() > 0);
     }

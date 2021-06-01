@@ -36,8 +36,9 @@ public class BrowserUtil {
      * 
      * @param activity
      * @param url
+     * @param canTrackEvent
      */
-    public static void open(final FragmentActivity activity, final String url) {
+    public static void open(final FragmentActivity activity, final String url, final boolean canTrackEvent) {
         if (TextUtils.isEmpty(url) || activity == null){
             logger.warn("cannot open URL in browser, either URL or activity parameter is NULL");
             return;
@@ -47,7 +48,7 @@ public class BrowserUtil {
             // use API host as the base URL for relative paths
             String absoluteUrl = String.format("%s%s", environment.getConfig().getApiHostURL(), url);
             logger.debug(String.format("opening relative path URL: %s", absoluteUrl));
-            openInBrowser(activity, absoluteUrl);
+            openInBrowser(activity, absoluteUrl, canTrackEvent);
             return;
         }
 
@@ -59,7 +60,7 @@ public class BrowserUtil {
             if (ConfigUtil.Companion.isWhiteListedURL(url, environment.getConfig())) {
                 // this is white-listed URL
                 logger.debug(String.format("opening white-listed URL: %s", url));
-                openInBrowser(activity, url);
+                openInBrowser(activity, url, canTrackEvent);
             }
             else {
                 // for non-white-listed URLs
@@ -68,7 +69,7 @@ public class BrowserUtil {
                 IDialogCallback callback = new IDialogCallback() {
                     @Override
                     public void onPositiveClicked() {
-                        openInBrowser(activity, url);
+                        openInBrowser(activity, url, canTrackEvent);
                     }
 
                     @Override
@@ -81,19 +82,21 @@ public class BrowserUtil {
         }
         else {
             logger.debug(String.format("non-zero rated network, opening URL: %s", url));
-            openInBrowser(activity, url);
+            openInBrowser(activity, url, canTrackEvent);
         }
     }
 
-    private static void openInBrowser(FragmentActivity context, String url) {
+    private static void openInBrowser(FragmentActivity context, String url, boolean canTrackEvent) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(url));
         try {
             context.startActivity(intent);
-            AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
-            analyticsRegistry.trackBrowserLaunched(url);
+            if (canTrackEvent) {
+                AnalyticsRegistry analyticsRegistry = environment.getAnalyticsRegistry();
+                analyticsRegistry.trackBrowserLaunched(url);
+            }
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, R.string.cannot_open_url, Toast.LENGTH_SHORT).show();
 
