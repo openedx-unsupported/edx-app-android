@@ -305,4 +305,8 @@
     <dimen name="whats_new_image_horizontal_margin">25dp</dimen>
     <dimen name="whats_new_bottom_bar_min_height">46dp</dimen>
 
+    <!-- Open in browser -->
+    <dimen name="open_in_browser_text_horizontal_padding">16dp</dimen>
+    <dimen name="open_in_browser_text_vertical_padding">8dp</dimen>
+
 </resources>

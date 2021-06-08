@@ -170,7 +170,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                 }
 
                 if (pageIsLoaded && !TextUtils.isEmpty(javascript)) {
-                    evaluateJavascript();
+                    evaluateJavascript(javascript, null);
                 } else {
                     hideLoadingProgress();
                 }
@@ -194,13 +194,11 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         tryToLoadWebView(forceLoad);
     }
 
-    private void evaluateJavascript() {
-        webView.evaluateJavascript(javascript, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                hideLoadingProgress();
-            }
-        });
+    public void evaluateJavascript(String javascript, ValueCallback<String> listener) {
+        if (listener == null) {
+            listener = value -> hideLoadingProgress();
+        }
+        webView.evaluateJavascript(javascript, listener);
     }
 
     private void tryToLoadWebView(boolean forceLoad) {

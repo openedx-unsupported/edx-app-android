@@ -1,6 +1,13 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +15,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +35,14 @@ import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
+import org.jetbrains.annotations.NotNull;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
@@ -47,6 +57,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     @InjectView(R.id.swipe_container)
     protected SwipeRefreshLayout swipeContainer;
+
+    @InjectView(R.id.tv_open_browser)
+    protected TextView tvOpenBrowser;
 
     private CourseDateViewModel courseDateViewModel;
     private PreLoadingListener preloadingListener;
@@ -99,6 +112,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                     }
                     isPageLoading = false;
                     EventBus.getDefault().post(new UnitLoadedEvent());
+                    evaluateJavascriptForiFrame();
                 }
             }
 
@@ -130,6 +144,59 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             authWebView.getWebView().getSettings().setDisplayZoomControls(false);
             authWebView.getWebView().getSettings().setBuiltInZoomControls(true);
         }
+    }
+
+    private void evaluateJavascriptForiFrame() {
+        if (!TextUtils.isEmpty(unit.getBlockId())) {
+            // execute js code to check an HTML block that contains an iframe
+            String javascript =
+                    "try {" +
+                            "    var top_div_list = document.querySelectorAll('div[data-usage-id=\"" + unit.getId() + "\"]');\n" +
+                            "    top_div_list.length == 1 && top_div_list[0].querySelectorAll(\"iframe\").length > 0;" +
+                            "} catch {" +
+                            "    false;" +
+                            "};";
+            authWebView.evaluateJavascript(javascript, value -> {
+                if (Boolean.parseBoolean(value)) {
+                    setupOpenInBrowserView();
+                } else {
+                    tvOpenBrowser.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    private void setupOpenInBrowserView() {
+        tvOpenBrowser.setVisibility(View.VISIBLE);
+
+        String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
+                + getString(R.string.open_in_browser_text) + " " + "icon";
+        SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
+
+        ImageSpan openInNewIcon = new ImageSpan(getContext(), R.drawable.ic_open_in_new);
+        openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf("icon"),
+                openInBrowserMessage.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NotNull View textView) {
+                BrowserUtil.open(getActivity(), unit.getWebUrl(), true);
+            }
+
+            @Override
+            public void updateDrawState(@NotNull TextPaint textPaint) {
+                textPaint.linkColor = R.color.neutralXXDark;
+                textPaint.setUnderlineText(true);
+                super.updateDrawState(textPaint);
+            }
+        };
+        openInBrowserSpan.setSpan(clickableSpan,
+                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)),
+                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)) + getString(R.string.open_in_browser_text).length(),
+                Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        tvOpenBrowser.setText(openInBrowserSpan);
+        tvOpenBrowser.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void fetchDateBannerInfo() {
