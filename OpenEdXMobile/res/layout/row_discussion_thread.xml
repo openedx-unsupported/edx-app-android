@@ -5,18 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/edx_margin"
-    android:paddingTop="@dimen/edx_margin">
+    android:paddingTop="@dimen/edx_margin"
+    android:paddingBottom="@dimen/edx_margin">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/discussion_post_type_icon"
         style="@style/icon_view_standard_size"
-        android:layout_height="12dp"
         android:layout_marginStart="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"
         android:layout_marginEnd="@dimen/edx_margin"
-        app:iconColor="@color/primaryBaseColor"
-        app:iconName="fa-comments" />
+        android:tint="@color/primaryBaseColor"
+        app:srcCompat="@drawable/ic_chat" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -35,23 +34,23 @@
             android:layout_marginTop="@dimen/x_small_icon_margin"
             android:orientation="horizontal">
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/discussion_post_closed_icon"
                 style="@style/discussion_thread_icon"
-                app:iconColor="@color/neutralXXDark"
-                app:iconName="fa-lock" />
+                android:tint="@color/neutralXXDark"
+                app:srcCompat="@drawable/ic_lock" />
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/discussion_post_pin_icon"
                 style="@style/discussion_thread_icon"
-                app:iconColor="@color/neutralXXDark"
-                app:iconName="fa-thumb-tack" />
+                android:tint="@color/neutralXXDark"
+                app:srcCompat="@drawable/ic_push_pin" />
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/discussion_post_following_icon"
                 style="@style/discussion_thread_icon"
-                app:iconColor="@color/neutralXXDark"
-                app:iconName="fa-star" />
+                android:tint="@color/neutralXXDark"
+                app:srcCompat="@drawable/ic_star_rate" />
 
             <TextView
                 android:id="@+id/discussion_subtitle_first_pipe"
@@ -87,10 +86,10 @@
     <TextView
         android:id="@+id/discussion_unread_replies_text"
         style="@style/discussion_title_text"
-        android:fontFamily="?attr/fontSemiBold"
         android:layout_marginStart="@dimen/edx_margin"
-        android:layout_marginEnd="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"
+        android:layout_marginEnd="@dimen/edx_margin"
+        android:fontFamily="?attr/fontSemiBold"
         android:textColor="@color/primaryBaseColor"
         android:textStyle="bold"
         tools:ignore="MissingPrefix"

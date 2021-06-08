@@ -8,11 +8,11 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/large_indicator_icon_width"
             android:layout_height="@dimen/large_indicator_icon_height"
-            app:iconColor="@color/neutralDark"
-            app:iconName="fa-exclamation-circle" />
+            android:tint="@color/neutralDark"
+            app:srcCompat="@drawable/ic_error" />
 
         <TextView
             android:id="@+id/error_msg"

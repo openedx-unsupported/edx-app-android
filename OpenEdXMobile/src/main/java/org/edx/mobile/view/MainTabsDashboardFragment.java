@@ -2,19 +2,16 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.AccountDataLoadedEvent;
@@ -31,6 +28,7 @@ import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.ConfigUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.UserProfileUtils;
 
 import java.util.ArrayList;
@@ -82,9 +80,8 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         inflater.inflate(R.menu.my_courses, menu);
         menu.findItem(R.id.menu_item_account).setVisible(true);
         menu.findItem(R.id.menu_item_account).setIcon(
-                new IconDrawable(getContext(), FontAwesomeIcons.fa_gear)
-                        .colorRes(getContext(), R.color.toolbar_controls_color)
-                        .actionBarSize(getContext()));
+                UiUtil.getDrawable(getContext(), R.drawable.ic_settings,
+                        R.dimen.action_bar_icon_size, R.color.toolbar_controls_color));
     }
 
     @Override
@@ -125,7 +122,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
 
         items.add(new FragmentItemModel(MyCoursesListFragment.class,
-                getResources().getString(R.string.label_my_courses), FontAwesomeIcons.fa_list_alt,
+                getResources().getString(R.string.label_my_courses), R.drawable.ic_bookmark_border,
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
@@ -135,7 +132,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
 
         if (environment.getConfig().getProgramConfig().isEnabled()) {
             items.add(new FragmentItemModel(WebViewProgramFragment.class,
-                    getResources().getString(R.string.label_my_programs), FontAwesomeIcons.fa_clone,
+                    getResources().getString(R.string.label_my_programs), R.drawable.ic_collections_bookmark,
                     WebViewProgramFragment.makeArguments(environment.getConfig().getProgramConfig().getUrl(),
                             null, true),
                     new FragmentItemModel.FragmentStateListener() {
@@ -149,7 +146,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment) ||
                 ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
-                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
+                    getResources().getString(R.string.label_discovery), R.drawable.ic_search,
                     getArguments(),
                     () -> EventBus.getDefault().post(new DiscoveryTabSelectedEvent())
             ));

@@ -5,12 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import de.greenrobot.event.EventBus
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.edx.mobile.R
-import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding
 import org.edx.mobile.databinding.PanelFindCourseBinding
@@ -147,7 +145,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     private fun getUserEnrolledCourses(fromCache: Boolean = false) {
         enrolledCoursesCall.enqueue(object : Callback<List<EnrolledCoursesResponse>> {
-            override fun onResponse(call: Call<List<EnrolledCoursesResponse>>, response: Response<List<EnrolledCoursesResponse>>) {
+            override fun onResponse(
+                call: Call<List<EnrolledCoursesResponse>>,
+                response: Response<List<EnrolledCoursesResponse>>
+            ) {
                 if (response.isSuccessful && response.code() == HttpStatus.OK) {
                     populateCourseData(ArrayList(response.body()), isCachedData = fromCache)
                     // Fetch latest data from server in the background after displaying previously cached data
@@ -160,9 +161,11 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 } else {
                     when {
                         response.code() == HttpStatus.UNAUTHORIZED && context != null -> {
-                            environment.router?.forceLogout(context,
-                                    environment.analyticsRegistry,
-                                    environment.notificationDelegate)
+                            environment.router?.forceLogout(
+                                context,
+                                environment.analyticsRegistry,
+                                environment.notificationDelegate
+                            )
                         }
                         response.code() == HttpStatus.UPGRADE_REQUIRED -> {
                             context?.let { context ->
@@ -185,9 +188,11 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     fromCache -> loadData(showProgress = true, fromCache = false)
                     else -> {
                         if (t is AuthException || (t is HttpStatusException && t.statusCode == HttpStatus.UNAUTHORIZED)) {
-                            environment.router?.forceLogout(context,
-                                    environment.analyticsRegistry,
-                                    environment.notificationDelegate)
+                            environment.router?.forceLogout(
+                                context,
+                                environment.analyticsRegistry,
+                                environment.notificationDelegate
+                            )
                         } else if (adapter.isEmpty) {
                             showError(t)
                             invalidateView()
@@ -199,7 +204,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     }
 
-    private fun populateCourseData(data: ArrayList<EnrolledCoursesResponse>, isCachedData: Boolean = false) {
+    private fun populateCourseData(
+        data: ArrayList<EnrolledCoursesResponse>,
+        isCachedData: Boolean = false
+    ) {
         if (isCachedData.not()) {
             updateDatabaseAfterDownload(data)
         }
@@ -209,8 +217,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         addFindCoursesFooter()
         adapter.notifyDataSetChanged()
         if (adapter.isEmpty && !isCourseDiscoveryEnabled(environment)) {
-            errorNotification.showError(R.string.no_courses_to_display,
-                    FontAwesomeIcons.fa_exclamation_circle, 0, null)
+            errorNotification.showError(
+                R.string.no_courses_to_display,
+                R.drawable.ic_error, 0, null
+            )
             binding.myCourseList.visibility = View.GONE
         } else {
             binding.myCourseList.visibility = View.VISIBLE
@@ -228,8 +238,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 //then activate all videos
                 if (list[i].isIs_active) {
                     //update all videos for a course fetched in the API as Activated
-                    environment.database?.updateVideosActivatedForCourse(list[i].course.id,
-                            dataCallback)
+                    environment.database?.updateVideosActivatedForCourse(
+                        list[i].course.id,
+                        dataCallback
+                    )
                 } else {
                     list.removeAt(i)
                 }

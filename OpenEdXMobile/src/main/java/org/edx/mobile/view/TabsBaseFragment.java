@@ -1,25 +1,25 @@
 package org.edx.mobile.view;
 
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -109,17 +109,17 @@ public abstract class TabsBaseFragment extends BaseFragment {
      * @return <code>true</code> if the specified tab fragment needs to be selected, <code>false</code> otherwise
      */
     private boolean shouldSelectFragment(@NonNull FragmentItemModel item, @NonNull @ScreenDef String screenName) {
-        return (screenName.equals(Screen.PROGRAM) && item.getIcon() == FontAwesomeIcons.fa_clone) ||
-                (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
-                (screenName.equals(Screen.PROGRAM_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
-                (screenName.equals(Screen.DEGREE_DISCOVERY) && item.getIcon() == FontAwesomeIcons.fa_search) ||
-                (screenName.equals(Screen.COURSE_VIDEOS) && item.getIcon() == FontAwesomeIcons.fa_film) ||
-                (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
-                (screenName.equals(Screen.DISCUSSION_POST) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
-                (screenName.equals(Screen.DISCUSSION_TOPIC) && item.getIcon() == FontAwesomeIcons.fa_comments_o) ||
-                (screenName.equals(Screen.COURSE_DATES) && item.getIcon() == FontAwesomeIcons.fa_calendar) ||
-                (screenName.equals(Screen.COURSE_HANDOUT) && item.getIcon() == FontAwesomeIcons.fa_ellipsis_h) ||
-                (screenName.equals(Screen.COURSE_ANNOUNCEMENT) && item.getIcon() == FontAwesomeIcons.fa_ellipsis_h);
+        return (screenName.equals(Screen.PROGRAM) && item.getIconResId() == R.drawable.ic_collections_bookmark) ||
+                (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
+                (screenName.equals(Screen.PROGRAM_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
+                (screenName.equals(Screen.DEGREE_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
+                (screenName.equals(Screen.COURSE_VIDEOS) && item.getIconResId() == R.drawable.ic_videocam) ||
+                (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIconResId() == R.drawable.ic_forum) ||
+                (screenName.equals(Screen.DISCUSSION_POST) && item.getIconResId() == R.drawable.ic_forum) ||
+                (screenName.equals(Screen.DISCUSSION_TOPIC) && item.getIconResId() == R.drawable.ic_forum) ||
+                (screenName.equals(Screen.COURSE_DATES) && item.getIconResId() == R.drawable.ic_event) ||
+                (screenName.equals(Screen.COURSE_HANDOUT) && item.getIconResId() == R.drawable.ic_more_horiz) ||
+                (screenName.equals(Screen.COURSE_ANNOUNCEMENT) && item.getIconResId() == R.drawable.ic_more_horiz);
     }
 
     private void initializeTabs() {
@@ -205,20 +205,22 @@ public abstract class TabsBaseFragment extends BaseFragment {
 
     protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
         // Tabs doesn't support `IconDrawable.colorRes` with material theme so use custom view having `ImageView`
-        final IconDrawable iconDrawable = new IconDrawable(getContext(), fragmentItem.getIcon());
-        iconDrawable.colorRes(getContext(), TAB_COLOR_SELECTOR_RES);
+        Drawable iconDrawable = ContextCompat.getDrawable(getContext(), fragmentItem.getIconResId());
+        iconDrawable.setTintList(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
+        iconDrawable.setTintMode(PorterDuff.Mode.SRC_IN);
         final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
         final ImageView icon = (ImageView) tabItem.findViewById(R.id.icon);
+        int size;
         if (showTitleInTabs()) {
-            iconDrawable.sizeRes(getContext(), R.dimen.edx_small);
+            size = getContext().getResources().getDimensionPixelSize(R.dimen.edx_small);
             final TextView title = (TextView) tabItem.findViewById(R.id.title);
             title.setText(fragmentItem.getTitle());
             title.setTextColor(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
         } else {
-            iconDrawable.sizeRes(getContext(), R.dimen.edx_x_large);
+            size = getContext().getResources().getDimensionPixelSize(R.dimen.edx_x_large);
             // set tab view ids for the course dash board screen for the automation.
             int id;
-            if (fragmentItem.getIcon() == FontAwesomeIcons.fa_list_alt) {
+            if (fragmentItem.getIconResId() == R.drawable.ic_class) {
                 id = R.id.course_outline;
             } else {
                 String resourceString = fragmentItem.getTitle().toString().toLowerCase().replace(" ", "_");
@@ -226,6 +228,8 @@ public abstract class TabsBaseFragment extends BaseFragment {
             }
             tabItem.setId(id);
         }
+        icon.getLayoutParams().height = size;
+        icon.getLayoutParams().width = size;
         icon.setImageDrawable(iconDrawable);
         tab.setCustomView(tabItem);
         tab.setContentDescription(fragmentItem.getTitle());

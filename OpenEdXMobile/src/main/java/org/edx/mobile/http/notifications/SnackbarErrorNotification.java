@@ -3,6 +3,7 @@ package org.edx.mobile.http.notifications;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -10,8 +11,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -50,21 +49,21 @@ public class SnackbarErrorNotification extends ErrorNotification {
      * Show the error notification as a persistent Snackbar, according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon. This is ignored here, since Snackbar doesn't really support
+     * @param iconResId       The error iconResId. This is ignored here, since Snackbar doesn't really support
      *                        icons.
      * @param actionTextResId The resource ID of the action button text.
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
-    public void showError(int errorResId, @Nullable Icon icon, int actionTextResId, @Nullable View.OnClickListener actionListener) {
-        showError(errorResId, icon, actionTextResId, Snackbar.LENGTH_INDEFINITE, actionListener);
+    public void showError(int errorResId, @DrawableRes int iconResId, int actionTextResId, @Nullable View.OnClickListener actionListener) {
+        showError(errorResId, iconResId, actionTextResId, Snackbar.LENGTH_INDEFINITE, actionListener);
     }
 
     /**
      * Show the error notification as a persistent Snackbar, according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon. This is ignored here, since Snackbar doesn't really support
+     * @param iconResId       The error iconResId. This is ignored here, since Snackbar doesn't really support
      *                        icons.
      * @param actionTextResId The resource ID of the action button text.
      * @param duration        The duration of the error message visibility
@@ -72,7 +71,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
      */
     @Override
     public void showError(@StringRes final int errorResId,
-                          @Nullable final Icon icon,
+                          @DrawableRes final int iconResId,
                           @StringRes final int actionTextResId,
                           final int duration,
                           @Nullable final View.OnClickListener actionListener) {
@@ -117,7 +116,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
      * @param listener The {@link RefreshListener} to use when action item is pressed on Snackbar.
      */
     public void showOfflineError(final RefreshListener listener) {
-        showError(R.string.offline_text, FontAwesomeIcons.fa_wifi,
+        showError(R.string.offline_text, R.drawable.ic_wifi,
                 R.string.lbl_reload, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

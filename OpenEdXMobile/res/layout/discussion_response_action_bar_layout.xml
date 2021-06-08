@@ -15,18 +15,18 @@
     <LinearLayout
         android:id="@+id/discussion_responses_action_bar_vote_container"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent=".33"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical|start"
-        android:padding="@dimen/discussion_responses_thread_text_view_spacing">
+        android:padding="@dimen/discussion_responses_thread_text_view_spacing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent=".33">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/discussion_responses_action_bar_vote_icon_view"
             style="@style/discussion_action_bar_icon"
-            app:iconColor="@color/infoBase"
-            app:iconName="fa-plus" />
+            android:tint="@color/infoBase"
+            app:srcCompat="@drawable/ic_thumb_up" />
 
         <TextView
             android:id="@+id/discussion_responses_action_bar_vote_count_text_view"
@@ -38,44 +38,44 @@
     <LinearLayout
         android:id="@+id/discussion_responses_action_bar_follow_container"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent=".33"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toEndOf="@id/discussion_responses_action_bar_vote_container"
-        app:layout_constraintEnd_toStartOf="@id/discussion_responses_action_bar_report_container"
         android:background="?android:selectableItemBackground"
         android:gravity="center"
         android:padding="@dimen/discussion_responses_thread_text_view_spacing"
         android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/discussion_responses_action_bar_report_container"
+        app:layout_constraintStart_toEndOf="@id/discussion_responses_action_bar_vote_container"
+        app:layout_constraintWidth_percent=".33"
         tools:visibility="visible">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/discussion_responses_action_bar_follow_icon_view"
             style="@style/discussion_action_bar_icon"
-            app:iconColor="@color/infoBase"
-            app:iconName="fa-star" />
+            android:tint="@color/infoBase"
+            app:srcCompat="@drawable/ic_star_rate" />
 
         <TextView
             android:id="@+id/discussion_responses_action_bar_follow_text_view"
-            android:text="@string/forum_follow"
-            style="@style/discussion_responses_action_bar_small_text"/>
+            style="@style/discussion_responses_action_bar_small_text"
+            android:text="@string/forum_follow" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/discussion_responses_action_bar_report_container"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent=".33"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical|end"
-        android:padding="@dimen/discussion_responses_thread_text_view_spacing">
+        android:padding="@dimen/discussion_responses_thread_text_view_spacing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent=".33">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/discussion_responses_action_bar_report_icon_view"
             style="@style/discussion_action_bar_icon"
-            app:iconColor="@color/infoBase"
-            app:iconName="fa-flag" />
+            android:tint="@color/infoBase"
+            app:srcCompat="@drawable/ic_flag" />
 
         <TextView
             android:id="@+id/discussion_responses_action_bar_report_text_view"

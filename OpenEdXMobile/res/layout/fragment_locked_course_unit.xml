@@ -28,12 +28,12 @@
                     android:paddingEnd="@dimen/edx_margin"
                     android:paddingBottom="@dimen/edx_double_margin">
 
-                    <org.edx.mobile.view.custom.IconImageViewXml
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/lock"
                         android:layout_width="@dimen/fa_xxx_large"
                         android:layout_height="@dimen/fa_xxx_large"
-                        app:iconColor="@color/white"
-                        app:iconName="fa-lock"
+                        android:tint="@color/white"
+                        app:srcCompat="@drawable/ic_lock"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

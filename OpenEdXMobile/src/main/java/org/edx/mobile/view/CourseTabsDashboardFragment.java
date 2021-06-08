@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
@@ -247,7 +246,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
         // Add course outline tab
         items.add(new FragmentItemModel(CourseOutlineFragment.class, courseData.getCourse().getName(),
-                FontAwesomeIcons.fa_list_alt,
+                R.drawable.ic_class,
                 CourseOutlineFragment.makeArguments(courseData, null, false),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
@@ -260,7 +259,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         // Add videos tab
         if (environment.getConfig().isCourseVideosEnabled()) {
             items.add(new FragmentItemModel(CourseOutlineFragment.class,
-                    getResources().getString(R.string.videos_title), FontAwesomeIcons.fa_film
+                    getResources().getString(R.string.videos_title), R.drawable.ic_videocam
                     , CourseOutlineFragment.makeArguments(courseData, null, true),
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
@@ -275,7 +274,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         if (environment.getConfig().isDiscussionsEnabled() &&
                 !TextUtils.isEmpty(courseData.getCourse().getDiscussionUrl())) {
             items.add(new FragmentItemModel(CourseDiscussionTopicsFragment.class,
-                    getResources().getString(R.string.discussion_title), FontAwesomeIcons.fa_comments_o,
+                    getResources().getString(R.string.discussion_title), R.drawable.ic_forum,
                     getArguments(),
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
@@ -289,7 +288,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         // Add important dates tab
         if (environment.getConfig().isCourseDatesEnabled()) {
             items.add(new FragmentItemModel(CourseDatesPageFragment.class,
-                    getResources().getString(R.string.course_dates_title), FontAwesomeIcons.fa_calendar,
+                    getResources().getString(R.string.course_dates_title), R.drawable.ic_event,
                     CourseDatesPageFragment.makeArguments(courseData), () -> {
                         analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
                                 courseData.getCourse().getId(), null);
@@ -298,8 +297,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         }
         // Add additional resources tab
         items.add(new FragmentItemModel(ResourcesFragment.class,
-                getResources().getString(R.string.resources_title),
-                FontAwesomeIcons.fa_ellipsis_h,
+                getResources().getString(R.string.resources_title), R.drawable.ic_more_horiz,
                 ResourcesFragment.makeArguments(courseData, screenName),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override

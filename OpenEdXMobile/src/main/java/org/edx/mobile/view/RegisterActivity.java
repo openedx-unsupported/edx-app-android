@@ -17,15 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -57,6 +55,7 @@ import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
@@ -247,21 +246,18 @@ public class RegisterActivity extends BaseFragmentActivity
         return errorShown;
     }
 
-    private void showErrorMessage(String errorMsg, @NonNull Icon errorIcon) {
+    private void showErrorMessage(String errorMsg, @DrawableRes int errorIconResId) {
         errorTextView.setVisibility(View.VISIBLE);
         errorTextView.setText(errorMsg);
-        errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
-                new IconDrawable(this, errorIcon)
-                        .sizeRes(this, R.dimen.content_unavailable_error_icon_size)
-                        .colorRes(this, R.color.neutralDark),
+        errorTextView.setCompoundDrawables(null, UiUtil.getDrawable(this, errorIconResId,
+                R.dimen.content_unavailable_error_icon_size, R.color.neutralDark),
                 null, null
         );
     }
 
     public void getRegistrationForm() {
         if (!NetworkUtil.isConnected(this)) {
-            showErrorMessage(getString(R.string.reset_no_network_message),
-                    FontAwesomeIcons.fa_wifi);
+            showErrorMessage(getString(R.string.reset_no_network_message), R.drawable.ic_wifi);
             return;
         }
 
@@ -281,7 +277,7 @@ public class RegisterActivity extends BaseFragmentActivity
             protected void onFailure(@NonNull Throwable error) {
                 updateUI(false);
                 showErrorMessage(ErrorUtils.getErrorMessage(error, RegisterActivity.this),
-                        FontAwesomeIcons.fa_exclamation_circle);
+                        R.drawable.ic_error);
                 logger.error(error);
             }
 

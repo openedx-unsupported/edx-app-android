@@ -3,36 +3,54 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.custom.SingleScrollDirectionEnforcer;
+
+import static android.view.animation.Animation.INFINITE;
+import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
 
 /**
  * Created by marcashman on 2014-12-02.
  */
 public class UiUtil {
+
+    public enum Animation {
+        ROTATION("rotation"),
+        NONE("none");
+
+        public final String value;
+
+        Animation(String value) {
+            this.value = value;
+        }
+    }
 
     private static final String TAG = UiUtil.class.getCanonicalName();
     private static final Logger logger = new Logger(UiUtil.class);
@@ -93,16 +111,42 @@ public class UiUtil {
         cardView.setLayoutParams(params);
     }
 
-
-    public static Drawable getFontAwesomeDrawable(Context context, Icon icon, int dimenSize, int colorRes) {
-        return new IconDrawable(context, icon)
-                .sizeRes(context, dimenSize)
-                .colorRes(context, colorRes);
+    public static Drawable getDrawable(@NonNull Context context, @DrawableRes int iconResId, int resSize, int colorRes) {
+        Drawable drawable = getDrawable(context, iconResId).mutate();
+        setDrawableColor(context, drawable, colorRes);
+        return setDrawableSize(context, drawable, resSize);
     }
 
-    @Nullable
+    public static void setDrawableColor(@NonNull Context context, Drawable drawable, int colorRes) {
+        drawable.setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN);
+    }
+
+    public static Drawable setDrawableSize(Context context, Drawable drawable, int resSize) {
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        int size = context.getResources().getDimensionPixelSize(resSize);
+        Drawable dr = DrawableCompat.wrap(new BitmapDrawable(context.getResources(), bitmap));
+        dr.setBounds(0, 0, size, size);
+        return dr;
+    }
+
+    public static void setAnimation(ImageView imageView, Animation animation) {
+        if (animation == Animation.NONE) {
+            imageView.setAnimation(null);
+            return;
+        }
+        RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
+                RELATIVE_TO_SELF, 0.5f, RELATIVE_TO_SELF, 0.5f);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(INFINITE);
+        anim.setDuration(1000);
+        imageView.startAnimation(anim);
+    }
+
     public static Drawable getDrawable(@NonNull Context context, @DrawableRes int drawableId) {
-        return context.getDrawable(drawableId);
+        return ContextCompat.getDrawable(context, drawableId);
     }
 
     @DrawableRes

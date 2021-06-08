@@ -18,15 +18,15 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ll_graded_content_icon"
                 android:layout_width="@dimen/medium_icon_size"
                 android:layout_height="@dimen/medium_icon_size"
                 android:layout_marginTop="@dimen/widget_margin_half"
-                app:iconColor="@color/primaryBaseColor"
-                app:iconName="fa-lock"
+                android:tint="@color/primaryBaseColor"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_lock" />
 
             <TextView
                 android:id="@+id/ll_graded_content_title"
@@ -72,13 +72,13 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/content_error_icon"
                 android:layout_width="@dimen/unit_unavailable_error_icon_size"
                 android:layout_height="@dimen/unit_unavailable_error_icon_size"
                 android:layout_margin="@dimen/widget_margin_double"
-                app:iconColor="@color/neutralXXDark"
-                app:iconName="fa-laptop" />
+                android:tint="@color/neutralXXDark"
+                app:srcCompat="@drawable/ic_laptop" />
 
             <TextView
                 android:id="@+id/not_available_message"

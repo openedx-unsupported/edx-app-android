@@ -2,9 +2,6 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseTopics;
@@ -32,6 +30,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.SoftKeyboardUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -100,10 +99,8 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
             header.setText(R.string.forum_post_i_am_following);
             Context context = getActivity();
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(header,
-                    new IconDrawable(context, FontAwesomeIcons.fa_star)
-                            .colorRes(context, R.color.primaryBaseColor)
-                            .sizeRes(context, R.dimen.edx_base),
+            header.setCompoundDrawables(UiUtil.getDrawable(context, R.drawable.ic_star_rate,
+                    R.dimen.edx_base, R.color.primaryBaseColor),
                     null, null, null);
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);

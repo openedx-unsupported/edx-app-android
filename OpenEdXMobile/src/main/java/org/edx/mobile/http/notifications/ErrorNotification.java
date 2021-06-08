@@ -1,12 +1,12 @@
 package org.edx.mobile.http.notifications;
 
 import android.content.Context;
+import android.view.View;
+
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import android.view.View;
-
-import com.joanzapata.iconify.Icon;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -54,15 +54,14 @@ public abstract class ErrorNotification {
     public void showError(@NonNull final Context context, @NonNull final Throwable error,
                           @StringRes int actionTextResId,
                           @Nullable View.OnClickListener actionListener) {
-        @StringRes
-        final int errorResId = ErrorUtils.getErrorMessageRes(context, error, this);
-        final Icon icon = ErrorUtils.getErrorIcon(error);
+        @StringRes final int errorResId = ErrorUtils.getErrorMessageRes(context, error, this);
+        final int iconResId = ErrorUtils.getErrorIconResId(error);
 
         if (errorResId == R.string.app_version_unsupported) {
             actionTextResId = R.string.label_update;
             actionListener = AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER;
         }
-        showError(errorResId, icon, actionTextResId, actionListener);
+        showError(errorResId, iconResId, actionTextResId, actionListener);
     }
 
     /**
@@ -74,7 +73,7 @@ public abstract class ErrorNotification {
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     public abstract void showError(@StringRes final int errorResId,
-                                   @Nullable final Icon icon,
+                                   @DrawableRes final int icon,
                                    @StringRes final int actionTextResId,
                                    @Nullable final View.OnClickListener actionListener);
 
@@ -82,13 +81,13 @@ public abstract class ErrorNotification {
      * Show the error notification according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon.
+     * @param iconResId       The error iconResId.
      * @param actionTextResId The resource ID of the action button text.
      * @param duration        The duration of the error message visibility
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     public abstract void showError(@StringRes final int errorResId,
-                                   @Nullable final Icon icon,
+                                   @DrawableRes final int iconResId,
                                    @StringRes final int actionTextResId,
                                    final int duration,
                                    @Nullable final View.OnClickListener actionListener);

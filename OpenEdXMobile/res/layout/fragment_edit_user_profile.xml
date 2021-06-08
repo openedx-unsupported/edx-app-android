@@ -25,8 +25,8 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/widget_margin"
-                android:paddingTop="@dimen/widget_margin">
+                android:paddingTop="@dimen/widget_margin"
+                android:paddingBottom="@dimen/widget_margin">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -41,13 +41,13 @@
                         app:civ_border_width="1dp"
                         tools:src="@drawable/profile_photo_placeholder" />
 
-                    <org.edx.mobile.view.custom.IconImageViewXml
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/profile_image_progress"
                         android:layout_width="@dimen/edx_base"
                         android:layout_height="@dimen/edx_base"
                         android:layout_gravity="center"
-                        app:iconColor="@color/accentAColor"
-                        app:iconName="fa-spinner" />
+                        android:tint="@color/accentAColor"
+                        app:srcCompat="@drawable/custom_circular_progress_bar" />
                 </FrameLayout>
 
                 <TextView
@@ -69,6 +69,8 @@
                     android:contentDescription="@string/edit_user_profile_change_photo_description"
                     android:drawablePadding="@dimen/x_small_icon_margin"
                     android:gravity="center_vertical"
+                    android:drawableLeft="@drawable/ic_camera_alt"
+                    android:drawableTint="@color/disableable_button_text"
                     android:paddingStart="@dimen/edx_margin"
                     android:paddingEnd="@dimen/edx_margin"
                     android:text="@string/edit_user_profile_change_photo"

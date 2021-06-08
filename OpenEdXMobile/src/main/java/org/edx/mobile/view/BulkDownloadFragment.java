@@ -4,25 +4,27 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+
+import androidx.annotation.DrawableRes;
 import androidx.databinding.DataBindingUtil;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.internal.Animation;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -44,6 +46,8 @@ import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtil.Animation;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 
@@ -293,7 +297,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
             binding.pbDownload.setVisibility(View.GONE);
 
-            setViewState(FontAwesomeIcons.fa_film, Animation.NONE, R.string.download_complete,
+            setViewState(R.drawable.ic_videocam, Animation.NONE, R.string.download_complete,
                     binding.tvSubtitle.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
                     "total_videos_count", videosStatus.total + "", "total_videos_size",
                     MemoryUtil.format(binding.tvSubtitle.getContext(), videosStatus.totalVideosSize));
@@ -305,7 +309,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             initDownloadProgressView();
 
             // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
-            setViewState(FontAwesomeIcons.fa_spinner, Animation.SPIN, R.string.downloading_videos,
+            setViewState(R.drawable.custom_circular_progress_bar, Animation.ROTATION, R.string.downloading_videos,
                     binding.tvSubtitle.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
@@ -320,7 +324,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else if (switchState == SwitchState.IN_PROCESS) {
             // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
-            setViewState(FontAwesomeIcons.fa_spinner, Animation.SPIN, R.string.download_starting,
+            setViewState(R.drawable.custom_circular_progress_bar, Animation.ROTATION, R.string.download_starting,
                     binding.tvSubtitle.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
@@ -337,7 +341,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
             binding.pbDownload.setVisibility(View.GONE);
 
-            setViewState(FontAwesomeIcons.fa_film, Animation.NONE,
+            setViewState(R.drawable.ic_videocam, Animation.NONE,
                     R.string.download_to_device,
                     binding.tvSubtitle.getResources().getQuantityString(R.plurals.download_total, videosStatus.remaining),
                     "total_videos_count", videosStatus.remaining + "", "total_videos_size",
@@ -351,12 +355,12 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         setSwitchState();
     }
 
-    private void setViewState(@NonNull Icon icon, @NonNull Animation animation,
+    private void setViewState(@DrawableRes int iconResId, @NonNull Animation animation,
                               @StringRes int titleRes, @NonNull String descPattern,
                               @NonNull String firstPlaceholder, @NonNull String firstPlaceholderVal,
                               @NonNull String secondPlaceholder, @NonNull String secondPlaceholderVal) {
-        binding.ivIcon.setIcon(icon);
-        binding.ivIcon.setIconAnimation(animation);
+        binding.ivIcon.setImageDrawable(UiUtil.getDrawable(requireContext(), iconResId));
+        UiUtil.setAnimation(binding.ivIcon, animation);
         binding.tvTitle.setText(titleRes);
         setSubtitle(descPattern, firstPlaceholder, firstPlaceholderVal, secondPlaceholder, secondPlaceholderVal);
     }

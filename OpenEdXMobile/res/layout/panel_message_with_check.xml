@@ -9,7 +9,7 @@
     android:background="@drawable/rectangle_border_background"
     android:orientation="horizontal">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/message_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +18,8 @@
         android:layout_marginEnd="@dimen/widget_margin_half"
         android:contentDescription="@null"
         android:gravity="center"
-        android:src="@drawable/ic_round_primary_check" />
+        android:tint="@color/primaryBaseColor"
+        android:src="@drawable/ic_check" />
 
     <TextView
         android:id="@+id/message_body"

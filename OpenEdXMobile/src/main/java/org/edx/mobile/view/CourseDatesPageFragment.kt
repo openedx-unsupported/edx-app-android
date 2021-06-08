@@ -302,7 +302,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
         snackbarErrorNotification.showError(
                 if (isSuccess) R.string.assessment_shift_dates_success_msg else R.string.course_dates_reset_unsuccessful,
-                null, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null)
+                0, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null)
         environment.analyticsRegistry.trackPLSCourseDatesShift(courseData.courseId, courseData.mode, Analytics.Screens.PLS_COURSE_DATES, isSuccess)
     }
 

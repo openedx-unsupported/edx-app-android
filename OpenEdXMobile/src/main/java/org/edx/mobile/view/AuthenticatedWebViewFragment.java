@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -13,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -106,8 +104,8 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
             swipeContainer.setEnabled(false);
         } else {
             view.findViewById(R.id.content_error).setVisibility(View.VISIBLE);
-            final IconImageView ivContentError = view.findViewById(R.id.content_error_icon);
-            ivContentError.setIcon(FontAwesomeIcons.fa_exclamation_circle);
+            final AppCompatImageView ivContentError = view.findViewById(R.id.content_error_icon);
+            ivContentError.setImageDrawable(UiUtil.getDrawable(getContext(), R.drawable.ic_error));
             tvContentError.setText(getString(R.string.error_unknown));
             btnContentErrorAction.setVisibility(View.VISIBLE);
             btnContentErrorAction.setText(R.string.lbl_reload);

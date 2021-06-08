@@ -96,13 +96,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/medium_icon_size"
                 android:layout_height="@dimen/medium_icon_size"
                 android:layout_marginTop="@dimen/widget_margin_half"
                 android:layout_marginEnd="@dimen/edx_margin"
-                app:iconColor="@color/primaryBaseColor"
-                app:iconName="fa-trophy" />
+                android:tint="@color/primaryBaseColor"
+                app:srcCompat="@drawable/ic_emoji_events" />
 
             <TextView
                 android:layout_width="wrap_content"

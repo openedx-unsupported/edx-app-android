@@ -321,11 +321,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(authWebView);
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
-                    null, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
+                    0, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
                     v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, unit.getCourseId(),
                             null, null, false, Screen.COURSE_DATES));
         } else {
-            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
+            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, 0,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
         environment.getAnalyticsRegistry().trackPLSCourseDatesShift(unit.getCourseId(), enrollmentMode,

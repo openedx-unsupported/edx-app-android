@@ -3,9 +3,6 @@ package org.edx.mobile.view.adapters;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.widget.TextViewCompat;
 
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.TextResourceProvider;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.CourseDiscussionPostsThreadFragment;
 
 /**
@@ -35,25 +35,23 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
     private static class IconDrawableFactoryImpl implements IconDrawableFactory {
         @NonNull
         private final Context context;
-        @NonNull
-        private final Icon icon;
+        @DrawableRes
+        private final int iconResId;
 
-        IconDrawableFactoryImpl(@NonNull Context context, @NonNull Icon icon) {
+        IconDrawableFactoryImpl(@NonNull Context context, @DrawableRes int iconResId) {
             this.context = context;
-            this.icon = icon;
+            this.iconResId = iconResId;
         }
 
         @Override
         @NonNull
-        public IconDrawable createIcon() {
-            return new IconDrawable(context, icon)
-                    .sizeRes(context, R.dimen.small_icon_size)
-                    .colorRes(context, R.color.primaryBaseColor);
+        public Drawable createIcon() {
+            return UiUtil.getDrawable(context, iconResId, R.dimen.small_icon_size, R.color.primaryBaseColor);
         }
     }
 
     private static final int[] ACTIVATED_STATE_SET =
-            new int[] { android.R.attr.state_activated };
+            new int[]{android.R.attr.state_activated};
 
     @NonNull
     private final IconDrawableFactory iconDrawableFactory;
@@ -70,15 +68,15 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
     private final Spinner spinner;
 
     public DiscussionPostsSpinnerAdapter(@NonNull Spinner spinner,
-            @NonNull TextResourceProvider[] textResourceProviders,
-            @NonNull Icon icon) {
+                                         @NonNull TextResourceProvider[] textResourceProviders,
+                                         @DrawableRes int iconResId) {
         this(spinner, textResourceProviders,
-                new IconDrawableFactoryImpl(spinner.getContext(), icon));
+                new IconDrawableFactoryImpl(spinner.getContext(), iconResId));
     }
 
     public DiscussionPostsSpinnerAdapter(@NonNull Spinner spinner,
-            @NonNull TextResourceProvider[] textResourceProviders,
-            @NonNull IconDrawableFactory iconDrawableFactory) {
+                                         @NonNull TextResourceProvider[] textResourceProviders,
+                                         @NonNull IconDrawableFactory iconDrawableFactory) {
         super(spinner.getContext(), R.layout.row_discussion_thread_dropdown, textResourceProviders);
         this.iconDrawableFactory = iconDrawableFactory;
         this.spinner = spinner;
@@ -111,7 +109,7 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
     @Override
     @NonNull
     public View getDropDownView(int position, @Nullable View convertView,
-            @NonNull ViewGroup parent) {
+                                @NonNull ViewGroup parent) {
         TextView textView = initTextView(position, convertView, parent);
         if (textView != convertView) {
             Drawable icon = createIcon();
@@ -133,7 +131,7 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
     // stateless) icon.
     @NonNull
     private TextView initTextView(int position, @Nullable View convertView,
-            @NonNull ViewGroup parent) {
+                                  @NonNull ViewGroup parent) {
         TextView textView = (TextView) (convertView != null ? convertView :
                 LayoutInflater.from(getContext()).inflate(
                         R.layout.row_discussion_thread_dropdown, parent, false));

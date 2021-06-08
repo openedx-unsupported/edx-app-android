@@ -82,8 +82,8 @@
         android:background="@drawable/selectable_box_overlay"
         android:layout_marginStart="@dimen/widget_margin_half"
         android:contentDescription="@string/cancel_download"
-        android:padding="@dimen/widget_margin"
         android:layout_gravity="center"
+        android:scaleType="center"
         android:src="@drawable/ic_close" />
 
 </LinearLayout>

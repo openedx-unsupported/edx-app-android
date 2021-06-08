@@ -1,13 +1,13 @@
 package org.edx.mobile.http.notifications;
 
 import android.content.DialogInterface;
+import android.view.View;
+
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import android.view.View;
-
-import com.joanzapata.iconify.Icon;
 
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
@@ -36,13 +36,13 @@ public class DialogErrorNotification extends ErrorNotification {
      * Show the error notification as a modal dialog, according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon. This is currently ignored here.
+     * @param iconResId            The error iconResId. This is currently ignored here.
      * @param actionTextResId The resource ID of the action button text.
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
     public void showError(@StringRes final int errorResId,
-                          @Nullable final Icon icon,
+                          @DrawableRes final int iconResId,
                           @StringRes final int actionTextResId,
                           @Nullable final View.OnClickListener actionListener) {
         if (baseFragment.isResumed()) {
@@ -62,14 +62,14 @@ public class DialogErrorNotification extends ErrorNotification {
      * Show the error dialog according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon.
+     * @param iconResId            The error iconResId.
      * @param actionTextResId The resource ID of the action button text.
      * @param duration        The duration of the error message visibility
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
-    public void showError(int errorResId, @Nullable Icon icon, int actionTextResId, int duration, @Nullable View.OnClickListener actionListener) {
+    public void showError(int errorResId, @DrawableRes int iconResId, int actionTextResId, int duration, @Nullable View.OnClickListener actionListener) {
         // Ignoring the duration as it won't be use in Dialog
-        showError(errorResId, icon, actionTextResId, actionListener);
+        showError(errorResId, iconResId, actionTextResId, actionListener);
     }
 }

@@ -23,7 +23,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.joanzapata.iconify.Icon;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
@@ -38,6 +37,7 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;
@@ -217,10 +217,11 @@ public class UserProfileFragment
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
 
-                final Icon errorIcon = ErrorUtils.getErrorIcon(error);
+                final int errorIconResId = ErrorUtils.getErrorIconResId(error);
                 viewHolder.contentError.getRoot().setVisibility(View.VISIBLE);
-                if (errorIcon != null) {
-                    viewHolder.contentError.contentErrorIcon.setIcon(errorIcon);
+                if (errorIconResId != 0) {
+                    viewHolder.contentError.contentErrorIcon.setImageDrawable(
+                            UiUtil.getDrawable(getContext(), errorIconResId));
                 }
                 viewHolder.contentError.contentErrorText.setText(ErrorUtils.getErrorMessage(error, getContext()));
                 viewHolder.contentError.contentErrorAction.setText(R.string.lbl_reload);

@@ -261,6 +261,7 @@
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
+    <dimen name="button_icon_horizontal_padding">20dp</dimen>
     <dimen name="divider_with_text_margin">12dp</dimen>
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>

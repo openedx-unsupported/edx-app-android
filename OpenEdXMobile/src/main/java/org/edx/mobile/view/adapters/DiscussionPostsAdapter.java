@@ -1,26 +1,27 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtil;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @ColorInt
@@ -51,23 +52,23 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     public void render(BaseViewHolder tag, DiscussionThread discussionThread) {
         ViewHolder holder = (ViewHolder) tag;
         {
-            final Icon icon;
-            @ColorInt
-            final int iconColor;
+            @DrawableRes final int iconResId;
+            @ColorInt final int iconColor;
             if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
                 if (discussionThread.isHasEndorsed()) {
-                    icon = FontAwesomeIcons.fa_check_square_o;
+                    iconResId = R.drawable.ic_verified;
                     iconColor = edx_utility_success_dark;
                 } else {
-                    icon = FontAwesomeIcons.fa_question;
+                    iconResId = R.drawable.ic_help_center;
                     iconColor = secondary_dark_color;
                 }
             } else {
-                icon = FontAwesomeIcons.fa_comments;
+                iconResId = R.drawable.ic_chat;
                 iconColor = (discussionThread.isRead() ? neutral_x_dark : primaryBaseColor);
             }
-            holder.discussionPostTypeIcon.setIcon(icon);
-            holder.discussionPostTypeIcon.setIconColor(iconColor);
+            holder.discussionPostTypeIcon.setImageDrawable(UiUtil
+                    .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId));
+            holder.discussionPostTypeIcon.setColorFilter(iconColor, android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
         {
@@ -81,10 +82,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 holder.discussionPostRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionPostDateTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionUnreadRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
-                holder.discussionPostTypeIcon.setIconColor(neutral_x_dark);
-                holder.discussionPostClosedIcon.setIconColor(neutral_x_dark);
-                holder.discussionPostPinIcon.setIconColor(neutral_x_dark);
-                holder.discussionPostFollowIcon.setIconColor(neutral_x_dark);
+                holder.discussionPostTypeIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
+                holder.discussionPostClosedIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
+                holder.discussionPostPinIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
+                holder.discussionPostFollowIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
             }
         }
 
@@ -169,11 +170,11 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        final IconImageView discussionPostTypeIcon;
+        final AppCompatImageView discussionPostTypeIcon;
         final TextView discussionPostTitle;
-        final IconImageView discussionPostClosedIcon;
-        final IconImageView discussionPostPinIcon;
-        final IconImageView discussionPostFollowIcon;
+        final AppCompatImageView discussionPostClosedIcon;
+        final AppCompatImageView discussionPostPinIcon;
+        final AppCompatImageView discussionPostFollowIcon;
         final TextView discussionPostRepliesTextView;
         final TextView discussionPostDateTextView;
         final TextView discussionUnreadRepliesTextView;
@@ -181,11 +182,11 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         final View discussionSubtitleSecondPipe;
 
         public ViewHolder(View convertView) {
-            discussionPostTypeIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_type_icon);
+            discussionPostTypeIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_type_icon);
             discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
-            discussionPostClosedIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_closed_icon);
-            discussionPostPinIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_pin_icon);
-            discussionPostFollowIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_following_icon);
+            discussionPostClosedIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_closed_icon);
+            discussionPostPinIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_pin_icon);
+            discussionPostFollowIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_following_icon);
             discussionPostRepliesTextView = (TextView) convertView.findViewById(R.id.discussion_post_replies_count);
             discussionPostDateTextView = (TextView) convertView.findViewById(R.id.discussion_post_date);
             discussionUnreadRepliesTextView = (TextView) convertView.findViewById(R.id.discussion_unread_replies_text);

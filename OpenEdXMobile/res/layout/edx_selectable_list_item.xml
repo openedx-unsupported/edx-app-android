@@ -9,4 +9,5 @@
     android:gravity="center_vertical"
     android:padding="@dimen/edx_margin"
     android:textColor="@color/primaryBaseColor"
+    android:drawableTint="@color/primaryBaseColor"
     android:textSize="@dimen/edx_base" />

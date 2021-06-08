@@ -34,11 +34,11 @@
                         android:layout_marginEnd="@dimen/edx_margin"
                         android:background="@drawable/selectable_box_overlay"
                         android:contentDescription="@string/close"
-                        android:padding="@dimen/widget_margin"
+                        android:scaleType="center"
                         android:src="@drawable/ic_close"
-                        android:tint="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/white" />
 
                     <TextView
                         android:id="@+id/tv_header"
@@ -47,7 +47,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/edx_margin"
                         android:singleLine="true"
-                        android:text="@string/payments_info_header"
                         android:textSize="@dimen/edx_large"
                         app:layout_constraintBottom_toBottomOf="@+id/btn_close"
                         app:layout_constraintEnd_toStartOf="@+id/btn_close"

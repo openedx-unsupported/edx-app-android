@@ -14,16 +14,16 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_icon"
             android:layout_width="@dimen/fa_large"
             android:layout_height="@dimen/fa_large"
             android:layout_marginStart="@dimen/widget_margin_double"
-            app:iconColor="@color/primaryBaseColor"
-            app:iconName="fa-film"
+            android:tint="@color/primaryBaseColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_videocam" />
 
         <LinearLayout
             android:id="@+id/ll_content"

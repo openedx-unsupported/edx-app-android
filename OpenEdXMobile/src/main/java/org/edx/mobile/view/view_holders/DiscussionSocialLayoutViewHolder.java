@@ -1,22 +1,24 @@
 package org.edx.mobile.view.view_holders;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.widget.IconImageView;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtil;
 
 public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
-    public final IconImageView threadVoteIconImageView;
+    public final AppCompatImageView threadVoteIconImageView;
     public final TextView threadVoteTextView;
     public final View voteViewContainer;
-    public final IconImageView threadFollowIconImageView;
+    public final AppCompatImageView threadFollowIconImageView;
     public final TextView threadFollowTextView;
     public final View threadFollowContainer;
 
@@ -28,13 +30,13 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
         threadVoteTextView = (TextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_count_text_view);
-        threadVoteIconImageView = (IconImageView) itemView.
+        threadVoteIconImageView = (AppCompatImageView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_icon_view);
 
         threadFollowTextView = (TextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_follow_text_view);
 
-        threadFollowIconImageView = (IconImageView) itemView.
+        threadFollowIconImageView = (AppCompatImageView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_follow_icon_view);
         threadFollowContainer = itemView.
                 findViewById(R.id.discussion_responses_action_bar_follow_container);
@@ -64,7 +66,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         if (threadFollowContainer.isSelected() != follow) {
             threadFollowContainer.setSelected(follow);
             threadFollowTextView.setText(follow ? R.string.forum_unfollow : R.string.forum_follow);
-            threadFollowIconImageView.setIconColorResource(R.color.infoBase);
+            threadFollowIconImageView.setColorFilter(ContextCompat.getColor(threadFollowIconImageView.getContext(), R.color.infoBase), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -72,6 +74,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         voteViewContainer.setSelected(vote);
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, vote ? otherUserVotes + 1 : otherUserVotes));
-        threadVoteIconImageView.setIconColorResource(R.color.infoBase);
+        threadVoteIconImageView.setColorFilter(ContextCompat.getColor(threadVoteIconImageView.getContext(), R.color.infoBase), android.graphics.PorterDuff.Mode.SRC_IN);
+
     }
 }

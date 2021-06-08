@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,9 +32,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -469,8 +467,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 if (!isVideoMode && isBannerVisible && position == 0) {
                     return false;
                 }
-                final IconImageView bulkDownloadIcon = (IconImageView) view.findViewById(R.id.bulk_download);
-                if (bulkDownloadIcon != null && bulkDownloadIcon.getIcon() == FontAwesomeIcons.fa_check) {
+                final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) view.findViewById(R.id.bulk_download);
+                if (bulkDownloadIcon != null && (Integer) bulkDownloadIcon.getTag() == R.drawable.ic_check) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
                     listView.setItemChecked(position, true);
                     return true;
@@ -539,11 +537,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(listView);
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
-                    null, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
+                    0, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
                     v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, courseData.getCourseId(),
                             null, null, false, Screen.COURSE_DATES));
         } else {
-            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, null,
+            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, 0,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
         }
         environment.getAnalyticsRegistry().trackPLSCourseDatesShift(courseData.getCourseId(),
@@ -589,9 +587,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             final MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.delete_contextual_menu, menu);
             menu.findItem(R.id.item_delete).setIcon(
-                    new IconDrawable(getContext(), FontAwesomeIcons.fa_trash_o)
-                            .colorRes(getContext(), R.color.white)
-                            .actionBarSize(getContext())
+                    UiUtil.getDrawable(getContext(), R.drawable.ic_delete,
+                            R.dimen.action_bar_icon_size,R.color.white)
             );
             mode.setTitle(R.string.delete_videos_title);
             return true;
@@ -615,7 +612,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     final View rowView = listView.getChildAt(checkedItemPosition - listView.getFirstVisiblePosition());
                     if (rowView != null) {
                         // rowView will be null, if the user scrolls away from the checked item
-                        ((IconImageView) rowView.findViewById(R.id.bulk_download)).setIcon(FontAwesomeIcons.fa_download);
+                        ((AppCompatImageView) rowView.findViewById(R.id.bulk_download)).setImageDrawable(
+                                UiUtil.getDrawable(requireContext(), R.drawable.ic_download));
                     }
 
                     final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(checkedItemPosition);
@@ -725,7 +723,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             // Remove bulk video download if the course has NO downloadable videos
             UiUtil.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
             if (isVideoMode) {
-                errorNotification.showError(R.string.no_videos_text, null, -1, null);
+                errorNotification.showError(R.string.no_videos_text, 0, -1, null);
             } else {
                 boolean isSpecialExamInfo = courseComponent.getSpecialExamInfo() != null;
                 Map<String, String> values = new HashMap<>();
@@ -733,7 +731,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 environment.getAnalyticsRegistry().trackScreenView(isSpecialExamInfo ? Analytics.Screens.SPECIAL_EXAM_BLOCK : Analytics.Screens.EMPTY_SUBSECTION_OUTLINE,
                         courseComponent.getCourseId(), null, values);
 
-                errorNotification.showError(R.string.assessment_not_available, null, R.string.assessment_view_on_web, new View.OnClickListener() {
+                errorNotification.showError(R.string.assessment_not_available, 0, R.string.assessment_view_on_web, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         environment.getAnalyticsRegistry().trackSubsectionViewOnWebTapped(courseComponent.getCourseId(), courseComponent.getBlockId(), isSpecialExamInfo);

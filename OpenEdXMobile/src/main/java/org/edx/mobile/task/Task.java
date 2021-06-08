@@ -119,6 +119,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     protected void stopProgress() {
         if (progressView != null) {
             progressView.setVisibility(View.GONE);
+            progressView.setAnimation(null);
         }
         final TaskProgressCallback callback = getProgressCallback();
         if (callback != null) {

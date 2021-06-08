@@ -26,7 +26,7 @@
                 android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base" />
 
-            <com.joanzapata.iconify.widget.IconButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/close_btn"
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"
@@ -35,8 +35,8 @@
                 android:background="@drawable/selectable_box_overlay"
                 android:contentDescription="@string/label_close"
                 android:padding="@dimen/widget_margin"
-                android:text="{fa-close}"
-                android:textColor="@color/white"
+                android:tint="@color/white"
+                android:src="@drawable/ic_close"
                 android:textSize="@dimen/edx_x_large" />
         </FrameLayout>
 

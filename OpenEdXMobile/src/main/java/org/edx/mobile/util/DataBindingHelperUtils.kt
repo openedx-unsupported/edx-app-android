@@ -1,6 +1,7 @@
 package org.edx.mobile.util
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
@@ -14,9 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.resources.TextAppearanceConfig
-import com.joanzapata.iconify.IconDrawable
-import com.joanzapata.iconify.fonts.FontAwesomeIcons
-import com.joanzapata.iconify.internal.ParsingUtil
 import kotlinx.android.synthetic.main.sub_item_course_date_block.view.*
 import org.edx.mobile.R
 import org.edx.mobile.interfaces.OnDateBlockListener
@@ -147,7 +145,7 @@ class DataBindingHelperUtils {
             val badgeBackground: Int
             val textAppearance: Int
             var badgeStrokeColor: Int = -1
-            var badgeIcon: IconDrawable? = null
+            var badgeIcon: Drawable? = null
             when (courseDateType) {
                 CourseDateType.TODAY -> {
                     badgeBackground = R.color.course_today_date
@@ -156,9 +154,9 @@ class DataBindingHelperUtils {
                 CourseDateType.VERIFIED_ONLY -> {
                     badgeBackground = R.color.black
                     textAppearance = R.style.verified_only_badge_text_appearance
-                    badgeIcon = IconDrawable(textView.context, FontAwesomeIcons.fa_lock)
-                            .sizeRes(textView.context, R.dimen.small_icon_size)
-                            .colorRes(textView.context, R.color.white)
+                    badgeIcon = UiUtil.getDrawable(
+                        textView.context, R.drawable.ic_lock, R.dimen.small_icon_size, R.color.white
+                    )
                 }
                 CourseDateType.COMPLETED -> {
                     badgeBackground = R.color.tag_light_silver
@@ -194,7 +192,8 @@ class DataBindingHelperUtils {
                 val dateType = dateBlockItems.first().dateBlockBadge
                 for (i in 1 until dateBlockItems.size) {
                     if (dateBlockItems[i].dateBlockBadge != dateType &&
-                            dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK) {
+                        dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK
+                    ) {
                         return false
                     }
                 }
@@ -205,10 +204,12 @@ class DataBindingHelperUtils {
         /**
          * Method to add the date badge at the end in given title with styles attributes
          */
-        private fun addDateBadge(textView: TextView, title: String, badgeBackground: Int,
-                                 textAppearance: Int,
-                                 badgeIcon: IconDrawable?,
-                                 badgeStrokeColor: Int) {
+        private fun addDateBadge(
+            textView: TextView, title: String, badgeBackground: Int,
+            textAppearance: Int,
+            badgeIcon: Drawable?,
+            badgeStrokeColor: Int
+        ) {
             // add badge title so can identify the actual badge position
             val titleWithBadge = SpannableStringBuilder((textView.text as Spannable))
             // add space before badge title
@@ -217,8 +218,10 @@ class DataBindingHelperUtils {
 
             // setup the date badge
             val string = textView.text as Spannable
-            val chipDrawable = ChipDrawable.createFromResource(textView.context,
-                    R.xml.dates_badge_chip)
+            val chipDrawable = ChipDrawable.createFromResource(
+                textView.context,
+                R.xml.dates_badge_chip
+            )
             chipDrawable.text = title
             chipDrawable.setChipBackgroundColorResource(badgeBackground)
             // Load font Synchronously
@@ -229,23 +232,33 @@ class DataBindingHelperUtils {
 
             if (badgeIcon != null) {
                 chipDrawable.chipIcon = badgeIcon
-                chipDrawable.chipIconSize = textView.context.resources.getDimension(R.dimen.small_icon_size)
+                chipDrawable.chipIconSize =
+                    textView.context.resources.getDimension(R.dimen.small_icon_size)
                 chipDrawable.setIconStartPaddingResource(R.dimen.dates_badge_icon_start_padding)
                 chipDrawable.setIconEndPaddingResource(R.dimen.dates_badge_icon_end_padding)
             }
             if (badgeStrokeColor != -1) {
                 chipDrawable.setChipStrokeColorResource(badgeStrokeColor)
-                chipDrawable.strokeWidth = ParsingUtil.dpToPx(textView.context, 1.0F)
+                chipDrawable.strokeWidth = dpToPx(textView.context,1.0F)
             }
             // Reduce the chip height and vertical margins to match the design.
-            chipDrawable.setBounds(0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
-                    chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt())
+            chipDrawable.setBounds(
+                0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
+                chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt()
+            )
 
             val length = textView.text.toString().length
             // Find & replace the badge title with actual badge drawable
-            string.setSpan(ImageSpan(chipDrawable), textView.text.indexOf(title), length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            string.setSpan(
+                ImageSpan(chipDrawable), textView.text.indexOf(title), length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             textView.setText(string, TextView.BufferType.SPANNABLE)
+        }
+
+        private fun dpToPx(context: Context, dpValue: Float): Float {
+            val scale = context.resources.displayMetrics.density
+            return dpValue * scale + 0.5f
         }
     }
 }

@@ -14,13 +14,13 @@
         android:layout_marginBottom="@dimen/edx_margin"
         android:orientation="horizontal">
 
-        <com.joanzapata.iconify.widget.IconImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_detail_field_icon"
             android:layout_width="@dimen/fa_xxx_large"
             android:layout_height="@dimen/fa_xxx_large"
             android:baselineAlignBottom="true"
             android:gravity="start"
-            app:iconColor="@color/black"
+            android:tint="@color/black"
             tools:src="@color/primaryBaseColor" />
 
         <TextView

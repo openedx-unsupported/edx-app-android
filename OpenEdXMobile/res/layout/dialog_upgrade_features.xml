@@ -20,6 +20,7 @@
                 android:layout_width="@dimen/fa_x_large"
                 android:layout_height="@dimen/fa_x_large"
                 android:layout_gravity="end"
+                android:scaleType="center"
                 android:src="@drawable/ic_close"
                 android:tint="@color/primaryBaseColor" />
 

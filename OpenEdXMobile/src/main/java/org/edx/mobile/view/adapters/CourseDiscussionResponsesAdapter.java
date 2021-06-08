@@ -1,11 +1,6 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.widget.TextViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -203,6 +199,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                                     discussionThread = discussionThread.patchObject(topicThread);
                                     EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                                 }
+
                                 @Override
                                 protected void onFailure(@NonNull final Throwable error) {
                                     notifyItemChanged(0);
@@ -221,7 +218,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount()-1: discussionThread.getVoteCount());
+                boolean isVoted = holder.toggleVote(discussionThread.isVoted() ? discussionThread.getVoteCount() - 1 : discussionThread.getVoteCount());
                 discussionService.setThreadVoted(discussionThread.getIdentifier(),
                         new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionThread>(
@@ -231,6 +228,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
                                 EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                             }
+
                             @Override
                             protected void onFailure(@NonNull final Throwable error) {
                                 notifyItemChanged(0);
@@ -252,6 +250,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
                                 EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                             }
+
                             @Override
                             protected void onFailure(@NonNull final Throwable error) {
                                 notifyItemChanged(0);
@@ -360,6 +359,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                                     discussionResponses.get(position - 1).patchObject(comment);
                                     discussionResponses.set(position - 1, comment);
                                 }
+
                                 @Override
                                 protected void onFailure(@NonNull final Throwable error) {
                                     notifyItemChanged(position);
@@ -379,7 +379,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isVoted = holder.toggleVote(response.isVoted() ? response.getVoteCount()-1: response.getVoteCount());
+                boolean isVoted = holder.toggleVote(response.isVoted() ? response.getVoteCount() - 1 : response.getVoteCount());
                 discussionService.setCommentVoted(response.getIdentifier(),
                         new VoteBody(isVoted))
                         .enqueue(new ErrorHandlingCallback<DiscussionComment>(
@@ -389,6 +389,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                                 discussionResponses.get(position - 1).patchObject(comment);
                                 discussionResponses.set(position - 1, comment);
                             }
+
                             @Override
                             protected void onFailure(@NonNull final Throwable error) {
                                 notifyItemChanged(position);
@@ -400,30 +401,27 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
         String text;
-        Icon icon;
+        int iconResId;
 
         int numChildren = response == null ? 0 : response.getChildCount();
 
         if (response.getChildCount() == 0) {
             if (discussionThread.isClosed() || courseData.isDiscussionBlackedOut()) {
                 text = context.getString(R.string.discussion_add_comment_disabled_title);
-                icon = FontAwesomeIcons.fa_lock;
+                iconResId = R.drawable.ic_lock;
             } else {
                 text = context.getString(R.string.number_responses_or_comments_add_comment_label);
-                icon = FontAwesomeIcons.fa_comment;
+                iconResId = R.drawable.ic_comment;
             }
         } else {
             text = context.getResources().getQuantityString(
                     R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren);
-            icon = FontAwesomeIcons.fa_comment;
+            iconResId = R.drawable.ic_comment;
         }
 
         holder.numberResponsesOrCommentsLabel.setText(text);
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                holder.numberResponsesOrCommentsLabel,
-                new IconDrawable(context, icon)
-                        .colorRes(context, R.color.primaryBaseColor)
-                        .sizeRes(context, R.dimen.edx_small),
+        holder.numberResponsesOrCommentsLabel.setCompoundDrawables(
+                UiUtil.getDrawable(context, iconResId, R.dimen.edx_small, R.color.primaryBaseColor),
                 null, null, null);
     }
 

@@ -2,8 +2,6 @@ package org.edx.mobile.view;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +9,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.UiUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -58,7 +59,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
         holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setIcon(FontAwesomeIcons.fa_file_text_o);
+        holder.typeView.setImageDrawable(UiUtil.getDrawable(requireContext(), R.drawable.ic_description));
         holder.titleView.setText(R.string.handouts_title);
         holder.subtitleView.setText(R.string.handouts_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
         holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setIcon(FontAwesomeIcons.fa_bullhorn);
+        holder.typeView.setImageDrawable(UiUtil.getDrawable(requireContext(), R.drawable.ic_campaign));
         holder.titleView.setText(R.string.announcement_title);
         holder.subtitleView.setText(R.string.announcement_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +108,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {
         ViewHolder holder = new ViewHolder();
         holder.rowView = inflater.inflate(R.layout.row_resource_list, parent, false);
-        holder.typeView = (IconImageView) holder.rowView.findViewById(R.id.row_type);
+        holder.typeView = (AppCompatImageView) holder.rowView.findViewById(R.id.row_type);
         holder.titleView = (TextView) holder.rowView.findViewById(R.id.row_title);
         holder.subtitleView = (TextView) holder.rowView.findViewById(R.id.row_subtitle);
         parent.addView(holder.rowView);
@@ -116,7 +117,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
     private class ViewHolder {
         View rowView;
-        IconImageView typeView;
+        AppCompatImageView typeView;
         TextView titleView;
         TextView subtitleView;
     }

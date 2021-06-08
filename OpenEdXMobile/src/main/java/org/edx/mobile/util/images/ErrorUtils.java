@@ -1,12 +1,10 @@
 package org.edx.mobile.util.images;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.CourseContentNotValidException;
@@ -87,14 +85,14 @@ public enum ErrorUtils {
         return errorResId;
     }
 
-    @Nullable
-    public static Icon getErrorIcon(@NonNull Throwable ex) {
+    @DrawableRes
+    public static int getErrorIconResId(@NonNull Throwable ex) {
         if (ex instanceof IOException) {
-            return FontAwesomeIcons.fa_wifi;
+            return R.drawable.ic_wifi;
         } else if (ex instanceof HttpStatusException || ex instanceof CourseContentNotValidException) {
-            return FontAwesomeIcons.fa_exclamation_circle;
+            return R.drawable.ic_error;
         } else {
-            return null;
+            return 0;
         }
     }
 }

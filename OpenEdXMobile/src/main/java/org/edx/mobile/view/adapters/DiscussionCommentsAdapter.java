@@ -1,19 +1,19 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.core.widget.TextViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.core.widget.TextViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
@@ -21,6 +21,7 @@ import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
 import java.util.ArrayList;
@@ -115,7 +116,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         if (getItemViewType(position) == RowType.PROGRESS) return;
         final ResponseOrCommentViewHolder holder = (ResponseOrCommentViewHolder) viewHolder;
         final DiscussionComment discussionComment;
-        final IconDrawable iconDrawable;
+        final Drawable iconDrawable;
 
         if (position == 0) {
             discussionComment = response;
@@ -124,19 +125,15 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             final int childCount = discussionComment.getChildCount();
             holder.discussionCommentCountReportTextView.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, childCount, childCount));
-            iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_comment)
-                    .sizeRes(context, R.dimen.edx_small)
-                    .colorRes(context, R.color.primaryBaseColor);
+            iconDrawable = UiUtil.getDrawable(context, R.drawable.ic_comment,
+                    R.dimen.edx_small, R.color.primaryBaseColor);
             holder.discussionCommentCountReportTextView.setOnClickListener(null);
             holder.discussionCommentCountReportTextView.setClickable(false);
         } else {
             holder.authorLayoutViewHolder.answerTextView.setVisibility(View.GONE);
             discussionComment = discussionComments.get(position - 1);
-
-            iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_flag)
-                    .sizeRes(context, R.dimen.edx_small)
-                    .colorRes(context, R.color.infoBase);
-
+            iconDrawable = UiUtil.getDrawable(context, R.drawable.ic_flag,
+                    R.dimen.edx_small, R.color.infoBase);
             if (TextUtils.equals(loginPrefs.getUsername(), discussionComment.getAuthor())) {
                 holder.discussionCommentCountReportTextView.setVisibility(View.GONE);
             } else {
