@@ -113,15 +113,6 @@ task(version) doLast {
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
-    implementation project (':android-iconify')
-    // Note that we have the Font Awesome TTF file
-    // in the local assets as well, to enable the
-    // graphical layout editor to render it. Since
-    // that is what will be compiled in the APK now,
-    // we need to ensure that it's updated along
-    // with module updates.
-    implementation project (':android-iconify-fontawesome')
-
     // Webview crash fix after update the library
     // Inspiration: https://github.com/PierfrancescoSoffritti/android-youtube-player/issues/461#issuecomment-696772172
     implementation "androidx.appcompat:appcompat:$androidXAppCompactVersion"

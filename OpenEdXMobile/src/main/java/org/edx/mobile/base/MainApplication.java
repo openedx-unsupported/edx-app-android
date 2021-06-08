@@ -18,8 +18,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
@@ -125,9 +123,6 @@ public abstract class MainApplication extends MultiDexApplication {
         registerReceiver(new NetworkConnectivityReceiver(), new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 
         checkIfAppVersionUpgraded(this);
-
-        // Register Font Awesome module in android-iconify library
-        Iconify.with(new FontAwesomeModule());
 
         // Init Branch
         if (config.getBranchConfig().isEnabled()) {
