@@ -7,6 +7,8 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +114,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                     }
                     isPageLoading = false;
                     EventBus.getDefault().post(new UnitLoadedEvent());
-                    evaluateJavascriptForiFrame();
                 }
             }
 
@@ -128,6 +129,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
             @Override
             public void onPageLoadProgressChanged(WebView webView, int progress) {
+                if (progress > 30) {
+                    evaluateJavascriptForiFrame();
+                }
             }
         });
 
@@ -175,7 +179,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
         ImageSpan openInNewIcon = new ImageSpan(getContext(), R.drawable.ic_open_in_new);
         openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf("icon"),
-                openInBrowserMessage.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                openInBrowserMessage.length(), DynamicDrawableSpan.ALIGN_BASELINE);
 
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
@@ -185,12 +189,16 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
             @Override
             public void updateDrawState(@NotNull TextPaint textPaint) {
-                textPaint.linkColor = R.color.neutralXXDark;
                 textPaint.setUnderlineText(true);
                 super.updateDrawState(textPaint);
             }
         };
         openInBrowserSpan.setSpan(clickableSpan,
+                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)),
+                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)) + getString(R.string.open_in_browser_text).length(),
+                Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        openInBrowserSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.neutralXXDark)),
                 openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)),
                 openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)) + getString(R.string.open_in_browser_text).length(),
                 Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
