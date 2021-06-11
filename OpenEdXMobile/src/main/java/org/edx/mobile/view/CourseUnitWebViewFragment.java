@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -46,6 +47,9 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
@@ -111,6 +115,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             public void onPageFinished() {
                 if (authWebView.isPageLoaded()) {
                     fetchDateBannerInfo();
+                    evaluateXBlocksForBanner();
                     evaluateJavascriptForiFrame();
                     if (getUserVisibleHint()) {
                         preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADED);
@@ -150,6 +155,14 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         }
     }
 
+    private void evaluateXBlocksForBanner() {
+        List<BlockType> allowedBlocks = Arrays.asList(BlockType.PROBLEM, BlockType.OPENASSESSMENT,
+                BlockType.DRAG_AND_DROP_V2, BlockType.WORD_CLOUD);
+        if (allowedBlocks.contains(unit.getType())) {
+            setupOpenInBrowserView(R.string.open_in_new_tab_text);
+        }
+    }
+
     private void evaluateJavascriptForiFrame() {
         if (!TextUtils.isEmpty(unit.getBlockId()) && !evaluatediFrameJS) {
             // execute js code to check an HTML block that contains an iframe
@@ -163,19 +176,17 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             authWebView.evaluateJavascript(javascript, value -> {
                 evaluatediFrameJS = true;
                 if (Boolean.parseBoolean(value)) {
-                    setupOpenInBrowserView();
-                } else {
-                    tvOpenBrowser.setVisibility(View.GONE);
+                    setupOpenInBrowserView(R.string.open_in_browser_text);
                 }
             });
         }
     }
 
-    private void setupOpenInBrowserView() {
+    private void setupOpenInBrowserView(@StringRes int linkTextResId) {
         tvOpenBrowser.setVisibility(View.VISIBLE);
 
         String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
-                + getString(R.string.open_in_browser_text) + " " + AppConstants.ICON_PLACEHOLDER;
+                + getString(linkTextResId) + " " + AppConstants.ICON_PLACEHOLDER;
         SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
 
         ImageSpan openInNewIcon = new ImageSpan(getContext(), R.drawable.ic_open_in_new);
@@ -194,13 +205,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 super.updateDrawState(textPaint);
             }
         };
-        int openInBrowserIndex = openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text));
+        int openInBrowserIndex = openInBrowserMessage.indexOf(getString(linkTextResId));
         openInBrowserSpan.setSpan(clickableSpan, openInBrowserIndex,
-                openInBrowserIndex + getString(R.string.open_in_browser_text).length(),
+                openInBrowserIndex + getString(linkTextResId).length(),
                 Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
         openInBrowserSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.neutralXXDark)),
-                openInBrowserIndex, openInBrowserIndex + getString(R.string.open_in_browser_text).length(),
+                openInBrowserIndex, openInBrowserIndex + getString(linkTextResId).length(),
                 Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
         tvOpenBrowser.setText(openInBrowserSpan);
