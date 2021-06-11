@@ -37,6 +37,7 @@ import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
@@ -68,6 +69,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private boolean isPageLoading = false;
     private String enrollmentMode = "";
     private boolean isSelfPaced = true;
+    private boolean evaluatediFrameJS = false;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String enrollmentMode, boolean isSelfPaced) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
@@ -151,7 +153,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void evaluateJavascriptForiFrame() {
-        if (!TextUtils.isEmpty(unit.getBlockId())) {
+        if (!TextUtils.isEmpty(unit.getBlockId()) && !evaluatediFrameJS) {
             // execute js code to check an HTML block that contains an iframe
             String javascript =
                     "try {" +
@@ -161,6 +163,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                             "    false;" +
                             "};";
             authWebView.evaluateJavascript(javascript, value -> {
+                evaluatediFrameJS = true;
                 if (Boolean.parseBoolean(value)) {
                     setupOpenInBrowserView();
                 } else {
@@ -174,11 +177,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         tvOpenBrowser.setVisibility(View.VISIBLE);
 
         String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
-                + getString(R.string.open_in_browser_text) + " " + "icon";
+                + getString(R.string.open_in_browser_text) + " " + AppConstants.ICON_PLACE_HOLDER;
         SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
 
         ImageSpan openInNewIcon = new ImageSpan(getContext(), R.drawable.ic_open_in_new);
-        openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf("icon"),
+        openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf(AppConstants.ICON_PLACE_HOLDER),
                 openInBrowserMessage.length(), DynamicDrawableSpan.ALIGN_BASELINE);
 
         ClickableSpan clickableSpan = new ClickableSpan() {
