@@ -111,6 +111,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             public void onPageFinished() {
                 if (authWebView.isPageLoaded()) {
                     fetchDateBannerInfo();
+                    evaluateJavascriptForiFrame();
                     if (getUserVisibleHint()) {
                         preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADED);
                     }
@@ -131,9 +132,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
             @Override
             public void onPageLoadProgressChanged(WebView webView, int progress) {
-                if (progress > 30) {
-                    evaluateJavascriptForiFrame();
-                }
             }
         });
 
@@ -177,11 +175,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         tvOpenBrowser.setVisibility(View.VISIBLE);
 
         String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
-                + getString(R.string.open_in_browser_text) + " " + AppConstants.ICON_PLACE_HOLDER;
+                + getString(R.string.open_in_browser_text) + " " + AppConstants.ICON_PLACEHOLDER;
         SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
 
         ImageSpan openInNewIcon = new ImageSpan(getContext(), R.drawable.ic_open_in_new);
-        openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf(AppConstants.ICON_PLACE_HOLDER),
+        openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf(AppConstants.ICON_PLACEHOLDER),
                 openInBrowserMessage.length(), DynamicDrawableSpan.ALIGN_BASELINE);
 
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -196,14 +194,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 super.updateDrawState(textPaint);
             }
         };
-        openInBrowserSpan.setSpan(clickableSpan,
-                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)),
-                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)) + getString(R.string.open_in_browser_text).length(),
+        int openInBrowserIndex = openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text));
+        openInBrowserSpan.setSpan(clickableSpan, openInBrowserIndex,
+                openInBrowserIndex + getString(R.string.open_in_browser_text).length(),
                 Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
         openInBrowserSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.neutralXXDark)),
-                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)),
-                openInBrowserMessage.indexOf(getString(R.string.open_in_browser_text)) + getString(R.string.open_in_browser_text).length(),
+                openInBrowserIndex, openInBrowserIndex + getString(R.string.open_in_browser_text).length(),
                 Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
         tvOpenBrowser.setText(openInBrowserSpan);
