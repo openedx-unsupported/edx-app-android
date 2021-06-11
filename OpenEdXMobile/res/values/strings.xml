@@ -818,4 +818,8 @@
     <string name="celebration_share_message">I\'m on my way to completing {course_name} online with @{platform_name}online. What are you spending your time learning? #my{platform_name}journey</string>
     <!-- accessibility label for section completion-->
     <string name="course_outline_completion_description">Completed</string>
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">This part of the course may work best in a web browser.</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>Open in browser</u></string>
 </resources>

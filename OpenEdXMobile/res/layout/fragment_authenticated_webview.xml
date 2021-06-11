@@ -22,5 +22,22 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_open_browser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/infoXXLight"
+            android:fontFamily="?attr/fontRegular"
+            android:paddingStart="@dimen/open_in_browser_text_horizontal_padding"
+            android:paddingTop="@dimen/open_in_browser_text_vertical_padding"
+            android:paddingEnd="@dimen/open_in_browser_text_horizontal_padding"
+            android:paddingBottom="@dimen/open_in_browser_text_vertical_padding"
+            android:textColor="@color/neutralXDark"
+            android:textSize="@dimen/edx_x_small"
+            android:visibility="gone"
+            tools:text="@string/open_in_browser_message"
+            tools:visibility="visible" />
+
     </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
