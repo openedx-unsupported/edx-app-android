@@ -36,6 +36,10 @@
     <string name="label_rate_the_app">Rate The App</string>
     <!-- Alert dialog and snackbar button for opening an app store to update the app to the latest version -->
     <string name="label_update">Update</string>
+    <!-- Alert dialog Don't allow button -->
+    <string name="label_do_not_allow">Don’t allow</string>
+    <!-- Alert dialog View Event button -->
+    <string name="label_view_events">View Events</string>
     <!-- Done button label -->
     <string name="label_done">Done</string>
     <!-- Undo button label -->

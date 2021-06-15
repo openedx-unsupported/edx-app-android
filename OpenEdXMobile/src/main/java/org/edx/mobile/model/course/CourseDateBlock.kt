@@ -1,8 +1,10 @@
 package org.edx.mobile.model.course
 
 import com.google.gson.annotations.SerializedName
+import org.apache.commons.lang.time.DateUtils
 import org.edx.mobile.util.CourseDateType
 import org.edx.mobile.util.DateUtil
+import java.util.*
 
 data class CourseDateBlock(
         @SerializedName("complete") var complete: Boolean = false,
@@ -31,6 +33,8 @@ data class CourseDateBlock(
     fun getFormattedDate(): String = DateUtil.formatCourseDate(date)
 
     fun getSimpleDateTime(): String = DateUtil.convertToSimpleDate(date)
+
+    fun getDateCalendar(): Calendar = DateUtils.toCalendar(DateUtil.convertToDate(date))
 
     fun isDatePassed(): Boolean = DateUtil.isPastDate(date)
 

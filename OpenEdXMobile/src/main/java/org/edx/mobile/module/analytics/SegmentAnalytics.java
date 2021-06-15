@@ -1038,4 +1038,14 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.SPECIAL_EXAM_INFO, isSpecialExamInfo);
         trackSegmentEvent(Events.SUBSECTION_VIEW_ON_WEB_TAPPED, aEvent.properties);
     }
+
+    @Override
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.USER_TYPE, userType);
+        aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        trackSegmentEvent(eventName, aEvent.properties);
+    }
 }

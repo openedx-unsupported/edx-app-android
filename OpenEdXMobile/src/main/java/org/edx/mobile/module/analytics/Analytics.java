@@ -551,9 +551,25 @@ public interface Analytics {
      */
     void trackSubsectionViewOnWebTapped(@NonNull String courseId, @NonNull String subsectionId, boolean isSpecialExamInfo);
 
+    /**
+     * Track the Calendar Sync events
+     *
+     * @param eventName   Name of the event
+     * @param biValue     BiValue of the event
+     * @param courseId    Id of the course
+     * @param userType    Whether the Account type of the user is audit or verified
+     * @param isSelfPaced Whether the course is self-paced or instructor paced
+     */
+    void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
+                            @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
+        String USER_TYPE = "user_type";
+        String PACING = "pacing";
+        String SELF = "self";
+        String INSTRUCTOR = "instructor";
         String OLD_TIME = "old_time";
         String NEW_TIME = "new_time";
         String NEW_SPEED = "new_speed";
@@ -766,6 +782,17 @@ public interface Analytics {
         // Resume Course Banner Tapped
         String RESUME_COURSE_BANNER_TAPPED = "edx.bi.app.course.resume.tapped";
         String SUBSECTION_VIEW_ON_WEB_TAPPED = "edx.bi.app.course.subsection.view_on_web.tapped";
+        // Course Dates Calendar Events BiValues
+        String CALENDAR_TOGGLE_ON = "edx.bi.app.calendar.toggle_on";
+        String CALENDAR_TOGGLE_OFF = "edx.bi.app.calendar.toggle_off";
+        String CALENDAR_ACCESS_OK = "edx.bi.app.calendar.access_ok";
+        String CALENDAR_ACCESS_DONT_ALLOW = "edx.bi.app.calendar.access_dont_allow";
+        String CALENDAR_ADD_OK = "edx.bi.app.calendar.add_ok";
+        String CALENDAR_ADD_CANCEL = "edx.bi.app.calendar.add_cancel";
+        String CALENDAR_CONFIRMATION_DONE = "edx.bi.app.calendar.confirmation_done";
+        String CALENDAR_VIEW_EVENTS = "edx.bi.app.calendar.confirmation_view_events";
+        String CALENDAR_ADD_SUCCESS = "edx.bi.app.calendar.add_success";
+        String CALENDAR_REMOVE_SUCCESS = "edx.bi.app.calendar.remove_success";
     }
 
     interface Screens {
@@ -901,6 +928,17 @@ public interface Analytics {
         // Resume Course Banner
         String RESUME_COURSE_TAPPED = "Resume Course Tapped";
         String SUBSECTION_VIEW_ON_WEB_TAPPED = "Subsection View On Web Tapped";
+        // Course Dates add to calendar events
+        String CALENDAR_TOGGLE_ON = "Dates: Calendar Toggle On";
+        String CALENDAR_TOGGLE_OFF = "Dates: Calendar Toggle Off";
+        String CALENDAR_ACCESS_OK = "Dates: Calendar Access Allowed";
+        String CALENDAR_ACCESS_DONT_ALLOW = "Dates: Calendar Access Dont Allow";
+        String CALENDAR_ADD_OK = "Dates: Calendar Add Dates";
+        String CALENDAR_ADD_CANCEL = "Dates: Calendar Add Cancelled";
+        String CALENDAR_CONFIRMATION_DONE = "Dates: Calendar Add Confirmation";
+        String CALENDAR_VIEW_EVENTS = "Dates: Calendar View Events";
+        String CALENDAR_ADD_SUCCESS = "Dates: Calendar Add Dates Success";
+        String CALENDAR_REMOVE_SUCCESS = "Dates: Calendar Remove Dates Success";
     }
 
     /**

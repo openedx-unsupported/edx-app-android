@@ -295,7 +295,9 @@
     <dimen name="accomplishment_image_size">50dp</dimen>
     <dimen name="accomplishment_button_size">36dp</dimen>
     <item name="course_date_title_line_spacing" format="float" type="dimen">1.25</item>
-    <item name="course_date_desc_line_spacing" format="float" type="dimen">1.125</item>
+    <item name="course_date_desc_line_spacing" format="float" type="dimen">1.25</item>
+    <dimen name="calendar_sync_card_corner_radius">6dp</dimen>
+    <dimen name="calendar_sync_switch_widget_height">24dp</dimen>
 
     <!--  Course Celebratory Modal  -->
     <dimen name="celebratory_modal_padding">16dp</dimen>

@@ -136,6 +136,7 @@
         <item name="colorPrimary">@color/primaryBaseColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/dialog_button_selector</item>
+        <item name="android:lineSpacingMultiplier">@dimen/course_date_title_line_spacing</item>
     </style>
 
     <!-- ActionBar buttons -->
@@ -579,4 +580,10 @@
     <style name="edX.Widget.TextInputLayout.HintTextAppearance" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
+
+    <style name="Calendar.Sync.Switch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/primaryDarkColor</item>
+        <item name="colorSwitchThumbNormal">@color/neutralDark</item>
+    </style>
+
 </resources>
