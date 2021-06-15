@@ -2,9 +2,10 @@ package org.edx.mobile.view.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -108,7 +109,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
         final Bundle arguments = new Bundle();
         arguments.putString(ARG_TITLE, title);
         arguments.putString(ARG_MESSAGE, message);
-        fragment.positiveButtonAttr =  new ButtonAttribute() {
+        fragment.positiveButtonAttr = new ButtonAttribute() {
             @NonNull
             @Override
             public String getText() {
@@ -176,6 +177,19 @@ public class AlertDialogFragment extends RoboDialogFragment {
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, negativeButtonAttr.getText(),
                     negativeButtonAttr.getOnClickListener());
         }
+
+        alertDialog.setOnShowListener(dialog -> {
+            if (positiveButtonAttr != null) {
+                Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                positiveButton.setTextColor(getContext().getResources().getColor(R.color.primaryBaseColor));
+                positiveButton.setTypeface(null, Typeface.BOLD);
+            }
+            if (negativeButtonAttr != null) {
+                Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                negativeButton.setTextColor(getContext().getResources().getColor(R.color.primaryBaseColor));
+                negativeButton.setTypeface(null, Typeface.BOLD);
+            }
+        });
         return alertDialog;
     }
 

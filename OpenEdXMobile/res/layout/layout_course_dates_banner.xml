@@ -11,12 +11,26 @@
         android:padding="@dimen/container_padding">
 
         <TextView
-            android:id="@+id/banner_info"
-            android:layout_width="wrap_content"
+            android:id="@+id/banner_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/neutralBlackT"
-            android:textSize="@dimen/edx_small"
-            tools:text="@string/course_dates_banner_reset_date" />
+            android:layout_marginBottom="@dimen/edx_half_margin"
+            android:fontFamily="?attr/fontSemiBold"
+            android:text="@string/course_schedule_title"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="@dimen/edx_large"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/banner_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="?attr/fontRegular"
+            android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
+            android:text="@string/course_dates_info_banner"
+            android:textColor="@color/neutralXDark"
+            android:textSize="@dimen/edx_x_small" />
 
         <!--  Use legacy text field instated of material-components-->
         <!--  Ref: https://medium.com/androiddevelopers/migrating-to-material-components-for-android-ec6757795351  -->

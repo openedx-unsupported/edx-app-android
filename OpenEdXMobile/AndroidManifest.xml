@@ -24,6 +24,8 @@
 
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <!-- Setup for Code Coverage -->
     <instrumentation

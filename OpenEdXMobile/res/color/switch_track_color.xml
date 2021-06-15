@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/primaryDarkColor_Opacity_30" android:state_checked="true" />
+    <item android:color="@color/neutralDark_Opacity_30" />
+</selector>

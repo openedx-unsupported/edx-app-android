@@ -238,27 +238,56 @@
     <string name="course_dates_reset_successful">Your dates have been successfully shifted.</string>
     <!-- Message Course Dates Reset Unsuccessful -->
     <string name="course_dates_reset_unsuccessful">Your dates could not be shifted. Please try again.</string>
-    <!-- Message Course Dates Info Banner -->
-    <string name="course_dates_info_banner"><b>We\'ve built a suggested schedule to help you stay on track.</b>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>We\'ve built a suggested schedule to help you stay on track.</b>
         But don\'t worry—it\'s flexible so you can learn at your own pace. If you happen to fall behind on our suggested dates,
         you\'ll be able to adjust them to keep yourself on track.</string>
-    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
-    <string name="course_dates_banner_upgrade_to_graded"><b>You are auditing this course,</b>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b>You are auditing this course,</b>
         which means that you are unable to participate in graded assignments. To complete graded assignments as part of this course, you can upgrade today.</string>
-    <!-- Label Course Dates Banner Upgrade to Complete Graded Button -->
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
     <string name="course_dates_banner_upgrade_to_graded_button">Upgrade now</string>
-    <!-- Message Course Dates Banner Upgrade to Reset -->
-    <string name="course_dates_banner_upgrade_to_reset"><b>You are auditing this course,</b>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>You are auditing this course,</b>
         which means that you are unable to participate in graded assignments. It looks like you missed some important deadlines based on our suggested schedule. To complete graded assignments as part of this course and shift the past due assignments into the future, you can upgrade today.</string>
-    <!-- Label Course Dates Banner Upgrade to Reset Button -->
-    <string name="course_dates_banner_upgrade_to_reset_button">Upgrade to shift due dates</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date"><b>It looks like you missed some important deadlines based on our suggested schedule.</b>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>It looks like you missed some important deadlines based on our suggested schedule.</b>
         To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Shift due dates</string>
     <!-- Label My Courses Graded content message -->
     <string name="course_value_prop_message">Get the most out of your course! Upgrade to get full access to the course material, unlock both graded and non-graded assignments, and earn a verified certificate to showcase on your resume.</string>
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">Course Schedule</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">We built a suggested schedule to help you stay on track. But don’t worry – it’s flexible so you can learn at your own pace.
+        If you happen to fall behind, you’ll be able to adjust the dates to keep yourself on track.</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">To complete graded assignments as part of this course, you can upgrade today.</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset">You are auditing this course,
+        which means that you are unable to participate in graded assignments. It looks like you missed some important deadlines based on our suggested schedule. To complete graded assignments as part of this course and shift the past due assignments into the future, you can upgrade today.</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">It looks like you missed some important deadlines based on our suggested schedule.
+        To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
+
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">Sync to calendar</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">Automatically sync all deadlines and due dates for this course to your calendar.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” Would Like to Access Your Calendar</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} would like to use your calendar list to subscribe to your personalized {platform_name} calendar for this course.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">Add Calendar \“{course_name}\”</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">Would you like to add the edX calendar \“{course_name}\” ? \n\nYou can edit or remove your course calendar any time in Calendar or Settings.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">\“{course_name}\” has been added to your calendar.</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
+
     <!-- Label My Courses Graded content Button -->
     <string name="course_value_prop_button">Learn more</string>
     <!-- Title Course Dashboard Modal  -->

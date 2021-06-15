@@ -13,6 +13,8 @@
     <color name="primaryBaseColor">#00262B</color>
     <!--  Primary 700 | Dark 700  -->
     <color name="primaryDarkColor">#002121</color>
+    <!--  Primary 700 | Dark 700, Opacity 30  -->
+    <color name="primaryDarkColor_Opacity_30">#4D002121</color>
 
     <!--  Brand 500  -->
     <color name="secondaryBaseColor">#D23228</color>
@@ -33,6 +35,8 @@
     <color name="neutralXDark">#707070</color>
     <!--  Light 700  -->
     <color name="neutralDark">#D7D3D1</color>
+    <!--  Light 700 Opacity 30 -->
+    <color name="neutralDark_Opacity_30">#4DD7D3D1</color>
     <!--  Light 500  -->
     <color name="neutralBase">#E1DDDB</color>
 

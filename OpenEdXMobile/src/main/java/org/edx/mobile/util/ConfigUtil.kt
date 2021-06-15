@@ -6,7 +6,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.core.IEdxEnvironment
+import org.edx.mobile.model.CourseDatesCalendarSync
+import org.json.JSONObject
+import java.lang.reflect.InvocationTargetException
 import java.util.*
+
 
 class ConfigUtil {
     companion object {
@@ -90,19 +94,19 @@ class ConfigUtil {
             if (config.firebaseConfig.isEnabled) {
                 val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
                 firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
-                        val whiteListedReleasesJson = firebaseRemoteConfig
-                                .getString(AppConstants.FirebaseConstants.REV_934_WHITELISTED_RELEASES)
-                        if (!TextUtils.isEmpty(whiteListedReleasesJson)) {
-                            val whiteListedReleases = Gson().fromJson<ArrayList<String>>(whiteListedReleasesJson,
-                                    object : TypeToken<ArrayList<String>>() {}.type)
-                            // Check current release is white listed in firebase remote config
-                            for (release in whiteListedReleases) {
-                                if (BuildConfig.VERSION_NAME.equals(release, ignoreCase = true)) {
-                                    listener.onCourseUpgradeResult(true)
-                                    return@addOnCompleteListener
-                                }
+                    val whiteListedReleasesJson = firebaseRemoteConfig
+                            .getString(AppConstants.FirebaseConstants.REV_934_WHITELISTED_RELEASES)
+                    if (!TextUtils.isEmpty(whiteListedReleasesJson)) {
+                        val whiteListedReleases = Gson().fromJson<ArrayList<String>>(whiteListedReleasesJson,
+                                object : TypeToken<ArrayList<String>>() {}.type)
+                        // Check current release is white listed in firebase remote config
+                        for (release in whiteListedReleases) {
+                            if (BuildConfig.VERSION_NAME.equals(release, ignoreCase = true)) {
+                                listener.onCourseUpgradeResult(true)
+                                return@addOnCompleteListener
                             }
                         }
+                    }
                     listener.onCourseUpgradeResult(false)
                 }
             }
@@ -126,6 +130,32 @@ class ConfigUtil {
                 }
             }
         }
+
+        /**
+         * Utility method to check the response of the calendar sync.
+         *
+         * @param config   [Config]
+         * @param listener [OnCalendarSyncListener] callback for the status of the value prop.
+         */
+        fun checkCalendarSyncEnabled(config: Config,
+                                     listener: OnCalendarSyncListener) {
+            // Check firebase enabled in config
+            if (config.firebaseConfig.isEnabled) {
+                val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+                firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
+                    try {
+                        val response = JSONObject(firebaseRemoteConfig
+                                .getString(AppConstants.FirebaseConstants.COURSE_DATES_CALENDAR_SYNC))
+                        val androidResponse = Gson().fromJson<CourseDatesCalendarSync>(response.getString(AppConstants.FirebaseConstants.KEY_ANDROID), CourseDatesCalendarSync::class.java)
+                        listener.onCalendarSyncResponse(response = androidResponse)
+                    } catch (e: InvocationTargetException) {
+                        e.cause?.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -146,5 +176,15 @@ class ConfigUtil {
          * Callback to send value prop status result.
          */
         fun isValuePropEnabled(isEnabled: Boolean)
+    }
+
+    /**
+     * Interface to provide the callback for the response of the remote config for Calendar Sync.
+     */
+    interface OnCalendarSyncListener {
+        /**
+         * Callback to send response of Calendar sync.
+         */
+        fun onCalendarSyncResponse(response: CourseDatesCalendarSync)
     }
 }

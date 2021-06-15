@@ -30,6 +30,10 @@ public enum AppConstants {
 
     public static final String ICON_PLACEHOLDER = "icon";
 
+    public static final String PLATFORM_NAME = "platform_name";
+    public static final String COURSE_NAME = "course_name";
+    public static final String ASSIGNMENT_DUE = "Assignment Due";
+
     /**
      * This class defines all the Firebase constants related to the app.
      */
@@ -43,6 +47,14 @@ public enum AppConstants {
          * Feature flag for value prop
          */
         public static final String VALUE_PROP_ENABLED = "VALUE_PROP_ENABLED";
+
+        /**
+         * Feature flag for Course Dates Calendar Sync
+         */
+        public static final String COURSE_DATES_CALENDAR_SYNC = "COURSE_DATES_CALENDAR_SYNC";
+
+        // Key to parse Json object
+        public static final String KEY_ANDROID = "android";
     }
 
     /**

@@ -534,4 +534,11 @@ public class AnalyticsRegistry implements Analytics {
             service.trackSubsectionViewOnWebTapped(courseId, subsectionId, isSpecialExamInfo);
         }
     }
+
+    @Override
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+        for (Analytics service : services) {
+            service.trackCalendarEvent(eventName, biValue, courseId, userType, isSelfPaced);
+        }
+    }
 }
