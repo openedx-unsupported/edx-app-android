@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.text.TextUtils
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.edx.mobile.R
@@ -33,6 +34,7 @@ object CourseDateUtil {
         val containerLayout = view as LinearLayout
         val title = view.findViewById(R.id.banner_title) as TextView
         val bannerMessage = view.findViewById(R.id.banner_info) as TextView
+        val imgView = view.findViewById(R.id.iv_calender) as ImageView
         val button = view.findViewById(R.id.btn_shift_dates) as Button
         var buttonText = ""
         var bannerTypeValue = ""
@@ -73,12 +75,14 @@ object CourseDateUtil {
             if (!TextUtils.isEmpty(buttonText)) {
                 button.text = buttonText
                 button.visibility = View.VISIBLE
+                imgView.visibility = if (isCourseDatePage) View.GONE else View.VISIBLE
                 button.setOnClickListener { v ->
                     clickListener.onClick(v)
                     analyticsRegistry.trackPLSShiftButtonTapped(courseId, enrollmentMode, screenName)
                 }
             } else {
                 button.visibility = View.GONE
+                imgView.visibility = View.GONE
             }
             view.visibility = View.VISIBLE
             analyticsRegistry.trackPLSCourseDatesBanner(biValue, courseId, enrollmentMode, screenName, bannerTypeValue)

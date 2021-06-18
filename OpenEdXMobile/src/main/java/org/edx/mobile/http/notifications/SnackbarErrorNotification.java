@@ -2,7 +2,6 @@ package org.edx.mobile.http.notifications;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -106,9 +105,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
             actionButton.setOnClickListener(actionListener);
             actionButton.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.inter_semi_bold));
 
-            TextView snackTextView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
-            snackTextView.setMaxLines(3);
-
+            snackbar.setMaxInlineActionWidth(view.getResources().getDimensionPixelSize(R.dimen.snack_bar_action_size));
             snackbar.setActionTextColor(view.getResources().getColor(R.color.accentAColor));
             snackbar.show();
         }
