@@ -283,8 +283,10 @@
     <string name="title_add_course_calendar">Add Calendar \“{course_name}\”</string>
     <!-- Message to add calendar for course  -->
     <string name="message_add_course_calendar">Would you like to add the edX calendar \“{course_name}\” ? \n\nYou can edit or remove your course calendar any time in Calendar or Settings.</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” has been added to your calendar.</string>
     <!-- Success Message after calendar for course added -->
-    <string name="message_after_course_calendar_added">\“{course_name}\” has been added to your calendar.</string>
+    <string name="message_after_course_calendar_added">Your course calendar has been added.</string>
     <!-- Success Message after calendar for course removed -->
     <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
 

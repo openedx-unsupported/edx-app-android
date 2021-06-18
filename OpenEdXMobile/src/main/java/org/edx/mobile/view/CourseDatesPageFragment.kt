@@ -254,21 +254,25 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun askForCalendarSync() {
-        val title: String = ResourceUtil.getFormattedString(resources, R.string.title_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
-        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        if (environment.courseCalendarPrefs.isSyncAlertPopupDisabled(courseData.course.name.replace(" ", "_"))) {
+            insertCalendarEvent()
+        } else {
+            val title: String = ResourceUtil.getFormattedString(resources, R.string.title_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+            val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
 
-        val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
-                { _: DialogInterface, _: Int ->
-                    trackCalendarEvent(Analytics.Events.CALENDAR_ADD_OK, Analytics.Values.CALENDAR_ADD_OK)
-                    insertCalendarEvent()
-                },
-                getString(R.string.label_cancel),
-                { _: DialogInterface?, _: Int ->
-                    trackCalendarEvent(Analytics.Events.CALENDAR_ADD_CANCEL, Analytics.Values.CALENDAR_ADD_CANCEL)
-                    binding.switchSync.isChecked = false
-                })
-        alertDialog.isCancelable = false
-        alertDialog.show(childFragmentManager, null)
+            val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
+                    { _: DialogInterface, _: Int ->
+                        trackCalendarEvent(Analytics.Events.CALENDAR_ADD_OK, Analytics.Values.CALENDAR_ADD_OK)
+                        insertCalendarEvent()
+                    },
+                    getString(R.string.label_cancel),
+                    { _: DialogInterface?, _: Int ->
+                        trackCalendarEvent(Analytics.Events.CALENDAR_ADD_CANCEL, Analytics.Values.CALENDAR_ADD_CANCEL)
+                        binding.switchSync.isChecked = false
+                    })
+            alertDialog.isCancelable = false
+            alertDialog.show(childFragmentManager, null)
+        }
     }
 
     private fun showShiftDateSnackBar(isSuccess: Boolean) {
@@ -304,17 +308,29 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun calendarAddedSuccessDialog() {
         isCalendarExist = true
-        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_after_course_calendar_added, AppConstants.COURSE_NAME, calendarTitle).toString()
+        if (environment.courseCalendarPrefs.isSyncAlertPopupDisabled(courseData.course.name.replace(" ", "_"))) {
+            showAddCalendarSuccessSnackbar()
+        } else {
+            environment.courseCalendarPrefs.setSyncAlertPopupDisabled(courseData.course.name.replace(" ", "_"), true)
+            val message: String = ResourceUtil.getFormattedString(resources, R.string.message_for_alert_after_course_calendar_added, AppConstants.COURSE_NAME, calendarTitle).toString()
 
-        AlertDialogFragment.newInstance(null, message, getString(R.string.label_done),
-                { _: DialogInterface, _: Int ->
-                    trackCalendarEvent(Analytics.Events.CALENDAR_CONFIRMATION_DONE, Analytics.Values.CALENDAR_CONFIRMATION_DONE)
-                },
-                getString(R.string.label_view_events),
-                { _: DialogInterface?, _: Int ->
-                    trackCalendarEvent(Analytics.Events.CALENDAR_VIEW_EVENTS, Analytics.Values.CALENDAR_VIEW_EVENTS)
-                    CalendarUtils.openCalendarApp(this)
-                }).show(childFragmentManager, null)
+            AlertDialogFragment.newInstance(null, message, getString(R.string.label_done),
+                    { _: DialogInterface, _: Int ->
+                        trackCalendarEvent(Analytics.Events.CALENDAR_CONFIRMATION_DONE, Analytics.Values.CALENDAR_CONFIRMATION_DONE)
+                    },
+                    getString(R.string.label_view_events),
+                    { _: DialogInterface?, _: Int ->
+                        trackCalendarEvent(Analytics.Events.CALENDAR_VIEW_EVENTS, Analytics.Values.CALENDAR_VIEW_EVENTS)
+                        CalendarUtils.openCalendarApp(this)
+                    }).show(childFragmentManager, null)
+        }
+    }
+
+
+    private fun showAddCalendarSuccessSnackbar() {
+        val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
+        snackbarErrorNotification.showError(R.string.message_after_course_calendar_added,
+                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
     }
 
     private fun deleteCalendar(calendarId: Long) {
