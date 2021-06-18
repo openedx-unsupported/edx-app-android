@@ -15,18 +15,19 @@ import java.util.Locale;
  */
 public enum  BlockType {
 
-    COURSE{ @Override public boolean isContainer() {return true;} },
     CHAPTER{ @Override public boolean isContainer() {return true;} },
+    COURSE{ @Override public boolean isContainer() {return true;} },
+    DISCUSSION{ @Override public boolean isContainer() {return false;} },
+    DRAG_AND_DROP_V2{ @Override public boolean isContainer() {return false;} },
+    HTML{ @Override public boolean isContainer() {return false;} },
+    LTI_CONSUMER{ @Override public boolean isContainer() {return false;} },
+    OPENASSESSMENT{ @Override public boolean isContainer() {return false;} },
+    OTHERS{ @Override public boolean isContainer() {return false;} },
+    PROBLEM{ @Override public boolean isContainer() {return false;} },
     SECTION{ @Override public boolean isContainer() {return true;} },
     SEQUENTIAL{ @Override public boolean isContainer() {return true;} },
     VERTICAL{ @Override public boolean isContainer() {return true;} },
     VIDEO{ @Override public boolean isContainer() {return false;} },
-    HTML{ @Override public boolean isContainer() {return false;} },
-    PROBLEM{ @Override public boolean isContainer() {return false;} },
-    DISCUSSION{ @Override public boolean isContainer() {return false;} },
-    OTHERS{ @Override public boolean isContainer() {return false;} },
-    OPENASSESSMENT{ @Override public boolean isContainer() {return false;} },
-    DRAG_AND_DROP_V2{ @Override public boolean isContainer() {return false;} },
     WORD_CLOUD{ @Override public boolean isContainer() {return false;} };
 
     abstract boolean isContainer();
