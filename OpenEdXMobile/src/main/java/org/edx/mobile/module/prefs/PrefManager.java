@@ -252,11 +252,12 @@ public class PrefManager {
         public static final String VIDEOS = "pref_videos";
         public static final String FEATURES = "features";
         public static final String REMOTE_FEATURES = "remote_features";
+        public static final String COURSE_CALENDAR_PREF = "course_calendar_pref";
         public static final String APP_INFO = "pref_app_info";
         public static final String USER_PREF = "pref_user";
 
         public static String[] getAll() {
-            return new String[]{LOGIN, WIFI, VIDEOS, FEATURES, REMOTE_FEATURES, APP_INFO, USER_PREF};
+            return new String[]{LOGIN, WIFI, VIDEOS, FEATURES, REMOTE_FEATURES, COURSE_CALENDAR_PREF, APP_INFO, USER_PREF};
         }
 
         public static String[] getAllPreferenceFileNames() {
