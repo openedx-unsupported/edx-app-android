@@ -61,5 +61,12 @@
             android:visibility="gone"
             tools:text="@string/course_dates_banner_reset_date_button"
             tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBuy"
+            style="@style/edX.Widget.PrimaryActionButton"
+            android:padding="@dimen/edx_half_margin"
+            android:text="Buy Course" />
+
     </LinearLayout>
 </layout>

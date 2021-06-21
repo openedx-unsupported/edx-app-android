@@ -82,6 +82,7 @@ import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
+import org.edx.mobile.view.view_holders.PaymentActivity;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
 
@@ -523,7 +524,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
                     Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
                     v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourseId()));
-
+            bannerViewBinding.btnBuy.setOnClickListener(v -> startActivity(new Intent(getActivity(), PaymentActivity.class)));
             if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;

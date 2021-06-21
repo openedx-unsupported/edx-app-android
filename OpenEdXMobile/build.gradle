@@ -279,6 +279,8 @@ dependencies {
      * https://square.github.io/leakcanary/recipes/#setting-up-leakcanary-for-different-product-flavors
      */
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    implementation "com.android.billingclient:billing-ktx:$kotlin_version_billing"
 }
 
 configurations {
@@ -338,8 +340,10 @@ android {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
 
-        versionCode getVersionCode()
-        versionName getVersionName()
+//        versionCode getVersionCode()
+//        versionName getVersionName()
+        versionCode 2025002
+        versionName "2.25.2"
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
