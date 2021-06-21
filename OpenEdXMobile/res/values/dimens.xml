@@ -299,7 +299,7 @@
     <dimen name="calendar_sync_card_corner_radius">6dp</dimen>
     <dimen name="calendar_sync_switch_widget_height">24dp</dimen>
 
-    <!--  Course Celebratory Modal  -->
+    <!-- Course Celebratory Modal -->
     <dimen name="celebratory_modal_padding">16dp</dimen>
     <dimen name="celebratory_share_button_size">34dp</dimen>
 
@@ -310,5 +310,8 @@
     <!-- Open in browser -->
     <dimen name="open_in_browser_text_horizontal_padding">16dp</dimen>
     <dimen name="open_in_browser_text_vertical_padding">8dp</dimen>
+
+    <!-- Snack bar -->
+    <dimen name="snack_bar_action_size">24dp</dimen>
 
 </resources>

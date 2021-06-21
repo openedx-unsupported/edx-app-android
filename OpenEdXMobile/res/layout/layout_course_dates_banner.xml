@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -22,15 +23,31 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/banner_info"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="?attr/fontRegular"
-            android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
-            android:text="@string/course_dates_info_banner"
-            android:textColor="@color/neutralXDark"
-            android:textSize="@dimen/edx_x_small" />
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_calender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin_x_half"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_calendar"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/banner_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="?attr/fontRegular"
+                android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
+                android:text="@string/course_dates_info_banner"
+                android:textColor="@color/neutralXDark"
+                android:textSize="@dimen/edx_x_small" />
+        </LinearLayout>
 
         <!--  Use legacy text field instated of material-components-->
         <!--  Ref: https://medium.com/androiddevelopers/migrating-to-material-components-for-android-ec6757795351  -->
@@ -38,6 +55,7 @@
             android:id="@+id/btn_shift_dates"
             style="@style/edX.Widget.PrimaryActionButton"
             android:padding="@dimen/edx_half_margin"
+            android:textSize="@dimen/edx_x_small"
             android:visibility="gone"
             tools:text="@string/course_dates_banner_reset_date_button"
             tools:visibility="visible" />
