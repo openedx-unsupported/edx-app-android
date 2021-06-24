@@ -44,6 +44,7 @@ import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -99,8 +100,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
             @Override
             public void onPageSelected(int position) {
-                // Disable ViewPager2 scrolling to enable horizontal scrolling to for the WebView (Specific HTML Components).
-                pager2.setUserInputEnabled(pagerAdapter.getUnit(position).getType() != BlockType.DRAG_AND_DROP_V2 && pagerAdapter.getUnit(position).getType() != BlockType.WORD_CLOUD);
+                if (pagerAdapter.getUnit(position).isMultiDevice()) {
+                    // Disable ViewPager2 scrolling to enable horizontal scrolling to for the WebView (Specific HTML Components).
+                    List<BlockType> horizontalBlocks = Arrays.asList(
+                            BlockType.DRAG_AND_DROP_V2, BlockType.LTI_CONSUMER, BlockType.WORD_CLOUD);
+                    pager2.setUserInputEnabled(!horizontalBlocks
+                            .contains(pagerAdapter.getUnit(position).getType()));
+                }
             }
 
             @Override
