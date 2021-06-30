@@ -51,21 +51,27 @@ def validate_item(plural, source_file_placeholders, translation_file):
 
 
 def validate_quantity(plural, item, source_file_placeholders, translation_file):
-    for placeholder in source_file_placeholders[plural.get('name')][item.get('quantity')]:
+    plural_name = plural.get('name')
+    quantity = item.get('quantity')
+    for placeholder in source_file_placeholders[plural_name][quantity]:
         if placeholder not in item.text:
             log.log_error(placeholder + " doesn't exist in item '" +
-                          item.get('quantity') + "' of plural '" + plural.get('name') +
+                          quantity + "' of plural '" + plural_name +
                           "'\n File: " + translation_file)
 
 
 def get_source_file_string_placeholders(file):
     """Reads the source xml file and return a dictionary having string name as
     key and tuple of existing placeholders as values"""
-    return {
-        string.get("name"): get_placeholders("".join(string.itertext()))
-        for string in ET.parse(file).getroot().findall("string")
-        if get_placeholders("".join(string.itertext()))
-    }
+    placeholders = {}
+    root = ET.parse(file).getroot()
+    for element in root.findall('string'):
+        name = element.get('name')
+        value = ''.join(element.itertext())
+        placeholder = get_placeholders(value)
+        if placeholder:
+            placeholders[name] = placeholder
+    return placeholders
 
 
 def get_source_file_plurals_placeholders(file):
@@ -77,14 +83,15 @@ def get_source_file_plurals_placeholders(file):
 
 
 def get_plural_items_placeholders(plural): #new
+    plural_name = plural.get('name')
     placeholders = {
-        plural.get("name"): {
+        plural_name: {
             item.get("quantity"): get_placeholders(item.text)
             for item in plural.findall("item")
             if get_placeholders(item.text)
         }
     }
-    return {_: item for _, item in placeholders.items() if item}
+    return placeholders if placeholders[plural_name] else {}
 
 
 def get_placeholders(str):
