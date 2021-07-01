@@ -36,14 +36,17 @@ import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
+import org.edx.mobile.model.course.CourseDateBlock;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
 import org.jetbrains.annotations.NotNull;
@@ -74,11 +77,15 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private String enrollmentMode = "";
     private boolean isSelfPaced = true;
     private boolean evaluatediFrameJS = false;
+    private String courseName = "";
+    private String calendarTitle = "";
+    private String accountName = "";
 
-    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String enrollmentMode, boolean isSelfPaced) {
+    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String courseName, String enrollmentMode, boolean isSelfPaced) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putSerializable(Router.EXTRA_COURSE_NAME, courseName);
         args.putString(Router.EXTRA_ENROLLMENT_MODE, enrollmentMode);
         args.putBoolean(Router.EXTRA_IS_SELF_PACED, isSelfPaced);
         fragment.setArguments(args);
@@ -97,6 +104,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         super.onViewCreated(view, savedInstanceState);
         enrollmentMode = getStringArgument(Router.EXTRA_ENROLLMENT_MODE);
         isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, true);
+        courseName = getStringArgument(Router.EXTRA_COURSE_NAME);
+        calendarTitle = environment.getConfig().getPlatformName() + " - " + courseName;
+        accountName = environment.getLoginPrefs().getCurrentUserProfile().name;
         if (getActivity() instanceof PreLoadingListener) {
             preloadingListener = (PreLoadingListener) getActivity();
         } else {
@@ -221,7 +231,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void fetchDateBannerInfo() {
         // Show course dates banner in assignment view only if the course is self paced
         if (unit.getType() == BlockType.PROBLEM && isSelfPaced) {
-            courseDateViewModel.fetchCourseDatesBannerInfo(unit.getCourseId(), true);
+            courseDateViewModel.fetchCourseDates(unit.getCourseId(), false, true);
         }
     }
 
@@ -239,6 +249,12 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void initObserver() {
         courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
 
+        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
+            if (courseDates.getCourseDateBlocks() != null) {
+                courseDates.organiseCourseDates();
+            }
+        });
+
         courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initInfoBanner);
 
         courseDateViewModel.getShowLoader().observe(getViewLifecycleOwner(), flag ->
@@ -248,8 +264,17 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
         courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
-                showShiftDateSnackBar(true);
                 authWebView.loadUrl(true, unit.getBlockUrl());
+                if (CalendarUtils.Companion.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
+                    Long calendarId = CalendarUtils.Companion.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
+                    AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
+                            getString(R.string.message_calendar_out_of_date), getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
+                            getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
+                    alertDialogFragment.setCancelable(false);
+                    alertDialogFragment.show(getChildFragmentManager(), null);
+                } else {
+                    showShiftDateSnackBar(true);
+                }
             }
         });
 
@@ -287,6 +312,30 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         }
         environment.getAnalyticsRegistry().trackPLSCourseDatesShift(unit.getCourseId(), enrollmentMode,
                 Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, isSuccess);
+    }
+
+
+    private void updateCalendarEvents(Long calendarId) {
+        trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
+        CalendarUtils.Companion.deleteAllCalendarEvents(requireContext(), calendarId);
+        if (courseDateViewModel.getCourseDates().getValue() != null) {
+            for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
+                CalendarUtils.Companion.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseName, courseDateBlock);
+            }
+            showCalendarUpdatedSnackbar();
+            trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
+        }
+    }
+
+    private void removeCalendar(Long calendarId) {
+        trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE);
+        CalendarUtils.Companion.deleteCalendar(getContextOrThrow(), calendarId);
+        showCalendarRemovedSnackbar();
+        trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_SUCCESS, Analytics.Values.CALENDAR_REMOVE_SUCCESS);
+    }
+
+    private void trackCalendarEvent(String eventName, String biValue) {
+        environment.getAnalyticsRegistry().trackCalendarEvent(eventName, biValue, unit.getCourseId(), enrollmentMode, isSelfPaced);
     }
 
     private void loadUnit() {

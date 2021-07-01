@@ -45,16 +45,17 @@ class CourseDateViewModel(
     val errorMessage: LiveData<ErrorMessage>
         get() = _errorMessage
 
-    fun fetchCourseDates(courseID: String, isSwipeRefresh: Boolean = false) {
+    fun fetchCourseDates(courseID: String, forceRefresh: Boolean, isSwipeRefresh: Boolean = false) {
         _errorMessage.value = null
         _swipeRefresh.value = isSwipeRefresh
         _showLoader.value = isSwipeRefresh.not()
         repository.getCourseDates(
                 courseId = courseID,
+                forceRefresh = forceRefresh,
                 callback = object : NetworkResponseCallback<CourseDates> {
                     override fun onSuccess(result: Result.Success<CourseDates>) {
                         if (result.isSuccessful && result.data != null) {
-                            _courseDates.value = result.data
+                            _courseDates.postValue(result.data)
                             fetchCourseDatesBannerInfo(courseID, true)
                         } else {
                             setError(ErrorMessage.COURSE_DATES_CODE, result.code, result.message)
@@ -65,7 +66,7 @@ class CourseDateViewModel(
 
                     override fun onError(error: Result.Error) {
                         _showLoader.postValue(false)
-                        _errorMessage.value = ErrorMessage(ErrorMessage.COURSE_DATES_CODE, error.throwable)
+                        _errorMessage.postValue(ErrorMessage(ErrorMessage.COURSE_DATES_CODE, error.throwable))
                         _swipeRefresh.postValue(false)
                     }
                 }
@@ -80,7 +81,7 @@ class CourseDateViewModel(
                 callback = object : NetworkResponseCallback<CourseBannerInfoModel> {
                     override fun onSuccess(result: Result.Success<CourseBannerInfoModel>) {
                         if (result.isSuccessful && result.data != null) {
-                            _bannerInfo.value = result.data
+                            _bannerInfo.postValue(result.data)
                         } else {
                             setError(ErrorMessage.BANNER_INFO_CODE, result.code, result.message)
                         }
@@ -90,7 +91,7 @@ class CourseDateViewModel(
 
                     override fun onError(error: Result.Error) {
                         _showLoader.postValue(false)
-                        _errorMessage.value = ErrorMessage(ErrorMessage.BANNER_INFO_CODE, error.throwable)
+                        _errorMessage.postValue(ErrorMessage(ErrorMessage.BANNER_INFO_CODE, error.throwable))
                         _swipeRefresh.postValue(false)
                     }
                 }
@@ -107,7 +108,7 @@ class CourseDateViewModel(
                 callback = object : NetworkResponseCallback<ResetCourseDates> {
                     override fun onSuccess(result: Result.Success<ResetCourseDates>) {
                         if (result.isSuccessful && result.data != null) {
-                            _resetCourseDates.value = result.data
+                            _resetCourseDates.postValue(result.data)
                             fetchCourseDatesBannerInfo(courseID, false)
                         } else {
                             setError(ErrorMessage.COURSE_RESET_DATES_CODE, result.code, result.message)
@@ -118,7 +119,7 @@ class CourseDateViewModel(
 
                     override fun onError(error: Result.Error) {
                         _showLoader.postValue(false)
-                        _errorMessage.value = ErrorMessage(ErrorMessage.COURSE_RESET_DATES_CODE, error.throwable)
+                        _errorMessage.postValue(ErrorMessage(ErrorMessage.COURSE_RESET_DATES_CODE, error.throwable))
                         _swipeRefresh.postValue(false)
                     }
                 }

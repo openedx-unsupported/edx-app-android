@@ -46,6 +46,7 @@ public class Router {
     public static final String EXTRA_ANNOUNCEMENTS = "announcements";
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
+    public static final String EXTRA_COURSE_NAME = "course_name";
     public static final String EXTRA_COURSE_DETAIL = "course_detail";
     public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_COURSE_UPGRADE_DATA = "course_upgrade_data";
