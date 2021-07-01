@@ -23,9 +23,8 @@
         android:textSize="@dimen/edx_small" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="@dimen/fa_x_large"
-        android:layout_height="@dimen/fa_x_large"
-        android:tint="@color/primaryBaseColor"
+        android:layout_width="@dimen/ic_x_large"
+        android:layout_height="@dimen/ic_x_large"
         app:srcCompat="@drawable/ic_open_in_browser" />
 
 </LinearLayout>

@@ -16,14 +16,14 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_icon"
-            android:layout_width="@dimen/fa_large"
-            android:layout_height="@dimen/fa_large"
+            android:layout_width="@dimen/ic_large"
+            android:layout_height="@dimen/ic_large"
             android:layout_marginStart="@dimen/widget_margin_double"
-            android:tint="@color/primaryBaseColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_videocam" />
+            app:srcCompat="@drawable/ic_videocam"
+            app:tint="@color/primaryBaseColor" />
 
         <LinearLayout
             android:id="@+id/ll_content"

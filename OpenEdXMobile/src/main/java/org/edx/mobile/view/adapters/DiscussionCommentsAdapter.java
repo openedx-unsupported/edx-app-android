@@ -21,7 +21,7 @@ import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
 import java.util.ArrayList;
@@ -125,15 +125,14 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             final int childCount = discussionComment.getChildCount();
             holder.discussionCommentCountReportTextView.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, childCount, childCount));
-            iconDrawable = UiUtil.getDrawable(context, R.drawable.ic_comment,
-                    R.dimen.edx_small, R.color.primaryBaseColor);
+            iconDrawable = UiUtils.INSTANCE.getDrawable(context, R.drawable.ic_comment,
+                    R.dimen.edx_small);
             holder.discussionCommentCountReportTextView.setOnClickListener(null);
             holder.discussionCommentCountReportTextView.setClickable(false);
         } else {
             holder.authorLayoutViewHolder.answerTextView.setVisibility(View.GONE);
             discussionComment = discussionComments.get(position - 1);
-            iconDrawable = UiUtil.getDrawable(context, R.drawable.ic_flag,
-                    R.dimen.edx_small, R.color.infoBase);
+            iconDrawable = UiUtils.INSTANCE.getDrawable(context, R.drawable.ic_flag, R.dimen.edx_small);
             if (TextUtils.equals(loginPrefs.getUsername(), discussionComment.getAuthor())) {
                 holder.discussionCommentCountReportTextView.setVisibility(View.GONE);
             } else {

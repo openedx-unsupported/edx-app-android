@@ -4,25 +4,22 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-
-import androidx.annotation.DrawableRes;
-import androidx.databinding.DataBindingUtil;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.core.view.ViewCompat;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.inject.Inject;
 
@@ -46,8 +43,8 @@ import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
-import org.edx.mobile.util.UiUtil.Animation;
+import org.edx.mobile.util.UiUtils;
+import org.edx.mobile.util.UiUtils.Animation;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 
@@ -359,8 +356,8 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                               @StringRes int titleRes, @NonNull String descPattern,
                               @NonNull String firstPlaceholder, @NonNull String firstPlaceholderVal,
                               @NonNull String secondPlaceholder, @NonNull String secondPlaceholderVal) {
-        binding.ivIcon.setImageDrawable(UiUtil.getDrawable(requireContext(), iconResId));
-        UiUtil.setAnimation(binding.ivIcon, animation);
+        binding.ivIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), iconResId));
+        UiUtils.INSTANCE.setAnimation(binding.ivIcon, animation);
         binding.tvTitle.setText(titleRes);
         setSubtitle(descPattern, firstPlaceholder, firstPlaceholderVal, secondPlaceholder, secondPlaceholderVal);
     }

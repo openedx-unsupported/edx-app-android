@@ -15,7 +15,7 @@
             android:layout_weight="0.7"
             android:background="@drawable/whats_new_gradient">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

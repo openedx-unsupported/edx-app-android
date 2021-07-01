@@ -21,7 +21,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @ColorInt
@@ -66,7 +66,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 iconResId = R.drawable.ic_chat;
                 iconColor = (discussionThread.isRead() ? neutral_x_dark : primaryBaseColor);
             }
-            holder.discussionPostTypeIcon.setImageDrawable(UiUtil
+            holder.discussionPostTypeIcon.setImageDrawable(UiUtils.INSTANCE
                     .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId));
             holder.discussionPostTypeIcon.setColorFilter(iconColor, android.graphics.PorterDuff.Mode.SRC_IN);
         }

@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +38,7 @@ import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -66,8 +65,8 @@ public class CourseDetailFragment extends BaseFragment {
 
     private TextView mCourseTextName;
     private TextView mCourseTextDetails;
-    private ImageView mHeaderImageView;
-    private ImageView mHeaderPlayIcon;
+    private AppCompatImageView mHeaderImageView;
+    private AppCompatImageView mHeaderPlayIcon;
 
     private LinearLayout mCourseDetailLayout;
 
@@ -119,8 +118,8 @@ public class CourseDetailFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_course_dashboard, container, false);
         mCourseTextName = (TextView) view.findViewById(R.id.course_detail_name);
         mCourseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        mHeaderImageView = (ImageView) view.findViewById(R.id.header_image_view);
-        mHeaderPlayIcon = (ImageView) view.findViewById(R.id.header_play_icon);
+        mHeaderImageView = (AppCompatImageView) view.findViewById(R.id.header_image_view);
+        mHeaderPlayIcon = (AppCompatImageView) view.findViewById(R.id.header_play_icon);
         mCourseDetailLayout = (LinearLayout) view.findViewById(R.id.dashboard_detail);
 
         mHeaderPlayIcon.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +163,7 @@ public class CourseDetailFragment extends BaseFragment {
         courseDetailFieldLayout = (LinearLayout) view.findViewById(R.id.course_detail_fields);
         if (courseDetail.effort != null && !courseDetail.effort.isEmpty()) {
             ViewHolder holder = createCourseDetailFieldViewHolder(inflater, mCourseDetailLayout);
-            holder.rowIcon.setImageDrawable(UiUtil.getDrawable(requireContext(), R.drawable.ic_dashboard));
+            holder.rowIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_dashboard));
             holder.rowFieldName.setText(R.string.effort_field_name);
             holder.rowFieldText.setText(courseDetail.effort);
         }

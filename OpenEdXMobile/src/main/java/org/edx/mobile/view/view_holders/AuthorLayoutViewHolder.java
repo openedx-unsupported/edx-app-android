@@ -18,7 +18,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.ProfileImageProvider;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import roboguice.RoboGuice;
 
@@ -40,9 +40,8 @@ public class AuthorLayoutViewHolder {
         answerTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_text_view);
 
         final Context context = answerTextView.getContext();
-        answerTextView.setCompoundDrawables(UiUtil.getDrawable(
-                context, R.drawable.ic_verified, R.dimen.edx_base, R.color.successLight),
-                null, null, null);
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, answerTextView, R.drawable.ic_verified,
+                R.dimen.edx_base, R.color.successLight);
         RoboGuice.getInjector(context).injectMembers(this);
     }
 

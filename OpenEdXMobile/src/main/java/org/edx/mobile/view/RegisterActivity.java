@@ -55,7 +55,7 @@ import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
@@ -249,7 +249,7 @@ public class RegisterActivity extends BaseFragmentActivity
     private void showErrorMessage(String errorMsg, @DrawableRes int errorIconResId) {
         errorTextView.setVisibility(View.VISIBLE);
         errorTextView.setText(errorMsg);
-        errorTextView.setCompoundDrawables(null, UiUtil.getDrawable(this, errorIconResId,
+        errorTextView.setCompoundDrawables(null, UiUtils.INSTANCE.getDrawable(this, errorIconResId,
                 R.dimen.content_unavailable_error_icon_size, R.color.neutralDark),
                 null, null
         );
@@ -518,7 +518,7 @@ public class RegisterActivity extends BaseFragmentActivity
         Spanned result = Html.fromHtml(sb.toString());
         messageView.setText(result);
         messageLayout.setVisibility(View.VISIBLE);
-        // UiUtil.animateLayouts(messageLayout);
+        // UiUtils.INSTANCE.animateLayouts(messageLayout);
     }
 
     private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken) {

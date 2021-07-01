@@ -31,7 +31,7 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.custom.ProgressWheel;
 
@@ -130,7 +130,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                 if (getActivity() != null) {
                     getArguments().putSerializable(Router.EXTRA_COURSE_DATA, course);
-                    UiUtil.restartFragment(CourseTabsDashboardFragment.this);
+                    UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this);
                 }
             }
 
@@ -138,7 +138,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             protected void onFailure(@NonNull final Throwable error) {
                 if (getActivity() != null) {
                     getArguments().putBoolean(ARG_COURSE_NOT_FOUND, true);
-                    UiUtil.restartFragment(CourseTabsDashboardFragment.this);
+                    UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this);
                     logger.error(new Exception("Invalid Course ID provided via deeplink: " + courseId), true);
                 }
             }

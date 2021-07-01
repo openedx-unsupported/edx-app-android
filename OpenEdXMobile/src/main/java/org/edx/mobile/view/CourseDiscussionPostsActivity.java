@@ -14,7 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import roboguice.inject.InjectExtra;
 
@@ -71,7 +71,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
         if (discussionTopic != null && discussionTopic.getName() != null) {
             if (discussionTopic.isFollowingType()) {
                 SpannableString title = new SpannableString("   " + discussionTopic.getName());
-                Drawable starIcon = UiUtil.getDrawable(this, R.drawable.ic_star_rate, R.dimen.edx_base, R.color.white);
+                Drawable starIcon = UiUtils.INSTANCE.getDrawable(this, R.drawable.ic_star_rate, R.dimen.edx_base);
                 ImageSpan iSpan = new ImageSpan(starIcon, ImageSpan.ALIGN_BASELINE);
                 title.setSpan(iSpan, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 setTitle(title);

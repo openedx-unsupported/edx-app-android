@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager2.widget.ViewPager2;
@@ -31,7 +31,7 @@ import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         // Enforce to intercept single scrolling direction
         if (binding != null) {
-            UiUtil.enforceSingleScrollDirection(binding.viewPager2);
+            UiUtils.INSTANCE.enforceSingleScrollDirection(binding.viewPager2);
         }
         handleTabSelection(getArguments());
     }
@@ -205,11 +205,11 @@ public abstract class TabsBaseFragment extends BaseFragment {
 
     protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
         // Tabs doesn't support `IconDrawable.colorRes` with material theme so use custom view having `ImageView`
-        Drawable iconDrawable = ContextCompat.getDrawable(getContext(), fragmentItem.getIconResId());
+        Drawable iconDrawable = UiUtils.INSTANCE.getDrawable(getContext(), fragmentItem.getIconResId());
         iconDrawable.setTintList(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
         iconDrawable.setTintMode(PorterDuff.Mode.SRC_IN);
         final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
-        final ImageView icon = (ImageView) tabItem.findViewById(R.id.icon);
+        final AppCompatImageView icon = (AppCompatImageView) tabItem.findViewById(R.id.icon);
         int size;
         if (showTitleInTabs()) {
             size = getContext().getResources().getDimensionPixelSize(R.dimen.edx_small);

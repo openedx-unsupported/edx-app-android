@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/course_detail_field"
     android:layout_width="match_parent"
@@ -16,11 +15,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_detail_field_icon"
-            android:layout_width="@dimen/fa_xxx_large"
-            android:layout_height="@dimen/fa_xxx_large"
+            android:layout_width="@dimen/ic_xxx_large"
+            android:layout_height="@dimen/ic_xxx_large"
             android:baselineAlignBottom="true"
             android:gravity="start"
-            android:tint="@color/black"
             tools:src="@color/primaryBaseColor" />
 
         <TextView

@@ -28,7 +28,7 @@ import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.ConfigUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UserProfileUtils;
 
 import java.util.ArrayList;
@@ -80,8 +80,8 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         inflater.inflate(R.menu.my_courses, menu);
         menu.findItem(R.id.menu_item_account).setVisible(true);
         menu.findItem(R.id.menu_item_account).setIcon(
-                UiUtil.getDrawable(getContext(), R.drawable.ic_settings,
-                        R.dimen.action_bar_icon_size, R.color.toolbar_controls_color));
+                UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_settings,
+                        R.dimen.action_bar_icon_size));
     }
 
     @Override

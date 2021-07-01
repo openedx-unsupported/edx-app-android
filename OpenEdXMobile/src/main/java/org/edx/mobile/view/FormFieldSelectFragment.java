@@ -28,7 +28,7 @@ import org.edx.mobile.user.FormOption;
 import org.edx.mobile.user.FormOptions;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,9 +140,8 @@ public class FormFieldSelectFragment extends BaseFragment {
             textView.setText(ResourceUtil.getFormattedString(listView.getContext().getResources(), labelRes, labelKey, labelValueSpan));
         }
         Context context = textView.getContext();
-        textView.setCompoundDrawables(UiUtil.getDrawable(context, iconResId,
-                R.dimen.edx_base, R.color.neutralDark)
-                , null, null, null);
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, iconResId, R.dimen.edx_base,
+                R.color.neutralDark);
         listView.addHeaderView(textView, new FormOption(labelValue, value), true);
     }
 

@@ -1,14 +1,16 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,8 +35,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
             holder.duration.setText(item.getDuration());
         }
         holder.progress.setProgress(item.getPercent());
-        @DrawableRes
-        final int progressDrawable;
+        @DrawableRes final int progressDrawable;
         final String progressText;
         final String errorText;
         switch (item.getStatus()) {
@@ -108,7 +109,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
         final TextView title;
         final TextView duration;
         final TextView percent;
-        final ImageView cross_button;
+        final AppCompatImageView cross_button;
         final TextView error;
         final ProgressBar progress;
 
@@ -122,7 +123,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                     .findViewById(R.id.txtDownloadFailed);
             progress = (ProgressBar) view
                     .findViewById(R.id.progressBar);
-            cross_button = (ImageView) view
+            cross_button = (AppCompatImageView) view
                     .findViewById(R.id.close_btn);
         }
     }

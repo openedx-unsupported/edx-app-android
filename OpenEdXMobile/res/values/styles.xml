@@ -351,7 +351,7 @@
     </style>
 
     <style name="profile_image">
-        <item name="android:src">@color/primaryXLightColor</item>
+        <item name="srcCompat">@color/primaryXLightColor</item>
         <item name="civ_border_color">@color/primaryBaseColor</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@drawable/white_circle</item>
@@ -532,24 +532,24 @@
         <!-- Since we use xx_large for the standard ProgressBar
              style, we'll have xxxx_large as the large style,
              android base as the small style. -->
-        <item name="android:minWidth">@dimen/fa_xx_large</item>
-        <item name="android:maxWidth">@dimen/fa_xx_large</item>
-        <item name="android:minHeight">@dimen/fa_xx_large</item>
-        <item name="android:maxHeight">@dimen/fa_xx_large</item>
+        <item name="android:minWidth">@dimen/ic_xx_large</item>
+        <item name="android:maxWidth">@dimen/ic_xx_large</item>
+        <item name="android:minHeight">@dimen/ic_xx_large</item>
+        <item name="android:maxHeight">@dimen/ic_xx_large</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Large">
-        <item name="android:minWidth">@dimen/fa_xxxx_large</item>
-        <item name="android:maxWidth">@dimen/fa_xxxx_large</item>
-        <item name="android:minHeight">@dimen/fa_xxxx_large</item>
-        <item name="android:maxHeight">@dimen/fa_xxxx_large</item>
+        <item name="android:minWidth">@dimen/ic_xxxx_large</item>
+        <item name="android:maxWidth">@dimen/ic_xxxx_large</item>
+        <item name="android:minHeight">@dimen/ic_xxxx_large</item>
+        <item name="android:maxHeight">@dimen/ic_xxxx_large</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Small">
-        <item name="android:minWidth">@dimen/fa_base</item>
-        <item name="android:maxWidth">@dimen/fa_base</item>
-        <item name="android:minHeight">@dimen/fa_base</item>
-        <item name="android:maxHeight">@dimen/fa_base</item>
+        <item name="android:minWidth">@dimen/ic_base</item>
+        <item name="android:maxWidth">@dimen/ic_base</item>
+        <item name="android:minHeight">@dimen/ic_base</item>
+        <item name="android:maxHeight">@dimen/ic_base</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Inverse">

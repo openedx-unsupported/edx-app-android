@@ -139,12 +139,12 @@ public class BaseFragment extends RoboFragment {
     public void showCalendarRemovedSnackbar() {
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_removed,
-                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
+                0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
     }
 
     public void showCalendarUpdatedSnackbar() {
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_updated,
-                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
+                0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
     }
 }

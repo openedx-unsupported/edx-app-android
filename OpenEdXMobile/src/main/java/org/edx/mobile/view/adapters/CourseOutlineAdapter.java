@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,7 +42,7 @@ import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -338,30 +337,25 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
             } else if (videoBlockModel.getData().encodedVideos.youtube != null) {
                 final boolean isYoutubePlayerEnabled = config.getYoutubePlayerConfig().isYoutubePlayerEnabled();
-                viewHolder.rowTitle.setCompoundDrawables(null, null,
-                        UiUtil.getDrawable(context, isYoutubePlayerEnabled ? R.drawable.ic_youtube_play : R.drawable.ic_laptop,
-                                R.dimen.small_icon_size, R.color.neutralXDark), null);
+                UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
+                        isYoutubePlayerEnabled ? R.drawable.ic_youtube_play : R.drawable.ic_laptop, R.dimen.small_icon_size);
             }
         } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
-            viewHolder.rowTitle.setCompoundDrawables(null, null,
-                    UiUtil.getDrawable(context, R.drawable.ic_forum,
-                            R.dimen.small_icon_size, R.color.neutralXDark), null);
+            UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
+                    R.drawable.ic_forum, R.dimen.small_icon_size);
         } else if (!unit.isMultiDevice()) {
             // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            viewHolder.rowTitle.setCompoundDrawables(null, null,
-                    UiUtil.getDrawable(context, R.drawable.ic_laptop,
-                            R.dimen.small_icon_size, R.color.neutralXDark), null);
+            UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
+                    R.drawable.ic_laptop, R.dimen.small_icon_size);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            viewHolder.rowTitle.setCompoundDrawables(null, null,
-                    UiUtil.getDrawable(context, unit.getType() == BlockType.PROBLEM ? R.drawable.ic_summarize : R.drawable.ic_article,
-                            R.dimen.small_icon_size, R.color.neutralXDark), null);
+            UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
+                    unit.getType() == BlockType.PROBLEM ? R.drawable.ic_summarize : R.drawable.ic_article, R.dimen.small_icon_size);
         }
         if (unit.getType() == BlockType.OPENASSESSMENT) {
-            viewHolder.rowTitle.setCompoundDrawables(null, null,
-                    UiUtil.getDrawable(context, R.drawable.ic_fact_check,
-                            R.dimen.small_icon_size, R.color.neutralXDark), null);
+            UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
+                    R.drawable.ic_fact_check, R.dimen.small_icon_size);
         }
 
         if (isDenialFeatureBasedEnrolments) {
@@ -386,9 +380,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,
                                   @NonNull final VideoBlockModel videoBlockModel) {
-        viewHolder.rowTitle.setCompoundDrawables(null, null,
-                UiUtil.getDrawable(context, R.drawable.ic_videocam,
-                        R.dimen.small_icon_size, R.color.neutralXDark), null);
+        UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle, R.drawable.ic_videocam,
+                R.dimen.small_icon_size);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
@@ -521,7 +514,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADED, null);
             } else if (dbStore.getDownloadingVideosCountForSection(courseId, chapterId,
                     sequentialId, null) + downloadedCount == totalDownloadableVideos) {
-                holder.noOfVideos.setVisibility(View.GONE);
+                holder.noOfVideos.setVisibility(View.INVISIBLE);
                 setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADING,
                         new View.OnClickListener() {
                             @Override
@@ -584,24 +577,24 @@ public class CourseOutlineAdapter extends BaseAdapter {
             , View.OnClickListener listener) {
         switch (state) {
             case DOWNLOADING:
-                row.bulkDownload.setImageDrawable(UiUtil.getDrawable(row.bulkDownload.getContext(),
-                        R.drawable.custom_circular_progress_bar, R.dimen.fa_large, R.color.primaryBaseColor));
+                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(row.bulkDownload.getContext(),
+                        R.drawable.custom_circular_progress_bar, R.dimen.edx_large, R.color.primaryBaseColor));
                 row.bulkDownload.setTag(R.drawable.custom_circular_progress_bar);
                 row.downloadBackground.setVisibility(View.GONE);
-                UiUtil.setAnimation(row.bulkDownload, UiUtil.Animation.ROTATION);
+                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.ROTATION);
                 break;
             case DOWNLOADED:
                 row.downloadBackground.setVisibility(View.VISIBLE);
-                row.bulkDownload.setImageDrawable(UiUtil.getDrawable(row.bulkDownload.getContext(),
-                        R.drawable.ic_download_done, R.dimen.fa_large, R.color.primaryBaseColor));
+                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
+                        R.drawable.ic_download_done, R.dimen.edx_large));
                 row.bulkDownload.setTag(R.drawable.ic_download_done);
-                UiUtil.setAnimation(row.bulkDownload, UiUtil.Animation.NONE);
+                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.NONE);
                 break;
             case ONLINE:
-                UiUtil.setAnimation(row.bulkDownload, UiUtil.Animation.NONE);
-                row.downloadBackground.setVisibility(View.GONE);
-                row.bulkDownload.setImageDrawable(UiUtil.getDrawable(context, R.drawable.ic_download,
-                        R.dimen.fa_large, R.color.primaryBaseColor));
+                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.NONE);
+                row.downloadBackground.setVisibility(View.VISIBLE);
+                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
+                        R.drawable.ic_download, R.dimen.edx_large));
                 row.bulkDownload.setTag(R.drawable.ic_download);
                 break;
         }
@@ -627,7 +620,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     public View getCardView(View view) {
         final TextView courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
         final TextView courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        final ImageView headerImageView = (ImageView) view.findViewById(R.id.header_image_view);
+        final AppCompatImageView headerImageView = (AppCompatImageView) view.findViewById(R.id.header_image_view);
 
         // Full course name should appear on the course's dashboard screen.
         courseTextName.setEllipsize(null);

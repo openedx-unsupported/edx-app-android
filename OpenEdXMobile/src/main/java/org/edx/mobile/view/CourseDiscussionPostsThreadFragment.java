@@ -34,7 +34,7 @@ import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -146,10 +146,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
         Context context = getActivity();
-        createNewPostTextView.setCompoundDrawables(UiUtil.getDrawable(
-                context, R.drawable.ic_add_comment, R.dimen.small_icon_size, R.color.white),
-                null, null, null
-        );
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, createNewPostTextView,
+                R.drawable.ic_add_comment, R.dimen.small_icon_size);
         createNewPostLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

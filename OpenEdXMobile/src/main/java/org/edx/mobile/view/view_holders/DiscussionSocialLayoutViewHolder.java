@@ -11,7 +11,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
@@ -66,7 +66,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         if (threadFollowContainer.isSelected() != follow) {
             threadFollowContainer.setSelected(follow);
             threadFollowTextView.setText(follow ? R.string.forum_unfollow : R.string.forum_follow);
-            threadFollowIconImageView.setColorFilter(ContextCompat.getColor(threadFollowIconImageView.getContext(), R.color.infoBase), android.graphics.PorterDuff.Mode.SRC_IN);
+            UiUtils.INSTANCE.setImageViewColor(threadFollowIconImageView.getContext(), threadFollowIconImageView, R.color.infoBase);
         }
     }
 
@@ -74,7 +74,6 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         voteViewContainer.setSelected(vote);
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, vote ? otherUserVotes + 1 : otherUserVotes));
-        threadVoteIconImageView.setColorFilter(ContextCompat.getColor(threadVoteIconImageView.getContext(), R.color.infoBase), android.graphics.PorterDuff.Mode.SRC_IN);
-
+        UiUtils.INSTANCE.setImageViewColor(threadVoteIconImageView.getContext(), threadVoteIconImageView, R.color.infoBase);
     }
 }

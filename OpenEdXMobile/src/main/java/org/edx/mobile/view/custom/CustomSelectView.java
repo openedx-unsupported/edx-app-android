@@ -10,7 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class CustomSelectView<T> extends AppCompatTextView implements View.OnCli
      * This sets the common view parameters for Custom SelectView
      */
     private void setUIParams() {
-        int padding = (int) UiUtil.getParamsInDP(getResources(), 10);
+        int padding = (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 10);
         setPadding(padding, padding, padding, padding);
         setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
     }

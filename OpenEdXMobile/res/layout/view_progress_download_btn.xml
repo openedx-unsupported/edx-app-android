@@ -9,10 +9,9 @@
     android:padding="@dimen/x_small_icon_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="@dimen/fa_small"
-        android:layout_height="@dimen/fa_small"
+        android:layout_width="@dimen/ic_small"
+        android:layout_height="@dimen/ic_small"
         android:layout_gravity="center"
-        android:tint="@color/toolbar_controls_color"
         app:srcCompat="@drawable/ic_arrow_downward"
         tools:ignore="ContentDescription" />
 

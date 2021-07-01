@@ -29,7 +29,6 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/course_unit_message_icon_size"
             android:layout_height="@dimen/course_unit_message_icon_size"
-            android:tint="@color/neutralDark"
             app:srcCompat="@drawable/ic_screen_rotation" />
 
         <TextView

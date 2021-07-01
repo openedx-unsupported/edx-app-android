@@ -36,7 +36,7 @@ public class DialogErrorNotification extends ErrorNotification {
      * Show the error notification as a modal dialog, according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param iconResId            The error iconResId. This is currently ignored here.
+     * @param iconResId       The error iconResId. This is currently ignored here.
      * @param actionTextResId The resource ID of the action button text.
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
@@ -62,7 +62,7 @@ public class DialogErrorNotification extends ErrorNotification {
      * Show the error dialog according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param iconResId            The error iconResId.
+     * @param iconResId       The error iconResId.
      * @param actionTextResId The resource ID of the action button text.
      * @param duration        The duration of the error message visibility
      * @param actionListener  The callback to be invoked when the action button is clicked.

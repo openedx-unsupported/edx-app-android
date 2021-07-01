@@ -25,7 +25,6 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/discussion_responses_action_bar_vote_icon_view"
             style="@style/discussion_action_bar_icon"
-            android:tint="@color/infoBase"
             app:srcCompat="@drawable/ic_thumb_up" />
 
         <TextView
@@ -51,8 +50,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/discussion_responses_action_bar_follow_icon_view"
             style="@style/discussion_action_bar_icon"
-            android:tint="@color/infoBase"
-            app:srcCompat="@drawable/ic_star_rate" />
+            app:srcCompat="@drawable/ic_star_rate"
+            app:tint="@color/infoBase" />
 
         <TextView
             android:id="@+id/discussion_responses_action_bar_follow_text_view"
@@ -74,7 +73,6 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/discussion_responses_action_bar_report_icon_view"
             style="@style/discussion_action_bar_icon"
-            android:tint="@color/infoBase"
             app:srcCompat="@drawable/ic_flag" />
 
         <TextView

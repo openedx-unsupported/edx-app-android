@@ -154,7 +154,7 @@ class DataBindingHelperUtils {
                 CourseDateType.VERIFIED_ONLY -> {
                     badgeBackground = R.color.black
                     textAppearance = R.style.verified_only_badge_text_appearance
-                    badgeIcon = UiUtil.getDrawable(
+                    badgeIcon = UiUtils.getDrawable(
                         textView.context, R.drawable.ic_lock, R.dimen.small_icon_size, R.color.white
                     )
                 }
@@ -192,8 +192,7 @@ class DataBindingHelperUtils {
                 val dateType = dateBlockItems.first().dateBlockBadge
                 for (i in 1 until dateBlockItems.size) {
                     if (dateBlockItems[i].dateBlockBadge != dateType &&
-                        dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK
-                    ) {
+                        dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK) {
                         return false
                     }
                 }
@@ -218,10 +217,8 @@ class DataBindingHelperUtils {
 
             // setup the date badge
             val string = textView.text as Spannable
-            val chipDrawable = ChipDrawable.createFromResource(
-                textView.context,
-                R.xml.dates_badge_chip
-            )
+            val chipDrawable = ChipDrawable.createFromResource(textView.context,
+                R.xml.dates_badge_chip)
             chipDrawable.text = title
             chipDrawable.setChipBackgroundColorResource(badgeBackground)
             // Load font Synchronously
@@ -239,26 +236,17 @@ class DataBindingHelperUtils {
             }
             if (badgeStrokeColor != -1) {
                 chipDrawable.setChipStrokeColorResource(badgeStrokeColor)
-                chipDrawable.strokeWidth = dpToPx(textView.context,1.0F)
+                chipDrawable.strokeWidth = UiUtils.dpToPx(textView.context, 1.0F)
             }
             // Reduce the chip height and vertical margins to match the design.
-            chipDrawable.setBounds(
-                0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
-                chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt()
-            )
+            chipDrawable.setBounds(0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
+                chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt())
 
             val length = textView.text.toString().length
             // Find & replace the badge title with actual badge drawable
-            string.setSpan(
-                ImageSpan(chipDrawable), textView.text.indexOf(title), length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            string.setSpan(ImageSpan(chipDrawable), textView.text.indexOf(title), length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             textView.setText(string, TextView.BufferType.SPANNABLE)
-        }
-
-        private fun dpToPx(context: Context, dpValue: Float): Float {
-            val scale = context.resources.displayMetrics.density
-            return dpValue * scale + 0.5f
         }
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -17,12 +18,12 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/dialog_dismiss"
-                android:layout_width="@dimen/fa_x_large"
-                android:layout_height="@dimen/fa_x_large"
+                android:layout_width="@dimen/ic_x_large"
+                android:layout_height="@dimen/ic_x_large"
                 android:layout_gravity="end"
                 android:scaleType="center"
-                android:src="@drawable/ic_close"
-                android:tint="@color/primaryBaseColor" />
+                app:srcCompat="@drawable/ic_close"
+                app:tint="@color/primaryDarkColor" />
 
             <TextView
                 android:id="@+id/dialog_title"
@@ -39,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/container_padding"
-                android:src="@drawable/course_certificate" />
+                app:srcCompat="@drawable/course_certificate" />
 
             <TextView
                 style="@style/regular_primary_base_text"
@@ -60,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/widget_margin_x_half"
-                    android:src="@drawable/ic_check_circle" />
+                    app:srcCompat="@drawable/ic_check_circle" />
 
                 <TextView
                     style="@style/regular_primary_base_text"
@@ -82,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/widget_margin_x_half"
-                    android:src="@drawable/ic_check_circle" />
+                    app:srcCompat="@drawable/ic_check_circle" />
 
                 <TextView
                     style="@style/regular_primary_base_text"
@@ -104,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/widget_margin_x_half"
-                    android:src="@drawable/ic_check_circle" />
+                    app:srcCompat="@drawable/ic_check_circle" />
 
                 <TextView
                     style="@style/regular_primary_base_text"
@@ -126,7 +127,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/widget_margin_x_half"
-                    android:src="@drawable/ic_check_circle" />
+                    app:srcCompat="@drawable/ic_check_circle" />
 
                 <TextView
                     android:id="@+id/support_non_profit"

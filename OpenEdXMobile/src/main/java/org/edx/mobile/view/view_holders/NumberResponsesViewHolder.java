@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 public class NumberResponsesViewHolder extends RecyclerView.ViewHolder {
     public TextView numberResponsesOrCommentsLabel;
@@ -18,10 +18,7 @@ public class NumberResponsesViewHolder extends RecyclerView.ViewHolder {
         numberResponsesOrCommentsLabel = (TextView) itemView.
                 findViewById(R.id.number_responses_or_comments_label);
         Context context = numberResponsesOrCommentsLabel.getContext();
-        Drawable iconDrawable = UiUtil.getDrawable(context, R.drawable.ic_comment,
-                R.dimen.edx_small, R.color.primaryBaseColor);
-        numberResponsesOrCommentsLabel.setCompoundDrawables(
-                iconDrawable, null, null, null);
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, numberResponsesOrCommentsLabel,
+                R.drawable.ic_comment, R.dimen.edx_small);
     }
-
 }

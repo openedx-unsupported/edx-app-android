@@ -12,11 +12,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/row_type"
-        android:layout_width="@dimen/fa_xx_large"
-        android:layout_height="@dimen/fa_xx_large"
+        android:layout_width="@dimen/ic_xx_large"
+        android:layout_height="@dimen/ic_xx_large"
         android:baselineAlignBottom="true"
-        android:gravity="center_vertical"
-        android:tint="@color/neutralXXDark" />
+        android:gravity="center_vertical" />
 
     <LinearLayout
         style="@style/regular_grey_text"

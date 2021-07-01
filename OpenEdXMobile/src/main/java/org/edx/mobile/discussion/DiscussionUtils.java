@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 public abstract class DiscussionUtils {
     /**
@@ -29,17 +29,13 @@ public abstract class DiscussionUtils {
         Context context = textView.getContext();
         if (isTopicClosed) {
             textView.setText(negativeTextResId);
-            textView.setCompoundDrawables(UiUtil.getDrawable(
-                    context, R.drawable.ic_lock, R.dimen.small_icon_size, R.color.white),
-                    null, null, null
-            );
+            UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, R.drawable.ic_lock,
+                    R.dimen.small_icon_size);
             creationLayout.setOnClickListener(null);
         } else {
             textView.setText(positiveTextResId);
-            textView.setCompoundDrawables(UiUtil.getDrawable(
-                    context, R.drawable.ic_add_comment, R.dimen.small_icon_size, R.color.white),
-                    null, null, null
-            );
+            UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, R.drawable.ic_add_comment,
+                    R.dimen.small_icon_size);
             creationLayout.setOnClickListener(listener);
         }
         creationLayout.setEnabled(!isTopicClosed);

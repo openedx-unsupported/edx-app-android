@@ -11,8 +11,8 @@
         android:layout_width="@dimen/large_indicator_icon_width"
         android:layout_height="@dimen/large_indicator_icon_height"
         android:layout_margin="@dimen/edx_margin"
-        android:tint="@color/neutralXXDark"
-        app:srcCompat="@drawable/ic_videocam" />
+        app:srcCompat="@drawable/ic_videocam"
+        app:tint="@color/neutralXXDark" />
 
     <TextView
         android:id="@+id/only_youtube_available_message"

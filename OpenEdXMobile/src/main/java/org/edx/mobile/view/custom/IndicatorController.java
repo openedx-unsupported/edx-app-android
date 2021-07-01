@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class IndicatorController {
 
         for (int i = 0; i < slideCount; i++) {
             ImageView dot = new ImageView(context);
-            dot.setImageDrawable(UiUtil.getDrawable(context, R.drawable.indicator_dot_active));
+            dot.setImageDrawable(UiUtils.INSTANCE.getDrawable(context, R.drawable.indicator_dot_active));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -56,7 +56,7 @@ public class IndicatorController {
     public void selectPosition(int index) {
         for (int i = 0; i < slideCount; i++) {
             int drawableId = (i == index) ? (R.drawable.indicator_dot_inactive) : (R.drawable.indicator_dot_active);
-            Drawable drawable = UiUtil.getDrawable(context, drawableId);
+            Drawable drawable = UiUtils.INSTANCE.getDrawable(context, drawableId);
             if (selectedDotColor != DEFAULT_COLOR && i == index)
                 drawable.mutate().setColorFilter(selectedDotColor, PorterDuff.Mode.SRC_IN);
             if (unselectedDotColor != DEFAULT_COLOR && i != index)

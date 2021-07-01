@@ -28,7 +28,7 @@ import org.edx.mobile.module.db.DataCallback
 import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.ConfigUtil.Companion.isCourseDiscoveryEnabled
 import org.edx.mobile.util.NetworkUtil
-import org.edx.mobile.util.UiUtil
+import org.edx.mobile.util.UiUtils
 import org.edx.mobile.view.adapters.MyCoursesAdapter
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import retrofit2.Call
@@ -80,7 +80,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             errorNotification.hideError()
             loadData(showProgress = false, fromCache = false)
         }
-        UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
+        UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
         // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(View(context), null, false)
         binding.myCourseList.adapter = adapter.also {

@@ -12,7 +12,6 @@
             android:id="@+id/content_error_icon"
             android:layout_width="@dimen/content_unavailable_error_icon_size"
             android:layout_height="@dimen/content_unavailable_error_icon_size"
-            android:tint="@color/neutralXXDark"
             app:srcCompat="@drawable/ic_wifi" />
 
         <TextView

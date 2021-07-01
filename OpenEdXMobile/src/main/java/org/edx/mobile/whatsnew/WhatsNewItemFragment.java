@@ -1,21 +1,22 @@
 package org.edx.mobile.whatsnew;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.databinding.FragmentWhatsNewItemBinding;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 public class WhatsNewItemFragment extends BaseFragment {
     public static final String ARG_MODEL = "ARG_MODEL";
@@ -49,15 +50,15 @@ public class WhatsNewItemFragment extends BaseFragment {
         binding.message.setMovementMethod(new ScrollingMovementMethod());
 
         @DrawableRes
-        final int imageRes = UiUtil.getDrawable(getContext(), model.getImage());
+        final int imageRes = UiUtils.INSTANCE.getDrawable(getContext(), model.getImage());
         binding.image.setImageResource(imageRes);
         // We need different scale types for portrait and landscape images
-        final Drawable drawable = UiUtil.getDrawable(getContext(), imageRes);
+        final Drawable drawable = UiUtils.INSTANCE.getDrawable(getContext(), imageRes);
         if (drawable != null) {
             if (drawable.getIntrinsicHeight() > drawable.getIntrinsicWidth()) {
-                binding.image.setScaleType(ImageView.ScaleType.FIT_END);
+                binding.image.setScaleType(AppCompatImageView.ScaleType.FIT_END);
             } else {
-                binding.image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                binding.image.setScaleType(AppCompatImageView.ScaleType.FIT_CENTER);
             }
         }
     }

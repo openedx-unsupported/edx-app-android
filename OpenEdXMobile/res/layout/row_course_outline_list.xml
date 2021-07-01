@@ -69,8 +69,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/row_subtitle_icon"
-                    android:layout_width="@dimen/fa_large"
-                    android:layout_height="@dimen/fa_large"
+                    android:layout_width="@dimen/ic_large"
+                    android:layout_height="@dimen/ic_large"
                     android:layout_gravity="top"
                     android:layout_marginEnd="@dimen/widget_margin_half"
                     android:visibility="gone"
@@ -115,7 +115,6 @@
             android:baselineAlignBottom="true"
             android:paddingStart="@dimen/edx_quarter_margin"
             android:paddingEnd="@dimen/course_unit_block_listing_icon_padding_end"
-            android:tint="@color/primaryBaseColor"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_lock"
             tools:visibility="visible" />
@@ -144,12 +143,12 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/bulk_download"
-                    android:layout_width="@dimen/fa_large"
-                    android:layout_height="@dimen/fa_large"
+                    android:layout_width="@dimen/ic_large"
+                    android:layout_height="@dimen/ic_large"
                     android:layout_gravity="center"
                     android:minWidth="@dimen/small_icon_size"
                     android:minHeight="@dimen/small_icon_size"
-                    android:src="@drawable/ic_download" />
+                    app:srcCompat="@drawable/ic_download" />
             </FrameLayout>
 
             <TextView

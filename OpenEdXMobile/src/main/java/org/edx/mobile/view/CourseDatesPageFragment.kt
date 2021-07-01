@@ -109,7 +109,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             errorNotification.hideError()
             viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = true, showLoader = false, isSwipeRefresh = true)
         }
-        UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
+        UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
         initObserver()
     }
 
@@ -361,7 +361,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     private fun showAddCalendarSuccessSnackbar() {
         val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_added,
-                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
+                0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
     }
 
     private fun deleteCalendar(calendarId: Long) {

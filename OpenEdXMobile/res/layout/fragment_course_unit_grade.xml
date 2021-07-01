@@ -23,7 +23,6 @@
                 android:layout_width="@dimen/medium_icon_size"
                 android:layout_height="@dimen/medium_icon_size"
                 android:layout_marginTop="@dimen/widget_margin_half"
-                android:tint="@color/primaryBaseColor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_lock" />
@@ -77,8 +76,8 @@
                 android:layout_width="@dimen/unit_unavailable_error_icon_size"
                 android:layout_height="@dimen/unit_unavailable_error_icon_size"
                 android:layout_margin="@dimen/widget_margin_double"
-                android:tint="@color/neutralXXDark"
-                app:srcCompat="@drawable/ic_laptop" />
+                app:srcCompat="@drawable/ic_laptop"
+                app:tint="@color/neutralXXDark" />
 
             <TextView
                 android:id="@+id/not_available_message"

@@ -43,7 +43,7 @@ import androidx.core.content.ContextCompat;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.ViewAnimationUtil;
 
 import java.lang.ref.WeakReference;
@@ -259,7 +259,7 @@ public class PlayerController extends FrameLayout {
     }
 
     private void initializeAnimations() {
-        boolean isLTRDirection = UiUtil.isDirectionLeftToRight();
+        boolean isLTRDirection = UiUtils.INSTANCE.isDirectionLeftToRight();
         mForwardAnimation = ViewAnimationUtil.getSeekTimeAnimation(mForwardTimeTextView, isLTRDirection);
         mRewindAnimation = ViewAnimationUtil.getSeekTimeAnimation(mRewindTimeTextView, !isLTRDirection);
     }
@@ -549,15 +549,11 @@ public class PlayerController extends FrameLayout {
             return;
         }
         if (mPlayer.isPlaying()) {
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_pause);
-            UiUtil.setDrawableColor(getContext(), drawable, R.color.white);
-            mPauseButton.setImageDrawable(drawable);
+            mPauseButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_pause));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_pause));
         } else {
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_play_arrow);
-            UiUtil.setDrawableColor(getContext(), drawable, R.color.white);
-            mPauseButton.setImageDrawable(drawable);
+            mPauseButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_play_arrow));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_play));
         }
@@ -570,11 +566,11 @@ public class PlayerController extends FrameLayout {
 
         mFullscreenButton.setBackgroundColor(Color.TRANSPARENT);
         if (mPlayer.isFullScreen()) {
-            mFullscreenButton.setImageDrawable(UiUtil.getDrawable(getContext(), R.drawable.ic_fullscreen_exit));
+            mFullscreenButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_fullscreen_exit));
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_exit_fullscreen));
         } else {
-            mFullscreenButton.setImageDrawable(UiUtil.getDrawable(getContext(), R.drawable.ic_fullscreen));
+            mFullscreenButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_fullscreen));
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_enter_fullscreen));
         }

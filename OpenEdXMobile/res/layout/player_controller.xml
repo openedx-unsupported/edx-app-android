@@ -68,13 +68,14 @@
             android:id="@+id/settings"
             style="@style/video_player_bottom_control"
             android:contentDescription="@string/video_player_settings"
-            android:src="@drawable/ic_settings" />
+            app:srcCompat="@drawable/ic_settings"
+            app:tint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/fullscreen"
             style="@style/video_player_bottom_control"
             android:contentDescription="@string/video_player_enter_fullscreen"
-            android:src="@drawable/ic_fullscreen_exit" />
+            app:srcCompat="@drawable/ic_fullscreen_exit" />
     </LinearLayout>
 
     <!-- Put play/pause button to the center of player -->
@@ -90,10 +91,10 @@
             android:layout_gravity="center_vertical|start"
             android:layout_marginStart="@dimen/video_player_control_left_margin"
             android:contentDescription="@string/video_player_previous"
-            android:src="@drawable/ic_chevron_left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_left" />
 
         <TextView
             android:id="@+id/rewind_time"
@@ -108,21 +109,21 @@
             style="@style/video_player_side_control"
             android:background="@drawable/semi_transparent_gray_circle"
             android:contentDescription="@string/video_player_rewind_button"
-            android:src="@drawable/ic_history"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/pause"
             app:layout_constraintStart_toEndOf="@+id/prev"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_history" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/pause"
             style="@style/video_player_play_pause_button"
             android:contentDescription="@string/video_player_pause"
-            android:src="@drawable/ic_pause"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_pause" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/forward"
@@ -130,11 +131,11 @@
             android:background="@drawable/semi_transparent_gray_circle"
             android:contentDescription="@string/video_player_forward_button"
             android:scaleX="-1"
-            android:src="@drawable/ic_history"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/next"
             app:layout_constraintStart_toEndOf="@+id/pause"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_history" />
 
         <TextView
             android:id="@+id/forward_time"
@@ -151,9 +152,9 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/video_player_control_right_margin"
             android:contentDescription="@string/video_player_next"
-            android:src="@drawable/ic_chevron_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_right" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

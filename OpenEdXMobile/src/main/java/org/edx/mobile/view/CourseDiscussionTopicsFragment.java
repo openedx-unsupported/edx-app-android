@@ -30,7 +30,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.SoftKeyboardUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
@@ -99,9 +99,8 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
             header.setText(R.string.forum_post_i_am_following);
             Context context = getActivity();
-            header.setCompoundDrawables(UiUtil.getDrawable(context, R.drawable.ic_star_rate,
-                    R.dimen.edx_base, R.color.primaryBaseColor),
-                    null, null, null);
+            UiUtils.INSTANCE.setTextViewDrawableStart(context, header, R.drawable.ic_star_rate,
+                    R.dimen.edx_base, R.color.primaryBaseColor);
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);
             discussionTopic.setName(getString(R.string.forum_post_i_am_following));

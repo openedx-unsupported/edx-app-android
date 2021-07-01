@@ -255,7 +255,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     /**
      * Shows the error message with the given icon, if the web page failed to load
      *
-     * @param errorMsg  The error message to show
+     * @param errorMsg       The error message to show
      * @param errorIconResId The resource id of the error icon to show with the error message
      */
     private void showErrorMessage(@StringRes int errorMsg, @DrawableRes int errorIconResId) {

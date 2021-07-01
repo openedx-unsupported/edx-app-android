@@ -26,7 +26,6 @@ import org.edx.mobile.base.MainApplication;
 public class TestApplication extends MainApplication {
     @Override
     public void onCreate() {
-        // Register Font Awesome module in android-iconify library
         application = this;
 
         // Facebook sdk should be initialized through AndroidManifest meta data declaration but

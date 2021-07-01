@@ -25,8 +25,7 @@ import org.edx.mobile.databinding.FragmentWhatsNewBinding;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.WhatsNewUtil;
 import org.edx.mobile.view.custom.IndicatorController;
 
@@ -111,7 +110,7 @@ public class WhatsNewFragment extends BaseFragment {
                 }
             });
             // Enforce to intercept single scrolling direction
-            UiUtil.enforceSingleScrollDirection(binding.viewPager2);
+            UiUtils.INSTANCE.enforceSingleScrollDirection(binding.viewPager2);
         } catch (IOException e) {
             // Submit crash report and end the activity
             logger.error(e, true);

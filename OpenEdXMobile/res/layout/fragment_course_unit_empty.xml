@@ -10,8 +10,8 @@
         android:layout_width="@dimen/unit_unavailable_error_icon_size"
         android:layout_height="@dimen/unit_unavailable_error_icon_size"
         android:layout_margin="@dimen/widget_margin_double"
-        android:tint="@color/neutralDark"
-        app:srcCompat="@drawable/ic_summarize" />
+        app:srcCompat="@drawable/ic_summarize"
+        app:tint="@color/neutralDark" />
 
     <TextView
         android:layout_width="match_parent"

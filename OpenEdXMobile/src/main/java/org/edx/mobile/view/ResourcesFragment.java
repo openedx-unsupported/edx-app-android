@@ -20,7 +20,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -59,7 +59,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
         holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setImageDrawable(UiUtil.getDrawable(requireContext(), R.drawable.ic_description));
+        holder.typeView.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_description));
         holder.titleView.setText(R.string.handouts_title);
         holder.subtitleView.setText(R.string.handouts_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +73,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
 
         holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setImageDrawable(UiUtil.getDrawable(requireContext(), R.drawable.ic_campaign));
+        holder.typeView.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_campaign));
         holder.titleView.setText(R.string.announcement_title);
         holder.subtitleView.setText(R.string.announcement_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {

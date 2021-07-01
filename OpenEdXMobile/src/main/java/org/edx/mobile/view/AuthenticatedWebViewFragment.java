@@ -18,7 +18,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 
 import roboguice.inject.InjectView;
@@ -105,12 +105,12 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
         } else {
             view.findViewById(R.id.content_error).setVisibility(View.VISIBLE);
             final AppCompatImageView ivContentError = view.findViewById(R.id.content_error_icon);
-            ivContentError.setImageDrawable(UiUtil.getDrawable(getContext(), R.drawable.ic_error));
+            ivContentError.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_error));
             tvContentError.setText(getString(R.string.error_unknown));
             btnContentErrorAction.setVisibility(View.VISIBLE);
             btnContentErrorAction.setText(R.string.lbl_reload);
             btnContentErrorAction.setOnClickListener(
-                    v -> UiUtil.restartFragment(AuthenticatedWebViewFragment.this));
+                    v -> UiUtils.INSTANCE.restartFragment(AuthenticatedWebViewFragment.this));
         }
     }
 

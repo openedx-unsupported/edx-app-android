@@ -46,8 +46,8 @@
                         android:layout_width="@dimen/edx_base"
                         android:layout_height="@dimen/edx_base"
                         android:layout_gravity="center"
-                        android:tint="@color/accentAColor"
-                        app:srcCompat="@drawable/custom_circular_progress_bar" />
+                        app:srcCompat="@drawable/custom_circular_progress_bar"
+                        app:tint="@color/accentAColor" />
                 </FrameLayout>
 
                 <TextView
@@ -60,7 +60,6 @@
                     android:textSize="@dimen/edx_base"
                     tools:text="username" />
 
-
                 <TextView
                     android:id="@+id/change_photo"
                     android:layout_width="wrap_content"
@@ -68,15 +67,15 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:contentDescription="@string/edit_user_profile_change_photo_description"
                     android:drawablePadding="@dimen/x_small_icon_margin"
+                    android:focusable="true"
                     android:gravity="center_vertical"
-                    android:drawableLeft="@drawable/ic_camera_alt"
-                    android:drawableTint="@color/disableable_button_text"
                     android:paddingStart="@dimen/edx_margin"
                     android:paddingEnd="@dimen/edx_margin"
                     android:text="@string/edit_user_profile_change_photo"
-                    android:focusable="true"
                     android:textColor="@color/disableable_button_text"
-                    android:textSize="@dimen/edx_x_small" />
+                    android:textSize="@dimen/edx_x_small"
+                    app:drawableStartCompat="@drawable/ic_camera_alt"
+                    app:drawableTint="@color/disableable_button_text" />
             </LinearLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat

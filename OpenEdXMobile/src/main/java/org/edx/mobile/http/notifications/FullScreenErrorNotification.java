@@ -15,7 +15,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -123,7 +123,7 @@ public class FullScreenErrorNotification extends ErrorNotification {
             iconView.setVisibility(GONE);
         } else {
             iconView.setVisibility(VISIBLE);
-            iconView.setImageDrawable(UiUtil.getDrawable(iconView.getContext(), iconResId));
+            iconView.setImageDrawable(UiUtils.INSTANCE.getDrawable(iconView.getContext(), iconResId));
         }
         if (actionTextResId == 0 || actionListener == null) {
             actionButton.setVisibility(GONE);

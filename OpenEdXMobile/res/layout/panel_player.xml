@@ -41,7 +41,7 @@
 
     <include layout="@layout/loading_indicator" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_transparent_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

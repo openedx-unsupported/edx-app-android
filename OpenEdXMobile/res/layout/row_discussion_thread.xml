@@ -14,7 +14,6 @@
         android:layout_marginStart="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"
         android:layout_marginEnd="@dimen/edx_margin"
-        android:tint="@color/primaryBaseColor"
         app:srcCompat="@drawable/ic_chat" />
 
     <LinearLayout
@@ -37,20 +36,20 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/discussion_post_closed_icon"
                 style="@style/discussion_thread_icon"
-                android:tint="@color/neutralXXDark"
-                app:srcCompat="@drawable/ic_lock" />
+                app:srcCompat="@drawable/ic_lock"
+                app:tint="@color/neutralXXDark" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/discussion_post_pin_icon"
                 style="@style/discussion_thread_icon"
-                android:tint="@color/neutralXXDark"
-                app:srcCompat="@drawable/ic_push_pin" />
+                app:srcCompat="@drawable/ic_push_pin"
+                app:tint="@color/neutralXXDark" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/discussion_post_following_icon"
                 style="@style/discussion_thread_icon"
-                android:tint="@color/neutralXXDark"
-                app:srcCompat="@drawable/ic_star_rate" />
+                app:srcCompat="@drawable/ic_star_rate"
+                app:tint="@color/neutralXXDark" />
 
             <TextView
                 android:id="@+id/discussion_subtitle_first_pipe"

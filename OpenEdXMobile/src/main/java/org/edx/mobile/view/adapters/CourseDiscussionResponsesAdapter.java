@@ -30,7 +30,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
@@ -133,7 +133,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         // CardView adds extra padding on pre-lollipop devices for shadows
         // Since, we've set cardUseCompatPadding to true in the layout file
         // so we need to deduct the extra padding from margins in any case to get the desired results
-        UiUtil.adjustCardViewMargins(discussionResponseRow);
+        UiUtils.INSTANCE.adjustCardViewMargins(discussionResponseRow);
 
         return new DiscussionResponseViewHolder(discussionResponseRow);
 
@@ -420,9 +420,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
 
         holder.numberResponsesOrCommentsLabel.setText(text);
-        holder.numberResponsesOrCommentsLabel.setCompoundDrawables(
-                UiUtil.getDrawable(context, iconResId, R.dimen.edx_small, R.color.primaryBaseColor),
-                null, null, null);
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, holder.numberResponsesOrCommentsLabel,
+                iconResId, R.dimen.edx_small, R.color.primaryBaseColor);
     }
 
     @Override

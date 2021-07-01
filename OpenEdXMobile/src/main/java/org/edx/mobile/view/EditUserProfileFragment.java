@@ -53,7 +53,7 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
@@ -186,7 +186,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
 
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        UiUtil.setAnimation(viewHolder.profileImageProgress, UiUtil.Animation.ROTATION);
+        UiUtils.INSTANCE.setAnimation(viewHolder.profileImageProgress, UiUtils.Animation.ROTATION);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);

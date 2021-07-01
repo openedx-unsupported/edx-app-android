@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
@@ -31,6 +30,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -58,7 +58,7 @@ import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.TextUtils;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.Version;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.BaseCourseUnitVideoFragment;
@@ -1139,17 +1139,17 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
             if (subTitlesTv != null) {
                 if (text != null) {
-                    int margin_twenty_dp = (int) UiUtil.getParamsInDP(getResources(), 20);
-                    int margin_ten_dp = (int) UiUtil.getParamsInDP(getResources(), 10);
+                    int margin_twenty_dp = (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 20);
+                    int margin_ten_dp = (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 10);
                     if (player != null) {
                         LayoutParams lp = (LayoutParams) subTitlesLayout.getLayoutParams();
                         if (player.getController() != null && player.getController().isShown()) {
                             if (player.isFullScreen()) {
                                 lp.setMargins(margin_twenty_dp, 0,
-                                        margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 50));
+                                        margin_twenty_dp, (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 50));
                             } else {
                                 lp.setMargins(margin_twenty_dp, 0,
-                                        margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 42));
+                                        margin_twenty_dp, (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 42));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         } else {
@@ -1158,13 +1158,13 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                                         margin_twenty_dp, margin_ten_dp);
                             } else {
                                 lp.setMargins(margin_twenty_dp, 0,
-                                        margin_twenty_dp, (int) UiUtil.getParamsInDP(getResources(), 5));
+                                        margin_twenty_dp, (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 5));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }
                     }
-                    subTitlesTv.setPadding(margin_ten_dp, (int) UiUtil.getParamsInDP(getResources(), 2),
-                            margin_ten_dp, (int) UiUtil.getParamsInDP(getResources(), 2));
+                    subTitlesTv.setPadding(margin_ten_dp, (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 2),
+                            margin_ten_dp, (int) UiUtils.INSTANCE.getParamsInDP(getResources(), 2));
                     subTitlesTv.setText("");
                     //This has been done because text.content contains <br />
                     //in the end of each message
@@ -1245,7 +1245,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void callSettings(Point p) {
         try {
-            ImageView iv = (ImageView) getActivity().findViewById(R.id.iv_transparent_bg);
+            AppCompatImageView iv = (AppCompatImageView) getActivity().findViewById(R.id.iv_transparent_bg);
             iv.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             logger.error(e);
@@ -1255,7 +1255,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     public void hideTransparentImage() {
         try {
-            ImageView iv = (ImageView) getActivity().findViewById(R.id.iv_transparent_bg);
+            AppCompatImageView iv = (AppCompatImageView) getActivity().findViewById(R.id.iv_transparent_bg);
             iv.setVisibility(View.GONE);
         } catch (Exception e) {
             logger.error(e);
