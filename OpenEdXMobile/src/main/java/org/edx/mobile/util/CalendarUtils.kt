@@ -19,15 +19,46 @@ class CalendarUtils {
     companion object {
 
         private val logger = Logger(DateUtil::class.java.name)
+        val permissions = arrayOf(android.Manifest.permission.WRITE_CALENDAR, android.Manifest.permission.READ_CALENDAR)
+
+        /**
+         * Check if the app has the calendar READ/WRITE permissions or not
+         */
+        fun hasPermissions(context: Context): Boolean = permissions.all { permission ->
+            PermissionsUtil.checkPermissions(permission, context)
+        }
+
+        /**
+         * Check if the calendar is already existed in mobile calendar app or not
+         */
+        fun isCalendarExists(context: Context, accountName: String, calendarTitle: String): Boolean {
+            if (hasPermissions(context)) {
+                return getCalendarId(context, accountName, calendarTitle) != (-1).toLong()
+            }
+            return false
+        }
+
+        /**
+         * Create or update the calendar if it is already existed in mobile calendar app
+         */
+        fun createOrUpdateCalendar(context: Context, accountName: String, calendarTitle: String): Long {
+            val calendarId: Long = getCalendarId(context = context, accountName = accountName, calendarTitle = calendarTitle)
+            return if (calendarId == (-1).toLong()) {
+                createCalendar(context = context, accountName = accountName, calendarTitle = calendarTitle)
+            } else {
+                deleteCalendar(context = context, calendarId = calendarId)
+                createCalendar(context = context, accountName = accountName, calendarTitle = calendarTitle)
+            }
+        }
 
         /**
          * Method to create a separate calendar based on course name in mobile calendar app
          */
         @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-        fun createCalendar(context: Context, accountName: String, courseName: String): Long {
+        private fun createCalendar(context: Context, accountName: String, calendarTitle: String): Long {
             val contentValues = ContentValues()
-            contentValues.put(CalendarContract.Calendars.NAME, courseName)
-            contentValues.put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, courseName)
+            contentValues.put(CalendarContract.Calendars.NAME, calendarTitle)
+            contentValues.put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, calendarTitle)
             contentValues.put(CalendarContract.Calendars.ACCOUNT_NAME, accountName)
             contentValues.put(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
             contentValues.put(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, CalendarContract.Calendars.CAL_ACCESS_ROOT)
@@ -49,25 +80,81 @@ class CalendarUtils {
         /**
          * Method to check if the calendar with the course name exist in the mobile calendar app or not
          */
-        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-        fun getCalendarId(context: Context, accountName: String, courseName: String): Long {
+        fun getCalendarId(context: Context, accountName: String, calendarTitle: String): Long {
             var calendarId = -1
             val projection = arrayOf(
-                    CalendarContract.Calendars._ID,
-                    CalendarContract.Calendars.ACCOUNT_NAME,
-                    CalendarContract.Calendars.NAME)
+                CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.ACCOUNT_NAME,
+                CalendarContract.Calendars.NAME
+            )
             val calendarContentResolver = context.contentResolver
-            val cursor: Cursor = calendarContentResolver.query(
-                    CalendarContract.Calendars.CONTENT_URI, projection,
-                    CalendarContract.Calendars.ACCOUNT_NAME + "=? and (" +
-                            CalendarContract.Calendars.NAME + "=? or " +
-                            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME + "=?)", arrayOf(accountName, courseName,
-                    courseName), null)
-            if (cursor.moveToFirst()) {
-                if (cursor.getString(2).equals(courseName))
-                    calendarId = cursor.getInt(0)
+            val cursor = calendarContentResolver.query(
+                CalendarContract.Calendars.CONTENT_URI, projection,
+                CalendarContract.Calendars.ACCOUNT_NAME + "=? and (" +
+                        CalendarContract.Calendars.NAME + "=? or " +
+                        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME + "=?)", arrayOf(
+                    accountName, calendarTitle,
+                    calendarTitle
+                ), null
+            )
+            cursor?.run {
+                if (moveToFirst()) {
+                    if (getString(getColumnIndex(CalendarContract.Calendars.NAME))
+                            .equals(calendarTitle)
+                    )
+                        calendarId =
+                            getInt(getColumnIndex(CalendarContract.Calendars._ID))
+                }
             }
+            cursor?.close()
             return calendarId.toLong()
+        }
+
+        /**
+         * Method to query the events for the given calendar id
+         *
+         * @param context [Context]
+         * @param calendarId calendarId to query the events
+         *
+         * @return [Cursor]
+         *
+         * */
+        private fun getCalendarEvents(context: Context, calendarId: Long): Cursor? {
+            val calendarContentResolver = context.contentResolver
+            val projection = arrayOf(
+                CalendarContract.Events._ID
+            )
+            val selection = CalendarContract.Events.CALENDAR_ID + "=?"
+            return calendarContentResolver.query(
+                CalendarContract.Events.CONTENT_URI,
+                projection,
+                selection,
+                arrayOf(calendarId.toString()),
+                null
+            )
+        }
+
+        /**
+         * Method to delete the events for the given calendar id
+         *
+         * @param context [Context]
+         * @param calendarId calendarId to query the events
+         *
+         * */
+        fun deleteAllCalendarEvents(context: Context, calendarId: Long) {
+            val cursor = getCalendarEvents(context, calendarId)
+            cursor?.run {
+                if (moveToFirst()) {
+                    do {
+                        val deleteUri = ContentUris.withAppendedId(
+                            CalendarContract.Events.CONTENT_URI,
+                            getLong(getColumnIndex(CalendarContract.Events._ID))
+                        )
+                        val rowDelete = context.contentResolver.delete(deleteUri, null, null)
+                        logger.debug("Rows deleted: $rowDelete")
+                    } while (moveToNext())
+                }
+            }
         }
 
         /**

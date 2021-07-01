@@ -793,6 +793,9 @@ public interface Analytics {
         String CALENDAR_VIEW_EVENTS = "edx.bi.app.calendar.confirmation_view_events";
         String CALENDAR_ADD_SUCCESS = "edx.bi.app.calendar.add_success";
         String CALENDAR_REMOVE_SUCCESS = "edx.bi.app.calendar.remove_success";
+        String CALENDAR_UPDATE_SUCCESS = "edx.bi.app.calendar.update_success";
+        String CALENDAR_SYNC_UPDATE = "edx.bi.app.calendar.sync_update";
+        String CALENDAR_SYNC_REMOVE = "edx.bi.app.calendar.sync_remove";
     }
 
     interface Screens {
@@ -939,6 +942,9 @@ public interface Analytics {
         String CALENDAR_VIEW_EVENTS = "Dates: Calendar View Events";
         String CALENDAR_ADD_SUCCESS = "Dates: Calendar Add Dates Success";
         String CALENDAR_REMOVE_SUCCESS = "Dates: Calendar Remove Dates Success";
+        String CALENDAR_UPDATE_SUCCESS = "Dates: Calendar Update Dates Success";
+        String CALENDAR_SYNC_UPDATE = "Dates: Calendar Sync Update Dates";
+        String CALENDAR_SYNC_REMOVE = "Dates: Calendar Sync Remove Calendar";
     }
 
     /**

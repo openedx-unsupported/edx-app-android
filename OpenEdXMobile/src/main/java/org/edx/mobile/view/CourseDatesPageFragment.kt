@@ -56,7 +56,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
     private var courseData: EnrolledCoursesResponse = EnrolledCoursesResponse()
     private var isSelfPaced: Boolean = true
-    private var permissions = arrayOf(android.Manifest.permission.WRITE_CALENDAR, android.Manifest.permission.READ_CALENDAR)
     private lateinit var calendarTitle: String
     private lateinit var accountName: String
     private var isCalendarExist: Boolean = false
@@ -108,7 +107,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             // Hide the progress bar as swipe layout has its own progress indicator
             binding.loadingIndicator.loadingIndicator.visibility = View.GONE
             errorNotification.hideError()
-            viewModel.fetchCourseDates(courseID = courseData.courseId, isSwipeRefresh = true)
+            viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = true, isSwipeRefresh = true)
         }
         UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
         initObserver()
@@ -116,7 +115,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchCourseDates(courseID = courseData.courseId, isSwipeRefresh = false)
+        viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = false, isSwipeRefresh = false)
     }
 
     private fun initObserver() {
@@ -142,7 +141,26 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
         viewModel.resetCourseDates.observe(viewLifecycleOwner, Observer { resetCourseDates ->
             if (resetCourseDates != null) {
-                showShiftDateSnackBar(true)
+                if (CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
+                    val calendarId = CalendarUtils.getCalendarId(contextOrThrow, accountName, calendarTitle)
+                    val alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
+                            getString(R.string.message_calendar_out_of_date),
+                            getString(R.string.label_update_now),
+                            { _: DialogInterface?, _: Int ->
+                                trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE)
+                                addOrUpdateEventsInCalendar(calendarId, true)
+                            },
+                            getString(R.string.label_remove_course_calendar),
+                            { _: DialogInterface?, _: Int ->
+                                trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE)
+                                deleteCalendar(calendarId)
+                                binding.switchSync.isChecked = false
+                            })
+                    alertDialogFragment.isCancelable = false
+                    alertDialogFragment.show(childFragmentManager, null)
+                } else {
+                    showShiftDateSnackBar(true)
+                }
             }
         })
 
@@ -211,15 +229,15 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         checkIfCalendarExists()
         binding.switchSync.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                if (!permissions.any { permission -> PermissionsUtil.checkPermissions(permission, contextOrThrow) }) {
+                if (!CalendarUtils.permissions.any { permission -> PermissionsUtil.checkPermissions(permission, contextOrThrow) }) {
                     askCalendarPermission()
                 } else {
                     if (isCalendarExist.not()) {
                         askForCalendarSync()
                     }
                 }
-            } else if (permissions.all { permission -> PermissionsUtil.checkPermissions(permission, contextOrThrow) }) {
-                val calendarId = CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, courseName = calendarTitle)
+            } else if (CalendarUtils.hasPermissions(context = contextOrThrow)) {
+                val calendarId = CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
                 if (calendarId != (-1).toLong()) {
                     deleteCalendar(calendarId)
                 }
@@ -230,10 +248,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun checkIfCalendarExists() {
-        if (permissions.all { permission -> PermissionsUtil.checkPermissions(permission, contextOrThrow) }) {
-            isCalendarExist = (CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, courseName = calendarTitle)) != (-1).toLong()
-            binding.switchSync.isChecked = isCalendarExist
-        }
+        isCalendarExist = CalendarUtils.isCalendarExists(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
+        binding.switchSync.isChecked = isCalendarExist
     }
 
     private fun askCalendarPermission() {
@@ -242,7 +258,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
         val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
                 { _: DialogInterface, _: Int ->
-                    PermissionsUtil.requestPermissions(PermissionsUtil.CALENDAR_PERMISSION_REQUEST, permissions, this@CourseDatesPageFragment)
+                    PermissionsUtil.requestPermissions(PermissionsUtil.CALENDAR_PERMISSION_REQUEST, CalendarUtils.permissions, this@CourseDatesPageFragment)
                 },
                 getString(R.string.label_do_not_allow),
                 { _: DialogInterface?, _: Int ->
@@ -284,26 +300,34 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun insertCalendarEvent() {
-        var calendarId: Long = CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, courseName = calendarTitle)
-        calendarId = if (calendarId == (-1).toLong()) {
-            CalendarUtils.createCalendar(context = contextOrThrow, accountName = accountName, courseName = calendarTitle)
-        } else {
-            CalendarUtils.deleteCalendar(context = contextOrThrow, calendarId = calendarId)
-            CalendarUtils.createCalendar(context = contextOrThrow, accountName = accountName, courseName = calendarTitle)
-        }
+        val calendarId: Long = CalendarUtils.createOrUpdateCalendar(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
         // if app unable to create the Calendar for the course
         if (calendarId == (-1).toLong()) {
             Toast.makeText(contextOrThrow, "Error Adding Calendar, Please try later", Toast.LENGTH_SHORT).show()
             binding.switchSync.isChecked = false
             return
         }
+        addOrUpdateEventsInCalendar(calendarId, false)
+    }
 
+    private fun addOrUpdateEventsInCalendar(calendarId: Long, updateEvents: Boolean) {
         val courseDates = viewModel.courseDates.value
+        if (updateEvents) {
+            CalendarUtils.deleteAllCalendarEvents(
+                    context = requireContext(),
+                    calendarId = calendarId
+            )
+        }
         courseDates?.courseDateBlocks?.forEach { courseDateBlock ->
             CalendarUtils.addEventsIntoCalendar(context = contextOrThrow, calendarId = calendarId, courseName = courseData.course.name, courseDateBlock = courseDateBlock)
         }
-        calendarAddedSuccessDialog()
-        trackCalendarEvent(Analytics.Events.CALENDAR_ADD_SUCCESS, Analytics.Values.CALENDAR_ADD_SUCCESS)
+        if (updateEvents) {
+            showCalendarUpdatedSnackbar()
+            trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS)
+        } else {
+            calendarAddedSuccessDialog()
+            trackCalendarEvent(Analytics.Events.CALENDAR_ADD_SUCCESS, Analytics.Values.CALENDAR_ADD_SUCCESS)
+        }
     }
 
     private fun calendarAddedSuccessDialog() {
@@ -336,13 +360,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     private fun deleteCalendar(calendarId: Long) {
         CalendarUtils.deleteCalendar(context = contextOrThrow, calendarId = calendarId)
         isCalendarExist = false
-        showDeleteCalendarSnackbar()
-    }
-
-    private fun showDeleteCalendarSnackbar() {
-        val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
-        snackbarErrorNotification.showError(R.string.message_after_course_calendar_removed,
-                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
+        showCalendarRemovedSnackbar()
         trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_SUCCESS, Analytics.Values.CALENDAR_REMOVE_SUCCESS)
     }
 

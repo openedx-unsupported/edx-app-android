@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.NewRelicEvent;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.util.PermissionsUtil;
 
 import de.greenrobot.event.EventBus;
@@ -133,5 +134,17 @@ public class BaseFragment extends RoboFragment {
         }
 
         return grantedPermissionsCount;
+    }
+
+    public void showCalendarRemovedSnackbar() {
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
+        snackbarErrorNotification.showError(R.string.message_after_course_calendar_removed,
+                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
+    }
+
+    public void showCalendarUpdatedSnackbar() {
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
+        snackbarErrorNotification.showError(R.string.message_after_course_calendar_updated,
+                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
     }
 }

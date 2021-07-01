@@ -289,6 +289,12 @@
     <string name="message_after_course_calendar_added">Your course calendar has been added.</string>
     <!-- Success Message after calendar for course removed -->
     <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">Your course calendar has been updated.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">Your course calendar is out of date</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">Your course dates have been shifted and your course calendar is no longer up to date with your new schedule.</string>
 
     <!-- Label My Courses Graded content Button -->
     <string name="course_value_prop_button">Learn more</string>

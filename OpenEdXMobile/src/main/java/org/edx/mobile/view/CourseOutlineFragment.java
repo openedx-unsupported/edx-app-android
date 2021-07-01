@@ -64,6 +64,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.CourseDateBlock;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -75,12 +76,14 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
 
@@ -135,6 +138,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private CourseOutlineAdapter.DownloadListener downloadListener;
     private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
     private CourseUpgradeResponse courseUpgradeData;
+    private String calendarTitle = "";
+    private String accountName = "";
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId, boolean isVideosMode) {
@@ -167,7 +172,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
-        courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -180,8 +184,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         });
         UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
         restore(bundle);
+        calendarTitle = environment.getConfig().getPlatformName() + " - " + courseData.getCourse().getName();
+        accountName = environment.getLoginPrefs().getCurrentUserProfile().name;
         initListView(view);
-        initObserver();
+        if (isOnCourseOutline) {
+            initObserver();
+        }
         fetchCourseComponent();
         // Track CourseOutline for A/A test
         trackAATestCourseOutline();
@@ -197,6 +205,14 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void initObserver() {
+        courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
+
+        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
+            if (courseDates.getCourseDateBlocks() != null) {
+                courseDates.organiseCourseDates();
+            }
+        });
+
         courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initDatesBanner);
 
         courseDateViewModel.getShowLoader().observe(getViewLifecycleOwner(), flag ->
@@ -207,7 +223,17 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
-                showShiftDateSnackBar(true);
+                if (CalendarUtils.Companion.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
+                    Long calendarId = CalendarUtils.Companion.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
+                    AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
+                            getString(R.string.message_calendar_out_of_date),
+                            getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
+                            getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
+                    alertDialogFragment.setCancelable(false);
+                    alertDialogFragment.show(getChildFragmentManager(), null);
+                } else {
+                    showShiftDateSnackBar(true);
+                }
             }
         });
 
@@ -230,6 +256,29 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 }
             }
         });
+    }
+
+    private void updateCalendarEvents(Long calendarId) {
+        trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
+        CalendarUtils.Companion.deleteAllCalendarEvents(requireContext(), calendarId);
+        if (courseDateViewModel.getCourseDates().getValue() != null) {
+            for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
+                CalendarUtils.Companion.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseData.getCourse().getName(), courseDateBlock);
+            }
+            showCalendarUpdatedSnackbar();
+            trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
+        }
+    }
+
+    private void removeCalendar(Long calendarId) {
+        trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE);
+        CalendarUtils.Companion.deleteCalendar(getContextOrThrow(), calendarId);
+        showCalendarRemovedSnackbar();
+        trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_SUCCESS, Analytics.Values.CALENDAR_REMOVE_SUCCESS);
+    }
+
+    private void trackCalendarEvent(String eventName, String biValue) {
+        environment.getAnalyticsRegistry().trackCalendarEvent(eventName, biValue, courseData.getCourseId(), courseData.getMode(), courseData.getCourse().isSelfPaced());
     }
 
     private void restore(@Nullable Bundle savedInstanceState) {
@@ -657,7 +706,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             getActivity().setTitle(courseComponent.getDisplayName());
         }
         if (!isVideoMode && isOnCourseOutline && canFetchBannerInfo) {
-            courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), swipeContainer.isRefreshing());
+            courseDateViewModel.fetchCourseDates(courseData.getCourseId(), true, swipeContainer.isRefreshing());
             canFetchBannerInfo = false;
         }
 
