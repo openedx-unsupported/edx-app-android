@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/neutralLight">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/ll_content"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:background="@color/neutralLight">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/discussion_recycler_view"
+        <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <include layout="@layout/create_new_item_layout" />
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/discussion_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-    <include
-        layout="@layout/loading_indicator"
-        tools:visibility="visible" />
-</FrameLayout>
+            <include
+                android:id="@+id/create_new_item"
+                layout="@layout/create_new_item_layout" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/loading_indicator"
+            layout="@layout/loading_indicator"
+            tools:visibility="visible" />
+    </FrameLayout>
+</layout>

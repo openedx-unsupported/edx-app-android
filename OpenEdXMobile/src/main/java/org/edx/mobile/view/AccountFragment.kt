@@ -6,11 +6,11 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
 import com.google.inject.Inject
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
-import org.edx.mobile.annotation.Nullable
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.FragmentAccountBinding

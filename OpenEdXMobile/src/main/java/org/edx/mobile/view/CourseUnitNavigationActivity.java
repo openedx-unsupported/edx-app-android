@@ -11,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +23,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
@@ -50,7 +49,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectView;
 
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         BaseCourseUnitVideoFragment.HasComponent, PreLoadingListener {
@@ -61,15 +59,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
-
-    @InjectView(R.id.goto_next)
-    private Button mNextBtn;
-    @InjectView(R.id.goto_prev)
-    private Button mPreviousBtn;
-    @InjectView(R.id.next_unit_title)
-    private TextView mNextUnitLbl;
-    @InjectView(R.id.prev_unit_title)
-    private TextView mPreviousUnitLbl;
 
     @Inject
     private CourseAPI courseApi;
@@ -84,8 +73,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         RelativeLayout insertPoint = (RelativeLayout) findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View v = inflater.inflate(R.layout.view_course_unit_pager, null);
-        insertPoint.addView(v, 0,
+        @NonNull ViewCourseUnitPagerBinding binding = ViewCourseUnitPagerBinding.inflate(inflater, null, false);
+        insertPoint.addView(binding.getRoot(), 0,
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         pager2 = findViewById(R.id.pager2);
@@ -120,8 +109,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         UiUtils.INSTANCE.enforceSingleScrollDirection(pager2);
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-        mPreviousBtn.setOnClickListener(view -> navigatePreviousComponent());
-        mNextBtn.setOnClickListener(view -> navigateNextComponent());
+        getBaseBinding().gotoPrev.setOnClickListener(view -> navigatePreviousComponent());
+        getBaseBinding().gotoNext.setOnClickListener(view -> navigateNextComponent());
 
         if (getIntent() != null) {
             isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
@@ -255,8 +244,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         int curIndex = pager2.getCurrentItem();
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
-        mPreviousBtn.setEnabled(curIndex > 0);
-        mNextBtn.setEnabled(curIndex < pagerAdapter.getItemCount() - 1);
+        getBaseBinding().gotoPrev.setEnabled(curIndex > 0);
+        getBaseBinding().gotoNext.setEnabled(curIndex < pagerAdapter.getItemCount() - 1);
 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
@@ -266,38 +255,38 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (curIndex + 1 <= pagerAdapter.getItemCount() - 1) {
             String nextUnitSubsectionId = unitList.get(curIndex + 1).getParent().getId();
             if (currentSubsectionId.equalsIgnoreCase(nextUnitSubsectionId)) {
-                mNextUnitLbl.setVisibility(View.GONE);
+                getBaseBinding().nextUnitTitle.setVisibility(View.GONE);
             } else {
-                mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
-                mNextUnitLbl.setVisibility(View.VISIBLE);
+                getBaseBinding().nextUnitTitle.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
+                getBaseBinding().nextUnitTitle.setVisibility(View.VISIBLE);
             }
         } else {
             // we have reached the end and next button is disabled
-            mNextUnitLbl.setVisibility(View.GONE);
+            getBaseBinding().nextUnitTitle.setVisibility(View.GONE);
         }
 
         if (curIndex - 1 >= 0) {
             String prevUnitSubsectionId = unitList.get(curIndex - 1).getParent().getId();
             if (currentSubsectionId.equalsIgnoreCase(prevUnitSubsectionId)) {
-                mPreviousUnitLbl.setVisibility(View.GONE);
+                getBaseBinding().prevUnitTitle.setVisibility(View.GONE);
             } else {
-                mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
-                mPreviousUnitLbl.setVisibility(View.VISIBLE);
+                getBaseBinding().prevUnitTitle.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
+                getBaseBinding().prevUnitTitle.setVisibility(View.VISIBLE);
             }
         } else {
             // we have reached the start and previous button is disabled
-            mPreviousUnitLbl.setVisibility(View.GONE);
+            getBaseBinding().prevUnitTitle.setVisibility(View.GONE);
         }
-        if (mPreviousBtn.isEnabled()) {
-            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
+        if (getBaseBinding().gotoPrev.isEnabled()) {
+            getBaseBinding().gotoPrev.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
         } else {
-            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
+            getBaseBinding().gotoPrev.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
         }
 
-        if (mNextBtn.isEnabled()) {
-            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
+        if (getBaseBinding().gotoNext.isEnabled()) {
+            getBaseBinding().gotoNext.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
         } else {
-            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
+            getBaseBinding().gotoNext.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
         }
     }
 

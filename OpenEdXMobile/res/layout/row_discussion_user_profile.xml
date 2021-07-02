@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/discussion_user_profile_row"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
-    android:background="?android:selectableItemBackground"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    tools:showIn="@layout/row_discussion_comments_comment">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="@dimen/discussion_profile_image_diameter"
-        android:layout_height="@dimen/discussion_profile_image_diameter"
-        android:layout_marginEnd="@dimen/discussion_responses_standard_margin"
-        app:srcCompat="@drawable/profile_photo_placeholder" />
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/discussion_user_profile_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:showIn="@layout/row_discussion_comments_comment">
 
-        <TextView
-            android:id="@+id/discussion_author_text_view"
-            style="@style/discussion_regular_text"
-            android:textStyle="bold"
-            tools:text="Brian (Staff)" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="@dimen/discussion_profile_image_diameter"
+            android:layout_height="@dimen/discussion_profile_image_diameter"
+            android:layout_marginEnd="@dimen/discussion_responses_standard_margin"
+            app:srcCompat="@drawable/profile_photo_placeholder" />
 
-        <TextView
-            android:id="@+id/discussion_date_text_view"
-            style="@style/discussion_regular_text"
-            tools:text="10 minutes ago" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/discussion_responses_answer_text_view"
-            style="@style/discussion_regular_text"
-            android:drawablePadding="@dimen/discussion_endorsed_response_icon_padding"
-            android:text="@string/discussion_responses_answer"
-            android:textColor="@color/successLight"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            <TextView
+                android:id="@+id/discussion_author_text_view"
+                style="@style/discussion_regular_text"
+                android:textStyle="bold"
+                tools:text="Brian (Staff)" />
+
+            <TextView
+                android:id="@+id/discussion_date_text_view"
+                style="@style/discussion_regular_text"
+                tools:text="10 minutes ago" />
+
+            <TextView
+                android:id="@+id/discussion_responses_answer_text_view"
+                style="@style/discussion_regular_text"
+                android:drawablePadding="@dimen/discussion_endorsed_response_icon_padding"
+                android:text="@string/discussion_responses_answer"
+                android:textColor="@color/successLight"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>

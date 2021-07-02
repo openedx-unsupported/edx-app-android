@@ -3,20 +3,19 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.databinding.FragmentDiscussionResponsesOrCommentsBinding;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionRequestFields;
@@ -45,18 +44,8 @@ import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import roboguice.RoboGuice;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class CourseDiscussionResponsesFragment extends BaseFragment implements CourseDiscussionResponsesAdapter.Listener {
-
-    @InjectView(R.id.discussion_recycler_view)
-    private RecyclerView discussionResponsesRecyclerView;
-
-    @InjectView(R.id.create_new_item_text_view)
-    private TextView addResponseTextView;
-
-    @InjectView(R.id.create_new_item_layout)
-    private ViewGroup addResponseLayout;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD, optional = true)
     private DiscussionThread discussionThread;
@@ -78,9 +67,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
-    @InjectView(R.id.loading_indicator)
-    private ProgressBar loadingIndicator;
-
     private FullScreenErrorNotification errorNotification;
 
     @Nullable
@@ -90,11 +76,13 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     private ResponsesLoader responsesLoader;
     private Call<DiscussionThread> getThreadCall;
+    private FragmentDiscussionResponsesOrCommentsBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_responses_or_comments, container, false);
+        binding = FragmentDiscussionResponsesOrCommentsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -106,8 +94,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 getThreadCall.cancel();
             }
             getThreadCall = discussionService.getThread(threadId);
-            getThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(getActivity(),
-                    new TaskProgressCallback.ProgressViewController(loadingIndicator), errorNotification) {
+            getThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(requireActivity(),
+                    new TaskProgressCallback.ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification) {
                 @Override
                 protected void onResponse(@NonNull DiscussionThread responseBody) {
                     discussionThread = responseBody;
@@ -130,8 +118,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
                 activity, this, this, discussionThread, courseData);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
-                discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
-        discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
+                binding.discussionRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
+        binding.discussionRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
 
         responsesLoader.freeze();
         if (getAndReadThreadCall != null) {
@@ -152,8 +140,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         });
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
-                addResponseTextView, R.string.discussion_responses_add_response_button,
-                R.string.discussion_add_response_disabled_title, addResponseLayout,
+                binding.createNewItem.createNewItemTextView, R.string.discussion_responses_add_response_button,
+                R.string.discussion_add_response_disabled_title, binding.createNewItem.createNewItemLayout,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -161,7 +149,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                     }
                 });
 
-        addResponseLayout.setEnabled(!courseData.isDiscussionBlackedOut());
+        binding.createNewItem.createNewItemLayout.setEnabled(!courseData.isDiscussionBlackedOut());
         final Map<String, String> values = new HashMap<>();
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
@@ -211,7 +199,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_response_posted));
                 if (!responsesLoader.hasMorePages()) {
                     courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
-                    discussionResponsesRecyclerView.smoothScrollToPosition(
+                    binding.discussionRecyclerView.smoothScrollToPosition(
                             courseDiscussionResponsesAdapter.getItemCount() - 1);
                 } else {
                     // We still need to update the response count locally

@@ -4,19 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.databinding.FragmentDiscussionResponsesOrCommentsBinding;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionRequestFields;
@@ -43,18 +44,8 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class CourseDiscussionCommentsFragment extends BaseFragment implements DiscussionCommentsAdapter.Listener {
-
-    @InjectView(R.id.discussion_recycler_view)
-    private RecyclerView discussionCommentsListView;
-
-    @InjectView(R.id.create_new_item_text_view)
-    private TextView createNewCommentTextView;
-
-    @InjectView(R.id.create_new_item_layout)
-    private ViewGroup createNewCommentLayout;
 
     @Inject
     private Router router;
@@ -90,38 +81,41 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Nullable
     private Call<DiscussionComment> setCommentFlaggedCall;
 
+    private FragmentDiscussionResponsesOrCommentsBinding binding;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_responses_or_comments, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentDiscussionResponsesOrCommentsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this,
+        discussionCommentsAdapter = new DiscussionCommentsAdapter(requireActivity(), this,
                 discussionThread, discussionResponse);
-        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(discussionCommentsListView,
+        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(binding.discussionRecyclerView,
                 discussionCommentsAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
-            @Override
-            public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-                getCommentsList(callback);
-            }
-        });
+                    @Override
+                    public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
+                        getCommentsList(callback);
+                    }
+                });
 
         final int overlap = getResources().getDimensionPixelSize(R.dimen.edx_hairline);
-        discussionCommentsListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+        binding.discussionRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 outRect.set(0, -overlap, 0, 0);
             }
         });
-        discussionCommentsListView.setAdapter(discussionCommentsAdapter);
+        binding.discussionRecyclerView.setAdapter(discussionCommentsAdapter);
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
-                createNewCommentTextView, R.string.discussion_post_create_new_comment,
-                R.string.discussion_add_comment_disabled_title, createNewCommentLayout,
+                binding.createNewItem.createNewItemTextView, R.string.discussion_post_create_new_comment,
+                R.string.discussion_add_comment_disabled_title, binding.createNewItem.createNewItemLayout,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -129,7 +123,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                     }
                 });
 
-        createNewCommentLayout.setEnabled(!courseData.isDiscussionBlackedOut());
+        binding.createNewItem.createNewItemLayout.setEnabled(!courseData.isDiscussionBlackedOut());
     }
 
     protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
@@ -140,7 +134,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
         getCommentsListCall = discussionService.getCommentsList(
                 discussionResponse.getIdentifier(), nextPage, requestedFields);
-        final Activity activity = getActivity();
+        final Activity activity = requireActivity();
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         getCommentsListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionComment>>(activity,
                 null, mCallback, CallTrigger.LOADING_UNCACHED) {
@@ -189,10 +183,10 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (null != event.getParent() && event.getParent().getIdentifier().equals(discussionResponse.getIdentifier())) {
-            ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_comment_posted));
+            ((BaseFragmentActivity) requireActivity()).showInfoMessage(getString(R.string.discussion_comment_posted));
             if (!hasMorePages) {
                 discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
-                discussionCommentsListView.smoothScrollToPosition(discussionCommentsAdapter.getItemCount() - 1);
+                binding.discussionRecyclerView.smoothScrollToPosition(discussionCommentsAdapter.getItemCount() - 1);
             } else {
                 // We still need to update the comment count locally
                 discussionCommentsAdapter.incrementCommentCount();
@@ -215,6 +209,6 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Override
     public void onClickAuthor(@NonNull String username) {
-        router.showUserProfile(getActivity(), username);
+        router.showUserProfile(requireActivity(), username);
     }
 }

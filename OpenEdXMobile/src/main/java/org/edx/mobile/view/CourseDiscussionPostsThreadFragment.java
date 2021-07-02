@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.FragmentDiscussionThreadPostsBinding;
 import org.edx.mobile.discussion.CourseDiscussionInfo;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
@@ -39,6 +38,7 @@ import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,31 +51,9 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
     public static final String ARG_DISCUSSION_HAS_TOPIC_NAME = "discussion_has_topic_name";
-
-    @InjectView(R.id.spinners_container)
-    private ViewGroup spinnersContainerLayout;
-
-    @InjectView(R.id.discussion_posts_filter_spinner)
-    private Spinner discussionPostsFilterSpinner;
-
-    @InjectView(R.id.discussion_posts_sort_spinner)
-    private Spinner discussionPostsSortSpinner;
-
-    @InjectView(R.id.create_new_item_text_view)
-    private TextView createNewPostTextView;
-
-    @InjectView(R.id.create_new_item_layout)
-    private ViewGroup createNewPostLayout;
-
-    @InjectView(R.id.center_message_box)
-    private TextView centerMessageBox;
-
-    @InjectView(R.id.loading_indicator)
-    private ProgressBar loadingIndicator;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
@@ -96,6 +74,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
      */
     @Nullable
     private Runnable populatePostListRunnable;
+    private FragmentDiscussionThreadPostsBinding binding;
 
     private enum EmptyQueryResultsFor {
         FOLLOWING,
@@ -123,11 +102,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_discussion_thread_posts, container, false);
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentDiscussionThreadPostsBinding.inflate(inflater, container, false);
         // Initializing errorNotification here, so that its non-null value can be used in the parent class's `onViewCreated` callback
-        errorNotification = new FullScreenErrorNotification(view.findViewById(R.id.content));
-        return view;
+        errorNotification = new FullScreenErrorNotification(binding.content);
+        return binding.getRoot();
     }
 
     @Override
@@ -140,29 +119,29 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             // Either we are coming from a deep link or courseware's inline discussion
             fetchDiscussionTopic();
         } else {
-            getActivity().setTitle(discussionTopic.getName());
+            requireActivity().setTitle(discussionTopic.getName());
             trackScreenView();
         }
 
-        createNewPostTextView.setText(R.string.discussion_post_create_new_post);
+        binding.createNewItem.createNewItemTextView.setText(R.string.discussion_post_create_new_post);
         Context context = getActivity();
-        UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), createNewPostTextView,
+        UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), binding.createNewItem.createNewItemTextView,
                 R.drawable.ic_add_comment, R.dimen.small_icon_size);
-        createNewPostLayout.setOnClickListener(new View.OnClickListener() {
+        binding.createNewItem.createNewItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);
+                router.showCourseDiscussionAddPost(requireActivity(), discussionTopic, courseData);
             }
         });
 
-        discussionPostsFilterSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
-                discussionPostsFilterSpinner, DiscussionPostsFilter.values(),
+        binding.discussionPostsFilterSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
+                binding.discussionPostsFilterSpinner, DiscussionPostsFilter.values(),
                 R.drawable.ic_filter_alt));
-        discussionPostsSortSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
-                discussionPostsSortSpinner, DiscussionPostsSort.values(),
+        binding.discussionPostsSortSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
+                binding.discussionPostsSortSpinner, DiscussionPostsSort.values(),
                 R.drawable.ic_swap_vert));
 
-        discussionPostsFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.discussionPostsFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(@NonNull AdapterView<?> parent, @NonNull View view, int position, long id) {
                 DiscussionPostsFilter selectedPostsFilter =
@@ -177,7 +156,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             public void onNothingSelected(@NonNull AdapterView<?> parent) {
             }
         });
-        discussionPostsSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.discussionPostsSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(@NonNull AdapterView<?> parent, @NonNull View view, int position, long id) {
                 DiscussionPostsSort selectedPostsSort =
@@ -203,18 +182,22 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         }
     }
 
+    @Override
+    protected ListView getDiscussionPostsListView() {
+        return binding.discussionPostsListview;
+    }
+
     private void fetchDiscussionTopic() {
         String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
-        final Activity activity = getActivity();
+        final Activity activity = requireActivity();
         discussionService.getSpecificCourseTopics(courseData.getCourse().getId(),
                 Collections.singletonList(topicId))
                 .enqueue(new ErrorHandlingCallback<CourseTopics>(activity,
-                        new ProgressViewController(loadingIndicator), errorNotification) {
+                        new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification) {
                     @Override
                     protected void onResponse(@NonNull final CourseTopics courseTopics) {
                         discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
-                        if (activity != null &&
-                                !getArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
+                        if (!requireArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
                             // We only need to set the title here when coming from a deep link
                             activity.setTitle(discussionTopic.getName());
                         }
@@ -303,7 +286,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
             discussionPostsAdapter.insert(newThread, i);
             // move the ListView's scroll to that newly added post's position
-            discussionPostsListView.setSelection(i);
+            binding.discussionPostsListview.setSelection(i);
             // In case this is the first addition, we need to hide the no-item-view
             setScreenStateUponResult();
         }
@@ -325,8 +308,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private void clearListAndLoadFirstPage() {
         nextPage = 1;
-        discussionPostsListView.setVisibility(View.INVISIBLE);
-        centerMessageBox.setVisibility(View.GONE);
+        binding.discussionPostsListview.setVisibility(View.INVISIBLE);
+        binding.centerMessageBox.setVisibility(View.GONE);
         controller.reset();
     }
 
@@ -353,7 +336,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 // Initially we need to show the spinner at the center of the screen. After that,
                 // the ListView will start showing a footer-based loading indicator.
                 nextPage > 1 || isRefreshingSilently ? null :
-                        new ProgressViewController(loadingIndicator),
+                        new ProgressViewController(binding.loadingIndicator.loadingIndicator),
                 // We only require the error to appear if the first server call fails
                 nextPage == 1 ? errorNotification : null) {
             @Override
@@ -410,21 +393,21 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         }
         if (!isAllPostsFilter) {
             resultsText += " " + getString(R.string.forum_no_results_with_filter);
-            spinnersContainerLayout.setVisibility(View.VISIBLE);
+            binding.spinnersContainer.setVisibility(View.VISIBLE);
         } else {
-            spinnersContainerLayout.setVisibility(View.GONE);
+            binding.spinnersContainer.setVisibility(View.GONE);
         }
 
-        centerMessageBox.setText(resultsText);
-        centerMessageBox.setVisibility(View.VISIBLE);
-        discussionPostsListView.setVisibility(View.INVISIBLE);
+        binding.centerMessageBox.setText(resultsText);
+        binding.centerMessageBox.setVisibility(View.VISIBLE);
+        binding.discussionPostsListview.setVisibility(View.INVISIBLE);
     }
 
     private void setScreenStateUponResult() {
         errorNotification.hideError();
-        centerMessageBox.setVisibility(View.GONE);
-        spinnersContainerLayout.setVisibility(View.VISIBLE);
-        discussionPostsListView.setVisibility(View.VISIBLE);
+        binding.centerMessageBox.setVisibility(View.GONE);
+        binding.spinnersContainer.setVisibility(View.VISIBLE);
+        binding.discussionPostsListview.setVisibility(View.VISIBLE);
     }
 
     @NonNull
@@ -477,7 +460,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
                     private void markAsBlackedOut(boolean isBlackedOut) {
                         courseData.setDiscussionBlackedOut(isBlackedOut);
-                        createNewPostLayout.setEnabled(!isBlackedOut);
+                        binding.createNewItem.createNewItemLayout.setEnabled(!isBlackedOut);
                         setCreateNewPostBtnVisibility(View.VISIBLE);
                     }
                 });
@@ -490,9 +473,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
      */
     private void setCreateNewPostBtnVisibility(int visibility) {
         if (discussionTopic != null) {
-            createNewPostLayout.setVisibility(visibility);
+            binding.createNewItem.createNewItemLayout.setVisibility(visibility);
         } else {
-            createNewPostLayout.setVisibility(View.GONE);
+            binding.createNewItem.createNewItemLayout.setVisibility(View.GONE);
         }
     }
 }

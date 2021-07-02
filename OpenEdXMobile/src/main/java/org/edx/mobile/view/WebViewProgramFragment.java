@@ -7,7 +7,6 @@ import android.view.ViewTreeObserver;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,8 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
-import org.edx.mobile.annotation.Nullable;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -28,13 +25,8 @@ import org.edx.mobile.util.links.DefaultActionListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import de.greenrobot.event.EventBus;
-import roboguice.inject.InjectView;
 
 public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
-
-    @Nullable
-    @InjectView(R.id.loading_indicator)
-    private ProgressBar progressWheel;
 
     @Inject
     private IEdxEnvironment environment;
@@ -60,8 +52,8 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (!isSystemUpdatingWebView()) {
-            authWebView.getWebViewClient().setActionListener(new DefaultActionListener(getActivity(),
-                    progressWheel, new DefaultActionListener.EnrollCallback() {
+            getBinding().authWebview.getWebViewClient().setActionListener(new DefaultActionListener(getActivity(),
+                    getBinding().authWebview.getProgressWheel(), new DefaultActionListener.EnrollCallback() {
                 @Override
                 public void onResponse(@NonNull EnrolledCoursesResponse course) {
 
@@ -78,14 +70,14 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
                 }
             }));
 
-            authWebView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
+            getBinding().authWebview.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
                 @Override
                 public void onPageStarted() {
                 }
 
                 @Override
                 public void onPageFinished() {
-                    swipeContainer.setRefreshing(false);
+                    getBinding().swipeContainer.setRefreshing(false);
                     tryEnablingSwipeContainer();
                 }
 
@@ -106,13 +98,13 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             });
 
             tryEnablingSwipeContainer();
-            UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
-            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            UiUtils.INSTANCE.setSwipeRefreshLayoutColors(getBinding().swipeContainer);
+            getBinding().swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     // We already have spinner inside the WebView, so we don't need the SwipeRefreshLayout's spinner
-                    swipeContainer.setEnabled(false);
-                    authWebView.loadUrl(true, authWebView.getWebView().getUrl());
+                    getBinding().swipeContainer.setEnabled(false);
+                    getBinding().authWebview.loadUrl(true, getBinding().authWebview.getWebView().getUrl());
                 }
             });
         }
@@ -129,12 +121,12 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             the underlying WebView has scrolled to its top.
             More info can be found on this SO question: https://stackoverflow.com/q/24658428/1402616
              */
-            swipeContainer.getViewTreeObserver().addOnScrollChangedListener(onScrollChangedListener =
+            getBinding().swipeContainer.getViewTreeObserver().addOnScrollChangedListener(onScrollChangedListener =
                     new ViewTreeObserver.OnScrollChangedListener() {
                         @Override
                         public void onScrollChanged() {
                             if (!tryEnablingSwipeContainer())
-                                swipeContainer.setEnabled(false);
+                                getBinding().swipeContainer.setEnabled(false);
                         }
                     });
         }
@@ -144,7 +136,7 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     public void onStop() {
         super.onStop();
         if (!isSystemUpdatingWebView()) {
-            swipeContainer.getViewTreeObserver().removeOnScrollChangedListener(onScrollChangedListener);
+            getBinding().swipeContainer.getViewTreeObserver().removeOnScrollChangedListener(onScrollChangedListener);
         }
     }
 
@@ -154,8 +146,8 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
         if (!isSystemUpdatingWebView() && refreshOnResume) {
             refreshOnResume = false;
             // Swipe refresh shouldn't work while the page is refreshing
-            swipeContainer.setEnabled(false);
-            authWebView.loadUrl(true, authWebView.getWebView().getUrl());
+            getBinding().swipeContainer.setEnabled(false);
+            getBinding().authWebview.loadUrl(true, getBinding().authWebview.getWebView().getUrl());
         }
         if (isVisible()) {
             environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
@@ -165,8 +157,9 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        getBinding();
         OfflineSupportUtils.setUserVisibleHint(getActivity(), isVisibleToUser,
-                authWebView != null && authWebView.isShowingError());
+                getBinding().authWebview.isShowingError());
     }
 
     @SuppressWarnings("unused")
@@ -174,11 +167,11 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
         if (!isSystemUpdatingWebView() && getActivity() != null) {
             if (!tryEnablingSwipeContainer()) {
                 //Disable swipe functionality and hide the loading view
-                swipeContainer.setEnabled(false);
-                swipeContainer.setRefreshing(false);
+                getBinding().swipeContainer.setEnabled(false);
+                getBinding().swipeContainer.setRefreshing(false);
             }
             OfflineSupportUtils.onNetworkConnectivityChangeEvent(getActivity(), getUserVisibleHint(),
-                    authWebView != null && authWebView.isShowingError());
+                    getBinding().authWebview.isShowingError());
         }
     }
 
@@ -200,18 +193,18 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     }
 
     /**
-     * Tries enabling the {@link #swipeContainer} if certain conditions are met and tells the caller
+     * Tries enabling the swipeContainer if certain conditions are met and tells the caller
      * if it was enabled or not.
      *
-     * @return <code>true</code> if {@link #swipeContainer} was enabled, <code>false</code> otherwise.
+     * @return <code>true</code> if swipeContainer was enabled, <code>false</code> otherwise.
      */
     private boolean tryEnablingSwipeContainer() {
         if (!isSystemUpdatingWebView() && getActivity() != null) {
             if (NetworkUtil.isConnected(getActivity())
-                    && !authWebView.isShowingError()
-                    && progressWheel.getVisibility() != View.VISIBLE
-                    && authWebView.getWebView().getScrollY() == 0) {
-                swipeContainer.setEnabled(true);
+                    && !getBinding().authWebview.isShowingError()
+                    && getBinding().authWebview.getProgressWheel().getVisibility() != View.VISIBLE
+                    && getBinding().authWebview.getWebView().getScrollY() == 0) {
+                getBinding().swipeContainer.setEnabled(true);
                 return true;
             }
         }

@@ -2,17 +2,17 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SearchView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -31,17 +31,12 @@ import org.edx.mobile.util.Version;
 import java.text.ParseException;
 
 import de.greenrobot.event.EventBus;
-import roboguice.inject.InjectView;
 
 import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
 public class MainDashboardActivity extends OfflineSupportBaseActivity
         implements ToolbarCallbacks {
-
-    @NonNull
-    @InjectView(R.id.coordinator_layout)
-    private CoordinatorLayout coordinatorLayout;
 
     @Inject
     NotificationDelegate notificationDelegate;
@@ -138,7 +133,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
      */
     public void onEvent(@NonNull final NewVersionAvailableEvent newVersionAvailableEvent) {
         if (!newVersionAvailableEvent.isConsumed()) {
-            final Snackbar snackbar = Snackbar.make(coordinatorLayout,
+            final Snackbar snackbar = Snackbar.make(getBinding().coordinatorLayout,
                     newVersionAvailableEvent.getNotificationString(this),
                     Snackbar.LENGTH_INDEFINITE);
             if (AppStoreUtils.canUpdate(this)) {

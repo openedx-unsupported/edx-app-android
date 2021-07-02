@@ -2,43 +2,30 @@ package org.edx.mobile.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.ActivitySingleFragmentBaseBinding;
 import org.edx.mobile.view.AuthPanelUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
-import roboguice.inject.InjectView;
-
 public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity implements TaskProcessCallback {
 
     public static final String FIRST_FRAG_TAG = "first_frag";
-
-    @InjectView(R.id.loading_indicator)
-    @Nullable
-    ProgressBar progressSpinner;
-
-    @InjectView(R.id.center_message_box)
-    @Nullable
-    TextView centerMessageBox;
-
-    @InjectView(R.id.toolbar_placeholder)
-    @NonNull
-    View toolbarPlaceholder;
+    private ActivitySingleFragmentBaseBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_fragment_base);
+        binding = ActivitySingleFragmentBaseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         addToolbar();
         super.setToolbarAsActionBar();
     }
@@ -53,9 +40,9 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
      * </p>
      */
     private void addToolbar() {
-        final ViewGroup parent = (ViewGroup) toolbarPlaceholder.getParent();
-        final int index = parent.indexOfChild(toolbarPlaceholder);
-        parent.removeView(toolbarPlaceholder);
+        final ViewGroup parent = (ViewGroup) binding.toolbarPlaceholder.getParent();
+        final int index = parent.indexOfChild(binding.toolbarPlaceholder);
+        parent.removeView(binding.toolbarPlaceholder);
         int toolbarLayoutId = getToolbarLayoutId();
         if (toolbarLayoutId >= 0) {
             final View toolbar = getLayoutInflater().inflate(toolbarLayoutId, parent, false);
@@ -112,15 +99,11 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     }
 
     protected void showLoadingProgress() {
-        if (progressSpinner != null) {
-            progressSpinner.setVisibility(View.VISIBLE);
-        }
+        binding.loadingIndicator.loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     protected void hideLoadingProgress() {
-        if (progressSpinner != null) {
-            progressSpinner.setVisibility(View.GONE);
-        }
+        binding.loadingIndicator.loadingIndicator.setVisibility(View.GONE);
     }
 
     /**
@@ -161,15 +144,15 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     }
 
     protected void showMessageInSitu(String message) {
-        if (centerMessageBox != null) {
-            centerMessageBox.setVisibility(View.VISIBLE);
-            centerMessageBox.setText(message);
-        }
+        binding.centerMessageBox.setVisibility(View.VISIBLE);
+        binding.centerMessageBox.setText(message);
     }
 
     protected void hideMessageInSitu() {
-        if (centerMessageBox != null) {
-            centerMessageBox.setVisibility(View.GONE);
-        }
+        binding.centerMessageBox.setVisibility(View.GONE);
+    }
+
+    public ActivitySingleFragmentBaseBinding getBinding() {
+        return binding;
     }
 }
