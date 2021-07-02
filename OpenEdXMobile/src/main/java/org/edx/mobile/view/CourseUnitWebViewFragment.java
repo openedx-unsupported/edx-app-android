@@ -48,7 +48,6 @@ import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
-import org.edx.mobile.viewModel.ViewModelFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -252,7 +251,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void initObserver() {
-        courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
+        courseDateViewModel = new ViewModelProvider(this).get(CourseDateViewModel.class);
 
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {

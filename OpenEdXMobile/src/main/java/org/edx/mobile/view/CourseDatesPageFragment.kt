@@ -31,7 +31,6 @@ import org.edx.mobile.util.*
 import org.edx.mobile.view.adapters.CourseDatesAdapter
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
-import org.edx.mobile.viewModel.ViewModelFactory
 
 class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.PermissionListener {
 
@@ -94,7 +93,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         permissionListener = this
-        viewModel = ViewModelProvider(this, ViewModelFactory()).get(CourseDateViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(CourseDateViewModel::class.java)
 
         courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
         calendarTitle = "${environment.config.platformName} - ${courseData.course.name}"

@@ -10,8 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            when (modelClass) {
-                CourseDateViewModel::class.java -> CourseDateViewModel() as T
-                else -> throw IllegalArgumentException("Class doesn't exist in ViewModelFactory")
-            }
+        when (modelClass) {
+            CourseDateViewModel::class.java -> CourseDateViewModel() as T
+//            InAppPurchaseViewModel::class.java -> InAppPurchaseViewModel() as T
+            else -> throw IllegalArgumentException("Class doesn't exist in ViewModelFactory")
+        }
 }

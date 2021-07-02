@@ -7,19 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.android.billingclient.api.*
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.databinding.FragmentPaymentsBinding
+import org.edx.mobile.viewModel.InAppPurchaseViewModel
 
 class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
 
+    private lateinit var iapViewModel: InAppPurchaseViewModel
     private lateinit var billingClient: BillingClient
     private lateinit var binding: FragmentPaymentsBinding
     private val TAG = PaymentFragment::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        iapViewModel = ViewModelProvider(this).get(InAppPurchaseViewModel::class.java)
         billingClient = BillingClient.newBuilder(contextOrThrow)
             .setListener(this)
             .enablePendingPurchases()
@@ -64,14 +68,11 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
     }
 
     private fun launchBillingFlow(skuDetail: SkuDetails) {
-        activity?.let { it ->
-            val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
-            billingFlowParamsBuilder.setSkuDetails(skuDetail)
-            billingClient.launchBillingFlow(
-                it,
-                billingFlowParamsBuilder.build()
-            )
-        }
+        val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
+        billingFlowParamsBuilder.setSkuDetails(skuDetail)
+        billingClient.launchBillingFlow(
+            requireActivity(), billingFlowParamsBuilder.build()
+        )
     }
 
     private fun billingClientConnection() {

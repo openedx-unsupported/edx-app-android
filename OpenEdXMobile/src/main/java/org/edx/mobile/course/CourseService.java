@@ -11,14 +11,17 @@ import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.ResetCourseDates;
+import org.edx.mobile.model.iap.BasketResponse;
+import org.edx.mobile.model.iap.CheckoutResponse;
+import org.edx.mobile.model.iap.PaymentExecutionResponse;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.json.JSONObject;
 
@@ -145,6 +148,15 @@ public interface CourseService {
 
     @POST("/api/courseware/celebration/{course_id}")
     Call<Void> updateCoursewareCelebration(@Path("course_id") final String courseId, @Body HashMap<String, Boolean> courseBody);
+
+    @GET("/api/iap/v1/basket/add/")
+    Call<BasketResponse> addToBasket(@Query("sku") final String sku);
+
+    @POST("/api/v2/checkout/")
+    Call<CheckoutResponse> checkoutPayment(@Body HashMap<String, String> paymentCheckout);
+
+    @POST("/api/iap/v1/execute/")
+    Call<PaymentExecutionResponse> executePayments(@Body HashMap<String, String> receipt);
 
     final class BlocksCompletionBody {
         @NonNull String username;

@@ -43,6 +43,9 @@ import org.edx.mobile.model.course.ResetCourseDates;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
+import org.edx.mobile.model.iap.BasketResponse;
+import org.edx.mobile.model.iap.CheckoutResponse;
+import org.edx.mobile.model.iap.PaymentExecutionResponse;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -241,6 +244,23 @@ public class CourseAPI {
         HashMap<String, Boolean> body = new HashMap<>();
         body.put(ApiConstants.FIRST_SECTION_KEY, false);
         return courseService.updateCoursewareCelebration(courseId, body);
+    }
+
+    @NonNull
+    public Call<BasketResponse> addToBasket(@NonNull String sku) {
+        return courseService.addToBasket(sku);
+    }
+
+    @NonNull
+    public Call<CheckoutResponse> checkoutPayment() {
+        HashMap<String, String> paymentCheckout = new HashMap<>();
+        paymentCheckout.put("payment_processor", "android-iap");
+        return courseService.checkoutPayment(paymentCheckout);
+    }
+
+    @NonNull
+    public Call<PaymentExecutionResponse> executePayments(HashMap<String, String> receipt) {
+        return courseService.executePayments(receipt);
     }
 
     public static abstract class GetCourseStructureCallback
