@@ -265,8 +265,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
                 authWebView.loadUrl(true, unit.getBlockUrl());
-                if (CalendarUtils.Companion.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
-                    Long calendarId = CalendarUtils.Companion.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
+                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
+                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
                     AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
                             getString(R.string.message_calendar_out_of_date), getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
                             getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
@@ -317,10 +317,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private void updateCalendarEvents(Long calendarId) {
         trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
-        CalendarUtils.Companion.deleteAllCalendarEvents(requireContext(), calendarId);
+        CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
         if (courseDateViewModel.getCourseDates().getValue() != null) {
             for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
-                CalendarUtils.Companion.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseName, courseDateBlock);
+                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseName, courseDateBlock);
             }
             showCalendarUpdatedSnackbar();
             trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
@@ -329,7 +329,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private void removeCalendar(Long calendarId) {
         trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE);
-        CalendarUtils.Companion.deleteCalendar(getContextOrThrow(), calendarId);
+        CalendarUtils.INSTANCE.deleteCalendar(getContextOrThrow(), calendarId);
         showCalendarRemovedSnackbar();
         trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_SUCCESS, Analytics.Values.CALENDAR_REMOVE_SUCCESS);
     }
