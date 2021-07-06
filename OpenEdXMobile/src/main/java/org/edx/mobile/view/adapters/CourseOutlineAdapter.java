@@ -323,7 +323,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
         viewHolder.rowTitle.setText(unit.getDisplayName());
-        viewHolder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        viewHolder.rowContainer.setBackgroundResource(R.drawable.activated_item_selector);
         viewHolder.rowCompleted.setVisibility(View.INVISIBLE);
         viewHolder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.neutralDark));
 
@@ -371,7 +371,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
         viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
         if (unit.isCompleted() || (isVideoMode && unit.isCompletedForVideos())) {
-            viewHolder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.successXXLight));
+            viewHolder.rowContainer.setBackgroundResource(R.drawable.activated_item_success_selector);
             viewHolder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.successXLight));
             viewHolder.rowCompleted.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_green_check));
             viewHolder.rowCompleted.setVisibility(View.VISIBLE);
@@ -471,7 +471,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         String chapterId = path.get(1) == null ? "" : path.get(1).getDisplayName();
         String sequentialId = path.get(2) == null ? "" : path.get(2).getDisplayName();
 
-        holder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        holder.rowContainer.setBackgroundResource(R.drawable.activated_item_selector);
         holder.rowCompleted.setVisibility(View.INVISIBLE);
         holder.wholeSeparator.setVisibility(View.VISIBLE);
         holder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.neutralDark));
@@ -543,7 +543,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             }
         }
         if (component.isCompleted() || (isVideoMode && component.isCompletedForVideos())) {
-            holder.rowContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.successXXLight));
+            holder.rowContainer.setBackgroundResource(R.drawable.activated_item_success_selector);
             holder.rowCompleted.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_green_check));
             holder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.successXLight));
             holder.rowCompleted.setVisibility(View.VISIBLE);
