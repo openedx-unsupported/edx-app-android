@@ -169,7 +169,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         List<BlockType> allowedBlocks = Arrays.asList(BlockType.PROBLEM, BlockType.OPENASSESSMENT,
                 BlockType.DRAG_AND_DROP_V2, BlockType.WORD_CLOUD);
         if (allowedBlocks.contains(unit.getType())) {
-            setupOpenInBrowserView(R.string.open_in_new_tab_text);
+            setupOpenInBrowserView();
         }
     }
 
@@ -186,27 +186,30 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             authWebView.evaluateJavascript(javascript, value -> {
                 evaluatediFrameJS = true;
                 if (Boolean.parseBoolean(value)) {
-                    setupOpenInBrowserView(R.string.open_in_browser_text);
+                    setupOpenInBrowserView();
                 }
             });
         }
     }
 
-    private void setupOpenInBrowserView(@StringRes int linkTextResId) {
+    private void setupOpenInBrowserView() {
+        @StringRes int linkTextResId = R.string.open_in_browser_text;
         tvOpenBrowser.setVisibility(View.VISIBLE);
 
         String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
                 + getString(linkTextResId) + " " + AppConstants.ICON_PLACEHOLDER;
         SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
 
-        ImageSpan openInNewIcon = new ImageSpan(getContext(), R.drawable.ic_open_in_new);
+        ImageSpan openInNewIcon = new ImageSpan(requireContext(), R.drawable.ic_open_in_new);
         openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf(AppConstants.ICON_PLACEHOLDER),
                 openInBrowserMessage.length(), DynamicDrawableSpan.ALIGN_BASELINE);
 
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NotNull View textView) {
-                BrowserUtil.open(getActivity(), unit.getWebUrl(), true);
+                BrowserUtil.open(getActivity(), unit.getWebUrl(), false);
+                trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_TAPPED,
+                        Analytics.Values.OPEN_IN_BROWSER_BANNER_TAPPED);
             }
 
             @Override
@@ -226,6 +229,14 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
         tvOpenBrowser.setText(openInBrowserSpan);
         tvOpenBrowser.setMovementMethod(LinkMovementMethod.getInstance());
+        trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_DISPLAYED,
+                Analytics.Values.OPEN_IN_BROWSER_BANNER_DISPLAYED);
+    }
+
+    private void trackOpenInBrowserBannerEvent(String eventName, String biValue) {
+        environment.getAnalyticsRegistry().trackOpenInBrowserBannerEvent(eventName, biValue,
+                enrollmentMode, unit.getCourseId(), unit.getBlockId(),
+                unit.getType().toString().toLowerCase(), unit.getWebUrl());
     }
 
     private void fetchDateBannerInfo() {

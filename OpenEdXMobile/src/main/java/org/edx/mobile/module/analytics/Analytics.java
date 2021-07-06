@@ -563,6 +563,17 @@ public interface Analytics {
     void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
                             @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced);
 
+    /**
+     * Track the open in browser banner display.
+     *
+     * @param eventName Name of the event
+     * @param biValue   BiValue of the event
+     */
+    void trackOpenInBrowserBannerEvent(@NonNull String eventName, @NonNull String biValue,
+                                       @NonNull String userType, @NonNull String courseId,
+                                       @NonNull String componentId, @NonNull String componentType,
+                                       @NonNull String openedUrl);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -582,6 +593,9 @@ public interface Analytics {
         String COURSE_ID = "course_id";
         String OPEN_BROWSER = "open_in_browser_url";
         String COMPONENT = "component";
+        String COMPONENT_ID = "component_id";
+        String COMPONENT_TYPE = "component_type";
+        String OPENED_URL = "opened_url";
         String COURSE_SECTION = "course_section";
         String COURSE_SUBSECTION = "course_subsection";
         String NO_OF_VIDEOS = "number_of_videos";
@@ -796,6 +810,9 @@ public interface Analytics {
         String CALENDAR_UPDATE_SUCCESS = "edx.bi.app.calendar.update_success";
         String CALENDAR_SYNC_UPDATE = "edx.bi.app.calendar.sync_update";
         String CALENDAR_SYNC_REMOVE = "edx.bi.app.calendar.sync_remove";
+        // Open in Banner
+        String OPEN_IN_BROWSER_BANNER_DISPLAYED = "edx.bi.app.navigation.component.open_in_browser_banner.displayed";
+        String OPEN_IN_BROWSER_BANNER_TAPPED = "edx.bi.app.navigation.component.open_in_browser_banner.tapped";
     }
 
     interface Screens {
@@ -945,6 +962,9 @@ public interface Analytics {
         String CALENDAR_UPDATE_SUCCESS = "Dates: Calendar Update Dates Success";
         String CALENDAR_SYNC_UPDATE = "Dates: Calendar Sync Update Dates";
         String CALENDAR_SYNC_REMOVE = "Dates: Calendar Sync Remove Calendar";
+        // Open in Banner
+        String OPEN_IN_BROWSER_BANNER_DISPLAYED = "Open in Browser Banner Displayed";
+        String OPEN_IN_BROWSER_BANNER_TAPPED = "Open in Browser Banner Tapped";
     }
 
     /**

@@ -859,6 +859,4 @@
     <string name="open_in_browser_message">This part of the course may work best in a web browser.</string>
     <!-- Open in browser Title -->
     <string name="open_in_browser_text"><u>Open in browser</u></string>
-    <!-- Open in new tab Title -->
-    <string name="open_in_new_tab_text"><u>Open in new tab</u></string>
 </resources>
