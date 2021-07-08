@@ -38,6 +38,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface CourseService {
     /**
@@ -149,8 +150,8 @@ public interface CourseService {
     @POST("/api/courseware/celebration/{course_id}")
     Call<Void> updateCoursewareCelebration(@Path("course_id") final String courseId, @Body HashMap<String, Boolean> courseBody);
 
-    @GET("/api/iap/v1/basket/add/")
-    Call<BasketResponse> addToBasket(@Query("sku") final String sku);
+    @GET("")
+    Call<BasketResponse> addToBasket(@Url final String url);
 
     @POST("/api/v2/checkout/")
     Call<CheckoutResponse> checkoutPayment(@Body HashMap<String, String> paymentCheckout);

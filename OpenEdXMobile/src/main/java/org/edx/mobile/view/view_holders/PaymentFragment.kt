@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import com.android.billingclient.api.*
+import com.google.inject.Inject
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
+import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.FragmentPaymentsBinding
+import org.edx.mobile.logger.Logger
+import org.edx.mobile.model.iap.BasketResponse
+import org.edx.mobile.repositorie.InAppPaymentsRepository
 import org.edx.mobile.viewModel.InAppPurchaseViewModel
 
 class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
@@ -20,10 +25,14 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
     private lateinit var billingClient: BillingClient
     private lateinit var binding: FragmentPaymentsBinding
     private val TAG = PaymentFragment::class.java.simpleName
+    private val logger = Logger(TAG)
+
+    @Inject
+    private lateinit var courseAPI: CourseAPI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        iapViewModel = ViewModelProvider(this).get(InAppPurchaseViewModel::class.java)
+        iapViewModel = InAppPurchaseViewModel(InAppPaymentsRepository(requireContext(), courseAPI))
         billingClient = BillingClient.newBuilder(contextOrThrow)
             .setListener(this)
             .enablePendingPurchases()
@@ -41,12 +50,28 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObserver()
         billingClientConnection()
         binding.btnBuy.setOnClickListener {
             if (billingClient.isReady) {
-                getSkuDetails()
+
+                addToBasket("https://ecommerce-iap.sandbox.edx.org/api/iap/v1/basket/add/?sku=A5B6DBE")
+//                getSkuDetails()
             }
         }
+    }
+
+    private fun initObserver() {
+        iapViewModel.basketResponse.observe(viewLifecycleOwner, object : Observer<BasketResponse> {
+            override fun onChanged(basketResponse: BasketResponse) {
+                logger.debug(basketResponse.toString())
+                binding.tvMessage.text = basketResponse.success
+            }
+        })
+    }
+
+    private fun addToBasket(url: String) {
+        iapViewModel.addToBasket(url)
     }
 
     private fun getSkuDetails() {

@@ -76,7 +76,6 @@ import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.ConfigUtil;
-import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
@@ -520,10 +519,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
 
         if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
-            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
-                    courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
-                    Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
-                    v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourseId()));
+            bannerViewBinding.getRoot().setVisibility(View.VISIBLE);
+//            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
+//                    courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
+//                    Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
+//                    v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourseId()));
             bannerViewBinding.btnBuy.setOnClickListener(v -> startActivity(new Intent(getActivity(), PaymentActivity.class)));
             if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());

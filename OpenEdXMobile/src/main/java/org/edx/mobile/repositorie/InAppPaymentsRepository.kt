@@ -4,14 +4,17 @@ import android.content.Context
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.edx.mobile.course.CourseAPI
+import org.edx.mobile.http.callback.Callback
+import org.edx.mobile.model.iap.BasketResponse
 
 @Singleton
 class InAppPaymentsRepository @Inject constructor(
-    context: Context,
-    courseApi: CourseAPI
+    val context: Context,
+    val courseApi: CourseAPI
 ) {
 
-    companion object {
-        private val TAG = InAppPaymentsRepository::class.java.simpleName
+    fun addToBasket(sku: String, callback: Callback<BasketResponse>) {
+        courseApi.
+        addToBasket(sku).enqueue(callback)
     }
 }

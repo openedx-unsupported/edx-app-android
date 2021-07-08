@@ -680,7 +680,7 @@ public class Config {
 
     public String getOAuthClientId() {
 //        return getString(OAUTH_CLIENT_ID);
-        return "LAbFDVlylloeK8N3FMMtsSXdZTq1CrtZtuS3tWig";
+        return "95AC4a3VFiTBhiiPz8xF8BXPP9XEXoKyBIgNh3Sk";
     }
 
     /**
