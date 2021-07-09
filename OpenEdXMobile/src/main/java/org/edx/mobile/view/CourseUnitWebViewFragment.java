@@ -235,7 +235,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private void trackOpenInBrowserBannerEvent(String eventName, String biValue) {
         environment.getAnalyticsRegistry().trackOpenInBrowserBannerEvent(eventName, biValue,
-                enrollmentMode, unit.getCourseId(), unit.getBlockId(),
+                enrollmentMode, unit.getCourseId(), unit.getId(),
                 unit.getType().toString().toLowerCase(), unit.getWebUrl());
     }
 
