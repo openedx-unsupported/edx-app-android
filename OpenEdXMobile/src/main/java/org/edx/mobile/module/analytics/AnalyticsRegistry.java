@@ -541,4 +541,15 @@ public class AnalyticsRegistry implements Analytics {
             service.trackCalendarEvent(eventName, biValue, courseId, userType, isSelfPaced);
         }
     }
+
+    @Override
+    public void trackOpenInBrowserBannerEvent(@NonNull String eventName, @NonNull String biValue,
+                                              @NonNull String userType, @NonNull String courseId,
+                                              @NonNull String componentId, @NonNull String componentType,
+                                              @NonNull String openedUrl) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserBannerEvent(eventName, biValue, userType, courseId,
+                    componentId, componentType, openedUrl);
+        }
+    }
 }

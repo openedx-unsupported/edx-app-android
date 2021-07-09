@@ -766,4 +766,18 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
+
+    @Override
+    public void trackOpenInBrowserBannerEvent(@NonNull String eventName, @NonNull String biValue,
+                                              @NonNull String userType, @NonNull String courseId,
+                                              @NonNull String componentId, @NonNull String componentType,
+                                              @NonNull String openedUrl) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
+        event.putString(Keys.USER_TYPE, userType);
+        event.putCourseId(courseId);
+        event.putString(Keys.COMPONENT_ID, componentId);
+        event.putString(Keys.COMPONENT_TYPE, componentType);
+        event.putString(Keys.OPENED_URL, openedUrl);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
 }

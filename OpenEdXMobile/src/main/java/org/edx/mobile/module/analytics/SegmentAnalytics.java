@@ -23,6 +23,7 @@ import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -1046,6 +1047,21 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.USER_TYPE, userType);
         aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackOpenInBrowserBannerEvent(@NonNull String eventName, @NonNull String biValue,
+                                              @NonNull String userType, @NonNull String courseId,
+                                              @NonNull String componentId, @NonNull String componentType,
+                                              @NonNull @NotNull String openedUrl) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
+        aEvent.data.putValue(Keys.USER_TYPE, userType);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
+        aEvent.data.putValue(Keys.COMPONENT_TYPE, componentType);
+        aEvent.data.putValue(Keys.OPENED_URL, openedUrl);
         trackSegmentEvent(eventName, aEvent.properties);
     }
 }
