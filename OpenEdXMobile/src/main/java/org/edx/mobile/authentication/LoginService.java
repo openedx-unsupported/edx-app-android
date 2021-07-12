@@ -75,7 +75,9 @@ public interface LoginService {
     Call<AuthResponse> getAccessToken(@Field("grant_type") String grant_type,
                                       @Field("client_id") String client_id,
                                       @Field("username") String username,
-                                      @Field("password") String password);
+                                      @Field("password") String password,
+                                      @Field("client_secret") String client_secret,
+                                      @Field("token_type") String token_type);
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered

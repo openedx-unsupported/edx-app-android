@@ -31,6 +31,7 @@ public final class OauthHeaderRequestInterceptor implements Interceptor {
         final Request.Builder builder = chain.request().newBuilder();
         final String token = loginPrefs.getAuthorizationHeader();
         if (token != null) {
+//            builder.addHeader("Authorization", token);
             builder.addHeader("Authorization", token);
         }
         return chain.proceed(builder.build());

@@ -16,6 +16,7 @@ import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.FragmentPaymentsBinding
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.iap.BasketResponse
+import org.edx.mobile.model.iap.CheckoutResponse
 import org.edx.mobile.repositorie.InAppPaymentsRepository
 import org.edx.mobile.viewModel.InAppPurchaseViewModel
 
@@ -66,7 +67,18 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
             override fun onChanged(basketResponse: BasketResponse) {
                 logger.debug(basketResponse.toString())
                 binding.tvMessage.text = basketResponse.success
+                binding.tvMessage.text =
+                    binding.tvMessage.text as String + " -> " + basketResponse.basketId
+                iapViewModel.checkout(basketResponse.basketId)
             }
+        })
+
+        iapViewModel.checkoutResponse.observe(viewLifecycleOwner, object : Observer<CheckoutResponse>{
+            override fun onChanged(checkoutResponse: CheckoutResponse?) {
+                binding.tvMessage.text =
+                    binding.tvMessage.text as String + " -> " + checkoutResponse.
+            }
+
         })
     }
 

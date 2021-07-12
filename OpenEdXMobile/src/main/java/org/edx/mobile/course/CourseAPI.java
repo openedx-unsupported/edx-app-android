@@ -252,8 +252,9 @@ public class CourseAPI {
     }
 
     @NonNull
-    public Call<CheckoutResponse> checkoutPayment() {
+    public Call<CheckoutResponse> checkoutPayment(String basketId) {
         HashMap<String, String> paymentCheckout = new HashMap<>();
+        paymentCheckout.put("basket_id", basketId);
         paymentCheckout.put("payment_processor", "android-iap");
         return courseService.checkoutPayment(paymentCheckout);
     }
