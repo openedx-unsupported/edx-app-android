@@ -3,10 +3,11 @@ package org.edx.mobile.view.custom;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.UiUtils;

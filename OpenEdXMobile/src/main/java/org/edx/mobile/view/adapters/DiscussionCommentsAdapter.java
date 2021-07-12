@@ -99,8 +99,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             };
         }
 
-        @LayoutRes
-        final int layout;
+        @LayoutRes final int layout;
         if (viewType == RowType.RESPONSE) {
             layout = R.layout.row_discussion_comments_response;
         } else {

@@ -1,12 +1,11 @@
 package org.edx.mobile.view.adapters;
 
-import android.content.Context;
-
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,10 +64,9 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                 throw new IllegalArgumentException(item.getStatus().name());
             }
         }
-        holder.progress
-                .setProgressDrawable(getContext()
-                        .getResources()
-                        .getDrawable(progressDrawable));
+        holder.progress.setProgressDrawable(getContext()
+                .getResources()
+                .getDrawable(progressDrawable));
         if (null == progressText) {
             holder.percent.setVisibility(View.GONE);
         } else {

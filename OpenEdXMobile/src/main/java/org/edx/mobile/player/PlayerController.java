@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -404,7 +403,7 @@ public class PlayerController extends FrameLayout {
 
         long seconds = totalSeconds % 60;
         long minutes = (totalSeconds / 60) % 60;
-        long hours   = totalSeconds / 3600;
+        long hours = totalSeconds / 3600;
 
         mFormatBuilder.setLength(0);
         if (hours > 0) {

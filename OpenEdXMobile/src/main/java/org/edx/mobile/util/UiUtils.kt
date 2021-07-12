@@ -31,17 +31,6 @@ object UiUtils {
     private val TAG = UiUtils::class.java.canonicalName
     private val logger = Logger(UiUtils::class.java)
 
-    fun showMessage(root: View?, message: String?) {
-        if (root == null) {
-            logger.warn("cannot show message, no views available")
-            return
-        }
-        root.findViewById<TextView>(R.id.flying_message)?.let {
-            it.text = message
-            ViewAnimationUtil.showMessageBar(it)
-        } ?: logger.warn("view flying_message not found")
-    }
-
     /**
      * This function is used to return the passed Value in Display Metrics form
      *
@@ -90,9 +79,8 @@ object UiUtils {
         cardView.layoutParams = params
     }
 
-    fun getDrawable(context: Context, @DrawableRes iconResId: Int, resSize: Int): Drawable {
-        return getDrawable(context, iconResId, resSize, 0)
-    }
+    fun getDrawable(context: Context, @DrawableRes iconResId: Int, resSize: Int) =
+        getDrawable(context, iconResId, resSize, 0)
 
     fun getDrawable(
         context: Context,
@@ -105,14 +93,15 @@ object UiUtils {
         return setDrawableSize(context, drawable, resSize)
     }
 
-    fun setDrawableColor(context: Context, drawable: Drawable, colorRes: Int) = drawable
+    private fun setDrawableColor(context: Context, drawable: Drawable, colorRes: Int) = drawable
         .setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
 
     fun setImageViewColor(context: Context, imageView: AppCompatImageView, colorRes: Int) {
         imageView.setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
     }
 
-    fun setDrawableSize(context: Context, drawable: Drawable, resSize: Int): Drawable {
+
+    private fun setDrawableSize(context: Context, drawable: Drawable, resSize: Int): Drawable {
         val bitmap = Bitmap.createBitmap(
             drawable.intrinsicWidth,
             drawable.intrinsicHeight,
@@ -157,14 +146,9 @@ object UiUtils {
         @DrawableRes iconResId: Int,
         resSize: Int,
         colorRes: Int
-    ) = when (colorRes) {
-        0 -> textView.setCompoundDrawables(
-            getDrawable(context, iconResId, resSize), null, null, null
-        )
-        else -> textView.setCompoundDrawables(
-            getDrawable(context, iconResId, resSize, colorRes), null, null, null
-        )
-    }
+    ) = textView.setCompoundDrawables(
+        getDrawable(context, iconResId, resSize, colorRes), null, null, null
+    )
 
     fun setTextViewDrawableEnd(
         context: Context,
@@ -179,14 +163,9 @@ object UiUtils {
         @DrawableRes iconResId: Int,
         resSize: Int,
         colorRes: Int
-    ) = when (colorRes) {
-        0 -> textView.setCompoundDrawables(
-            null, null, getDrawable(context, iconResId, resSize), null
-        )
-        else -> textView.setCompoundDrawables(
-            null, null, getDrawable(context, iconResId, resSize, colorRes), null
-        )
-    }
+    ) = textView.setCompoundDrawables(
+        null, null, getDrawable(context, iconResId, resSize, colorRes), null
+    )
 
     fun getDrawable(context: Context, @DrawableRes drawableId: Int): Drawable {
         return ContextCompat.getDrawable(context, drawableId)!!

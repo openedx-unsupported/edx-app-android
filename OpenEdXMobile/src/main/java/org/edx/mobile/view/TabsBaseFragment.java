@@ -205,19 +205,19 @@ public abstract class TabsBaseFragment extends BaseFragment {
 
     protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
         // Tabs doesn't support `IconDrawable.colorRes` with material theme so use custom view having `ImageView`
-        Drawable iconDrawable = UiUtils.INSTANCE.getDrawable(getContext(), fragmentItem.getIconResId());
-        iconDrawable.setTintList(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
+        Drawable iconDrawable = UiUtils.INSTANCE.getDrawable(requireContext(), fragmentItem.getIconResId());
+        iconDrawable.setTintList(ContextCompat.getColorStateList(requireContext(), TAB_COLOR_SELECTOR_RES));
         iconDrawable.setTintMode(PorterDuff.Mode.SRC_IN);
         final View tabItem = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, null);
         final AppCompatImageView icon = (AppCompatImageView) tabItem.findViewById(R.id.icon);
         int size;
         if (showTitleInTabs()) {
-            size = getContext().getResources().getDimensionPixelSize(R.dimen.edx_small);
+            size = requireContext().getResources().getDimensionPixelSize(R.dimen.edx_small);
             final TextView title = (TextView) tabItem.findViewById(R.id.title);
             title.setText(fragmentItem.getTitle());
-            title.setTextColor(ContextCompat.getColorStateList(getContext(), TAB_COLOR_SELECTOR_RES));
+            title.setTextColor(ContextCompat.getColorStateList(requireContext(), TAB_COLOR_SELECTOR_RES));
         } else {
-            size = getContext().getResources().getDimensionPixelSize(R.dimen.edx_x_large);
+            size = requireContext().getResources().getDimensionPixelSize(R.dimen.edx_x_large);
             // set tab view ids for the course dash board screen for the automation.
             int id;
             if (fragmentItem.getIconResId() == R.drawable.ic_class) {

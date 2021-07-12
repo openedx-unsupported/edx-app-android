@@ -157,7 +157,7 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             swipeContainer.setEnabled(false);
             authWebView.loadUrl(true, authWebView.getWebView().getUrl());
         }
-        if(isVisible()){
+        if (isVisible()) {
             environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
         }
     }

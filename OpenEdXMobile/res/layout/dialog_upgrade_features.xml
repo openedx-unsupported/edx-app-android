@@ -23,7 +23,7 @@
                 android:layout_gravity="end"
                 android:scaleType="center"
                 app:srcCompat="@drawable/ic_close"
-                app:tint="@color/primaryDarkColor" />
+                app:tint="@color/primaryBaseColor" />
 
             <TextView
                 android:id="@+id/dialog_title"

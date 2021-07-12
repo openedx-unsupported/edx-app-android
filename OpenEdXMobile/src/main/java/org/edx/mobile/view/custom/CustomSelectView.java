@@ -3,11 +3,12 @@ package org.edx.mobile.view.custom;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.UiUtils;

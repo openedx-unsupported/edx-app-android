@@ -35,8 +35,8 @@
             android:gravity="top|center_horizontal"
             android:orientation="vertical"
             android:paddingStart="@dimen/edx_margin"
-            android:paddingEnd="@dimen/edx_margin"
-            android:paddingTop="@dimen/edx_margin">
+            android:paddingTop="@dimen/edx_margin"
+            android:paddingEnd="@dimen/edx_margin">
 
             <TextView
                 android:id="@+id/title"
@@ -54,9 +54,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="@dimen/widget_margin"
+                android:scrollbars="vertical"
                 android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base"
-                android:scrollbars = "vertical"
                 tools:text="This is the description." />
         </LinearLayout>
     </LinearLayout>

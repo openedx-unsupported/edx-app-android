@@ -1,12 +1,12 @@
 package org.edx.mobile.view;
 
-import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -105,7 +105,7 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
         } else {
             view.findViewById(R.id.content_error).setVisibility(View.VISIBLE);
             final AppCompatImageView ivContentError = view.findViewById(R.id.content_error_icon);
-            ivContentError.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_error));
+            ivContentError.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_error));
             tvContentError.setText(getString(R.string.error_unknown));
             btnContentErrorAction.setVisibility(View.VISIBLE);
             btnContentErrorAction.setText(R.string.lbl_reload);

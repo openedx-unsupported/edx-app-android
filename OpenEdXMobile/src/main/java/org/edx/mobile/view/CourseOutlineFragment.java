@@ -587,7 +587,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             final MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.delete_contextual_menu, menu);
             menu.findItem(R.id.item_delete).setIcon(
-                    UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_delete, R.dimen.action_bar_icon_size)
+                    UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_delete, R.dimen.action_bar_icon_size)
             );
             mode.setTitle(R.string.delete_videos_title);
             return true;

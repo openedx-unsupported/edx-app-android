@@ -60,7 +60,7 @@
             android:contentDescription="@string/share_accomplishment_button"
             android:padding="@dimen/widget_margin"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/abc_ic_menu_share_mtrl_alpha"
+            app:srcCompat="@drawable/ic_share"
             app:tint="@color/primaryBaseColor" />
     </LinearLayout>
 </layout>

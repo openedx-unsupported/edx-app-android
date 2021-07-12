@@ -80,7 +80,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         inflater.inflate(R.menu.my_courses, menu);
         menu.findItem(R.id.menu_item_account).setVisible(true);
         menu.findItem(R.id.menu_item_account).setIcon(
-                UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_settings,
+                UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_settings,
                         R.dimen.action_bar_icon_size));
     }
 

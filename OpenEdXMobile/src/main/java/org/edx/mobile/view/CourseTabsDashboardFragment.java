@@ -290,10 +290,10 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             items.add(new FragmentItemModel(CourseDatesPageFragment.class,
                     getResources().getString(R.string.course_dates_title), R.drawable.ic_event,
                     CourseDatesPageFragment.makeArguments(courseData), () -> {
-                        analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
-                                courseData.getCourse().getId(), null);
-                        setDownloadProgressMenuItemVisibility(false);
-                    }));
+                analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
+                        courseData.getCourse().getId(), null);
+                setDownloadProgressMenuItemVisibility(false);
+            }));
         }
         // Add additional resources tab
         items.add(new FragmentItemModel(ResourcesFragment.class,

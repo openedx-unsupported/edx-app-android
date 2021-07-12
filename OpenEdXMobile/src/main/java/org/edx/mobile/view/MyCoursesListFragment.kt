@@ -139,16 +139,14 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             binding.loadingIndicator.root.visibility = View.VISIBLE
             errorNotification.hideError()
         }
-        enrolledCoursesCall = if (fromCache) courseAPI.enrolledCoursesFromCache else courseAPI.enrolledCourses
+        enrolledCoursesCall =
+            if (fromCache) courseAPI.enrolledCoursesFromCache else courseAPI.enrolledCourses
         getUserEnrolledCourses(fromCache)
     }
 
     private fun getUserEnrolledCourses(fromCache: Boolean = false) {
         enrolledCoursesCall.enqueue(object : Callback<List<EnrolledCoursesResponse>> {
-            override fun onResponse(
-                call: Call<List<EnrolledCoursesResponse>>,
-                response: Response<List<EnrolledCoursesResponse>>
-            ) {
+            override fun onResponse(call: Call<List<EnrolledCoursesResponse>>, response: Response<List<EnrolledCoursesResponse>>) {
                 if (response.isSuccessful && response.code() == HttpStatus.OK) {
                     populateCourseData(ArrayList(response.body()), isCachedData = fromCache)
                     // Fetch latest data from server in the background after displaying previously cached data
@@ -161,8 +159,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 } else {
                     when {
                         response.code() == HttpStatus.UNAUTHORIZED && context != null -> {
-                            environment.router?.forceLogout(
-                                context,
+                            environment.router?.forceLogout(context,
                                 environment.analyticsRegistry,
                                 environment.notificationDelegate
                             )
@@ -188,8 +185,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     fromCache -> loadData(showProgress = true, fromCache = false)
                     else -> {
                         if (t is AuthException || (t is HttpStatusException && t.statusCode == HttpStatus.UNAUTHORIZED)) {
-                            environment.router?.forceLogout(
-                                context,
+                            environment.router?.forceLogout(context,
                                 environment.analyticsRegistry,
                                 environment.notificationDelegate
                             )
@@ -204,10 +200,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     }
 
-    private fun populateCourseData(
-        data: ArrayList<EnrolledCoursesResponse>,
-        isCachedData: Boolean = false
-    ) {
+    private fun populateCourseData(data: ArrayList<EnrolledCoursesResponse>, isCachedData: Boolean = false) {
         if (isCachedData.not()) {
             updateDatabaseAfterDownload(data)
         }
@@ -238,8 +231,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 //then activate all videos
                 if (list[i].isIs_active) {
                     //update all videos for a course fetched in the API as Activated
-                    environment.database?.updateVideosActivatedForCourse(
-                        list[i].course.id,
+                    environment.database?.updateVideosActivatedForCourse(list[i].course.id,
                         dataCallback
                     )
                 } else {

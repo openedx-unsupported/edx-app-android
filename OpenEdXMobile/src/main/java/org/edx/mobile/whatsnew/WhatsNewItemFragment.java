@@ -49,11 +49,10 @@ public class WhatsNewItemFragment extends BaseFragment {
         binding.message.setText(escapePlatformName(model.getMessage()));
         binding.message.setMovementMethod(new ScrollingMovementMethod());
 
-        @DrawableRes
-        final int imageRes = UiUtils.INSTANCE.getDrawable(getContext(), model.getImage());
+        @DrawableRes final int imageRes = UiUtils.INSTANCE.getDrawable(requireContext(), model.getImage());
         binding.image.setImageResource(imageRes);
         // We need different scale types for portrait and landscape images
-        final Drawable drawable = UiUtils.INSTANCE.getDrawable(getContext(), imageRes);
+        final Drawable drawable = UiUtils.INSTANCE.getDrawable(requireContext(), imageRes);
         if (drawable != null) {
             if (drawable.getIntrinsicHeight() > drawable.getIntrinsicWidth()) {
                 binding.image.setScaleType(AppCompatImageView.ScaleType.FIT_END);

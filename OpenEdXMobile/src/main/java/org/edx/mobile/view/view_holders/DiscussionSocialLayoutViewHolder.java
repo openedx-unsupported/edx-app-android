@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;

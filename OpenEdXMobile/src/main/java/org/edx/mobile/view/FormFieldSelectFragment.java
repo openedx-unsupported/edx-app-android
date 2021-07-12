@@ -97,7 +97,7 @@ public class FormFieldSelectFragment extends BaseFragment {
                             "current_location",
                             locale.getDisplayCountry(),
                             locale.getCountry(),
-                            R.drawable.ic_push_pin);
+                            R.drawable.ic_place);
                     break;
                 }
                 case LANGUAGE: {

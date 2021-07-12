@@ -1,7 +1,8 @@
 package org.edx.mobile.view.view_holders;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
+
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;

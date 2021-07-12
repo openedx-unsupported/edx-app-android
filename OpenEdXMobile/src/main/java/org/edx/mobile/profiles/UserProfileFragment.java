@@ -221,7 +221,7 @@ public class UserProfileFragment
                 viewHolder.contentError.getRoot().setVisibility(View.VISIBLE);
                 if (errorIconResId != 0) {
                     viewHolder.contentError.contentErrorIcon.setImageDrawable(
-                            UiUtils.INSTANCE.getDrawable(getContext(), errorIconResId));
+                            UiUtils.INSTANCE.getDrawable(requireContext(), errorIconResId));
                 }
                 viewHolder.contentError.contentErrorText.setText(ErrorUtils.getErrorMessage(error, getContext()));
                 viewHolder.contentError.contentErrorAction.setText(R.string.lbl_reload);
