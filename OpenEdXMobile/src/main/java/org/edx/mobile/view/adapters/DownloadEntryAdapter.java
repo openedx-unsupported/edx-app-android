@@ -1,10 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +7,11 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;

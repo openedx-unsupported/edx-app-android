@@ -1,5 +1,6 @@
 package org.edx.mobile.view.adapters;
 
+import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ public class DiscussionReportViewHolder {
         int reportStringResId = isReported ? R.string.discussion_responses_reported_label :
                 R.string.discussion_responses_report_label;
         reportTextView.setText(reportTextView.getResources().getString(reportStringResId));
-        reportIconImageView.setColorFilter(ContextCompat.getColor(reportIconImageView.getContext(), R.color.infoBase), android.graphics.PorterDuff.Mode.SRC_IN);
+        reportIconImageView.setColorFilter(ContextCompat.getColor(reportIconImageView.getContext(), R.color.infoBase), PorterDuff.Mode.SRC_IN);
     }
 
     public boolean toggleReported() {

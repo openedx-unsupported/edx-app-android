@@ -40,7 +40,7 @@ object UiUtils {
     fun getParamsInDP(r: Resources, point: Int): Float {
         try {
             return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, point.toFloat(), r.displayMetrics
+                    TypedValue.COMPLEX_UNIT_DIP, point.toFloat(), r.displayMetrics
             )
         } catch (e: Exception) {
             logger.error(e)
@@ -80,32 +80,26 @@ object UiUtils {
     }
 
     fun getDrawable(context: Context, @DrawableRes iconResId: Int, resSize: Int) =
-        getDrawable(context, iconResId, resSize, 0)
+            getDrawable(context, iconResId, resSize, 0)
 
-    fun getDrawable(
-        context: Context,
-        @DrawableRes iconResId: Int,
-        resSize: Int,
-        colorRes: Int
-    ): Drawable {
+    fun getDrawable(context: Context, @DrawableRes iconResId: Int, resSize: Int, colorRes: Int): Drawable {
         val drawable = getDrawable(context, iconResId).mutate()
         if (colorRes != 0) setDrawableColor(context, drawable, colorRes)
-        return setDrawableSize(context, drawable, resSize)
+        return if (resSize != 0) setDrawableSize(context, drawable, resSize) else drawable
     }
 
     private fun setDrawableColor(context: Context, drawable: Drawable, colorRes: Int) = drawable
-        .setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
+            .setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
 
     fun setImageViewColor(context: Context, imageView: AppCompatImageView, colorRes: Int) {
         imageView.setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
     }
 
-
     private fun setDrawableSize(context: Context, drawable: Drawable, resSize: Int): Drawable {
         val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
@@ -122,12 +116,12 @@ object UiUtils {
             return
         }
         val anim = RotateAnimation(
-            0.0f,
-            360.0f,
-            android.view.animation.Animation.RELATIVE_TO_SELF,
-            0.5f,
-            android.view.animation.Animation.RELATIVE_TO_SELF,
-            0.5f
+                0.0f,
+                360.0f,
+                android.view.animation.Animation.RELATIVE_TO_SELF,
+                0.5f,
+                android.view.animation.Animation.RELATIVE_TO_SELF,
+                0.5f
         )
         anim.interpolator = LinearInterpolator()
         anim.repeatCount = android.view.animation.Animation.INFINITE
@@ -135,37 +129,17 @@ object UiUtils {
         imageView.startAnimation(anim)
     }
 
-    fun setTextViewDrawableStart(
-        context: Context, textView: TextView, @DrawableRes iconResId: Int,
-        resSize: Int
-    ) = setTextViewDrawableStart(context, textView, iconResId, resSize, 0);
+    fun setTextViewDrawableStart(context: Context, textView: TextView, @DrawableRes iconResId: Int, resSize: Int) =
+            setTextViewDrawableStart(context, textView, iconResId, resSize, 0)
 
-    fun setTextViewDrawableStart(
-        context: Context,
-        textView: TextView,
-        @DrawableRes iconResId: Int,
-        resSize: Int,
-        colorRes: Int
-    ) = textView.setCompoundDrawables(
-        getDrawable(context, iconResId, resSize, colorRes), null, null, null
-    )
+    fun setTextViewDrawableStart(context: Context, textView: TextView, @DrawableRes iconResId: Int, resSize: Int, colorRes: Int) =
+            textView.setCompoundDrawables(getDrawable(context, iconResId, resSize, colorRes), null, null, null)
 
-    fun setTextViewDrawableEnd(
-        context: Context,
-        textView: TextView,
-        @DrawableRes iconResId: Int,
-        resSize: Int
-    ) = setTextViewDrawableEnd(context, textView, iconResId, resSize, 0)
+    fun setTextViewDrawableEnd(context: Context, textView: TextView, @DrawableRes iconResId: Int, resSize: Int) =
+            setTextViewDrawableEnd(context, textView, iconResId, resSize, 0)
 
-    fun setTextViewDrawableEnd(
-        context: Context,
-        textView: TextView,
-        @DrawableRes iconResId: Int,
-        resSize: Int,
-        colorRes: Int
-    ) = textView.setCompoundDrawables(
-        null, null, getDrawable(context, iconResId, resSize, colorRes), null
-    )
+    fun setTextViewDrawableEnd(context: Context, textView: TextView, @DrawableRes iconResId: Int, resSize: Int, colorRes: Int) =
+            textView.setCompoundDrawables(null, null, getDrawable(context, iconResId, resSize, colorRes), null)
 
     fun getDrawable(context: Context, @DrawableRes drawableId: Int): Drawable {
         return ContextCompat.getDrawable(context, drawableId)!!
@@ -174,8 +148,8 @@ object UiUtils {
     @DrawableRes
     fun getDrawable(context: Context, drawableName: String): Int {
         return context.resources.getIdentifier(
-            drawableName, "drawable",
-            context.packageName
+                drawableName, "drawable",
+                context.packageName
         )
     }
 
@@ -186,8 +160,8 @@ object UiUtils {
      */
     fun setSwipeRefreshLayoutColors(swipeRefreshLayout: SwipeRefreshLayout) {
         swipeRefreshLayout.setColorSchemeResources(
-            R.color.primaryDarkColor,
-            R.color.neutralBlack
+                R.color.primaryDarkColor,
+                R.color.neutralBlack
         )
     }
 
@@ -198,7 +172,7 @@ object UiUtils {
      */
     fun restartFragment(fragment: Fragment?) {
         fragment?.requireFragmentManager()?.beginTransaction()?.detach(fragment)?.attach(fragment)
-            ?.commitAllowingStateLoss()
+                ?.commitAllowingStateLoss()
     }
 
     /**
@@ -213,7 +187,7 @@ object UiUtils {
             val fragment = fragmentManager.findFragmentByTag(tag)
             fragment?.let {
                 fragmentManager.beginTransaction().remove(fragment)
-                    .commitAllowingStateLoss()
+                        .commitAllowingStateLoss()
             }
         }
     }

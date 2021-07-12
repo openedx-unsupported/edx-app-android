@@ -1,13 +1,13 @@
 package org.edx.mobile.view.adapters;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.SubjectItemBinding;

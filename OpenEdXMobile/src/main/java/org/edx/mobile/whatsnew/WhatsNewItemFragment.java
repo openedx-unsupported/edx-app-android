@@ -1,17 +1,17 @@
 package org.edx.mobile.whatsnew;
 
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.databinding.DataBindingUtil;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;

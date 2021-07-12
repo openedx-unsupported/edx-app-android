@@ -67,8 +67,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 iconColor = (discussionThread.isRead() ? neutral_x_dark : primaryBaseColor);
             }
             holder.discussionPostTypeIcon.setImageDrawable(UiUtils.INSTANCE
-                    .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId));
-            holder.discussionPostTypeIcon.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+                    .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId, 0, iconColor));
         }
 
         {

@@ -1,5 +1,10 @@
 package org.edx.mobile.whatsnew;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -7,11 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -75,7 +75,8 @@ public class WhatsNewFragment extends BaseFragment {
     private void initViewPager() {
         try {
             final String whatsNewJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.whats_new);
-            final Type type = new TypeToken<List<WhatsNewModel>>() {}.getType();
+            final Type type = new TypeToken<List<WhatsNewModel>>() {
+            }.getType();
             final List<WhatsNewModel> whatsNewModels = new Gson().fromJson(whatsNewJson, type);
             final List<WhatsNewItemModel> items = WhatsNewUtil.getWhatsNewItems(BuildConfig.VERSION_NAME, whatsNewModels);
             if (items == null) {

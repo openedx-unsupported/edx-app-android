@@ -146,7 +146,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
         Context context = getActivity();
-        UiUtils.INSTANCE.setTextViewDrawableStart(context, createNewPostTextView,
+        UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), createNewPostTextView,
                 R.drawable.ic_add_comment, R.dimen.small_icon_size);
         createNewPostLayout.setOnClickListener(new View.OnClickListener() {
             @Override

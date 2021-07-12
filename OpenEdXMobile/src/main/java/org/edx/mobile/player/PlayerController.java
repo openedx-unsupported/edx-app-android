@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -925,12 +926,12 @@ public class PlayerController extends FrameLayout {
             if (isSettingEnabled) {
                 mSettingsButton.setColorFilter(
                         ContextCompat.getColor(mSettingsButton.getContext(), R.color.accentAColor),
-                        android.graphics.PorterDuff.Mode.SRC_IN
+                        PorterDuff.Mode.SRC_IN
                 );
             } else {
                 mSettingsButton.setColorFilter(
                         ContextCompat.getColor(mSettingsButton.getContext(), R.color.white),
-                        android.graphics.PorterDuff.Mode.SRC_IN
+                        PorterDuff.Mode.SRC_IN
                 );
             }
         }

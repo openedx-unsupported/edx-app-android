@@ -98,8 +98,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         {
             final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
             header.setText(R.string.forum_post_i_am_following);
-            Context context = getActivity();
-            UiUtils.INSTANCE.setTextViewDrawableStart(context, header, R.drawable.ic_star_rate,
+            UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), header, R.drawable.ic_star_rate,
                     R.dimen.edx_base, R.color.primaryBaseColor);
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);
