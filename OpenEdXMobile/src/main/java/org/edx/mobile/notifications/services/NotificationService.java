@@ -1,5 +1,6 @@
 package org.edx.mobile.notifications.services;
 
+import com.appboy.AppboyFirebaseMessagingService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -22,7 +23,11 @@ public class NotificationService extends FirebaseMessagingService {
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
 
         if (environment.getConfig().areFirebasePushNotificationsEnabled()) {
-            PushLinkManager.INSTANCE.onFCMForegroundNotificationReceived(remoteMessage);
+            if (AppboyFirebaseMessagingService.isBrazePushNotification(remoteMessage)) {
+                AppboyFirebaseMessagingService.handleBrazeRemoteMessage(this, remoteMessage);
+            } else {
+                PushLinkManager.INSTANCE.onFCMForegroundNotificationReceived(remoteMessage);
+            }
         }
     }
 }

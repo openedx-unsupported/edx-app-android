@@ -13,6 +13,7 @@ import com.segment.analytics.Analytics.Builder;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+import com.segment.analytics.android.integrations.appboy.AppboyIntegration;
 import com.segment.analytics.android.integrations.firebase.FirebaseIntegration;
 import com.segment.analytics.integrations.BasePayload;
 import com.segment.analytics.integrations.Integration;
@@ -72,6 +73,8 @@ public class SegmentAnalytics implements Analytics {
                         chain.proceed(newPayload);
                     });
         }
+        if (config.getBrazeConfig().isEnabled() && config.getFirebaseConfig().isEnabled())
+            builder = builder.use(AppboyIntegration.FACTORY);
         tracker = builder.build();
     }
 

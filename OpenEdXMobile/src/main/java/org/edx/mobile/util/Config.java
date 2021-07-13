@@ -475,6 +475,9 @@ public class Config {
         @SerializedName("CLOUD_MESSAGING_ENABLED")
         private boolean mCloudMessagingEnabled;
 
+        @SerializedName("PROJECT_NUMBER")
+        private String mProjectNumber;
+
         public enum AnalyticsSource {
             @SerializedName("segment")
             SEGMENT,
@@ -496,6 +499,10 @@ public class Config {
             return mEnabled && mAnalyticsSource == AnalyticsSource.FIREBASE;
         }
 
+        public String getProjectNumber() {
+            return mProjectNumber;
+        }
+
         public boolean areNotificationsEnabled() {
             return mEnabled && mCloudMessagingEnabled;
         }
@@ -505,23 +512,15 @@ public class Config {
         @SerializedName("ENABLED")
         private boolean enabled;
 
-        @SerializedName("API_KEY")
-        private String apiKey;
-
-        @SerializedName("END_POINT_KEY")
-        private String endPointKey;
-
+        @SerializedName("PUSH_NOTIFICATIONS_ENABLED")
+        private boolean mPushNotificationsEnabled;
 
         public boolean isEnabled() {
             return enabled;
         }
 
-        public String getApiKey() {
-            return apiKey;
-        }
-
-        public String getEndPointKey() {
-            return endPointKey;
+        public boolean isPushNotificationsEnabled() {
+            return mPushNotificationsEnabled;
         }
     }
 
