@@ -468,7 +468,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     return false;
                 }
                 final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) view.findViewById(R.id.bulk_download);
-                if (bulkDownloadIcon != null && (Integer) bulkDownloadIcon.getTag() == R.drawable.ic_download_done) {
+                if (bulkDownloadIcon != null && bulkDownloadIcon.getTag() != null &&
+                        (Integer) bulkDownloadIcon.getTag() == R.drawable.ic_download_done) {
                     ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
                     listView.setItemChecked(position, true);
                     return true;
@@ -611,8 +612,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     final View rowView = listView.getChildAt(checkedItemPosition - listView.getFirstVisiblePosition());
                     if (rowView != null) {
                         // rowView will be null, if the user scrolls away from the checked item
-                        ((AppCompatImageView) rowView.findViewById(R.id.bulk_download)).setImageDrawable(
-                                UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_download));
+                        final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) rowView.findViewById(R.id.bulk_download);
+                        bulkDownloadIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_download));
+                        bulkDownloadIcon.setTag(R.drawable.ic_download);
                     }
 
                     final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(checkedItemPosition);
