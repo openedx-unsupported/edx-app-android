@@ -213,6 +213,6 @@ object UiUtils {
     }
 
     enum class Animation(val value: String) {
-        ROTATION("rotation"), NONE("none");
+        ROTATION("rotation"), NONE("none")
     }
 }

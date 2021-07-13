@@ -139,8 +139,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             binding.loadingIndicator.root.visibility = View.VISIBLE
             errorNotification.hideError()
         }
-        enrolledCoursesCall =
-                if (fromCache) courseAPI.enrolledCoursesFromCache else courseAPI.enrolledCourses
+        enrolledCoursesCall = if (fromCache) courseAPI.enrolledCoursesFromCache else courseAPI.enrolledCourses
         getUserEnrolledCourses(fromCache)
     }
 
@@ -161,8 +160,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         response.code() == HttpStatus.UNAUTHORIZED && context != null -> {
                             environment.router?.forceLogout(context,
                                     environment.analyticsRegistry,
-                                    environment.notificationDelegate
-                            )
+                                    environment.notificationDelegate)
                         }
                         response.code() == HttpStatus.UPGRADE_REQUIRED -> {
                             context?.let { context ->
@@ -187,8 +185,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         if (t is AuthException || (t is HttpStatusException && t.statusCode == HttpStatus.UNAUTHORIZED)) {
                             environment.router?.forceLogout(context,
                                     environment.analyticsRegistry,
-                                    environment.notificationDelegate
-                            )
+                                    environment.notificationDelegate)
                         } else if (adapter.isEmpty) {
                             showError(t)
                             invalidateView()
@@ -210,10 +207,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         addFindCoursesFooter()
         adapter.notifyDataSetChanged()
         if (adapter.isEmpty && !isCourseDiscoveryEnabled(environment)) {
-            errorNotification.showError(
-                    R.string.no_courses_to_display,
-                    R.drawable.ic_error, 0, null
-            )
+            errorNotification.showError(R.string.no_courses_to_display,
+                    R.drawable.ic_error, 0, null)
             binding.myCourseList.visibility = View.GONE
         } else {
             binding.myCourseList.visibility = View.VISIBLE
@@ -231,9 +226,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 //then activate all videos
                 if (list[i].isIs_active) {
                     //update all videos for a course fetched in the API as Activated
-                    environment.database?.updateVideosActivatedForCourse(list[i].course.id,
-                            dataCallback
-                    )
+                    environment.database?.updateVideosActivatedForCourse(list[i].course.id, dataCallback)
                 } else {
                     list.removeAt(i)
                 }

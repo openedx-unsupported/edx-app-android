@@ -81,10 +81,7 @@ class DataBindingHelperUtils {
                     }
 
                     if (item.title.isNotBlank()) childView.title.visibility = View.VISIBLE
-                    childView.title.setText(
-                            TextUtils.concat(labelType, title),
-                            TextView.BufferType.SPANNABLE
-                    )
+                    childView.title.setText(TextUtils.concat(labelType, title), TextView.BufferType.SPANNABLE)
                     isViewAccessible(childView.title, item.dateBlockBadge)
 
                     setSpanText(childView.description, item.description)
@@ -110,10 +107,7 @@ class DataBindingHelperUtils {
             bulletView.bringToFront()
             when (type) {
                 CourseDateType.PAST_DUE -> {
-                    bulletView.background = ContextCompat.getDrawable(
-                            bulletView.context,
-                            R.drawable.black_border_gray_circle
-                    )
+                    bulletView.background = ContextCompat.getDrawable(bulletView.context, R.drawable.black_border_gray_circle)
                 }
                 CourseDateType.BLANK,
                 CourseDateType.COMPLETED,
@@ -123,12 +117,9 @@ class DataBindingHelperUtils {
                 CourseDateType.VERIFIED_ONLY -> {
                     if (isDatePast && (type == CourseDateType.VERIFIED_ONLY).not()) {
                         bulletView.background = ContextCompat.getDrawable(
-                                bulletView.context,
-                                R.drawable.black_border_white_circle
-                        )
+                                bulletView.context, R.drawable.black_border_white_circle)
                     } else {
-                        bulletView.background =
-                                ContextCompat.getDrawable(bulletView.context, R.drawable.black_circle)
+                        bulletView.background = ContextCompat.getDrawable(bulletView.context, R.drawable.black_circle)
                     }
                 }
             }
@@ -136,7 +127,8 @@ class DataBindingHelperUtils {
 
         @JvmStatic
         @BindingAdapter("binding:badge", "binding:dateBlockItems", "binding:badgeAdded", requireAll = false)
-        fun setBadge(textView: TextView, dateBlock: CourseDateBlock, dateBlockItems: ArrayList<CourseDateBlock>?, parentBadgeAdded: Boolean = false) {
+        fun setBadge(textView: TextView, dateBlock: CourseDateBlock, dateBlockItems: ArrayList<CourseDateBlock>?,
+                     parentBadgeAdded: Boolean = false) {
             // Check Today's badge is already added or not
             if (dateBlock.isToday() && !parentBadgeAdded) {
                 createBadge(textView, CourseDateType.TODAY)
@@ -163,9 +155,7 @@ class DataBindingHelperUtils {
                 CourseDateType.VERIFIED_ONLY -> {
                     badgeBackground = R.color.black
                     textAppearance = R.style.verified_only_badge_text_appearance
-                    badgeIcon = UiUtils.getDrawable(
-                            textView.context, R.drawable.ic_lock, R.dimen.small_icon_size, R.color.white
-                    )
+                    badgeIcon = UiUtils.getDrawable(textView.context, R.drawable.ic_lock, R.dimen.small_icon_size, R.color.white)
                 }
                 CourseDateType.COMPLETED -> {
                     badgeBackground = R.color.tag_light_silver
@@ -201,8 +191,7 @@ class DataBindingHelperUtils {
                 val dateType = dateBlockItems.first().dateBlockBadge
                 for (i in 1 until dateBlockItems.size) {
                     if (dateBlockItems[i].dateBlockBadge != dateType &&
-                            dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK
-                    ) {
+                            dateBlockItems[i].dateBlockBadge != CourseDateType.BLANK) {
                         return false
                     }
                 }
@@ -224,9 +213,7 @@ class DataBindingHelperUtils {
             // setup the date badge
             val string = textView.text as Spannable
             val chipDrawable = ChipDrawable.createFromResource(
-                    textView.context,
-                    R.xml.dates_badge_chip
-            )
+                    textView.context, R.xml.dates_badge_chip)
             chipDrawable.text = title
             chipDrawable.setChipBackgroundColorResource(badgeBackground)
             // Load font Synchronously
@@ -237,8 +224,7 @@ class DataBindingHelperUtils {
 
             if (badgeIcon != null) {
                 chipDrawable.chipIcon = badgeIcon
-                chipDrawable.chipIconSize =
-                        textView.context.resources.getDimension(R.dimen.small_icon_size)
+                chipDrawable.chipIconSize = textView.context.resources.getDimension(R.dimen.small_icon_size)
                 chipDrawable.setIconStartPaddingResource(R.dimen.dates_badge_icon_start_padding)
                 chipDrawable.setIconEndPaddingResource(R.dimen.dates_badge_icon_end_padding)
             }
@@ -247,17 +233,14 @@ class DataBindingHelperUtils {
                 chipDrawable.strokeWidth = UiUtils.dpToPx(textView.context, 1.0F)
             }
             // Reduce the chip height and vertical margins to match the design.
-            chipDrawable.setBounds(
-                    0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
+            chipDrawable.setBounds(0, (chipDrawable.intrinsicHeight * -0.15).toInt(),
                     chipDrawable.intrinsicWidth, (chipDrawable.intrinsicHeight * 0.675).toInt()
             )
 
             val length = textView.text.toString().length
             // Find & replace the badge title with actual badge drawable
-            string.setSpan(
-                    ImageSpan(chipDrawable), textView.text.indexOf(title), length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            string.setSpan(ImageSpan(chipDrawable), textView.text.indexOf(title), length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             textView.setText(string, TextView.BufferType.SPANNABLE)
         }
     }
