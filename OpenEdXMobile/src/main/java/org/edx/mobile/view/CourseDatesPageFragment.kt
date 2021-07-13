@@ -107,7 +107,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             // Hide the progress bar as swipe layout has its own progress indicator
             binding.loadingIndicator.loadingIndicator.visibility = View.GONE
             errorNotification.hideError()
-            viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = true, isSwipeRefresh = true)
+            viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = true, showLoader = false, isSwipeRefresh = true)
         }
         UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
         initObserver()
@@ -115,7 +115,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = false, isSwipeRefresh = false)
+        viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = false, showLoader = true, isSwipeRefresh = false)
     }
 
     private fun initObserver() {
@@ -136,29 +136,18 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                     layoutManager = LinearLayoutManager(context)
                     adapter = CourseDatesAdapter(dates.courseDatesMap, onDateItemClick)
                 }
+                if (CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
+                    val calendarId = CalendarUtils.getCalendarId(contextOrThrow, accountName, calendarTitle)
+                    if (CalendarUtils.compareEvents(requireContext(), calendarId, dates.courseDateBlocks).not()) {
+                        showCalendarOutOfDateDialog(calendarId)
+                    }
+                }
             }
         })
 
         viewModel.resetCourseDates.observe(viewLifecycleOwner, Observer { resetCourseDates ->
             if (resetCourseDates != null) {
-                if (CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                    val calendarId = CalendarUtils.getCalendarId(contextOrThrow, accountName, calendarTitle)
-                    val alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
-                            getString(R.string.message_calendar_out_of_date),
-                            getString(R.string.label_update_now),
-                            { _: DialogInterface?, _: Int ->
-                                trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE)
-                                addOrUpdateEventsInCalendar(calendarId, true)
-                            },
-                            getString(R.string.label_remove_course_calendar),
-                            { _: DialogInterface?, _: Int ->
-                                trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE)
-                                deleteCalendar(calendarId)
-                                binding.switchSync.isChecked = false
-                            })
-                    alertDialogFragment.isCancelable = false
-                    alertDialogFragment.show(childFragmentManager, null)
-                } else {
+                if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
                     showShiftDateSnackBar(true)
                 }
             }
@@ -193,6 +182,24 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         viewModel.swipeRefresh.observe(viewLifecycleOwner, Observer { enableSwipeListener ->
             binding.swipeContainer.isRefreshing = enableSwipeListener
         })
+    }
+
+    private fun showCalendarOutOfDateDialog(calendarId: Long) {
+        val alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
+                getString(R.string.message_calendar_out_of_date),
+                getString(R.string.label_update_now),
+                { _: DialogInterface?, _: Int ->
+                    trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE)
+                    addOrUpdateEventsInCalendar(calendarId, true)
+                },
+                getString(R.string.label_remove_course_calendar),
+                { _: DialogInterface?, _: Int ->
+                    trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE)
+                    deleteCalendar(calendarId)
+                    binding.switchSync.isChecked = false
+                })
+        alertDialogFragment.isCancelable = false
+        alertDialogFragment.show(childFragmentManager, null)
     }
 
     /**

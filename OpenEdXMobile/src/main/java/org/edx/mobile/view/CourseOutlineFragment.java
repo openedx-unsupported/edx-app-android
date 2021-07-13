@@ -210,6 +210,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
+                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
+                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
+                    if (!CalendarUtils.INSTANCE.compareEvents(requireContext(), calendarId, courseDates.getCourseDateBlocks())) {
+                        showCalendarOutOfDateDialog(calendarId);
+                    }
+                }
             }
         });
 
@@ -223,15 +229,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
-                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
-                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
-                    AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
-                            getString(R.string.message_calendar_out_of_date),
-                            getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
-                            getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
-                    alertDialogFragment.setCancelable(false);
-                    alertDialogFragment.show(getChildFragmentManager(), null);
-                } else {
+                if (!CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
                     showShiftDateSnackBar(true);
                 }
             }
@@ -256,6 +254,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 }
             }
         });
+    }
+
+    private void showCalendarOutOfDateDialog(Long calendarId) {
+        AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
+                getString(R.string.message_calendar_out_of_date),
+                getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
+                getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
+        alertDialogFragment.setCancelable(false);
+        alertDialogFragment.show(getChildFragmentManager(), null);
     }
 
     private void updateCalendarEvents(Long calendarId) {
@@ -706,7 +713,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             getActivity().setTitle(courseComponent.getDisplayName());
         }
         if (!isVideoMode && isOnCourseOutline && canFetchBannerInfo) {
-            courseDateViewModel.fetchCourseDates(courseData.getCourseId(), true, swipeContainer.isRefreshing());
+            courseDateViewModel.fetchCourseDates(courseData.getCourseId(), true, !swipeContainer.isRefreshing(), swipeContainer.isRefreshing());
             canFetchBannerInfo = false;
         }
 
