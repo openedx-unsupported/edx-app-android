@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -25,13 +26,7 @@ import org.edx.mobile.util.UiUtils;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @ColorInt
-    private final int primaryBaseColor;
-    @ColorInt
     private final int neutral_x_dark;
-    @ColorInt
-    private final int secondary_dark_color;
-    @ColorInt
-    private final int edx_utility_success_dark;
 
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
@@ -41,10 +36,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
-        primaryBaseColor = context.getResources().getColor(R.color.primaryBaseColor);
         neutral_x_dark = context.getResources().getColor(R.color.neutralXDark);
-        secondary_dark_color = context.getResources().getColor(R.color.secondaryDarkColor);
-        edx_utility_success_dark = context.getResources().getColor(R.color.successBase);
         semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
     }
 
@@ -53,21 +45,21 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         ViewHolder holder = (ViewHolder) tag;
         {
             @DrawableRes final int iconResId;
-            @ColorInt final int iconColor;
+            @ColorRes final int iconColorRes;
             if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
                 if (discussionThread.isHasEndorsed()) {
                     iconResId = R.drawable.ic_verified;
-                    iconColor = edx_utility_success_dark;
+                    iconColorRes = R.color.successBase;
                 } else {
                     iconResId = R.drawable.ic_help_center;
-                    iconColor = secondary_dark_color;
+                    iconColorRes = R.color.secondaryDarkColor;
                 }
             } else {
                 iconResId = R.drawable.ic_chat;
-                iconColor = (discussionThread.isRead() ? neutral_x_dark : primaryBaseColor);
+                iconColorRes = (discussionThread.isRead() ? R.color.neutralXDark : R.color.primaryBaseColor);
             }
             holder.discussionPostTypeIcon.setImageDrawable(UiUtils.INSTANCE
-                    .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId, 0, iconColor));
+                    .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId, 0, iconColorRes));
         }
 
         {
