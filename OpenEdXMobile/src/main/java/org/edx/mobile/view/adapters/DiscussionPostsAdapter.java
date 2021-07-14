@@ -1,14 +1,11 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -25,19 +22,12 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
-    @ColorInt
-    private final int neutral_x_dark;
-
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
-
-    private final Typeface semiBoldFont;
 
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
-        neutral_x_dark = context.getResources().getColor(R.color.neutralXDark);
-        semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
     }
 
     @Override
@@ -67,16 +57,16 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             holder.discussionPostTitle.setText(threadTitle);
             if (!discussionThread.isRead()) {
                 holder.discussionPostTitle.setTextAppearance(getContext(), R.style.discussion_title_text);
-                holder.discussionPostTitle.setTypeface(semiBoldFont);
+                holder.discussionPostTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.inter_semi_bold));
             } else {
                 holder.discussionPostTitle.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionPostRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionPostDateTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionUnreadRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
-                holder.discussionPostTypeIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
-                holder.discussionPostClosedIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
-                holder.discussionPostPinIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
-                holder.discussionPostFollowIcon.setColorFilter(neutral_x_dark, PorterDuff.Mode.SRC_IN);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostTypeIcon, R.color.neutralXDark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostClosedIcon, R.color.neutralXDark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostPinIcon, R.color.neutralXDark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostFollowIcon, R.color.neutralXDark);
             }
         }
 
