@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discussion_user_profile_row"
     android:layout_width="wrap_content"
@@ -15,7 +16,7 @@
         android:layout_width="@dimen/discussion_profile_image_diameter"
         android:layout_height="@dimen/discussion_profile_image_diameter"
         android:layout_marginEnd="@dimen/discussion_responses_standard_margin"
-        android:src="@drawable/profile_photo_placeholder" />
+        app:srcCompat="@drawable/profile_photo_placeholder" />
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -1,17 +1,18 @@
 package org.edx.mobile.view.adapters;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.SubjectItemBinding;
 import org.edx.mobile.model.SubjectModel;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.images.ImageUtils;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class PopularSubjectsAdapter extends RecyclerView.Adapter {
                 final SubjectModel model = popularSubjects.get(position);
                 final SubjectItemBinding subjectItemBinding = DataBindingUtil.bind(holder.itemView);
                 subjectItemBinding.tvSubjectName.setText(model.name);
-                @DrawableRes final int imageRes = UiUtil.getDrawable(subjectItemBinding.ivSubjectLogo.getContext(), model.imageName);
+                @DrawableRes final int imageRes = UiUtils.INSTANCE.getDrawable(subjectItemBinding.ivSubjectLogo.getContext(), model.imageName);
                 ImageUtils.setRoundedCornerImage(subjectItemBinding.ivSubjectLogo, imageRes);
                 holder.itemView.setContentDescription(
                         holder.itemView.getResources().getString(R.string.browse_by_subject) + " " + model.name);

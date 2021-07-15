@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
@@ -11,13 +10,12 @@
     android:paddingStart="@dimen/dashboard_nav_element_left_margin"
     android:paddingEnd="@dimen/dashboard_nav_element_right_margin">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/row_type"
-        android:layout_width="@dimen/fa_xx_large"
-        android:layout_height="@dimen/fa_xx_large"
+        android:layout_width="@dimen/ic_xx_large"
+        android:layout_height="@dimen/ic_xx_large"
         android:baselineAlignBottom="true"
-        android:gravity="center_vertical"
-        app:iconColor="@color/neutralXXDark" />
+        android:gravity="center_vertical" />
 
     <LinearLayout
         style="@style/regular_grey_text"

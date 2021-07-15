@@ -1,17 +1,17 @@
 package org.edx.mobile.whatsnew;
 
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,8 +25,7 @@ import org.edx.mobile.databinding.FragmentWhatsNewBinding;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.WhatsNewUtil;
 import org.edx.mobile.view.custom.IndicatorController;
 
@@ -76,7 +75,8 @@ public class WhatsNewFragment extends BaseFragment {
     private void initViewPager() {
         try {
             final String whatsNewJson = FileUtil.loadTextFileFromResources(getContext(), R.raw.whats_new);
-            final Type type = new TypeToken<List<WhatsNewModel>>() {}.getType();
+            final Type type = new TypeToken<List<WhatsNewModel>>() {
+            }.getType();
             final List<WhatsNewModel> whatsNewModels = new Gson().fromJson(whatsNewJson, type);
             final List<WhatsNewItemModel> items = WhatsNewUtil.getWhatsNewItems(BuildConfig.VERSION_NAME, whatsNewModels);
             if (items == null) {
@@ -111,7 +111,7 @@ public class WhatsNewFragment extends BaseFragment {
                 }
             });
             // Enforce to intercept single scrolling direction
-            UiUtil.enforceSingleScrollDirection(binding.viewPager2);
+            UiUtils.INSTANCE.enforceSingleScrollDirection(binding.viewPager2);
         } catch (IOException e) {
             // Submit crash report and end the activity
             logger.error(e, true);

@@ -18,13 +18,13 @@
             android:paddingStart="@dimen/edx_double_margin"
             android:paddingEnd="@dimen/edx_double_margin">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_edx_logo"
                 android:layout_width="@dimen/logo_width"
                 android:layout_height="@dimen/logo_height"
                 android:layout_marginTop="@dimen/logo_top_margin"
                 android:contentDescription="@string/phonetic_app_name"
-                android:src="@drawable/launch_screen_logo" />
+                app:srcCompat="@drawable/launch_screen_logo" />
 
             <TextView
                 android:id="@+id/tv_launch_text"

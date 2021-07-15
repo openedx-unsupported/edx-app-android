@@ -5,12 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import com.joanzapata.iconify.fonts.FontAwesomeIcons
 import de.greenrobot.event.EventBus
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.edx.mobile.R
-import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding
 import org.edx.mobile.databinding.PanelFindCourseBinding
@@ -30,7 +28,7 @@ import org.edx.mobile.module.db.DataCallback
 import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.ConfigUtil.Companion.isCourseDiscoveryEnabled
 import org.edx.mobile.util.NetworkUtil
-import org.edx.mobile.util.UiUtil
+import org.edx.mobile.util.UiUtils
 import org.edx.mobile.view.adapters.MyCoursesAdapter
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import retrofit2.Call
@@ -82,7 +80,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             errorNotification.hideError()
             loadData(showProgress = false, fromCache = false)
         }
-        UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
+        UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
         // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(View(context), null, false)
         binding.myCourseList.adapter = adapter.also {
@@ -210,7 +208,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         adapter.notifyDataSetChanged()
         if (adapter.isEmpty && !isCourseDiscoveryEnabled(environment)) {
             errorNotification.showError(R.string.no_courses_to_display,
-                    FontAwesomeIcons.fa_exclamation_circle, 0, null)
+                    R.drawable.ic_error, 0, null)
             binding.myCourseList.visibility = View.GONE
         } else {
             binding.myCourseList.visibility = View.VISIBLE
@@ -228,8 +226,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 //then activate all videos
                 if (list[i].isIs_active) {
                     //update all videos for a course fetched in the API as Activated
-                    environment.database?.updateVideosActivatedForCourse(list[i].course.id,
-                            dataCallback)
+                    environment.database?.updateVideosActivatedForCourse(list[i].course.id, dataCallback)
                 } else {
                     list.removeAt(i)
                 }

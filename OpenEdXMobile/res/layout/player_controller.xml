@@ -64,18 +64,18 @@
             android:textStyle="bold"
             tools:text="02:05" />
 
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/settings"
             style="@style/video_player_bottom_control"
             android:contentDescription="@string/video_player_settings"
-            app:iconName="fa-cog" />
+            app:srcCompat="@drawable/ic_settings"
+            app:tint="@color/white" />
 
-
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/fullscreen"
             style="@style/video_player_bottom_control"
             android:contentDescription="@string/video_player_enter_fullscreen"
-            app:iconName="fa-compress" />
+            app:srcCompat="@drawable/ic_fullscreen_exit" />
     </LinearLayout>
 
     <!-- Put play/pause button to the center of player -->
@@ -85,16 +85,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/prev"
             style="@style/video_player_side_control"
             android:layout_gravity="center_vertical|start"
             android:layout_marginStart="@dimen/video_player_control_left_margin"
             android:contentDescription="@string/video_player_previous"
-            app:iconName="fa-chevron-circle-left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_left" />
 
         <TextView
             android:id="@+id/rewind_time"
@@ -104,38 +104,38 @@
             app:layout_constraintEnd_toStartOf="@id/rewind"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/rewind"
             style="@style/video_player_side_control"
             android:background="@drawable/semi_transparent_gray_circle"
             android:contentDescription="@string/video_player_rewind_button"
-            app:iconName="fa-history"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/pause"
             app:layout_constraintStart_toEndOf="@+id/prev"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_history" />
 
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/pause"
             style="@style/video_player_play_pause_button"
             android:contentDescription="@string/video_player_pause"
-            app:iconName="fa-pause"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_pause" />
 
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/forward"
             style="@style/video_player_side_control"
             android:background="@drawable/semi_transparent_gray_circle"
             android:contentDescription="@string/video_player_forward_button"
             android:scaleX="-1"
-            app:iconName="fa-history"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/next"
             app:layout_constraintStart_toEndOf="@+id/pause"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_history" />
 
         <TextView
             android:id="@+id/forward_time"
@@ -146,15 +146,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <com.joanzapata.iconify.widget.IconImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/next"
             style="@style/video_player_side_control"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/video_player_control_right_margin"
             android:contentDescription="@string/video_player_next"
-            app:iconName="fa-chevron-circle-right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_right" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

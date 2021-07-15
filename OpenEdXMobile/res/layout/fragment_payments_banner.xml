@@ -42,9 +42,9 @@
 
             <TextView
                 style="@style/edX.Widget.Button"
-                android:fontFamily="?attr/fontSemiBold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="?attr/fontSemiBold"
                 android:text="@string/upgrade_to_verified_today_title"
                 android:textColor="@color/white"
                 tools:ignore="MissingPrefix" />
@@ -58,22 +58,22 @@
                 tools:text="$99 USD" />
         </LinearLayout>
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/info"
             style="@style/edX.Widget.ActionBorderedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/edx_half_margin"
             android:focusable="true"
+            android:paddingStart="@dimen/button_icon_horizontal_padding"
+            android:paddingEnd="@dimen/button_icon_horizontal_padding"
             android:visibility="gone"
-            app:iconColor="@color/primaryBaseColor"
-            app:iconName="fa-info-circle"
             app:layout_constraintBottom_toBottomOf="@+id/ll_upgrade_button"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ll_upgrade_button"
+            app:srcCompat="@drawable/ic_info"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

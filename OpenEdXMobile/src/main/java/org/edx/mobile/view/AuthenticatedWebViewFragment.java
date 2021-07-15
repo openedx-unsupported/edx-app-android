@@ -1,11 +1,12 @@
 package org.edx.mobile.view;
 
-import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -14,13 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageView;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 
 import roboguice.inject.InjectView;
@@ -106,13 +104,13 @@ public class AuthenticatedWebViewFragment extends BaseFragment {
             swipeContainer.setEnabled(false);
         } else {
             view.findViewById(R.id.content_error).setVisibility(View.VISIBLE);
-            final IconImageView ivContentError = view.findViewById(R.id.content_error_icon);
-            ivContentError.setIcon(FontAwesomeIcons.fa_exclamation_circle);
+            final AppCompatImageView ivContentError = view.findViewById(R.id.content_error_icon);
+            ivContentError.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_error));
             tvContentError.setText(getString(R.string.error_unknown));
             btnContentErrorAction.setVisibility(View.VISIBLE);
             btnContentErrorAction.setText(R.string.lbl_reload);
             btnContentErrorAction.setOnClickListener(
-                    v -> UiUtil.restartFragment(AuthenticatedWebViewFragment.this));
+                    v -> UiUtils.INSTANCE.restartFragment(AuthenticatedWebViewFragment.this));
         }
     }
 

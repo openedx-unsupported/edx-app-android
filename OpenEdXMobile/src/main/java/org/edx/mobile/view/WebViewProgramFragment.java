@@ -23,7 +23,7 @@ import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.links.DefaultActionListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -106,7 +106,7 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             });
 
             tryEnablingSwipeContainer();
-            UiUtil.setSwipeRefreshLayoutColors(swipeContainer);
+            UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
             swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -157,7 +157,7 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             swipeContainer.setEnabled(false);
             authWebView.loadUrl(true, authWebView.getWebView().getUrl());
         }
-        if(isVisible()){
+        if (isVisible()) {
             environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
         }
     }

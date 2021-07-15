@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-
 import org.edx.mobile.R;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.ErrorNotification;
@@ -224,7 +222,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
             // Show SnackBar if user is seeing cached content while being offline.
             if (response.raw().networkResponse() == null && !NetworkUtil.isConnected(context)) {
                 if (snackbarErrorNotification != null && refreshListener != null) {
-                    snackbarErrorNotification.showError(R.string.offline_text, FontAwesomeIcons.fa_wifi,
+                    snackbarErrorNotification.showError(R.string.offline_text, R.drawable.ic_wifi,
                             R.string.lbl_reload,
                             new View.OnClickListener() {
                                 @Override

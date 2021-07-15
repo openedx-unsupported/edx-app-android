@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
@@ -10,8 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -97,7 +97,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
                             populateHandouts(result);
                         } else {
                             errorNotification.showError(R.string.no_handouts_to_display,
-                                    FontAwesomeIcons.fa_exclamation_circle, 0, null);
+                                    R.drawable.ic_error, 0, null);
                         }
                     }
 

@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -32,19 +33,17 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageButton;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.ContextCompat;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.ViewAnimationUtil;
 
 import java.lang.ref.WeakReference;
@@ -66,7 +65,7 @@ import java.util.Locale;
  * <p>
  * Functions like show() and hide() have no effect when MediaController
  * is created in an xml layout.
- *
+ * <p>
  * MediaController will hide and
  * show the buttons according to these rules:
  * <ul>
@@ -82,43 +81,43 @@ import java.util.Locale;
 @SuppressLint("WrongViewCast")
 public class PlayerController extends FrameLayout {
 
-    public static final long    DEFAULT_TIMEOUT_MS = 3000L;
+    public static final long DEFAULT_TIMEOUT_MS = 3000L;
 
-    private long                mTimeoutMS = DEFAULT_TIMEOUT_MS;
+    private long mTimeoutMS = DEFAULT_TIMEOUT_MS;
     private PlayerListener mPlayer;
-    private Context             mContext;
-    private ViewGroup           mAnchor;
-    private View                mRoot;
-    private ProgressBar         mProgress;
-    private TextView            mEndTime, mCurrentTime;
-    private boolean             mShowing;
-    private boolean             mPauseAccessibilityRequestQueued;
-    private boolean             mDragging;
-    private static final int    FADE_OUT = 1;
-    private static final int    SHOW_PROGRESS = 2;
-    private boolean             mUseFastForward;
-    private boolean             mFromXml;
-    private boolean             mListenersSet;
+    private Context mContext;
+    private ViewGroup mAnchor;
+    private View mRoot;
+    private ProgressBar mProgress;
+    private TextView mEndTime, mCurrentTime;
+    private boolean mShowing;
+    private boolean mPauseAccessibilityRequestQueued;
+    private boolean mDragging;
+    private static final int FADE_OUT = 1;
+    private static final int SHOW_PROGRESS = 2;
+    private boolean mUseFastForward;
+    private boolean mFromXml;
+    private boolean mListenersSet;
     private View.OnClickListener mNextListener, mPrevListener;
-    StringBuilder               mFormatBuilder;
-    Formatter                   mFormatter;
-    private IconImageButton     mPauseButton;
-    private ImageButton         mNextButton;
-    private ImageButton         mPrevButton;
-    private ImageButton         mRewindButton;
-    private ImageButton         mForwardButton;
-    private IconImageButton     mFullscreenButton;
-    private IconImageButton     mSettingsButton;
-    private Handler             mHandler = new MessageHandler(this);
-    private String              mTitle;
-    private TextView            mTitleTextView;
-    private TextView            mRewindTimeTextView;
-    private TextView            mForwardTimeTextView;
-    private boolean             mIsAutoHide = true;
-    private String              mLmsUrl;
-    private View                mTopBar;
-    private TranslateAnimation  mForwardAnimation;
-    private TranslateAnimation  mRewindAnimation;
+    StringBuilder mFormatBuilder;
+    Formatter mFormatter;
+    private AppCompatImageButton mPauseButton;
+    private AppCompatImageButton mNextButton;
+    private AppCompatImageButton mPrevButton;
+    private AppCompatImageButton mRewindButton;
+    private AppCompatImageButton mForwardButton;
+    private AppCompatImageButton mFullscreenButton;
+    private AppCompatImageButton mSettingsButton;
+    private Handler mHandler = new MessageHandler(this);
+    private String mTitle;
+    private TextView mTitleTextView;
+    private TextView mRewindTimeTextView;
+    private TextView mForwardTimeTextView;
+    private boolean mIsAutoHide = true;
+    private String mLmsUrl;
+    private View mTopBar;
+    private TranslateAnimation mForwardAnimation;
+    private TranslateAnimation mRewindAnimation;
 
     private static final Logger logger = new Logger(PlayerController.class.getName());
 
@@ -157,6 +156,7 @@ public class PlayerController extends FrameLayout {
     /**
      * Set the view that acts as the anchor for the control view.
      * This can for example be a VideoView, or your Activity's main view.
+     *
      * @param view The view to which to anchor the controller when it is visible.
      */
     public void setAnchorView(ViewGroup view) {
@@ -165,7 +165,7 @@ public class PlayerController extends FrameLayout {
         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
-                );
+        );
 
         removeAllViews();
         View v = makeControllerView();
@@ -175,6 +175,7 @@ public class PlayerController extends FrameLayout {
     /**
      * Create the view that holds the widgets that control playback.
      * Derived classes can override this to create their own.
+     *
      * @return The controller view.
      * @hide This doesn't work as advertised
      */
@@ -188,19 +189,19 @@ public class PlayerController extends FrameLayout {
     }
 
     private void initControllerView(View v) {
-        mPauseButton = (IconImageButton) v.findViewById(R.id.pause);
+        mPauseButton = (AppCompatImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
             mPauseButton.setOnClickListener(mPauseListener);
         }
 
-        mFullscreenButton = (IconImageButton) v.findViewById(R.id.fullscreen);
+        mFullscreenButton = (AppCompatImageButton) v.findViewById(R.id.fullscreen);
         if (mFullscreenButton != null) {
             mFullscreenButton.requestFocus();
             mFullscreenButton.setOnClickListener(mFullscreenListener);
         }
 
-        mRewindButton = (ImageButton) v.findViewById(R.id.rewind);
+        mRewindButton = (AppCompatImageButton) v.findViewById(R.id.rewind);
         if (mRewindButton != null) {
             mRewindButton.setOnClickListener(mRewindListener);
             if (!mFromXml) {
@@ -208,7 +209,7 @@ public class PlayerController extends FrameLayout {
             }
         }
 
-        mForwardButton = (ImageButton) v.findViewById(R.id.forward);
+        mForwardButton = (AppCompatImageButton) v.findViewById(R.id.forward);
         if (mForwardButton != null) {
             mForwardButton.setOnClickListener(mForwardListener);
             if (!mFromXml) {
@@ -217,11 +218,11 @@ public class PlayerController extends FrameLayout {
         }
 
         // By default these are hidden. They will be enabled when setNextPreviousListeners() is called
-        mNextButton = (ImageButton) v.findViewById(R.id.next);
+        mNextButton = (AppCompatImageButton) v.findViewById(R.id.next);
         if (mNextButton != null && !mFromXml && !mListenersSet) {
             mNextButton.setVisibility(View.GONE);
         }
-        mPrevButton = (ImageButton) v.findViewById(R.id.prev);
+        mPrevButton = (AppCompatImageButton) v.findViewById(R.id.prev);
         if (mPrevButton != null && !mFromXml && !mListenersSet) {
             mPrevButton.setVisibility(View.GONE);
         }
@@ -235,8 +236,9 @@ public class PlayerController extends FrameLayout {
             mProgress.setMax(1000);
         }
 
-        mSettingsButton = (IconImageButton) v.findViewById(R.id.settings);
+        mSettingsButton = (AppCompatImageButton) v.findViewById(R.id.settings);
         if (mSettingsButton != null) {
+            mSettingsButton.setBackgroundColor(Color.TRANSPARENT);
             mSettingsButton.requestFocus();
             mSettingsButton.setOnClickListener(mSettingsListener);
         }
@@ -257,7 +259,7 @@ public class PlayerController extends FrameLayout {
     }
 
     private void initializeAnimations() {
-        boolean isLTRDirection = UiUtil.isDirectionLeftToRight();
+        boolean isLTRDirection = UiUtils.INSTANCE.isDirectionLeftToRight();
         mForwardAnimation = ViewAnimationUtil.getSeekTimeAnimation(mForwardTimeTextView, isLTRDirection);
         mRewindAnimation = ViewAnimationUtil.getSeekTimeAnimation(mRewindTimeTextView, !isLTRDirection);
     }
@@ -285,7 +287,7 @@ public class PlayerController extends FrameLayout {
     /**
      * Show the controller on screen. It will timeout according to setShowTimeoutMS().
      * Use this as opposed to showSpecial() when you want the timeout to be consistent with
-     *  tapping the screen, activating a control, etc.
+     * tapping the screen, activating a control, etc.
      */
     public void show() {
         hideTimeText();
@@ -295,7 +297,7 @@ public class PlayerController extends FrameLayout {
     /**
      * Show the controller for a specified timeout.
      * Use this as opposed to show() when you want to show the controls for a time inconsistent with
-     *  tapping the screen, activating a control, etc
+     * tapping the screen, activating a control, etc
      *
      * @param timeoutMS The timeout to show controls for.
      *                  Value of <= 0 means no timeout
@@ -369,7 +371,7 @@ public class PlayerController extends FrameLayout {
      * Remove the controller from the screen.
      */
     public void hide() {
-        if (mAnchor!= null && mShowing) {
+        if (mAnchor != null && mShowing) {
 
             mAnchor.removeView(this);
             mHandler.removeMessages(SHOW_PROGRESS);
@@ -385,8 +387,7 @@ public class PlayerController extends FrameLayout {
     public void requestAccessibilityFocusPausePlay() {
         if (mShowing && mAnchor != null) {
             setAccessibilityFocusPausePlay(true);
-        }
-        else {
+        } else {
             mPauseAccessibilityRequestQueued = true;
         }
     }
@@ -403,7 +404,7 @@ public class PlayerController extends FrameLayout {
 
         long seconds = totalSeconds % 60;
         long minutes = (totalSeconds / 60) % 60;
-        long hours   = totalSeconds / 3600;
+        long hours = totalSeconds / 3600;
 
         mFormatBuilder.setLength(0);
         if (hours > 0) {
@@ -424,9 +425,9 @@ public class PlayerController extends FrameLayout {
             if (duration > 0) {
                 // use long to avoid overflow
                 long pos = 1000L * position / duration;
-                mProgress.setProgress( (int) pos);
+                mProgress.setProgress((int) pos);
             }
-            if(position > duration){
+            if (position > duration) {
                 position = duration;
             }
             int percent = mPlayer.getBufferPercentage();
@@ -462,7 +463,7 @@ public class PlayerController extends FrameLayout {
         int keyCode = event.getKeyCode();
         final boolean uniqueDown = event.getRepeatCount() == 0
                 && event.getAction() == KeyEvent.ACTION_DOWN;
-        if (keyCode ==  KeyEvent.KEYCODE_HEADSETHOOK
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK
                 || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
                 || keyCode == KeyEvent.KEYCODE_SPACE) {
             if (uniqueDown) {
@@ -520,7 +521,7 @@ public class PlayerController extends FrameLayout {
 
     private View.OnClickListener mSettingsListener = new View.OnClickListener() {
         public void onClick(View v) {
-            try{
+            try {
                 setSettingsBtnDrawable(true);
                 int[] location = new int[2];
                 // Get the x, y location and store it in the location[] array
@@ -533,7 +534,7 @@ public class PlayerController extends FrameLayout {
                 p.y = location[1];
 
                 callSettings(p);
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.error(e);
             }
         }
@@ -548,13 +549,11 @@ public class PlayerController extends FrameLayout {
             return;
         }
         if (mPlayer.isPlaying()) {
-            mPauseButton.setImageDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_pause)
-                    .colorRes(getContext(), R.color.white));
+            mPauseButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_pause));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_pause));
         } else {
-            mPauseButton.setImageDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_play)
-                    .colorRes(getContext(),R.color.white));
+            mPauseButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_play_arrow));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_play));
         }
@@ -567,11 +566,11 @@ public class PlayerController extends FrameLayout {
 
         mFullscreenButton.setBackgroundColor(Color.TRANSPARENT);
         if (mPlayer.isFullScreen()) {
-            mFullscreenButton.setIcon(FontAwesomeIcons.fa_compress);
+            mFullscreenButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_fullscreen_exit));
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_exit_fullscreen));
         } else {
-            mFullscreenButton.setIcon(FontAwesomeIcons.fa_expand);
+            mFullscreenButton.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), R.drawable.ic_fullscreen));
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_enter_fullscreen));
         }
@@ -591,14 +590,14 @@ public class PlayerController extends FrameLayout {
         updatePausePlay();
     }
 
-    private void callSettings(Point p){
-        try{
+    private void callSettings(Point p) {
+        try {
             if (mPlayer == null) {
                 return;
             }
             mPlayer.callSettings(p);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
@@ -635,6 +634,7 @@ public class PlayerController extends FrameLayout {
     private OnSeekBarChangeListener mSeekListener = new OnSeekBarChangeListener() {
         long startPos = 0;
         long endPos = 0;
+
         public void onStartTrackingTouch(SeekBar bar) {
             show();
             mDragging = true;
@@ -645,7 +645,7 @@ public class PlayerController extends FrameLayout {
             // we will post one of these messages to the queue again and
             // this ensures that there will be exactly one message queued up.
             mHandler.removeMessages(SHOW_PROGRESS);
-            if(mPlayer!=null){
+            if (mPlayer != null) {
                 startPos = mPlayer.getCurrentPosition();
             }
         }
@@ -663,9 +663,9 @@ public class PlayerController extends FrameLayout {
 
             long duration = mPlayer.getDuration();
             long newposition = (duration * progress) / 1000L;
-            mPlayer.seekTo( (int) newposition);
+            mPlayer.seekTo((int) newposition);
             if (mCurrentTime != null)
-                mCurrentTime.setText(stringForTime( (int) newposition));
+                mCurrentTime.setText(stringForTime((int) newposition));
 
             //  callback this event
 //          if (mEventListener != null) {
@@ -684,13 +684,13 @@ public class PlayerController extends FrameLayout {
             // no-op if we are already showing.
             mHandler.sendEmptyMessage(SHOW_PROGRESS);
 
-            try{
-                if(mPlayer!=null) {
+            try {
+                if (mPlayer != null) {
                     endPos = mPlayer.getCurrentPosition();
                     logger.debug("Seek bar Start Pos: " + startPos + " End Pos: " + endPos);
                     mPlayer.callPlayerSeeked(startPos, endPos, false);
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.error(e);
             }
         }
@@ -741,13 +741,13 @@ public class PlayerController extends FrameLayout {
                 return;
             }
             hideTimeText();
-            if(mRewindAnimation != null){
+            if (mRewindAnimation != null) {
                 mRewindTimeTextView.startAnimation(mRewindAnimation);
             }
             long pos = mPlayer.getCurrentPosition();
-            try{
-                mPlayer.callPlayerSeeked(pos, pos-10000, true);
-            }catch(Exception e){
+            try {
+                mPlayer.callPlayerSeeked(pos, pos - 10000, true);
+            } catch (Exception e) {
                 logger.error(e);
             }
 
@@ -769,13 +769,13 @@ public class PlayerController extends FrameLayout {
                 return;
             }
             hideTimeText();
-           if(mForwardAnimation != null){
-               mForwardTimeTextView.startAnimation(mForwardAnimation);
-           }
+            if (mForwardAnimation != null) {
+                mForwardTimeTextView.startAnimation(mForwardAnimation);
+            }
             long pos = mPlayer.getCurrentPosition();
-            try{
-                mPlayer.callPlayerSeeked(pos, pos+15000, true);
-            }catch(Exception e){
+            try {
+                mPlayer.callPlayerSeeked(pos, pos + 15000, true);
+            } catch (Exception e) {
                 logger.error(e);
             }
 
@@ -791,20 +791,20 @@ public class PlayerController extends FrameLayout {
     /**
      * Hide Rewind & Forward time text
      */
-    private void hideTimeText(){
+    private void hideTimeText() {
         mRewindTimeTextView.setVisibility(GONE);
         mForwardTimeTextView.setVisibility(GONE);
     }
 
     private void installPrevNextListeners() {
-        if(mNextListener!=null){
+        if (mNextListener != null) {
             if (mNextButton != null) {
                 mNextButton.setOnClickListener(mNextListener);
                 mNextButton.setEnabled(mNextListener != null);
             }
         }
 
-        if(mPrevListener!=null){
+        if (mPrevListener != null) {
             if (mPrevButton != null) {
                 mPrevButton.setOnClickListener(mPrevListener);
                 mPrevButton.setEnabled(mPrevListener != null);
@@ -822,16 +822,16 @@ public class PlayerController extends FrameLayout {
             installPrevNextListeners();
 
             if (mNextButton != null && !mFromXml) {
-                if(mNextListener!=null){
+                if (mNextListener != null) {
                     mNextButton.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     mNextButton.setVisibility(View.GONE);
                 }
             }
             if (mPrevButton != null && !mFromXml) {
-                if(mPrevListener!=null){
+                if (mPrevListener != null) {
                     mPrevButton.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     mPrevButton.setVisibility(View.GONE);
                 }
             }
@@ -844,6 +844,7 @@ public class PlayerController extends FrameLayout {
         MessageHandler(PlayerController view) {
             mView = new WeakReference<>(view);
         }
+
         @Override
         public void handleMessage(Message msg) {
             try {
@@ -854,21 +855,21 @@ public class PlayerController extends FrameLayout {
 
                 long pos;
                 switch (msg.what) {
-                case FADE_OUT:
-                    if (view.mIsAutoHide) {
-                        view.hide();
-                    }
-                    break;
-                case SHOW_PROGRESS:
-                    pos = view.setProgress();
-                    // FIXME: got illegalstateexception for player here
-                    if (!view.mDragging && view.mShowing && view.mPlayer.isPlaying()) {
-                        msg = obtainMessage(SHOW_PROGRESS);
-                        sendMessageDelayed(msg, 1000 - (pos % 1000));
-                    }
-                    break;
+                    case FADE_OUT:
+                        if (view.mIsAutoHide) {
+                            view.hide();
+                        }
+                        break;
+                    case SHOW_PROGRESS:
+                        pos = view.setProgress();
+                        // FIXME: got illegalstateexception for player here
+                        if (!view.mDragging && view.mShowing && view.mPlayer.isPlaying()) {
+                            msg = obtainMessage(SHOW_PROGRESS);
+                            sendMessageDelayed(msg, 1000 - (pos % 1000));
+                        }
+                        break;
                 }
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 logger.error(ex);
             }
         }
@@ -888,7 +889,7 @@ public class PlayerController extends FrameLayout {
 
     @SuppressWarnings("unused")
     public void hideProgress() {
-        if(this.mProgress!=null){
+        if (this.mProgress != null) {
             this.mProgress.setVisibility(View.INVISIBLE);
         }
     }
@@ -920,22 +921,29 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    public void setSettingsBtnDrawable(boolean isSettingEnabled){
+    public void setSettingsBtnDrawable(boolean isSettingEnabled) {
         if (mSettingsButton != null) {
             if (isSettingEnabled) {
-                mSettingsButton.setIconColor(getResources().getColor(R.color.accentAColor));
+                mSettingsButton.setColorFilter(
+                        ContextCompat.getColor(mSettingsButton.getContext(), R.color.accentAColor),
+                        PorterDuff.Mode.SRC_IN
+                );
             } else {
-                mSettingsButton.setIconColor(getResources().getColor(R.color.white));
+                mSettingsButton.setColorFilter(
+                        ContextCompat.getColor(mSettingsButton.getContext(), R.color.white),
+                        PorterDuff.Mode.SRC_IN
+                );
             }
         }
     }
 
     /**
      * Sets the visibility of top bar of the player controller
+     *
      * @param isVisible true=visible & false=gone
      */
     public void setTopBarVisibility(boolean isVisible) {
-        if (isVisible){
+        if (isVisible) {
             mTopBar.setVisibility(View.VISIBLE);
         } else {
             mTopBar.setVisibility(View.GONE);

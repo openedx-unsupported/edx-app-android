@@ -1,16 +1,14 @@
 package org.edx.mobile.discussion;
 
 import android.content.Context;
-import androidx.annotation.StringRes;
-import androidx.core.widget.TextViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
+import org.edx.mobile.util.UiUtils;
 
 public abstract class DiscussionUtils {
     /**
@@ -31,21 +29,13 @@ public abstract class DiscussionUtils {
         Context context = textView.getContext();
         if (isTopicClosed) {
             textView.setText(negativeTextResId);
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                    new IconDrawable(context, FontAwesomeIcons.fa_lock)
-                            .sizeRes(context, R.dimen.small_icon_size)
-                            .colorRes(context, R.color.white),
-                    null, null, null
-            );
+            UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, R.drawable.ic_lock,
+                    R.dimen.small_icon_size);
             creationLayout.setOnClickListener(null);
         } else {
             textView.setText(positiveTextResId);
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                    new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
-                            .sizeRes(context, R.dimen.small_icon_size)
-                            .colorRes(context, R.color.white),
-                    null, null, null
-            );
+            UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, R.drawable.ic_add_comment,
+                    R.dimen.small_icon_size);
             creationLayout.setOnClickListener(listener);
         }
         creationLayout.setEnabled(!isTopicClosed);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -10,7 +11,7 @@
         android:gravity="center_vertical"
         android:minHeight="@dimen/social_btn_min_height">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/microsoft_btn_bg"
@@ -22,13 +23,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_microsoft"
                 android:layout_width="@dimen/social_btn_icon_size"
                 android:layout_height="@dimen/social_btn_icon_size"
                 android:layout_margin="@dimen/social_btn_margin"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_microsoft_img" />
+                app:srcCompat="@drawable/ic_microsoft_img" />
 
             <View
                 android:layout_width="@dimen/social_btn_divider_width"

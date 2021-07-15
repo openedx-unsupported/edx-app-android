@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ellipsis_icon"
                     android:layout_width="@dimen/course_card_ellipsis_icon_size"
                     android:layout_height="@dimen/course_card_ellipsis_icon_size"
@@ -96,13 +96,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/medium_icon_size"
                 android:layout_height="@dimen/medium_icon_size"
                 android:layout_marginTop="@dimen/widget_margin_half"
                 android:layout_marginEnd="@dimen/edx_margin"
-                app:iconColor="@color/primaryBaseColor"
-                app:iconName="fa-trophy" />
+                app:srcCompat="@drawable/ic_emoji_events" />
 
             <TextView
                 android:layout_width="wrap_content"

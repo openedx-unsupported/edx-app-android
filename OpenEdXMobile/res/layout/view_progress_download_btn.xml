@@ -8,12 +8,11 @@
     android:layout_marginEnd="@dimen/x_small_icon_margin"
     android:padding="@dimen/x_small_icon_margin">
 
-    <org.edx.mobile.view.custom.IconImageViewXml
-        android:layout_width="@dimen/fa_x_small"
-        android:layout_height="@dimen/fa_x_small"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="@dimen/ic_small"
+        android:layout_height="@dimen/ic_small"
         android:layout_gravity="center"
-        app:iconColor="@color/toolbar_controls_color"
-        app:iconName="fa-arrow-down"
+        app:srcCompat="@drawable/ic_arrow_downward"
         tools:ignore="ContentDescription" />
 
     <include layout="@layout/view_progress_wheel" />

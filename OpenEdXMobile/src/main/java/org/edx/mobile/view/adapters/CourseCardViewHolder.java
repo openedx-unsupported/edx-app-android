@@ -2,13 +2,13 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
 
@@ -23,7 +23,7 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     @LayoutRes
     public static int LAYOUT = R.layout.row_course_list;
 
-    private final ImageView courseImage;
+    private final AppCompatImageView courseImage;
     private final TextView courseTitle;
     private final TextView courseDetails;
     private final LinearLayout propContainer;
@@ -35,7 +35,7 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
                 .findViewById(R.id.course_name);
         this.courseDetails = (TextView) convertView
                 .findViewById(R.id.course_details);
-        this.courseImage = (ImageView) convertView
+        this.courseImage = (AppCompatImageView) convertView
                 .findViewById(R.id.course_image);
         this.newCourseContent = convertView
                 .findViewById(R.id.new_course_content_layout);

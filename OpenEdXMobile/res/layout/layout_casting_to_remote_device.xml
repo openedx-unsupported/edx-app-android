@@ -8,14 +8,14 @@
     android:clickable="true"
     android:focusable="true">
 
-    <com.joanzapata.iconify.widget.IconImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/remote_play_button"
         style="@style/video_player_play_pause_button"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/edx_half_margin"
         android:contentDescription="@string/video_player_play"
         android:visibility="gone"
-        app:iconName="fa-play"
+        app:srcCompat="@drawable/ic_play_arrow"
         tools:visibility="visible" />
 
     <TextView

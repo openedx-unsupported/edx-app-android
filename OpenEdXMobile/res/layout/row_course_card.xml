@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/course_card_height"
     tools:showIn="@layout/fragment_course_dashboard">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/header_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,13 +52,13 @@
             android:contentDescription="@string/share_course_button"
             android:padding="@dimen/edx_margin"
             android:scaleType="fitCenter"
-            android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
-            android:tint="@color/black"
             android:visibility="invisible"
+            app:srcCompat="@drawable/ic_share"
+            app:tint="@color/black"
             tools:visibility="visible" />
     </LinearLayout>
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/header_play_icon"
         android:layout_width="@dimen/course_card_play_icon_size"
         android:layout_height="@dimen/course_card_play_icon_size"
@@ -67,9 +68,9 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_media_play_inactive"
-        android:tint="@color/black"
         android:visibility="invisible"
+        app:srcCompat="@drawable/ic_media_play_inactive"
+        app:tint="@color/black"
         tools:visibility="visible" />
 
 </FrameLayout>

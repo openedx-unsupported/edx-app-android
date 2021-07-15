@@ -8,12 +8,12 @@
         style="@style/content_unavailable_layout"
         tools:visibility="visible">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/content_error_icon"
             android:layout_width="@dimen/content_unavailable_error_icon_size"
             android:layout_height="@dimen/content_unavailable_error_icon_size"
-            app:iconColor="@color/neutralXXDark"
-            app:iconName="fa-wifi" />
+            app:srcCompat="@drawable/ic_wifi"
+            app:tint="@color/neutralXXDark" />
 
         <TextView
             android:id="@+id/content_error_text"

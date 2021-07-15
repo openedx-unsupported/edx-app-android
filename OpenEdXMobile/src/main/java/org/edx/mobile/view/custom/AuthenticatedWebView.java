@@ -15,14 +15,13 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
@@ -122,7 +121,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                 didReceiveError = true;
                 hideLoadingProgress();
                 pageIsLoaded = false;
-                showErrorMessage(R.string.network_error_message, FontAwesomeIcons.fa_exclamation_circle);
+                showErrorMessage(R.string.network_error_message, R.drawable.ic_error);
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
 
@@ -145,7 +144,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                             break;
                     }
                     pageIsLoaded = false;
-                    showErrorMessage(R.string.network_error_message, FontAwesomeIcons.fa_exclamation_circle);
+                    showErrorMessage(R.string.network_error_message, R.drawable.ic_error);
                 }
                 super.onReceivedHttpError(view, request, errorResponse);
             }
@@ -153,7 +152,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
             public void onPageFinished(WebView view, String url) {
                 if (!NetworkUtil.isConnected(getContext())) {
                     showErrorView(getResources().getString(R.string.reset_no_network_message),
-                            FontAwesomeIcons.fa_wifi);
+                            R.drawable.ic_wifi);
                     hideLoadingProgress();
                     pageIsLoaded = false;
                     return;
@@ -213,7 +212,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         }
 
         if (!NetworkUtil.isConnected(getContext())) {
-            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
+            showErrorMessage(R.string.reset_no_network_message, R.drawable.ic_wifi);
             return;
         }
 
@@ -256,26 +255,26 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     /**
      * Shows the error message with the given icon, if the web page failed to load
      *
-     * @param errorMsg  The error message to show
-     * @param errorIcon The error icon to show with the error message
+     * @param errorMsg       The error message to show
+     * @param errorIconResId The resource id of the error icon to show with the error message
      */
-    private void showErrorMessage(@StringRes int errorMsg, @NonNull Icon errorIcon) {
+    private void showErrorMessage(@StringRes int errorMsg, @DrawableRes int errorIconResId) {
         if (!pageIsLoaded) {
             tryToClearWebView();
-            showErrorView(getResources().getString(errorMsg), errorIcon);
+            showErrorView(getResources().getString(errorMsg), errorIconResId);
         }
     }
 
-    private void showErrorView(@NonNull String errorMsg, @NonNull Icon errorIcon) {
+    private void showErrorView(@NonNull String errorMsg, @DrawableRes int errorIconResId) {
         if (isManuallyReloadable) {
-            fullScreenErrorNotification.showError(errorMsg, errorIcon, R.string.lbl_reload, new OnClickListener() {
+            fullScreenErrorNotification.showError(errorMsg, errorIconResId, R.string.lbl_reload, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onRefresh();
                 }
             });
         } else {
-            fullScreenErrorNotification.showError(errorMsg, errorIcon, 0, null);
+            fullScreenErrorNotification.showError(errorMsg, errorIconResId, 0, null);
         }
     }
 
@@ -297,7 +296,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                 onRefresh();
             }
         } else {
-            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
+            showErrorMessage(R.string.reset_no_network_message, R.drawable.ic_wifi);
         }
     }
 
@@ -370,7 +369,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                             public void run() {
                                 didReceiveError = true;
                                 webView.setVisibility(View.GONE);
-                                showErrorView(errorMsg, FontAwesomeIcons.fa_exclamation_circle);
+                                showErrorView(errorMsg, R.drawable.ic_error);
                             }
                         }
                 );

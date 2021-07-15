@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.widget.TextViewCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -30,10 +30,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.internal.Animation;
-import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -57,6 +53,7 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
@@ -153,11 +150,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         viewHolder.username.setText(username);
         viewHolder.username.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.profile_username_description, "username", username));
 
-        final IconDrawable icon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
-                .colorRes(getActivity(), R.color.disableable_button_text)
-                .sizeRes(getActivity(), R.dimen.fa_x_small)
-                .tint(null); // IconDrawable is tinted by default, but we don't want it to be tinted here
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto, icon, null, null, null);
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +186,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
 
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        viewHolder.profileImageProgress.setIconAnimation(Animation.PULSE);
+        UiUtils.INSTANCE.setAnimation(viewHolder.profileImageProgress, UiUtils.Animation.ROTATION);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
@@ -244,7 +236,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         public final TextView username;
         public final ViewGroup fields;
         public final TextView changePhoto;
-        public final IconImageView profileImageProgress;
+        public final AppCompatImageView profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);
@@ -253,7 +245,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             this.username = (TextView) parent.findViewById(R.id.username);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
             this.changePhoto = (TextView) parent.findViewById(R.id.change_photo);
-            this.profileImageProgress = (IconImageView) parent.findViewById(R.id.profile_image_progress);
+            this.profileImageProgress = (AppCompatImageView) parent.findViewById(R.id.profile_image_progress);
         }
     }
 

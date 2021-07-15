@@ -182,26 +182,28 @@
     <dimen name="edx_xx_small">11sp</dimen>
     <dimen name="edx_xxx_small">10sp</dimen>
 
-    <!-- font awesome sizes -->
-    <dimen name="fa_xxxx_large">38dp</dimen>
-    <dimen name="fa_xxx_large">28dp</dimen>
-    <dimen name="fa_xx_large">24dp</dimen>
-    <dimen name="fa_x_large">21dp</dimen>
-    <dimen name="fa_large">18dp</dimen>
-    <dimen name="fa_base">16dp</dimen>
-    <dimen name="fa_small">14dp</dimen>
-    <dimen name="fa_x_small">12dp</dimen>
-    <dimen name="fa_xx_small">11dp</dimen>
-    <dimen name="fa_xxx_small">10dp</dimen>
+    <!-- Icons Sizes -->
+    <dimen name="ic_xxxx_large">38dp</dimen>
+    <dimen name="ic_xxx_large">28dp</dimen>
+    <dimen name="ic_xx_large">24dp</dimen>
+    <dimen name="ic_x_large">21dp</dimen>
+    <dimen name="ic_large">18dp</dimen>
+    <dimen name="ic_base">16dp</dimen>
+    <dimen name="ic_small">14dp</dimen>
+    <dimen name="ic_x_small">12dp</dimen>
+    <dimen name="ic_xxx_small">10dp</dimen>
 
-    <!-- Icons -->
+    <!-- Unorganized Icons Sizes -->
     <dimen name="x_small_icon_margin">5dp</dimen>
     <dimen name="small_icon_size">15dp</dimen>
     <dimen name="medium_icon_size">35dp</dimen>
+
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>
+
     <dimen name="content_unavailable_error_icon_size">80dp</dimen>
     <dimen name="unit_unavailable_error_icon_size">90dp</dimen>
+
     <dimen name="course_unit_block_listing_icon_width">34dp</dimen>
     <dimen name="course_unit_block_listing_icon_height">48dp</dimen>
     <dimen name="course_unit_block_listing_icon_padding_end">14dp</dimen>
@@ -261,6 +263,7 @@
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
+    <dimen name="button_icon_horizontal_padding">20dp</dimen>
     <dimen name="divider_with_text_margin">12dp</dimen>
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>

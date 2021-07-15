@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <org.edx.mobile.view.custom.IconProgressBar
+    <ProgressBar
         android:id="@+id/progress_indicator"
-        style="?android:attr/progressBarStyleInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

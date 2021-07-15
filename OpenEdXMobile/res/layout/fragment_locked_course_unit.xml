@@ -28,14 +28,14 @@
                     android:paddingEnd="@dimen/edx_margin"
                     android:paddingBottom="@dimen/edx_double_margin">
 
-                    <org.edx.mobile.view.custom.IconImageViewXml
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/lock"
-                        android:layout_width="@dimen/fa_xxx_large"
-                        android:layout_height="@dimen/fa_xxx_large"
-                        app:iconColor="@color/white"
-                        app:iconName="fa-lock"
+                        android:layout_width="@dimen/ic_xxx_large"
+                        android:layout_height="@dimen/ic_xxx_large"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_lock"
+                        app:tint="@color/white" />
 
                     <TextView
                         android:id="@+id/tv_header"
@@ -64,7 +64,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/edx_margin"
@@ -72,7 +72,7 @@
                     android:background="@color/neutralLight"
                     android:contentDescription="@string/tab_label_certificate"
                     android:padding="@dimen/image_border_width"
-                    android:src="@drawable/payment_certificate" />
+                    app:srcCompat="@drawable/payment_certificate" />
 
             </LinearLayout>
 

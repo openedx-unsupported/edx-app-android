@@ -2,14 +2,14 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -136,7 +136,7 @@ public class CourseAnnouncementsFragment extends BaseFragment implements Refresh
                             populateAnnouncements(announcementsList);
                         } else {
                             errorNotification.showError(R.string.no_announcements_to_display,
-                                    FontAwesomeIcons.fa_exclamation_circle, 0, null);
+                                    R.drawable.ic_error, 0, null);
                         }
                     }
 

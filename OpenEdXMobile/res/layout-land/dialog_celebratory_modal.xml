@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:padding="@dimen/celebratory_modal_padding">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_celebrate_clap"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -61,10 +61,10 @@
                 android:orientation="horizontal"
                 android:padding="@dimen/celebratory_modal_padding">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_share"
+                    app:srcCompat="@drawable/ic_share"
                     tools:ignore="ContentDescription" />
 
                 <TextView

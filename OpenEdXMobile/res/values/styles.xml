@@ -195,24 +195,24 @@
         <item name="android:layout_width">@dimen/video_player_pause_btn_width</item>
         <item name="android:layout_height">@dimen/video_player_pause_btn_height</item>
         <item name="android:background">@drawable/semi_transparent_gray_circle</item>
-        <item name="android:padding">@dimen/video_player_pause_btn_padding</item>
-        <item name="iconColor">@color/white</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="tint">@color/white</item>
     </style>
 
     <style name="video_player_top_control">
         <item name="android:layout_width">@dimen/video_player_top_control_width</item>
         <item name="android:layout_height">@dimen/video_player_top_control_height</item>
         <item name="android:layout_marginEnd">@dimen/video_player_control_right_margin</item>
-        <item name="iconColor">@color/white</item>
+        <item name="tint">@color/white</item>
     </style>
 
     <style name="video_player_side_control">
         <item name="android:layout_width">@dimen/video_player_side_control_width</item>
         <item name="android:layout_height">@dimen/video_player_side_control_height</item>
         <item name="android:layout_marginEnd">@dimen/video_player_control_right_margin</item>
-        <item name="android:padding">@dimen/video_player_side_control_padding</item>
         <item name="android:background">@drawable/semi_transparent_gray_circle</item>
-        <item name="iconColor">@color/white</item>
+        <item name="tint">@color/white</item>
+        <item name="android:scaleType">centerCrop</item>
     </style>
 
     <style name="video_player_advance_control_time_text">
@@ -243,7 +243,8 @@
         <item name="android:layout_height">@dimen/video_player_bottom_control_height</item>
         <item name="android:layout_marginStart">@dimen/video_player_bottom_control_left_margin</item>
         <item name="android:layout_marginEnd">@dimen/video_player_bottom_control_right_margin</item>
-        <item name="iconColor">@color/white</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="tint">@color/white</item>
     </style>
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
@@ -334,7 +335,7 @@
         <item name="android:layout_height">@dimen/edx_small</item>
         <item name="android:layout_marginEnd">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginTop">@dimen/discussion_posts_icon_margin</item>
-        <item name="iconColor">@color/neutralXXDark</item>
+        <item name="tint">@color/neutralXXDark</item>
     </style>
 
     <style name="discussion_responses_nested_card_layout">
@@ -350,7 +351,7 @@
     </style>
 
     <style name="profile_image">
-        <item name="android:src">@color/primaryXLightColor</item>
+        <item name="srcCompat">@color/primaryXLightColor</item>
         <item name="civ_border_color">@color/primaryBaseColor</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@drawable/white_circle</item>
@@ -523,44 +524,44 @@
              need to use IconProgressBar to be able to define it in XML.
              Since, this should be used everywhere, it's set up as the
              default style for ProgressBar as well. -->
-        <item name="indeterminateIconName">fa-spinner</item>
-        <item name="indeterminateIconColor">@color/primaryBaseColor</item>
-        <item name="indeterminateIconPulse">true</item>
+        <item name="android:indeterminateDrawable">@drawable/custom_circular_progress_bar</item>
+        <item name="android:indeterminateTint">@color/primaryBaseColor</item>
+        <item name="android:indeterminateTintMode">src_in</item>
         <item name="android:indeterminateDuration">600</item>
         <item name="android:mirrorForRtl">true</item>
         <!-- Since we use xx_large for the standard ProgressBar
              style, we'll have xxxx_large as the large style,
              android base as the small style. -->
-        <item name="android:minWidth">@dimen/fa_xx_large</item>
-        <item name="android:maxWidth">@dimen/fa_xx_large</item>
-        <item name="android:minHeight">@dimen/fa_xx_large</item>
-        <item name="android:maxHeight">@dimen/fa_xx_large</item>
+        <item name="android:minWidth">@dimen/ic_xx_large</item>
+        <item name="android:maxWidth">@dimen/ic_xx_large</item>
+        <item name="android:minHeight">@dimen/ic_xx_large</item>
+        <item name="android:maxHeight">@dimen/ic_xx_large</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Large">
-        <item name="android:minWidth">@dimen/fa_xxxx_large</item>
-        <item name="android:maxWidth">@dimen/fa_xxxx_large</item>
-        <item name="android:minHeight">@dimen/fa_xxxx_large</item>
-        <item name="android:maxHeight">@dimen/fa_xxxx_large</item>
+        <item name="android:minWidth">@dimen/ic_xxxx_large</item>
+        <item name="android:maxWidth">@dimen/ic_xxxx_large</item>
+        <item name="android:minHeight">@dimen/ic_xxxx_large</item>
+        <item name="android:maxHeight">@dimen/ic_xxxx_large</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Small">
-        <item name="android:minWidth">@dimen/fa_base</item>
-        <item name="android:maxWidth">@dimen/fa_base</item>
-        <item name="android:minHeight">@dimen/fa_base</item>
-        <item name="android:maxHeight">@dimen/fa_base</item>
+        <item name="android:minWidth">@dimen/ic_base</item>
+        <item name="android:maxWidth">@dimen/ic_base</item>
+        <item name="android:minHeight">@dimen/ic_base</item>
+        <item name="android:maxHeight">@dimen/ic_base</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Inverse">
-        <item name="indeterminateIconColor">@color/white</item>
+        <item name="android:indeterminateTint">@color/white</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Large.Inverse">
-        <item name="indeterminateIconColor">@color/white</item>
+        <item name="android:indeterminateTint">@color/white</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Small.Inverse">
-        <item name="indeterminateIconColor">@color/white</item>
+        <item name="android:indeterminateTint">@color/white</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Small.Title" />

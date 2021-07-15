@@ -1,8 +1,6 @@
 package org.edx.mobile.test;
 
 import com.facebook.FacebookSdk;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import org.edx.mobile.base.MainApplication;
 
@@ -28,8 +26,6 @@ import org.edx.mobile.base.MainApplication;
 public class TestApplication extends MainApplication {
     @Override
     public void onCreate() {
-        // Register Font Awesome module in android-iconify library
-        Iconify.with(new FontAwesomeModule());
         application = this;
 
         // Facebook sdk should be initialized through AndroidManifest meta data declaration but

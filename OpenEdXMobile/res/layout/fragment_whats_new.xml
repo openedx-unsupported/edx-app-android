@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -26,7 +27,7 @@
                 android:textColor="@color/neutralWhite"
                 android:textSize="@dimen/edx_base" />
 
-            <com.joanzapata.iconify.widget.IconButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/close_btn"
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"
@@ -35,9 +36,9 @@
                 android:background="@drawable/selectable_box_overlay"
                 android:contentDescription="@string/label_close"
                 android:padding="@dimen/widget_margin"
-                android:text="{fa-close}"
-                android:textColor="@color/white"
-                android:textSize="@dimen/edx_x_large" />
+                android:textSize="@dimen/edx_x_large"
+                app:srcCompat="@drawable/ic_close"
+                app:tint="@color/white" />
         </FrameLayout>
 
         <androidx.viewpager2.widget.ViewPager2

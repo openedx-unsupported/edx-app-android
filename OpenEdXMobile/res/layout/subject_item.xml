@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -8,13 +9,13 @@
         android:layout_height="@dimen/subject_item_height"
         android:padding="@dimen/widget_margin_half">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_subject_logo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/business" />
+            app:srcCompat="@drawable/business" />
 
         <TextView
             android:id="@+id/tv_subject_name"

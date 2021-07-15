@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_share"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
-        android:title="@string/share_certificate_button" />
+        android:icon="@drawable/ic_share"
+        android:iconTint="@color/white"
+        android:iconTintMode="src_in"
+        android:title="@string/share_certificate_button"
+        app:showAsAction="ifRoom" />
 </menu>

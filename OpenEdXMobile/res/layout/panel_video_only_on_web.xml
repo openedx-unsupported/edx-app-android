@@ -22,10 +22,9 @@
         android:textColor="@color/white"
         android:textSize="@dimen/edx_small" />
 
-    <org.edx.mobile.view.custom.IconImageViewXml
-        android:layout_width="@dimen/fa_x_large"
-        android:layout_height="@dimen/fa_x_large"
-        app:iconColor="@color/primaryBaseColor"
-        app:iconName="fa-share-square-o" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="@dimen/ic_x_large"
+        android:layout_height="@dimen/ic_x_large"
+        app:srcCompat="@drawable/ic_open_in_browser" />
 
 </LinearLayout>

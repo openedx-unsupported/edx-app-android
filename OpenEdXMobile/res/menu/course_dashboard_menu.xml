@@ -5,6 +5,7 @@
     <item
         android:id="@+id/menu_item_download_progress"
         android:title="@string/label_current_downloads"
+        android:visible="false"
         app:actionLayout="@layout/view_progress_download_btn"
         app:showAsAction="always" />
 

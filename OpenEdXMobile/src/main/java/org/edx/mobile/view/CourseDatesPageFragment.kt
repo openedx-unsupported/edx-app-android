@@ -109,7 +109,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             errorNotification.hideError()
             viewModel.fetchCourseDates(courseID = courseData.courseId, forceRefresh = true, showLoader = false, isSwipeRefresh = true)
         }
-        UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer)
+        UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
         initObserver()
     }
 
@@ -302,7 +302,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
         snackbarErrorNotification.showError(
                 if (isSuccess) R.string.assessment_shift_dates_success_msg else R.string.course_dates_reset_unsuccessful,
-                null, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null)
+                0, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null)
         environment.analyticsRegistry.trackPLSCourseDatesShift(courseData.courseId, courseData.mode, Analytics.Screens.PLS_COURSE_DATES, isSuccess)
     }
 
@@ -361,7 +361,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     private fun showAddCalendarSuccessSnackbar() {
         val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_added,
-                null, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
+                0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
     }
 
     private fun deleteCalendar(calendarId: Long) {

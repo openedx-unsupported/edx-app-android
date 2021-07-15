@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <org.edx.mobile.view.custom.IconImageViewXml
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,8 +37,8 @@
                 android:layout_marginEnd="@dimen/widget_margin"
                 android:contentDescription="@string/course_outline_completion_description"
                 android:gravity="center_vertical"
-                android:src="@drawable/ic_green_check"
                 android:visibility="invisible"
+                app:srcCompat="@drawable/ic_green_check"
                 tools:visibility="visible" />
 
             <TextView
@@ -67,14 +67,14 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <org.edx.mobile.view.custom.IconImageViewXml
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/row_subtitle_icon"
-                    android:layout_width="@dimen/fa_large"
-                    android:layout_height="@dimen/fa_large"
+                    android:layout_width="@dimen/ic_large"
+                    android:layout_height="@dimen/ic_large"
                     android:layout_gravity="top"
                     android:layout_marginEnd="@dimen/widget_margin_half"
                     android:visibility="gone"
-                    app:iconName="fa-edit"
+                    app:srcCompat="@drawable/ic_fact_check"
                     tools:visibility="visible" />
 
                 <TextView
@@ -108,7 +108,7 @@
 
         </RelativeLayout>
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/locked_content"
             android:layout_width="@dimen/course_unit_block_listing_icon_width"
             android:layout_height="@dimen/course_unit_block_listing_icon_height"
@@ -116,8 +116,7 @@
             android:paddingStart="@dimen/edx_quarter_margin"
             android:paddingEnd="@dimen/course_unit_block_listing_icon_padding_end"
             android:visibility="gone"
-            app:iconColor="@color/primaryBaseColor"
-            app:iconName="fa-lock"
+            app:srcCompat="@drawable/ic_lock"
             tools:visibility="visible" />
 
         <LinearLayout
@@ -142,14 +141,14 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
-                <org.edx.mobile.view.custom.IconImageViewXml
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/bulk_download"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/ic_large"
+                    android:layout_height="@dimen/ic_large"
                     android:layout_gravity="center"
                     android:minWidth="@dimen/small_icon_size"
                     android:minHeight="@dimen/small_icon_size"
-                    android:src="@drawable/ic_holo_download" />
+                    app:srcCompat="@drawable/ic_download" />
             </FrameLayout>
 
             <TextView

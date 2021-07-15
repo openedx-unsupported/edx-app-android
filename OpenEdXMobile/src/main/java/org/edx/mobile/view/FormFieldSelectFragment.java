@@ -4,10 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.core.widget.TextViewCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -20,9 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -31,6 +28,7 @@ import org.edx.mobile.user.FormOption;
 import org.edx.mobile.user.FormOptions;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +97,7 @@ public class FormFieldSelectFragment extends BaseFragment {
                             "current_location",
                             locale.getDisplayCountry(),
                             locale.getCountry(),
-                            FontAwesomeIcons.fa_map_marker);
+                            R.drawable.ic_place);
                     break;
                 }
                 case LANGUAGE: {
@@ -109,7 +107,7 @@ public class FormFieldSelectFragment extends BaseFragment {
                             "current_language",
                             locale.getDisplayLanguage(),
                             locale.getLanguage(),
-                            FontAwesomeIcons.fa_comment);
+                            R.drawable.ic_language);
                     break;
                 }
             }
@@ -134,7 +132,7 @@ public class FormFieldSelectFragment extends BaseFragment {
         selectCurrentOption();
     }
 
-    private static void addDetectedValueHeader(@NonNull ListView listView, @StringRes int labelRes, @NonNull String labelKey, @NonNull String labelValue, @NonNull String value, @NonNull Icon icon) {
+    private static void addDetectedValueHeader(@NonNull ListView listView, @StringRes int labelRes, @NonNull String labelKey, @NonNull String labelValue, @NonNull String value, @DrawableRes int iconResId) {
         final TextView textView = (TextView) LayoutInflater.from(listView.getContext()).inflate(R.layout.edx_selectable_list_item, listView, false);
         {
             final SpannableString labelValueSpan = new SpannableString(labelValue);
@@ -142,11 +140,8 @@ public class FormFieldSelectFragment extends BaseFragment {
             textView.setText(ResourceUtil.getFormattedString(listView.getContext().getResources(), labelRes, labelKey, labelValueSpan));
         }
         Context context = textView.getContext();
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                new IconDrawable(context, icon)
-                        .sizeRes(context, R.dimen.edx_base)
-                        .colorRes(context, R.color.neutralDark)
-                , null, null, null);
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, iconResId, R.dimen.edx_base,
+                R.color.neutralDark);
         listView.addHeaderView(textView, new FormOption(labelValue, value), true);
     }
 

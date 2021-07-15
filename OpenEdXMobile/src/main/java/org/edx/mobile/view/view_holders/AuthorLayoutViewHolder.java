@@ -1,17 +1,15 @@
 package org.edx.mobile.view.view_holders;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.core.widget.TextViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionTextUtils;
@@ -21,6 +19,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.ProfileImageProvider;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.UiUtils;
 
 import roboguice.RoboGuice;
 
@@ -42,12 +41,8 @@ public class AuthorLayoutViewHolder {
         answerTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_text_view);
 
         final Context context = answerTextView.getContext();
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                answerTextView,
-                new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
-                        .sizeRes(context, R.dimen.edx_base)
-                        .colorRes(context, R.color.successLight),
-                null, null, null);
+        UiUtils.INSTANCE.setTextViewDrawableStart(context, answerTextView, R.drawable.ic_verified,
+                R.dimen.edx_base, R.color.successLight);
         RoboGuice.getInjector(context).injectMembers(this);
     }
 

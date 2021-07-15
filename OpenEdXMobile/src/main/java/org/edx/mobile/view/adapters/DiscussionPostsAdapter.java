@@ -1,73 +1,55 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtils;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
-    @ColorInt
-    private final int primaryBaseColor;
-    @ColorInt
-    private final int neutral_x_dark;
-    @ColorInt
-    private final int secondary_dark_color;
-    @ColorInt
-    private final int edx_utility_success_dark;
-
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
-
-    private final Typeface semiBoldFont;
 
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
-        primaryBaseColor = context.getResources().getColor(R.color.primaryBaseColor);
-        neutral_x_dark = context.getResources().getColor(R.color.neutralXDark);
-        secondary_dark_color = context.getResources().getColor(R.color.secondaryDarkColor);
-        edx_utility_success_dark = context.getResources().getColor(R.color.successBase);
-        semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
     }
 
     @Override
     public void render(BaseViewHolder tag, DiscussionThread discussionThread) {
         ViewHolder holder = (ViewHolder) tag;
         {
-            final Icon icon;
-            @ColorInt
-            final int iconColor;
+            @DrawableRes final int iconResId;
+            @ColorRes final int iconColorRes;
             if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
                 if (discussionThread.isHasEndorsed()) {
-                    icon = FontAwesomeIcons.fa_check_square_o;
-                    iconColor = edx_utility_success_dark;
+                    iconResId = R.drawable.ic_verified;
+                    iconColorRes = R.color.successBase;
                 } else {
-                    icon = FontAwesomeIcons.fa_question;
-                    iconColor = secondary_dark_color;
+                    iconResId = R.drawable.ic_help_center;
+                    iconColorRes = R.color.secondaryDarkColor;
                 }
             } else {
-                icon = FontAwesomeIcons.fa_comments;
-                iconColor = (discussionThread.isRead() ? neutral_x_dark : primaryBaseColor);
+                iconResId = R.drawable.ic_chat;
+                iconColorRes = (discussionThread.isRead() ? R.color.neutralXDark : R.color.primaryBaseColor);
             }
-            holder.discussionPostTypeIcon.setIcon(icon);
-            holder.discussionPostTypeIcon.setIconColor(iconColor);
+            holder.discussionPostTypeIcon.setImageDrawable(UiUtils.INSTANCE
+                    .getDrawable(holder.discussionPostTypeIcon.getContext(), iconResId, 0, iconColorRes));
         }
 
         {
@@ -75,16 +57,16 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             holder.discussionPostTitle.setText(threadTitle);
             if (!discussionThread.isRead()) {
                 holder.discussionPostTitle.setTextAppearance(getContext(), R.style.discussion_title_text);
-                holder.discussionPostTitle.setTypeface(semiBoldFont);
+                holder.discussionPostTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.inter_semi_bold));
             } else {
                 holder.discussionPostTitle.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionPostRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionPostDateTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
                 holder.discussionUnreadRepliesTextView.setTextAppearance(getContext(), R.style.discussion_responses_read);
-                holder.discussionPostTypeIcon.setIconColor(neutral_x_dark);
-                holder.discussionPostClosedIcon.setIconColor(neutral_x_dark);
-                holder.discussionPostPinIcon.setIconColor(neutral_x_dark);
-                holder.discussionPostFollowIcon.setIconColor(neutral_x_dark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostTypeIcon, R.color.neutralXDark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostClosedIcon, R.color.neutralXDark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostPinIcon, R.color.neutralXDark);
+                UiUtils.INSTANCE.setImageViewColor(getContext(), holder.discussionPostFollowIcon, R.color.neutralXDark);
             }
         }
 
@@ -169,11 +151,11 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        final IconImageView discussionPostTypeIcon;
+        final AppCompatImageView discussionPostTypeIcon;
         final TextView discussionPostTitle;
-        final IconImageView discussionPostClosedIcon;
-        final IconImageView discussionPostPinIcon;
-        final IconImageView discussionPostFollowIcon;
+        final AppCompatImageView discussionPostClosedIcon;
+        final AppCompatImageView discussionPostPinIcon;
+        final AppCompatImageView discussionPostFollowIcon;
         final TextView discussionPostRepliesTextView;
         final TextView discussionPostDateTextView;
         final TextView discussionUnreadRepliesTextView;
@@ -181,11 +163,11 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         final View discussionSubtitleSecondPipe;
 
         public ViewHolder(View convertView) {
-            discussionPostTypeIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_type_icon);
+            discussionPostTypeIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_type_icon);
             discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
-            discussionPostClosedIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_closed_icon);
-            discussionPostPinIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_pin_icon);
-            discussionPostFollowIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_following_icon);
+            discussionPostClosedIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_closed_icon);
+            discussionPostPinIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_pin_icon);
+            discussionPostFollowIcon = (AppCompatImageView) convertView.findViewById(R.id.discussion_post_following_icon);
             discussionPostRepliesTextView = (TextView) convertView.findViewById(R.id.discussion_post_replies_count);
             discussionPostDateTextView = (TextView) convertView.findViewById(R.id.discussion_post_date);
             discussionUnreadRepliesTextView = (TextView) convertView.findViewById(R.id.discussion_unread_replies_text);

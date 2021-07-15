@@ -27,16 +27,15 @@
                     android:paddingTop="@dimen/edx_margin"
                     android:paddingBottom="@dimen/edx_margin">
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/btn_close"
-                        android:layout_width="@dimen/fa_xxxx_large"
-                        android:layout_height="@dimen/fa_xxxx_large"
+                        android:layout_width="@dimen/ic_xxxx_large"
+                        android:layout_height="@dimen/ic_xxxx_large"
                         android:layout_marginEnd="@dimen/edx_margin"
                         android:background="@drawable/selectable_box_overlay"
                         android:contentDescription="@string/close"
-                        android:padding="@dimen/widget_margin"
-                        android:src="@drawable/ic_close"
-                        android:tint="@color/white"
+                        android:scaleType="center"
+                        app:srcCompat="@drawable/ic_close"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +46,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/edx_margin"
                         android:singleLine="true"
-                        android:text="@string/payments_info_header"
                         android:textSize="@dimen/edx_large"
                         app:layout_constraintBottom_toBottomOf="@+id/btn_close"
                         app:layout_constraintEnd_toStartOf="@+id/btn_close"
@@ -67,18 +65,18 @@
                         app:layout_constraintTop_toBottomOf="@id/btn_close"
                         app:layout_constraintWidth_percent=".65" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/certificate_slice"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/edx_half_margin"
                         android:contentDescription="@null"
                         android:scaleType="fitEnd"
-                        android:src="@drawable/payment_certificate_half"
                         app:layout_constraintBottom_toBottomOf="@id/tv_header_detail"
                         app:layout_constraintStart_toEndOf="@id/tv_header_detail"
                         app:layout_constraintTop_toTopOf="@id/tv_header_detail"
-                        app:layout_constraintWidth_percent=".35" />
+                        app:layout_constraintWidth_percent=".35"
+                        app:srcCompat="@drawable/payment_certificate_half" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

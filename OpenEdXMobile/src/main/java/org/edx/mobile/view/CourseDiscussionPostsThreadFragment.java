@@ -2,13 +2,7 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseDiscussionInfo;
@@ -39,6 +34,7 @@ import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
@@ -150,12 +146,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
         Context context = getActivity();
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(createNewPostTextView,
-                new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
-                        .sizeRes(context, R.dimen.small_icon_size)
-                        .colorRes(context, R.color.white),
-                null, null, null
-        );
+        UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), createNewPostTextView,
+                R.drawable.ic_add_comment, R.dimen.small_icon_size);
         createNewPostLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,38 +157,10 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         discussionPostsFilterSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
                 discussionPostsFilterSpinner, DiscussionPostsFilter.values(),
-                FontAwesomeIcons.fa_filter));
+                R.drawable.ic_filter_alt));
         discussionPostsSortSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
                 discussionPostsSortSpinner, DiscussionPostsSort.values(),
-                // Since we can't define IconDrawable in XML resources, we'll have to define
-                // this constructed dynamically in code. This is far more efficient than the
-                // alternative option of defining multiple IconView items in the layout.
-                new DiscussionPostsSpinnerAdapter.IconDrawableFactory() {
-                    @Override
-                    @NonNull
-                    public Drawable createIcon() {
-                        Context context = getActivity();
-                        LayerDrawable layeredIcon = new LayerDrawable(new Drawable[]{
-                                new IconDrawable(context, FontAwesomeIcons.fa_long_arrow_up)
-                                        .colorRes(context, R.color.primaryBaseColor),
-                                new IconDrawable(context, FontAwesomeIcons.fa_long_arrow_down)
-                                        .colorRes(context, R.color.primaryBaseColor)
-                        });
-                        Resources resources = context.getResources();
-                        final int width = resources.getDimensionPixelSize(
-                                R.dimen.small_icon_size);
-                        final int verticalPadding = resources.getDimensionPixelSize(
-                                R.dimen.discussion_posts_filter_popup_icon_margin);
-                        final int height = width + verticalPadding;
-                        final float halfWidth = width / 2f;
-                        final int leftIconWidth = (int) Math.ceil(halfWidth);
-                        final int rightIconWidth = (int) halfWidth;
-                        layeredIcon.setLayerInset(0, 0, 0, rightIconWidth, verticalPadding);
-                        layeredIcon.setLayerInset(1, leftIconWidth, verticalPadding, 0, 0);
-                        layeredIcon.setBounds(0, 0, width, height);
-                        return layeredIcon;
-                    }
-                }));
+                R.drawable.ic_swap_vert));
 
         discussionPostsFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

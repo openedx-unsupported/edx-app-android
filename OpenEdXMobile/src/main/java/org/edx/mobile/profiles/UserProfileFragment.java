@@ -1,15 +1,7 @@
 package org.edx.mobile.profiles;
 
 import android.content.res.Resources;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,12 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.joanzapata.iconify.Icon;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
@@ -38,6 +37,7 @@ import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;
@@ -129,7 +129,7 @@ public class UserProfileFragment
     @VisibleForTesting
     @NonNull
     protected StaticFragmentPagerAdapter createTabAdapter() {
-        return new StaticFragmentPagerAdapter(this , this);
+        return new StaticFragmentPagerAdapter(this, this);
     }
 
     @NonNull
@@ -217,10 +217,11 @@ public class UserProfileFragment
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
 
-                final Icon errorIcon = ErrorUtils.getErrorIcon(error);
+                final int errorIconResId = ErrorUtils.getErrorIconResId(error);
                 viewHolder.contentError.getRoot().setVisibility(View.VISIBLE);
-                if (errorIcon != null) {
-                    viewHolder.contentError.contentErrorIcon.setIcon(errorIcon);
+                if (errorIconResId != 0) {
+                    viewHolder.contentError.contentErrorIcon.setImageDrawable(
+                            UiUtils.INSTANCE.getDrawable(requireContext(), errorIconResId));
                 }
                 viewHolder.contentError.contentErrorText.setText(ErrorUtils.getErrorMessage(error, getContext()));
                 viewHolder.contentError.contentErrorAction.setText(R.string.lbl_reload);
@@ -293,8 +294,7 @@ public class UserProfileFragment
     @Override
     public void onChildScrollingPreferenceChanged() {
         final int position = viewHolder.profileSectionTabs.getSelectedTabPosition();
-        @AppBarLayout.LayoutParams.ScrollFlags
-        final int scrollFlags;
+        @AppBarLayout.LayoutParams.ScrollFlags final int scrollFlags;
         final Fragment fragment = (((StaticFragmentPagerAdapter) viewHolder.profileSectionPager.getAdapter()).getFragment(position));
         if (fragment != null) {
             if (position >= 0 &&

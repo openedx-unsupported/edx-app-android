@@ -7,11 +7,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
-import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -121,7 +121,7 @@ public class ImageUtils {
         return true;
     }
 
-    public static void setRoundedCornerImage(@NonNull ImageView imageView,
+    public static void setRoundedCornerImage(@NonNull AppCompatImageView imageView,
                                              @DrawableRes int drawableRes) {
         final Context context = imageView.getContext();
         final int cornerRadius = context.getResources().getDimensionPixelSize(R.dimen.subject_item_corner_radius);

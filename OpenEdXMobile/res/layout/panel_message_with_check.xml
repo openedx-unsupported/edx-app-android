@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_message_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +10,7 @@
     android:background="@drawable/rectangle_border_background"
     android:orientation="horizontal">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/message_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +19,7 @@
         android:layout_marginEnd="@dimen/widget_margin_half"
         android:contentDescription="@null"
         android:gravity="center"
-        android:src="@drawable/ic_round_primary_check" />
+        app:srcCompat="@drawable/ic_check" />
 
     <TextView
         android:id="@+id/message_body"

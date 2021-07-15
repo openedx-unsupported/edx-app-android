@@ -32,7 +32,7 @@
             android:textSize="@dimen/edx_small"
             app:layout_constraintTop_toBottomOf="@+id/tv_celebratory_modal_title" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_celebrate_clap"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -54,10 +54,10 @@
             android:padding="@dimen/celebratory_modal_padding"
             app:layout_constraintTop_toBottomOf="@+id/iv_celebrate_clap">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_share"
+                app:srcCompat="@drawable/ic_share"
                 tools:ignore="ContentDescription" />
 
             <TextView

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -9,7 +10,7 @@
         android:foreground="@drawable/light_selectable_rounded_box_overlay"
         android:gravity="center_vertical">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/google_btn_bg"
@@ -21,12 +22,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/social_btn_icon_size"
                 android:layout_height="@dimen/social_btn_icon_size"
                 android:layout_margin="@dimen/social_btn_margin"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_google" />
+                app:srcCompat="@drawable/ic_google" />
 
             <View
                 android:layout_width="@dimen/social_btn_divider_width"

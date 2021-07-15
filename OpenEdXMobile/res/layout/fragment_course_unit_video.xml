@@ -26,13 +26,10 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <org.edx.mobile.view.custom.IconImageViewXml
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/course_unit_message_icon_size"
             android:layout_height="@dimen/course_unit_message_icon_size"
-            android:background="@color/white"
-            android:rotation="90"
-            app:iconColor="@color/neutralDark"
-            app:iconName="fa-mobile-phone" />
+            app:srcCompat="@drawable/ic_screen_rotation" />
 
         <TextView
             android:layout_width="match_parent"

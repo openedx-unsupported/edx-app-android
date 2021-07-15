@@ -1,8 +1,5 @@
 package org.edx.mobile.http.notifications;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +8,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.widget.IconImageView;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.util.UiUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -56,31 +57,31 @@ public class FullScreenErrorNotification extends ErrorNotification {
      * as the root.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon.
+     * @param iconResId       The error iconResId.
      * @param actionTextResId The resource ID of the action button text.
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
     public void showError(@StringRes final int errorResId,
-                          @Nullable final Icon icon,
+                          @DrawableRes final int iconResId,
                           @StringRes final int actionTextResId,
                           @Nullable final View.OnClickListener actionListener) {
-        showError(view.getContext().getString(errorResId), icon, actionTextResId, actionListener);
+        showError(view.getContext().getString(errorResId), iconResId, actionTextResId, actionListener);
     }
 
     /**
      * Show the error notification according to the provided details.
      *
      * @param errorResId      The resource ID of the error message.
-     * @param icon            The error icon.
+     * @param iconResId       The error icon.
      * @param actionTextResId The resource ID of the action button text.
      * @param duration        The duration of the error message visibility
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     @Override
-    public void showError(int errorResId, @Nullable Icon icon, int actionTextResId, int duration, @Nullable View.OnClickListener actionListener) {
+    public void showError(int errorResId, @DrawableRes int iconResId, int actionTextResId, int duration, @Nullable View.OnClickListener actionListener) {
         // Ignoring the duration as it won't be use in Dialog
-        showError(errorResId, icon, actionTextResId, actionListener);
+        showError(errorResId, iconResId, actionTextResId, actionListener);
     }
 
     /**
@@ -94,12 +95,12 @@ public class FullScreenErrorNotification extends ErrorNotification {
      * as the root.
      *
      * @param errorMsg        The error message.
-     * @param icon            The error icon.
+     * @param iconResId       The error iconResId.
      * @param actionTextResId The resource ID of the action button text.
      * @param actionListener  The callback to be invoked when the action button is clicked.
      */
     public void showError(@NonNull final String errorMsg,
-                          @Nullable final Icon icon,
+                          @DrawableRes final int iconResId,
                           @StringRes final int actionTextResId,
                           @Nullable final View.OnClickListener actionListener) {
         final ViewGroup root = findSuitableAncestorLayout();
@@ -115,14 +116,14 @@ public class FullScreenErrorNotification extends ErrorNotification {
         }
         final TextView messageView = (TextView) errorLayout.findViewById(R.id.content_error_text);
         final Button actionButton = (Button) errorLayout.findViewById(R.id.content_error_action);
-        final IconImageView iconView = (IconImageView) errorLayout.findViewById(R.id.content_error_icon);
+        final AppCompatImageView iconView = (AppCompatImageView) errorLayout.findViewById(R.id.content_error_icon);
 
         messageView.setText(errorMsg);
-        if (icon == null) {
+        if (iconResId == 0) {
             iconView.setVisibility(GONE);
         } else {
             iconView.setVisibility(VISIBLE);
-            iconView.setIcon(icon);
+            iconView.setImageDrawable(UiUtils.INSTANCE.getDrawable(iconView.getContext(), iconResId));
         }
         if (actionTextResId == 0 || actionListener == null) {
             actionButton.setVisibility(GONE);

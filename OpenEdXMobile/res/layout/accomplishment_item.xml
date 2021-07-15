@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -10,7 +11,7 @@
         android:orientation="horizontal"
         android:padding="@dimen/edx_margin">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image"
             android:layout_width="@dimen/accomplishment_image_size"
             android:layout_height="@dimen/accomplishment_image_size"
@@ -59,7 +60,7 @@
             android:contentDescription="@string/share_accomplishment_button"
             android:padding="@dimen/widget_margin"
             android:scaleType="fitCenter"
-            android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
-            android:tint="@color/primaryBaseColor" />
+            app:srcCompat="@drawable/ic_share"
+            app:tint="@color/primaryBaseColor" />
     </LinearLayout>
 </layout>
