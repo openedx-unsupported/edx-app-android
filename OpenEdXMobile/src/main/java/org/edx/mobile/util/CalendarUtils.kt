@@ -171,7 +171,9 @@ object CalendarUtils {
     private fun getCalendarEvents(context: Context, calendarId: Long): Cursor? {
         val calendarContentResolver = context.contentResolver
         val projection = arrayOf(
-                CalendarContract.Events._ID
+                CalendarContract.Events._ID,
+                CalendarContract.Events.DTSTART,
+                CalendarContract.Events.DESCRIPTION
         )
         val selection = CalendarContract.Events.CALENDAR_ID + "=?"
         return calendarContentResolver.query(
@@ -181,6 +183,47 @@ object CalendarUtils {
                 arrayOf(calendarId.toString()),
                 null
         )
+    }
+
+    /**
+     * Method to compare the calendar events with course dates
+     * @return  true if the events are the same as calendar dates otherwise false
+     */
+    fun compareEvents(context: Context, calendarId: Long, courseDateBlocks: List<CourseDateBlock>): Boolean {
+        val cursor = getCalendarEvents(context, calendarId)
+        // Creating a local copy of courseDateBlock as this method required nested iteration to compare events
+        // To decrease the loop complexity we can remove object from list if they matched with existed events.
+        // through this the loop complexity can be reduced to 1/2 of N^2 which is O(N^2).
+        // Ref: https://dzone.com/articles/learning-big-o-notation-with-on-complexity
+        val datesList = ArrayList(courseDateBlocks)
+        var count = 0
+        cursor?.run {
+            if (moveToFirst()) {
+                do {
+                    val startDate = Calendar.getInstance().apply { timeInMillis = getLong(getColumnIndex(CalendarContract.Events.DTSTART)) }
+                    val description = getString(getColumnIndex(CalendarContract.Events.DESCRIPTION))
+                    run breaker@{
+                        datesList.forEachIndexed { index, unit ->
+                            if (unit.title.equals(description, ignoreCase = true)) {
+                                val date = unit.getDateCalendar()
+                                // Comparing the existed events start time with current dates block
+                                // As event started 1 hour before it's due time so mincing 1 hour from current date block
+                                if (date.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
+                                        date.get(Calendar.MONTH) == startDate.get(Calendar.MONTH) &&
+                                        date.get(Calendar.DAY_OF_MONTH) == startDate.get(Calendar.DAY_OF_MONTH) &&
+                                        date.get(Calendar.HOUR_OF_DAY) - 1 == startDate.get(Calendar.HOUR_OF_DAY) &&
+                                        date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)) {
+                                    count++
+                                    datesList.removeAt(index)
+                                    return@breaker
+                                }
+                            }
+                        }
+                    }
+                } while (moveToNext())
+            }
+        }
+        return (cursor?.count != 0 && cursor?.count == count)
     }
 
     /**

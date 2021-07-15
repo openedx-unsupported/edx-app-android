@@ -45,10 +45,10 @@ class CourseDateViewModel(
     val errorMessage: LiveData<ErrorMessage>
         get() = _errorMessage
 
-    fun fetchCourseDates(courseID: String, forceRefresh: Boolean, isSwipeRefresh: Boolean = false) {
+    fun fetchCourseDates(courseID: String, forceRefresh: Boolean, showLoader: Boolean = false, isSwipeRefresh: Boolean = false) {
         _errorMessage.value = null
         _swipeRefresh.value = isSwipeRefresh
-        _showLoader.value = isSwipeRefresh.not()
+        _showLoader.value = showLoader
         repository.getCourseDates(
                 courseId = courseID,
                 forceRefresh = forceRefresh,
@@ -109,7 +109,7 @@ class CourseDateViewModel(
                     override fun onSuccess(result: Result.Success<ResetCourseDates>) {
                         if (result.isSuccessful && result.data != null) {
                             _resetCourseDates.postValue(result.data)
-                            fetchCourseDatesBannerInfo(courseID, false)
+                            fetchCourseDates(courseID, forceRefresh = true, showLoader =  false, isSwipeRefresh = false)
                         } else {
                             setError(ErrorMessage.COURSE_RESET_DATES_CODE, result.code, result.message)
                         }

@@ -242,7 +242,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void fetchDateBannerInfo() {
         // Show course dates banner in assignment view only if the course is self paced
         if (unit.getType() == BlockType.PROBLEM && isSelfPaced) {
-            courseDateViewModel.fetchCourseDates(unit.getCourseId(), false, true);
+            courseDateViewModel.fetchCourseDates(unit.getCourseId(), false, true, false);
         }
     }
 
@@ -263,6 +263,12 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
+                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
+                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
+                    if (!CalendarUtils.INSTANCE.compareEvents(requireContext(), calendarId, courseDates.getCourseDateBlocks())) {
+                        showCalendarOutOfDateDialog(calendarId);
+                    }
+                }
             }
         });
 
@@ -276,14 +282,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
                 authWebView.loadUrl(true, unit.getBlockUrl());
-                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
-                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
-                    AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
-                            getString(R.string.message_calendar_out_of_date), getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
-                            getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
-                    alertDialogFragment.setCancelable(false);
-                    alertDialogFragment.show(getChildFragmentManager(), null);
-                } else {
+                if (!CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
                     showShiftDateSnackBar(true);
                 }
             }
@@ -308,6 +307,14 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 }
             }
         });
+    }
+
+    private void showCalendarOutOfDateDialog(Long calendarId) {
+        AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
+                getString(R.string.message_calendar_out_of_date), getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
+                getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
+        alertDialogFragment.setCancelable(false);
+        alertDialogFragment.show(getChildFragmentManager(), null);
     }
 
     private void showShiftDateSnackBar(boolean isSuccess) {
