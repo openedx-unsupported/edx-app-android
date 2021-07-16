@@ -76,7 +76,6 @@ public interface LoginService {
                                       @Field("client_id") String client_id,
                                       @Field("username") String username,
                                       @Field("password") String password,
-                                      @Field("client_secret") String client_secret,
                                       @Field("token_type") String token_type);
 
     /**

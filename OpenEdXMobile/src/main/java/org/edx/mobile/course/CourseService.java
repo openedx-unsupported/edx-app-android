@@ -153,11 +153,11 @@ public interface CourseService {
     @GET("")
     Call<BasketResponse> addToBasket(@Url final String url);
 
-    @POST("/api/v2/checkout/")
-    Call<CheckoutResponse> checkoutPayment(@Body HashMap<String, String> paymentCheckout);
+    @POST("")
+    Call<CheckoutResponse> checkoutPayment(@Url String url, @Body HashMap<String, String> paymentCheckout);
 
-    @POST("/api/iap/v1/execute/")
-    Call<PaymentExecutionResponse> executePayments(@Body HashMap<String, String> receipt);
+    @POST("")
+    Call<PaymentExecutionResponse> executePayments(@Url final String executionURL, @Body HashMap<String, String> receipt);
 
     final class BlocksCompletionBody {
         @NonNull String username;

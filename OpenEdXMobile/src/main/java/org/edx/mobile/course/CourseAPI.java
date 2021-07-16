@@ -252,16 +252,16 @@ public class CourseAPI {
     }
 
     @NonNull
-    public Call<CheckoutResponse> checkoutPayment(String basketId) {
+    public Call<CheckoutResponse> checkoutPayment(String url, String basketId) {
         HashMap<String, String> paymentCheckout = new HashMap<>();
         paymentCheckout.put("basket_id", basketId);
         paymentCheckout.put("payment_processor", "android-iap");
-        return courseService.checkoutPayment(paymentCheckout);
+        return courseService.checkoutPayment(url, paymentCheckout);
     }
 
     @NonNull
-    public Call<PaymentExecutionResponse> executePayments(HashMap<String, String> receipt) {
-        return courseService.executePayments(receipt);
+    public Call<PaymentExecutionResponse> executePayments(String executionURL, HashMap<String, String> receipt) {
+        return courseService.executePayments(executionURL,receipt);
     }
 
     public static abstract class GetCourseStructureCallback

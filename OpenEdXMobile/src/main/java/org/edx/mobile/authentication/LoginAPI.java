@@ -80,9 +80,8 @@ public class LoginAPI {
                                        @NonNull String password) throws IOException {
         String grantType = "password";
         String clientID = config.getOAuthClientId();
-        String clientSecret = "IHuwG8TnElJpQyx6VikEG2P1eTBNbtFYH7cHWPSAFVbUjkLTiKDDFWAQdpJo1Z1YQRRUPGYRDMhkf8PhGTLUM1HC9JF0xAbxWXWxw41nWX2kqGMT3nvrhtQNCFkP6azE";
         String token_type = "jwt";
-        return loginService.getAccessToken(grantType, clientID, username, password, clientSecret, token_type).execute();
+        return loginService.getAccessToken(grantType, clientID, username, password, token_type).execute();
     }
 
     @NonNull

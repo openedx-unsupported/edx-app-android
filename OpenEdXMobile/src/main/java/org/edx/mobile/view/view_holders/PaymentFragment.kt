@@ -17,6 +17,7 @@ import org.edx.mobile.databinding.FragmentPaymentsBinding
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.iap.BasketResponse
 import org.edx.mobile.model.iap.CheckoutResponse
+import org.edx.mobile.model.iap.PaymentExecutionResponse
 import org.edx.mobile.repositorie.InAppPaymentsRepository
 import org.edx.mobile.viewModel.InAppPurchaseViewModel
 
@@ -69,17 +70,28 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
                 binding.tvMessage.text = basketResponse.success
                 binding.tvMessage.text =
                     binding.tvMessage.text as String + " -> " + basketResponse.basketId
-                iapViewModel.checkout(basketResponse.basketId)
+                iapViewModel.checkout(
+                    "https://ecommerce-iap.sandbox.edx.org/api/v2/checkout/",
+                    basketResponse.basketId
+                )
             }
         })
 
-        iapViewModel.checkoutResponse.observe(viewLifecycleOwner, object : Observer<CheckoutResponse>{
-            override fun onChanged(checkoutResponse: CheckoutResponse?) {
+        iapViewModel.checkoutResponse.observe(
+            viewLifecycleOwner,
+            Observer<CheckoutResponse> { checkoutResponse ->
                 binding.tvMessage.text =
-                    binding.tvMessage.text as String + " -> " + checkoutResponse.
-            }
+                    binding.tvMessage.text as String + " -> " + checkoutResponse.paymentPageUrl
+                val paymentMap = HashMap<String, String>()
+                paymentMap["basket_id"] = checkoutResponse.basketId
+//                iapViewModel.paymentExecution(checkoutResponse.paymentPageUrl, paymentMap)
+            })
 
-        })
+        iapViewModel.paymentExecution.observe(
+            viewLifecycleOwner,
+            Observer<PaymentExecutionResponse> { paymentExecutionResponse ->
+                binding.tvMessage.text as String + " -> " + paymentExecutionResponse.basketId
+            })
     }
 
     private fun addToBasket(url: String) {

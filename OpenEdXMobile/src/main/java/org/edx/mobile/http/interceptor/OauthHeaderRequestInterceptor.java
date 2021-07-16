@@ -1,6 +1,7 @@
 package org.edx.mobile.http.interceptor;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
@@ -31,7 +32,6 @@ public final class OauthHeaderRequestInterceptor implements Interceptor {
         final Request.Builder builder = chain.request().newBuilder();
         final String token = loginPrefs.getAuthorizationHeader();
         if (token != null) {
-//            builder.addHeader("Authorization", token);
             builder.addHeader("Authorization", token);
         }
         return chain.proceed(builder.build());
