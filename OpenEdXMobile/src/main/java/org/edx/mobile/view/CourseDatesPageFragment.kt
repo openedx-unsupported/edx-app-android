@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,7 +100,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
         calendarTitle = "${environment.config.platformName} - ${courseData.course.name}"
         isSelfPaced = courseData.course.isSelfPaced
-        accountName = environment.loginPrefs.currentUserProfile?.name ?: "local_user"
+        accountName = environment.loginPrefs.currentUserProfile?.email ?: CalendarUtils.LOCAL_USER
 
         errorNotification = FullScreenErrorNotification(binding.swipeContainer)
 
@@ -245,7 +246,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 }
             } else if (CalendarUtils.hasPermissions(context = contextOrThrow)) {
                 val calendarId = CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
-                if (calendarId != (-1).toLong()) {
+                if (calendarId != -1L) {
                     deleteCalendar(calendarId)
                 }
             }
@@ -307,10 +308,18 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun insertCalendarEvent() {
-        val calendarId: Long = CalendarUtils.createOrUpdateCalendar(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
+        val calendarId: Long = CalendarUtils.createOrUpdateCalendar(
+            context = contextOrThrow,
+            accountName = accountName,
+            calendarTitle = calendarTitle
+        )
         // if app unable to create the Calendar for the course
-        if (calendarId == (-1).toLong()) {
-            Toast.makeText(contextOrThrow, "Error Adding Calendar, Please try later", Toast.LENGTH_SHORT).show()
+        if (calendarId == -1L) {
+            Toast.makeText(
+                contextOrThrow,
+                getString(R.string.adding_calendar_error_message),
+                Toast.LENGTH_SHORT
+            ).show()
             binding.switchSync.isChecked = false
             return
         }
