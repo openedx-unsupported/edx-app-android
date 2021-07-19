@@ -73,8 +73,9 @@ public class SegmentAnalytics implements Analytics {
                         chain.proceed(newPayload);
                     });
         }
-        if (config.getBrazeConfig().isEnabled() && config.getFirebaseConfig().isEnabled())
+        if (config.getBrazeConfig().isEnabled() && config.getFirebaseConfig().isEnabled()) {
             builder = builder.use(AppboyIntegration.FACTORY);
+        }
         tracker = builder.build();
     }
 

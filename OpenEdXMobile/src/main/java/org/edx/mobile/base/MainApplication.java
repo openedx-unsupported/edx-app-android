@@ -142,11 +142,12 @@ public abstract class MainApplication extends MultiDexApplication {
         // Braze SDK Initialization
         if (config.getBrazeConfig().isEnabled() && config.getFirebaseConfig().isEnabled()) {
             AppboyConfig appboyConfig = new AppboyConfig.Builder()
-                    .setIsFirebaseCloudMessagingRegistrationEnabled(config.getBrazeConfig().isPushNotificationsEnabled())
+                    .setIsFirebaseCloudMessagingRegistrationEnabled(config.areFirebasePushNotificationsEnabled()
+                            && config.getBrazeConfig().isPushNotificationsEnabled())
                     .setFirebaseCloudMessagingSenderIdKey(config.getFirebaseConfig().getProjectNumber())
                     .setHandlePushDeepLinksAutomatically(true)
                     .build();
-            Appboy.configure(getApplicationContext(), appboyConfig);
+            Appboy.configure(this, appboyConfig);
             registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener(true, true));
         }
     }
