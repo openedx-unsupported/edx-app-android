@@ -70,6 +70,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setToolbarAsActionBar();
         RelativeLayout insertPoint = (RelativeLayout) findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
