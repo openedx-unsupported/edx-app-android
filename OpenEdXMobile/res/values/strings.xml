@@ -859,4 +859,6 @@
     <string name="open_in_browser_message">This part of the course may work best in a web browser.</string>
     <!-- Open in browser Title -->
     <string name="open_in_browser_text"><u>Open in browser</u></string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Error Adding Calendar, Please try later</string>
 </resources>
