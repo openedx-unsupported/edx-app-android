@@ -238,10 +238,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             if (isChecked) {
                 if (!CalendarUtils.permissions.any { permission -> PermissionsUtil.checkPermissions(permission, contextOrThrow) }) {
                     askCalendarPermission()
-                } else {
-                    if (isCalendarExist.not()) {
+                } else if (isCalendarExist.not()) {
                         askForCalendarSync()
-                    }
                 }
             } else if (CalendarUtils.hasPermissions(context = contextOrThrow)) {
                 val calendarId = CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
@@ -328,6 +326,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         courseDates?.courseDateBlocks?.forEach { courseDateBlock ->
             CalendarUtils.addEventsIntoCalendar(context = contextOrThrow, calendarId = calendarId, courseName = courseData.course.name, courseDateBlock = courseDateBlock)
         }
+        checkIfCalendarExists()
         if (updateEvents) {
             showCalendarUpdatedSnackbar()
             trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS)
