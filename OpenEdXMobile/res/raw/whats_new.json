@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Sync to calendar",
+        "message": "Never miss a deadline again—sync course dates to your phone's calendar to receive reminders!"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {
