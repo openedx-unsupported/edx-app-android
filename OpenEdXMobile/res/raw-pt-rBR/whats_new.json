@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Sincronize com o calendário",
+        "message": "Nunca mais perca um prazo: sincronize as datas do curso com o calendário do seu telefone para receber lembretes!"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {

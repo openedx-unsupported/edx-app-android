@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Takvim ile senkronize et",
+        "message": "Bir daha hiçbir bitiş tarihini kaçırmayın, ders tarihlerini telefonunuzun takvimiyle senkronize edin ve hatırlatıcılar alın!"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {

@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Đồng bộ hóa với lịch",
+        "message": "Không còn bị trễ hạn nữa—đồng bộ hóa ngày khóa học với lịch trên điện thoại của bạn để nhận nhắc nhở!"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {

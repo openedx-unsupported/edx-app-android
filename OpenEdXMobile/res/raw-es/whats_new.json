@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Sincronizar con el calendario",
+        "message": "No vuelvas a pasar por alto otro plazo: ¡sincroniza las fechas del curso con el calendario de tu teléfono para recibir recordatorios!"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {

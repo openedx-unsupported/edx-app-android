@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "カレンダーに同期",
+        "message": "講座の日付をスマートフォン上のカレンダーに同期してリマインダーを受け取り、締切を確実に守りましょう！"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {

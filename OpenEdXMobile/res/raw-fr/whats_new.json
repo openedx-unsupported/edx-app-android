@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Synchroniser avec le calendrier",
+        "message": "Ne manquez plus jamais une date limite : synchronisez les dates des cours avec le calendrier de votre téléphone pour recevoir des rappels!"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {
