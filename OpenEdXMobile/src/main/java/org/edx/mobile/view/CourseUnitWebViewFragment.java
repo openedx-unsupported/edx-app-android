@@ -167,7 +167,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private void evaluateXBlocksForBanner() {
         List<BlockType> allowedBlocks = Arrays.asList(BlockType.PROBLEM, BlockType.OPENASSESSMENT,
-                BlockType.DRAG_AND_DROP_V2, BlockType.WORD_CLOUD);
+                BlockType.DRAG_AND_DROP_V2, BlockType.WORD_CLOUD, BlockType.LTI_CONSUMER);
         if (allowedBlocks.contains(unit.getType())) {
             setupOpenInBrowserView();
         }
