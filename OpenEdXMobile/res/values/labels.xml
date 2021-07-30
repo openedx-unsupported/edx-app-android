@@ -44,6 +44,8 @@
     <string name="label_update_now">Update Now</string>
     <!-- Alert dialog remove course calendar button -->
     <string name="label_remove_course_calendar">Remove Course Calendar</string>
+    <!-- Alert dialog Remove button -->
+    <string name="label_remove">Remove</string>
     <!-- Done button label -->
     <string name="label_done">Done</string>
     <!-- Undo button label -->

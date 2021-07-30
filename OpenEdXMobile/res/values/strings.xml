@@ -287,6 +287,10 @@
     <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” has been added to your phone\'s calendar.</string>
     <!-- Success Message after calendar for course added -->
     <string name="message_after_course_calendar_added">Your course calendar has been added.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">Remove calendar \“{course_name}\”</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">Would you like to remove the edX calendar \“{course_name}\” ?</string>
     <!-- Success Message after calendar for course removed -->
     <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
     <!-- Success Message after calendar for course update -->
