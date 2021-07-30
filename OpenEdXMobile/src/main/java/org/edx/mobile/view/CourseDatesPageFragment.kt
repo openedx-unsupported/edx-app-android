@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -240,12 +239,12 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 if (!CalendarUtils.permissions.any { permission -> PermissionsUtil.checkPermissions(permission, contextOrThrow) }) {
                     askCalendarPermission()
                 } else if (isCalendarExist.not()) {
-                        askForCalendarSync()
+                    askForCalendarSync()
                 }
             } else if (CalendarUtils.hasPermissions(context = contextOrThrow)) {
                 val calendarId = CalendarUtils.getCalendarId(context = contextOrThrow, accountName = accountName, calendarTitle = calendarTitle)
                 if (calendarId != -1L) {
-                    deleteCalendar(calendarId)
+                    askCalendarRemoveDialog(calendarId)
                 }
             }
             trackCalendarEvent(if (isChecked) Analytics.Events.CALENDAR_TOGGLE_ON else Analytics.Events.CALENDAR_TOGGLE_OFF,
@@ -276,25 +275,21 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun askForCalendarSync() {
-        if (environment.courseCalendarPrefs.isSyncAlertPopupDisabled(courseData.course.name.replace(" ", "_"))) {
-            insertCalendarEvent()
-        } else {
-            val title: String = ResourceUtil.getFormattedString(resources, R.string.title_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
-            val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val title: String = ResourceUtil.getFormattedString(resources, R.string.title_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
 
-            val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
-                    { _: DialogInterface, _: Int ->
-                        trackCalendarEvent(Analytics.Events.CALENDAR_ADD_OK, Analytics.Values.CALENDAR_ADD_OK)
-                        insertCalendarEvent()
-                    },
-                    getString(R.string.label_cancel),
-                    { _: DialogInterface?, _: Int ->
-                        trackCalendarEvent(Analytics.Events.CALENDAR_ADD_CANCEL, Analytics.Values.CALENDAR_ADD_CANCEL)
-                        binding.switchSync.isChecked = false
-                    })
-            alertDialog.isCancelable = false
-            alertDialog.show(childFragmentManager, null)
-        }
+        val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
+                { _: DialogInterface, _: Int ->
+                    trackCalendarEvent(Analytics.Events.CALENDAR_ADD_OK, Analytics.Values.CALENDAR_ADD_OK)
+                    insertCalendarEvent()
+                },
+                getString(R.string.label_cancel),
+                { _: DialogInterface?, _: Int ->
+                    trackCalendarEvent(Analytics.Events.CALENDAR_ADD_CANCEL, Analytics.Values.CALENDAR_ADD_CANCEL)
+                    binding.switchSync.isChecked = false
+                })
+        alertDialog.isCancelable = false
+        alertDialog.show(childFragmentManager, null)
     }
 
     private fun showShiftDateSnackBar(isSuccess: Boolean) {
@@ -370,6 +365,24 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_added,
                 0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION) { snackbarErrorNotification.hideError() }
+    }
+
+    private fun askCalendarRemoveDialog(calendarId: Long) {
+        val title: String = ResourceUtil.getFormattedString(resources, R.string.title_remove_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_remove_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+
+        val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_remove),
+                { _: DialogInterface, _: Int ->
+                    trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_OK, Analytics.Values.CALENDAR_REMOVE_OK)
+                    deleteCalendar(calendarId)
+                },
+                getString(R.string.label_cancel),
+                { _: DialogInterface?, _: Int ->
+                    trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_CANCEL, Analytics.Values.CALENDAR_REMOVE_CANCEL)
+                    binding.switchSync.isChecked = true
+                })
+        alertDialog.isCancelable = false
+        alertDialog.show(childFragmentManager, null)
     }
 
     private fun deleteCalendar(calendarId: Long) {

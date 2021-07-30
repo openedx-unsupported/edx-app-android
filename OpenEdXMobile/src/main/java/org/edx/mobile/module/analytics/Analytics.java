@@ -803,6 +803,8 @@ public interface Analytics {
         String CALENDAR_ACCESS_DONT_ALLOW = "edx.bi.app.calendar.access_dont_allow";
         String CALENDAR_ADD_OK = "edx.bi.app.calendar.add_ok";
         String CALENDAR_ADD_CANCEL = "edx.bi.app.calendar.add_cancel";
+        String CALENDAR_REMOVE_OK = "edx.bi.app.calendar.remove_ok";
+        String CALENDAR_REMOVE_CANCEL = "edx.bi.app.calendar.remove_cancel";
         String CALENDAR_CONFIRMATION_DONE = "edx.bi.app.calendar.confirmation_done";
         String CALENDAR_VIEW_EVENTS = "edx.bi.app.calendar.confirmation_view_events";
         String CALENDAR_ADD_SUCCESS = "edx.bi.app.calendar.add_success";
@@ -955,6 +957,8 @@ public interface Analytics {
         String CALENDAR_ACCESS_DONT_ALLOW = "Dates: Calendar Access Dont Allow";
         String CALENDAR_ADD_OK = "Dates: Calendar Add Dates";
         String CALENDAR_ADD_CANCEL = "Dates: Calendar Add Cancelled";
+        String CALENDAR_REMOVE_OK = "Dates: Calendar Remove Dates";
+        String CALENDAR_REMOVE_CANCEL = "Dates: Calendar Remove Cancelled";
         String CALENDAR_CONFIRMATION_DONE = "Dates: Calendar Add Confirmation";
         String CALENDAR_VIEW_EVENTS = "Dates: Calendar View Events";
         String CALENDAR_ADD_SUCCESS = "Dates: Calendar Add Dates Success";
