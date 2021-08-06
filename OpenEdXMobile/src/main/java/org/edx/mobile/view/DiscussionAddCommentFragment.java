@@ -96,21 +96,12 @@ public class DiscussionAddCommentFragment extends BaseFragment {
                 new AuthorLayoutViewHolder(binding.rowDiscussionUserProfile.discussionUserProfileRow);
         authorLayoutViewHolder.populateViewHolder(config, discussionResponse, discussionResponse,
                 System.currentTimeMillis(),
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        router.showUserProfile(requireActivity(), discussionResponse.getAuthor());
-                    }
-                });
+                () -> router.showUserProfile(requireActivity(), discussionResponse.getAuthor()));
         DiscussionTextUtils.setEndorsedState(authorLayoutViewHolder.answerTextView,
                 discussionThread, discussionResponse);
 
         binding.btnAddCommentText.setText(R.string.discussion_add_comment_button_label);
-        binding.btnAddComment.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                createComment();
-            }
-        });
+        binding.btnAddComment.setOnClickListener(v -> createComment());
         binding.btnAddComment.setEnabled(false);
         binding.btnAddComment.setContentDescription(getString(R.string.discussion_add_comment_button_description));
         binding.etNewComment.setHint(R.string.discussion_add_comment_hint);

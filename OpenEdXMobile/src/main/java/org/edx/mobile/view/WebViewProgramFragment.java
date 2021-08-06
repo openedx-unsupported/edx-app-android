@@ -10,7 +10,6 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.inject.Inject;
 
@@ -52,7 +51,7 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (!isSystemUpdatingWebView()) {
-            getBinding().authWebview.getWebViewClient().setActionListener(new DefaultActionListener(getActivity(),
+            getBinding().authWebview.getWebViewClient().setActionListener(new DefaultActionListener(requireActivity(),
                     getBinding().authWebview.getProgressWheel(), new DefaultActionListener.EnrollCallback() {
                 @Override
                 public void onResponse(@NonNull EnrolledCoursesResponse course) {
@@ -99,13 +98,10 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
 
             tryEnablingSwipeContainer();
             UiUtils.INSTANCE.setSwipeRefreshLayoutColors(getBinding().swipeContainer);
-            getBinding().swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    // We already have spinner inside the WebView, so we don't need the SwipeRefreshLayout's spinner
-                    getBinding().swipeContainer.setEnabled(false);
-                    getBinding().authWebview.loadUrl(true, getBinding().authWebview.getWebView().getUrl());
-                }
+            getBinding().swipeContainer.setOnRefreshListener(() -> {
+                // We already have spinner inside the WebView, so we don't need the SwipeRefreshLayout's spinner
+                getBinding().swipeContainer.setEnabled(false);
+                getBinding().authWebview.loadUrl(true, getBinding().authWebview.getWebView().getUrl());
             });
         }
     }
@@ -121,14 +117,10 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             the underlying WebView has scrolled to its top.
             More info can be found on this SO question: https://stackoverflow.com/q/24658428/1402616
              */
-            getBinding().swipeContainer.getViewTreeObserver().addOnScrollChangedListener(onScrollChangedListener =
-                    new ViewTreeObserver.OnScrollChangedListener() {
-                        @Override
-                        public void onScrollChanged() {
-                            if (!tryEnablingSwipeContainer())
-                                getBinding().swipeContainer.setEnabled(false);
-                        }
-                    });
+            getBinding().swipeContainer.getViewTreeObserver().addOnScrollChangedListener(onScrollChangedListener = () -> {
+                if (!tryEnablingSwipeContainer())
+                    getBinding().swipeContainer.setEnabled(false);
+            });
         }
     }
 

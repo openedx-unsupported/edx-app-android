@@ -199,4 +199,3 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
         return binding;
     }
 }
-

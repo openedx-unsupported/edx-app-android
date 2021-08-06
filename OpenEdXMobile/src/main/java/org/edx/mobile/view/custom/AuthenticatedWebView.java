@@ -232,11 +232,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     private void hideLoadingProgress() {
         binding.loadingIndicator.loadingIndicator.setVisibility(View.GONE);
-        if (didReceiveError) {
-            binding.webview.setVisibility(View.GONE);
-        } else {
-            binding.webview.setVisibility(View.VISIBLE);
-        }
+        binding.webview.setVisibility(didReceiveError ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -344,13 +340,11 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         @JavascriptInterface
         public void showErrorMessage(@NonNull final String errorMsg) {
             if (!TextUtils.isEmpty(errorMsg)) {
-                binding.webview.post(
-                        () -> {
-                            didReceiveError = true;
-                            binding.webview.setVisibility(View.GONE);
-                            showErrorView(errorMsg, R.drawable.ic_error);
-                        }
-                );
+                binding.webview.post(() -> {
+                    didReceiveError = true;
+                    binding.webview.setVisibility(View.GONE);
+                    showErrorView(errorMsg, R.drawable.ic_error);
+                });
             }
         }
     }

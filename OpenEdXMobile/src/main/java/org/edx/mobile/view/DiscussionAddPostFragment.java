@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -85,25 +84,22 @@ public class DiscussionAddPostFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.discussionQuestionSegmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                @StringRes final int bodyHint;
-                @StringRes final int submitLabel;
-                @StringRes final int submitDescription;
-                if (binding.discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
-                    bodyHint = R.string.discussion_body_hint_discussion;
-                    submitLabel = R.string.discussion_add_post_button_label;
-                    submitDescription = R.string.discussion_add_post_button_description;
-                } else {
-                    bodyHint = R.string.discussion_body_hint_question;
-                    submitLabel = R.string.discussion_add_question_button_label;
-                    submitDescription = R.string.discussion_add_question_button_description;
-                }
-                binding.bodyEditText.setHint(bodyHint);
-                binding.addPostButtonText.setText(submitLabel);
-                binding.addPostButton.setContentDescription(getText(submitDescription));
+        binding.discussionQuestionSegmentedGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            @StringRes final int bodyHint;
+            @StringRes final int submitLabel;
+            @StringRes final int submitDescription;
+            if (binding.discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
+                bodyHint = R.string.discussion_body_hint_discussion;
+                submitLabel = R.string.discussion_add_post_button_label;
+                submitDescription = R.string.discussion_add_post_button_description;
+            } else {
+                bodyHint = R.string.discussion_body_hint_question;
+                submitLabel = R.string.discussion_add_question_button_label;
+                submitDescription = R.string.discussion_add_question_button_description;
             }
+            binding.bodyEditText.setHint(bodyHint);
+            binding.addPostButtonText.setText(submitLabel);
+            binding.addPostButton.setContentDescription(getText(submitDescription));
         });
         binding.discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
 
@@ -132,31 +128,29 @@ public class DiscussionAddPostFragment extends BaseFragment {
 
         ViewCompat.setBackgroundTintList(binding.topicsSpinner, getResources().getColorStateList(R.color.primaryBaseColor));
 
-        binding.addPostButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Activity activity = requireActivity();
-                SoftKeyboardUtil.hide(activity);
+        binding.addPostButton.setOnClickListener(v -> {
+            Activity activity = requireActivity();
+            SoftKeyboardUtil.hide(activity);
 
-                final String title = binding.titleEditText.getText().toString();
-                final String body = binding.bodyEditText.getText().toString();
+            final String title = binding.titleEditText.getText().toString();
+            final String body = binding.bodyEditText.getText().toString();
 
-                final DiscussionThread.ThreadType discussionQuestion;
-                if (binding.discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
-                    discussionQuestion = DiscussionThread.ThreadType.DISCUSSION;
-                } else {
-                    discussionQuestion = DiscussionThread.ThreadType.QUESTION;
-                }
-
-                ThreadBody threadBody = new ThreadBody();
-                threadBody.setCourseId(courseData.getCourse().getId());
-                threadBody.setTitle(title);
-                threadBody.setRawBody(body);
-                threadBody.setTopicId(((DiscussionTopicDepth) binding.topicsSpinner.getSelectedItem()).getDiscussionTopic().getIdentifier());
-                threadBody.setType(discussionQuestion);
-
-                binding.addPostButton.setEnabled(false);
-                createThread(threadBody);
+            final DiscussionThread.ThreadType discussionQuestion;
+            if (binding.discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
+                discussionQuestion = DiscussionThread.ThreadType.DISCUSSION;
+            } else {
+                discussionQuestion = DiscussionThread.ThreadType.QUESTION;
             }
+
+            ThreadBody threadBody = new ThreadBody();
+            threadBody.setCourseId(courseData.getCourse().getId());
+            threadBody.setTitle(title);
+            threadBody.setRawBody(body);
+            threadBody.setTopicId(((DiscussionTopicDepth) binding.topicsSpinner.getSelectedItem()).getDiscussionTopic().getIdentifier());
+            threadBody.setType(discussionQuestion);
+
+            binding.addPostButton.setEnabled(false);
+            createThread(threadBody);
         });
         binding.addPostButton.setEnabled(false);
         final TextWatcher textWatcher = new TextWatcher() {

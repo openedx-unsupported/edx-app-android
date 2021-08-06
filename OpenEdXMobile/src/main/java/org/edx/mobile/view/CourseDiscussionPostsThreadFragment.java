@@ -127,12 +127,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         Context context = getActivity();
         UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), binding.createNewItem.createNewItemTextView,
                 R.drawable.ic_add_comment, R.dimen.small_icon_size);
-        binding.createNewItem.createNewItemLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                router.showCourseDiscussionAddPost(requireActivity(), discussionTopic, courseData);
-            }
-        });
+        binding.createNewItem.createNewItemLayout.setOnClickListener(v ->
+                router.showCourseDiscussionAddPost(requireActivity(), discussionTopic, courseData)
+        );
 
         binding.discussionPostsFilterSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
                 binding.discussionPostsFilterSpinner, DiscussionPostsFilter.values(),

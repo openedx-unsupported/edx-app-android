@@ -17,7 +17,9 @@
             android:id="@+id/loading_indicator"
             layout="@layout/loading_indicator" />
 
-        <include layout="@layout/content_error" />
+        <include
+            android:id="@+id/content_error"
+            layout="@layout/content_error" />
 
     </FrameLayout>
 </layout>

@@ -28,8 +28,8 @@ import org.edx.mobile.user.FormOption;
 import org.edx.mobile.user.FormOptions;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
-import org.jetbrains.annotations.NotNull;
 import org.edx.mobile.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
