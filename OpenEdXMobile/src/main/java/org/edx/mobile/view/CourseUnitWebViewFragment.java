@@ -16,16 +16,14 @@ import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.FragmentAuthenticatedWebviewBinding;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.event.UnitLoadedEvent;
 import org.edx.mobile.exception.AuthException;
@@ -43,7 +41,6 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.CourseDateUtil;
-import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
@@ -55,21 +52,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import roboguice.inject.InjectView;
 
 public class CourseUnitWebViewFragment extends CourseUnitFragment {
-
-    @InjectView(R.id.auth_webview)
-    private AuthenticatedWebView authWebView;
-
-    @InjectView(R.id.info_banner)
-    private LinearLayout infoBanner;
-
-    @InjectView(R.id.swipe_container)
-    protected SwipeRefreshLayout swipeContainer;
-
-    @InjectView(R.id.tv_open_browser)
-    protected TextView tvOpenBrowser;
 
     private CourseDateViewModel courseDateViewModel;
     private PreLoadingListener preloadingListener;
@@ -80,6 +64,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private String courseName = "";
     private String calendarTitle = "";
     private String accountName = "";
+    private FragmentAuthenticatedWebviewBinding binding;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String courseName, String enrollmentMode, boolean isSelfPaced) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
@@ -96,7 +81,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
-        return inflater.inflate(R.layout.fragment_authenticated_webview, container, false);
+        binding = FragmentAuthenticatedWebviewBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -112,10 +98,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         } else {
             throw new RuntimeException("Parent activity of this Fragment should implement the PreLoadingListener interface");
         }
-        swipeContainer.setEnabled(false);
-        authWebView.initWebView(getActivity(), true, false, true,
+        binding.swipeContainer.setEnabled(false);
+        binding.authWebview.initWebView(getActivity(), true, false, true,
                 this::markComponentCompleted);
-        authWebView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
+        binding.authWebview.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
             public void onPageStarted() {
                 isPageLoading = true;
@@ -123,7 +109,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
             @Override
             public void onPageFinished() {
-                if (authWebView.isPageLoaded()) {
+                if (binding.authWebview.isPageLoaded()) {
                     fetchDateBannerInfo();
                     evaluateXBlocksForBanner();
                     evaluateJavascriptForiFrame();
@@ -159,9 +145,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         }
         // Enable Pan & Zoom for specific HTML components
         if (unit.getType() == BlockType.DRAG_AND_DROP_V2) {
-            authWebView.getWebView().getSettings().setSupportZoom(true);
-            authWebView.getWebView().getSettings().setDisplayZoomControls(false);
-            authWebView.getWebView().getSettings().setBuiltInZoomControls(true);
+            binding.authWebview.getWebView().getSettings().setSupportZoom(true);
+            binding.authWebview.getWebView().getSettings().setDisplayZoomControls(false);
+            binding.authWebview.getWebView().getSettings().setBuiltInZoomControls(true);
         }
     }
 
@@ -183,7 +169,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                             "} catch {" +
                             "    false;" +
                             "};";
-            authWebView.evaluateJavascript(javascript, value -> {
+            binding.authWebview.evaluateJavascript(javascript, value -> {
                 evaluatediFrameJS = true;
                 if (Boolean.parseBoolean(value)) {
                     setupOpenInBrowserView();
@@ -194,7 +180,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private void setupOpenInBrowserView() {
         @StringRes int linkTextResId = R.string.open_in_browser_text;
-        tvOpenBrowser.setVisibility(View.VISIBLE);
+        binding.tvOpenBrowser.setVisibility(View.VISIBLE);
 
         String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
                 + getString(linkTextResId) + " " + AppConstants.ICON_PLACEHOLDER;
@@ -227,8 +213,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 openInBrowserIndex, openInBrowserIndex + getString(linkTextResId).length(),
                 Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        tvOpenBrowser.setText(openInBrowserSpan);
-        tvOpenBrowser.setMovementMethod(LinkMovementMethod.getInstance());
+        binding.tvOpenBrowser.setText(openInBrowserSpan);
+        binding.tvOpenBrowser.setMovementMethod(LinkMovementMethod.getInstance());
         trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_DISPLAYED,
                 Analytics.Values.OPEN_IN_BROWSER_BANNER_DISPLAYED);
     }
@@ -249,10 +235,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void initInfoBanner(CourseBannerInfoModel courseBannerInfo) {
         if (courseBannerInfo == null || courseBannerInfo.getHasEnded()
                 || courseBannerInfo.getDatesBannerInfo().getCourseBannerType() != CourseBannerType.RESET_DATES) {
-            infoBanner.setVisibility(View.GONE);
+            binding.infoBanner.containerLayout.setVisibility(View.GONE);
             return;
         }
-        CourseDateUtil.INSTANCE.setupCourseDatesBanner(infoBanner, unit.getCourseId(), enrollmentMode, isSelfPaced,
+        CourseDateUtil.INSTANCE.setupCourseDatesBanner(binding.infoBanner.containerLayout, unit.getCourseId(), enrollmentMode, isSelfPaced,
                 Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, environment.getAnalyticsRegistry(), courseBannerInfo,
                 v -> courseDateViewModel.resetCourseDatesBanner(unit.getCourseId()));
     }
@@ -281,7 +267,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
         courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
             if (resetCourseDates != null) {
-                authWebView.loadUrl(true, unit.getBlockUrl());
+                binding.authWebview.loadUrl(true, unit.getBlockUrl());
                 if (!CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
                     showShiftDateSnackBar(true);
                 }
@@ -318,7 +304,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void showShiftDateSnackBar(boolean isSuccess) {
-        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(authWebView);
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(binding.authWebview);
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
                     0, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
@@ -357,9 +343,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void loadUnit() {
-        if (authWebView != null) {
-            if (!authWebView.isPageLoaded() && !isPageLoading) {
-                authWebView.loadUrl(true, unit.getBlockUrl());
+        if (binding.authWebview != null) {
+            if (!binding.authWebview.isPageLoaded() && !isPageLoading) {
+                binding.authWebview.loadUrl(true, unit.getBlockUrl());
                 if (getUserVisibleHint()) {
                     preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADING);
                 }
@@ -379,25 +365,25 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @Override
     public void onResume() {
         super.onResume();
-        authWebView.onResume();
+        binding.authWebview.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        authWebView.onPause();
+        binding.authWebview.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        authWebView.onDestroy();
+        binding.authWebview.onDestroy();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        authWebView.onDestroyView();
+        binding.authWebview.onDestroyView();
         EventBus.getDefault().unregister(this);
     }
 

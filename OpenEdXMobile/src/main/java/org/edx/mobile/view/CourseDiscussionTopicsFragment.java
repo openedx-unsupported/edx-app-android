@@ -5,9 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -17,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.FragmentDiscussionTopicsBinding;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTopic;
@@ -38,17 +36,10 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectView;
 
 public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         implements RefreshListener {
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
-
-    @InjectView(R.id.discussion_topics_searchview)
-    private SearchView discussionTopicsSearchView;
-
-    @InjectView(R.id.discussion_topics_listview)
-    private ListView discussionTopicsListView;
 
     private EnrolledCoursesResponse courseData;
 
@@ -61,58 +52,58 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     @Inject
     private Router router;
 
-    @InjectView(R.id.loading_indicator)
-    ProgressBar progressSpinner;
-
     private Call<CourseTopics> getTopicListCall;
 
     private FullScreenErrorNotification errorNotification;
+    private FragmentDiscussionTopicsBinding binding;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
-        return inflater.inflate(R.layout.fragment_discussion_topics, container, false);
+        binding = FragmentDiscussionTopicsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new FullScreenErrorNotification((View) discussionTopicsListView.getParent());
+        errorNotification = new FullScreenErrorNotification((View) binding.discussionTopicsListview.getParent());
 
-        final LayoutInflater inflater = LayoutInflater.from(getActivity());
+        final LayoutInflater inflater = LayoutInflater.from(requireActivity());
 
         // Add "All posts" item
         {
-            final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
+            final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, binding.discussionTopicsListview, false);
             header.setText(R.string.discussion_posts_filter_all_posts);
 
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.ALL_TOPICS_ID);
             discussionTopic.setName(getString(R.string.discussion_posts_filter_all_posts));
-            discussionTopicsListView.addHeaderView(header, new DiscussionTopicDepth(discussionTopic, 0, true), true);
+            binding.discussionTopicsListview.addHeaderView(header, new DiscussionTopicDepth(discussionTopic, 0, true), true);
         }
 
         // Add "Posts I'm following" item
         {
-            final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
+            final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic,
+                    binding.discussionTopicsListview, false);
             header.setText(R.string.forum_post_i_am_following);
             UiUtils.INSTANCE.setTextViewDrawableStart(requireContext(), header, R.drawable.ic_star_rate,
                     R.dimen.edx_base, R.color.primaryBaseColor);
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);
             discussionTopic.setName(getString(R.string.forum_post_i_am_following));
-            discussionTopicsListView.addHeaderView(header, new DiscussionTopicDepth(discussionTopic, 0, true), true);
+            binding.discussionTopicsListview.addHeaderView(header, new DiscussionTopicDepth(discussionTopic, 0, true), true);
         }
 
-        discussionTopicsListView.setAdapter(discussionTopicsAdapter);
+        binding.discussionTopicsListview.setAdapter(discussionTopicsAdapter);
 
-        discussionTopicsSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.discussionTopicsSearchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query == null || query.trim().isEmpty())
                     return false;
-                router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
+                router.showCourseDiscussionPostsForSearchQuery(requireActivity(), query, courseData);
                 return true;
             }
 
@@ -122,15 +113,11 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             }
         });
 
-        discussionTopicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                router.showCourseDiscussionPostsForDiscussionTopic(
-                        getActivity(),
+        binding.discussionTopicsListview.setOnItemClickListener(
+                (parent, view1, position, id) -> router.showCourseDiscussionPostsForDiscussionTopic(
+                        requireActivity(),
                         ((DiscussionTopicDepth) parent.getItemAtPosition(position)).getDiscussionTopic(),
-                        courseData);
-            }
-        });
+                        courseData));
 
         getTopicList();
         showCourseDiscussionTopic();
@@ -141,10 +128,10 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             getTopicListCall.cancel();
         }
         final TaskProgressCallback.ProgressViewController progressViewController =
-                new TaskProgressCallback.ProgressViewController(progressSpinner);
+                new TaskProgressCallback.ProgressViewController(binding.loadingIndicator.loadingIndicator);
         getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
         getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
-                getActivity(), progressViewController, errorNotification, null, this) {
+                requireActivity(), progressViewController, errorNotification, null, this) {
             @Override
             protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 logger.debug("GetTopicListTask success=" + courseTopics);
@@ -170,7 +157,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         final String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
         if (!TextUtils.isEmpty(topicId)) {
             router.showCourseDiscussionPostsForDiscussionTopic(
-                    getActivity(),
+                    requireActivity(),
                     getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID),
                     getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID),
                     courseData);
@@ -184,7 +171,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        SoftKeyboardUtil.clearViewFocus(discussionTopicsSearchView);
+        SoftKeyboardUtil.clearViewFocus(binding.discussionTopicsSearchview);
     }
 
     @SuppressWarnings("unused")

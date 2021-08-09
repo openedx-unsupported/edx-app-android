@@ -1,62 +1,67 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <View
-        android:id="@+id/toolbar_placeholder"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:minHeight="?android:attr/actionBarSize" />
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
+        <View
+            android:id="@+id/toolbar_placeholder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            tools:minHeight="?android:attr/actionBarSize" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
-                android:id="@+id/error_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <include layout="@layout/panel_error_message_with_title" />
+                <LinearLayout
+                    android:id="@+id/error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <include layout="@layout/panel_error_message_with_title" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/my_groups_list_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1">
+
+                </RelativeLayout>
+
+                <include
+                    android:id="@+id/auth_panel"
+                    layout="@layout/auth_panel" />
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/my_groups_list_container"
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="1">
-
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/flying_message"
+                style="@style/flying_message"
+                android:visibility="gone" />
 
             <include
-                android:id="@+id/auth_panel"
-                layout="@layout/auth_panel" />
-        </LinearLayout>
+                android:id="@+id/loading_indicator"
+                layout="@layout/loading_indicator" />
 
-        <TextView
-            android:id="@+id/flying_message"
-            style="@style/flying_message"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/center_message_box"
+                style="@style/content_unavailable_error_text"
+                tools:text="Error text comes here."
+                tools:visibility="visible" />
 
-        <include layout="@layout/loading_indicator" />
-
-        <TextView
-            android:id="@+id/center_message_box"
-            style="@style/content_unavailable_error_text"
-            tools:text="Error text comes here."
-            tools:visibility="visible" />
-
-    </FrameLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

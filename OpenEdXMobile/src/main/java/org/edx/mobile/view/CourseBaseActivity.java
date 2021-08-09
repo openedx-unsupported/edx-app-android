@@ -1,16 +1,15 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.databinding.ActivityCourseBaseBinding;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
@@ -24,26 +23,17 @@ import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import retrofit2.Call;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 /**
- *  A base class to handle some common task
- *  NOTE - in the layout file,  these should be defined
- *  1. content_error_root (The layout that contains all of the following)
- *  2. content_error (The layout having the views that'll be used to show error)
- *  3. content_area (The layout having the views that'll be used to present data on screen)
- *  4. loading_indicator (A view or layout to show loading while data loads)
+ * A base class to handle some common task
+ * NOTE - in the layout file,  these should be defined
+ * 1. content_error_root (The layout that contains all of the following)
+ * 2. content_error (The layout having the views that'll be used to show error)
+ * 3. content_area (The layout having the views that'll be used to present data on screen)
+ * 4. loading_indicator (A view or layout to show loading while data loads)
  */
-@ContentView(R.layout.activity_course_base)
-public abstract  class CourseBaseActivity  extends BaseFragmentActivity
-        implements TaskProcessCallback, RefreshListener{
-
-    @InjectView(R.id.loading_indicator)
-    ProgressBar progressWheel;
-
-    @InjectView(R.id.content_area)
-    ViewGroup contentLayout;
+public abstract class CourseBaseActivity extends BaseFragmentActivity
+        implements TaskProcessCallback, RefreshListener {
 
     @Inject
     CourseAPI courseApi;
@@ -61,6 +51,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
+    private ActivityCourseBaseBinding binding;
+
     protected abstract void onLoadData();
 
     private FullScreenErrorNotification errorNotification;
@@ -69,11 +61,13 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         super.setToolbarAsActionBar();
-        errorNotification = new FullScreenErrorNotification(contentLayout);
+        binding = ActivityCourseBaseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        errorNotification = new FullScreenErrorNotification(binding.contentArea);
 
         Bundle bundle = arg0;
-        if ( bundle == null ) {
-            if ( getIntent() != null )
+        if (bundle == null) {
+            if (getIntent() != null)
                 bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         }
         restore(bundle);
@@ -112,7 +106,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
             final String courseId = courseData.getCourse().getId();
             getHierarchyCall = courseApi.getCourseStructure(blocksApiVersion, courseId);
             getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
-                    new ProgressViewController(progressWheel), errorNotification,
+                    new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification,
                     null, this) {
                 @Override
                 protected void onResponse(@NonNull final CourseComponent courseComponent) {
@@ -149,40 +143,37 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
      * This function shows the loading progress wheel
      * Show progress wheel while loading the web page
      */
-    private void showLoadingProgress(){
-        if(progressWheel!=null){
-            progressWheel.setVisibility(View.VISIBLE);
-        }
+    private void showLoadingProgress() {
+        binding.loadingIndicator.loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     /**
      * This function hides the loading progress wheel
      * Hide progress wheel after the web page completes loading
      */
-    private void hideLoadingProgress(){
-        if(progressWheel!=null){
-            progressWheel.setVisibility(View.GONE);
-        }
+    private void hideLoadingProgress() {
+        binding.loadingIndicator.loadingIndicator.setVisibility(View.GONE);
     }
 
     /**
      * implements TaskProcessCallback
      */
-    public void startProcess(){
+    public void startProcess() {
         showLoadingProgress();
     }
+
     /**
      * implements TaskProcessCallback
      */
-    public void finishProcess(){
+    public void finishProcess() {
         hideLoadingProgress();
     }
 
-    public void onMessage(@NonNull MessageType messageType, @NonNull String message){
+    public void onMessage(@NonNull MessageType messageType, @NonNull String message) {
         showErrorMessage("", message);
     }
 
-    protected boolean isOnCourseOutline(){
+    protected boolean isOnCourseOutline() {
         if (courseComponentId == null) return true;
         CourseComponent outlineComp = courseManager.getComponentById(blocksApiVersion,
                 courseData.getCourse().getId(), courseComponentId);
@@ -203,5 +194,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity
             onLoadData();
         }
     }
-}
 
+    public ActivityCourseBaseBinding getBaseBinding() {
+        return binding;
+    }
+}

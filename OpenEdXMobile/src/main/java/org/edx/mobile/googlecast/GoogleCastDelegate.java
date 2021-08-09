@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.MenuItem;
 
 import com.google.android.gms.cast.MediaInfo;
@@ -22,7 +24,6 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.images.WebImage;
 
 import org.edx.mobile.R;
-import org.edx.mobile.annotation.Nullable;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.Analytics;
@@ -31,8 +32,6 @@ import org.edx.mobile.util.AppConstants;
 
 public class GoogleCastDelegate extends RemoteMediaClient.Callback implements
         SessionManagerListener<CastSession> {
-
-
 
     public interface CastSessionListener {
         void onApplicationConnected();

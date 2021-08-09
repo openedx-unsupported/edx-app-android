@@ -2,17 +2,20 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.SearchView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.FragmentDiscussionSearchPostsBinding;
 import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -35,7 +38,6 @@ import java.util.Map;
 
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBaseFragment {
 
@@ -45,32 +47,31 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
 
-    @InjectView(R.id.discussion_topics_searchview)
-    private SearchView discussionTopicsSearchView;
-
     private Call<Page<DiscussionThread>> searchThreadListCall;
+    private FragmentDiscussionSearchPostsBinding binding;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_search_posts, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentDiscussionSearchPostsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionTopicsSearchView.setQuery(searchQuery, false);
-        discussionTopicsSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.discussionTopicsSearchview.setQuery(searchQuery, false);
+        binding.discussionTopicsSearchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query == null || query.trim().isEmpty())
                     return false;
-                SoftKeyboardUtil.hide(getActivity());
+                SoftKeyboardUtil.hide(requireActivity());
                 searchQuery = query;
                 nextPage = 1;
                 controller.reset();
-                discussionPostsListView.setVisibility(View.INVISIBLE);
+                binding.discussionPostsListview.setVisibility(View.INVISIBLE);
                 return true;
             }
 
@@ -87,8 +88,13 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     }
 
     @Override
+    protected ListView getDiscussionPostsListView() {
+        return binding.discussionPostsListview;
+    }
+
+    @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        final Activity activity = getActivity();
+        final Activity activity = requireActivity();
         final TaskProgressCallback progressCallback = activity instanceof TaskProgressCallback ? (TaskProgressCallback) activity : null;
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         if (mCallback != null) {
@@ -116,7 +122,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                     if (discussionPostsAdapter.getCount() == 0) {
                         String escapedTitle = TextUtils.htmlEncode(searchQuery);
                         String resultsText = ResourceUtil.getFormattedString(
-                                getContext().getResources(),
+                                requireContext().getResources(),
                                 R.string.forum_no_results_for_search_query,
                                 "search_query",
                                 escapedTitle
@@ -125,7 +131,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                         ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
                     } else {
                         ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
-                        discussionPostsListView.setVisibility(View.VISIBLE);
+                        binding.discussionPostsListview.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -147,6 +153,6 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     @Override
     public void onResume() {
         super.onResume();
-        SoftKeyboardUtil.clearViewFocus(discussionTopicsSearchView);
+        SoftKeyboardUtil.clearViewFocus(binding.discussionTopicsSearchview);
     }
 }

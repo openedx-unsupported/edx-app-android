@@ -3,14 +3,13 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -18,16 +17,13 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 
 import de.greenrobot.event.EventBus;
-import roboguice.inject.InjectView;
 
 import static org.edx.mobile.util.links.WebViewLink.Authority.ENROLLED_COURSE_INFO;
 
 public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
+
     @Inject
     AnalyticsRegistry analyticsRegistry;
-
-    @InjectView(R.id.loading_indicator)
-    private ProgressBar progressWheel;
 
     public static Fragment newInstance(@NonNull String url, @Nullable String javascript,
                                        boolean isManuallyReloadable,
@@ -56,11 +52,11 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
              * Note: The host resolution happens URLInterceptorWebViewClient class's onPageStarted
              * function which we are overriding in this specific case.
              */
-            authWebView.getWebViewClient().setHostForThisPage(Uri.parse(getArguments().getString(ARG_URL)).getHost());
+            getBinding().authWebview.getWebViewClient().setHostForThisPage(Uri.parse(getArguments().getString(ARG_URL)).getHost());
 
-            authWebView.getWebViewClient().addInternalLinkHost("https://payment.edx.org");
+            getBinding().authWebview.getWebViewClient().addInternalLinkHost("https://payment.edx.org");
 
-            authWebView.getWebViewClient().setActionListener(helper -> {
+            getBinding().authWebview.getWebViewClient().setActionListener(helper -> {
                 if (getActivity() != null) {
                     // This means that the transaction completed successfully and user tapped on the
                     // WebView's `View Course` button.
@@ -89,8 +85,8 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
          * 3 - Move the app to background and then back to foreground.
          * 4 - App opens the place order screen instated of a thank you screen.
          */
-        if (getActivity() != null && authWebView.getWebView() != null) {
-            final String url = authWebView.getWebView().getUrl();
+        if (getActivity() != null && getBinding().authWebview.getWebView() != null) {
+            final String url = getBinding().authWebview.getWebView().getUrl();
             if (url != null && url.contains("checkout/receipt")) {
                 onCoursePaymentSuccessful();
             }
@@ -100,7 +96,7 @@ public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
     public void onCoursePaymentSuccessful() {
         // Finish activity
         final Activity activity = getActivity();
-        if( activity != null) {
+        if (activity != null) {
             activity.finish();
         }
 

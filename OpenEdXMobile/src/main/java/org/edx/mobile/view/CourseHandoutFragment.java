@@ -7,7 +7,6 @@ import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +15,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.databinding.FragmentWebviewWithPaddingsBinding;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
@@ -34,7 +34,6 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import de.greenrobot.event.EventBus;
 import okhttp3.Request;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class CourseHandoutFragment extends BaseFragment implements RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
@@ -51,12 +50,10 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @Inject
     private OkHttpClientProvider okHttpClientProvider;
 
-    @InjectView(R.id.webview)
-    private WebView webView;
-
     private FullScreenErrorNotification errorNotification;
 
     private SnackbarErrorNotification snackbarErrorNotification;
+    private FragmentWebviewWithPaddingsBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,18 +62,19 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_webview_with_paddings, container, false);
+        binding = FragmentWebviewWithPaddingsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorNotification = new FullScreenErrorNotification(webView);
-        snackbarErrorNotification = new SnackbarErrorNotification(webView);
-        new URLInterceptorWebViewClient(getActivity(), webView, false, null).setAllLinksAsExternal(true);
+        errorNotification = new FullScreenErrorNotification(binding.webview);
+        snackbarErrorNotification = new SnackbarErrorNotification(binding.webview);
+        new URLInterceptorWebViewClient(requireActivity(), binding.webview, false, null).setAllLinksAsExternal(true);
         loadData();
     }
 
@@ -85,7 +83,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
                 .url(courseData.getCourse().getCourse_handouts())
                 .get()
                 .build())
-                .enqueue(new ErrorHandlingOkCallback<HandoutModel>(getActivity(),
+                .enqueue(new ErrorHandlingOkCallback<HandoutModel>(requireActivity(),
                         HandoutModel.class, errorNotification, snackbarErrorNotification, this) {
                     @Override
                     protected void onResponse(@NonNull final HandoutModel result) {
@@ -102,15 +100,6 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
                     }
 
                     @Override
-                    protected void onFailure(@NonNull final Throwable error) {
-                        super.onFailure(error);
-
-                        if (getActivity() == null) {
-                            return;
-                        }
-                    }
-
-                    @Override
                     protected void onFinish() {
                         if (!EventBus.getDefault().isRegistered(CourseHandoutFragment.this)) {
                             EventBus.getDefault().registerSticky(CourseHandoutFragment.this);
@@ -122,7 +111,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     private void populateHandouts(HandoutModel handout) {
         hideErrorMessage();
 
-        StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(getActivity(), logger);
+        StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(requireActivity(), logger);
 
         buff.append("<body>");
         buff.append("<div class=\"header\">");
@@ -130,19 +119,19 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         buff.append("</div>");
         buff.append("</body>");
 
-        webView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
+        binding.webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
                 "text/html", Encoding.UTF_8.toString(), null);
 
     }
 
     private void hideErrorMessage() {
-        webView.setVisibility(View.VISIBLE);
+        binding.webview.setVisibility(View.VISIBLE);
         errorNotification.hideError();
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
-        if (!NetworkUtil.isConnected(getContext())) {
+        if (!NetworkUtil.isConnected(requireContext())) {
             if (!errorNotification.isShowing()) {
                 snackbarErrorNotification.showOfflineError(this);
             }
@@ -163,7 +152,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
 
     @Override
     protected void onRevisit() {
-        if (NetworkUtil.isConnected(getActivity())) {
+        if (NetworkUtil.isConnected(requireActivity())) {
             snackbarErrorNotification.hideError();
         }
     }

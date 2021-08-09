@@ -3,25 +3,22 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.databinding.FragmentAddPostBinding;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -47,7 +44,6 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class DiscussionAddPostFragment extends BaseFragment {
 
@@ -63,27 +59,6 @@ public class DiscussionAddPostFragment extends BaseFragment {
     @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC)
     private DiscussionTopic discussionTopic;
 
-    @InjectView(R.id.discussion_question_segmented_group)
-    private RadioGroup discussionQuestionSegmentedGroup;
-
-    @InjectView(R.id.topics_spinner)
-    private AppCompatSpinner topicsSpinner;
-
-    @InjectView(R.id.title_edit_text)
-    private EditText titleEditText;
-
-    @InjectView(R.id.body_edit_text)
-    private EditText bodyEditText;
-
-    @InjectView(R.id.add_post_button)
-    private ViewGroup addPostButton;
-
-    @InjectView(R.id.add_post_button_text)
-    private TextView addPostButtonText;
-
-    @InjectView(R.id.progress_indicator)
-    private ProgressBar addPostProgressBar;
-
     @Inject
     private DiscussionService discussionService;
 
@@ -96,42 +71,41 @@ public class DiscussionAddPostFragment extends BaseFragment {
     private Call<DiscussionThread> createThreadCall;
 
     private int selectedTopicIndex;
+    private FragmentAddPostBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         this.container = container;
-        return inflater.inflate(R.layout.fragment_add_post, container, false);
+        binding = FragmentAddPostBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionQuestionSegmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                @StringRes final int bodyHint;
-                @StringRes final int submitLabel;
-                @StringRes final int submitDescription;
-                if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
-                    bodyHint = R.string.discussion_body_hint_discussion;
-                    submitLabel = R.string.discussion_add_post_button_label;
-                    submitDescription = R.string.discussion_add_post_button_description;
-                } else {
-                    bodyHint = R.string.discussion_body_hint_question;
-                    submitLabel = R.string.discussion_add_question_button_label;
-                    submitDescription = R.string.discussion_add_question_button_description;
-                }
-                bodyEditText.setHint(bodyHint);
-                addPostButtonText.setText(submitLabel);
-                addPostButton.setContentDescription(getText(submitDescription));
+        binding.discussionQuestionSegmentedGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            @StringRes final int bodyHint;
+            @StringRes final int submitLabel;
+            @StringRes final int submitDescription;
+            if (binding.discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
+                bodyHint = R.string.discussion_body_hint_discussion;
+                submitLabel = R.string.discussion_add_post_button_label;
+                submitDescription = R.string.discussion_add_post_button_description;
+            } else {
+                bodyHint = R.string.discussion_body_hint_question;
+                submitLabel = R.string.discussion_add_question_button_label;
+                submitDescription = R.string.discussion_add_question_button_description;
             }
+            binding.bodyEditText.setHint(bodyHint);
+            binding.addPostButtonText.setText(submitLabel);
+            binding.addPostButton.setContentDescription(getText(submitDescription));
         });
-        discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
+        binding.discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
 
         getTopicList();
 
-        topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Even though we disabled topics that aren't supposed to be selected, Android still allows you to select them using keyboard or finger-dragging
@@ -152,37 +126,33 @@ public class DiscussionAddPostFragment extends BaseFragment {
             }
         });
 
-        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.primaryBaseColor));
+        ViewCompat.setBackgroundTintList(binding.topicsSpinner, getResources().getColorStateList(R.color.primaryBaseColor));
 
-        addPostButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Activity activity = getActivity();
-                if (activity != null) {
-                    SoftKeyboardUtil.hide(activity);
-                }
+        binding.addPostButton.setOnClickListener(v -> {
+            Activity activity = requireActivity();
+            SoftKeyboardUtil.hide(activity);
 
-                final String title = titleEditText.getText().toString();
-                final String body = bodyEditText.getText().toString();
+            final String title = binding.titleEditText.getText().toString();
+            final String body = binding.bodyEditText.getText().toString();
 
-                final DiscussionThread.ThreadType discussionQuestion;
-                if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
-                    discussionQuestion = DiscussionThread.ThreadType.DISCUSSION;
-                } else {
-                    discussionQuestion = DiscussionThread.ThreadType.QUESTION;
-                }
-
-                ThreadBody threadBody = new ThreadBody();
-                threadBody.setCourseId(courseData.getCourse().getId());
-                threadBody.setTitle(title);
-                threadBody.setRawBody(body);
-                threadBody.setTopicId(((DiscussionTopicDepth) topicsSpinner.getSelectedItem()).getDiscussionTopic().getIdentifier());
-                threadBody.setType(discussionQuestion);
-
-                addPostButton.setEnabled(false);
-                createThread(threadBody);
+            final DiscussionThread.ThreadType discussionQuestion;
+            if (binding.discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
+                discussionQuestion = DiscussionThread.ThreadType.DISCUSSION;
+            } else {
+                discussionQuestion = DiscussionThread.ThreadType.QUESTION;
             }
+
+            ThreadBody threadBody = new ThreadBody();
+            threadBody.setCourseId(courseData.getCourse().getId());
+            threadBody.setTitle(title);
+            threadBody.setRawBody(body);
+            threadBody.setTopicId(((DiscussionTopicDepth) binding.topicsSpinner.getSelectedItem()).getDiscussionTopic().getIdentifier());
+            threadBody.setType(discussionQuestion);
+
+            binding.addPostButton.setEnabled(false);
+            createThread(threadBody);
         });
-        addPostButton.setEnabled(false);
+        binding.addPostButton.setEnabled(false);
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -197,15 +167,15 @@ public class DiscussionAddPostFragment extends BaseFragment {
                 setPostButtonEnabledState();
             }
         };
-        titleEditText.addTextChangedListener(textWatcher);
-        bodyEditText.addTextChangedListener(textWatcher);
+        binding.titleEditText.addTextChangedListener(textWatcher);
+        binding.bodyEditText.addTextChangedListener(textWatcher);
     }
 
     private void setPostButtonEnabledState() {
-        final String title = titleEditText.getText().toString();
-        final String body = bodyEditText.getText().toString();
-        final boolean topicSelected = null != topicsSpinner.getSelectedItem();
-        addPostButton.setEnabled(topicSelected && title.trim().length() > 0 && body.trim().length() > 0);
+        final String title = binding.titleEditText.getText().toString();
+        final String body = binding.bodyEditText.getText().toString();
+        final boolean topicSelected = null != binding.topicsSpinner.getSelectedItem();
+        binding.addPostButton.setEnabled(topicSelected && title.trim().length() > 0 && body.trim().length() > 0);
     }
 
     protected void createThread(ThreadBody threadBody) {
@@ -214,18 +184,18 @@ public class DiscussionAddPostFragment extends BaseFragment {
         }
         createThreadCall = discussionService.createThread(threadBody);
         createThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(
-                getActivity(),
-                new ProgressViewController(addPostProgressBar),
+                requireActivity(),
+                new ProgressViewController(binding.buttonProgressIndicator.progressIndicator),
                 new DialogErrorNotification(this)) {
             @Override
             protected void onResponse(@NonNull final DiscussionThread courseTopics) {
                 EventBus.getDefault().post(new DiscussionThreadPostedEvent(courseTopics));
-                getActivity().finish();
+                requireActivity().finish();
             }
 
             @Override
             protected void onFailure(@NonNull final Throwable error) {
-                addPostButton.setEnabled(true);
+                binding.addPostButton.setEnabled(true);
             }
         });
     }
@@ -236,7 +206,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
         }
         getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
         getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
-                getActivity(), null, null, CallTrigger.LOADING_CACHED) {
+                requireActivity(), null, null, CallTrigger.LOADING_CACHED) {
             @Override
             protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 final ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
@@ -244,7 +214,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
                 allTopics.addAll(courseTopics.getCoursewareTopics());
 
                 final TopicSpinnerAdapter adapter = new TopicSpinnerAdapter(container.getContext(), DiscussionTopicDepth.createFromDiscussionTopics(allTopics));
-                topicsSpinner.setAdapter(adapter);
+                binding.topicsSpinner.setAdapter(adapter);
 
                 {
                     // Attempt to select the topic that we navigated from
@@ -260,12 +230,12 @@ public class DiscussionAddPostFragment extends BaseFragment {
                             selectedTopicIndex = adapter.getPosition(discussionTopic);
                         }
                         if (selectedTopicIndex >= 0) {
-                            topicsSpinner.setSelection(selectedTopicIndex);
+                            binding.topicsSpinner.setSelection(selectedTopicIndex);
                         }
                     }
                 }
 
-                DiscussionTopic selectedTopic = ((DiscussionTopicDepth) topicsSpinner.getSelectedItem()).getDiscussionTopic();
+                DiscussionTopic selectedTopic = ((DiscussionTopicDepth) binding.topicsSpinner.getSelectedItem()).getDiscussionTopic();
                 Map<String, String> values = new HashMap<>();
                 values.put(Analytics.Keys.TOPIC_ID, selectedTopic.getIdentifier());
                 analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_CREATE_TOPIC_THREAD,
@@ -278,7 +248,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            SoftKeyboardUtil.clearViewFocus(titleEditText);
+            SoftKeyboardUtil.clearViewFocus(binding.titleEditText);
         }
     }
 }

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/create_new_item_layout"
-    style="@style/footer_action_button"
-    android:layout_alignParentBottom="true"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/create_new_item_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawablePadding="@dimen/discussion_create_new_item_icon_margin"
-        android:fontFamily="?attr/fontSemiBold"
-        android:textColor="@color/white"
-        android:textSize="@dimen/edx_small"
-        tools:text="Create a new item" />
+    <FrameLayout
+        android:id="@+id/create_new_item_layout"
+        style="@style/footer_action_button"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/create_new_item_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawablePadding="@dimen/discussion_create_new_item_icon_margin"
+            android:fontFamily="?attr/fontSemiBold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edx_small"
+            tools:text="Create a new item" />
+
+    </FrameLayout>
+</layout>

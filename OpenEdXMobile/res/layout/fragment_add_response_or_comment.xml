@@ -1,78 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/neutralLight"
-    android:fillViewport="true">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/neutralLight"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/widget_margin"
-            android:paddingStart="@dimen/edx_margin"
-            android:paddingEnd="@dimen/edx_margin"
-            android:paddingTop="@dimen/widget_margin">
+            android:orientation="vertical">
 
-            <include layout="@layout/row_discussion_user_profile" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/edx_margin"
+                android:paddingTop="@dimen/widget_margin"
+                android:paddingEnd="@dimen/edx_margin"
+                android:paddingBottom="@dimen/widget_margin">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/discussion_title_text"
-                android:layout_marginBottom="@dimen/widget_margin"
-                android:visibility="gone"
-                tools:text="Post Title"
-                tools:visibility="visible" />
+                <include
+                    android:id="@+id/row_discussion_user_profile"
+                    layout="@layout/row_discussion_user_profile" />
 
-            <TextView
-                android:id="@+id/tvResponse"
-                style="@style/discussion_regular_text"
-                tools:text="Post body" />
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/discussion_title_text"
+                    android:layout_marginBottom="@dimen/widget_margin"
+                    android:visibility="gone"
+                    tools:text="Post Title"
+                    tools:visibility="visible" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvResponse"
+                    style="@style/discussion_regular_text"
+                    tools:text="Post body" />
 
-        <include layout="@layout/edx_divider" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/edx_margin"
-            android:paddingTop="@dimen/widget_margin"
-            android:paddingEnd="@dimen/edx_margin"
-            android:paddingBottom="@dimen/widget_margin">
+            <include layout="@layout/edx_divider" />
 
-            <EditText
-                android:id="@+id/etNewComment"
-                style="@style/edX.Widget.EditText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="top"
-                android:hint="@string/discussion_add_response_hint"
-                android:inputType="text|textMultiLine" />
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/edx_margin"
+                android:paddingTop="@dimen/widget_margin"
+                android:paddingEnd="@dimen/edx_margin"
+                android:paddingBottom="@dimen/widget_margin">
 
-            <FrameLayout
-                android:id="@+id/btnAddComment"
-                style="@style/edX.Widget.CreationButtonLayout"
-                android:contentDescription="@string/discussion_add_response_button_description">
+                <EditText
+                    android:id="@+id/etNewComment"
+                    style="@style/edX.Widget.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:hint="@string/discussion_add_response_hint"
+                    android:inputType="text|textMultiLine" />
 
-                <TextView
-                    android:id="@+id/btnAddCommentText"
-                    style="@style/edX.Widget.CreationButton"
-                    android:text="@string/discussion_add_response_button_label" />
+                <FrameLayout
+                    android:id="@+id/btnAddComment"
+                    style="@style/edX.Widget.CreationButtonLayout"
+                    android:contentDescription="@string/discussion_add_response_button_description">
 
-                <include layout="@layout/button_progress_indicator" />
-            </FrameLayout>
+                    <TextView
+                        android:id="@+id/btnAddCommentText"
+                        style="@style/edX.Widget.CreationButton"
+                        android:text="@string/discussion_add_response_button_label" />
+
+                    <include
+                        android:id="@+id/button_progress_indicator"
+                        layout="@layout/button_progress_indicator" />
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</layout>

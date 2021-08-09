@@ -11,7 +11,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,35 +22,35 @@ import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.databinding.FragmentFormFieldSelectBinding;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.FormOption;
 import org.edx.mobile.user.FormOptions;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class FormFieldSelectFragment extends BaseFragment {
 
     @InjectExtra(FormFieldActivity.EXTRA_FIELD)
     private FormField formField;
 
-    @InjectView(android.R.id.list)
-    private ListView listView;
-
     private static final String COUNTRIES = "countries";
     private static final String LANGUAGES = "languages";
+    private FragmentFormFieldSelectBinding binding;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_form_field_select, container, false);
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentFormFieldSelectBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -77,7 +76,7 @@ public class FormFieldSelectFragment extends BaseFragment {
             options.addAll(formOptions.getValues());
         }
         if (!TextUtils.isEmpty(formField.getInstructions())) {
-            final View instructionsContainer = LayoutInflater.from(view.getContext()).inflate(R.layout.form_field_instructions_header, listView, false);
+            final View instructionsContainer = LayoutInflater.from(view.getContext()).inflate(R.layout.form_field_instructions_header, binding.list, false);
             final TextView instructions = (TextView) instructionsContainer.findViewById(R.id.instructions);
             final TextView subInstructions = (TextView) instructionsContainer.findViewById(R.id.sub_instructions);
             instructions.setText(formField.getInstructions());
@@ -86,13 +85,13 @@ public class FormFieldSelectFragment extends BaseFragment {
             } else {
                 subInstructions.setText(formField.getSubInstructions());
             }
-            listView.addHeaderView(instructionsContainer, null, false);
+            binding.list.addHeaderView(instructionsContainer, null, false);
         }
         if (null != formField.getDataType()) {
             switch (formField.getDataType()) {
                 case COUNTRY: {
                     final Locale locale = Locale.getDefault();
-                    addDetectedValueHeader(listView,
+                    addDetectedValueHeader(binding.list,
                             R.string.edit_user_profile_current_location,
                             "current_location",
                             locale.getDisplayCountry(),
@@ -102,7 +101,7 @@ public class FormFieldSelectFragment extends BaseFragment {
                 }
                 case LANGUAGE: {
                     final Locale locale = Locale.getDefault();
-                    addDetectedValueHeader(listView,
+                    addDetectedValueHeader(binding.list,
                             R.string.edit_user_profile_current_language,
                             "current_language",
                             locale.getDisplayLanguage(),
@@ -113,21 +112,18 @@ public class FormFieldSelectFragment extends BaseFragment {
             }
         }
         if (formField.getOptions().isAllowsNone()) {
-            final TextView textView = (TextView) LayoutInflater.from(listView.getContext()).inflate(R.layout.edx_selectable_list_item, listView, false);
+            final TextView textView = (TextView) LayoutInflater.from(binding.list.getContext()).inflate(R.layout.edx_selectable_list_item, binding.list, false);
             final String label = formField.getOptions().getNoneLabel();
             textView.setText(label);
-            listView.addHeaderView(textView, new FormOption(label, null), true);
+            binding.list.addHeaderView(textView, new FormOption(label, null), true);
         }
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final FormOption item = (FormOption) parent.getItemAtPosition(position);
-                getActivity().setResult(Activity.RESULT_OK, new Intent()
-                        .putExtra(FormFieldActivity.EXTRA_FIELD, formField)
-                        .putExtra(FormFieldActivity.EXTRA_VALUE, item.getValue()));
-                getActivity().finish();
-            }
+        binding.list.setAdapter(adapter);
+        binding.list.setOnItemClickListener((parent, view1, position, id) -> {
+            final FormOption item = (FormOption) parent.getItemAtPosition(position);
+            getActivity().setResult(Activity.RESULT_OK, new Intent()
+                    .putExtra(FormFieldActivity.EXTRA_FIELD, formField)
+                    .putExtra(FormFieldActivity.EXTRA_VALUE, item.getValue()));
+            getActivity().finish();
         });
         selectCurrentOption();
     }
@@ -148,11 +144,11 @@ public class FormFieldSelectFragment extends BaseFragment {
     private void selectCurrentOption() {
         final String currentValue = getArguments().getString(FormFieldActivity.EXTRA_VALUE);
         if (null != currentValue) {
-            for (int i = 0; i < listView.getCount(); i++) {
-                final FormOption option = (FormOption) listView.getItemAtPosition(i);
+            for (int i = 0; i < binding.list.getCount(); i++) {
+                final FormOption option = (FormOption) binding.list.getItemAtPosition(i);
                 if (null != option && TextUtils.equals(option.getValue(), currentValue)) {
-                    listView.setItemChecked(i, true);
-                    listView.setSelection(i);
+                    binding.list.setItemChecked(i, true);
+                    binding.list.setSelection(i);
                     break;
                 }
             }

@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/info_banner"
-            layout="@layout/layout_course_dates_banner"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <org.edx.mobile.view.custom.AuthenticatedWebView
-            android:id="@+id/auth_webview"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_open_browser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/infoXXLight"
-            android:fontFamily="?attr/fontRegular"
-            android:paddingStart="@dimen/open_in_browser_text_horizontal_padding"
-            android:paddingTop="@dimen/open_in_browser_text_vertical_padding"
-            android:paddingEnd="@dimen/open_in_browser_text_horizontal_padding"
-            android:paddingBottom="@dimen/open_in_browser_text_vertical_padding"
-            android:textColor="@color/neutralXDark"
-            android:textSize="@dimen/edx_x_small"
-            android:visibility="gone"
-            tools:text="@string/open_in_browser_message"
-            tools:visibility="visible" />
+            <include
+                android:id="@+id/info_banner"
+                layout="@layout/layout_course_dates_banner"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
-    </LinearLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <org.edx.mobile.view.custom.AuthenticatedWebView
+                android:id="@+id/auth_webview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_open_browser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/infoXXLight"
+                android:fontFamily="?attr/fontRegular"
+                android:paddingStart="@dimen/open_in_browser_text_horizontal_padding"
+                android:paddingTop="@dimen/open_in_browser_text_vertical_padding"
+                android:paddingEnd="@dimen/open_in_browser_text_horizontal_padding"
+                android:paddingBottom="@dimen/open_in_browser_text_vertical_padding"
+                android:textColor="@color/neutralXDark"
+                android:textSize="@dimen/edx_x_small"
+                android:visibility="gone"
+                tools:text="@string/open_in_browser_message"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

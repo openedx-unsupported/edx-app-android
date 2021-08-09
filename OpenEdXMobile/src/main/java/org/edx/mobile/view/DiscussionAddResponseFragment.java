@@ -2,20 +2,18 @@ package org.edx.mobile.view;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.databinding.FragmentAddResponseOrCommentBinding;
 import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
@@ -38,7 +36,6 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 public class DiscussionAddResponseFragment extends BaseFragment {
 
@@ -48,21 +45,6 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     private DiscussionThread discussionThread;
 
     protected final Logger logger = new Logger(getClass().getName());
-
-    @InjectView(R.id.etNewComment)
-    private EditText editTextNewComment;
-
-    @InjectView(R.id.btnAddComment)
-    private ViewGroup buttonAddComment;
-
-    @InjectView(R.id.progress_indicator)
-    private ProgressBar createCommentProgressBar;
-
-    @InjectView(R.id.tvTitle)
-    private TextView textViewTitle;
-
-    @InjectView(R.id.tvResponse)
-    private TextView textViewResponse;
 
     private Call<DiscussionComment> createCommentCall;
 
@@ -77,6 +59,8 @@ public class DiscussionAddResponseFragment extends BaseFragment {
 
     @Inject
     private Config config;
+
+    private FragmentAddResponseOrCommentBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,36 +77,28 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_response_or_comment, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentAddResponseOrCommentBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textViewTitle.setVisibility(View.VISIBLE);
-        textViewTitle.setText(discussionThread.getTitle());
+        binding.tvTitle.setVisibility(View.VISIBLE);
+        binding.tvTitle.setText(discussionThread.getTitle());
 
-        DiscussionTextUtils.renderHtml(textViewResponse, discussionThread.getRenderedBody());
+        DiscussionTextUtils.renderHtml(binding.tvResponse, discussionThread.getRenderedBody());
 
         AuthorLayoutViewHolder authorLayoutViewHolder =
-                new AuthorLayoutViewHolder(getView().findViewById(R.id.discussion_user_profile_row));
+                new AuthorLayoutViewHolder(binding.rowDiscussionUserProfile.discussionUserProfileRow);
         authorLayoutViewHolder.populateViewHolder(config, discussionThread, discussionThread,
                 System.currentTimeMillis(),
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        router.showUserProfile(getActivity(), discussionThread.getAuthor());
-                    }
-                });
+                () -> router.showUserProfile(requireActivity(), discussionThread.getAuthor()));
 
-        buttonAddComment.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                createComment();
-            }
-        });
-        buttonAddComment.setEnabled(false);
-        editTextNewComment.addTextChangedListener(new TextWatcher() {
+        binding.btnAddComment.setOnClickListener(v -> createComment());
+        binding.btnAddComment.setEnabled(false);
+        binding.etNewComment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -133,34 +109,34 @@ public class DiscussionAddResponseFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                buttonAddComment.setEnabled(s.toString().trim().length() > 0);
+                binding.btnAddComment.setEnabled(s.toString().trim().length() > 0);
             }
         });
     }
 
     private void createComment() {
-        buttonAddComment.setEnabled(false);
+        binding.btnAddComment.setEnabled(false);
 
         if (createCommentCall != null) {
             createCommentCall.cancel();
         }
 
         createCommentCall = discussionService.createComment(new CommentBody(
-                discussionThread.getIdentifier(), editTextNewComment.getText().toString(), null));
+                discussionThread.getIdentifier(), binding.etNewComment.getText().toString(), null));
         createCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                getActivity(),
-                new ProgressViewController(createCommentProgressBar),
+                requireContext(),
+                new ProgressViewController(binding.buttonProgressIndicator.progressIndicator),
                 new DialogErrorNotification(this)) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment thread) {
                 logger.debug(thread.toString());
                 EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, null));
-                getActivity().finish();
+                requireActivity().finish();
             }
 
             @Override
             protected void onFailure(@NonNull final Throwable error) {
-                buttonAddComment.setEnabled(true);
+                binding.btnAddComment.setEnabled(true);
             }
         });
     }
@@ -169,7 +145,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            SoftKeyboardUtil.clearViewFocus(editTextNewComment);
+            SoftKeyboardUtil.clearViewFocus(binding.etNewComment);
         }
     }
 }
