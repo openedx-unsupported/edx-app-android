@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Mit Kalender synchronisieren",
+        "message": "Verpassen Sie nie wieder eine Frist, indem Sie Ihre Kursdaten mit Ihrem Telefonkalender synchronisieren und Erinnerungen erhalten."
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {

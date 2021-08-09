@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.26",
+    "messages": [
+      {
+        "platforms": [
+          "ios",
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "同步到日历",
+        "message": "再也不会错过截止日期——将课程日期同步到您手机的日历以接收提醒！"
+      }
+    ]
+  },
+  {
     "version": "2.25",
     "messages": [
       {
