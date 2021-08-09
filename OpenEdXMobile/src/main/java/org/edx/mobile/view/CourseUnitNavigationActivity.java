@@ -207,15 +207,15 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             mPreviousUnitLbl.setVisibility(View.GONE);
         }
         if (mPreviousBtn.isEnabled()) {
-            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
+            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.open_sans_semi_bold));
         } else {
-            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
+            mPreviousBtn.setTypeface(ResourcesCompat.getFont(this, R.font.open_sans_regular));
         }
 
         if (mNextBtn.isEnabled()) {
-            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_semi_bold));
+            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.open_sans_semi_bold));
         } else {
-            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
+            mNextBtn.setTypeface(ResourcesCompat.getFont(this, R.font.open_sans_regular));
         }
     }
 

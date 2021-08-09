@@ -622,9 +622,9 @@
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->
-    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="already_have_an_account">Sign In</string>
     <!-- Prompt leading user to create account screen -->
-    <string name="sign_up_and_learn">Sign up and start learning</string>
+    <string name="sign_up_and_learn">Sign Up</string>
     <!-- In Register screen -->
     <string name="register_with">Register with</string>
     <string name="or_register_with_email">or register with email</string>

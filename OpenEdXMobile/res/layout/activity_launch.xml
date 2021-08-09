@@ -11,11 +11,12 @@
 
         <ImageView
             android:id="@+id/edx_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/edx_quadruple_margin"
+            android:layout_width="238dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="400dp"
             android:contentDescription="@string/phonetic_app_name"
+            android:cropToPadding="false"
             android:src="@drawable/launch_screen_logo" />
 
         <LinearLayout

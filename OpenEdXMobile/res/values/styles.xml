@@ -45,10 +45,10 @@
         </item>
         <item name="mediaRouteTheme">@style/MediaRouterTheme</item>
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
-        <item name="fontItalic">@font/inter_italic</item>
-        <item name="fontRegular">@font/inter_regular</item>
-        <item name="fontSemiBoldItalic">@font/inter_semi_bold_italic</item>
-        <item name="fontSemiBold">@font/inter_semi_bold</item>
+        <item name="fontItalic">@font/open_sans_italic</item>
+        <item name="fontRegular">@font/open_sans_regular</item>
+        <item name="fontSemiBoldItalic">@font/open_sans_semi_bold_italic</item>
+        <item name="fontSemiBold">@font/open_sans_semi_bold</item>
         <item name="android:fontFamily">?attr/fontRegular</item>
     </style>
 

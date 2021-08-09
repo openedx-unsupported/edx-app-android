@@ -104,7 +104,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
             // doesn't automatically dismiss and we have to manually dismiss it.
             final Button actionButton = (Button) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_action);
             actionButton.setOnClickListener(actionListener);
-            actionButton.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.inter_semi_bold));
+            actionButton.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.open_sans_semi_bold));
 
             TextView snackTextView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
             snackTextView.setMaxLines(3);

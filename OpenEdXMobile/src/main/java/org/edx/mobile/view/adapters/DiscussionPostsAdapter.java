@@ -44,7 +44,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         neutral_x_dark = context.getResources().getColor(R.color.neutralXDark);
         secondary_dark_color = context.getResources().getColor(R.color.secondaryDarkColor);
         edx_utility_success_dark = context.getResources().getColor(R.color.successBase);
-        semiBoldFont = ResourcesCompat.getFont(context, R.font.inter_semi_bold);
+        semiBoldFont = ResourcesCompat.getFont(context, R.font.open_sans_semi_bold);
     }
 
     @Override
