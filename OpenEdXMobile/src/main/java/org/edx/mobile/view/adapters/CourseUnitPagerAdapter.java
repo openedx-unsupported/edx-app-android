@@ -89,7 +89,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         final boolean isYoutubeVideo = (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
             if (courseUpgradeData == null) {
-                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced(), courseData.getCourse().getPrice());
             } else {
                 unitFragment = LockedCourseUnitFragment.newInstance(minifiedUnit, courseData, courseUpgradeData);
             }
@@ -106,7 +106,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         } else if (config.isDiscussionsEnabled() && minifiedUnit instanceof DiscussionBlockModel) {
             unitFragment = CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData);
         } else if (!minifiedUnit.isMultiDevice()) {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced(), courseData.getCourse().getPrice());
         } else if (minifiedUnit.getType() != BlockType.VIDEO &&
                 minifiedUnit.getType() != BlockType.HTML &&
                 minifiedUnit.getType() != BlockType.OTHERS &&
@@ -123,7 +123,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         }
         //fallback
         else {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit);
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced(), courseData.getCourse().getPrice());
         }
 
         unitFragment.setHasComponentCallback(callback);

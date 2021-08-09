@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/widget_margin_x_double"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:padding="@dimen/widget_margin_x_half"
+                app:srcCompat="@drawable/ic_green_check_filled" />
+
+            <TextView
+                style="@style/regular_neutral_xx_dark_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/widget_margin_half"
+                android:gravity="start"
+                android:lineSpacingMultiplier="1.25"
+                android:text="@string/course_modal_earn_certificate"
+                android:textSize="@dimen/edx_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:padding="@dimen/widget_margin_x_half"
+                app:srcCompat="@drawable/ic_green_check_filled" />
+
+            <TextView
+                style="@style/regular_neutral_xx_dark_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/widget_margin_half"
+                android:gravity="start"
+                android:lineSpacingMultiplier="1.25"
+                android:text="@string/course_modal_unlock_access"
+                android:textSize="@dimen/edx_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:padding="@dimen/widget_margin_x_half"
+                app:srcCompat="@drawable/ic_green_check_filled" />
+
+            <TextView
+                style="@style/regular_neutral_xx_dark_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/widget_margin_half"
+                android:gravity="start"
+                android:lineSpacingMultiplier="1.25"
+                android:text="@string/course_modal_full_access_course"
+                android:textSize="@dimen/edx_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/edx_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:padding="@dimen/widget_margin_x_half"
+                app:srcCompat="@drawable/ic_green_check_filled" />
+
+            <TextView
+                android:id="@+id/support_non_profit"
+                style="@style/regular_neutral_xx_dark_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/widget_margin_half"
+                android:gravity="start"
+                android:lineSpacingMultiplier="1.25"
+                android:text="@string/course_modal_support_non_profit"
+                android:textSize="@dimen/edx_small" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

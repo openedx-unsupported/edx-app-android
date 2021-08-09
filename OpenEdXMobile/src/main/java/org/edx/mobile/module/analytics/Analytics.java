@@ -494,6 +494,28 @@ public interface Analytics {
     void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId);
 
     /**
+     * Track the tapped occurrence when a user taps "Upgrade Now" in an embedded or modal value prop.
+     *
+     * @param courseId    course id of the course on which button is tapped
+     * @param price       Price for which the course can upgrade
+     * @param componentId Component id of course unit
+     * @param isSelfPaced Whether the course is self-paced or instructor paced
+     */
+    void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
+                                @Nullable String componentId, boolean isSelfPaced);
+
+    /**
+     * Track the tapped occurrence when a user taps "Show more/Show less" in an embedded value prop.
+     *  @param courseId    course id of the course on which button is tapped
+     * @param componentId Component id of course unit
+     * @param price       Price for which the course can upgrade
+     * @param isSelfPaced Whether the course is self-paced or instructor paced
+     * @param showMore    True when user tapped on show more otherwise false
+     */
+    void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
+                                           @NonNull String price, boolean isSelfPaced, boolean showMore);
+
+    /**
      * Tracks explore all courses tapped on landing screen.
      *
      * @param versionName App's version.
@@ -621,6 +643,7 @@ public interface Analytics {
         String SCREEN_NAME = "screen_name";
         String BANNER_TYPE = "banner_type";
         String SUCCESS = "success";
+        String PRICE = "price";
 
         String CELL_CARRIER = "cell_carrier";
         String CELL_ZERO_RATED = "cell_zero_rated";
@@ -704,6 +727,9 @@ public interface Analytics {
         String USER_COURSE_UPGRADE_SUCCESS = "edx.bi.app.course.upgrade.success";
         String VALUE_PROP_LEARN_MORE_CLICKED = "edx.bi.app.value.prop.learn.more.clicked";
         String LOCKED_CONTENT_CLICKED = "edx.bi.app.course.unit.locked.content.clicked";
+        String COURSE_UPGRADE_NOW_CLICKED = "edx.bi.app.upgrade.button.clicked";
+        String VALUE_PROP_SHOW_MORE_CLICKED = "edx.bi.app.value_prop.show_more.clicked";
+        String VALUE_PROP_SHOW_LESS_CLICKED = "edx.bi.app.value_prop.show_less.clicked";
         String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
         String CONVERSION = "conversion";
         String USER_ENGAGEMENT = "user-engagement";
@@ -944,6 +970,9 @@ public interface Analytics {
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
         String COURSE_UNIT_LOCKED_CONTENT = "Value Prop Locked Content Clicked";
+        String COURSE_UPGRADE_NOW_CLICKED = "Upgrade Now Clicked";
+        String VALUE_PROP_SHOW_MORE_CLICKED = "Value Prop Show More Clicked";
+        String VALUE_PROP_SHOW_LESS_CLICKED = "Value Prop Show Less Clicked";
         // Course Celebration Modal
         String COURSE_SECTION_COMPLETION_CELEBRATION = "Celebration: First Section Opened";
         String CELEBRATION_SOCIAL_SHARE_CLICKED = "Celebration: Social Share Clicked";

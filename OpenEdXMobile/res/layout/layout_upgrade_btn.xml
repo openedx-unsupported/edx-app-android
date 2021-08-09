@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_upgrade"
+        style="@style/edX.Widget.ActionBrandPillButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/upgrade_now_button_padding"
+        android:text="@string/label_upgrade_course_button"
+        app:backgroundTint="@color/secondaryBaseColor"
+        app:icon="@drawable/ic_lock"
+        app:iconGravity="textStart"
+        app:iconTint="@color/edx_brand_button_text" />
+</layout>

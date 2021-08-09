@@ -63,8 +63,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 }
             }
 
-            override fun onLearnMoreClicked(courseId: String) {
-                CourseModalDialogFragment.newInstance(environment.config.platformName, true, courseId, null)
+            override fun onLearnMoreClicked(courseId: String, courseName: String, price: String, isSelfPaced: Boolean) {
+                CourseModalDialogFragment.newInstance(environment.config.platformName, courseId, courseName, price, isSelfPaced)
                         .show(childFragmentManager, CourseModalDialogFragment.TAG)
             }
         }

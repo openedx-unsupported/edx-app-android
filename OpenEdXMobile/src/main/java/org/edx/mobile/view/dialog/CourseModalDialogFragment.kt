@@ -17,8 +17,8 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
     private lateinit var binding: DialogUpgradeFeaturesBinding
     private var courseId: String = ""
-    private var assignmentId: String? = null
-    private var isFromDashboard: Boolean = true
+    private var price: String = ""
+    private var isSelfPaced: Boolean = false
 
     @Inject
     private lateinit var environment: IEdxEnvironment
@@ -30,7 +30,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_upgrade_features, container,
                 false)
         return binding.root
@@ -40,18 +40,20 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
             courseId = bundle.getString(KEY_COURSE_ID) ?: ""
-            assignmentId = bundle.getString(KEY_ASSIGNMENT_ID)
-            isFromDashboard = bundle.getBoolean(KEY_IS_FROM_DASHBOARD)
-            environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, assignmentId,
-                    if (isFromDashboard) Analytics.Screens.COURSE_ENROLLMENT else Analytics.Screens.COURSE_UNIT)
-            environment.analyticsRegistry.trackValuePropModalView(courseId, assignmentId,
-                    if (isFromDashboard) Analytics.Screens.COURSE_ENROLLMENT else Analytics.Screens.COURSE_UNIT)
+            price = bundle.getString(KEY_COURSE_PRICE) ?: ""
+            isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
+            environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, null, Analytics.Screens.COURSE_ENROLLMENT)
+            environment.analyticsRegistry.trackValuePropModalView(courseId, null, Analytics.Screens.COURSE_ENROLLMENT)
         }
 
-        binding.dialogTitle.text = getString(if (isFromDashboard) R.string.course_dashboard_modal_title else R.string.course_locked_modal_title)
-        binding.supportNonProfit.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_support_non_profit, KEY_MODAL_PLATFORM, arguments?.getString(KEY_MODAL_PLATFORM))
+        binding.dialogTitle.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_heading, KEY_COURSE_NAME, arguments?.getString(KEY_COURSE_NAME))
+        binding.layoutUpgradeFeature.supportNonProfit.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_support_non_profit, KEY_MODAL_PLATFORM, arguments?.getString(KEY_MODAL_PLATFORM))
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
+        }
+        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (environment.config.isIAPEnabled) View.VISIBLE else View.GONE
+        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            environment.analyticsRegistry.trackUpgradeNowClicked(courseId, price, null, isSelfPaced)
         }
     }
 
@@ -59,17 +61,19 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         const val TAG: String = "CourseModalDialogFragment"
         const val KEY_MODAL_PLATFORM = "platform_name"
         const val KEY_COURSE_ID = "course_id"
-        const val KEY_ASSIGNMENT_ID = "assignment_id"
-        const val KEY_IS_FROM_DASHBOARD = "isFromDashboard"
+        const val KEY_COURSE_NAME = "course_name"
+        const val KEY_COURSE_PRICE = "course_price"
+        const val KEY_IS_SELF_PACED = "is_Self_Paced"
 
         @JvmStatic
-        fun newInstance(platformName: String, isFromDashboard: Boolean, courseId: String, assignmentId: String?): CourseModalDialogFragment {
+        fun newInstance(platformName: String, courseId: String, courseName: String, price: String, isSelfPaced: Boolean): CourseModalDialogFragment {
             val frag = CourseModalDialogFragment()
             val args = Bundle().apply {
                 putString(KEY_MODAL_PLATFORM, platformName)
-                putBoolean(KEY_IS_FROM_DASHBOARD, isFromDashboard)
                 putString(KEY_COURSE_ID, courseId)
-                putString(KEY_ASSIGNMENT_ID, assignmentId)
+                putString(KEY_COURSE_NAME, courseName)
+                putString(KEY_COURSE_PRICE, price)
+                putBoolean(KEY_IS_SELF_PACED, isSelfPaced)
             }
             frag.arguments = args
             return frag

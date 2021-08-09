@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,127 +17,39 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/dialog_dismiss"
-                android:layout_width="@dimen/ic_x_large"
-                android:layout_height="@dimen/ic_x_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:padding="@dimen/edx_quarter_margin"
                 android:scaleType="center"
                 app:srcCompat="@drawable/ic_close"
                 app:tint="@color/primaryBaseColor" />
 
             <TextView
                 android:id="@+id/dialog_title"
-                style="@style/semi_bold_primary_base_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/widget_margin_double"
-                android:gravity="center"
-                android:textSize="@dimen/edx_x_large"
-                tools:text="@string/course_dashboard_modal_title" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/container_padding"
-                app:srcCompat="@drawable/course_certificate" />
-
-            <TextView
                 style="@style/regular_primary_base_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_double"
+                android:layout_marginTop="@dimen/widget_margin_quadruple"
+                android:layout_marginBottom="@dimen/edx_margin"
+                android:fontFamily="?attr/fontSemiBold"
                 android:gravity="start"
                 android:text="@string/course_modal_heading"
-                android:textSize="@dimen/edx_large" />
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="@dimen/edx_xx_large" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_double"
-                android:orientation="horizontal">
+            <include
+                android:id="@+id/layout_upgrade_feature"
+                layout="@layout/layout_upgrade_features" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/widget_margin_x_half"
-                    app:srcCompat="@drawable/ic_check_circle" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-                <TextView
-                    style="@style/regular_primary_base_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/widget_margin_half"
-                    android:gravity="start"
-                    android:text="@string/course_modal_earn_certificate"
-                    android:textSize="@dimen/edx_base" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_double"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/widget_margin_x_half"
-                    app:srcCompat="@drawable/ic_check_circle" />
-
-                <TextView
-                    style="@style/regular_primary_base_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/widget_margin_half"
-                    android:gravity="start"
-                    android:text="@string/course_modal_unlock_access"
-                    android:textSize="@dimen/edx_base" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_double"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/widget_margin_x_half"
-                    app:srcCompat="@drawable/ic_check_circle" />
-
-                <TextView
-                    style="@style/regular_primary_base_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/widget_margin_half"
-                    android:gravity="start"
-                    android:text="@string/course_modal_full_access_course"
-                    android:textSize="@dimen/edx_base" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_double"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/widget_margin_x_half"
-                    app:srcCompat="@drawable/ic_check_circle" />
-
-                <TextView
-                    android:id="@+id/support_non_profit"
-                    style="@style/regular_primary_base_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/widget_margin_half"
-                    android:gravity="start"
-                    android:text="@string/course_modal_support_non_profit"
-                    android:textSize="@dimen/edx_base" />
-            </LinearLayout>
+            <include
+                android:id="@+id/layout_upgrade_btn"
+                layout="@layout/layout_upgrade_btn" />
 
         </LinearLayout>
     </ScrollView>

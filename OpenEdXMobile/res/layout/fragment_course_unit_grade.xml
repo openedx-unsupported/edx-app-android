@@ -2,119 +2,133 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/ll_graded_content_layout"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/edx_margin"
-            android:background="@color/infoXXLight"
-            android:orientation="vertical"
-            android:padding="@dimen/edx_margin"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ll_graded_content_icon"
-                android:layout_width="@dimen/medium_icon_size"
-                android:layout_height="@dimen/medium_icon_size"
-                android:layout_marginTop="@dimen/widget_margin_half"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_lock" />
-
-            <TextView
-                android:id="@+id/ll_graded_content_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/edx_half_margin"
-                android:fontFamily="?attr/fontSemiBold"
-                android:text="@string/course_modal_graded_assignment_locked"
-                android:textColor="@color/neutralBlackT"
-                android:textSize="@dimen/edx_large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ll_graded_content_icon"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/ll_graded_content_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_half"
-                android:text="@string/course_modal_graded_assignment_locked_description"
-                android:textColor="@color/neutralBlackT"
-                android:textSize="@dimen/edx_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/ll_graded_content_title"
-                app:layout_constraintTop_toBottomOf="@+id/ll_graded_content_title" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_learn_more"
-                style="@style/edX.Widget.PrimaryActionButton"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:includeFontPadding="false"
-                android:padding="@dimen/container_padding"
-                android:text="@string/course_value_prop_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_graded_content_description" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/container_layout_not_available"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center"
+            android:background="@color/neutralWhite"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/content_error_icon"
-                android:layout_width="@dimen/unit_unavailable_error_icon_size"
-                android:layout_height="@dimen/unit_unavailable_error_icon_size"
-                android:layout_margin="@dimen/widget_margin_double"
-                app:srcCompat="@drawable/ic_laptop"
-                app:tint="@color/neutralXXDark" />
-
-            <TextView
-                android:id="@+id/not_available_message"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ll_graded_content_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/edx_quadruple_margin"
-                android:layout_marginEnd="@dimen/edx_quadruple_margin"
-                android:layout_marginBottom="@dimen/widget_margin_double"
-                android:gravity="center"
-                android:singleLine="false"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/edx_base"
-                tools:text="@string/assessment_not_available" />
+                android:layout_margin="@dimen/edx_margin"
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/edx_box_radius"
+                app:cardUseCompatPadding="true">
 
-            <TextView
-                android:id="@+id/not_available_message_2"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:background="@color/neutralWhite"
+                    android:orientation="vertical"
+                    android:padding="@dimen/edx_margin">
+
+                    <TextView
+                        android:id="@+id/ll_graded_content_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/widget_margin"
+                        android:fontFamily="?attr/fontSemiBold"
+                        android:gravity="center"
+                        android:text="@string/course_modal_graded_assignment_locked"
+                        android:textColor="@color/neutralBlackT"
+                        android:textSize="@dimen/edx_small"
+                        app:drawableStartCompat="@drawable/ic_lock"
+                        app:drawableTint="@color/neutralBlackT" />
+
+                    <TextView
+                        android:id="@+id/ll_graded_content_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/widget_margin_x_double"
+                        android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
+                        android:text="@string/course_modal_graded_assignment_locked_description"
+                        android:textColor="@color/neutralXXDark"
+                        android:textSize="@dimen/edx_medium" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/toggle_show"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/widget_margin_x_double"
+                        android:layout_marginBottom="@dimen/widget_margin_x_double"
+                        android:text="@string/course_modal_graded_assignment_show_more"
+                        android:textColor="@color/neutralXXDark"
+                        android:textSize="@dimen/edx_small" />
+
+                    <include
+                        android:id="@+id/layout_upgrade_feature"
+                        layout="@layout/layout_upgrade_features"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/layout_upgrade_btn"
+                        layout="@layout/layout_upgrade_btn" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/container_layout_not_available"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/edx_quadruple_margin"
-                android:layout_marginEnd="@dimen/edx_quadruple_margin"
-                android:layout_marginBottom="@dimen/widget_margin_double"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:gravity="center"
-                android:singleLine="false"
-                android:text="@string/assessment_explore_on_web"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/edx_base" />
+                android:orientation="vertical"
+                android:visibility="gone">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/view_on_web_button"
-                style="@style/edX.Widget.BaseSizeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/widget_margin_double"
-                android:text="@string/assessment_view_on_web" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/content_error_icon"
+                    android:layout_width="@dimen/unit_unavailable_error_icon_size"
+                    android:layout_height="@dimen/unit_unavailable_error_icon_size"
+                    android:layout_margin="@dimen/widget_margin_double"
+                    app:srcCompat="@drawable/ic_laptop"
+                    app:tint="@color/neutralXXDark" />
 
-        </LinearLayout>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/not_available_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/edx_quadruple_margin"
+                    android:layout_marginEnd="@dimen/edx_quadruple_margin"
+                    android:layout_marginBottom="@dimen/widget_margin_double"
+                    android:gravity="center"
+                    android:singleLine="false"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/edx_base"
+                    tools:text="@string/assessment_not_available" />
+
+                <TextView
+                    android:id="@+id/not_available_message_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/edx_quadruple_margin"
+                    android:layout_marginEnd="@dimen/edx_quadruple_margin"
+                    android:layout_marginBottom="@dimen/widget_margin_double"
+                    android:gravity="center"
+                    android:singleLine="false"
+                    android:text="@string/assessment_explore_on_web"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/edx_base" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/view_on_web_button"
+                    style="@style/edX.Widget.BaseSizeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/widget_margin_double"
+                    android:text="@string/assessment_view_on_web" />
+
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
 </layout>

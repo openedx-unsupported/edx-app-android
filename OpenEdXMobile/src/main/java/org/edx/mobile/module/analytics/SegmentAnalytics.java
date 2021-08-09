@@ -972,6 +972,34 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
+    public void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
+                                       @Nullable String componentId, boolean isSelfPaced) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.COURSE_UPGRADE_NOW_CLICKED);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.PRICE, price);
+        if (!TextUtils.isEmpty(componentId)) {
+            aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
+        }
+        aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        trackSegmentEvent(Events.COURSE_UPGRADE_NOW_CLICKED, aEvent.properties);
+    }
+
+    @Override
+    public void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
+                                                  @NonNull String price, boolean isSelfPaced, boolean showMore) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, showMore ? Values.VALUE_PROP_SHOW_MORE_CLICKED : Values.VALUE_PROP_SHOW_LESS_CLICKED);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.PRICE, price);
+        if (!TextUtils.isEmpty(componentId)) {
+            aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
+        }
+        aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        trackSegmentEvent(showMore ? Events.VALUE_PROP_SHOW_MORE_CLICKED : Events.VALUE_PROP_SHOW_LESS_CLICKED, aEvent.properties);
+    }
+
+    @Override
     public void trackExploreAllCoursesTapped(String versionName) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_ALL_COURSES);
