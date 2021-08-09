@@ -487,6 +487,22 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
+    public void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
+                                       @Nullable String componentId, boolean isSelfPaced) {
+        for (Analytics service : services) {
+            service.trackUpgradeNowClicked(courseId, price, componentId, isSelfPaced);
+        }
+    }
+
+    @Override
+    public void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
+                                                  @NonNull String price, boolean isSelfPaced, boolean showMore) {
+        for (Analytics service : services) {
+            service.trackValuePropShowMoreLessClicked(courseId, componentId, price, isSelfPaced, showMore);
+        }
+    }
+
+    @Override
     public void trackExploreAllCoursesTapped(String versionName) {
         for (Analytics service : services) {
             service.trackExploreAllCoursesTapped(versionName);

@@ -692,6 +692,34 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
+    public void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
+                                       @Nullable String componentId, boolean isSelfPaced) {
+
+        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_UPGRADE_NOW_CLICKED, Values.COURSE_UPGRADE_NOW_CLICKED);
+        event.putCourseId(courseId);
+        event.putString(Keys.PRICE, price);
+        if (!TextUtils.isEmpty(componentId)) {
+            event.putString(Keys.COMPONENT_ID, componentId);
+        }
+        event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
+                                                  @NonNull String price, boolean isSelfPaced, boolean showMore) {
+        final FirebaseEvent event = new FirebaseEvent(showMore ? Events.VALUE_PROP_SHOW_MORE_CLICKED : Events.VALUE_PROP_SHOW_LESS_CLICKED,
+                showMore ? Values.VALUE_PROP_SHOW_MORE_CLICKED : Values.VALUE_PROP_SHOW_LESS_CLICKED);
+        event.putCourseId(courseId);
+        event.putString(Keys.PRICE, price);
+        if (!TextUtils.isEmpty(componentId)) {
+            event.putString(Keys.COMPONENT_ID, componentId);
+        }
+        event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
     public void trackExploreAllCoursesTapped(String versionName) {
         final FirebaseEvent event = new FirebaseEvent(Events.EXPLORE_ALL_COURSES, Values.EXPLORE_ALL_COURSES);
         event.addCategoryToBiEvents(Values.USER_ENGAGEMENT, Values.DISCOVERY);

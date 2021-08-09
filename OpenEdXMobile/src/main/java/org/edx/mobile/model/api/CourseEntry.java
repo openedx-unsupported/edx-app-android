@@ -40,6 +40,7 @@ public class CourseEntry implements Serializable {
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
     private boolean is_self_paced;
+    private String price = "$99"; //Parameter not received in API yet so adding it for testing & future implementation purpose
     @Nullable private Map<String, String> course_sharing_utm_parameters;
 
     public LatestUpdateModel getLatest_updates() {
@@ -154,6 +155,10 @@ public class CourseEntry implements Serializable {
     public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
 
     public boolean isSelfPaced() { return is_self_paced; }
+
+    public String getPrice() {
+        return price;
+    }
 
     public boolean isStarted() {
         return CourseCardUtils.isDatePassed(new Date(), start);

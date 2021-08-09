@@ -68,6 +68,7 @@ public class Router {
     public static final String EXTRA_DEEP_LINK = "deep_link";
     public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
     public static final String EXTRA_IS_SELF_PACED = "is_self_paced";
+    public static final String EXTRA_PRICE = "course_price";
 
     @Inject
     Config config;
