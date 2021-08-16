@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:minHeight="@dimen/course_detail_card_height"
+            android:gravity="bottom"
             android:orientation="vertical">
 
             <LinearLayout
@@ -93,7 +94,9 @@
                 android:paddingStart="@dimen/course_card_detail_padding_start"
                 android:paddingTop="@dimen/course_card_detail_padding_top"
                 android:paddingEnd="@dimen/course_card_detail_padding_end"
-                android:paddingBottom="@dimen/course_card_detail_padding_bottom">
+                android:paddingBottom="@dimen/course_card_detail_padding_bottom"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/ic_large"
