@@ -255,8 +255,6 @@
         To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Shift due dates</string>
-    <!-- Label My Courses Graded content message -->
-    <string name="course_value_prop_message">Get the most out of your course! Upgrade to get full access to the course material, unlock both graded and non-graded assignments, and earn a verified certificate to showcase on your resume.</string>
     <!-- Title Course Schedule  -->
     <string name="course_schedule_title">Course Schedule</string>
     <!-- Message Course Dates Info Banner -->
@@ -270,6 +268,9 @@
     <!-- Message Course Dates Banner Reset Date -->
     <string name="course_dates_banner_reset_date">It looks like you missed some important deadlines based on our suggested schedule.
         To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">Unlock to access more features</string>
+
 
     <!-- Title Sync to calendar  -->
     <string name="sync_to_calendar">Sync to calendar</string>

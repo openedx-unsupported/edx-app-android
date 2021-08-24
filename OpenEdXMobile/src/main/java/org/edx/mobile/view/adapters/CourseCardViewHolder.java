@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +26,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     private final TextView courseTitle;
     private final TextView courseDetails;
     private final LinearLayout propContainer;
-    private final AppCompatButton learnMore;
     private final View newCourseContent;
 
     public CourseCardViewHolder(View convertView) {
@@ -41,8 +39,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
                 .findViewById(R.id.new_course_content_layout);
         this.propContainer = (LinearLayout) convertView
                 .findViewById(R.id.ll_graded_content_layout);
-        this.learnMore = (AppCompatButton) convertView
-                .findViewById(R.id.btn_learn_more);
     }
 
     public void setCourseTitle(@NonNull String title) {
@@ -73,10 +69,10 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
         courseDetails.setText(date);
     }
 
-    public void setHasUpgradeOption(String mode, View.OnClickListener onLearnMoreClick) {
+    public void setHasUpgradeOption(String mode, View.OnClickListener onValuePropClick) {
         if (mode.equalsIgnoreCase(EnrollmentMode.AUDIT.toString())) {
             propContainer.setVisibility(View.VISIBLE);
-            learnMore.setOnClickListener(onLearnMoreClick);
+            propContainer.setOnClickListener(onValuePropClick);
         } else {
             propContainer.setVisibility(View.GONE);
         }
