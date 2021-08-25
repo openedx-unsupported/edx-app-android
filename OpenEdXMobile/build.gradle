@@ -270,6 +270,15 @@ dependencies {
         exclude group: 'org.hamcrest'
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
+
+    /**
+     * Using debugImplementation here, so that LeakCanary only runs with debug variants of the builds.
+     * p.s. it won't run with the debuggable variant.
+     *
+     * Following link explains setting up LeakCanary for different product flavors:
+     * https://square.github.io/leakcanary/recipes/#setting-up-leakcanary-for-different-product-flavors
+     */
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }
 
 configurations {
