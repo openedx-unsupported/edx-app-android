@@ -893,4 +893,16 @@
     <string name="open_in_browser_text"><u>Open in browser</u></string>
     <!-- Error message while creating calendar for the course events -->
     <string name="adding_calendar_error_message">Error Adding Calendar, Please try later</string>
+    <!-- Title of Video Quality Dialog -->
+    <string name="video_download_quality_title">Video download quality</string>
+    <!-- Auto Video Quality option -->
+    <string name="auto_recommended_text">Auto (Recommended)</string>
+    <!-- 360p Video Quality option -->
+    <string name="p360_quality_option">360p (Smallest file size)</string>
+    <!-- 540p Video Quality option -->
+    <string name="p540_quality_option">540p</string>
+    <!-- 720p Video Quality option -->
+    <string name="p720_quality_option">720p (Best quality)</string>
+    <!-- Message shows in Video Quality dialog -->
+    <string name="video_download_quality_message">This setting is for all video downloads in the {platform_name} app.</string>
 </resources>

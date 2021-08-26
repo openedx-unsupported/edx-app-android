@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_roundedbg"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/grey_top_roundedbg"
+            android:padding="@dimen/edx_x_quarter_margin">
+
+            <TextView
+                android:id="@+id/tv_header_video_quality"
+                style="@style/bold_edx_black_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/tv_close"
+                android:gravity="start|center_vertical"
+                android:padding="@dimen/widget_margin"
+                android:text="@string/video_download_quality_title"
+                android:textSize="@dimen/edx_small" />
+
+            <TextView
+                android:id="@+id/tv_close"
+                style="@style/bold_edx_black_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/grey_top_roundedbg"
+                android:padding="@dimen/widget_margin"
+                android:text="@string/close"
+                android:textSize="@dimen/edx_xx_small" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_video_quality_message"
+            style="@style/regular_edx_black_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingStart="@dimen/edx_margin"
+            android:paddingTop="@dimen/widget_margin_double"
+            android:paddingEnd="@dimen/edx_margin"
+            android:paddingBottom="@dimen/widget_margin_double"
+            android:textSize="@dimen/edx_xx_small"
+            tools:text="@string/video_download_quality_message" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_player_settings_divider_height"
+            android:background="@color/neutralXLight" />
+
+        <ListView
+            android:id="@+id/video_quality_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:divider="@color/neutralLight"
+            android:dividerHeight="@dimen/video_player_settings_divider_height"
+            android:listSelector="@android:color/transparent" />
+
+    </LinearLayout>
+
+</layout>

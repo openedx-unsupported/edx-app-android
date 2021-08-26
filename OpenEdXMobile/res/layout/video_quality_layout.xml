@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/rl_video_quality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/neutralXLight"
+        android:paddingStart="@dimen/widget_margin_double"
+        android:paddingTop="@dimen/widget_margin"
+        android:paddingEnd="@dimen/widget_margin_double"
+        android:paddingBottom="@dimen/widget_margin">
+
+        <ImageView
+            android:id="@+id/iv_video_quality"
+            android:layout_width="@dimen/ic_large"
+            android:layout_height="@dimen/ic_large"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/edx_margin"
+            android:src="@drawable/ic_settings"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/video_download_label"
+            style="@style/video_download_quality_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/iv_video_quality_arrow"
+            android:layout_toEndOf="@+id/iv_video_quality"
+            android:text="@string/video_download_quality_title" />
+
+        <TextView
+            android:id="@+id/tv_video_download_quality"
+            style="@style/video_download_quality_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/video_download_label"
+            android:layout_marginTop="@dimen/edx_x_quarter_margin"
+            android:layout_toStartOf="@+id/iv_video_quality_arrow"
+            android:layout_toEndOf="@+id/iv_video_quality"
+            android:text="@string/auto_recommended_text" />
+
+        <ImageView
+            android:id="@+id/iv_video_quality_arrow"
+            android:layout_width="@dimen/ic_large"
+            android:layout_height="@dimen/ic_large"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/widget_margin"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/primaryXLightColor"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+</layout>

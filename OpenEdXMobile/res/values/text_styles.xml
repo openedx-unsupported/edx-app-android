@@ -97,6 +97,10 @@
         <item name="android:textColor">@color/neutralBlackT</item>
     </style>
 
+    <style name="regular_primary_dark_color" parent="@style/regular_text">
+        <item name="android:textColor">@color/neutralBlackT</item>
+    </style>
+
     <style name="regular_primary_base_text" parent="@style/regular_text">
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
@@ -231,6 +235,10 @@
         <item name="android:textColor">@color/neutralXDark</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="video_download_quality_text_style" parent="regular_primary_base_text">
+        <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
 
 </resources>
