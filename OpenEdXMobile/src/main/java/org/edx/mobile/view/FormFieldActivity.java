@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,8 +12,6 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.FormField;
-
-import roboguice.inject.InjectExtra;
 
 import static org.edx.mobile.user.DataType.COUNTRY;
 import static org.edx.mobile.user.DataType.LANGUAGE;
@@ -23,7 +22,6 @@ public class FormFieldActivity extends BaseSingleFragmentActivity
     public static final String EXTRA_FIELD = "field";
     public static final String EXTRA_VALUE = "value";
 
-    @InjectExtra(FormFieldActivity.EXTRA_FIELD)
     private FormField field;
 
     public static Intent newIntent(@NonNull Context context, @NonNull FormField field, @Nullable String currentValue) {
@@ -35,7 +33,12 @@ public class FormFieldActivity extends BaseSingleFragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parseExtras();
         fireScreenEvent();
+    }
+
+    private void parseExtras() {
+        field = (FormField) getIntent().getSerializableExtra(EXTRA_FIELD);
     }
 
     @Override

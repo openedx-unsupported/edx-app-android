@@ -36,16 +36,10 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
 public class DiscussionAddCommentFragment extends BaseFragment {
 
-    static public String TAG = DiscussionAddCommentFragment.class.getCanonicalName();
-
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT, optional = true)
-    DiscussionComment discussionResponse;
-
-    @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
+    private DiscussionComment discussionResponse;
     private DiscussionThread discussionThread;
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -68,6 +62,7 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parseExtras();
 
         Map<String, String> values = new HashMap<>();
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
@@ -119,6 +114,11 @@ public class DiscussionAddCommentFragment extends BaseFragment {
                 binding.btnAddComment.setEnabled(s.toString().trim().length() > 0);
             }
         });
+    }
+
+    private void parseExtras() {
+        discussionResponse = (DiscussionComment) getArguments().getSerializable(Router.EXTRA_DISCUSSION_COMMENT);
+        discussionThread = (DiscussionThread) getArguments().getSerializable(Router.EXTRA_DISCUSSION_THREAD);
     }
 
     private void createComment() {

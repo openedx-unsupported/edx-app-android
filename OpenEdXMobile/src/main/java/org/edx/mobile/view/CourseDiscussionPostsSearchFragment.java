@@ -37,18 +37,21 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
 public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBaseFragment {
 
     @Inject
     private DiscussionService discussionService;
 
-    @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
-
     private Call<Page<DiscussionThread>> searchThreadListCall;
     private FragmentDiscussionSearchPostsBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        parseExtras();
+    }
 
     @Nullable
     @Override
@@ -85,6 +88,10 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
         values.put(Analytics.Keys.SEARCH_STRING, searchQuery);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_SEARCH_THREADS,
                 courseData.getCourse().getId(), searchQuery, values);
+    }
+
+    private void parseExtras() {
+        searchQuery = getArguments().getString(Router.EXTRA_SEARCH_QUERY);
     }
 
     @Override

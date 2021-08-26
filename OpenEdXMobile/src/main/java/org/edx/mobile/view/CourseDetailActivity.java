@@ -1,14 +1,9 @@
-/*
- * CourseDetailActivity
- *
- * Activity that holds the fragments related to the course detail.
- */
-
 package org.edx.mobile.view;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -16,6 +11,9 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.module.analytics.Analytics;
 
+/**
+ * Activity that holds the fragments related to the course detail.
+ */
 public class CourseDetailActivity extends BaseSingleFragmentActivity {
 
     public static Intent newIntent(@NonNull Context context, @NonNull CourseDetail courseDetail) {
@@ -31,6 +29,8 @@ public class CourseDetailActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        return new CourseDetailFragment();
+        final CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
+        courseDetailFragment.setArguments(getIntent().getExtras());
+        return courseDetailFragment;
     }
 }

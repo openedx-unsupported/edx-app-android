@@ -43,7 +43,6 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
 public class CourseDiscussionCommentsFragment extends BaseFragment implements DiscussionCommentsAdapter.Listener {
 
@@ -53,21 +52,14 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Inject
     private Context context;
 
-    @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
-    private DiscussionThread discussionThread;
-
-    @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
-    private DiscussionComment discussionResponse;
-
-    @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
-    private EnrolledCoursesResponse courseData;
-
     @Inject
     private DiscussionService discussionService;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
+    private DiscussionThread discussionThread;
+    private DiscussionComment discussionResponse;
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
     @Nullable
@@ -76,12 +68,24 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private int nextPage = 1;
     private boolean hasMorePages = true;
 
-    private InfiniteScrollUtils.InfiniteListController controller;
-
-    @Nullable
-    private Call<DiscussionComment> setCommentFlaggedCall;
-
     private FragmentDiscussionResponsesOrCommentsBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+        parseExtras();
+
+        final Map<String, String> values = new HashMap<>();
+        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
+        values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
+        if (!discussionResponse.isAuthorAnonymous()) {
+            values.put(Analytics.Keys.AUTHOR, discussionResponse.getAuthor());
+        }
+        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
+                discussionThread.getCourseId(), discussionThread.getTitle(), values);
+    }
 
     @Nullable
     @Override
@@ -96,7 +100,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
         discussionCommentsAdapter = new DiscussionCommentsAdapter(requireActivity(), this,
                 discussionThread, discussionResponse);
-        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(binding.discussionRecyclerView,
+        InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(binding.discussionRecyclerView,
                 discussionCommentsAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
                     @Override
                     public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
@@ -123,7 +127,15 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                     }
                 });
 
+        final EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getArguments().
+                getSerializable(Router.EXTRA_COURSE_DATA);
         binding.createNewItem.createNewItemLayout.setEnabled(!courseData.isDiscussionBlackedOut());
+    }
+
+    private void parseExtras() {
+        final Bundle bundle = getArguments();
+        discussionThread = (DiscussionThread) bundle.getSerializable(Router.EXTRA_DISCUSSION_THREAD);
+        discussionResponse = (DiscussionComment) bundle.getSerializable(Router.EXTRA_DISCUSSION_COMMENT);
     }
 
     protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
@@ -156,22 +168,6 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-
-        Map<String, String> values = new HashMap<>();
-        values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
-        values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
-        values.put(Analytics.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
-        if (!discussionResponse.isAuthorAnonymous()) {
-            values.put(Analytics.Keys.AUTHOR, discussionResponse.getAuthor());
-        }
-        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
-                discussionThread.getCourseId(), discussionThread.getTitle(), values);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         if (getCommentsListCall != null) {
@@ -196,7 +192,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Override
     public void reportComment(@NonNull DiscussionComment comment) {
-        setCommentFlaggedCall = discussionService.setCommentFlagged(
+        final Call<DiscussionComment> setCommentFlaggedCall = discussionService.setCommentFlagged(
                 comment.getIdentifier(), new FlagBody(!comment.isAbuseFlagged()));
         setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
                 context, null, new DialogErrorNotification(this)) {
