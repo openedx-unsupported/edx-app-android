@@ -265,17 +265,17 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
 
     Results_run = device_farm.get_test(arn=test_run)
     print('Test Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
-        Results_run['run']['name'],
-        Results_run['run']['platform'],
-        str(Results_run['run']['created']),
-        Results_run['run']['status'],
-        Results_run['run']['result'],
-        Results_run['run']['counters'],
-        Results_run['run']['counters']['total'],
-        Results_run['run']['counters']['passed'],
-        Results_run['run']['counters']['failed'],
-        Results_run['run']['totalJobs'],
-        Results_run['run']['completedJobs'])
+        Results_run['test']['name'],
+        Results_run['test']['platform'],
+        str(Results_run['test']['created']),
+        Results_run['test']['status'],
+        Results_run['test']['result'],
+        Results_run['test']['counters'],
+        Results_run['test']['counters']['total'],
+        Results_run['test']['counters']['passed'],
+        Results_run['test']['counters']['failed'],
+        Results_run['test']['totalJobs'],
+        Results_run['test']['completedJobs'])
     )
     return run_arn
 
