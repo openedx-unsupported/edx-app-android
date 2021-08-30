@@ -333,7 +333,10 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
     """
 
     work_directory = os.getcwd()
+    print('work_directory: ', work_directory)
+    print('RUN_NAME: ', RUN_NAME)
     artifacts_directory = work_directory + "/" + RUN_NAME + " artifacts"
+    print('artifacts_directory: ', artifacts_directory)
     if not os.path.exists(artifacts_directory):
         try:
             os.mkdir(artifacts_directory)
@@ -345,7 +348,11 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
             if exc.errno != errno.EEXIST:
                 raise
     target_file_name = artifacts_directory + "/" + file_name + "." + file_extension
+    print('target_file_name: ', target_file_name)
+    print('file_name: ', file_name)
+    print('file_extension: ', file_extension)
     server_response = requests.request("GET", file_url)
+    print('server_response: ', server_response)
     with open(target_file_name, "wb") as target_file:
         target_file.write(server_response.content)
         target_file.close()
