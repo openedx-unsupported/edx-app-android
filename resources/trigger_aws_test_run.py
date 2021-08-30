@@ -337,7 +337,7 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
     work_directory = os.getcwd()
     print('work_directory: ', work_directory)
     print('RUN_NAME: ', RUN_NAME)
-    artifacts_directory = work_directory + "/" + RUN_NAME + " artifacts"
+    artifacts_directory = work_directory
     print('artifacts_directory: ', artifacts_directory)
     if not os.path.exists(artifacts_directory):
         try:
