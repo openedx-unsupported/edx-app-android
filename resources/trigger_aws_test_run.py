@@ -260,8 +260,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test_run['run']['counters']['passed'],
         test_run['run']['counters']['failed'],
         test_run['run']['totalJobs'],
-        test_run['run']['completedJobs'],
-        test_run['run']['message'])
+        test_run['run']['completedJobs'])
     )
     return run_arn
 
@@ -344,7 +343,7 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
     work_directory = os.getcwd()
     print('work_directory: ', work_directory)
     print('RUN_NAME: ', RUN_NAME)
-    artifacts_directory = work_directory
+    artifacts_directory = work_directory + "/" + RUN_NAME + " artifacts"
     print('artifacts_directory: ', artifacts_directory)
     if not os.path.exists(artifacts_directory):
         try:
