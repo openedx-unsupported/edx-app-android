@@ -355,6 +355,7 @@ def download_artifacts(file_name, file_type, file_extension, file_url):
     print('file_extension: ', file_extension)
     server_response = requests.request("GET", file_url)
     print('server_response: ', server_response)
+    print('server_response: ', server_response)
     with open(target_file_name, "wb") as target_file:
         target_file.write(server_response.content)
         target_file.close()
