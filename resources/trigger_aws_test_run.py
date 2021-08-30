@@ -248,8 +248,8 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
 
     run_arn = schedule_run_result['run']['arn']
 
-    test_run = device_farm.get_test(arn=run_arn)
-    print('Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completed_jobs'.format(
+    test_run = device_farm.get_run(arn=run_arn)
+    print('Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
         test_run['run']['name'],
         test_run['run']['platform'],
         str(test_run['run']['created']),
@@ -261,6 +261,21 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test_run['run']['counters']['failed'],
         test_run['run']['totalJobs'],
         test_run['run']['completedJobs'])
+    )
+
+    Results_run = device_farm.get_test(arn=test_run)
+    print('Test Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
+        Results_run['run']['name'],
+        Results_run['run']['platform'],
+        str(Results_run['run']['created']),
+        Results_run['run']['status'],
+        Results_run['run']['result'],
+        Results_run['run']['counters'],
+        Results_run['run']['counters']['total'],
+        Results_run['run']['counters']['passed'],
+        Results_run['run']['counters']['failed'],
+        Results_run['run']['totalJobs'],
+        Results_run['run']['completedJobs'])
     )
     return run_arn
 
