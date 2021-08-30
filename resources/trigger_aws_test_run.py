@@ -306,6 +306,7 @@ def get_test_run_artifacts(run_name, run_arn):
         arn=run_arn, type='FILE')['artifacts']
     if len(run_artifacts_dict) > 0:
         print('Total {} artifacts are found'.format(len(run_artifacts_dict)))
+        print('run_artifacts_dict:', run_artifacts_dict)
         for run_artifacts in run_artifacts_dict:
             artifacts_name = run_artifacts['name']
             artifacts_type = run_artifacts['type']
@@ -319,6 +320,7 @@ def get_test_run_artifacts(run_name, run_arn):
     else:
         print('No artifacts are found for given run')
     print('All artifacts are downloaded')
+    print('artifacts_url:', artifacts_url)
 
 
 def download_artifacts(file_name, file_type, file_extension, file_url):
