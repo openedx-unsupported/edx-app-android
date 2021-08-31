@@ -264,11 +264,11 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
     )
     
     print("Full test Spec: ", test_specs_arn)
-    print("test Spec Arn: ", test_specs_arn['test']['arn'])
+    # print("test Spec Arn: ", test_specs_arn['test']['arn'])
 
-    test_arn = test_specs_arn['run']['arn']
+    # test_arn = test_specs_arn['run']['arn']
 
-    Results_run = device_farm.get_test(arn=test_arn)
+    Results_run = device_farm.get_test(arn=test_specs_arn)
     print('Test Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
         Results_run['test']['name'],
         Results_run['test']['platform'],
