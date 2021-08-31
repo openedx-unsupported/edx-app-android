@@ -244,8 +244,22 @@ lo que significa que no puedes participar en tareas calificadas. Parece que no c
   <!--Message Course Dates Banner Reset Date-->
   <string name="course_dates_banner_reset_date">Parece que no has cumplido con algunos plazos importantes según nuestro calendario sugerido.
 Para mantenerte en el camino adecuado, puedes actualizar este calendario y mover las tareas vencidas hacia el futuro. No te preocupes, no perderás nada de lo que hayas avanzado cuando cambies las fechas de entrega.</string>
-  <!--Label Course Card Graded Message-->
-  <string name="value_prop_course_card_message">Desbloquealo para acceder a más funciones</string>
+
+  <!-- region: Course Date types -->
+  <!-- Label used when the date is Today -->
+  <string name="date_type_today">Hoy</string>
+  <!-- Label used when an assignment is for verified user only -->
+  <string name="date_type_verified_only">Solamente Verificado</string>
+  <!-- Label used when an assignment is completed -->
+  <string name="date_type_completed">Completado</string>
+  <!-- Label used when an assignment is past due -->
+  <string name="date_type_past_due">Vencido</string>
+  <!-- Label used when an assignment is due next -->
+  <string name="date_type_due_next">Debido a continuacion</string>
+  <!-- Label used when an assignment is not yet released -->
+  <string name="date_type_not_yet_released">Todavía no se ha publicado</string>
+  <!-- endregion -->
+
   <!--Title Sync to calendar-->
   <string name="sync_to_calendar">Sincronización con el calendario</string>
   <!--Title Sync to calendar-->

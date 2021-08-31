@@ -271,6 +271,21 @@
     <string name="course_dates_banner_reset_date">It looks like you missed some important deadlines based on our suggested schedule.
         To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
 
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Today</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Verified Only</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Completed</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Past Due</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Due Next</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Not Yet Released</string>
+    <!-- endregion -->
+
     <!-- Title Sync to calendar  -->
     <string name="sync_to_calendar">Sync to calendar</string>
     <!-- Title Sync to calendar  -->
