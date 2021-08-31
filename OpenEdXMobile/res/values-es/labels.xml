@@ -35,10 +35,22 @@
   <string name="label_rate_the_app">Valorar la aplicación</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">Actualizar</string>
+  <!--Alert dialog Don't allow button-->
+  <string name="label_do_not_allow">No permitir</string>
+  <!--Alert dialog View Event button-->
+  <string name="label_view_events">Ver eventos</string>
+  <!--Alert dialog Update now button-->
+  <string name="label_update_now">Actualizar ahora</string>
+  <!--Alert dialog remove course calendar button-->
+  <string name="label_remove_course_calendar">Eliminar calendario del curso</string>
+  <!--Alert dialog Remove button-->
+  <string name="label_remove">Eliminar</string>
   <!--Done button label-->
   <string name="label_done">Hecho</string>
   <!--Undo button label-->
   <string name="label_undo">Deshacer</string>
   <!--Label denoting an error-->
   <string name="label_error">Error</string>
+  <!--Customer support text, using as button title for disabled user-->
+  <string name="label_customer_support">Ayuda al Cliente</string>
 </resources>
