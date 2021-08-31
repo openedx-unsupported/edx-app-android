@@ -249,6 +249,14 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
     run_arn = schedule_run_result['run']['arn']
 
     test_run = device_farm.get_run(arn=run_arn)
+
+    print('run_arn: ', run_arn)
+    print('test_run: ', test_run)
+    print('test_specs_arn: ', test_specs_arn)
+    print('test_package_arn: ', test_package_arn)
+    print('project_arn: ', project_arn)
+    print('app_arn: ', app_arn)
+
     print('Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs - {} & testSpecArn'.format(
         test_run['run']['name'],
         test_run['run']['platform'],
@@ -263,30 +271,29 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
         test_run['run']['completedJobs'],
         test_run['run']['testSpecArn'])
     )
-    
-    
+
     # print("Full test Spec: ", test_specs_arn)
     # print('test spec arn: ', test_run['run']['testSpecArn'])
     # test_arn = test_run['run']['testSpecArn']
-    print("Run Arn: ", run_arn)
+    # print("Run Arn: ", run_arn)
 
     # test_arn = test_specs_arn['run']['arn']
 
-    Results_run = device_farm.list_tests(arn=run_arn)
-    print('Results_run: ', Results_run)
-    print('Test Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
-        Results_run['test']['name'],
-        Results_run['test']['platform'],
-        str(Results_run['test']['created']),
-        Results_run['test']['status'],
-        Results_run['test']['result'],
-        Results_run['test']['counters'],
-        Results_run['test']['counters']['total'],
-        Results_run['test']['counters']['passed'],
-        Results_run['test']['counters']['failed'],
-        Results_run['test']['totalJobs'],
-        Results_run['test']['completedJobs'])
-    )
+    # Results_run = device_farm.list_tests(arn=run_arn)
+    # print('Results_run: ', Results_run)
+    # print('Test Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
+    #     Results_run['test']['name'],
+    #     Results_run['test']['platform'],
+    #     str(Results_run['test']['created']),
+    #     Results_run['test']['status'],
+    #     Results_run['test']['result'],
+    #     Results_run['test']['counters'],
+    #     Results_run['test']['counters']['total'],
+    #     Results_run['test']['counters']['passed'],
+    #     Results_run['test']['counters']['failed'],
+    #     Results_run['test']['totalJobs'],
+    #     Results_run['test']['completedJobs'])
+    # )
     return run_arn
 
 
@@ -306,6 +313,8 @@ def get_test_run(run_arn):
         get_run_details = device_farm.get_run(arn=run_arn)
         run_status = get_run_details['run']['status']
         run_result = get_run_details['run']['result']
+        print('get_run_details1:', get_run_details['run']['counters'])
+        print('get_run_details2:', get_run_details['run']['counters']['passed'])
         if run_status in RUN_COMPLETED_STATUS:
             print('Run is {} with {} result'.format(run_status, run_result))
             break
