@@ -268,7 +268,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
 
     # test_arn = test_specs_arn['run']['arn']
 
-    Results_run = device_farm.list_tests(arn=test_specs_arn)
+    Results_run = device_farm.list_tests(arn=run_arn)
     print('Results_run: ', Results_run)
     print('Test Run Name - {} on {} is started at {} with status - {} & results - {} & counters - {} & counters_total - {} & counters_passed - {} & counters_failed - {} & total_jobs - {} & completedJobs'.format(
         Results_run['tests']['name'],
