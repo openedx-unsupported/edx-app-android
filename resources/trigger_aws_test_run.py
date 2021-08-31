@@ -264,9 +264,7 @@ def schedule_run(project_arn, name, device_pool_arn, app_arn,
     )
     
     print("Full test Spec: ", test_specs_arn)
-    print("Run Spec Arn: ", test_specs_arn['run']['arn'])
     print("test Spec Arn: ", test_specs_arn['test']['arn'])
-    print("Run Spec Arn: ", test_specs_arn['run']['arn'])
 
     test_arn = test_specs_arn['run']['arn']
 
