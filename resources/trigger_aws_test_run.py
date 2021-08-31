@@ -331,6 +331,7 @@ def get_test_run(run_arn):
             break
         time.sleep(check_every_seconds)
         wait_try += 1
+    print('get_run_details1:', get_run_details['run']['counters'])
 
 
 def get_test_run_artifacts(run_name, run_arn):
