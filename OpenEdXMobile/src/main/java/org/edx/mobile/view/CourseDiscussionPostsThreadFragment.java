@@ -50,19 +50,16 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
     public static final String ARG_DISCUSSION_HAS_TOPIC_NAME = "discussion_has_topic_name";
-
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
-    private DiscussionTopic discussionTopic;
 
     @Inject
     private DiscussionService discussionService;
 
     private FullScreenErrorNotification errorNotification;
 
+    private DiscussionTopic discussionTopic;
     private DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
     private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
@@ -98,6 +95,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        parseExtras();
     }
 
     @Nullable
@@ -182,6 +180,10 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @Override
     protected ListView getDiscussionPostsListView() {
         return binding.discussionPostsListview;
+    }
+
+    private void parseExtras() {
+        discussionTopic = (DiscussionTopic) getArguments().getSerializable(Router.EXTRA_DISCUSSION_TOPIC);
     }
 
     private void fetchDiscussionTopic() {

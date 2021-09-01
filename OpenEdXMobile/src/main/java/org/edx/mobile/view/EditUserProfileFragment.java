@@ -66,8 +66,6 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
-
 
 public class EditUserProfileFragment extends BaseFragment implements BaseFragment.PermissionListener {
 
@@ -76,7 +74,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
     private static final int CHOOSE_PHOTO_REQUEST = 3;
     private static final int CROP_PHOTO_REQUEST = 4;
 
-    @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
 
     private Call<Account> getAccountCall;
@@ -113,6 +110,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
 
+        parseExtras();
 
         final Activity activity = getActivity();
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
@@ -184,6 +182,10 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         setData(account, formDescription);
     }
 
+    private void parseExtras() {
+        username = getArguments().getString(EditUserProfileActivity.EXTRA_USERNAME);
+    }
+
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
         UiUtils.INSTANCE.setAnimation(viewHolder.profileImageProgress, UiUtils.Animation.ROTATION);
@@ -241,11 +243,11 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);
             this.loadingIndicator = parent.findViewById(R.id.loading_indicator);
-            this.profileImage = (CircleImageView) parent.findViewById(R.id.profile_image);
-            this.username = (TextView) parent.findViewById(R.id.username);
-            this.fields = (ViewGroup) parent.findViewById(R.id.fields);
-            this.changePhoto = (TextView) parent.findViewById(R.id.change_photo);
-            this.profileImageProgress = (AppCompatImageView) parent.findViewById(R.id.profile_image_progress);
+            this.profileImage = parent.findViewById(R.id.profile_image);
+            this.username = parent.findViewById(R.id.username);
+            this.fields = parent.findViewById(R.id.fields);
+            this.changePhoto = parent.findViewById(R.id.change_photo);
+            this.profileImageProgress = parent.findViewById(R.id.profile_image_progress);
         }
     }
 
@@ -453,10 +455,10 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(instructions);
-        final RadioGroup group = ((RadioGroup) view.findViewById(R.id.options));
+        final RadioGroup group = view.findViewById(R.id.options);
         {
-            final RadioButton optionOne = ((RadioButton) view.findViewById(R.id.option_one));
-            final RadioButton optionTwo = ((RadioButton) view.findViewById(R.id.option_two));
+            final RadioButton optionOne = view.findViewById(R.id.option_one);
+            final RadioButton optionTwo = view.findViewById(R.id.option_two);
             optionOne.setText(field.getOptions().getValues().get(0).getName());
             optionOne.setTag(field.getOptions().getValues().get(0).getValue());
             optionTwo.setText(field.getOptions().getValues().get(1).getName());

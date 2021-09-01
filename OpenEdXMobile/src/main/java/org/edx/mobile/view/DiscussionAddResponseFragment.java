@@ -35,13 +35,11 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
 public class DiscussionAddResponseFragment extends BaseFragment {
 
     static public String TAG = DiscussionAddResponseFragment.class.getCanonicalName();
 
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD, optional = true)
     private DiscussionThread discussionThread;
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -65,8 +63,9 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parseExtras();
 
-        Map<String, String> values = new HashMap<>();
+        final Map<String, String> values = new HashMap<>();
         values.put(Analytics.Keys.TOPIC_ID, discussionThread.getTopicId());
         values.put(Analytics.Keys.THREAD_ID, discussionThread.getIdentifier());
         if (!discussionThread.isAuthorAnonymous()) {
@@ -74,6 +73,10 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         }
         analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_ADD_RESPONSE,
                 discussionThread.getCourseId(), discussionThread.getTitle(), values);
+    }
+
+    private void parseExtras() {
+        discussionThread = (DiscussionThread) getArguments().getSerializable(Router.EXTRA_DISCUSSION_THREAD);
     }
 
     @Override
