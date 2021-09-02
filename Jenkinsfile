@@ -73,5 +73,11 @@ pipeline {
                 sh 'bash ./resources/setup_virtual_env.sh'
             }
         }
+
+        stage('Download') {
+            steps {
+                archiveArtifacts artifacts: 'Test spec output.txt', onlyIfSuccessful: true
+            }
+        }
     }
 } 
