@@ -362,7 +362,6 @@ def get_test_run_artifacts(run_name, run_arn):
         print('No artifacts are found for given run')
     print('All artifacts are downloaded')
     print('artifacts_url:', artifacts_url)
-    print('get_run_details1:', run_artifacts_dict['run']['counters'])
 
 
 def download_artifacts(file_name, file_type, file_extension, file_url):
