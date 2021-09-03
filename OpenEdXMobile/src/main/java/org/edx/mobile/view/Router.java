@@ -9,9 +9,9 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.core.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -108,12 +108,6 @@ public class Router {
         Intent programInfoIntent = new Intent(sourceActivity, ProgramInfoActivity.class);
         programInfoIntent.putExtra(EXTRA_PATH_ID, pathId);
         sourceActivity.startActivity(programInfoIntent);
-    }
-
-    public void showSettings(Activity sourceActivity) {
-        Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
-        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(settingsIntent);
     }
 
     public void showLaunchScreen(Context context) {
@@ -350,9 +344,9 @@ public class Router {
      * for handling manual logout,
      * {@link #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
-     * @param context  The context.
-     * @param analyticsRegistry  The analytics provider object.
-     * @param delegate The notification delegate.
+     * @param context           The context.
+     * @param analyticsRegistry The analytics provider object.
+     * @param delegate          The notification delegate.
      * @see #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
@@ -372,9 +366,9 @@ public class Router {
      * logout internally (e.g. in response to refresh token expiration),
      * {@link #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
-     * @param context  The context.
-     * @param analyticsRegistry  The analytics provider object.
-     * @param delegate The notification delegate.
+     * @param context           The context.
+     * @param analyticsRegistry The analytics provider object.
+     * @param delegate          The notification delegate.
      * @see #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {

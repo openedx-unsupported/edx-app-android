@@ -404,16 +404,6 @@ public interface Analytics {
     void trackSubjectClicked(@NonNull String subjectId);
 
     /**
-     * Track the pressing of 'Download Video to SD Card' switch to ON state.
-     */
-    void trackDownloadToSdCardSwitchOn();
-
-    /**
-     * Track the pressing of 'Download Video to SD Card' switch to OFF state.
-     */
-    void trackDownloadToSdCardSwitchOff();
-
-    /**
      * Track the parameters relevant to the experiment of Firebase Remote Configs.
      * Ref: https://openedx.atlassian.net/browse/LEARNER-7394
      *
@@ -506,7 +496,8 @@ public interface Analytics {
 
     /**
      * Track the tapped occurrence when a user taps "Show more/Show less" in an embedded value prop.
-     *  @param courseId    course id of the course on which button is tapped
+     *
+     * @param courseId    course id of the course on which button is tapped
      * @param componentId Component id of course unit
      * @param price       Price for which the course can upgrade
      * @param isSelfPaced Whether the course is self-paced or instructor paced
@@ -595,6 +586,22 @@ public interface Analytics {
                                        @NonNull String userType, @NonNull String courseId,
                                        @NonNull String componentId, @NonNull String componentType,
                                        @NonNull String openedUrl);
+
+    /**
+     * Track screen viewed
+     *
+     * @param eventName  Name of the screen event
+     * @param screenName Screen name on which event is triggered
+     */
+    void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName);
+
+    /**
+     * Track event triggered on Profile screen
+     *
+     * @param eventName Name of the event
+     * @param biValue   BiValue of the event
+     */
+    void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue);
 
     interface Keys {
         String NAME = "name";
@@ -841,6 +848,15 @@ public interface Analytics {
         // Open in Banner
         String OPEN_IN_BROWSER_BANNER_DISPLAYED = "edx.bi.app.navigation.component.open_in_browser_banner.displayed";
         String OPEN_IN_BROWSER_BANNER_TAPPED = "edx.bi.app.navigation.component.open_in_browser_banner.tapped";
+        // Profile Page Screen Events
+        String SCREEN_NAVIGATION = "edx.bi.app.navigation.screen";
+        String PERSONAL_INFORMATION_CLICKED = "edx.bi.app.profile.personal_info.clicked";
+        String FAQ_CLICKED = "eedx.bi.app.profile.faq.clicked";
+        String WIFI_ON = "edx.bi.app.profile.wifi.switch.on";
+        String WIFI_OFF  = "edx.bi.app.profile.wifi.switch.off";
+        String WIFI_ALLOW = "edx.bi.app.profile.wifi.allow";
+        String WIFI_DONT_ALLOW = "edx.bi.app.profile.wifi.dont_allow";
+        String EMAIL_SUPPORT_CLICKED = "edx.bi.app.profile.email_support.clicked";
     }
 
     interface Screens {
@@ -865,8 +881,7 @@ public interface Analytics {
         String FIND_DEGREES = "Find Degrees";
         String MY_COURSES = "My Courses";
         String MY_PROGRAM = "My Programs";
-        String SETTINGS = "Settings";
-        String ACCOUNT_SETTINGS = "Account Settings";
+        String PROFILE = "Profile";
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";
         String FORUM_VIEW_TOPIC_THREADS = "Forum: View Topic Threads";
@@ -998,6 +1013,15 @@ public interface Analytics {
         // Open in Banner
         String OPEN_IN_BROWSER_BANNER_DISPLAYED = "Open in Browser Banner Displayed";
         String OPEN_IN_BROWSER_BANNER_TAPPED = "Open in Browser Banner Tapped";
+        // Profile Page Screen Events
+        String PROFILE_PAGE_VIEWED = "Profile Page View";
+        String PERSONAL_INFORMATION_CLICKED = "Personal Information Clicked";
+        String FAQ_CLICKED = "FAQ Clicked";
+        String WIFI_ON = "Wifi On";
+        String WIFI_OFF  = "Wifi Off";
+        String WIFI_ALLOW = "Wifi Allow";
+        String WIFI_DONT_ALLOW = "Wifi Dont Allow";
+        String EMAIL_SUPPORT_CLICKED = "Email Support Clicked";
     }
 
     /**

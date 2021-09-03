@@ -870,20 +870,6 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDownloadToSdCardSwitchOn() {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_ON);
-        trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_ON, aEvent.properties);
-    }
-
-    @Override
-    public void trackDownloadToSdCardSwitchOff() {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
-        trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, aEvent.properties);
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putAll(values);
@@ -1094,6 +1080,21 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
         aEvent.data.putValue(Keys.COMPONENT_TYPE, componentType);
         aEvent.data.putValue(Keys.OPENED_URL, openedUrl);
+        trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        aEvent.properties.putValue(Keys.NAME, Values.SCREEN_NAVIGATION);
+        trackSegmentEvent(Events.PROFILE_PAGE_VIEWED, aEvent.properties);
+    }
+
+    @Override
+    public void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
         trackSegmentEvent(eventName, aEvent.properties);
     }
 }

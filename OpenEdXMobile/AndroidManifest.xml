@@ -106,7 +106,7 @@
 
         <activity
             android:name="org.edx.mobile.view.AccountActivity"
-            android:label="@string/title_account"
+            android:label="@string/profile_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
@@ -209,12 +209,6 @@
             android:label="@string/tab_label_certificate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
-
-        <activity
-            android:name="org.edx.mobile.view.SettingsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name=".profiles.UserProfileActivity"

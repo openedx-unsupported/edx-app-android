@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/switch_disabled_off" android:state_enabled="false" android:state_checked="false"/>
-    <item android:drawable="@drawable/switch_disabled_on" android:state_enabled="false" android:state_checked="true"/>
-    <item android:drawable="@drawable/switch_defaultbg" android:state_focused="true"/>
-    <item android:drawable="@drawable/switch_cyanbg" android:state_checked="true"/>
-    <item android:drawable="@drawable/switch_defaultbg" android:state_checked="false"/>
-    <item android:drawable="@drawable/switch_cyanbg"/>
-</selector>

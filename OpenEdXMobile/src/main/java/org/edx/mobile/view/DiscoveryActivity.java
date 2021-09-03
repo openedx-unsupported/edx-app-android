@@ -3,13 +3,13 @@ package org.edx.mobile.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.SearchView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
@@ -53,7 +53,7 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity implements Too
 
     @Override
     protected int getToolbarLayoutId() {
-        return R.layout.toolbar_with_profile_button;
+        return R.layout.toolbar_with_search_view;
     }
 
 
@@ -91,12 +91,6 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity implements Too
         if (titleView != null && titleView instanceof TextView) {
             return (TextView) titleView;
         }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public ImageView getProfileView() {
         return null;
     }
 }

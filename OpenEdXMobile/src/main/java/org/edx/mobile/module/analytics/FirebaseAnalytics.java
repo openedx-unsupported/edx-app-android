@@ -596,18 +596,6 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDownloadToSdCardSwitchOn() {
-        final FirebaseEvent event = new FirebaseEvent(Events.DOWNLOAD_TO_SD_CARD_ON, Values.DOWNLOAD_TO_SD_CARD_SWITCH_ON);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
-    public void trackDownloadToSdCardSwitchOff() {
-        final FirebaseEvent event = new FirebaseEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final FirebaseEvent event = new FirebaseEvent(experimentName);
         event.putMap(values);
@@ -806,6 +794,19 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.COMPONENT_ID, componentId);
         event.putString(Keys.COMPONENT_TYPE, componentType);
         event.putString(Keys.OPENED_URL, openedUrl);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, Values.SCREEN_NAVIGATION);
+        event.putString(Keys.SCREEN_NAME, screenName);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

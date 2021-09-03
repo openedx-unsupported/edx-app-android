@@ -45,7 +45,7 @@
   <string name="share_course_button">שתפו את הקורסים שלכם</string>
   <!--Share course-->
   <string name="share_course_message">אני לוקח\ת קורס ב{platform_name}! תעיפו מבט:</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">הורדה רק בWi-Fi</string>
   <!--Label explaining what wifi only means in detail-->
@@ -106,8 +106,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">צפו בהורדות המתבצעות כעת</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">פתח פרופיל</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">קורסים</string>
   <!--Title of user's program list screen-->
@@ -128,14 +126,8 @@
   <string name="toggle_turn_off">כבוי</string>
   <!--Logout button label-->
   <string name="logout">התנתקות</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">הגדרות</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">גרסת האפליקציה</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">הגדרות</string>
-  <!--Title of Account screen-->
-  <string name="title_account">חשבון</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">איפוס סיסמה</string>

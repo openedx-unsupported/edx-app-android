@@ -1,6 +1,7 @@
 package org.edx.mobile.deeplink;
 
 import android.app.Activity;
+
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
@@ -55,12 +56,8 @@ public class DeepLinkManager {
                 router.showMainDashboard(activity, screenName, deepLink.getPathId());
                 break;
             }
-            case Screen.PROFILE: {
-                router.showUserProfile(activity, username);
-                break;
-            }
-            case Screen.SETTINGS:
-            case Screen.ACCOUNT: {
+            case Screen.PROFILE:
+            case Screen.USER_PROFILE: {
                 router.showAccountActivity(activity, screenName);
                 break;
             }

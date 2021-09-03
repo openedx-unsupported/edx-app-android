@@ -1,77 +1,33 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
-import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.user.Account;
-import org.edx.mobile.user.ProfileImage;
-import org.edx.mobile.user.UserAPI;
-import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.UiUtils;
-import org.edx.mobile.util.UserProfileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import de.greenrobot.event.EventBus;
-import retrofit2.Call;
 
 public class MainTabsDashboardFragment extends TabsBaseFragment {
-
-    private ProfileModel profile;
-
-    private ToolbarCallbacks toolbarCallbacks;
-
-    @Nullable
-    private Call<Account> getAccountCall;
-
-    @Inject
-    private LoginPrefs loginPrefs;
-
-    @Inject
-    private UserService userService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final boolean isUserProfileEnabled = environment.getConfig().isUserProfilesEnabled();
-        if (isUserProfileEnabled) {
-            profile = loginPrefs.getCurrentUserProfile();
-            sendGetUpdatedAccountCall();
-            toolbarCallbacks.getProfileView().setVisibility(View.VISIBLE);
-        } else {
-            toolbarCallbacks.getProfileView().setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -95,21 +51,6 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                 return super.onOptionsItemSelected(item);
             }
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        toolbarCallbacks = (ToolbarCallbacks) getActivity();
-    }
-
-    public void sendGetUpdatedAccountCall() {
-        getAccountCall = userService.getAccount(profile.username);
-        getAccountCall.enqueue(new UserAPI.AccountDataUpdatedCallback(
-                getActivity(),
-                profile.username,
-                null, // Disable global loading indicator
-                null)); // No place to show an error notification
     }
 
     @Override
@@ -168,49 +109,9 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
-        if (!environment.getConfig().isUserProfilesEnabled()) {
-            return;
-        }
-        final ImageView profileImage = toolbarCallbacks.getProfileView();
-        if (event.getUsername().equalsIgnoreCase(profile.username)) {
-            UserProfileUtils.loadProfileImage(getContext(), event, profileImage);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
-        if (!environment.getConfig().isUserProfilesEnabled()) {
-            return;
-        }
-        final Account account = event.getAccount();
-        if (account.getUsername().equalsIgnoreCase(profile.username)) {
-            final ImageView profileImage = toolbarCallbacks.getProfileView();
-            if (profileImage != null) {
-                loadProfileImage(account.getProfileImage(), profileImage);
-            }
-        }
-    }
-
-    private void loadProfileImage(@NonNull ProfileImage profileImage, @NonNull ImageView imageView) {
-        if (profileImage.hasImage()) {
-            Glide.with(this)
-                    .load(profileImage.getImageUrlMedium())
-                    .into(imageView);
-        } else {
-            Glide.with(this)
-                    .load(R.drawable.profile_photo_placeholder)
-                    .into(imageView);
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != getAccountCall) {
-            getAccountCall.cancel();
-        }
         EventBus.getDefault().unregister(this);
     }
 }

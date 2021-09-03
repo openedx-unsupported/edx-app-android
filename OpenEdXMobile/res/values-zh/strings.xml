@@ -45,7 +45,7 @@
   <string name="share_course_button">分享课程</string>
   <!--Share course-->
   <string name="share_course_message">我正在{platform_name}上学习课程！看一看：</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">仅在Wi-Fi下载</string>
   <!--Label explaining what wifi only means in detail-->
@@ -106,8 +106,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">查看当前下载</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">打开您的用户资料</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">课程</string>
   <!--Title of user's program list screen-->
@@ -128,14 +126,8 @@
   <string name="toggle_turn_off">关</string>
   <!--Logout button label-->
   <string name="logout">退出</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">设置</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">应用版本</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">设置</string>
-  <!--Title of Account screen-->
-  <string name="title_account">账号</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">重置密码</string>

@@ -8,6 +8,5 @@ public class ProfileModel implements Serializable {
     public String username;
     public String email;
     public String name;
-    public String course_enrollments;
-    // public String url;
+    public boolean hasLimitedProfile;
 }

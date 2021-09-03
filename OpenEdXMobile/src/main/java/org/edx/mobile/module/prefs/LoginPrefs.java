@@ -171,6 +171,16 @@ public class LoginPrefs {
         }
     }
 
+    public void setUserInfo(@NonNull String username, @NonNull String email, @Nullable ProfileImage profileImage, boolean hasLimitedProfile) {
+        if (username.equals(getUsername())) {
+            ProfileModel currentProfile = getCurrentUserProfile();
+            currentProfile.email = email;
+            currentProfile.hasLimitedProfile = hasLimitedProfile;
+            pref.put(PrefManager.Key.PROFILE_JSON, gson.toJson(currentProfile));
+            pref.put(PrefManager.Key.PROFILE_IMAGE, gson.toJson(profileImage));
+        }
+    }
+
     @Nullable
     public ProfileImage getProfileImage() {
         final String json = pref.getString(PrefManager.Key.PROFILE_IMAGE);
