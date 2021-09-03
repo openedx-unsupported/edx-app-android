@@ -356,9 +356,11 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                               @StringRes int titleRes, @NonNull String descPattern,
                               @NonNull String firstPlaceholder, @NonNull String firstPlaceholderVal,
                               @NonNull String secondPlaceholder, @NonNull String secondPlaceholderVal) {
-        binding.ivIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), iconResId));
-        UiUtils.INSTANCE.setAnimation(binding.ivIcon, animation);
-        binding.tvTitle.setText(titleRes);
+        if (getContext() != null) {
+            binding.ivIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), iconResId));
+            UiUtils.INSTANCE.setAnimation(binding.ivIcon, animation);
+            binding.tvTitle.setText(titleRes);
+        }
         setSubtitle(descPattern, firstPlaceholder, firstPlaceholderVal, secondPlaceholder, secondPlaceholderVal);
     }
 
