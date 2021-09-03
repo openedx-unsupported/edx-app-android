@@ -1,5 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -31,7 +30,8 @@
              any of the other sizes anywhere currently, it doesn't matter for now. -->
         <item name="android:progressBarStyle">@style/edX.Widget.ProgressBar</item>
         <item name="android:progressBarStyleSmall">@style/edX.Widget.ProgressBar.Small</item>
-        <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title</item>
+        <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title
+        </item>
         <item name="android:progressBarStyleLarge">@style/edX.Widget.ProgressBar.Large</item>
         <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
@@ -241,7 +241,8 @@
     <style name="video_player_bottom_control">
         <item name="android:layout_width">@dimen/video_player_bottom_control_width</item>
         <item name="android:layout_height">@dimen/video_player_bottom_control_height</item>
-        <item name="android:layout_marginStart">@dimen/video_player_bottom_control_left_margin</item>
+        <item name="android:layout_marginStart">@dimen/video_player_bottom_control_left_margin
+        </item>
         <item name="android:layout_marginEnd">@dimen/video_player_bottom_control_right_margin</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="tint">@color/white</item>
@@ -249,7 +250,8 @@
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success</item>
+        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success
+        </item>
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
     </style>
@@ -257,21 +259,6 @@
     <style name="bulk_download_progress_bar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
         <item name="android:progressDrawable">@drawable/bulk_download_progress_bar_horizontal</item>
-    </style>
-
-    <style name="edX.Widget.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="android:switchTextAppearance">@style/edX.TextAppearance.Switch</item>
-        <item name="android:showText">true</item>
-        <item name="android:textOff">@string/toggle_turn_off</item>
-        <item name="android:textOn">@string/toggle_turn_on</item>
-        <item name="android:thumb">@drawable/switch_inner</item>
-        <item name="android:thumbTextPadding">8dp</item>
-        <item name="android:track">@drawable/switch_track</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:switchMinWidth">90dp</item>
-        <item name="android:background">@null</item>
     </style>
 
     <style name="bulk_download_switch" parent="Theme.AppCompat.Light">
@@ -347,7 +334,8 @@
     <style name="discussion_action_bar_icon">
         <item name="android:layout_width">@dimen/edx_small</item>
         <item name="android:layout_height">@dimen/edx_small</item>
-        <item name="android:layout_marginEnd">@dimen/discussion_responses_action_bar_icon_margin</item>
+        <item name="android:layout_marginEnd">@dimen/discussion_responses_action_bar_icon_margin
+        </item>
     </style>
 
     <style name="profile_image">
@@ -472,6 +460,22 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
+    <style name="edX.Widget.ProfileActionBorderedButton" parent="edX.Widget.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/profile_view_button_height</item>
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:textColor">@color/primaryBaseColor</item>
+        <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:layout_marginStart">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginEnd">@dimen/edx_default_margin</item>
+        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="edX.Widget.BaseSizeButton" parent="edX.Widget.ActionBorderedButton">
         <item name="android:textSize">@dimen/edx_base</item>
     </style>
@@ -585,6 +589,14 @@
     <style name="Calendar.Sync.Switch" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/primaryDarkColor</item>
         <item name="colorSwitchThumbNormal">@color/neutralDark</item>
+        <item name="android:textOff">@string/toggle_turn_off</item>
+        <item name="android:textOn">@string/toggle_turn_on</item>
+    </style>
+
+    <style name="list_item_divider" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edx_divider_length</item>
+        <item name="background">@color/neutralXLight</item>
     </style>
 
 </resources>

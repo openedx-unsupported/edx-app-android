@@ -60,14 +60,14 @@
     <!-- Share course -->
     <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
 
-    <!-- Settings Page -->
+    <!-- Profile Page -->
     <!-- Label for wifi only switch -->
-    <string name="settings_wifi_top">Wi-Fi only download</string>
+    <string name="settings_wifi_top">Wifi only download</string>
     <!-- Label explaining what wifi only means in detail -->
-    <string name="settings_wifi_bottom">Only download content when Wi-Fi is turned on</string>
+    <string name="settings_wifi_bottom">Only download content when wi-fi is turned on</string>
 
     <!-- Label for the Download to sd-card setting -->
-    <string name="settings_download_to_sdcard_title">Download Video to SD Card</string>
+    <string name="settings_download_to_sdcard_title">Download Videos to SD Card</string>
     <!-- Label explaining the download location setting in detail -->
     <string name="settings_download_to_sdcard_subtitle">Videos will be downloaded to the SD Card if available</string>
 
@@ -128,8 +128,6 @@
     <!-- Navigation Drawer Labels -->
     <!-- Button text to show user current downloads screen -->
     <string name="label_current_downloads">View current downloads</string>
-    <!-- Content description for edit profile button -->
-    <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">Courses</string>
     <!-- Title of user's program list screen -->
@@ -150,14 +148,37 @@
     <string name="toggle_turn_off">Off</string>
     <!-- Logout button label -->
     <string name="logout">Logout</string>
-    <!-- Settings screen title -->
-    <string name="settings_txt">Settings</string>
-    <!-- Settings screen version -->
+    <!-- Profile screen version -->
     <string name="label_version">App Version</string>
-    <!-- Button text to show user Settings screen -->
-    <string name="label_settings">Settings</string>
-    <!-- Title of Account screen -->
-    <string name="title_account">Account</string>
+    <!--  String for Profile Screen  -->
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">Video Settings</string>
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wifi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">Personal Information</string>
+    <!--  Heading of Purchases Field  -->
+    <string name="label_purchase">Purchases</string>
+    <!--  Title of Purchases Field  -->
+    <string name="title_purchase">Restore purchases</string>
+    <!--  Description of Purchases Field  -->
+    <string name="description_purchase">Sign into the Play Store to restore access to courses you have previously paid to upgrade</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">Help</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">Looking to make a feature request or give us some feedback on our app?</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">Email the support team</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">Get support</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">To get more help and learn how to use the edX mobile app, visit our frequently asked questions.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">View FAQ</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">Sign out</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">Version</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
@@ -774,6 +795,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">Profile</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">Email: {email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">Username: {username}</string>
     <!-- The accessibility description for the language section -->

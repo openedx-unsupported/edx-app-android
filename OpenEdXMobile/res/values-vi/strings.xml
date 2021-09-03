@@ -45,7 +45,7 @@
   <string name="share_course_button">Chia sẻ khóa học</string>
   <!--Share course-->
   <string name="share_course_message">Tôi đang tham gia khóa học ở {platform_name}! Tham gia cùng tôi ở:</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">Chỉ tải xuống bằng Wi-Fi</string>
   <!--Label explaining what wifi only means in detail-->
@@ -106,8 +106,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">Xem các mục đang tải xuống</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">Mở hồ sơ của bạn</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Khóa học</string>
   <!--Title of user's program list screen-->
@@ -128,14 +126,8 @@
   <string name="toggle_turn_off">Tắt</string>
   <!--Logout button label-->
   <string name="logout">Đăng xuất</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">Cài đặt</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">Phiên bản ứng dụng</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">Cài đặt</string>
-  <!--Title of Account screen-->
-  <string name="title_account">Tài khoản</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Đặt lại mật khẩu</string>

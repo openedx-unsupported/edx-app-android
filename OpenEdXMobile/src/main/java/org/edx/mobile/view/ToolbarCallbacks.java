@@ -1,10 +1,9 @@
 package org.edx.mobile.view;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 
 public interface ToolbarCallbacks {
     @Nullable
@@ -12,7 +11,4 @@ public interface ToolbarCallbacks {
 
     @Nullable
     TextView getTitleView();
-
-    @Nullable
-    ImageView getProfileView();
 }

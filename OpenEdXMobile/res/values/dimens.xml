@@ -52,11 +52,6 @@
     <dimen name="course_card_detail_padding_top">8dp</dimen>
     <dimen name="course_card_detail_padding_bottom">8dp</dimen>
 
-    <!-- Courses Toolbar -->
-    <dimen name="courses_profile_icon_size">30dp</dimen>
-    <dimen name="courses_profile_icon_left_margin">15dp</dimen>
-    <dimen name="courses_title_text_left_margin">20dp</dimen>
-
     <!-- Course Dashboard-->
     <dimen name="dashboard_nav_element_height">85dp</dimen>
     <dimen name="dashboard_nav_element_left_margin">30dp</dimen>
@@ -162,6 +157,9 @@
     <dimen name="crop_circle_border_width">3dp</dimen>
     <dimen name="user_profile_image_diameter">166dp</dimen>
     <dimen name="user_profile_image_border_width">3dp</dimen>
+    <dimen name="user_profile_mini_image_width">36dp</dimen>
+    <dimen name="user_profile_mini_image_height">36dp</dimen>
+    <dimen name="user_profile_mini_image_padding">6dp</dimen>
 
     <!-- Course unit -->
     <dimen name="course_unit_nav_bar_height">55dp</dimen>
@@ -274,6 +272,8 @@
     <dimen name="shadow_view_height">4dp</dimen>
     <dimen name="container_padding">12dp</dimen>
     <dimen name="radio_tab_height">32dp</dimen>
+    <dimen name="edx_default_margin">16dp</dimen>
+    <dimen name="profile_view_button_height">36dp</dimen>
 
     <!-- Social platforms -->
     <dimen name="social_btn_radius">3dp</dimen>

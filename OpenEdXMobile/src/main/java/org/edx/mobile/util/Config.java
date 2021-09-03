@@ -39,6 +39,7 @@ public class Config {
     private static final String PLATFORM_NAME = "PLATFORM_NAME";
     private static final String PLATFORM_DESTINATION_NAME = "PLATFORM_DESTINATION_NAME";
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
+    private static final String FAQ_URL = "FAQ_URL";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
     private static final String APP_UPDATE_URIS = "APP_UPDATE_URIS";
@@ -670,6 +671,10 @@ public class Config {
 
     public String getFeedbackEmailAddress() {
         return getString(FEEDBACK_EMAIL_ADDRESS);
+    }
+
+    public String getFaqUrl(){
+        return getString(FAQ_URL);
     }
 
     public String getOAuthClientId() {

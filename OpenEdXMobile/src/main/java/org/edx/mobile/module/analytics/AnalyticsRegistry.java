@@ -413,20 +413,6 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackDownloadToSdCardSwitchOn() {
-        for (Analytics service : services) {
-            service.trackDownloadToSdCardSwitchOn();
-        }
-    }
-
-    @Override
-    public void trackDownloadToSdCardSwitchOff() {
-        for (Analytics service : services) {
-            service.trackDownloadToSdCardSwitchOff();
-        }
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         for (Analytics service : services) {
             service.trackExperimentParams(experimentName, values);
@@ -566,6 +552,20 @@ public class AnalyticsRegistry implements Analytics {
         for (Analytics service : services) {
             service.trackOpenInBrowserBannerEvent(eventName, biValue, userType, courseId,
                     componentId, componentType, openedUrl);
+        }
+    }
+
+    @Override
+    public void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName) {
+        for (Analytics service : services) {
+            service.trackScreenViewEvent(eventName, screenName);
+        }
+    }
+
+    @Override
+    public void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue) {
+        for (Analytics service : services) {
+            service.trackProfileScreenEvent(eventName, biValue);
         }
     }
 }

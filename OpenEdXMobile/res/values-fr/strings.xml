@@ -45,7 +45,7 @@
   <string name="share_course_button">Partagez votre cours</string>
   <!--Share course-->
   <string name="share_course_message">Je suis un cours sur {platform_name}! Check this out:</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">Téléchargement uniquement disponible en Wi-Fi</string>
   <!--Label explaining what wifi only means in detail-->
@@ -106,8 +106,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">Voir les téléchargements en cours</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">Ouvrir votre profil</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Cours</string>
   <!--Title of user's program list screen-->
@@ -128,14 +126,8 @@
   <string name="toggle_turn_off">Off</string>
   <!--Logout button label-->
   <string name="logout">Déconnexion</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">Paramètres</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">Version de l\'App</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">Paramètres</string>
-  <!--Title of Account screen-->
-  <string name="title_account">Compte</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Réinitialiser le mot de passe</string>
