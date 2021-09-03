@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentAuthenticatedWebviewBinding;
 import org.edx.mobile.deeplink.Screen;
@@ -34,11 +36,12 @@ import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseDateBlock;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.PreLoadingListener;
@@ -55,6 +58,9 @@ import de.greenrobot.event.EventBus;
 
 public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
+    @Inject
+    private CourseManager courseManager;
+
     private CourseDateViewModel courseDateViewModel;
     private PreLoadingListener preloadingListener;
     private boolean isPageLoading = false;
@@ -64,6 +70,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private String courseName = "";
     private String calendarTitle = "";
     private String accountName = "";
+    private boolean forceReloadComponent = false;
     private FragmentAuthenticatedWebviewBinding binding;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String courseName, String enrollmentMode, boolean isSelfPaced) {
@@ -138,7 +145,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
         // Only load the unit if it is currently visible to user or the visible unit has finished loading
         if (getUserVisibleHint() || preloadingListener.isMainUnitLoaded()) {
-            loadUnit();
+            loadUnit(false);
         }
         if (unit.getType() == BlockType.PROBLEM) {
             initObserver();
@@ -152,9 +159,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void evaluateXBlocksForBanner() {
-        List<BlockType> allowedBlocks = Arrays.asList(BlockType.PROBLEM, BlockType.OPENASSESSMENT,
-                BlockType.DRAG_AND_DROP_V2, BlockType.WORD_CLOUD, BlockType.LTI_CONSUMER);
-        if (allowedBlocks.contains(unit.getType())) {
+        List<BlockType> notPermittedBlocks = Arrays.asList(BlockType.DISCUSSION, BlockType.HTML, BlockType.VIDEO);
+        if (!notPermittedBlocks.contains(unit.getType())) {
             setupOpenInBrowserView();
         }
     }
@@ -193,7 +199,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NotNull View textView) {
-                BrowserUtil.open(getActivity(), unit.getWebUrl(), false);
+                CourseComponent component = courseManager.getComponentByIdFromAppLevelCache(unit.getCourseId(), unit.getId());
+                environment.getRouter().showAuthenticatedWebViewActivity(requireContext(), component.getParent());
+                forceReloadComponent = true;
                 trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_TAPPED,
                         Analytics.Values.OPEN_IN_BROWSER_BANNER_TAPPED);
             }
@@ -318,7 +326,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, isSuccess);
     }
 
-
     private void updateCalendarEvents(Long calendarId) {
         trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
         CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
@@ -342,11 +349,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         environment.getAnalyticsRegistry().trackCalendarEvent(eventName, biValue, unit.getCourseId(), enrollmentMode, isSelfPaced);
     }
 
-    private void loadUnit() {
+    private void loadUnit(Boolean forceRefresh) {
         if (binding.authWebview != null) {
-            if (!binding.authWebview.isPageLoaded() && !isPageLoading) {
+            if (forceRefresh || (!binding.authWebview.isPageLoaded() && !isPageLoading)) {
                 binding.authWebview.loadUrl(true, unit.getBlockUrl());
-                if (getUserVisibleHint()) {
+                if (isVisible()) {
                     preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADING);
                 }
             }
@@ -358,7 +365,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         super.setUserVisibleHint(isVisibleToUser);
         // Only load the unit if it is currently visible to user
         if (isVisibleToUser) {
-            loadUnit();
+            loadUnit(false);
         }
     }
 
@@ -366,6 +373,11 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     public void onResume() {
         super.onResume();
         binding.authWebview.onResume();
+        // Forcefully reload the unit if returning from Authenticated WebView Activity
+        if (forceReloadComponent) {
+            loadUnit(true);
+            forceReloadComponent = false;
+        }
     }
 
     @Override
@@ -388,6 +400,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     public void onEventMainThread(UnitLoadedEvent event) {
-        loadUnit();
+        loadUnit(false);
     }
 }

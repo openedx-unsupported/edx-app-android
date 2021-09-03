@@ -282,6 +282,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="org.edx.mobile.view.AuthenticatedWebViewActivity"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
