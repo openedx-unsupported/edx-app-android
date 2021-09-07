@@ -78,7 +78,7 @@ phases:
       # Note: For most use cases, the default command works fine.
       # Please refer "https://docs.pytest.org/en/latest/usage.html" for more options on running pytests from command line.
       # It will run these test cases and create html report in $DEVICEFARM_LOG_DIR
-      - bin/py.test -v tests/android/tests/test_android_new_landing.py tests/android/tests/test_android_login.py tests/android/tests/test_android_main_dashboard.py tests/android/tests/test_android_my_courses_list.py tests/android/tests/test_android_course_discovery.py tests/android/tests/test_android_register.py --html=report.html
+      - bin/py.test -v tests/android/tests/test_android_new_landing.py tests/android/tests/test_android_login.py tests/android/tests/test_android_main_dashboard.py tests/android/tests/test_android_my_courses_list.py tests/android/tests/test_android_course_discovery.py tests/android/tests/test_android_register.py --html=edX_test_run artifacts/report.html
 
   # The post test phase includes are commands that are run after your tests are executed.
   post_test:
