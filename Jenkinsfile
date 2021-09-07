@@ -77,7 +77,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'edX_test_run artifacts/Customer Artifacts.zip/Host_Machine_Files/$DEVICEFARM_LOG_DIR/report.html'
+            archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt','edX_test_run artifacts/Video.mp4'
         }
     }
 }
