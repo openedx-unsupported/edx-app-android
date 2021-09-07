@@ -3,6 +3,7 @@ package org.edx.mobile.module.analytics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
@@ -603,6 +604,23 @@ public interface Analytics {
      */
     void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue);
 
+    /**
+     * Track event triggered click on Video download Quality Modal
+     *
+     * @param eventName Name of the event
+     * @param biValue   BiValue of the event
+     * @param courseId  course id of the course currently viewing
+     */
+    void trackVideoDownloadQualityClicked(String eventName, String biValue, String courseId);
+
+    /**
+     * Track event triggered on Video Download Quality is changed
+     *
+     * @param selectedVideoQuality newly selected {@link VideoQuality}
+     * @param oldVideoQuality      previously selected {@link VideoQuality}
+     */
+    void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -693,6 +711,8 @@ public interface Analytics {
         String PROPERTIES = "properties";
         String SERVICE = "service";
         String SPECIAL_EXAM_INFO = "special_exam_info";
+        String VALUE = "value";
+        String OLD_VALUE = "old_value";
     }
 
     interface Values {
@@ -853,10 +873,14 @@ public interface Analytics {
         String PERSONAL_INFORMATION_CLICKED = "edx.bi.app.profile.personal_info.clicked";
         String FAQ_CLICKED = "eedx.bi.app.profile.faq.clicked";
         String WIFI_ON = "edx.bi.app.profile.wifi.switch.on";
-        String WIFI_OFF  = "edx.bi.app.profile.wifi.switch.off";
+        String WIFI_OFF = "edx.bi.app.profile.wifi.switch.off";
         String WIFI_ALLOW = "edx.bi.app.profile.wifi.allow";
         String WIFI_DONT_ALLOW = "edx.bi.app.profile.wifi.dont_allow";
         String EMAIL_SUPPORT_CLICKED = "edx.bi.app.profile.email_support.clicked";
+        // Video Download Quality
+        String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
+        String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
+        String VIDEO_DOWNLOAD_QUALITY_CHANGED = "edx.bi.app.video_download_quality.changed";
     }
 
     interface Screens {
@@ -909,6 +933,9 @@ public interface Analytics {
         String PLS_COURSE_UNIT_ASSIGNMENT = "assignments_screen";
         String SPECIAL_EXAM_BLOCK = "Special Exam Blocked Screen";
         String EMPTY_SUBSECTION_OUTLINE = "Empty Section Outline";
+        // Video Download Quality
+        String VIDEO_DOWNLOAD_QUALITY = "Video Download Quality";
+        String VIDEO_DOWNLOAD_QUALITY_CHANGED = "Video Download Quality Changed";
     }
 
     interface Events {
@@ -1018,10 +1045,13 @@ public interface Analytics {
         String PERSONAL_INFORMATION_CLICKED = "Personal Information Clicked";
         String FAQ_CLICKED = "FAQ Clicked";
         String WIFI_ON = "Wifi On";
-        String WIFI_OFF  = "Wifi Off";
+        String WIFI_OFF = "Wifi Off";
         String WIFI_ALLOW = "Wifi Allow";
         String WIFI_DONT_ALLOW = "Wifi Dont Allow";
         String EMAIL_SUPPORT_CLICKED = "Email Support Clicked";
+        // Video Download Quality
+        String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
+        String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";
     }
 
     /**

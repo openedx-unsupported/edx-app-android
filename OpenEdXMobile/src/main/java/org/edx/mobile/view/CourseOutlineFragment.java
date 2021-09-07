@@ -758,7 +758,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (isVideoMode && isOnCourseOutline && getView() != null) {
             View videoQualityLayout = getView().findViewById(R.id.video_quality_layout);
             videoQualityLayout.setVisibility(View.VISIBLE);
-            videoQualityLayout.setOnClickListener(v -> showVideoQualitySelectionModal(courseComponent));
+            videoQualityLayout.setOnClickListener(v -> {
+                environment.getAnalyticsRegistry().trackVideoDownloadQualityClicked(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,
+                        Analytics.Values.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED, courseData.getCourseId());
+                showVideoQualitySelectionModal(courseComponent);
+            });
             setVideoQualityHeaderLabel(environment.getLoginPrefs().getVideoQuality());
         }
     }
@@ -850,7 +854,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private void showVideoQualitySelectionModal(CourseComponent courseComponent) {
         VideoDownloadQualityDialogFragment videoQualityDialog =
                 VideoDownloadQualityDialogFragment.getInstance(environment, videoQuality -> {
-                    environment.getLoginPrefs().setVideoQuality(videoQuality);
                     setVideoQualityHeaderLabel(videoQuality);
                     adapter.notifyDataSetChanged();
                     setUpBulkDownloadHeader(courseComponent);

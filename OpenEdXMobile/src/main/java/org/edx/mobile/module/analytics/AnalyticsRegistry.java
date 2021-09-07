@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.google.inject.Singleton;
 
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.ArrayList;
@@ -566,6 +567,20 @@ public class AnalyticsRegistry implements Analytics {
     public void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue) {
         for (Analytics service : services) {
             service.trackProfileScreenEvent(eventName, biValue);
+        }
+    }
+
+    @Override
+    public void trackVideoDownloadQualityClicked(String eventName, String biValue, String courseId) {
+        for (Analytics service : services) {
+            service.trackVideoDownloadQualityClicked(eventName, biValue, courseId);
+        }
+    }
+
+    @Override
+    public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
+        for (Analytics service : services) {
+            service.trackVideoDownloadQualityChanged(selectedVideoQuality, oldVideoQuality);
         }
     }
 }

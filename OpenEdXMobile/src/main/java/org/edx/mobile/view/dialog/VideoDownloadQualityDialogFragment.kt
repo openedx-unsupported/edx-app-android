@@ -4,23 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import com.google.inject.Inject
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.VideoQualityDialogFragmentBinding
 import org.edx.mobile.model.video.VideoQuality
+import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.module.analytics.AnalyticsRegistry
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.view.adapters.VideoQualityAdapter
+import roboguice.fragment.RoboDialogFragment
 
 class VideoDownloadQualityDialogFragment(
     var environment: IEdxEnvironment,
     var callback: IListDialogCallback
-) : DialogFragment() {
+) : RoboDialogFragment() {
 
     private var loginPref: LoginPrefs? = environment.loginPrefs
     private val videoQualities: ArrayList<VideoQuality> = arrayListOf()
     private lateinit var binding: VideoQualityDialogFragmentBinding
+
+    @Inject
+    lateinit var analyticsRegistry: AnalyticsRegistry
 
     init {
         videoQualities.addAll(VideoQuality.values())
@@ -55,6 +61,10 @@ class VideoDownloadQualityDialogFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        analyticsRegistry.trackScreenView(
+            Analytics.Screens.VIDEO_DOWNLOAD_QUALITY, null,
+            Analytics.Values.SCREEN_NAVIGATION
+        )
         val platformName = resources.getString(R.string.platform_name)
         binding.tvVideoQualityMessage.text = ResourceUtil.getFormattedString(
             resources,
@@ -68,6 +78,11 @@ class VideoDownloadQualityDialogFragment(
         }
         val adapter = object : VideoQualityAdapter(context, environment, selectedVideoQuality) {
             override fun onItemClicked(videoQuality: VideoQuality) {
+                analyticsRegistry.trackVideoDownloadQualityChanged(
+                    videoQuality,
+                    environment.loginPrefs.videoQuality
+                )
+                environment.loginPrefs.videoQuality = videoQuality
                 callback.onItemClicked(videoQuality)
                 dismiss()
             }

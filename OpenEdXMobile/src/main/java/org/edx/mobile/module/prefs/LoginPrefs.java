@@ -111,6 +111,7 @@ public class LoginPrefs {
         pref.put(PrefManager.Key.VIDEO_QUALITY, videoQuality.ordinal());
     }
 
+    @NonNull
     public VideoQuality getVideoQuality() {
         int ordinal = pref.getInt(PrefManager.Key.VIDEO_QUALITY);
         if (ordinal == -1) {
