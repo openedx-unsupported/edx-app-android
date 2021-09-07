@@ -77,7 +77,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'edX_test_run artifacts/*.*'
+            archiveArtifacts artifacts: 'edX_test_run artifacts/*.html'
         }
     }
-} 
+}
