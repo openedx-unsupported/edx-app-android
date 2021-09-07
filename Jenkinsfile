@@ -79,7 +79,7 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt'
             archiveArtifacts artifacts: 'edX_test_run artifacts/Video.mp4'
-            archiveArtifacts artifacts: 'edX_test_run artifacts/$DEVICEFARM_LOG_DIR/report.html'
+            archiveArtifacts artifacts: '*/report.html'
         }
     }
 }
