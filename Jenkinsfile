@@ -77,7 +77,10 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt','edX_test_run artifacts/Video.mp4'
+            archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt'
+        }
+        always {
+            archiveArtifacts artifacts: 'edX_test_run artifacts/Video.mp4'
         }
     }
 }
