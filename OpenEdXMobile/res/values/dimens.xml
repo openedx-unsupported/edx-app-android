@@ -221,7 +221,7 @@
     <dimen name="progress_bar_rim_width">4dp</dimen>
 
     <!-- Bulk Download View -->
-    <dimen name="bulk_download_view_height">72dp</dimen>
+    <dimen name="download_view_min_height">56dp</dimen>
     <dimen name="bulk_download_progress_height">@dimen/progress_bar_height</dimen>
     <dimen name="bulk_download_description_top_margin">4dp</dimen>
     <dimen name="download_background_size">30dp</dimen>
