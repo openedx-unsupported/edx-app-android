@@ -72,13 +72,13 @@ pipeline {
             steps {
                 sh 'bash ./resources/setup_virtual_env.sh'
             }
+            steps {
+                unzip zipFile: 'Customer Artifacts.zip', dir: 'edX_test_run artifacts'
+            }
         }
     }
 
     post {
-        steps {
-            unzip zipFile: 'Customer Artifacts.zip', dir: 'edX_test_run artifacts'
-        }
         always {
             archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt'
             archiveArtifacts artifacts: 'edX_test_run artifacts/Video.mp4'
