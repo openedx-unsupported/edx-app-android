@@ -74,4 +74,10 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '*/Test spec output.txt, */Video.mp4, */Customer Artifacts.zip', onlyIfSuccessful: true
+        }
+    }
 } 
