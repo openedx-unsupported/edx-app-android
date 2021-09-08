@@ -80,7 +80,7 @@ pipeline {
         always {
             unzip zipFile: 'edX_test_run artifacts/Customer Artifacts.zip', dir: 'edX_test_run artifacts'
             archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt, edX_test_run artifacts/Video.mp4'
-            archiveArtifacts artifacts: '***/report.html'
+            archiveArtifacts artifacts: 'edX_test_run artifacts/Host_Machine_Files/$DEVICEFARM_LOG_DIR/report.html'
         }
     }
 }
