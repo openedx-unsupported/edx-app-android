@@ -76,8 +76,10 @@ pipeline {
     }
 
     post {
-        always {
+        steps {
             unzip zipFile: 'Customer Artifacts.zip', dir: 'edX_test_run artifacts'
+        }
+        always {
             archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt'
             archiveArtifacts artifacts: 'edX_test_run artifacts/Video.mp4'
             archiveArtifacts artifacts: '*/report.html'
