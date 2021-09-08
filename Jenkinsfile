@@ -71,7 +71,7 @@ pipeline {
         stage('setup virtual env and trigger run on aws device farm') {
             steps {
                 sh 'bash ./resources/setup_virtual_env.sh'
-                unzip zipFile: 'Customer Artifacts.zip', dir: 'edX_test_run artifacts'
+                unzip zipFile: 'edX_test_run artifacts/Customer Artifacts.zip', dir: 'edX_test_run artifacts'
             }
         }
     }
