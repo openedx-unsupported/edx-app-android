@@ -71,16 +71,16 @@ pipeline {
         stage('setup virtual env and trigger run on aws device farm') {
             steps {
                 sh 'bash ./resources/setup_virtual_env.sh'
-                unzip zipFile: 'edX_test_run artifacts/Customer Artifacts.zip', dir: 'edX_test_run artifacts'
+                // unzip zipFile: 'edX_test_run artifacts/Customer Artifacts.zip', dir: 'edX_test_run artifacts'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt'
-            archiveArtifacts artifacts: 'edX_test_run artifacts/Video.mp4'
-            archiveArtifacts artifacts: '*/report.html'
+            unzip zipFile: 'edX_test_run artifacts/Customer Artifacts.zip', dir: 'edX_test_run artifacts'
+            archiveArtifacts artifacts: 'edX_test_run artifacts/Test spec output.txt, edX_test_run artifacts/Video.mp4'
+            archiveArtifacts artifacts: '***/report.html'
         }
     }
 }
