@@ -136,6 +136,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
+    private View videoQualityLayout;
     private CourseOutlineAdapter.DownloadListener downloadListener;
     private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
     private CourseUpgradeResponse courseUpgradeData;
@@ -173,6 +174,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
+        videoQualityLayout = view.findViewById(R.id.video_quality_layout);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -756,7 +758,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private void setUpVideoQualityHeader(CourseComponent courseComponent) {
         if (isVideoMode && isOnCourseOutline && getView() != null) {
-            View videoQualityLayout = getView().findViewById(R.id.video_quality_layout);
             videoQualityLayout.setVisibility(View.VISIBLE);
             videoQualityLayout.setOnClickListener(v -> {
                 environment.getAnalyticsRegistry().trackVideoDownloadQualityClicked(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,

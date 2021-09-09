@@ -237,8 +237,11 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="video_download_quality_text_style" parent="regular_primary_base_text">
+    <style name="video_download_label_text_style" parent="regular_primary_base_text">
         <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
 
+    <style name="video_download_description_text_style" parent="regular_primary_x_light_text">
+        <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
 </resources>

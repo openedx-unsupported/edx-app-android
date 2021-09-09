@@ -40,16 +40,16 @@
 
             <TextView
                 android:id="@+id/tv_title"
+                style="@style/video_download_label_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primaryBaseColor"
-                android:textSize="@dimen/edx_x_small"
                 tools:text="1 of 17 Videos Downloaded" />
 
             <TextView
                 android:id="@+id/tv_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/video_download_description_text_style"
                 android:layout_marginTop="@dimen/bulk_download_description_top_margin"
                 android:textColor="@color/primaryXLightColor"
                 android:textSize="@dimen/edx_x_small"
