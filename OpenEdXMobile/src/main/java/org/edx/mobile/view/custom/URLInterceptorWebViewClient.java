@@ -51,6 +51,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     private ActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
+    private boolean ajaxInterceptorEmbed = false;
 
     /**
      * Tells if the page loading has been finished or not.
@@ -120,6 +121,16 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 if (pageStatusListener != null) {
                     pageStatusListener.onPageLoadProgressChanged(view, progress);
                 }
+                if (interceptAjaxRequest && progress > 30 && !ajaxInterceptorEmbed) {
+                    // setup native callback to intercept the ajax requests.
+                    try {
+                        String nativeAjaxCallbackJS = FileUtil.loadTextFileFromAssets(activity, "js/nativeAjaxCallback.js");
+                        view.loadUrl(nativeAjaxCallbackJS);
+                        ajaxInterceptorEmbed = true;
+                    } catch (IOException e) {
+                        logger.error(e);
+                    }
+                }
             }
 
             @Override
@@ -159,15 +170,15 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
         }
-        if (interceptAjaxRequest) {
-            // setup native callback to intercept the ajax requests.
-            try {
-                String nativeAjaxCallbackJS = FileUtil.loadTextFileFromAssets(activity, "js/nativeAjaxCallback.js");
-                view.loadUrl(nativeAjaxCallbackJS);
-            } catch (IOException e) {
-                logger.error(e);
-            }
-        }
+//        if (interceptAjaxRequest) {
+//            // setup native callback to intercept the ajax requests.
+//            try {
+//                String nativeAjaxCallbackJS = FileUtil.loadTextFileFromAssets(activity, "js/nativeAjaxCallback.js");
+//                view.loadUrl(nativeAjaxCallbackJS);
+//            } catch (IOException e) {
+//                logger.error(e);
+//            }
+//        }
     }
 
     @Override
