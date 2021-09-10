@@ -1100,12 +1100,9 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoDownloadQualityClicked(String eventName, String biValue, String courseId) {
+    public void trackVideoDownloadQualityClicked(String eventName, String biValue) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
-        if (!TextUtils.isEmpty(courseId)) {
-            aEvent.properties.put(Keys.COURSE_ID, courseId);
-        }
         trackSegmentEvent(eventName, aEvent.properties);
     }
 
@@ -1115,6 +1112,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.properties.putValue(Keys.NAME, Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
         aEvent.data.putValue(Keys.VALUE, selectedVideoQuality.name().toLowerCase().replaceAll("option_", ""));
         aEvent.data.putValue(Keys.OLD_VALUE, oldVideoQuality.name().toLowerCase().replaceAll("option_", ""));
-        trackSegmentEvent(Analytics.Screens.VIDEO_DOWNLOAD_QUALITY_CHANGED, aEvent.properties);
+        trackSegmentEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED, aEvent.properties);
     }
 }

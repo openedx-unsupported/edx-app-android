@@ -15,7 +15,6 @@ import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -813,17 +812,14 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackVideoDownloadQualityClicked(String eventName, String biValue, String courseId) {
+    public void trackVideoDownloadQualityClicked(String eventName, String biValue) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
-        if (!TextUtils.isEmpty(courseId)) {
-            event.putCourseId(courseId);
-        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
     @Override
-    public void trackVideoDownloadQualityChanged(@NonNull @NotNull VideoQuality selectedVideoQuality, @NonNull @NotNull VideoQuality oldVideoQuality) {
-        final FirebaseEvent event = new FirebaseEvent(Analytics.Screens.VIDEO_DOWNLOAD_QUALITY_CHANGED,
+    public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
+        final FirebaseEvent event = new FirebaseEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED,
                 Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
         event.putString(Keys.VALUE, selectedVideoQuality.name().replace("option_", "").toLowerCase());
         event.putString(Keys.OLD_VALUE, oldVideoQuality.name().replace("option_", "").toLowerCase());

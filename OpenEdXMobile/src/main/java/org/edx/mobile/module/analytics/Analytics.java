@@ -605,13 +605,12 @@ public interface Analytics {
     void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue);
 
     /**
-     * Track event triggered click on Video download Quality Modal
+     * Track event triggered on Video download Quality Modal clicked
      *
      * @param eventName Name of the event
      * @param biValue   BiValue of the event
-     * @param courseId  course id of the course currently viewing
      */
-    void trackVideoDownloadQualityClicked(String eventName, String biValue, String courseId);
+    void trackVideoDownloadQualityClicked(String eventName, String biValue);
 
     /**
      * Track event triggered on Video Download Quality is changed
@@ -935,7 +934,6 @@ public interface Analytics {
         String EMPTY_SUBSECTION_OUTLINE = "Empty Section Outline";
         // Video Download Quality
         String VIDEO_DOWNLOAD_QUALITY = "Video Download Quality";
-        String VIDEO_DOWNLOAD_QUALITY_CHANGED = "Video Download Quality Changed";
     }
 
     interface Events {
@@ -1052,6 +1050,7 @@ public interface Analytics {
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";
+        String VIDEO_DOWNLOAD_QUALITY_CHANGED = "Video Download Quality Changed";
     }
 
     /**

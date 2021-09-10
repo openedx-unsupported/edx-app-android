@@ -66,6 +66,8 @@ public class LoginPrefs {
         saveDefaultPlaybackSpeed(VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue());
         pref.put(PrefManager.Key.PROFILE_JSON, null);
         pref.put(PrefManager.Key.AUTH_JSON, null);
+        pref.put(PrefManager.Key.VIDEO_QUALITY, VideoQuality.AUTO.ordinal());
+        pref.put(PrefManager.Key.PROFILE_IMAGE, null);
         EdxCookieManager.getSharedInstance(MainApplication.instance()).clearWebWiewCookie();
     }
 

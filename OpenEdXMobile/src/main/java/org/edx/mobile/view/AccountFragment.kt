@@ -122,8 +122,10 @@ class AccountFragment : BaseFragment() {
                         })
                 videoQualityDialog.show(childFragmentManager, VideoDownloadQualityDialogFragment.TAG)
 
-                environment.analyticsRegistry?.trackVideoDownloadQualityClicked(Analytics.Events.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED,
-                        Analytics.Values.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED, null)
+                environment.analyticsRegistry?.trackVideoDownloadQualityClicked(
+                    Analytics.Events.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED,
+                    Analytics.Values.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED
+                )
             }
         }
     }

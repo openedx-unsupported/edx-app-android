@@ -571,9 +571,9 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackVideoDownloadQualityClicked(String eventName, String biValue, String courseId) {
+    public void trackVideoDownloadQualityClicked(String eventName, String biValue) {
         for (Analytics service : services) {
-            service.trackVideoDownloadQualityClicked(eventName, biValue, courseId);
+            service.trackVideoDownloadQualityClicked(eventName, biValue);
         }
     }
 

@@ -105,7 +105,7 @@ class EncodedVideos : Serializable {
     }
 
     val youtubeVideoInfo: VideoInfo?
-        get() = if (youtube != null && URLUtil.isNetworkUrl(youtube!!.url)) youtube else null
+        get() = if (youtube != null && URLUtil.isNetworkUrl(youtube?.url)) youtube else null
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
