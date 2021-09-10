@@ -46,7 +46,8 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
             holder.setDetails(CourseCardUtils.getFormattedDate(getContext(), enrollment));
         }
         if (isValuePropEnabled) {
-            holder.setHasUpgradeOption(enrollment.getMode(), v -> onValuePropClicked(courseData.getId(), courseData.getName(), courseData.getPrice(), courseData.isSelfPaced()));
+            holder.setHasUpgradeOption(courseData, enrollment.getMode(),
+                    v -> onValuePropClicked(courseData.getId(), courseData.getName(), courseData.getPrice(), courseData.isSelfPaced()));
         }
     }
 
