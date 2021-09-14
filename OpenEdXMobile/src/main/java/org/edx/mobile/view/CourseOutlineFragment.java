@@ -83,6 +83,7 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.view.view_holders.PaymentActivity;
 import org.edx.mobile.viewModel.CourseDateViewModel;
+import org.edx.mobile.viewModel.ViewModelFactory;
 
 import java.util.HashMap;
 import java.util.List;

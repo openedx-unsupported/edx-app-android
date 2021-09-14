@@ -56,9 +56,7 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
         billingClientConnection()
         binding.btnBuy.setOnClickListener {
             if (billingClient.isReady) {
-
-                addToBasket("https://ecommerce-iap.sandbox.edx.org/api/iap/v1/basket/add/?sku=A5B6DBE")
-//                getSkuDetails()
+                getSkuDetails("org.edx.mobile.test_product")
             }
         }
     }
@@ -98,12 +96,12 @@ class PaymentFragment : BaseFragment(), PurchasesUpdatedListener {
         iapViewModel.addToBasket(url)
     }
 
-    private fun getSkuDetails() {
+    private fun getSkuDetails(productId: String) {
         billingClient.querySkuDetailsAsync(
             SkuDetailsParams.newBuilder()
                 .setType(BillingClient.SkuType.INAPP)
                 // testing key
-                .setSkusList(listOf("android.test.purchased"))
+                .setSkusList(listOf(productId))
                 .build()
         ) { billingResult, skuDetailsList ->
             Log.d(
