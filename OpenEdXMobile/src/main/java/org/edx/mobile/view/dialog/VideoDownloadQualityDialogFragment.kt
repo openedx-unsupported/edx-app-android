@@ -1,32 +1,34 @@
 package org.edx.mobile.view.dialog
 
+import android.app.Dialog
+import android.content.DialogInterface
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.inject.Inject
+import android.widget.Button
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.VideoQualityDialogFragmentBinding
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
-import org.edx.mobile.module.analytics.AnalyticsRegistry
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.view.adapters.VideoQualityAdapter
-import roboguice.fragment.RoboDialogFragment
+
 
 class VideoDownloadQualityDialogFragment(
     var environment: IEdxEnvironment,
     var callback: IListDialogCallback
-) : RoboDialogFragment() {
+) : DialogFragment() {
 
     private var loginPref: LoginPrefs? = environment.loginPrefs
     private val videoQualities: ArrayList<VideoQuality> = arrayListOf()
     private lateinit var binding: VideoQualityDialogFragmentBinding
-
-    @Inject
-    lateinit var analyticsRegistry: AnalyticsRegistry
 
     init {
         videoQualities.addAll(VideoQuality.values())
@@ -46,8 +48,8 @@ class VideoDownloadQualityDialogFragment(
     }
 
     private fun setupWindow() {
-        setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+//        setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Dialog)
+//        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     override fun onCreateView(
@@ -55,13 +57,12 @@ class VideoDownloadQualityDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         setupWindow()
-        binding = VideoQualityDialogFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        analyticsRegistry.trackScreenView(
+        environment.analyticsRegistry.trackScreenView(
             Analytics.Screens.VIDEO_DOWNLOAD_QUALITY, null,
             Analytics.Values.SCREEN_NAVIGATION
         )
@@ -78,7 +79,7 @@ class VideoDownloadQualityDialogFragment(
         }
         val adapter = object : VideoQualityAdapter(context, environment, selectedVideoQuality) {
             override fun onItemClicked(videoQuality: VideoQuality) {
-                analyticsRegistry.trackVideoDownloadQualityChanged(
+                environment.analyticsRegistry.trackVideoDownloadQualityChanged(
                     videoQuality,
                     environment.loginPrefs.videoQuality
                 )
@@ -90,10 +91,28 @@ class VideoDownloadQualityDialogFragment(
         adapter.setItems(videoQualities)
         binding.videoQualityList.adapter = adapter
         binding.videoQualityList.onItemClickListener = adapter
+    }
 
-        binding.tvClose.setOnClickListener {
-            dialog?.dismiss()
-        }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding =
+            VideoQualityDialogFragmentBinding.inflate(LayoutInflater.from(context), null, false)
+        return AlertDialog.Builder(requireContext())
+            .setNegativeButton(
+                R.string.label_cancel
+            ) { dialog, _ -> dialog.dismiss() }.setView(binding.root).create()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val negativeButton: Button =
+            (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
+        negativeButton.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.primaryBaseColor
+            )
+        )
+        negativeButton.setTypeface(null, Typeface.BOLD)
     }
 
     interface IListDialogCallback {
