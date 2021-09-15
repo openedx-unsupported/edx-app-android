@@ -273,7 +273,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        if (AjaxCallData.isCompletionRequest(new AjaxCallData(HttpStatus.OK, request.getUrl().toString(), ""))) {
+        if (completionCallback != null &&
+                AjaxCallData.isCompletionRequest(new AjaxCallData(HttpStatus.OK, request.getUrl().toString(), ""))) {
             completionCallback.blockCompletionHandler(true);
         }
         Context context = view.getContext().getApplicationContext();
