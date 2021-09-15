@@ -22,12 +22,14 @@ abstract class CourseUnitFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        unit = if (arguments == null) null else arguments?.getSerializable(Router.EXTRA_COURSE_UNIT) as CourseComponent
+        unit =
+            if (arguments == null) null else arguments?.getSerializable(Router.EXTRA_COURSE_UNIT) as CourseComponent
     }
 
-    fun markComponentCompleted() {
+    fun markComponentCompletion(isCompleted: Boolean) {
         unit?.let {
-            courseManager?.getComponentByIdFromAppLevelCache(it.courseId, it.id)?.setCompleted(1)
+            courseManager?.getComponentByIdFromAppLevelCache(it.courseId, it.id)
+                ?.setCompleted(if (isCompleted) 1 else 0)
         }
     }
 

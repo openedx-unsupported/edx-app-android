@@ -361,7 +361,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                             watchedStateCallback);
         }
-        markComponentCompleted();
+        markComponentCompletion(true);
         courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
             @Override
             protected void onResponse(@NonNull JSONObject responseBody) {
