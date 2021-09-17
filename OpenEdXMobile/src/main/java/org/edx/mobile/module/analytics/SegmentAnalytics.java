@@ -20,6 +20,7 @@ import com.segment.analytics.integrations.Integration;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.JavaUtil;
@@ -1096,5 +1097,21 @@ public class SegmentAnalytics implements Analytics {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
         trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackVideoDownloadQualityClicked(String eventName, String biValue) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
+        trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
+        aEvent.data.putValue(Keys.VALUE, selectedVideoQuality.getValue());
+        aEvent.data.putValue(Keys.OLD_VALUE, oldVideoQuality.getValue());
+        trackSegmentEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED, aEvent.properties);
     }
 }

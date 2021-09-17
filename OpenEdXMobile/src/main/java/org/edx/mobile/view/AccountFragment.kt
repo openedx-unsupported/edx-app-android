@@ -21,6 +21,7 @@ import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.AccountDataLoadedEvent
 import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
+import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
@@ -30,6 +31,7 @@ import org.edx.mobile.user.UserService
 import org.edx.mobile.util.*
 import org.edx.mobile.view.dialog.IDialogCallback
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment
+import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment
 import retrofit2.Call
 
 class AccountFragment : BaseFragment() {
@@ -67,7 +69,7 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false)
         return binding.root
     }
@@ -86,6 +88,7 @@ class AccountFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initPersonalInfo()
         handleIntentBundle(arguments)
+        initVideoQuality()
         updateWifiSwitch()
         updateSDCardSwitch()
         initHelpFields()
@@ -104,6 +107,29 @@ class AccountFragment : BaseFragment() {
                 BuildConfig.VERSION_NAME, config?.environmentDisplayName)
 
         environment?.analyticsRegistry?.trackScreenViewEvent(Analytics.Events.PROFILE_PAGE_VIEWED, Analytics.Screens.PROFILE)
+    }
+
+    private fun initVideoQuality() {
+        environment?.let { environment ->
+            binding.containerVideoQuality.setOnClickListener {
+                val videoQualityDialog: VideoDownloadQualityDialogFragment = VideoDownloadQualityDialogFragment.getInstance(environment,
+                        callback = object : VideoDownloadQualityDialogFragment.IListDialogCallback {
+                            override fun onItemClicked(videoQuality: VideoQuality) {
+                                setVideoQualityDescription(videoQuality)
+                            }
+                        })
+                videoQualityDialog.show(childFragmentManager, VideoDownloadQualityDialogFragment.TAG)
+
+                environment.analyticsRegistry?.trackVideoDownloadQualityClicked(
+                    Analytics.Events.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED,
+                    Analytics.Values.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED
+                )
+            }
+        }
+    }
+
+    private fun setVideoQualityDescription(videoQuality: VideoQuality) {
+        binding.tvVideoDownloadQuality.setText(videoQuality.titleResId)
     }
 
     private fun initHelpFields() {
@@ -171,6 +197,7 @@ class AccountFragment : BaseFragment() {
                 trackEvent(Analytics.Events.PERSONAL_INFORMATION_CLICKED, Analytics.Values.PERSONAL_INFORMATION_CLICKED)
                 environment?.router?.showUserProfile(requireActivity(), prefs.username ?: "")
             }
+            setVideoQualityDescription(prefs.videoQuality)
         } ?: run { binding.containerPersonalInfo.visibility = View.GONE }
     }
 

@@ -12,12 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <include
+        android:id="@+id/video_quality_layout"
+        layout="@layout/video_quality_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fl_bulk_download_container"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/fragment_container"
-        android:layout_below="@+id/fl_bulk_download_container">
+        android:layout_below="@+id/video_quality_layout">
 
         <ListView
             android:id="@+id/outline_list"

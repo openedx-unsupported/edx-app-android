@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rl_video_quality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/neutralXLight"
+        android:minHeight="@dimen/download_view_min_height">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_video_quality"
+            android:layout_width="@dimen/ic_large"
+            android:layout_height="@dimen/ic_large"
+            android:layout_marginStart="@dimen/widget_margin_double"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_settings"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/video_download_label"
+            style="@style/video_download_label_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_marginTop="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/widget_margin_double"
+            android:text="@string/video_download_quality_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_video_quality"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_video_download_quality"
+            style="@style/video_download_description_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_marginTop="@dimen/edx_x_quarter_margin"
+            android:layout_marginEnd="@dimen/widget_margin_double"
+            android:layout_marginBottom="@dimen/widget_margin"
+            android:text="@string/auto_recommended_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_video_quality"
+            app:layout_constraintTop_toBottomOf="@+id/video_download_label" />
+
+        <View
+            android:id="@+id/bottom_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_player_settings_divider_height"
+            android:background="@color/neutralDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

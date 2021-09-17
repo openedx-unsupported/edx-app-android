@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.user.ProfileImage;
@@ -65,6 +66,8 @@ public class LoginPrefs {
         saveDefaultPlaybackSpeed(VideoPlaybackSpeed.SPEED_1_0X.getSpeedValue());
         pref.put(PrefManager.Key.PROFILE_JSON, null);
         pref.put(PrefManager.Key.AUTH_JSON, null);
+        pref.put(PrefManager.Key.VIDEO_QUALITY, VideoQuality.AUTO.ordinal());
+        pref.put(PrefManager.Key.PROFILE_IMAGE, null);
         EdxCookieManager.getSharedInstance(MainApplication.instance()).clearWebWiewCookie();
     }
 
@@ -104,6 +107,19 @@ public class LoginPrefs {
 
     public void saveDefaultPlaybackSpeed(float speed) {
         pref.put(PrefManager.Key.PLAYBACK_SPEED, speed);
+    }
+
+    public void setVideoQuality(VideoQuality videoQuality) {
+        pref.put(PrefManager.Key.VIDEO_QUALITY, videoQuality.ordinal());
+    }
+
+    @NonNull
+    public VideoQuality getVideoQuality() {
+        int ordinal = pref.getInt(PrefManager.Key.VIDEO_QUALITY);
+        if (ordinal == -1) {
+            ordinal = VideoQuality.AUTO.ordinal();
+        }
+        return VideoQuality.values()[ordinal];
     }
 
     @Nullable

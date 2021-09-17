@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,6 +68,7 @@ import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -82,6 +84,7 @@ import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
+import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.ViewModelFactory;
 
@@ -133,6 +136,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
+    private View videoQualityLayout;
     private CourseOutlineAdapter.DownloadListener downloadListener;
     private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
     private CourseUpgradeResponse courseUpgradeData;
@@ -170,6 +174,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         errorNotification = new FullScreenErrorNotification(swipeContainer);
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
+        videoQualityLayout = view.findViewById(R.id.video_quality_layout);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -719,6 +724,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         adapter.setData(courseComponent);
         if (adapter.hasCourseData()) {
             setUpBulkDownloadHeader(courseComponent);
+            setUpVideoQualityHeader(courseComponent);
             errorNotification.hideError();
         } else {
             // Remove bulk video download if the course has NO downloadable videos
@@ -748,6 +754,18 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
 
         fetchLastAccessed();
+    }
+
+    private void setUpVideoQualityHeader(CourseComponent courseComponent) {
+        if (isVideoMode && isOnCourseOutline && getView() != null) {
+            videoQualityLayout.setVisibility(View.VISIBLE);
+            videoQualityLayout.setOnClickListener(v -> {
+                environment.getAnalyticsRegistry().trackVideoDownloadQualityClicked(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,
+                        Analytics.Values.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED);
+                showVideoQualitySelectionModal(courseComponent);
+            });
+            setVideoQualityHeaderLabel(environment.getLoginPrefs().getVideoQuality());
+        }
     }
 
     private void getCourseUpgradeFirebaseConfig() {
@@ -828,6 +846,20 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                         courseComponent.getVideos(true));
             }
         }
+    }
+
+    private void setVideoQualityHeaderLabel(VideoQuality videoQuality) {
+        ((TextView) getView().findViewById(R.id.tv_video_download_quality)).setText(videoQuality.getTitleResId());
+    }
+
+    private void showVideoQualitySelectionModal(CourseComponent courseComponent) {
+        VideoDownloadQualityDialogFragment videoQualityDialog =
+                VideoDownloadQualityDialogFragment.getInstance(environment, videoQuality -> {
+                    setVideoQualityHeaderLabel(videoQuality);
+                    adapter.notifyDataSetChanged();
+                    setUpBulkDownloadHeader(courseComponent);
+                });
+        videoQualityDialog.show(getChildFragmentManager(), VideoDownloadQualityDialogFragment.getTAG());
     }
 
     @Override

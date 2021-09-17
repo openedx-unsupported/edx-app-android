@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/neutralXLight"
         android:contentDescription="@string/view_downloads"
-        android:minHeight="@dimen/bulk_download_view_height"
+        android:minHeight="@dimen/download_view_min_height"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
@@ -40,19 +40,19 @@
 
             <TextView
                 android:id="@+id/tv_title"
+                style="@style/video_download_label_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primaryBaseColor"
-                android:textSize="@dimen/edx_small"
                 tools:text="1 of 17 Videos Downloaded" />
 
             <TextView
                 android:id="@+id/tv_subtitle"
+                style="@style/video_download_description_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bulk_download_description_top_margin"
                 android:textColor="@color/primaryXLightColor"
-                android:textSize="@dimen/edx_small"
+                android:textSize="@dimen/edx_x_small"
                 tools:text="5.5MB of 67.5MB total" />
 
         </LinearLayout>

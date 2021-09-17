@@ -77,6 +77,33 @@
                 style="@style/profile_field_description"
                 android:text="@string/settings_download_to_sdcard_subtitle" />
 
+
+            <LinearLayout
+                android:id="@+id/container_video_quality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:background="@drawable/selectable_rounded_box_overlay"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/edx_default_margin"
+                android:paddingEnd="@dimen/edx_default_margin">
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="@dimen/edx_half_margin"
+                    android:text="@string/video_download_quality_title" />
+
+                <TextView
+                    android:id="@+id/tv_video_download_quality"
+                    style="@style/profile_field_description"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/auto_recommended_text" />
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edx_line"
