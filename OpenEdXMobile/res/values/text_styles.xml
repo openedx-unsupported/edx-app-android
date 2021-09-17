@@ -101,10 +101,6 @@
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 
-    <style name="regular_edx_gray_dark_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/primaryBaseColor</item>
-    </style>
-
     <style name="regular_primary_x_light_text" parent="@style/regular_text">
         <item name="android:textColor">@color/primaryXLightColor</item>
     </style>
