@@ -325,7 +325,13 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             )
         }
         courseDates?.courseDateBlocks?.forEach { courseDateBlock ->
-            CalendarUtils.addEventsIntoCalendar(context = contextOrThrow, calendarId = calendarId, courseName = courseData.course.name, courseDateBlock = courseDateBlock)
+            CalendarUtils.addEventsIntoCalendar(
+                context = contextOrThrow,
+                calendarId = calendarId,
+                courseId = courseData.courseId,
+                courseName = courseData.course.name,
+                courseDateBlock = courseDateBlock
+            )
         }
         checkIfCalendarExists()
         if (updateEvents) {

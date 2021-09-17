@@ -7,9 +7,15 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
+import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import io.branch.indexing.BranchUniversalObject
+import io.branch.referral.util.ContentMetadata
+import io.branch.referral.util.LinkProperties
 import org.edx.mobile.R
+import org.edx.mobile.deeplink.DeepLink
+import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.course.CourseDateBlock
 import java.util.*
@@ -134,16 +140,34 @@ object CalendarUtils {
     /**
      * Method to add important dates of course as calendar event into calendar of mobile app
      */
-    fun addEventsIntoCalendar(context: Context, calendarId: Long, courseName: String, courseDateBlock: CourseDateBlock) {
+    fun addEventsIntoCalendar(
+        context: Context,
+        calendarId: Long,
+        courseId: String,
+        courseName: String,
+        courseDateBlock: CourseDateBlock
+    ) {
         val date = courseDateBlock.getDateCalendar()
         // start time of the event added to the calendar
         val startMillis: Long = Calendar.getInstance().run {
-            set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.HOUR_OF_DAY) - 1, date.get(Calendar.MINUTE))
+            set(
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH),
+                date.get(Calendar.HOUR_OF_DAY) - 1,
+                date.get(Calendar.MINUTE)
+            )
             timeInMillis
         }
         // end time of the event added to the calendar
         val endMillis: Long = Calendar.getInstance().run {
-            set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE))
+            set(
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH),
+                date.get(Calendar.HOUR_OF_DAY),
+                date.get(Calendar.MINUTE)
+            )
             timeInMillis
         }
 
@@ -151,12 +175,48 @@ object CalendarUtils {
             put(CalendarContract.Events.DTSTART, startMillis)
             put(CalendarContract.Events.DTEND, endMillis)
             put(CalendarContract.Events.TITLE, "${AppConstants.ASSIGNMENT_DUE} : $courseName")
-            put(CalendarContract.Events.DESCRIPTION, courseDateBlock.title)
+            put(
+                CalendarContract.Events.DESCRIPTION,
+                getEventDescription(
+                    context = context,
+                    courseId = courseId,
+                    courseDateBlock = courseDateBlock
+                )
+            )
             put(CalendarContract.Events.CALENDAR_ID, calendarId)
             put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
         }
         val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
         addReminderToEvent(context = context, uri = uri)
+    }
+
+    /**
+     * Method to generate & add deeplink into event description
+     *
+     * @return event description with deeplink for assignment block else block title
+     */
+    private fun getEventDescription(
+        context: Context, courseId: String, courseDateBlock: CourseDateBlock
+    ): String {
+        var eventDescription = courseDateBlock.title
+        if (!TextUtils.isEmpty(courseDateBlock.blockId)) {
+            val metaData = ContentMetadata()
+                .addCustomMetadata(DeepLink.Keys.SCREEN_NAME, Screen.COURSE_COMPONENT)
+                .addCustomMetadata(DeepLink.Keys.COURSE_ID, courseId)
+                .addCustomMetadata(DeepLink.Keys.COMPONENT_ID, courseDateBlock.blockId)
+
+            val branchUniversalObject = BranchUniversalObject()
+                .setCanonicalIdentifier("${Screen.COURSE_COMPONENT}\n${courseDateBlock.blockId}")
+                .setTitle(courseDateBlock.title)
+                .setContentDescription(courseDateBlock.title)
+                .setContentMetadata(metaData)
+
+            val linkProperties = LinkProperties()
+                .addControlParameter("\$desktop_url", courseDateBlock.link)
+
+            eventDescription += "\n" + branchUniversalObject.getShortUrl(context, linkProperties)
+        }
+        return eventDescription
     }
 
     /**
@@ -217,7 +277,11 @@ object CalendarUtils {
      * Method to compare the calendar events with course dates
      * @return  true if the events are the same as calendar dates otherwise false
      */
-    fun compareEvents(context: Context, calendarId: Long, courseDateBlocks: List<CourseDateBlock>): Boolean {
+    fun compareEvents(
+        context: Context,
+        calendarId: Long,
+        courseDateBlocks: List<CourseDateBlock>
+    ): Boolean {
         val cursor = getCalendarEvents(context, calendarId)
         // Creating a local copy of courseDateBlock as this method required nested iteration to compare events
         // To decrease the loop complexity we can remove object from list if they matched with existed events.
@@ -228,19 +292,22 @@ object CalendarUtils {
         cursor?.run {
             if (moveToFirst()) {
                 do {
-                    val startDate = Calendar.getInstance().apply { timeInMillis = getLong(getColumnIndex(CalendarContract.Events.DTSTART)) }
+                    val startDate = Calendar.getInstance().apply {
+                        timeInMillis = getLong(getColumnIndex(CalendarContract.Events.DTSTART))
+                    }
                     val description = getString(getColumnIndex(CalendarContract.Events.DESCRIPTION))
                     run breaker@{
                         datesList.forEachIndexed { index, unit ->
-                            if (unit.title.equals(description, ignoreCase = true)) {
+                            if (description.contains(unit.title, ignoreCase = true)) {
                                 val date = unit.getDateCalendar()
                                 // Comparing the existed events start time with current dates block
                                 // As event started 1 hour before it's due time so mincing 1 hour from current date block
                                 if (date.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
-                                        date.get(Calendar.MONTH) == startDate.get(Calendar.MONTH) &&
-                                        date.get(Calendar.DAY_OF_MONTH) == startDate.get(Calendar.DAY_OF_MONTH) &&
-                                        date.get(Calendar.HOUR_OF_DAY) - 1 == startDate.get(Calendar.HOUR_OF_DAY) &&
-                                        date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)) {
+                                    date.get(Calendar.MONTH) == startDate.get(Calendar.MONTH) &&
+                                    date.get(Calendar.DAY_OF_MONTH) == startDate.get(Calendar.DAY_OF_MONTH) &&
+                                    date.get(Calendar.HOUR_OF_DAY) - 1 == startDate.get(Calendar.HOUR_OF_DAY) &&
+                                    date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)
+                                ) {
                                     count++
                                     datesList.removeAt(index)
                                     return@breaker

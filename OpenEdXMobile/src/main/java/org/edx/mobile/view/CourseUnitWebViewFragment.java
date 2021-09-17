@@ -316,8 +316,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
                     0, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
-                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, unit.getCourseId(),
-                            null, null, false, Screen.COURSE_DATES));
+                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), unit.getCourseId(), Screen.COURSE_DATES));
         } else {
             snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, 0,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
@@ -331,7 +330,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
         if (courseDateViewModel.getCourseDates().getValue() != null) {
             for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
-                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseName, courseDateBlock);
+                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, unit.getCourseId(), courseName, courseDateBlock);
             }
             showCalendarUpdatedSnackbar();
             trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
