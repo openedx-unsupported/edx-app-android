@@ -821,8 +821,8 @@ public class FirebaseAnalytics implements Analytics {
     public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
         final FirebaseEvent event = new FirebaseEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED,
                 Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
-        event.putString(Keys.VALUE, selectedVideoQuality.name().replace("option_", "").toLowerCase());
-        event.putString(Keys.OLD_VALUE, oldVideoQuality.name().replace("option_", "").toLowerCase());
+        event.putString(Keys.VALUE, selectedVideoQuality.getValue());
+        event.putString(Keys.OLD_VALUE, oldVideoQuality.getValue());
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

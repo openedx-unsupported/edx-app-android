@@ -33,7 +33,7 @@ abstract class VideoQualityAdapter(
             TextUtils.setTextAppearance(
                 context,
                 holder.tvVideoQualityRowTitle,
-                R.style.regular_primary_dark_color
+                R.style.regular_edx_black_text
             )
             holder.ivVideoQualityCheck.visibility = View.GONE
         }

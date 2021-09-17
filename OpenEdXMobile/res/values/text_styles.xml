@@ -97,10 +97,6 @@
         <item name="android:textColor">@color/neutralBlackT</item>
     </style>
 
-    <style name="regular_primary_dark_color" parent="@style/regular_text">
-        <item name="android:textColor">@color/neutralBlackT</item>
-    </style>
-
     <style name="regular_primary_base_text" parent="@style/regular_text">
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>

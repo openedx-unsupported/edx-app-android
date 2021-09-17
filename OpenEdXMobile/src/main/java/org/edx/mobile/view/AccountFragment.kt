@@ -34,7 +34,6 @@ import org.edx.mobile.view.dialog.NetworkCheckDialogFragment
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment
 import retrofit2.Call
 
-
 class AccountFragment : BaseFragment() {
 
     private lateinit var binding: FragmentAccountBinding
@@ -111,7 +110,6 @@ class AccountFragment : BaseFragment() {
     }
 
     private fun initVideoQuality() {
-
         environment?.let { environment ->
             binding.containerVideoQuality.setOnClickListener {
                 val videoQualityDialog: VideoDownloadQualityDialogFragment = VideoDownloadQualityDialogFragment.getInstance(environment,

@@ -20,7 +20,6 @@ import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.view.adapters.VideoQualityAdapter
 
-
 class VideoDownloadQualityDialogFragment(
     var environment: IEdxEnvironment,
     var callback: IListDialogCallback
@@ -47,16 +46,10 @@ class VideoDownloadQualityDialogFragment(
         }
     }
 
-    private fun setupWindow() {
-//        setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Dialog)
-//        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setupWindow()
         return binding.root
     }
 

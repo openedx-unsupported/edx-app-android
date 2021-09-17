@@ -1110,8 +1110,8 @@ public class SegmentAnalytics implements Analytics {
     public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
-        aEvent.data.putValue(Keys.VALUE, selectedVideoQuality.name().toLowerCase().replaceAll("option_", ""));
-        aEvent.data.putValue(Keys.OLD_VALUE, oldVideoQuality.name().toLowerCase().replaceAll("option_", ""));
+        aEvent.data.putValue(Keys.VALUE, selectedVideoQuality.getValue());
+        aEvent.data.putValue(Keys.OLD_VALUE, oldVideoQuality.getValue());
         trackSegmentEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED, aEvent.properties);
     }
 }

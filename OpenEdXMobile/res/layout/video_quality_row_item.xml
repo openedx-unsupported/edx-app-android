@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/tv_video_quality_row_title"
-            style="@style/regular_primary_dark_color"
+            style="@style/regular_edx_black_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

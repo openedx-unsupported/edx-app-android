@@ -47,9 +47,9 @@
 
             <TextView
                 android:id="@+id/tv_subtitle"
+                style="@style/video_download_description_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/video_download_description_text_style"
                 android:layout_marginTop="@dimen/bulk_download_description_top_margin"
                 android:textColor="@color/primaryXLightColor"
                 android:textSize="@dimen/edx_x_small"
