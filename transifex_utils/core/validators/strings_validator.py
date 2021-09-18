@@ -45,7 +45,15 @@ def validate_plurals_translation(source_file_placeholders, translation_file):
 
 
 def validate_item(plural, source_file_placeholders, translation_file):
-    for item in plural.findall('item'):
+    items = plural.findall('item')
+
+    for item in items:
+        if (get_placeholders(item.text) != get_placeholders(items[0].text)):
+            log.log_error("Plural '" + plural.get('name') + "' contain items with " +
+            "different placeholder or format specifier \n File: " + translation_file)
+            return
+
+    for item in items:
         if item.get('quantity') in source_file_placeholders[plural.get('name')]:
             validate_quantity(plural, item, source_file_placeholders, translation_file)
 
@@ -95,4 +103,4 @@ def get_plural_items_placeholders(plural): #new
 
 
 def get_placeholders(str):
-    return re.findall("{?[a-zA-Z0-9_]+}", str)
+    return re.findall("{?[a-zA-Z0-9_]+}|%d|%f|%s", str)
