@@ -17,7 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.AjaxCallData;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
@@ -47,10 +49,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private final Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private final FragmentActivity activity;
-    private boolean interceptAjaxRequest;
+    private final CompletionCallback completionCallback;
+    private final boolean interceptAjaxRequest;
     private ActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
+    private boolean ajaxInterceptorEmbed = false;
 
     /**
      * Tells if the page loading has been finished or not.
@@ -80,7 +84,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         this.activity = activity;
         this.interceptAjaxRequest = interceptAjaxRequest;
         config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
-        setupWebView(webView, completionCallback);
+        this.completionCallback = completionCallback;
+        setupWebView(webView);
     }
 
     /**
@@ -107,9 +112,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * sets this class itself as WebViewClient.
      *
      * @param webView
-     * @param completionCallback
      */
-    private void setupWebView(WebView webView, CompletionCallback completionCallback) {
+    private void setupWebView(WebView webView) {
         webView.setWebViewClient(this);
         //We need to hide the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
@@ -119,6 +123,16 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 }
                 if (pageStatusListener != null) {
                     pageStatusListener.onPageLoadProgressChanged(view, progress);
+                }
+                if (interceptAjaxRequest && progress > 30 && !ajaxInterceptorEmbed) {
+                    // setup native callback to intercept the ajax requests.
+                    try {
+                        String nativeAjaxCallbackJS = FileUtil.loadTextFileFromAssets(activity, "js/nativeAjaxCallback.js");
+                        view.loadUrl(nativeAjaxCallbackJS);
+                        ajaxInterceptorEmbed = true;
+                    } catch (IOException e) {
+                        logger.error(e);
+                    }
                 }
             }
 
@@ -158,15 +172,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         // Page loading has finished.
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
-        }
-        if (interceptAjaxRequest) {
-            // setup native callback to intercept the ajax requests.
-            try {
-                String nativeAjaxCallbackJS = FileUtil.loadTextFileFromAssets(activity, "js/nativeAjaxCallback.js");
-                view.loadUrl(nativeAjaxCallbackJS);
-            } catch (IOException e) {
-                logger.error(e);
-            }
         }
     }
 
@@ -268,6 +273,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        if (completionCallback != null &&
+                AjaxCallData.isCompletionRequest(new AjaxCallData(HttpStatus.OK, request.getUrl().toString(), ""))) {
+            completionCallback.blockCompletionHandler(true);
+        }
         Context context = view.getContext().getApplicationContext();
 
         // suppress external links on ZeroRated network
@@ -379,6 +388,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     public interface CompletionCallback {
-        void blockCompletionHandler();
+        void blockCompletionHandler(boolean isCompleted);
     }
 }

@@ -12,9 +12,11 @@ class AjaxNativeCallback(private val completionCallback: URLInterceptorWebViewCl
     fun ajaxDone(json: String?) {
         if (!TextUtils.isEmpty(json)) {
             val data = Gson().fromJson<AjaxCallData>(json, AjaxCallData::class.java)
-            if (data.status == HttpStatus.OK && data.isCompletionRequest()) {
-                completionCallback?.blockCompletionHandler()
-            }
+            completionCallback?.blockCompletionHandler(
+                data.status == HttpStatus.OK && AjaxCallData.isCompletionRequest(
+                    data
+                )
+            )
         }
     }
 }
