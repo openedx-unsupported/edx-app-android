@@ -213,18 +213,15 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             binding.syncCalendarContainer.visibility = View.GONE
             return
         }
-        if (isSelfPaced) {
-            ConfigUtil.checkCalendarSyncEnabled(environment.config, object : ConfigUtil.OnCalendarSyncListener {
-                override fun onCalendarSyncResponse(response: CourseDatesCalendarSync) {
-                    if (!response.disabledVersions.contains(VERSION_NAME) && ((response.isSelfPlacedEnable && isSelfPaced) || (response.isInstructorPlacedEnable && !isSelfPaced))) {
-                        binding.syncCalendarContainer.visibility = View.VISIBLE
-                        initializedSyncContainer()
-                    }
+        ConfigUtil.checkCalendarSyncEnabled(environment.config, object : ConfigUtil.OnCalendarSyncListener {
+            override fun onCalendarSyncResponse(response: CourseDatesCalendarSync) {
+                if (!response.disabledVersions.contains(VERSION_NAME) && ((response.isSelfPlacedEnable && isSelfPaced) || (response.isInstructorPlacedEnable && !isSelfPaced))) {
+                    binding.syncCalendarContainer.visibility = View.VISIBLE
+                    initializedSyncContainer()
                 }
-            })
-        } else {
-            binding.syncCalendarContainer.visibility = View.GONE
-        }
+            }
+        })
+
         CourseDateUtil.setupCourseDatesBanner(view = binding.banner.root, isCourseDatePage = true, courseId = courseData.courseId,
                 enrollmentMode = courseData.mode, isSelfPaced = isSelfPaced, screenName = Analytics.Screens.PLS_COURSE_DATES,
                 analyticsRegistry = environment.analyticsRegistry, courseBannerInfoModel = courseBannerInfo,
@@ -302,16 +299,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun insertCalendarEvent() {
         val calendarId: Long = CalendarUtils.createOrUpdateCalendar(
-            context = contextOrThrow,
-            accountName = accountName,
-            calendarTitle = calendarTitle
+                context = contextOrThrow,
+                accountName = accountName,
+                calendarTitle = calendarTitle
         )
         // if app unable to create the Calendar for the course
         if (calendarId == -1L) {
             Toast.makeText(
-                contextOrThrow,
-                getString(R.string.adding_calendar_error_message),
-                Toast.LENGTH_SHORT
+                    contextOrThrow,
+                    getString(R.string.adding_calendar_error_message),
+                    Toast.LENGTH_SHORT
             ).show()
             binding.switchSync.isChecked = false
             return
