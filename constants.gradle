@@ -12,4 +12,5 @@ project.ext {
     // App dependencies
     androidXVersion = '1.0.0'
     androidXAppCompactVersion = '1.2.0'
+    kotlin_version_billing = "4.0.0"
 }
