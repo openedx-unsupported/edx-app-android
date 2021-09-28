@@ -13,6 +13,8 @@ import org.edx.mobile.logger.Logger
  *
  * This BillingProcessor knows nothing about the application, all necessary information is either
  * passed into the constructor, exported as observable Flows, or exported through callbacks.
+ *
+ * Inspiration: [https://github.com/android/play-billing-samples/blob/master/TrivialDriveKotlin/app/src/main/java/com/sample/android/trivialdrivesample/billing/BillingDataSource.kt]
  * */
 class BillingProcessor(val context: Context, val listener: BillingFlowListeners?) :
     PurchasesUpdatedListener,
@@ -22,7 +24,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
     private val logger = Logger(TAG)
 
     private var RECONNECT_TIMER_START_MILLISECONDS = 1L * 1000L
-    private val RECONNECT_MAX_TIME = 3 // retry connect max times
+    private val RECONNECT_MAX_COUNT = 3 // retry connection max count
 
     private val handler = Handler(Looper.getMainLooper())
     private var connectionTryCount = 0
@@ -50,7 +52,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      * self-upgrades or is force closed.
      */
     override fun onBillingServiceDisconnected() {
-        if (connectionTryCount > RECONNECT_MAX_TIME) {
+        if (connectionTryCount > RECONNECT_MAX_COUNT) {
             connectionTryCount++
             retryBillingServiceConnectionWithExponentialBackoff()
         } else {
@@ -58,6 +60,12 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         }
     }
 
+    /**
+     * Called by the BillingLibrary when new purchases are detected; typically in response to a
+     * launchBillingFlow.
+     * @param billingResult result of the purchase flow.
+     * @param list of new purchases.
+     */
     override fun onPurchasesUpdated(
         billingResult: BillingResult,
         purchases: MutableList<Purchase>?
@@ -67,6 +75,12 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         }
     }
 
+    /**
+     * Called to purchase the new product. Query the product details and launch the purchase flow.
+     *
+     * @param activity active activity to launch our billing flow from
+     * @param productId SKU (Product ID) to be purchased
+     */
     fun purchaseItem(activity: Activity, productId: String) {
         if (billingClient.isReady) {
 
@@ -92,6 +106,13 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         }
     }
 
+    /**
+     * Launch the billing flow. This will launch an external Activity for a result, so it requires
+     * an Activity reference.
+     *
+     * @param activity active activity to launch our billing flow from
+     * @param skuDetail SKU (Product) to be purchased
+     */
     private fun launchBillingFlow(activity: Activity, skuDetail: SkuDetails) {
         val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
         billingFlowParamsBuilder.setSkuDetails(skuDetail)
@@ -100,6 +121,10 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         )
     }
 
+    /**
+     * Acknowledge new purchases are ones not yet acknowledged.
+     * @param purchase new purchase
+     */
     private fun acknowledgePurchase(purchase: Purchase) {
         billingClient.acknowledgePurchase(
             AcknowledgePurchaseParams.newBuilder()
@@ -135,6 +160,14 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         ) { billingResult, _ -> logger.debug(billingResult.responseCode.toString() + billingResult.debugMessage) }
     }
 
+    /**
+     * Calls the billing client functions to query sku details for inapp SKUs. SKU details are
+     * useful for displaying item names and price lists to the user, and are required to make a
+     * purchase.
+     *
+     * @param productId SKU of the product
+     * @param listener [SkuDetailsResponseListener]
+     * */
     private fun querySyncDetails(productId: String, listener: SkuDetailsResponseListener) {
         billingClient.querySkuDetailsAsync(
             SkuDetailsParams.newBuilder()
@@ -144,6 +177,9 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         )
     }
 
+    /**
+     * Closes the connection and releases all held resources such as service connections.
+     */
     fun disconnect() {
         billingClient.endConnection()
     }
