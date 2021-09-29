@@ -160,18 +160,26 @@ public class Router {
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
                                         boolean announcements) {
-        showCourseDashboardTabs(activity, model, null, null, null, announcements, null);
+        showCourseDashboardTabs(activity, model, null, null, null, null, announcements, null);
+    }
+
+    public void showCourseDashboardTabs(@NonNull Activity activity,
+                                        @Nullable String courseId,
+                                        @Nullable @ScreenDef String screenName) {
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, null, courseId,
+                null, null, null, false, screenName));
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
                                         @Nullable String courseId,
+                                        @Nullable String componentId,
                                         @Nullable String topicId,
                                         @Nullable String threadId,
                                         boolean announcements,
                                         @Nullable @ScreenDef String screenName) {
         activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId,
-                topicId, threadId, announcements, screenName));
+                componentId, topicId, threadId, announcements, screenName));
     }
 
     public void showCourseUpgradeWebViewActivity(@NonNull Context context,

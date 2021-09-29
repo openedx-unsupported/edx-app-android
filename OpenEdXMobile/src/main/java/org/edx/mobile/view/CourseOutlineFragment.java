@@ -39,7 +39,9 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.LayoutCourseDatesBannerBinding;
+import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.Screen;
+import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
@@ -137,18 +139,21 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
     private View videoQualityLayout;
+    private TextView tvVideoDownloadQuality;
     private CourseOutlineAdapter.DownloadListener downloadListener;
     private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
     private CourseUpgradeResponse courseUpgradeData;
     private String calendarTitle = "";
     private String accountName = "";
+    private String screenName;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
-                                       @Nullable String courseComponentId, boolean isVideosMode) {
+                                       @Nullable String courseComponentId, boolean isVideosMode, @ScreenDef String screenName) {
         final Bundle arguments = new Bundle();
         final Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(Router.EXTRA_COURSE_DATA, model);
         courseBundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+        courseBundle.putString(Router.EXTRA_SCREEN_NAME, screenName);
 
         arguments.putBundle(Router.EXTRA_BUNDLE, courseBundle);
         arguments.putBoolean(Router.EXTRA_IS_VIDEOS_MODE, isVideosMode);
@@ -175,6 +180,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         loadingIndicator = view.findViewById(R.id.loading_indicator);
         flBulkDownload = view.findViewById(R.id.fl_bulk_download_container);
         videoQualityLayout = view.findViewById(R.id.video_quality_layout);
+        tvVideoDownloadQuality = view.findViewById(R.id.tv_video_download_quality);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -273,7 +279,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
         if (courseDateViewModel.getCourseDates().getValue() != null) {
             for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
-                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseData.getCourse().getName(), courseDateBlock);
+                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseData.getCourseId(), courseData.getCourse().getName(), courseDateBlock);
             }
             showCalendarUpdatedSnackbar();
             trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
@@ -297,6 +303,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
             courseUpgradeData = bundle.getParcelable(Router.EXTRA_COURSE_UPGRADE_DATA);
             courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+            screenName = bundle.getString(DeepLink.Keys.SCREEN_NAME);
             isVideoMode = savedInstanceState.getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
             isSingleVideoDownload = savedInstanceState.getBoolean("isSingleVideoDownload");
             if (savedInstanceState.containsKey(Router.EXTRA_IS_ON_COURSE_OUTLINE)) {
@@ -309,7 +316,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     private void fetchCourseComponent() {
         final String courseId = courseData.getCourseId();
-        if (courseComponentId != null) {
+        if (courseComponentId != null && TextUtils.isEmpty(screenName)) {
             final CourseComponent courseComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId);
             if (courseComponent != null) {
                 // Course data exist in app session cache
@@ -539,13 +546,21 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
     }
 
+    private void detectDeepLinking() {
+        if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName)
+                && !TextUtils.isEmpty(courseComponentId)) {
+            environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
+                    REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, courseComponentId, false);
+            screenName = null;
+        }
+    }
+
     private void showShiftDateSnackBar(boolean isSuccess) {
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(listView);
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
                     0, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
-                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), null, courseData.getCourseId(),
-                            null, null, false, Screen.COURSE_DATES));
+                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), courseData.getCourseId(), Screen.COURSE_DATES));
         } else {
             snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, 0,
                     0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
@@ -706,7 +721,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
      * @param courseComponent Components of course to be load
      */
     private void loadData(@NonNull CourseComponent courseComponent) {
-        courseComponentId = courseComponent.getId();
         if (courseData == null || getActivity() == null)
             return;
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -752,12 +766,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.SECTION_OUTLINE, courseData.getCourseId(), courseComponent.getInternalName());
         }
-
         fetchLastAccessed();
+        detectDeepLinking();
+        courseComponentId = courseComponent.getId();
     }
 
     private void setUpVideoQualityHeader(CourseComponent courseComponent) {
-        if (isVideoMode && isOnCourseOutline && getView() != null) {
+        if (isVideoMode && isOnCourseOutline) {
             videoQualityLayout.setVisibility(View.VISIBLE);
             videoQualityLayout.setOnClickListener(v -> {
                 environment.getAnalyticsRegistry().trackVideoDownloadQualityClicked(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,
@@ -849,7 +864,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void setVideoQualityHeaderLabel(VideoQuality videoQuality) {
-        ((TextView) getView().findViewById(R.id.tv_video_download_quality)).setText(videoQuality.getTitleResId());
+        tvVideoDownloadQuality.setText(videoQuality.getTitleResId());
     }
 
     private void showVideoQualitySelectionModal(CourseComponent courseComponent) {
@@ -940,7 +955,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     protected boolean isOnCourseOutline() {
-        if (courseComponentId == null) return true;
+        if (courseComponentId == null || getActivity() instanceof CourseTabsDashboardActivity) {
+            return true;
+        }
         final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
                 courseData.getCourseId(), courseComponentId);
         final BlockPath outlinePath = outlineComp.getPath();

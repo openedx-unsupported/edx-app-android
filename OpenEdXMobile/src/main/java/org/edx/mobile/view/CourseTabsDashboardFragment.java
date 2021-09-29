@@ -1,5 +1,8 @@
 package org.edx.mobile.view;
 
+import static android.widget.FrameLayout.LayoutParams;
+import static org.edx.mobile.view.Router.EXTRA_COURSE_COMPONENT_ID;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -38,8 +41,6 @@ import org.edx.mobile.view.custom.ProgressWheel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static android.widget.FrameLayout.LayoutParams;
 
 public class CourseTabsDashboardFragment extends TabsBaseFragment {
     private static final String ARG_COURSE_NOT_FOUND = "ARG_COURSE_NOT_FOUND";
@@ -247,7 +248,8 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         // Add course outline tab
         items.add(new FragmentItemModel(CourseOutlineFragment.class, courseData.getCourse().getName(),
                 R.drawable.ic_class,
-                CourseOutlineFragment.makeArguments(courseData, null, false),
+                CourseOutlineFragment.makeArguments(courseData, getArguments().getString(EXTRA_COURSE_COMPONENT_ID),
+                        false, screenName),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
@@ -260,7 +262,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         if (environment.getConfig().isCourseVideosEnabled()) {
             items.add(new FragmentItemModel(CourseOutlineFragment.class,
                     getResources().getString(R.string.videos_title), R.drawable.ic_videocam
-                    , CourseOutlineFragment.makeArguments(courseData, null, true),
+                    , CourseOutlineFragment.makeArguments(courseData, null, true, null),
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
