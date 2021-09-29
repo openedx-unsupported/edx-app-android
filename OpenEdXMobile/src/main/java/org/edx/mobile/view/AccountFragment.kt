@@ -106,6 +106,20 @@ class AccountFragment : BaseFragment() {
         binding.appVersion.text = String.format("%s %s %s", getString(R.string.label_app_version),
                 BuildConfig.VERSION_NAME, config?.environmentDisplayName)
 
+        config?.deleteAccountUrl?.let { deleteAccountUrl ->
+            binding.containerDeleteAccount.visibility = View.VISIBLE
+            binding.btnDeleteAccount.setOnClickListener {
+                environment?.router?.showAuthenticatedWebViewActivity(
+                    this.requireContext(),
+                    deleteAccountUrl, getString(R.string.title_delete_my_account)
+                )
+                trackEvent(
+                    Analytics.Events.DELETE_ACCOUNT_CLICKED,
+                    Analytics.Values.DELETE_ACCOUNT_CLICKED
+                )
+            }
+        }
+
         environment?.analyticsRegistry?.trackScreenViewEvent(Analytics.Events.PROFILE_PAGE_VIEWED, Analytics.Screens.PROFILE)
     }
 

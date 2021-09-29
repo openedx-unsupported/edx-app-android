@@ -343,6 +343,11 @@ public class Router {
         context.startActivity(AuthenticatedWebViewActivity.newIntent(context, unit));
     }
 
+    public void showAuthenticatedWebViewActivity(@NonNull Context context, @NonNull String url,
+                                                 @NonNull String name) {
+        context.startActivity(AuthenticatedWebViewActivity.newIntent(context, url, name));
+    }
+
     /**
      * Clear the login data and exit to the splash screen. This should only be called internally;
      * for handling manual logout,

@@ -25,9 +25,14 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
 
         @JvmStatic
         fun newIntent(activity: Context?, unit: CourseComponent): Intent {
+            return newIntent(activity, url = unit.blockUrl, screenTitle = unit.displayName)
+        }
+
+        @JvmStatic
+        fun newIntent(activity: Context?, url: String, screenTitle: String): Intent {
             val intent = Intent(activity, AuthenticatedWebViewActivity::class.java)
-            intent.putExtra(EXTRA_COMPONENT_URL, unit.blockUrl)
-            intent.putExtra(EXTRA_SCREEN_TITLE, unit.displayName)
+            intent.putExtra(EXTRA_COMPONENT_URL, url)
+            intent.putExtra(EXTRA_SCREEN_TITLE, screenTitle)
             return intent
         }
     }

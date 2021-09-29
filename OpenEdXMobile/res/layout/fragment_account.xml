@@ -319,16 +319,36 @@
                 android:id="@+id/app_version"
                 style="@style/profile_field_description"
                 android:layout_marginTop="@dimen/edx_default_margin"
+                android:layout_marginBottom="@dimen/edx_default_margin"
                 android:lineHeight="@dimen/edx_margin"
                 android:textSize="@dimen/edx_xx_small"
                 tools:text="Version X.X.X" />
 
-            <View
+            <LinearLayout
+                android:id="@+id/container_delete_account"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edx_line"
-                android:layout_marginTop="@dimen/edx_default_margin"
-                android:layout_marginBottom="@dimen/edx_default_margin"
-                android:background="@color/neutralXLight" />
+                android:layout_height="wrap_content"
+                android:background="@color/neutralWhite"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_delete_account"
+                    style="@style/edX.Widget.ProfileActionBorderedButton"
+                    android:layout_marginTop="@dimen/button_horizontal_padding"
+                    android:layout_marginBottom="@dimen/edx_half_margin"
+                    android:background="@drawable/edx_error_base_bordered_button"
+                    android:text="@string/label_delete_account_btn"
+                    android:textColor="@color/errorBase" />
+
+                <TextView
+                    style="@style/profile_field_description"
+                    android:layout_marginBottom="@dimen/divider_with_text_margin"
+                    android:text="@string/description_delete_account"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </layout>
