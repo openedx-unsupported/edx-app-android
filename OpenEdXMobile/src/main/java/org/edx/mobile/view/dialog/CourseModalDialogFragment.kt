@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.android.billingclient.api.Purchase
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
+import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.ResourceUtil
 import roboguice.fragment.RoboDialogFragment
@@ -19,6 +21,8 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     private var courseId: String = ""
     private var price: String = ""
     private var isSelfPaced: Boolean = false
+
+    private lateinit var billingProcessor: BillingProcessor
 
     @Inject
     private lateinit var environment: IEdxEnvironment
@@ -51,10 +55,22 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
-        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (environment.config.isIAPEnabled) View.VISIBLE else View.GONE
+        binding.layoutUpgradeBtn.btnUpgrade.visibility =
+            if (environment.config.isIAPEnabled) View.VISIBLE else View.GONE
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            purchaseProduct("org.edx.mobile.test_product")
             environment.analyticsRegistry.trackUpgradeNowClicked(courseId, price, null, isSelfPaced)
         }
+        billingProcessor =
+            BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
+                override fun onPurchaseComplete(purchase: Purchase) {
+                    // Nothing do here
+                }
+            })
+    }
+
+    private fun purchaseProduct(productId: String) {
+        activity?.let { billingProcessor.purchaseItem(it, productId) }
     }
 
     companion object {
@@ -78,5 +94,10 @@ class CourseModalDialogFragment : RoboDialogFragment() {
             frag.arguments = args
             return frag
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        billingProcessor.disconnect()
     }
 }

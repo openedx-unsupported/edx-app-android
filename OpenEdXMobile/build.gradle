@@ -270,6 +270,7 @@ dependencies {
         exclude group: 'org.hamcrest'
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
+    implementation "com.android.billingclient:billing-ktx:$kotlin_version_billing"
 
     /**
      * Using debugImplementation here, so that LeakCanary only runs with debug variants of the builds.
