@@ -876,6 +876,7 @@ public interface Analytics {
         String WIFI_ALLOW = "edx.bi.app.profile.wifi.allow";
         String WIFI_DONT_ALLOW = "edx.bi.app.profile.wifi.dont_allow";
         String EMAIL_SUPPORT_CLICKED = "edx.bi.app.profile.email_support.clicked";
+        String DELETE_ACCOUNT_CLICKED = "edx.bi.app.profile.delete_account.clicked";
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
@@ -1047,6 +1048,7 @@ public interface Analytics {
         String WIFI_ALLOW = "Wifi Allow";
         String WIFI_DONT_ALLOW = "Wifi Dont Allow";
         String EMAIL_SUPPORT_CLICKED = "Email Support Clicked";
+        String DELETE_ACCOUNT_CLICKED = "Profile: Delete Account Clicked";
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";

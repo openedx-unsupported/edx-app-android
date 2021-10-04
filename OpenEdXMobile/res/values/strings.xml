@@ -177,6 +177,12 @@
     <string name="label_view_faq_btn">View FAQ</string>
     <!--  Label of Sign out Button  -->
     <string name="label_sign_out_btn">Sign out</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">Delete my account</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">Delete account</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">Follow the instructions on the next screen to delete your account and all related data.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Version</string>
 

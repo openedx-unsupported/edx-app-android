@@ -1,5 +1,7 @@
 package org.edx.mobile.view.custom;
 
+import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -23,6 +25,8 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.AuthenticatedWebviewBinding;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.FileSelectionEvent;
@@ -38,8 +42,6 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 
 import de.greenrobot.event.EventBus;
-
-import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
 
 /**
  * A custom webview which authenticates the user before loading a page,
@@ -134,6 +136,30 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                     showErrorMessage(R.string.network_error_message, R.drawable.ic_error);
                 }
                 super.onReceivedHttpError(view, request, errorResponse);
+            }
+
+            /**
+             * Method is usable for Android 6.0 and below otherwise app didn't get the control when a URL is
+             * about to be loaded in the current WebView.
+             * Ref: https://developer.android.com/reference/android/webkit/WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView,%20java.lang.String)
+             */
+            @Deprecated
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.contains("logout")) {
+                    forceLogoutUser();
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (request.getUrl().toString().contains("logout")) {
+                    forceLogoutUser();
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, request);
             }
 
             public void onPageFinished(WebView view, String url) {
@@ -359,5 +385,11 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     public ProgressBar getProgressWheel() {
         return binding.loadingIndicator.loadingIndicator;
+    }
+
+    private void forceLogoutUser() {
+        IEdxEnvironment environment = MainApplication.getEnvironment(getContext());
+        environment.getRouter().forceLogout(getContext(), environment.getAnalyticsRegistry(),
+                environment.getNotificationDelegate());
     }
 }
