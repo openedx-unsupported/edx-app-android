@@ -345,7 +345,6 @@
     <string name="course_modal_earn_certificate">Earn a verified certificate of completion to showcase on your resume</string>
     <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
     <string name="course_modal_full_access_course">Full access to course content and course material even after the course ends</string>
-    <string name="course_modal_support_non_profit">Support our non-profit mission at {platform_name}</string>
     <!-- Label Course Upgrade button  -->
     <string name="label_upgrade_course_button">Upgrade now for $99</string>
     <!-- Title Course Locked Modal  -->
