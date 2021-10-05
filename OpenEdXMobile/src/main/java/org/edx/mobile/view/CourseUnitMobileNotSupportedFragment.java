@@ -19,10 +19,7 @@ import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
-
-import static org.edx.mobile.util.AppConstants.PLATFORM_NAME;
 
 public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     private FragmentCourseUnitGradeBinding binding;
@@ -56,9 +53,6 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
                 binding.containerLayoutNotAvailable.setVisibility(View.GONE);
                 binding.llGradedContentLayout.setVisibility(View.VISIBLE);
                 binding.layoutUpgradeBtn.btnUpgrade.setVisibility(environment.getConfig().isIAPEnabled() ? View.VISIBLE : View.GONE);
-
-                binding.layoutUpgradeFeature.supportNonProfit.setText(
-                        ResourceUtil.getFormattedString(getResources(), R.string.course_modal_support_non_profit, PLATFORM_NAME, environment.getConfig().getPlatformName()));
 
                 binding.toggleShow.setOnClickListener(v -> {
                     boolean showMore = binding.layoutUpgradeFeature.containerLayout.getVisibility() == View.GONE;

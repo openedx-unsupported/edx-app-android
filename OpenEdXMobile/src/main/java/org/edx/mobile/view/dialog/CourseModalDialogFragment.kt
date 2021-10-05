@@ -51,7 +51,6 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         }
 
         binding.dialogTitle.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_heading, KEY_COURSE_NAME, arguments?.getString(KEY_COURSE_NAME))
-        binding.layoutUpgradeFeature.supportNonProfit.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_support_non_profit, KEY_MODAL_PLATFORM, arguments?.getString(KEY_MODAL_PLATFORM))
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
