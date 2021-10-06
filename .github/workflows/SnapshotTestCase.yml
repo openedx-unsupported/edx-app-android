@@ -8,11 +8,11 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - uses: actions/checkout@v2
 
-      - name: set up JDK 11
+      - name: set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '11'
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '8'
 
       # Execute unit tests
       - name: Unit Test
