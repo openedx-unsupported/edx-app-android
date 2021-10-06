@@ -35,7 +35,7 @@ class CourseDateViewModelTest : HttpBaseTestCase() {
 
     @Test
     fun startViewModel() {
-        courseDateViewModel.fetchCourseDates(courseID = "", isSwipeRefresh = false)
+        courseDateViewModel.fetchCourseDates(courseID = "", forceRefresh = false, isSwipeRefresh = false)
         assertNotNull(courseDateViewModel.courseDates.getOrAwaitValue())
     }
 }

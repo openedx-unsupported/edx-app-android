@@ -70,7 +70,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
     @Test
     public void initializeTest() throws CourseContentNotValidException {
         initializeCourseData();
-        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getMode(), false);
+        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getCourse().getName(), courseData.getMode(), false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, PreLoadingListenerActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
