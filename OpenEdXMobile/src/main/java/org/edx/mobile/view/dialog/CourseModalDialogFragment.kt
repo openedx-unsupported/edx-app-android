@@ -57,16 +57,28 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         binding.layoutUpgradeBtn.btnUpgrade.visibility =
             if (environment.config.isIAPEnabled) View.VISIBLE else View.GONE
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            enableUpgradeButton(false)
             purchaseProduct("org.edx.mobile.test_product")
             environment.analyticsRegistry.trackUpgradeNowClicked(courseId, price, null, isSelfPaced)
         }
         billingProcessor =
             BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
+                override fun onPurchaseCancel() {
+                    enableUpgradeButton(true)
+                }
+
                 override fun onPurchaseComplete(purchase: Purchase) {
-                    // Nothing do here
+                    enableUpgradeButton(true)
                 }
             })
     }
+
+    private fun enableUpgradeButton(enable: Boolean) {
+        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (enable) View.VISIBLE else View.GONE
+        binding.layoutUpgradeBtn.loadingIndicator.visibility =
+            if (!enable) View.VISIBLE else View.GONE
+    }
+
 
     private fun purchaseProduct(productId: String) {
         activity?.let { billingProcessor.purchaseItem(it, productId) }

@@ -599,4 +599,11 @@
         <item name="background">@color/neutralXLight</item>
     </style>
 
+    <style name="Update.Now.Progress" parent="AppTheme">
+        <item name="android:indeterminate">true</item>
+        <item name="indicatorColor">@color/white</item>
+        <item name="indicatorSize">@dimen/upgrade_now_progress_indicator_size</item>
+        <item name="trackThickness">@dimen/upgrade_now_progress_indicator_thickness</item>
+    </style>
+
 </resources>

@@ -63,6 +63,7 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
                 });
 
                 binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener(v -> {
+                    enableUpgradeButton(false);
                     purchaseProduct("org.edx.mobile.test_product");
                     environment.getAnalyticsRegistry().trackUpgradeNowClicked(unit.getCourseId(),
                             price, unit.getId(), isSelfPaced);
@@ -91,6 +92,11 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
         });
         billingProcessor = new BillingProcessor(requireContext(), new BillingProcessor.BillingFlowListeners() {
             @Override
+            public void onPurchaseCancel() {
+                enableUpgradeButton(true);
+            }
+
+            @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 // Nothing do here
             }
@@ -102,9 +108,14 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
 
             @Override
             public void onPurchaseComplete(@NonNull Purchase purchase) {
-                // Nothing do here
+                enableUpgradeButton(true);
             }
         });
+    }
+
+    private void enableUpgradeButton(boolean enable) {
+        binding.layoutUpgradeBtn.btnUpgrade.setVisibility(enable ? View.VISIBLE : View.GONE);
+        binding.layoutUpgradeBtn.loadingIndicator.setVisibility(!enable ? View.VISIBLE : View.GONE);
     }
 
     private void purchaseProduct(String productId) {
