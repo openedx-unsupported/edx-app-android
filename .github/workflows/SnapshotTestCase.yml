@@ -2,6 +2,7 @@ name: Android CI
 on: [push]
 
 jobs:
+
   test:
     runs-on: macos-latest
     steps:
@@ -14,8 +15,17 @@ jobs:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '8'
 
+#      - name: Change wrapper permissions
+#        run: chmod +x ./gradlew
+
+#      - name: config emulator
+#      - run: cd ../../ && make emulator
+
+#      - run: echo "Creating and initializing an Android emulator for testing the app"
+
+
       # Execute unit tests
       - name: Unit Test
-        run: ./gradlew jacocoTestProdDebugUnitTestReport
+        run: cd ../../ && make test
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
