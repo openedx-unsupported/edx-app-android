@@ -27,7 +27,6 @@ jobs:
       - name: Linter
         run: ./gradlew lintProdDebug
 
-      - name: Artifact
       - run: ./gradlew copyLintBuildArtifacts
       - run: ./gradlew copyUnitTestBuildArtifacts
       - run: ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
