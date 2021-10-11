@@ -1,36 +1,63 @@
 name: Android CI
 on: [push]
 
+env:
+  SAMPLE_PATH: EdX
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
-  test:
-    runs-on: macos-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: set up JDK
+      - name: Copy C! gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: set up JDK 8
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt' # See 'Supported distributions' for available options
+          distribution: 'adopt'
           java-version: '8'
 
-      - name: config emulator
-        run: $HOME/Library/Android/sdk/tools/bin/avdmanager create avd -n test -k "system-images;android-30;google_apis_playstore;x86" --device "Nexus 4"
+      - name: Build Project
+        working-directory: ${{ env.SAMPLE_PATH }}
+        run: .gradlew assembledebug
 
-      - name: Creat APK
-        run: ./gradlew assembleDebug
+      - name: Upload build ouputs (APKS)
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-outputs
+          path: ${{ env.SAMPLE_PATH }}/app/build/outputs
 
-      - name: Unit Test
-        run: ./gradlew jacocoTestProdDebugUnitTestReport
+  test:
+    needs: build
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        api-level: [24, 27, 30]
 
-      - name: Linter
-        run: ./gradlew lintProdDebug
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - run: ./gradlew copyLintBuildArtifacts
-      - run: ./gradlew copyUnitTestBuildArtifacts
-      - run: ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '8'
 
-
+      - name: Run tests
+        uses: actions/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86
+          disable-animations: true
+          script: ./gradlew jacocoTestProdDebugUnitTestReport
+          working-directory: ${{ env.SAMPLE_PATH }}
