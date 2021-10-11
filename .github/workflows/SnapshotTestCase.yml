@@ -28,10 +28,9 @@ jobs:
         run: ./gradlew lintProdDebug
 
       - name: Artifact
-        run:
-          - ./gradlew copyLintBuildArtifacts
-          - ./gradlew copyUnitTestBuildArtifacts
-          - ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
+      - run: ./gradlew copyLintBuildArtifacts
+      - run: ./gradlew copyUnitTestBuildArtifacts
+      - run: ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
