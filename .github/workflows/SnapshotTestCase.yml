@@ -15,17 +15,24 @@ jobs:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '8'
 
-#      - name: Change wrapper permissions
-#        run: chmod +x ./gradlew
+      - name: config emulator
+        run: $HOME/Library/Android/sdk/tools/bin/avdmanager create avd -n test -k "system-images;android-30;google_apis_playstore;x86" --device "Nexus 4"
 
-#      - name: config emulator
-#      - run: cd ../../ && make emulator
+      - name: Creat APK
+        run: ./gradlew assembleDebug
 
-#      - run: echo "Creating and initializing an Android emulator for testing the app"
-
-
-      # Execute unit tests
       - name: Unit Test
-        run: cd ../../ && make test
+        run: ./gradlew jacocoTestProdDebugUnitTestReport
+
+      - name: Linter
+        run: ./gradlew lintProdDebug
+
+      - name: Artifact
+        run:
+          - ./gradlew copyLintBuildArtifacts
+          - ./gradlew copyUnitTestBuildArtifacts
+          - ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+
