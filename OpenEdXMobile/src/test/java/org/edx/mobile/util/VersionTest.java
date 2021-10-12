@@ -114,7 +114,7 @@ public class VersionTest {
      */
     @Test
     public void testCompareTo_withEarlierVersion_isGreaterThan() throws ParseException {
-        assertThat(new Version("2.0.0")).isGreaterThan(new Version("3.0.0"));
+        assertThat(new Version("2.0.0")).isGreaterThan(new Version("1.0.0"));
     }
 
     /**
