@@ -53,7 +53,7 @@ jobs:
           java-version: '8'
 
       - name: Run tests
-        uses: actions/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86
