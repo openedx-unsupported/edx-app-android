@@ -23,14 +23,13 @@ jobs:
           java-version: '8'
 
       - name: Build Project
-        working-directory: ${{ env.SAMPLE_PATH }}
         run: ./gradlew assembleDebug
 
       - name: Upload build ouputs (APKS)
         uses: actions/upload-artifact@v2
         with:
           name: build-outputs
-          path: ${{ env.SAMPLE_PATH }}/app/build/outputs
+          path: app/build/outputs
 
   test:
     needs: build
@@ -44,8 +43,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-#      - name: Copy CI gradle.properties
-#        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: set up JDK 8
         uses: actions/setup-java@v2
@@ -60,5 +59,3 @@ jobs:
           arch: x86
           disable-animations: true
           script: ./gradlew jacocoTestProdDebugUnitTestReport
-          working-directory: ${{ env.SAMPLE_PATH }}
-
