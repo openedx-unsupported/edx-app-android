@@ -61,3 +61,4 @@ jobs:
           disable-animations: true
           script: ./gradlew jacocoTestProdDebugUnitTestReport
           working-directory: ${{ env.SAMPLE_PATH }}
+
