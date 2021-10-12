@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Project
         working-directory: ${{ env.SAMPLE_PATH }}
-        run: .gradlew assembledebug
+        run: ./gradlew assembledebug
 
       - name: Upload build ouputs (APKS)
         uses: actions/upload-artifact@v2
