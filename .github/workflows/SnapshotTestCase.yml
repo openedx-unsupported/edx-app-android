@@ -1,8 +1,5 @@
 name: Android CI
-on: [push]
-
-env:
-  SAMPLE_PATH: EdX
+on: [ push ]
 
 jobs:
   build:
@@ -10,13 +7,16 @@ jobs:
     timeout-minutes: 30
 
     steps:
+#      - name: Nuke CMake 3.18.1-g262b901
+#        run: ~/Library/Android/sdk/tools/bin/sdkmanager --uninstall 'cmake;3.18.1'
+
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Copy C! gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: set up JDK 8
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
@@ -25,11 +25,11 @@ jobs:
       - name: Build Project
         run: ./gradlew assembleDebug
 
-      - name: Upload build ouputs (APKS)
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-outputs
-          path: OpenEdXMobile/build/outputs
+#      - name: Upload build ouputs (APKS)
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: build-outputs
+#          path: OpenEdXMobile/build/outputs/apk/
 
   test:
     needs: build
@@ -37,9 +37,12 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        api-level: [24, 27, 30]
+        api-level: [ 24, 27, 30 ]
 
     steps:
+#      - name: Nuke CMake 3.18.1-g262b901
+#        run: ~/Library/Android/sdk/tools/bin/sdkmanager --uninstall 'cmake;3.18.1'
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -57,5 +60,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86
+          emulator-options: -no-window -noaudio
           disable-animations: true
+          target: google_apis
           script: ./gradlew jacocoTestProdDebugUnitTestReport
