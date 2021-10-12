@@ -55,7 +55,6 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86
-          emulator-options: -no-window -noaudio
           disable-animations: true
           target: google_apis
           ndk: 21.4.7075529
