@@ -49,7 +49,7 @@ emulator :
 # flag prints too many logs that are mostly not needed, which make it exceed
 # the 4mb limit enforced by travis (so use it with caution)
 quality:
-	 @./gradlewassembleDebug
+	@./gradlew assembleDebug
 
 test:
 	@./gradlew jacocoTestProdDebugUnitTestReport
