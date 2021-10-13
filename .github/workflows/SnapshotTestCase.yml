@@ -69,6 +69,7 @@ jobs:
           disable-animations: true
           target: google_apis
           ndk: 21.4.7075529
+          profile: Nexus 4
           script: |
             ./gradlew jacocoTestProdDebugUnitTestReport
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
