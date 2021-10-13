@@ -59,7 +59,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install --user codecov
-          pip install --user pillow
+          pip install --user Pillow==6.2.2
 
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2
