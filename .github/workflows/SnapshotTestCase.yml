@@ -58,20 +58,24 @@ jobs:
           disable-animations: true
           target: google_apis
           ndk: 21.4.7075529
-#          script: ./gradlew jacocoTestProdDebugUnitTestReport
-          script: ./gradlew connectedCheck
+          script: |
+            ./gradlew jacocoTestProdDebugUnitTestReport
+            ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
+            ./gradlew copyLintBuildArtifacts
+            ./gradlew copyUnitTestBuildArtifacts
+            ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - name: Generate Report
         uses: actions/upload-artifact@v2
         with:
           name: report
-          path: OpenEdXMobile/build/reports/coverage/debug
+          path: artifacts
 
-      - name: Download Test Reports Folder
-        uses: actions/download-artifact@v2
-        with:
-          name: report
-          path: OpenEdXMobile/build/reports/coverage/debug
+#      - name: Download Test Reports Folder
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: report
+#          path: OpenEdXMobile/build/reports/coverage/debug
 
-      - name: Upload Test Report
-        run: bash <(curl -s https://codecov.io/bash) -f "OpenEdXMobile/build/reports/coverage/debug/report.xml"
+#      - name: Upload Test Report
+#        run: bash <(curl -s https://codecov.io/bash) -f "OpenEdXMobile/build/reports/coverage/debug/report.xml"
