@@ -19,8 +19,8 @@ jobs:
           distribution: 'adopt'
           java-version: '8'
 
-      - name: Build Project
-        run: ./gradlew assembleDebug
+#      - name: Build Project
+#        run: ./gradlew assembleDebug
 
 #      - name: Upload build ouputs (APKS)
 #        uses: actions/upload-artifact@v2
@@ -34,7 +34,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        api-level: [ 24, 27, 30 ]
+        api-level: [ 30 ]
       fail-fast: false
 
     steps:
@@ -58,4 +58,20 @@ jobs:
           disable-animations: true
           target: google_apis
           ndk: 21.4.7075529
-          script: ./gradlew jacocoTestProdDebugUnitTestReport
+#          script: ./gradlew jacocoTestProdDebugUnitTestReport
+          script: ./gradlew connectedCheck
+
+      - name: Generate Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: report
+          path: OpenEdXMobile/build/reports/coverage/debug
+
+      - name: Download Test Reports Folder
+        uses: actions/download-artifact@v2
+        with:
+          name: report
+          path: OpenEdXMobile/build/reports/coverage/debug
+
+      - name: Upload Test Report
+        run: bash <(curl -s https://codecov.io/bash) -f "OpenEdXMobile/build/reports/coverage/debug/report.xml"
