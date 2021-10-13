@@ -78,7 +78,7 @@ jobs:
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - name: Upload Reports
-        if: ${{ failed() }}
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: SS Reports
