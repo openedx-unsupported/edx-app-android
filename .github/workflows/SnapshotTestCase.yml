@@ -34,7 +34,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        api-level: [ 30 ]
+        api-level: [ 24, 27, 30 ]
       fail-fast: false
 
     steps:
@@ -53,7 +53,7 @@ jobs:
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
+          api-level: 28
           arch: x86
           disable-animations: true
           target: google_apis
