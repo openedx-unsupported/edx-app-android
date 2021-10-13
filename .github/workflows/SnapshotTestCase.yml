@@ -90,7 +90,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
+          script: avdmanager list
 
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2
@@ -105,6 +105,7 @@ jobs:
           script: ./gradlew jacocoTestProdDebugUnitTestReport
 
       - name: Run E2E
+        if: ${{ always }}
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 28
@@ -117,6 +118,7 @@ jobs:
           script: ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
 
       - name: Run Artifacts
+        if: ${{ always }}
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 28
@@ -139,6 +141,7 @@ jobs:
           path: OpenEdXMobile/build/screenshotsProdDebuggableAndroidTest
 
       - name: Generate Report
+        if: ${{ always }}
         uses: actions/upload-artifact@v2
         with:
           name: report
