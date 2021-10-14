@@ -110,7 +110,7 @@ jobs:
         with:
           api-level: 28
           arch: x86
-         disable-animations: true
+          disable-animations: true
           target: google_apis
           profile: Nexus 4
           force-avd-creation: false
