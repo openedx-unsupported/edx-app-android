@@ -136,10 +136,11 @@ jobs:
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
 
       - name: Upload Reports
-        if: ${{ failure() }}
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: SS Reports
+          script: ./gradlew pullProdDebuggableAndroidTestScreenshots
           path: OpenEdXMobile/build/screenshotsProdDebuggableAndroidTest
 
       - name: Generate Report
