@@ -153,5 +153,5 @@ jobs:
 #          name: report
 #          path: OpenEdXMobile/build/reports/coverage/debug
 
-#      - name: Upload Test Report
-#        run: bash <(curl -s https://codecov.io/bash) -f "OpenEdXMobile/build/reports/coverage/debug/report.xml"
+      - name: Upload Test Report
+        run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
