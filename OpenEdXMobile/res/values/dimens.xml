@@ -324,5 +324,8 @@
 
     <!-- Upgrade Now -->
     <dimen name="upgrade_now_button_padding">4dp</dimen>
+    <dimen name="upgrade_now_progress_indicator_size">28dp</dimen>
+    <dimen name="upgrade_now_progress_indicator_thickness">3dp</dimen>
+    <dimen name="upgrade_now_button_height">44dp</dimen>
 
 </resources>

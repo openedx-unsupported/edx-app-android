@@ -22,7 +22,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     private var price: String = ""
     private var isSelfPaced: Boolean = false
 
-    private lateinit var billingProcessor: BillingProcessor
+    private var billingProcessor: BillingProcessor? = null
 
     @Inject
     private lateinit var environment: IEdxEnvironment
@@ -54,22 +54,42 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
-        binding.layoutUpgradeBtn.btnUpgrade.visibility =
-            if (environment.config.isIAPEnabled) View.VISIBLE else View.GONE
-        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-            purchaseProduct("org.edx.mobile.test_product")
-            environment.analyticsRegistry.trackUpgradeNowClicked(courseId, price, null, isSelfPaced)
+
+        if (environment.config.isIAPEnabled) {
+            binding.layoutUpgradeBtn.root.visibility = View.VISIBLE
+            binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+                enableUpgradeButton(false)
+                purchaseProduct("org.edx.mobile.test_product")
+                environment.analyticsRegistry.trackUpgradeNowClicked(
+                    courseId,
+                    price,
+                    null,
+                    isSelfPaced
+                )
+            }
+            billingProcessor =
+                BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
+                    override fun onPurchaseCancel() {
+                        enableUpgradeButton(true)
+                    }
+
+                    override fun onPurchaseComplete(purchase: Purchase) {
+                        enableUpgradeButton(true)
+                    }
+                })
+        } else {
+            binding.layoutUpgradeBtn.root.visibility = View.GONE
         }
-        billingProcessor =
-            BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
-                override fun onPurchaseComplete(purchase: Purchase) {
-                    // Nothing do here
-                }
-            })
+    }
+
+    private fun enableUpgradeButton(enable: Boolean) {
+        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (enable) View.VISIBLE else View.GONE
+        binding.layoutUpgradeBtn.loadingIndicator.visibility =
+            if (!enable) View.VISIBLE else View.GONE
     }
 
     private fun purchaseProduct(productId: String) {
-        activity?.let { billingProcessor.purchaseItem(it, productId) }
+        activity?.let { billingProcessor?.purchaseItem(it, productId) }
     }
 
     companion object {
@@ -97,6 +117,6 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        billingProcessor.disconnect()
+        billingProcessor?.disconnect()
     }
 }
