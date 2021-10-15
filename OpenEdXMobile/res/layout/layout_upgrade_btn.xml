@@ -24,7 +24,7 @@
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loading_indicator"
-            style="@style/Update.Now.Progress"
+            style="@style/UpdateNowProgress"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
