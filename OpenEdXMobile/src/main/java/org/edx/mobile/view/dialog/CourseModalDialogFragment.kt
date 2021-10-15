@@ -22,7 +22,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     private var price: String = ""
     private var isSelfPaced: Boolean = false
 
-    private lateinit var billingProcessor: BillingProcessor
+    private var billingProcessor: BillingProcessor? = null
 
     @Inject
     private lateinit var environment: IEdxEnvironment
@@ -89,7 +89,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     }
 
     private fun purchaseProduct(productId: String) {
-        activity?.let { billingProcessor.purchaseItem(it, productId) }
+        activity?.let { billingProcessor?.purchaseItem(it, productId) }
     }
 
     companion object {
@@ -117,6 +117,6 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        billingProcessor.disconnect()
+        billingProcessor?.disconnect()
     }
 }

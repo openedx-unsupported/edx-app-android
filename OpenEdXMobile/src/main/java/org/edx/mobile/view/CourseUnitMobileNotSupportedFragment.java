@@ -141,6 +141,8 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        billingProcessor.disconnect();
+        if (billingProcessor != null) {
+            billingProcessor.disconnect();
+        }
     }
 }
