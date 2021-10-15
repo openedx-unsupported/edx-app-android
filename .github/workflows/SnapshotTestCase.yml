@@ -79,7 +79,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 28
-          arch: x86_64
+          arch: x86
           target: google_apis
           profile: Nexus 4
           force-avd-creation: false
@@ -90,7 +90,7 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 28
-          arch: x86_64
+          arch: x86
           disable-animations: true
           target: google_apis
           profile: Nexus 4
@@ -105,7 +105,7 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 28
-          arch: x86_64
+          arch: x86
           disable-animations: true
           target: google_apis
           profile: Nexus 4
@@ -118,7 +118,7 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 28
-          arch: x86_64
+          arch: x86
           disable-animations: true
           target: google_apis
           profile: Nexus 4
