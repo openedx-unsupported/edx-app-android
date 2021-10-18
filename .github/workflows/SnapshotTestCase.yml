@@ -74,6 +74,15 @@ jobs:
 #          disable-animations: false
 #          script: echo "Done"
 
+      - name: Run tests
+        run: |
+          if ./gradlew jacocoTestProdDebugUnitTestReport; then
+          echo "Gradle task succeeded" >&2
+          else
+          echo "Gradle task failed" >&2
+          fi
+        shell: bash
+
 #      - name: Run tests
 #        uses: ReactiveCircus/android-emulator-runner@v2
 #        with:
