@@ -74,19 +74,19 @@ jobs:
 #          disable-animations: false
 #          script: echo "Done"
 
-      - name: Run tests
-        uses: ReactiveCircus/android-emulator-runner@v2
-        with:
-          api-level: 28
-          arch: x86
-          disable-animations: true
-          target: google_apis
-          profile: Nexus 4
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save
-          script: |
-            chmod +x gradlew
-            ./gradlew jacocoTestProdDebugUnitTestReport
+#      - name: Run tests
+#        uses: ReactiveCircus/android-emulator-runner@v2
+#        with:
+#          api-level: 28
+#          arch: x86
+#          disable-animations: true
+#          target: google_apis
+#          profile: Nexus 4
+#          force-avd-creation: false
+#          emulator-options: -no-snapshot-save
+#          script: |
+#            chmod +x gradlew
+#            ./gradlew jacocoTestProdDebugUnitTestReport
 
 #      - name: Run E2E
 #        if: always()
