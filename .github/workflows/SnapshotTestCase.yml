@@ -86,13 +86,14 @@ jobs:
           emulator-options: -no-snapshot-save
           script: |
             chmod +x gradlew
-            if ./gradlew jacocoTestProdDebugUnitTestReport; then
-              echo "Gradle task succeeded" >&2
+            ./gradlew jacocoTestProdDebugUnitTestReport
+            if [[ $? -eq 0 ]]; then
+                echo "Tests passed. Do something."
             else
-              echo "Gradle task failed" >&2
+                echo "Tests didn't pass. Do something."
             fi
 
-      #      - name: Run E2E
+#      - name: Run E2E
 #        if: always()
 #        uses: ReactiveCircus/android-emulator-runner@v2
 #        with:
