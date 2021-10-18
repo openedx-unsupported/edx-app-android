@@ -15,8 +15,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestName
 
-class AccountActivityScreenshotTests {
-
+//class AccountActivityScreenshotTests1223 {
+/*
     @get:Rule
     var mActivityRule = ActivityTestRule(AccountActivity::class.java, true, false)
     @get:Rule
@@ -43,5 +43,5 @@ class AccountActivityScreenshotTests {
     @After
     fun after() {
         loginPrefs?.clear()
-    }
-}
+    }*/
+//}
