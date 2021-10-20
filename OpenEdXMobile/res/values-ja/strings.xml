@@ -521,8 +521,6 @@
   <string name="profile_sharing_limited_by_other_user">現在、限定プロフィールを公開しています</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">全プロフィールを公開するには13歳以上でなければなりません。</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">アカウント設定</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">プロフィールが出来ていないようです。作成しましょう。</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

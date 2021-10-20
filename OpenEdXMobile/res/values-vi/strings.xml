@@ -586,8 +586,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="profile_sharing_limited_by_other_user">Người dùng này đang chia sẻ hồ sơ cá nhân giới hạn</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">Bạn phải trên 13 tuổi để chia sẻ toàn bộ hồ sơ cá nhân.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">Cài đặt tài khoản</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">Hồ sơ của bạn chưa hoàn chỉnh. Hãy bắt đầu bổ sung.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

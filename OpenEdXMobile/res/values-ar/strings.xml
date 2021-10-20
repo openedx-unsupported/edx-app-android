@@ -623,8 +623,6 @@
   <string name="profile_sharing_limited_by_other_user">هذا الشخص حاليًا يشارك جزء محدود من معلومات صفحته الشخصية.</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">يجب أن يتجاوز عمرك 13 عامًا لتتمكّن من مشاركة صفحتك الشخصية بالكامل.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">إعدادات الحساب</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">يبدو أن ملفك الشخصي غير مكتمل. دعنا نساعدك لتبدأ.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

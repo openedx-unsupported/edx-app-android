@@ -598,8 +598,6 @@ Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <string name="profile_sharing_limited_by_other_user">Der Nutzer teilt derzeit nur ein limitiertes Profil.</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">Sie müssen älter als 13 Jahre sein, um alle persönlichen Informationen teilen zu können.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">Kontoeinstellungen</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">Vervollständigen Sie Ihr Profil.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

@@ -610,8 +610,6 @@
   <string name="profile_sharing_limited_by_other_user">Bu kullanıcı şu an kısıtlı profil paylaşıyor</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">Tüm profilinizi paylaşmak için 13 yaşın üstünde olmalısınız.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">Profili Düzenle</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">Profiliniz henüz tamamlanmadı gibi görünüyor. Haydi, doldurmaya başlayalım.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

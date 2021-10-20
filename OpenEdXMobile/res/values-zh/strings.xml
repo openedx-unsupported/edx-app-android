@@ -586,8 +586,6 @@
   <string name="profile_sharing_limited_by_other_user">此人当前仅分享部分资料</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">您必须年满13岁才能分享完整的用户资料。</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">账号设置</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">您的资料似乎不完整。我们来帮助您完善资料。</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

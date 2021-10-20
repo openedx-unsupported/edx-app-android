@@ -55,7 +55,6 @@ public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPres
                 presenter.onEditProfile();
             }
         };
-        viewHolder.parentalConsentEditProfileButton.setOnClickListener(listener);
         viewHolder.incompleteEditProfileButton.setOnClickListener(listener);
 
         return new UserProfileBioPresenter.ViewInterface() {
@@ -63,7 +62,6 @@ public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPres
             @Override
             public void showBio(UserProfileBioModel bio) {
                 viewHolder.profileBioContent.setVisibility(View.VISIBLE);
-                viewHolder.parentalConsentRequired.setVisibility(bio.contentType == UserProfileBioModel.ContentType.PARENTAL_CONSENT_REQUIRED ? View.VISIBLE : View.GONE);
                 viewHolder.incompleteContainer.setVisibility(bio.contentType == UserProfileBioModel.ContentType.INCOMPLETE ? View.VISIBLE : View.GONE);
                 viewHolder.noAboutMe.setVisibility(bio.contentType == UserProfileBioModel.ContentType.NO_ABOUT_ME ? View.VISIBLE : View.GONE);
                 viewHolder.bioText.setVisibility(bio.contentType == UserProfileBioModel.ContentType.ABOUT_ME ? View.VISIBLE : View.GONE);

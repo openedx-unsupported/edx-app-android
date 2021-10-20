@@ -5,18 +5,18 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:background="@color/neutralWhite">
+        android:background="@color/neutralWhite"
+        android:fillViewport="true">
 
         <FrameLayout
             android:id="@+id/profile_bio_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:paddingBottom="@dimen/edx_margin"
             android:paddingStart="@dimen/edx_double_margin"
-            android:paddingEnd="@dimen/edx_double_margin"
             android:paddingTop="@dimen/edx_margin"
+            android:paddingEnd="@dimen/edx_double_margin"
+            android:paddingBottom="@dimen/edx_margin"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -27,28 +27,6 @@
                 android:textColor="@color/primaryBaseColor"
                 android:textSize="@dimen/edx_base"
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
-
-            <LinearLayout
-                android:id="@+id/parental_consent_required"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/content_unavailable_error_text"
-                    android:text="@string/profile_consent_needed_explanation"
-                    android:visibility="visible" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/parental_consent_edit_profile_button"
-                    style="@style/edX.Widget.ActionBorderedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/edx_margin"
-                    android:text="@string/profile_consent_needed_edit_button" />
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/incomplete_container"
