@@ -65,7 +65,7 @@ public class UserAPI {
         protected void onResponse(@NonNull final Account account) {
             // Store the logged in user Info for Profile Screen
             loginPrefs.setUserInfo(username, account.getEmail(), account.getProfileImage(),
-                    account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE);
+                    !account.requiresParentalConsent() && account.getAccountPrivacy() == Account.Privacy.PRIVATE);
             EventBus.getDefault().post(new AccountDataLoadedEvent(account));
         }
     }
