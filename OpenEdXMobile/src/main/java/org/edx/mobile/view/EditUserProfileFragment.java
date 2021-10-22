@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import static org.edx.mobile.user.FieldType.SWITCH;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -238,6 +241,8 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         public final TextView username;
         public final ViewGroup fields;
         public final TextView changePhoto;
+        public final TextView tvProfileVisibilityOff;
+        public final LinearLayout llProfileVisibilityOff;
         public final AppCompatImageView profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
@@ -246,6 +251,8 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             this.profileImage = parent.findViewById(R.id.profile_image);
             this.username = parent.findViewById(R.id.username);
             this.fields = parent.findViewById(R.id.fields);
+            this.tvProfileVisibilityOff = parent.findViewById(R.id.tv_profile_visibility_off);
+            this.llProfileVisibilityOff = parent.findViewById(R.id.ll_profile_visibility_off);
             this.changePhoto = parent.findViewById(R.id.change_photo);
             this.profileImageProgress = parent.findViewById(R.id.profile_image_progress);
         }
@@ -262,7 +269,11 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         } else {
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
-            viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
+            if (account.requiresParentalConsent()) {
+                viewHolder.changePhoto.setVisibility(View.GONE);
+            } else {
+                viewHolder.changePhoto.setVisibility(View.VISIBLE);
+            }
             viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.primaryBaseColor : R.color.primaryXLightColor);
 
             if (account.getProfileImage().hasImage()) {
@@ -283,8 +294,10 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             final LayoutInflater layoutInflater = LayoutInflater.from(viewHolder.fields.getContext());
             viewHolder.fields.removeAllViews();
             for (final FormField field : formDescription.getFields()) {
-                if (null == field.getFieldType()) {
-                    // Missing field type; ignore this field
+                if (null == field.getFieldType() ||
+                        (account.requiresParentalConsent() && field.getFieldType() == SWITCH)) {
+                    // ignore this field if Missing field type OR user didn't set YOB or is less than 13
+
                     continue;
                 }
                 switch (field.getFieldType()) {
@@ -373,6 +386,17 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                         break;
                     }
                 }
+            }
+            if (account.requiresParentalConsent()) {
+                viewHolder.llProfileVisibilityOff.setVisibility(View.VISIBLE);
+                String profileVisibilityMessage = ResourceUtil.getFormattedString(
+                        getResources(),
+                        R.string.profile_visibility_off_message,
+                        "platform_name",
+                        getString(R.string.platform_name)).toString();
+                viewHolder.tvProfileVisibilityOff.setText(profileVisibilityMessage);
+            } else {
+                viewHolder.llProfileVisibilityOff.setVisibility(View.GONE);
             }
         }
     }
