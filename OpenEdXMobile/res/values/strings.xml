@@ -833,8 +833,6 @@
     <string name="profile_sharing_limited_by_other_user">This person is currently sharing a limited profile</string>
     <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
     <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile.</string>
-    <!-- Shown as button below the explanation for age of consent; it launches the edit profile screen -->
-    <string name="profile_consent_needed_edit_button">Account Settings</string>
     <!-- Shown when viewing your own incomplete profile -->
     <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet. Let’s get you started.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->

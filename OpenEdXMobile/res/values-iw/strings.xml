@@ -602,8 +602,6 @@
   <string name="profile_sharing_limited_by_other_user">אדם זה משתף כעת פרופיל מוגבל.</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">עליכם להיות בני 13 או יותר כדי לשתף פרופיל מלא.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">הגדרות חשבון</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">נראה שהפרופיל שלכם טרם הושלם. בואו נתחיל.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

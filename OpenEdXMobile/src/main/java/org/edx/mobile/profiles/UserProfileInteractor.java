@@ -1,8 +1,9 @@
 package org.edx.mobile.profiles;
 
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
@@ -100,8 +101,13 @@ public class UserProfileInteractor implements RefreshListener {
             final UserProfileViewModel.LimitedProfileMessage limitedProfileMessage;
             String languageName = null;
             String countryName = null;
-            if (accountResponse.requiresParentalConsent() || accountResponse.getAccountPrivacy() == Account.Privacy.PRIVATE) {
-                limitedProfileMessage = viewingOwnProfile ? UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE : UserProfileViewModel.LimitedProfileMessage.OTHER_USERS_PROFILE;
+            // If the user doesn't have YOB or is less than 13
+            if (accountResponse.requiresParentalConsent()) {
+                limitedProfileMessage = UserProfileViewModel.LimitedProfileMessage.NONE;
+            } else if (accountResponse.getAccountPrivacy() == Account.Privacy.PRIVATE) {
+                limitedProfileMessage = viewingOwnProfile
+                        ? UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE
+                        : UserProfileViewModel.LimitedProfileMessage.NONE;
             } else {
                 limitedProfileMessage = UserProfileViewModel.LimitedProfileMessage.NONE;
                 if (!accountResponse.getLanguageProficiencies().isEmpty()) {

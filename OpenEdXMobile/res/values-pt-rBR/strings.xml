@@ -591,8 +591,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="profile_sharing_limited_by_other_user">No momento, esta pessoa está compartilhando um perfil limitado</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">Você deve ser maior de 13 anos para compartilhar um perfil completo.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">Configurações de conta</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">Parece que seu perfil ainda não está completo. Vamos começar. </string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

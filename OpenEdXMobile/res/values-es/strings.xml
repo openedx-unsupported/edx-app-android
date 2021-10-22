@@ -721,8 +721,6 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <string name="profile_sharing_limited_by_other_user">Este usuario está compartiendo un perfil limitado</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">Debe tener más de 13 años para compartir el perfil completo.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">Configuración de cuenta</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">Parece que su perfil aún no está completo. Comencemos.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->
