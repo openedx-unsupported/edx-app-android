@@ -15,19 +15,6 @@
               "accessibility_hint" : "他の人に公開する情報を変更"
     },
     {
-              "name" : "year_of_birth",
-              "label" : "誕生年",
-              "type" : "select",
-              "options" : {
-                "range_min" : 1896,
-                "range_max" : 2020,
-                "allows_none" : true,
-                "none_label" : "誕生年なし"
-              },
-              "instructions" : "全プロフィールを公開する場合は誕生年を入力しなければなりません。",
-              "sub_instructions" : "これは公開されません。"
-    },
-    {
               "name" : "country",
               "label" : "現在地",
               "type" : "select",

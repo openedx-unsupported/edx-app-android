@@ -15,19 +15,6 @@
               "accessibility_hint" : "Altere que informação é compartilhada com outros."
     },
     {
-              "name" : "year_of_birth",
-              "label" : "Ano de nascimento",
-              "type" : "select",
-              "options" : {
-                "range_min" : 1896,
-                "range_max" : 2020,
-                "allows_none" : true,
-                "none_label" : "Sem ano de nascimento"
-              },
-              "instructions" : "Você deve especificar seu ano de nascimento antes que você possa compartilhar seu perfil completo.",
-              "sub_instructions" : "Esta informação não será exibida publicamente"
-    },
-    {
               "name" : "country",
               "label" : "Localização",
               "type" : "select",
