@@ -1,7 +1,5 @@
 package org.edx.mobile.view;
 
-import static org.edx.mobile.user.FieldType.SWITCH;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -45,6 +43,7 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.DeleteAccountImageTask;
+import org.edx.mobile.user.FieldType;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
@@ -295,9 +294,8 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             viewHolder.fields.removeAllViews();
             for (final FormField field : formDescription.getFields()) {
                 if (null == field.getFieldType() ||
-                        (account.requiresParentalConsent() && field.getFieldType() == SWITCH)) {
+                        (account.requiresParentalConsent() && field.getFieldType() == FieldType.SWITCH)) {
                     // ignore this field if Missing field type OR user didn't set YOB or is less than 13
-
                     continue;
                 }
                 switch (field.getFieldType()) {
