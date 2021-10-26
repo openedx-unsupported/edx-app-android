@@ -86,6 +86,33 @@
                 app:divider="@drawable/edx_divider"
                 app:showDividers="middle|end" />
 
+            <LinearLayout
+                android:id="@+id/ll_profile_visibility_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edx_double_margin"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/edx_default_margin"
+                android:paddingEnd="@dimen/edx_default_margin">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/edx_half_margin"
+                    android:src="@drawable/ic_visibility_off"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tv_profile_visibility_off"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="?attr/fontRegular"
+                    android:textColor="@color/neutralXDark"
+                    android:textSize="@dimen/edx_x_small"
+                    tools:text="@string/profile_visibility_off_message" />
+
+            </LinearLayout>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <include layout="@layout/loading_indicator" />

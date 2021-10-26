@@ -65,6 +65,8 @@
     <string name="settings_wifi_top">Wifi only download</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Only download content when wi-fi is turned on</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">Your profile information is only visible to you. Only your username is visible to others on {platform_name}.</string>
 
     <!-- Label for the Download to sd-card setting -->
     <string name="settings_download_to_sdcard_title">Download Videos to SD Card</string>
