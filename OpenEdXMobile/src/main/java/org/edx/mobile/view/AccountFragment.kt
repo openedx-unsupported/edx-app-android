@@ -159,6 +159,10 @@ class AccountFragment : BaseFragment() {
 
             if (!config?.faqUrl.isNullOrBlank()) {
                 binding.containerFaq.visibility = View.VISIBLE
+                binding.tvGetSupportDescription.text = ResourceUtil.getFormattedString(
+                    resources, R.string.description_get_support,
+                    AppConstants.PLATFORM_NAME, config?.platformName
+                ).toString()
                 binding.btnFaq.setOnClickListener {
                     BrowserUtil.open(requireActivity(), environment?.config?.faqUrl, false)
                     trackEvent(Analytics.Events.FAQ_CLICKED, Analytics.Values.FAQ_CLICKED)

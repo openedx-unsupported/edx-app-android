@@ -145,7 +145,8 @@ object CalendarUtils {
         calendarId: Long,
         courseId: String,
         courseName: String,
-        courseDateBlock: CourseDateBlock
+        courseDateBlock: CourseDateBlock,
+        isDeeplinkEnabled: Boolean
     ) {
         val date = courseDateBlock.getDateCalendar()
         // start time of the event added to the calendar
@@ -180,7 +181,8 @@ object CalendarUtils {
                 getEventDescription(
                     context = context,
                     courseId = courseId,
-                    courseDateBlock = courseDateBlock
+                    courseDateBlock = courseDateBlock,
+                    isDeeplinkEnabled = isDeeplinkEnabled
                 )
             )
             put(CalendarContract.Events.CALENDAR_ID, calendarId)
@@ -196,10 +198,10 @@ object CalendarUtils {
      * @return event description with deeplink for assignment block else block title
      */
     private fun getEventDescription(
-        context: Context, courseId: String, courseDateBlock: CourseDateBlock
+        context: Context, courseId: String, courseDateBlock: CourseDateBlock, isDeeplinkEnabled: Boolean
     ): String {
         var eventDescription = courseDateBlock.title
-        if (!TextUtils.isEmpty(courseDateBlock.blockId)) {
+        if (isDeeplinkEnabled && !TextUtils.isEmpty(courseDateBlock.blockId)) {
             val metaData = ContentMetadata()
                 .addCustomMetadata(DeepLink.Keys.SCREEN_NAME, Screen.COURSE_COMPONENT)
                 .addCustomMetadata(DeepLink.Keys.COURSE_ID, courseId)

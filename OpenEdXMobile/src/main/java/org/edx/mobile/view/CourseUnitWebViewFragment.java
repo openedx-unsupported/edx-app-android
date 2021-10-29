@@ -43,6 +43,7 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.CalendarUtils;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -330,7 +331,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
         if (courseDateViewModel.getCourseDates().getValue() != null) {
             for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
-                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, unit.getCourseId(), courseName, courseDateBlock);
+                ConfigUtil.Companion.checkCalendarSyncEnabled(environment.getConfig(), response ->
+                        CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, unit.getCourseId(),
+                                courseName, courseDateBlock, response.isDeepLinkEnabled()));
             }
             showCalendarUpdatedSnackbar();
             trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);

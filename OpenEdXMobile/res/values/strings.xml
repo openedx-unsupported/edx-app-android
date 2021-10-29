@@ -141,7 +141,7 @@
     <!-- Title of Find Courses tab on Main Dashboard screen -->
     <string name="label_discovery">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
-    <string name="label_submit_feedback">Submit Feedback</string>
+    <string name="label_submit_feedback">Submit feedback</string>
     <!-- Toggle switch on state label -->
     <string name="toggle_turn_on">On</string>
     <!-- Toggle switch off state label -->
@@ -172,13 +172,13 @@
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">Get support</string>
     <!--  Description of Get Support Field  -->
-    <string name="description_get_support">To get more help and learn how to use the edX mobile app, visit our frequently asked questions.</string>
+    <string name="description_get_support">To get more help and learn how to use the {platform_name} mobile app, visit our frequently asked questions.</string>
     <!--  Label of Get Support Button  -->
     <string name="label_view_faq_btn">View FAQ</string>
     <!--  Label of Sign out Button  -->
     <string name="label_sign_out_btn">Sign out</string>
     <!-- Delete my account screen Title -->
-    <string name="title_delete_my_account">Delete my account</string>
+    <string name="title_delete_my_account">Delete your account</string>
     <!--  Label of Delete Account Button  -->
     <string name="label_delete_account_btn">Delete account</string>
     <!--  Description of Delete Account  -->
@@ -296,7 +296,7 @@
     <string name="course_dates_banner_reset_date">It looks like you missed some important deadlines based on our suggested schedule.
         To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
     <!-- Label Course Card Graded Message -->
-    <string name="value_prop_course_card_message">Unlock to access more features</string>
+    <string name="value_prop_course_card_message">Upgrade to access more features</string>
 
 
     <!-- region: Course Date types -->
@@ -325,7 +325,7 @@
     <!-- Title to add calendar for course  -->
     <string name="title_add_course_calendar">Add Calendar \“{course_name}\”</string>
     <!-- Message to add calendar for course  -->
-    <string name="message_add_course_calendar">Would you like to add the edX calendar \“{course_name}\” ? \n\nYou can edit or remove your course calendar any time in Calendar or Settings.</string>
+    <string name="message_add_course_calendar">Would you like to add the {platform_name} calendar \“{course_name}\” ? \n\nYou can edit or remove your course calendar any time in Calendar or Settings.</string>
     <!-- Success Message after calendar for course added first time -->
     <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” has been added to your phone\'s calendar.</string>
     <!-- Success Message after calendar for course added -->
@@ -333,7 +333,7 @@
     <!-- Title to remove calendar for course  -->
     <string name="title_remove_course_calendar">Remove calendar \“{course_name}\”</string>
     <!-- Message to remove calendar for course  -->
-    <string name="message_remove_course_calendar">Would you like to remove the edX calendar \“{course_name}\” ?</string>
+    <string name="message_remove_course_calendar">Would you like to remove the {platform_name} calendar \“{course_name}\” ?</string>
     <!-- Success Message after calendar for course removed -->
     <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
     <!-- Success Message after calendar for course update -->
@@ -348,7 +348,7 @@
     <!-- Label Course Modal heading -->
     <string name="course_modal_heading">Upgrade {course_name}</string>
     <!-- Label Course Modal features -->
-    <string name="course_modal_earn_certificate">Earn a verified certificate of completion to showcase on your resume</string>
+    <string name="course_modal_earn_certificate">Earn a verified certificate of completion to showcase on your resumé</string>
     <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
     <string name="course_modal_full_access_course">Full access to course content and course material even after the course ends</string>
     <!-- Label Course Upgrade button  -->
