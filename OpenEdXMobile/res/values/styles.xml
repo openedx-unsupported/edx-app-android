@@ -606,4 +606,9 @@
         <item name="trackThickness">@dimen/upgrade_now_progress_indicator_thickness</item>
     </style>
 
+    <style name="DialogSlideUpAndDownAnimation" >
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
 </resources>

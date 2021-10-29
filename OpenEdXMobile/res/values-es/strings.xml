@@ -48,7 +48,7 @@
   <string name="share_course_message">Estoy tomando un curso en {platform_name}! Dale un vistazo:</string>
   <!--Profile Page-->
   <!--Label for wifi only switch-->
-  <string name="settings_wifi_top">Descargar solo por Wi-Fi</string>
+  <string name="settings_wifi_top">Descarga solo posible mediante WiFi</string>
   <!--Label explaining what wifi only means in detail-->
   <string name="settings_wifi_bottom">Sólo descargar contenido cuando el Wifi está encendido</string>
   <!--Label for the Download to sd-card setting-->
@@ -120,7 +120,7 @@
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->
-  <string name="label_submit_feedback">Enviar comentario</string>
+  <string name="label_submit_feedback">Enviar retroalimentación</string>
   <!--Toggle switch on state label-->
   <string name="toggle_turn_on">Encendido</string>
   <!--Toggle switch off state label-->
@@ -129,6 +129,33 @@
   <string name="logout">Salir</string>
   <!--Profile screen version-->
   <string name="label_version">Versión de la aplicación</string>
+  <!--  String for Profile Screen  -->
+  <!-- Button text to show user Video Settings screen -->
+  <string name="label_video_settings">AJUSTES DE VIDEO</string>
+  <!--  Heading of Personal Information  -->
+  <string name="label_personal_information">Información personal</string>
+  <!--  Heading of Help Field  -->
+  <string name="label_help">Ayuda</string>
+  <!--  Description of Submit feedback Field  -->
+  <string name="description_submit_feedback">¿Quieres ayudarnos a mejorar la plataforma o la aplicación?</string>
+  <!--  Label of Submit feedback Button  -->
+  <string name="label_submit_feedback_btn">Contactar al equipo de soporte</string>
+  <!--  Heading of Get Support Field  -->
+  <string name="title_get_support">Obtener ayuda</string>
+  <!--  Description of Get Support Field  -->
+  <string name="description_get_support">Si necesitas más ayuda y quieres aprender cómo usar la aplicación móvil de {platform_name}, visita nuestras preguntas frecuentes.</string>
+  <!--  Label of Get Support Button  -->
+  <string name="label_view_faq_btn">Ver preguntas frecuentes</string>
+  <!--  Label of Sign out Button  -->
+  <string name="label_sign_out_btn">Salir</string>
+  <!-- Delete my account screen Title -->
+  <string name="title_delete_my_account">Borrar tu cuenta</string>
+  <!--  Label of Delete Account Button  -->
+  <string name="label_delete_account_btn">Borrar cuenta</string>
+  <!--  Description of Delete Account  -->
+  <string name="description_delete_account">Sigue las instrucciones en la siguiente pantalla para borrar tu cuenta y todos los datos relacionados.</string>
+  <!--  Label of App Version  -->
+  <string name="label_app_version">Versión</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Restablecer contraseña</string>
@@ -237,6 +264,9 @@ lo que significa que no puedes participar en tareas calificadas. Parece que no c
   <string name="course_dates_banner_reset_date">Parece que no has cumplido con algunos plazos importantes según nuestro calendario sugerido.
 Para mantenerte en el camino adecuado, puedes actualizar este calendario y mover las tareas vencidas hacia el futuro. No te preocupes, no perderás nada de lo que hayas avanzado cuando cambies las fechas de entrega.</string>
 
+  <!-- Label Course Card Graded Message -->
+  <string name="value_prop_course_card_message">Obtener todos los beneficios</string>
+
   <!-- region: Course Date types -->
   <!-- Label used when the date is Today -->
   <string name="date_type_today">Hoy</string>
@@ -263,7 +293,7 @@ Para mantenerte en el camino adecuado, puedes actualizar este calendario y mover
   <!--Title to add calendar for course-->
   <string name="title_add_course_calendar">agregar calendario \"{course_name}\"</string>
   <!--Message to add calendar for course-->
-  <string name="message_add_course_calendar">¿Deseas agregar el calendario de edX \"{course_name}\"? 
+  <string name="message_add_course_calendar">¿Deseas agregar el calendario de {platform_name} \"{course_name}\"?
 Puedes editar o eliminar el calendario del curso en cualquier momento en Calendario o Configuración</string>
   <!--Success Message after calendar for course added first time-->
   <string name="message_for_alert_after_course_calendar_added">\"{course_name}\" ha sido añadido a tu calendario.</string>
@@ -272,7 +302,7 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <!--Title to remove calendar for course-->
   <string name="title_remove_course_calendar">Remover el calendario \"{course_name}\"</string>
   <!--Message to remove calendar for course-->
-  <string name="message_remove_course_calendar">¿Deseas eliminar el calendario de edX \"{course_name}\"?</string>
+  <string name="message_remove_course_calendar">¿Deseas eliminar el calendario de {platform_name} \"{course_name}\"?</string>
   <!--Success Message after calendar for course removed-->
   <string name="message_after_course_calendar_removed">Tu calendario de cursos ha sido eliminado.</string>
   <!--Success Message after calendar for course update-->
@@ -298,6 +328,11 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <string name="course_modal_graded_assignment_locked">Las tareas calificadas bloqueadas.</string>
   <!--Label Course Modal Graded Assignments Locked description-->
   <string name="course_modal_graded_assignment_locked_description">Cambia a la opción paga para obtener acceso a funciones bloqueadas como esta y aprovecha al máximo tu curso</string>
+  <!-- Label Course Modal Graded Assignments show more -->
+  <string name="course_modal_graded_assignment_show_more"><u>Ver más</u></string>
+  <!-- Label Course Modal Graded Assignments show less -->
+  <string name="course_modal_graded_assignment_show_less"><u>Ver menos</u></string>
+
   <!--Subtitle labels for video durations in hours-->
   <!--Subtitle labels for video durations in minutes-->
   <plurals name="video_duration_minutes">
@@ -631,7 +666,9 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <!--Button leading user to log in screen-->
   <string name="launch_login">Iniciar sesión</string>
   <!--Introduction text on the launch screen-->
+  <string name="launch_text">Cursos de las mejores universidades del mundo a tu alcance.</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
+  <string name="launch_text_courses_and_program">Cursos y programas de las mejores universidades del mundo a tu alcance.</string>
   <!--Search View title on the launch screen-->
   <string name="launch_search_title">¿Qué quieres aprender?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
@@ -705,6 +742,8 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <!--User Profiles-->
   <!--Window title for the user profile screen-->
   <string name="profile_title">Perfil</string>
+  <!-- The accessibility description for the email section -->
+  <string name="profile_email_description">Correo electrónico: {email}</string>
   <!--The accessibility description for the username section-->
   <string name="profile_username_description">Usuario: {username}</string>
   <!--The accessibility description for the language section-->
@@ -716,7 +755,7 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <!--Label for toolbar icon that launches the edit profile screen for the current user-->
   <string name="profile_toolbar_edit_button">Editar</string>
   <!--Shown when viewing your own profile and you are not sharing a full profile-->
-  <string name="profile_sharing_limited_by_you">Actualmente está compartiendo una versión limitada de su perfil</string>
+  <string name="profile_sharing_limited_by_you">Actualmente compartes un perfil limitado.</string>
   <!--Shown when viewing another user's profile and that user is not sharing a full profile-->
   <string name="profile_sharing_limited_by_other_user">Este usuario está compartiendo un perfil limitado</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
@@ -796,5 +835,16 @@ Puedes editar o eliminar el calendario del curso en cualquier momento en Calenda
   <string name="open_in_browser_message">Esta parte del curso puede funcionar mejor en un navegador web.</string>
   <!--Open in browser Title-->
   <string name="open_in_browser_text"><u>Abrir en el navegador</u></string>
-  <!--Error message while creating calendar for the course events-->
+  <!-- Title of Video Quality Dialog -->
+  <string name="video_download_quality_title">Calidad de descarga de vídeo</string>
+  <!-- Auto Video Quality option -->
+  <string name="auto_recommended_text">Auto (recomendado)</string>
+  <!-- 360p Video Quality option -->
+  <string name="video_quality_p360">360p (Archivo de menor peso)</string>
+  <!-- 540p Video Quality option -->
+  <string name="video_quality_p540">540p</string>
+  <!-- 720p Video Quality option -->
+  <string name="video_quality_p720">720p (Mejor calidad)</string>
+  <!-- Message shows in Video Quality dialog -->
+  <string name="video_download_quality_message">Este ajuste es para todos las descargas de vídeos en la aplicación de {platform_name}.</string>
 </resources>

@@ -58,6 +58,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.CourseDatesCalendarSync;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -279,7 +280,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
         if (courseDateViewModel.getCourseDates().getValue() != null) {
             for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
-                CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseData.getCourseId(), courseData.getCourse().getName(), courseDateBlock);
+                ConfigUtil.Companion.checkCalendarSyncEnabled(environment.getConfig(), response ->
+                        CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, courseData.getCourseId(),
+                                courseData.getCourse().getName(), courseDateBlock, response.isDeepLinkEnabled()));
             }
             showCalendarUpdatedSnackbar();
             trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);

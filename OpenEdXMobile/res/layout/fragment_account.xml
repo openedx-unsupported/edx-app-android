@@ -285,6 +285,7 @@
                     android:text="@string/title_get_support" />
 
                 <TextView
+                    android:id="@+id/tv_get_support_description"
                     style="@style/profile_field_description"
                     android:text="@string/description_get_support" />
 
@@ -295,10 +296,11 @@
                     android:layout_height="@dimen/profile_view_button_height"
                     android:layout_marginTop="@dimen/edx_half_margin"
                     android:text="@string/label_view_faq_btn"
+                    android:includeFontPadding="false"
                     app:backgroundTint="@null"
                     app:icon="@drawable/ic_open_in_new"
                     app:iconGravity="textEnd"
-                    app:iconSize="@dimen/small_icon_size"
+                    app:iconSize="@dimen/ic_small"
                     app:iconTint="@color/primaryBaseColor" />
             </LinearLayout>
 

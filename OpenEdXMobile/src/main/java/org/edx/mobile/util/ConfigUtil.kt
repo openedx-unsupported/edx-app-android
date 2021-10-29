@@ -142,7 +142,7 @@ class ConfigUtil {
             // Check firebase enabled in config
             if (config.firebaseConfig.isEnabled) {
                 val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-                firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
+                firebaseRemoteConfig.fetch(0).addOnCompleteListener {
                     try {
                         val response = JSONObject(firebaseRemoteConfig
                                 .getString(AppConstants.FirebaseConstants.COURSE_DATES_CALENDAR_SYNC))

@@ -56,8 +56,10 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
     private var courseData: EnrolledCoursesResponse = EnrolledCoursesResponse()
     private var isSelfPaced: Boolean = true
+    private var isDeepLinkEnabled: Boolean = false
     private lateinit var calendarTitle: String
     private lateinit var accountName: String
+    private lateinit var keyValMap: Map<String, CharSequence>
     private var isCalendarExist: Boolean = false
 
 
@@ -100,6 +102,10 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         calendarTitle = "${environment.config.platformName} - ${courseData.course.name}"
         isSelfPaced = courseData.course.isSelfPaced
         accountName = environment.loginPrefs.currentUserProfile?.email ?: CalendarUtils.LOCAL_USER
+        keyValMap = mapOf(
+            AppConstants.PLATFORM_NAME to environment.config.platformName,
+            AppConstants.COURSE_NAME to calendarTitle
+        )
 
         errorNotification = FullScreenErrorNotification(binding.swipeContainer)
 
@@ -217,6 +223,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             override fun onCalendarSyncResponse(response: CourseDatesCalendarSync) {
                 if (!response.disabledVersions.contains(VERSION_NAME) && ((response.isSelfPlacedEnable && isSelfPaced) || (response.isInstructorPlacedEnable && !isSelfPaced))) {
                     binding.syncCalendarContainer.visibility = View.VISIBLE
+                    isDeepLinkEnabled = response.isDeepLinkEnabled
                     initializedSyncContainer()
                 }
             }
@@ -273,7 +280,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun askForCalendarSync() {
         val title: String = ResourceUtil.getFormattedString(resources, R.string.title_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
-        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, keyValMap).toString()
 
         val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
                 { _: DialogInterface, _: Int ->
@@ -330,7 +337,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 calendarId = calendarId,
                 courseId = courseData.courseId,
                 courseName = courseData.course.name,
-                courseDateBlock = courseDateBlock
+                courseDateBlock = courseDateBlock,
+                isDeeplinkEnabled = isDeepLinkEnabled
             )
         }
         checkIfCalendarExists()
@@ -372,7 +380,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun askCalendarRemoveDialog(calendarId: Long) {
         val title: String = ResourceUtil.getFormattedString(resources, R.string.title_remove_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
-        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_remove_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_remove_course_calendar, keyValMap).toString()
 
         val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_remove),
                 { _: DialogInterface, _: Int ->
