@@ -154,7 +154,7 @@ public class RegisterActivity extends BaseFragmentActivity
         TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
         agreementMessageView.setMovementMethod(LinkMovementMethod.getInstance());
         agreementMessageView.setText(org.edx.mobile.util.TextUtils.generateLicenseText(
-                environment.getConfig(), getResources(), R.string.by_creating_account));
+                environment.getConfig(), this, R.string.by_creating_account));
 
         createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {

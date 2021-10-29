@@ -561,6 +561,9 @@ public class Config {
         @SerializedName("PRIVACY_POLICY_URL")
         private String privacyPolicyUrl;
 
+        @SerializedName("SUPPORTED_LANGUAGES")
+        private ArrayList<String> supportedLanguages;
+
         public String getEulaUrl() {
             return eulaUrl;
         }
@@ -571,6 +574,10 @@ public class Config {
 
         public String getPrivacyPolicyUrl() {
             return privacyPolicyUrl;
+        }
+
+        public ArrayList<String> getSupportedLanguages() {
+            return supportedLanguages;
         }
 
         public boolean isAtleastOneAgreementUrlAvailable() {

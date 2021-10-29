@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
@@ -92,5 +93,20 @@ public class UrlUtil {
             }
         }
         return newUri.build().toString();
+    }
+
+    /**
+     * Utility function to append the path after the URL Authority
+     *
+     * @param url  that needs to update
+     * @param path that needs to be append in the URL
+     */
+    public static String appendPathAfterAuthority(String url, String path) {
+        Uri uri = Uri.parse(url);
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(uri.getScheme())
+                .authority(uri.getAuthority())
+                .appendPath(path + uri.getEncodedPath());
+        return Uri.decode(builder.build().toString());
     }
 }

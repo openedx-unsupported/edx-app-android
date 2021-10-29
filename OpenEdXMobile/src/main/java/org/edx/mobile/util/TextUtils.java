@@ -1,7 +1,8 @@
 package org.edx.mobile.util;
 
+import static org.edx.mobile.view.dialog.WebViewActivity.PARAM_INTENT_FILE_LINK;
+
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.text.Html;
 import android.text.SpannableString;
@@ -17,11 +18,10 @@ import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import static org.edx.mobile.view.dialog.WebViewActivity.PARAM_INTENT_FILE_LINK;
 
 public class TextUtils {
     private TextUtils() {
@@ -68,48 +68,57 @@ public class TextUtils {
      * documents shipped with app.
      *
      * @param config        Configurations object to use for obtaining agreement URLs in config.
-     * @param resources     Resources object to use for obtaining strings from strings.xml.
+     * @param context       Context object to use for obtaining strings from strings.xml.
      * @param licenseTextId Resource ID of the license text.
      * @return License text having clickable links to license documents.
      */
     public static CharSequence generateLicenseText(@NonNull Config config,
-                                                   @NonNull Resources resources,
+                                                   @NonNull Context context,
                                                    @StringRes int licenseTextId) {
-        final String platformName = resources.getString(R.string.platform_name);
-        final CharSequence eula = ResourceUtil.getFormattedString(resources, R.string.licensing_agreement, "platform_name", platformName);
-        final CharSequence tos = ResourceUtil.getFormattedString(resources, R.string.tos_and_honor_code, "platform_name", platformName);
-        final CharSequence privacyPolicy = resources.getString(R.string.privacy_policy);
+        final String platformName = context.getResources().getString(R.string.platform_name);
+        final CharSequence eula = ResourceUtil.getFormattedString(context.getResources(), R.string.licensing_agreement, "platform_name", platformName);
+        final CharSequence tos = ResourceUtil.getFormattedString(context.getResources(), R.string.tos_and_honor_code, "platform_name", platformName);
+        final CharSequence privacyPolicy = context.getResources().getString(R.string.privacy_policy);
 
         final SpannableString eulaSpan = new SpannableString(eula);
         final SpannableString tosSpan = new SpannableString(tos);
         final SpannableString privacyPolicySpan = new SpannableString(privacyPolicy);
 
-        String eulaUri = resources.getString(R.string.eula_file_link);
-        String tosUri = resources.getString(R.string.terms_file_link);
-        String privacyPolicyUri = resources.getString(R.string.privacy_file_link);
+        String eulaUri = context.getResources().getString(R.string.eula_file_link);
+        String tosUri = context.getResources().getString(R.string.terms_file_link);
+        String privacyPolicyUri = context.getResources().getString(R.string.privacy_file_link);
 
         final Config.AgreementUrlsConfig agreementUrlsConfig = config.getAgreementUrlsConfig();
         if (agreementUrlsConfig.isAtleastOneAgreementUrlAvailable()) {
             eulaUri = agreementUrlsConfig.getEulaUrl();
             tosUri = agreementUrlsConfig.getTosUrl();
             privacyPolicyUri = agreementUrlsConfig.getPrivacyPolicyUrl();
+            ArrayList<String> supportedLanguages = agreementUrlsConfig.getSupportedLanguages();
+            if (supportedLanguages != null && !supportedLanguages.isEmpty()) {
+                String currentLocal = LocaleUtils.getCurrentDeviceLanguage(context);
+                if (supportedLanguages.contains(currentLocal)) {
+                    tosUri = UrlUtil.appendPathAfterAuthority(tosUri, currentLocal);
+                    privacyPolicyUri = UrlUtil.appendPathAfterAuthority(privacyPolicyUri, currentLocal);
+                    eulaUri = UrlUtil.appendPathAfterAuthority(eulaUri, currentLocal);
+                }
+            }
         }
 
         if (!android.text.TextUtils.isEmpty(eulaUri)) {
             eulaSpan.setSpan(new URLSpan(TextUtils.createAppUri(
-                    resources.getString(R.string.end_user_title), eulaUri)),
+                    context.getResources().getString(R.string.end_user_title), eulaUri)),
                     0, eula.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if (!android.text.TextUtils.isEmpty(tosUri)) {
             tosSpan.setSpan(new URLSpan(TextUtils.createAppUri(
-                    resources.getString(R.string.terms_of_service_title), tosUri)),
+                    context.getResources().getString(R.string.terms_of_service_title), tosUri)),
                     0, tos.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if (!android.text.TextUtils.isEmpty(privacyPolicyUri)) {
             privacyPolicySpan.setSpan(new URLSpan(TextUtils.createAppUri(
-                    resources.getString(R.string.privacy_policy_title), privacyPolicyUri)),
+                    context.getResources().getString(R.string.privacy_policy_title), privacyPolicyUri)),
                     0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -119,7 +128,7 @@ public class TextUtils {
         keyValMap.put("platform_name", platformName);
         keyValMap.put("privacy_policy", privacyPolicySpan);
 
-        return ResourceUtil.getFormattedString(resources, licenseTextId, keyValMap);
+        return ResourceUtil.getFormattedString(context.getResources(), licenseTextId, keyValMap);
     }
 
     /**
