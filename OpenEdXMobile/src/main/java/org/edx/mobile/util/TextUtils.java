@@ -18,7 +18,6 @@ import androidx.annotation.StringRes;
 
 import org.edx.mobile.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -84,25 +83,9 @@ public class TextUtils {
         final SpannableString tosSpan = new SpannableString(tos);
         final SpannableString privacyPolicySpan = new SpannableString(privacyPolicy);
 
-        String eulaUri = context.getResources().getString(R.string.eula_file_link);
-        String tosUri = context.getResources().getString(R.string.terms_file_link);
-        String privacyPolicyUri = context.getResources().getString(R.string.privacy_file_link);
-
-        final Config.AgreementUrlsConfig agreementUrlsConfig = config.getAgreementUrlsConfig();
-        if (agreementUrlsConfig.isAtleastOneAgreementUrlAvailable()) {
-            eulaUri = agreementUrlsConfig.getEulaUrl();
-            tosUri = agreementUrlsConfig.getTosUrl();
-            privacyPolicyUri = agreementUrlsConfig.getPrivacyPolicyUrl();
-            ArrayList<String> supportedLanguages = agreementUrlsConfig.getSupportedLanguages();
-            if (supportedLanguages != null && !supportedLanguages.isEmpty()) {
-                String currentLocal = LocaleUtils.getCurrentDeviceLanguage(context);
-                if (supportedLanguages.contains(currentLocal)) {
-                    tosUri = UrlUtil.appendPathAfterAuthority(tosUri, currentLocal);
-                    privacyPolicyUri = UrlUtil.appendPathAfterAuthority(privacyPolicyUri, currentLocal);
-                    eulaUri = UrlUtil.appendPathAfterAuthority(eulaUri, currentLocal);
-                }
-            }
-        }
+        String eulaUri = ConfigUtil.getAgreementUrl(context, config.getAgreementUrlsConfig(), AgreementUrlType.EULA);
+        String tosUri = ConfigUtil.getAgreementUrl(context, config.getAgreementUrlsConfig(), AgreementUrlType.TOS);
+        String privacyPolicyUri = ConfigUtil.getAgreementUrl(context, config.getAgreementUrlsConfig(), AgreementUrlType.PRIVACY_POLICY);
 
         if (!android.text.TextUtils.isEmpty(eulaUri)) {
             eulaSpan.setSpan(new URLSpan(TextUtils.createAppUri(

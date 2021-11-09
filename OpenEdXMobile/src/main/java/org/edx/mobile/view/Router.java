@@ -39,6 +39,7 @@ import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
+import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 @Singleton
@@ -141,7 +142,7 @@ public class Router {
     }
 
     public void showMainDashboard(@NonNull Activity sourceActivity) {
-        showMainDashboard(sourceActivity, null);
+        showMainDashboard(sourceActivity, (String) null);
     }
 
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName) {
@@ -154,6 +155,11 @@ public class Router {
         if (!TextUtils.isEmpty(screenName)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
+        sourceActivity.startActivity(intent);
+    }
+
+    public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable DeepLink deepLink) {
+        Intent intent = MainDashboardActivity.newIntent(deepLink);
         sourceActivity.startActivity(intent);
     }
 
@@ -352,8 +358,12 @@ public class Router {
     }
 
     public void showAuthenticatedWebViewActivity(@NonNull Context context, @NonNull String url,
-                                                 @NonNull String name) {
-        context.startActivity(AuthenticatedWebViewActivity.newIntent(context, url, name));
+                                                 @NonNull String name, boolean isModalView) {
+        context.startActivity(AuthenticatedWebViewActivity.newIntent(context, url, name, isModalView));
+    }
+
+    public void showWebViewActivity(@NonNull Context context, @NonNull String url, @NonNull String name) {
+        context.startActivity(WebViewActivity.newIntent(context, url, name));
     }
 
     /**

@@ -63,7 +63,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
 
         items.add(new FragmentItemModel(MyCoursesListFragment.class,
-                getResources().getString(R.string.label_my_courses), R.drawable.ic_bookmark_border,
+                getResources().getString(R.string.label_my_courses), R.drawable.ic_bookmark_border, getArguments(),
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {

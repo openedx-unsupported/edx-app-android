@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
@@ -30,6 +31,7 @@ import java.text.ParseException;
 
 import de.greenrobot.event.EventBus;
 
+import static org.edx.mobile.view.Router.EXTRA_DEEP_LINK;
 import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
@@ -46,6 +48,12 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 .putExtra(EXTRA_SCREEN_NAME, screenName)
                 .putExtra(EXTRA_PATH_ID, pathId);
+    }
+
+    public static Intent newIntent(@Nullable DeepLink deepLink) {
+        return IntentFactory.newIntentForComponent(MainDashboardActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .putExtra(EXTRA_DEEP_LINK, deepLink);
     }
 
     @Override

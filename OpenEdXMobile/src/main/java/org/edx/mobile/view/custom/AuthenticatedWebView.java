@@ -5,6 +5,7 @@ import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -95,12 +96,13 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
      *                             web browser.
      * @param isManuallyReloadable A flag that decides if we should give show/hide reload button.
      * @param interceptAjaxRequest A flag that decides if webview intercept the webpage ajax request.
-     * @param completionCallback
+     * @param completionCallback   Callback to handle component completion
+     * @param pageUrlCallback      Callback to dismiss the current Webpage and open the screen if available
      */
     @SuppressLint("SetJavaScriptEnabled")
     public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
                             boolean isManuallyReloadable, boolean interceptAjaxRequest,
-                            URLInterceptorWebViewClient.CompletionCallback completionCallback) {
+                            URLInterceptorWebViewClient.CompletionCallback completionCallback, OverridePageUrlCallback pageUrlCallback) {
         this.isManuallyReloadable = isManuallyReloadable;
         binding.webview.getSettings().setJavaScriptEnabled(true);
         webViewClient = new URLInterceptorWebViewClient(fragmentActivity, binding.webview, interceptAjaxRequest,
@@ -146,20 +148,28 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
             @Deprecated
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains("logout")) {
-                    forceLogoutUser();
-                    return true;
-                }
-                return super.shouldOverrideUrlLoading(view, url);
+                return shouldOverrideUrlLoadingWrapper(Uri.parse(url)) || super.shouldOverrideUrlLoading(view, url);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (request.getUrl().toString().contains("logout")) {
+                return shouldOverrideUrlLoadingWrapper(request.getUrl()) || super.shouldOverrideUrlLoading(view, request);
+            }
+
+            public boolean shouldOverrideUrlLoadingWrapper(@NonNull Uri uri) {
+                String overrideUrl = uri.toString();
+                if (overrideUrl.contains("logout")) {
                     forceLogoutUser();
                     return true;
                 }
-                return super.shouldOverrideUrlLoading(view, request);
+                if (overrideUrl.contains("show_screen_without_dismissing")) {
+                    pageUrlCallback.onUrlClick(false, uri.getQueryParameter("screen_name"));
+                    return true;
+                } else if (overrideUrl.contains("dismiss")) {
+                    pageUrlCallback.onUrlClick(true, uri.getQueryParameter("screen_name"));
+                    return true;
+                }
+                return false;
             }
 
             public void onPageFinished(WebView view, String url) {
@@ -391,5 +401,9 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         IEdxEnvironment environment = MainApplication.getEnvironment(getContext());
         environment.getRouter().forceLogout(getContext(), environment.getAnalyticsRegistry(),
                 environment.getNotificationDelegate());
+    }
+
+    public interface OverridePageUrlCallback {
+        void onUrlClick(boolean canDismiss, @Nullable String screenName);
     }
 }

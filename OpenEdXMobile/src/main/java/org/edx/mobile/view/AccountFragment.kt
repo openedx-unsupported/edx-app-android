@@ -111,7 +111,7 @@ class AccountFragment : BaseFragment() {
             binding.btnDeleteAccount.setOnClickListener {
                 environment?.router?.showAuthenticatedWebViewActivity(
                     this.requireContext(),
-                    deleteAccountUrl, getString(R.string.title_delete_my_account)
+                    deleteAccountUrl, getString(R.string.title_delete_my_account), false
                 )
                 trackEvent(
                     Analytics.Events.DELETE_ACCOUNT_CLICKED,
