@@ -173,7 +173,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                     "try {" +
                             "    var top_div_list = document.querySelectorAll('div[data-usage-id=\"" + unit.getId() + "\"]');\n" +
                             "    top_div_list.length == 1 && top_div_list[0].querySelectorAll(\"iframe\").length > 0;" +
-                            "} catch {" +
+                            "} catch(err) {" +
                             "    false;" +
                             "};";
             binding.authWebview.evaluateJavascript(javascript, value -> {
