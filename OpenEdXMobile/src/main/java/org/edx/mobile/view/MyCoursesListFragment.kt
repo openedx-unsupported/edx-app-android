@@ -9,9 +9,13 @@ import de.greenrobot.event.EventBus
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.edx.mobile.R
+import org.edx.mobile.authentication.LoginAPI
+import org.edx.mobile.base.MainApplication
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding
 import org.edx.mobile.databinding.PanelFindCourseBinding
+import org.edx.mobile.deeplink.DeepLink
+import org.edx.mobile.deeplink.DeepLinkManager
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.event.EnrolledInCourseEvent
 import org.edx.mobile.event.MainDashboardRefreshEvent
@@ -45,6 +49,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     @Inject
     private lateinit var courseAPI: CourseAPI
+    @Inject
+    private lateinit var loginAPI: LoginAPI
     private lateinit var errorNotification: FullScreenErrorNotification
     private lateinit var enrolledCoursesCall: Call<List<EnrolledCoursesResponse>>
 
@@ -68,6 +74,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         .show(childFragmentManager, CourseModalDialogFragment.TAG)
             }
         }
+        detectDeeplink()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -215,6 +222,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             errorNotification.hideError()
         }
         invalidateView()
+    }
+
+    private fun detectDeeplink() {
+        if (arguments?.get(Router.EXTRA_DEEP_LINK) != null) {
+            (arguments?.get(Router.EXTRA_DEEP_LINK) as DeepLink).let { deeplink ->
+                DeepLinkManager.proceedDeeplink(requireActivity(), deeplink)
+                MainApplication.instance().showBanner(loginAPI, true)
+            }
+        } else {
+            MainApplication.instance().showBanner(loginAPI, false)
+        }
     }
 
     private fun updateDatabaseAfterDownload(list: ArrayList<EnrolledCoursesResponse>?) {

@@ -35,7 +35,12 @@ public class DeepLinkManager {
             }
             return;
         }
+        router.showMainDashboard(activity, deepLink);
+    }
 
+    public static void proceedDeeplink(@NonNull Activity activity, @NonNull final DeepLink deepLink) {
+        final Router router = new Router(new Config(activity));
+        @ScreenDef final String screenName = deepLink.getScreenName();
         switch (screenName) {
             case Screen.COURSE_DASHBOARD:
             case Screen.COURSE_VIDEOS:

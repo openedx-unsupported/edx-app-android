@@ -10,16 +10,24 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
+import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.ContentErrorBinding
 import org.edx.mobile.databinding.FragmentAuthenticatedWebviewBinding
+import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.logger.Logger
+import org.edx.mobile.util.AgreementUrlType
+import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.UiUtils
+import javax.inject.Inject
 
 /**
  * Provides a webview which authenticates the user before loading a page,
  * Javascript can also be passed in arguments for evaluation.
  */
 open class AuthenticatedWebViewFragment : BaseFragment() {
+
+    @Inject
+    private lateinit var environment: IEdxEnvironment
 
     protected val logger = Logger(javaClass.name)
 
@@ -92,9 +100,53 @@ open class AuthenticatedWebViewFragment : BaseFragment() {
                     false,
                     isManuallyReloadable,
                     false,
-                    null
+                    null,
+                    { canDismiss, screenName ->
+                        handleScreenNavigation(screenName)
+                        if (canDismiss) {
+                            activity?.finish()
+                        }
+                    }
                 )
                 authWebViewBinding?.authWebview?.loadUrlWithJavascript(true, url, javascript)
+            }
+        }
+    }
+
+    private fun handleScreenNavigation(screenName: String?) {
+        when (screenName) {
+            Screen.DELETE_ACCOUNT -> {
+                environment.router.showAuthenticatedWebViewActivity(
+                    requireActivity(),
+                    environment.config.deleteAccountUrl,
+                    getString(R.string.title_delete_my_account), false
+                )
+            }
+            Screen.TERMS_OF_SERVICE -> {
+                ConfigUtil.getAgreementUrl(
+                    requireContext(),
+                    environment.config.agreementUrlsConfig,
+                    AgreementUrlType.TOS
+                )?.let { url ->
+                    environment.router.showWebViewActivity(
+                        requireActivity(),
+                        url,
+                        getString(R.string.terms_of_service_title)
+                    )
+                }
+            }
+            Screen.PRIVACY_POLICY -> {
+                ConfigUtil.getAgreementUrl(
+                    requireContext(),
+                    environment.config.agreementUrlsConfig,
+                    AgreementUrlType.PRIVACY_POLICY
+                )?.let { url ->
+                    environment.router.showWebViewActivity(
+                        requireActivity(),
+                        url,
+                        getString(R.string.privacy_policy_title)
+                    )
+                }
             }
         }
     }

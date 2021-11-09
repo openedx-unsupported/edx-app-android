@@ -20,4 +20,7 @@ public class Screen {
     public static final String DISCUSSION_POST = "discussion_post";
     public static final String DISCUSSION_TOPIC = "discussion_topic";
     public static final String COURSE_COMPONENT = "course_component";
+    public static final String DELETE_ACCOUNT = "delete_account";
+    public static final String TERMS_OF_SERVICE = "terms_of_service";
+    public static final String PRIVACY_POLICY = "privacy_policy";
 }

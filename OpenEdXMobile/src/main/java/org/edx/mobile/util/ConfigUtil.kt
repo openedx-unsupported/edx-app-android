@@ -1,5 +1,6 @@
 package org.edx.mobile.util
 
+import android.content.Context
 import android.text.TextUtils
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
@@ -155,6 +156,34 @@ class ConfigUtil {
                     }
                 }
             }
+        }
+
+        /**
+         * Utility Method to get Agreement Urls based on [AgreementUrlType] and supported languages
+         *
+         * @param context   Current Context
+         * @param config    [Config.AgreementUrlsConfig]
+         * @param urlType   [AgreementUrlType] type of Url
+         */
+        @JvmStatic
+        fun getAgreementUrl(
+            context: Context,
+            config: Config.AgreementUrlsConfig?,
+            urlType: AgreementUrlType
+        ): String? {
+            if (config == null || TextUtils.isEmpty(config.getAgreementUrl(urlType))) {
+                return context.resources.getString(urlType.getStringResId())
+            }
+            if (config.supportedLanguages != null && config.supportedLanguages.isNotEmpty()) {
+                val currentLocal = LocaleUtils.getCurrentDeviceLanguage(context)
+                if (config.supportedLanguages.contains(currentLocal)) {
+                    return UrlUtil.appendPathAfterAuthority(
+                        config.getAgreementUrl(urlType),
+                        currentLocal
+                    )
+                }
+            }
+            return config.getAgreementUrl(urlType)
         }
     }
 

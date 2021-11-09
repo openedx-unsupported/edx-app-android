@@ -38,6 +38,8 @@ public class ApiConstants {
 
     public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
 
+    public static final String URL_UNACKNOWLEDGED_NOTICE = "/notices/api/v1/unacknowledged?mobile=true";
+
     public static final String TOKEN_TYPE_ACCESS = "access_token";
 
     public static final String TOKEN_TYPE_REFRESH = "refresh_token";

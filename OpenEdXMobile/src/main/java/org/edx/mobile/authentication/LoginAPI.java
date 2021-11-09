@@ -1,6 +1,7 @@
 package org.edx.mobile.authentication;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
+import org.edx.mobile.model.api.UnacknowledgedNoticeResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
@@ -237,6 +240,11 @@ public class LoginAPI {
         ProfileModel data = executeStrict(loginService.getProfile());
         loginPrefs.storeUserProfile(data);
         return data;
+    }
+
+    @NonNull
+    public Call<UnacknowledgedNoticeResponse> getUnacknowledgedNotice() {
+        return loginService.getUnacknowledgedNotice();
     }
 
     public static class AccountNotLinkedException extends Exception {

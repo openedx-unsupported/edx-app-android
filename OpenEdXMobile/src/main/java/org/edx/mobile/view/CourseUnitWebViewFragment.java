@@ -108,7 +108,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         }
         binding.swipeContainer.setEnabled(false);
         binding.authWebview.initWebView(getActivity(), true, false, true,
-                this::markComponentCompletion);
+                this::markComponentCompletion, null);
         binding.authWebview.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
             public void onPageStarted() {

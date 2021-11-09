@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -564,24 +565,21 @@ public class Config {
         @SerializedName("SUPPORTED_LANGUAGES")
         private ArrayList<String> supportedLanguages;
 
-        public String getEulaUrl() {
-            return eulaUrl;
-        }
-
-        public String getTosUrl() {
-            return tosUrl;
-        }
-
-        public String getPrivacyPolicyUrl() {
-            return privacyPolicyUrl;
+        public String getAgreementUrl(@NonNull AgreementUrlType urlType){
+            switch (urlType) {
+                case TOS:
+                    return tosUrl;
+                case EULA:
+                    return eulaUrl;
+                case PRIVACY_POLICY:
+                    return privacyPolicyUrl;
+                default:
+                    return null;
+            }
         }
 
         public ArrayList<String> getSupportedLanguages() {
             return supportedLanguages;
-        }
-
-        public boolean isAtleastOneAgreementUrlAvailable() {
-            return !TextUtils.isEmpty(eulaUrl) || !TextUtils.isEmpty(tosUrl) || !TextUtils.isEmpty(privacyPolicyUrl);
         }
     }
 
