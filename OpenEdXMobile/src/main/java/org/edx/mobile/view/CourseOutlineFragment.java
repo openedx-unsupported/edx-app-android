@@ -58,7 +58,6 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.CourseDatesCalendarSync;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -194,8 +193,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         });
         UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
         restore(bundle);
-        calendarTitle = environment.getConfig().getPlatformName() + " - " + courseData.getCourse().getName();
-        accountName = environment.getLoginPrefs().getCurrentUserProfile().name;
+        calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.getCourse().getName());
+        accountName = CalendarUtils.getUserAccountForSync(environment);
         initListView(view);
         if (isOnCourseOutline) {
             initObserver();
@@ -220,11 +219,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
-                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
-                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
-                    if (!CalendarUtils.INSTANCE.compareEvents(requireContext(), calendarId, courseDates.getCourseDateBlocks())) {
-                        showCalendarOutOfDateDialog(calendarId);
-                    }
+                long outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
+                        requireContext(), accountName, calendarTitle, courseDates.getCourseDateBlocks());
+                if (outdatedCalenderId != -1L) {
+                    showCalendarOutOfDateDialog(outdatedCalenderId);
                 }
             }
         });

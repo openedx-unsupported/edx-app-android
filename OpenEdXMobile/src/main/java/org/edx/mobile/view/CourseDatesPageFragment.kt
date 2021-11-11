@@ -99,9 +99,9 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         viewModel = ViewModelProvider(this, ViewModelFactory()).get(CourseDateViewModel::class.java)
 
         courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
-        calendarTitle = "${environment.config.platformName} - ${courseData.course.name}"
         isSelfPaced = courseData.course.isSelfPaced
-        accountName = environment.loginPrefs.currentUserProfile?.email ?: CalendarUtils.LOCAL_USER
+        calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
+        accountName = CalendarUtils.getUserAccountForSync(environment)
         keyValMap = mapOf(
             AppConstants.PLATFORM_NAME to environment.config.platformName,
             AppConstants.COURSE_NAME to calendarTitle
@@ -142,11 +142,14 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                     layoutManager = LinearLayoutManager(context)
                     adapter = CourseDatesAdapter(dates.courseDatesMap, onDateItemClick)
                 }
-                if (CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                    val calendarId = CalendarUtils.getCalendarId(contextOrThrow, accountName, calendarTitle)
-                    if (CalendarUtils.compareEvents(requireContext(), calendarId, dates.courseDateBlocks).not()) {
-                        showCalendarOutOfDateDialog(calendarId)
-                    }
+                val outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
+                    requireContext(),
+                    accountName,
+                    calendarTitle,
+                    dates.courseDateBlocks
+                )
+                if (outdatedCalenderId != -1L) {
+                    showCalendarOutOfDateDialog(outdatedCalenderId)
                 }
             }
         })

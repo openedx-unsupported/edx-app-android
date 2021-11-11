@@ -99,8 +99,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         enrollmentMode = getStringArgument(Router.EXTRA_ENROLLMENT_MODE);
         isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, true);
         courseName = getStringArgument(Router.EXTRA_COURSE_NAME);
-        calendarTitle = environment.getConfig().getPlatformName() + " - " + courseName;
-        accountName = environment.getLoginPrefs().getCurrentUserProfile().name;
+        calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseName);
+        accountName = CalendarUtils.getUserAccountForSync(environment);
         if (getActivity() instanceof PreLoadingListener) {
             preloadingListener = (PreLoadingListener) getActivity();
         } else {
@@ -258,11 +258,10 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
-                if (CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
-                    Long calendarId = CalendarUtils.INSTANCE.getCalendarId(getContextOrThrow(), accountName, calendarTitle);
-                    if (!CalendarUtils.INSTANCE.compareEvents(requireContext(), calendarId, courseDates.getCourseDateBlocks())) {
-                        showCalendarOutOfDateDialog(calendarId);
-                    }
+                long outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
+                        requireContext(), accountName, calendarTitle, courseDates.getCourseDateBlocks());
+                if (outdatedCalenderId != -1L) {
+                    showCalendarOutOfDateDialog(outdatedCalenderId);
                 }
             }
         });

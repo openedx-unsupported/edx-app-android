@@ -14,6 +14,7 @@ import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.util.ContentMetadata
 import io.branch.referral.util.LinkProperties
 import org.edx.mobile.R
+import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.deeplink.DeepLink
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.logger.Logger
@@ -25,7 +26,7 @@ object CalendarUtils {
     private val logger = Logger(DateUtil::class.java.name)
     private const val REMINDER_24_HOURS = 24 * 60
     private const val REMINDER_48_HOURS = 2 * 24 * 60
-    const val LOCAL_USER = "local_user"
+    private const val LOCAL_USER = "local_user"
 
     val permissions = arrayOf(android.Manifest.permission.WRITE_CALENDAR, android.Manifest.permission.READ_CALENDAR)
 
@@ -225,7 +226,7 @@ object CalendarUtils {
      * Method to add a reminder to the given calendar events
      *
      * @param context
-     * @param uri calender event Uri
+     * @param uri Calendar event Uri
      */
     private fun addReminderToEvent(context: Context, uri: Uri) {
         val eventId: Long = uri.lastPathSegment.toLong()
@@ -378,5 +379,60 @@ object CalendarUtils {
         val intent = Intent(Intent.ACTION_VIEW)
                 .setData(builder.build())
         fragment.startActivity(intent)
+    }
+
+    /**
+     * Helper method used to check that the calendar if outdated for the course or not
+     *
+     * @param context - current [Context] of the application
+     * @param accountName Name of the calendar owner
+     * @param calendarTitle Title for the course Calendar
+     * @param courseDateBlocks Course dates events
+     *
+     * @return Calendar Id if Calendar is outdated otherwise -1
+     *
+     */
+    @JvmStatic
+    fun isCalendarOutOfDate(
+        context: Context,
+        accountName: String,
+        calendarTitle: String,
+        courseDateBlocks: List<CourseDateBlock>
+    ): Long {
+        if (isCalendarExists(context, accountName, calendarTitle)) {
+            val calendarId = getCalendarId(context, accountName, calendarTitle)
+            if (compareEvents(context, calendarId, courseDateBlocks).not()) {
+                return calendarId
+            }
+        }
+        return -1
+    }
+
+    /**
+     * Method to get the current user account as the Calendar owner
+     *
+     * @param environment Relevant configuration environment.
+     *
+     * @return calendar owner account or "local_user"
+     */
+    @JvmStatic
+    fun getUserAccountForSync(environment: IEdxEnvironment): String {
+        return environment.loginPrefs.currentUserProfile?.email ?: LOCAL_USER
+    }
+
+    /**
+     * Method to create the Calendar title for the platform against the course
+     *
+     * @param environment Relevant configuration environment.
+     * @param courseName Name of the course for that creating the Calendar events.
+     *
+     * @return title of the Calendar against the course
+     */
+    @JvmStatic
+    fun getCourseCalendarTitle(
+        environment: IEdxEnvironment,
+        courseName: String
+    ): String {
+        return "${environment.config.platformName} - $courseName"
     }
 }
