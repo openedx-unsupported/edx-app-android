@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Hoy</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Solamente Verificado</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Completado</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Vencido</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Debido a continuacion</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Todavía no se ha publicado</string>
+    <!-- endregion -->
+
+    <!--Title Sync to calendar-->
+    <string name="sync_to_calendar">Sincronización con el calendario</string>
+    <!--Title Sync to calendar-->
+    <string name="sync_to_calendar_message">Sincronizar automáticamente todos los plazos y fechas de vencimiento de este curso con tu calendario.</string>
+    <!--Title to request calendar permission-->
+    <string name="title_request_calendar_permission">\“{platform_name}\” quiere acceder a tu calendario</string>
+    <!--Message to request calendar permission-->
+    <string name="message_request_calendar_permission">{platform_name} quiere usar tu lista de calendario para subscribirse a tu calendario personalizado de {platform_name} para este curso.</string>
+    <!--Title to add calendar for course-->
+    <string name="title_add_course_calendar">agregar calendario \"{course_name}\"</string>
+    <!--Message to add calendar for course-->
+    <string name="message_add_course_calendar">¿Deseas agregar el calendario de {platform_name} \"{course_name}\"?
+Puedes editar o eliminar el calendario del curso en cualquier momento en Calendario o Configuración</string>
+    <!--Success Message after calendar for course added first time-->
+    <string name="message_for_alert_after_course_calendar_added">\"{course_name}\" ha sido añadido a tu calendario.</string>
+    <!--Success Message after calendar for course added-->
+    <string name="message_after_course_calendar_added">Tu calendario de cursos ha sido añadido.</string>
+    <!--Title to remove calendar for course-->
+    <string name="title_remove_course_calendar">Remover el calendario \"{course_name}\"</string>
+    <!--Message to remove calendar for course-->
+    <string name="message_remove_course_calendar">¿Deseas eliminar el calendario de {platform_name} \"{course_name}\"?</string>
+    <!--Success Message after calendar for course removed-->
+    <string name="message_after_course_calendar_removed">Tu calendario de cursos ha sido eliminado.</string>
+    <!--Success Message after calendar for course update-->
+    <string name="message_after_course_calendar_updated">Tu calendario de cursos ha sido actualizado.</string>
+    <!--Title course calendar is out-of-date-->
+    <string name="title_calendar_out_of_date">Tu calendario de cursos está desactualizado</string>
+    <!--Message course calendar is out-of-date-->
+    <string name="message_calendar_out_of_date">Las fechas de tus cursos se han movido y tu calendario de cursos ya no está actualizado con tu nuevo horario.</string>
+    <!--Alert dialog remove course calendar button-->
+    <string name="label_remove_course_calendar">Eliminar calendario del curso</string>
+    <!-- endregion -->
+</resources>

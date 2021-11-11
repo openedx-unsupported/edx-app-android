@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Label My Courses Graded content Button-->
+    <string name="course_value_prop_button">Aprender más.</string>
+    <!--Label Course Modal heading-->
+    <string name="course_modal_heading">Cambia a la opción paga {course_name}</string>
+    <!--Label Course Modal features-->
+    <string name="course_modal_earn_certificate">Obtén un certificado de finalización verificado para mostrarlo en tu curriculum vitae.</string>
+    <string name="course_modal_unlock_access">Desbloquea el acceso a todas las actividades del curso, incluidas las tareas calificadas</string>
+    <string name="course_modal_full_access_course">Acceso total al contenido y al material del curso, incluso después de que finalice el curso</string>
+    <!--Title Course Locked Modal-->
+    <string name="course_locked_modal_title">Obtén más información sobre funciones bloqueadas</string>
+    <!--Label Course Modal Unlock Graded Assignments-->
+    <string name="course_modal_unlock_graded_assignment"><u>Como desbloquear asignacianes calificadas</u></string>
+    <!--Label Course Modal Graded Assignments Locked-->
+    <string name="course_modal_graded_assignment_locked">Las tareas calificadas bloqueadas.</string>
+    <!--Label Course Modal Graded Assignments Locked description-->
+    <string name="course_modal_graded_assignment_locked_description">Cambia a la opción paga para obtener acceso a funciones bloqueadas como esta y aprovecha al máximo tu curso</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>Ver más</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>Ver menos</u></string>
+</resources>

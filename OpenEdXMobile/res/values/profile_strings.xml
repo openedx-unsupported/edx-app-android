@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Profile Page -->
+    <!-- Label for wifi only switch -->
+    <string name="settings_wifi_top">Wifi only download</string>
+    <!-- Label explaining what wifi only means in detail -->
+    <string name="settings_wifi_bottom">Only download content when wi-fi is turned on</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">Your profile information is only visible to you. Only your username is visible to others on {platform_name}.</string>
+
+    <!--  String for Profile Screen  -->
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">Video Settings</string>
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wifi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">Personal Information</string>
+    <!--  Heading of Purchases Field  -->
+    <string name="label_purchase">Purchases</string>
+    <!--  Title of Purchases Field  -->
+    <string name="title_purchase">Restore purchases</string>
+    <!--  Description of Purchases Field  -->
+    <string name="description_purchase">Sign into the Play Store to restore access to courses you have previously paid to upgrade</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">Help</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">Looking to make a feature request or give us some feedback on our app?</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">Email the support team</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">Get support</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">To get more help and learn how to use the {platform_name} mobile app, visit our frequently asked questions.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">View FAQ</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">Sign out</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">Delete your account</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">Delete account</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">Follow the instructions on the next screen to delete your account and all related data.</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">Version</string>
+
+    <!-- Logout button label -->
+    <string name="logout">Logout</string>
+    <!-- Profile screen version -->
+    <string name="label_version">App Version</string>
+
+    <!-- User Profiles -->
+    <!-- Window title for the user profile screen -->
+    <string name="profile_title">Profile</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">Email: {email}</string>
+    <!-- The accessibility description for the username section -->
+    <string name="profile_username_description">Username: {username}</string>
+    <!-- The accessibility description for the language section -->
+    <string name="profile_language_description">Language: {language}</string>
+    <!-- The accessibility description for the location section -->
+    <string name="profile_location_description">Location: {location}</string>
+    <!-- The accessibility description for the "About Me" section -->
+    <string name="profile_about_me_description">About me: {about_me}</string>
+    <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
+    <string name="profile_toolbar_edit_button">Edit</string>
+    <!-- Shown when viewing your own profile and you are not sharing a full profile -->
+    <string name="profile_sharing_limited_by_you">You are currently sharing a limited profile</string>
+    <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
+    <string name="profile_sharing_limited_by_other_user">This person is currently sharing a limited profile</string>
+    <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
+    <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile.</string>
+    <!-- Shown when viewing your own incomplete profile -->
+    <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet. Let’s get you started.</string>
+    <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
+    <string name="profile_incomplete_edit_button">Get Started</string>
+    <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
+    <string name="profile_incomplete_about_me">No “About me” info provided.</string>
+    <!-- Window title for edit profile screen -->
+    <string name="edit_user_profile_title">Edit profile</string>
+    <!-- How most profile fields are formatted when viewing the edit screen -->
+    <string name="edit_user_profile_field">{label}: {value}</string>
+    <!-- Default placeholder if a profile field is blank -->
+    <string name="edit_user_profile_field_placeholder">Select</string>
+    <!-- Button that saves changes to a profile text field -->
+    <string name="edit_user_profile_textarea_submit_button">Submit</string>
+    <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
+    <string name="edit_user_profile_current_language">Current language: {current_language}</string>
+    <!-- An option that will set the user profile's location to the country of their device's configured locale -->
+    <string name="edit_user_profile_current_location">Current location: {current_location}</string>
+    <!-- Button label that will open gallery or camera for choosing new profile photo -->
+    <string name="edit_user_profile_change_photo">Change</string>
+    <!-- Content Description for change photo button -->
+    <string name="edit_user_profile_change_photo_description">Change profile picture</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_take_photo">Take photo</string>
+    <!-- Button that will open photo gallery for choosing a new profile photo -->
+    <string name="edit_user_profile_choose_photo">Choose a photo</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_remove_photo">Remove photo</string>
+    <!-- Title when cropping newly selected profile photo -->
+    <string name="edit_user_profile_photo_crop_title">Crop and resize</string>
+    <!-- Button that will exit the crop tool without saving the image -->
+    <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
+    <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
+    <string name="edit_user_profile_photo_crop_save">Choose</string>
+    <!-- Tab title for section of profile that displays a user's bio -->
+    <string name="profile_tab_bio">About</string>
+    <!-- Tab title for section of profile that lists a user's accomplishments -->
+    <string name="profile_tab_accomplishment">Accomplishments</string>
+</resources>

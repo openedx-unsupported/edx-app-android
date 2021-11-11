@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">Learn more</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">Upgrade {course_name}</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">Earn a verified certificate of completion to showcase on your resumé</string>
+    <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
+    <string name="course_modal_full_access_course">Full access to course content and course material even after the course ends</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">Upgrade now for $99</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">Learn more about locked features</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>How to unlock graded assignments</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">Graded assignments are locked</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">Upgrade to gain access to locked features like this one and get the most out of your course</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>Show more</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>Show less</u></string>
+</resources>

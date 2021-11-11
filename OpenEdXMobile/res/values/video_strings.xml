@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Title of Video Quality Dialog -->
+    <string name="video_download_quality_title">Video download quality</string>
+    <!-- Auto Video Quality option -->
+    <string name="auto_recommended_text">Auto (Recommended)</string>
+    <!-- 360p Video Quality option -->
+    <string name="video_quality_p360">360p (Smallest file size)</string>
+    <!-- 540p Video Quality option -->
+    <string name="video_quality_p540">540p</string>
+    <!-- 720p Video Quality option -->
+    <string name="video_quality_p720">720p (Best quality)</string>
+    <!-- Message shows in Video Quality dialog -->
+    <string name="video_download_quality_message">This setting is for all video downloads in the {platform_name} app.</string>
+
+    <!-- Label for the Download to sd-card setting -->
+    <string name="settings_download_to_sdcard_title">Download Videos to SD Card</string>
+    <!-- Label explaining the download location setting in detail -->
+    <string name="settings_download_to_sdcard_subtitle">Videos will be downloaded to the SD Card if available</string>
+    <!-- Label indicating that the only course content visible in the app is videos -->
+    <string name="lbl_showing_only_videos">Showing only videos</string>
+    <!-- Title of prompt indicating issue loading a video -->
+    <string name="network_error_header">Problem loading video</string>
+    <!-- Content of prompt indicating issue loading a video -->
+    <string name="network_error_message">Please check your Internet Connection.</string>
+
+    <!-- Download error messages -->
+    <!-- Label shown on video list item whose download failed -->
+    <string name="error_download_failed">Download failed</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="file_size_exceeded">The size of the download exceeds the remaining device storage space.</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="download_exceed_message">The videos you’ve selected are larger than 1 GB.
+        Do you want to download these videos?</string>
+
+    <!-- Message shown when user attempts to download a video over cellular data,
+    but has chosen to only allow video downloads over wifi -->
+    <string name="wifi_off_message">Your current download settings only allow downloads over Wi-Fi.
+        \n Please connect to a Wi-Fi network or change your download settings.</string>
+
+    <!-- Google Cast -->
+    <!-- Description of a button that will cast/un-cast the app to a remote device -->
+    <string name="media_route_menu_title">Play on&#8230;</string>
+    <!-- Google cast Introduction title -->
+    <string name="introducing_cast_text">Introducing Cast</string>
+    <!-- Text to describe that video is casting on the remote device -->
+    <string name="remote_device_casting_message">Video is casting to remote device</string>
+
+    <!-- Label explaining toggle for cellular data access -->
+    <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
+    <!-- Info message text for to let use know how many videos were deleted -->
+    <plurals name="delete_video_snackbar_msg">
+        <item quantity="one">%s video deleted</item>
+        <item quantity="other">%s videos deleted</item>
+    </plurals>
+</resources>

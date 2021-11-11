@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Profile Page-->
+    <!--Label for wifi only switch-->
+    <string name="settings_wifi_top">Descarga solo posible mediante WiFi</string>
+    <!--Label explaining what wifi only means in detail-->
+    <string name="settings_wifi_bottom">Sólo descargar contenido cuando el Wifi está encendido</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">Your profile information is only visible to you. Only your username is visible to others on {platform_name}.</string>
+
+    <!--  String for Profile Screen  -->
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">AJUSTES DE VIDEO</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">Información personal</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">Ayuda</string>
+
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">¿Quieres ayudarnos a mejorar la plataforma o la aplicación?</string>
+
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">Contactar al equipo de soporte</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">Obtener ayuda</string>
+
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">Si necesitas más ayuda y quieres aprender cómo usar la aplicación móvil de {platform_name}, visita nuestras preguntas frecuentes.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">Ver preguntas frecuentes</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">Salir</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">Borrar tu cuenta</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">Borrar cuenta</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">Sigue las instrucciones en la siguiente pantalla para borrar tu cuenta y todos los datos relacionados.</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">Versión</string>
+    <!--Logout button label-->
+    <string name="logout">Salir</string>
+    <!--Profile screen version-->
+    <string name="label_version">Versión de la aplicación</string>
+
+    <!--User Profiles-->
+    <!--Window title for the user profile screen-->
+    <string name="profile_title">Perfil</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">Correo electrónico: {email}</string>
+    <!--The accessibility description for the username section-->
+    <string name="profile_username_description">Usuario: {username}</string>
+    <!--The accessibility description for the language section-->
+    <string name="profile_language_description">Idioma: {language}</string>
+    <!--The accessibility description for the location section-->
+    <string name="profile_location_description">Ubicación: {location}</string>
+    <!--The accessibility description for the "About Me" section-->
+    <string name="profile_about_me_description">Sobre mi: {about_me}</string>
+    <!--Label for toolbar icon that launches the edit profile screen for the current user-->
+    <string name="profile_toolbar_edit_button">Editar</string>
+    <!--Shown when viewing your own profile and you are not sharing a full profile-->
+    <string name="profile_sharing_limited_by_you">Actualmente compartes un perfil limitado.</string>
+    <!--Shown when viewing another user's profile and that user is not sharing a full profile-->
+    <string name="profile_sharing_limited_by_other_user">Este usuario está compartiendo un perfil limitado</string>
+    <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
+    <string name="profile_consent_needed_explanation">Debe tener más de 13 años para compartir el perfil completo.</string>
+    <!--Shown when viewing your own incomplete profile-->
+    <string name="profile_incomplete_explanation">Parece que su perfil aún no está completo. Comencemos.</string>
+    <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->
+    <string name="profile_incomplete_edit_button">Comenzar</string>
+    <!--This text is shown in place of the "About Me" text if the user has not filled in their "About Me"-->
+    <string name="profile_incomplete_about_me">No se suministró información \"Sobre mí\".</string>
+    <!--Window title for edit profile screen-->
+    <string name="edit_user_profile_title">Editar perfil</string>
+    <!--How most profile fields are formatted when viewing the edit screen-->
+    <string name="edit_user_profile_field">{label}: {value}</string>
+    <!--Default placeholder if a profile field is blank-->
+    <string name="edit_user_profile_field_placeholder">Seleccionar</string>
+    <!--Button that saves changes to a profile text field-->
+    <string name="edit_user_profile_textarea_submit_button">Enviar</string>
+    <!--An option that will set the user profile's primary language to the language of their device's configured locale-->
+    <string name="edit_user_profile_current_language">Idioma actual: {current_language}</string>
+    <!--An option that will set the user profile's location to the country of their device's configured locale-->
+    <string name="edit_user_profile_current_location">Ubicación actual: {current_location}</string>
+    <!--Button label that will open gallery or camera for choosing new profile photo-->
+    <string name="edit_user_profile_change_photo">Cambiar</string>
+    <!--Content Description for change photo button-->
+    <string name="edit_user_profile_change_photo_description">Cambiar foto de perfil</string>
+    <!--Button that will open a camera for taking a new profile photo-->
+    <string name="edit_user_profile_take_photo">Tomar foto</string>
+    <!--Button that will open photo gallery for choosing a new profile photo-->
+    <string name="edit_user_profile_choose_photo">Elegir una foto</string>
+    <!--Button that will open a camera for taking a new profile photo-->
+    <string name="edit_user_profile_remove_photo">Eliminar foto</string>
+    <!--Title when cropping newly selected profile photo-->
+    <string name="edit_user_profile_photo_crop_title">Cortar y redimensionar</string>
+    <!--Button that will exit the crop tool without saving the image-->
+    <string name="edit_user_profile_photo_crop_cancel">Cancelar</string>
+    <!--Button that will confirm the crop region and continue to upload the cropped photo-->
+    <string name="edit_user_profile_photo_crop_save">Elegir</string>
+    <!--Tab title for section of profile that displays a user's bio-->
+    <string name="profile_tab_bio">Acerca de</string>
+    <!--Tab title for section of profile that lists a user's accomplishments-->
+    <string name="profile_tab_accomplishment">Logros</string>
+</resources>
