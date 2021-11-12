@@ -154,7 +154,7 @@ dependencies {
     implementation "androidx.mediarouter:mediarouter:$androidXVersion"
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
-    implementation 'com.facebook.android:facebook-login:5.9.0'
+    implementation 'com.facebook.android:facebook-login:11.1.1'
     implementation 'com.microsoft.identity.client:msal:0.3+'
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'com.google.code.gson:gson:2.7'
