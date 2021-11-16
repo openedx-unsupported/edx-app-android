@@ -186,46 +186,48 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void setupOpenInBrowserView() {
-        @StringRes int linkTextResId = R.string.open_in_browser_text;
-        binding.tvOpenBrowser.setVisibility(View.VISIBLE);
+        if (getContext() != null) {
+            @StringRes int linkTextResId = R.string.open_in_browser_text;
+            binding.tvOpenBrowser.setVisibility(View.VISIBLE);
 
-        String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
-                + getString(linkTextResId) + " " + AppConstants.ICON_PLACEHOLDER;
-        SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
+            String openInBrowserMessage = getString(R.string.open_in_browser_message) + " "
+                    + getString(linkTextResId) + " " + AppConstants.ICON_PLACEHOLDER;
+            SpannableString openInBrowserSpan = new SpannableString(openInBrowserMessage);
 
-        ImageSpan openInNewIcon = new ImageSpan(requireContext(), R.drawable.ic_open_in_new);
-        openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf(AppConstants.ICON_PLACEHOLDER),
-                openInBrowserMessage.length(), DynamicDrawableSpan.ALIGN_BASELINE);
+            ImageSpan openInNewIcon = new ImageSpan(requireContext(), R.drawable.ic_open_in_new);
+            openInBrowserSpan.setSpan(openInNewIcon, openInBrowserMessage.indexOf(AppConstants.ICON_PLACEHOLDER),
+                    openInBrowserMessage.length(), DynamicDrawableSpan.ALIGN_BASELINE);
 
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(@NotNull View textView) {
-                CourseComponent component = courseManager.getComponentByIdFromAppLevelCache(unit.getCourseId(), unit.getId());
-                environment.getRouter().showAuthenticatedWebViewActivity(requireContext(), component.getParent());
-                forceReloadComponent = true;
-                trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_TAPPED,
-                        Analytics.Values.OPEN_IN_BROWSER_BANNER_TAPPED);
-            }
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NotNull View textView) {
+                    CourseComponent component = courseManager.getComponentByIdFromAppLevelCache(unit.getCourseId(), unit.getId());
+                    environment.getRouter().showAuthenticatedWebViewActivity(requireContext(), component.getParent());
+                    forceReloadComponent = true;
+                    trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_TAPPED,
+                            Analytics.Values.OPEN_IN_BROWSER_BANNER_TAPPED);
+                }
 
-            @Override
-            public void updateDrawState(@NotNull TextPaint textPaint) {
-                textPaint.setUnderlineText(true);
-                super.updateDrawState(textPaint);
-            }
-        };
-        int openInBrowserIndex = openInBrowserMessage.indexOf(getString(linkTextResId));
-        openInBrowserSpan.setSpan(clickableSpan, openInBrowserIndex,
-                openInBrowserIndex + getString(linkTextResId).length(),
-                Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                @Override
+                public void updateDrawState(@NotNull TextPaint textPaint) {
+                    textPaint.setUnderlineText(true);
+                    super.updateDrawState(textPaint);
+                }
+            };
+            int openInBrowserIndex = openInBrowserMessage.indexOf(getString(linkTextResId));
+            openInBrowserSpan.setSpan(clickableSpan, openInBrowserIndex,
+                    openInBrowserIndex + getString(linkTextResId).length(),
+                    Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        openInBrowserSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.neutralXXDark)),
-                openInBrowserIndex, openInBrowserIndex + getString(linkTextResId).length(),
-                Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            openInBrowserSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.neutralXXDark)),
+                    openInBrowserIndex, openInBrowserIndex + getString(linkTextResId).length(),
+                    Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        binding.tvOpenBrowser.setText(openInBrowserSpan);
-        binding.tvOpenBrowser.setMovementMethod(LinkMovementMethod.getInstance());
-        trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_DISPLAYED,
-                Analytics.Values.OPEN_IN_BROWSER_BANNER_DISPLAYED);
+            binding.tvOpenBrowser.setText(openInBrowserSpan);
+            binding.tvOpenBrowser.setMovementMethod(LinkMovementMethod.getInstance());
+            trackOpenInBrowserBannerEvent(Analytics.Events.OPEN_IN_BROWSER_BANNER_DISPLAYED,
+                    Analytics.Values.OPEN_IN_BROWSER_BANNER_DISPLAYED);
+        }
     }
 
     private void trackOpenInBrowserBannerEvent(String eventName, String biValue) {
