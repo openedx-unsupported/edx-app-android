@@ -299,23 +299,25 @@ object CalendarUtils {
                         timeInMillis = getLong(getColumnIndex(CalendarContract.Events.DTSTART))
                     }
                     val description = getString(getColumnIndex(CalendarContract.Events.DESCRIPTION))
-                    run breaker@{
-                        datesList.forEachIndexed { index, unit ->
-                            if (description.contains(unit.title, ignoreCase = true)) {
-                                val date = unit.getDateCalendar()
-                                // As event started 1 hour before it's due time so mincing 1 hour from current date
-                                date.add(Calendar.HOUR_OF_DAY, -1)
+                    if (description != null) {
+                        run breaker@{
+                            datesList.forEachIndexed { index, unit ->
+                                if (description.contains(unit.title, ignoreCase = true)) {
+                                    val date = unit.getDateCalendar()
+                                    // As event started 1 hour before it's due time so mincing 1 hour from current date
+                                    date.add(Calendar.HOUR_OF_DAY, -1)
 
-                                // Comparing the existed events start time with current dates block
-                                if (date.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
-                                    date.get(Calendar.MONTH) == startDate.get(Calendar.MONTH) &&
-                                    date.get(Calendar.DAY_OF_MONTH) == startDate.get(Calendar.DAY_OF_MONTH) &&
-                                    date.get(Calendar.HOUR_OF_DAY) == startDate.get(Calendar.HOUR_OF_DAY) &&
-                                    date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)
-                                ) {
-                                    count++
-                                    datesList.removeAt(index)
-                                    return@breaker
+                                    // Comparing the existed events start time with current dates block
+                                    if (date.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
+                                        date.get(Calendar.MONTH) == startDate.get(Calendar.MONTH) &&
+                                        date.get(Calendar.DAY_OF_MONTH) == startDate.get(Calendar.DAY_OF_MONTH) &&
+                                        date.get(Calendar.HOUR_OF_DAY) == startDate.get(Calendar.HOUR_OF_DAY) &&
+                                        date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)
+                                    ) {
+                                        count++
+                                        datesList.removeAt(index)
+                                        return@breaker
+                                    }
                                 }
                             }
                         }
