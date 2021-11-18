@@ -199,7 +199,12 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 getString(R.string.label_update_now),
                 { _: DialogInterface?, _: Int ->
                     trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE)
-                    addOrUpdateEventsInCalendar(calendarId, true)
+                    val newCalId = CalendarUtils.createOrUpdateCalendar(
+                        context = contextOrThrow,
+                        accountName = accountName,
+                        calendarTitle = calendarTitle
+                    )
+                    addOrUpdateEventsInCalendar(newCalId, true)
                 },
                 getString(R.string.label_remove_course_calendar),
                 { _: DialogInterface?, _: Int ->
@@ -328,12 +333,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun addOrUpdateEventsInCalendar(calendarId: Long, updateEvents: Boolean) {
         val courseDates = viewModel.courseDates.value
-        if (updateEvents) {
-            CalendarUtils.deleteAllCalendarEvents(
-                    context = requireContext(),
-                    calendarId = calendarId
-            )
-        }
         courseDates?.courseDateBlocks?.forEach { courseDateBlock ->
             CalendarUtils.addEventsIntoCalendar(
                 context = contextOrThrow,
