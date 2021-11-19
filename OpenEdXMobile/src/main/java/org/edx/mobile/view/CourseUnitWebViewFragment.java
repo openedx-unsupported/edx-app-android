@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -307,7 +308,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private void showCalendarOutOfDateDialog(Long calendarId) {
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
-                getString(R.string.message_calendar_out_of_date), getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(calendarId),
+                getString(R.string.message_calendar_out_of_date), getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(),
                 getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
         alertDialogFragment.setCancelable(false);
         alertDialogFragment.show(getChildFragmentManager(), null);
@@ -327,13 +328,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 Analytics.Screens.PLS_COURSE_UNIT_ASSIGNMENT, isSuccess);
     }
 
-    private void updateCalendarEvents(Long calendarId) {
+    private void updateCalendarEvents() {
         trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
-        CalendarUtils.INSTANCE.deleteAllCalendarEvents(requireContext(), calendarId);
+        long newCalId = CalendarUtils.createOrUpdateCalendar(getContextOrThrow(), accountName, CalendarContract.ACCOUNT_TYPE_LOCAL, calendarTitle);
         if (courseDateViewModel.getCourseDates().getValue() != null) {
             for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
                 ConfigUtil.Companion.checkCalendarSyncEnabled(environment.getConfig(), response ->
-                        CalendarUtils.INSTANCE.addEventsIntoCalendar(getContextOrThrow(), calendarId, unit.getCourseId(),
+                        CalendarUtils.addEventsIntoCalendar(getContextOrThrow(), newCalId, unit.getCourseId(),
                                 courseName, courseDateBlock, response.isDeepLinkEnabled()));
             }
             showCalendarUpdatedSnackbar();

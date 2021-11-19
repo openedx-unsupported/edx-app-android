@@ -50,6 +50,7 @@ object CalendarUtils {
     /**
      * Create or update the calendar if it is already existed in mobile calendar app
      */
+    @JvmStatic
     fun createOrUpdateCalendar(
         context: Context,
         accountName: String,
@@ -78,7 +79,7 @@ object CalendarUtils {
      * Method to create a separate calendar based on course name in mobile calendar app
      */
     @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    fun createCalendar(
+    private fun createCalendar(
         context: Context,
         accountName: String,
         accountType: String,
@@ -141,6 +142,7 @@ object CalendarUtils {
     /**
      * Method to add important dates of course as calendar event into calendar of mobile app
      */
+    @JvmStatic
     fun addEventsIntoCalendar(
         context: Context,
         calendarId: Long,
@@ -280,7 +282,7 @@ object CalendarUtils {
      * Method to compare the calendar events with course dates
      * @return  true if the events are the same as calendar dates otherwise false
      */
-    fun compareEvents(
+    private fun compareEvents(
         context: Context,
         calendarId: Long,
         courseDateBlocks: List<CourseDateBlock>
@@ -325,30 +327,9 @@ object CalendarUtils {
                 } while (moveToNext())
             }
         }
-        return (cursor?.count != 0 && cursor?.count == count)
-    }
-
-    /**
-     * Method to delete the events for the given calendar id
-     *
-     * @param context [Context]
-     * @param calendarId calendarId to query the events
-     *
-     * */
-    fun deleteAllCalendarEvents(context: Context, calendarId: Long) {
-        val cursor = getCalendarEvents(context, calendarId)
-        cursor?.run {
-            if (moveToFirst()) {
-                do {
-                    val deleteUri = ContentUris.withAppendedId(
-                            CalendarContract.Events.CONTENT_URI,
-                            getLong(getColumnIndex(CalendarContract.Events._ID))
-                    )
-                    val rowDelete = context.contentResolver.delete(deleteUri, null, null)
-                    logger.debug("Rows deleted: $rowDelete")
-                } while (moveToNext())
-            }
-        }
+        val areEventsEqual = cursor?.count != 0 && cursor?.count == count
+        cursor?.close()
+        return areEventsEqual
     }
 
     /**
