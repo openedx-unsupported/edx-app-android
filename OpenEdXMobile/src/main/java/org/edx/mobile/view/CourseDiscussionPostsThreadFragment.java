@@ -13,8 +13,6 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDiscussionThreadPostsBinding;
 import org.edx.mobile.discussion.CourseDiscussionInfo;
@@ -48,14 +46,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
     public static final String ARG_DISCUSSION_HAS_TOPIC_NAME = "discussion_has_topic_name";
 
     @Inject
-    private DiscussionService discussionService;
+    DiscussionService discussionService;
 
     private FullScreenErrorNotification errorNotification;
 
@@ -77,6 +79,10 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         FOLLOWING,
         CATEGORY,
         COURSE
+    }
+
+    @Inject
+    public CourseDiscussionPostsThreadFragment() {
     }
 
     public static CourseDiscussionPostsThreadFragment newInstance(@NonNull String topicId,

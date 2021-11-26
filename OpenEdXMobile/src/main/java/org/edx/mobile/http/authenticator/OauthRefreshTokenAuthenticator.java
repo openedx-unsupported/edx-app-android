@@ -1,18 +1,16 @@
 package org.edx.mobile.http.authenticator;
 
-import android.content.Context;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-
-import org.edx.mobile.authentication.LoginService;
-
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.event.LogoutEvent;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.provider.RetrofitProvider;
-import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
@@ -21,14 +19,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.Lazy;
 import de.greenrobot.event.EventBus;
 import okhttp3.Authenticator;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
-import roboguice.RoboGuice;
-
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 /**
  * Authenticator for 401 responses for refreshing oauth tokens. Checks for
@@ -37,6 +36,7 @@ import static org.edx.mobile.http.util.CallUtil.executeStrict;
  * that received the 401 will be attempted again. If no refresh_token is
  * present, no authentication attempt is made.
  */
+@Singleton
 public class OauthRefreshTokenAuthenticator implements Authenticator {
 
     private final Logger logger = new Logger(getClass().getName());
@@ -44,25 +44,27 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     private final static String TOKEN_NONEXISTENT_ERROR_MESSAGE = "token_nonexistent";
     private final static String TOKEN_INVALID_GRANT_ERROR_MESSAGE = "invalid_grant";
     private final static String DISABLED_USER_ERROR_MESSAGE = "user_is_disabled";
-    private Context context;
+
+    Lazy<Config> config;
+
+    Lazy<LoginPrefs> loginPrefs;
+
+    Lazy<RetrofitProvider> retrofitProvider;
 
     @Inject
-    Config config;
-
-    @Inject
-    LoginPrefs loginPrefs;
-
-
-    public OauthRefreshTokenAuthenticator(Context context) {
-        this.context = context;
-        RoboGuice.injectMembers(context, this);
+    public OauthRefreshTokenAuthenticator(Lazy<Config> config, Lazy<RetrofitProvider> retrofitProvider,
+                                          Lazy<LoginPrefs> loginPrefs
+    ) {
+        this.retrofitProvider = retrofitProvider;
+        this.loginPrefs = loginPrefs;
+        this.config = config;
     }
 
     @Override
     public synchronized Request authenticate(Route route, final Response response) throws IOException {
         logger.warn(response.toString());
 
-        final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
+        final AuthResponse currentAuth = loginPrefs.get().getCurrentAuth();
         if (null == currentAuth || null == currentAuth.refresh_token) {
             return null;
         }
@@ -105,14 +107,11 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     @NonNull
     private AuthResponse refreshAccessToken(AuthResponse currentAuth)
             throws IOException, HttpStatusException {
-        // RoboGuice doesn't seem to allow this to be injected via annotation at initialization
-        // time. TODO: Investigate whether this is a bug in RoboGuice.
-        LoginService loginService = RoboGuice.getInjector(context)
-                .getInstance(RetrofitProvider.class).getNonOAuthBased().create(LoginService.class);
+        LoginService loginService = this.retrofitProvider.get().getNonOAuthBased().create(LoginService.class);
 
         AuthResponse refreshTokenData = executeStrict(loginService.refreshAccessToken(
-                ApiConstants.TOKEN_TYPE_REFRESH, config.getOAuthClientId(), currentAuth.refresh_token));
-        loginPrefs.storeRefreshTokenResponse(refreshTokenData);
+                ApiConstants.TOKEN_TYPE_REFRESH, config.get().getOAuthClientId(), currentAuth.refresh_token));
+        loginPrefs.get().storeRefreshTokenResponse(refreshTokenData);
         return refreshTokenData;
     }
 

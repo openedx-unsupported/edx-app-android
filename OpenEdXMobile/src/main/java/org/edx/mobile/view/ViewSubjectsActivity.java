@@ -2,11 +2,15 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.logger.Logger;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ViewSubjectsActivity extends BaseSingleFragmentActivity {
     protected Logger logger = new Logger(getClass().getSimpleName());
 

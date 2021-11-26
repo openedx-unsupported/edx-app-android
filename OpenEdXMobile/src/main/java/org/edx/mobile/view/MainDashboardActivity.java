@@ -1,5 +1,9 @@
 package org.edx.mobile.view;
 
+import static org.edx.mobile.view.Router.EXTRA_DEEP_LINK;
+import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
+import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +16,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -29,12 +32,12 @@ import org.edx.mobile.util.Version;
 
 import java.text.ParseException;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.view.Router.EXTRA_DEEP_LINK;
-import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
-import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
-
+@AndroidEntryPoint
 public class MainDashboardActivity extends OfflineSupportBaseActivity
         implements ToolbarCallbacks {
 

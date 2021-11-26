@@ -3,11 +3,12 @@ package org.edx.mobile.view;
 import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -23,6 +24,9 @@ import org.edx.mobile.view.adapters.DownloadEntryAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class DownloadListActivity extends BaseFragmentActivity {
 
     public static int REFRESH_INTERVAL_IN_MILLISECONDS = 3000;

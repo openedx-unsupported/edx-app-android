@@ -3,6 +3,7 @@ package org.edx.mobile.whatsnew;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +14,9 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.module.prefs.PrefManager;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class WhatsNewActivity extends BaseFragmentActivity {
 
     public static Intent newIntent(@NonNull Context context) {

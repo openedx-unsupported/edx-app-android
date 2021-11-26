@@ -1,5 +1,7 @@
 package org.edx.mobile.http.interceptor;
 
+import androidx.annotation.NonNull;
+
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
@@ -39,6 +41,7 @@ public class NewVersionBroadcastInterceptor implements Interceptor {
      */
     private final Logger logger = new Logger(NewVersionBroadcastInterceptor.class);
 
+    @NonNull
     @Override
     public Response intercept(final Chain chain) throws IOException {
         final Response response = chain.proceed(chain.request());

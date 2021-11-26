@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -44,6 +43,9 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -51,6 +53,7 @@ import retrofit2.Call;
  * Main fragment that populates the course detail screen. The course card fragment is created first
  * and then the additional items are added if given.
  */
+@AndroidEntryPoint
 public class CourseDetailFragment extends BaseFragment {
 
     private static final int LOG_IN_REQUEST_CODE = 42;
@@ -80,10 +83,10 @@ public class CourseDetailFragment extends BaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
-    private CourseService courseService;
+    CourseService courseService;
 
     @Inject
-    private CourseAPI courseApi;
+    CourseAPI courseApi;
 
     @Inject
     IEdxEnvironment environment;
@@ -233,8 +236,8 @@ public class CourseDetailFragment extends BaseFragment {
      */
     private void populateAboutThisCourse(String overview) {
         courseAbout.setVisibility(View.VISIBLE);
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(
-                getActivity(), courseAboutWebView, false, null);
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(),
+                courseAboutWebView, false, null);
         client.setAllLinksAsExternal(true);
 
         StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(getActivity(), logger);

@@ -1,24 +1,26 @@
 package org.edx.mobile.core;
 
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.CourseCalendarPrefs;
-import org.edx.mobile.module.prefs.RemoteFeaturePrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.RemoteFeaturePrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 
-@Singleton
+@Module
+@InstallIn(SingletonComponent.class)
 public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
@@ -56,6 +58,10 @@ public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
     EventBus eventBus;
+
+    @Inject
+    public EdxEnvironment() {
+    }
 
     @Override
     public IDatabase getDatabase() {

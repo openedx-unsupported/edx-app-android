@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
  * it is served as a base class for data{} block. as
  * the detail/schema of the block depends on the block type
  */
-public class BlockData implements Serializable{
+public class BlockData implements Serializable {
     public static class Deserializer implements JsonDeserializer<BlockData> {
         @Override
         public BlockData deserialize(JsonElement json, Type typeOfT,

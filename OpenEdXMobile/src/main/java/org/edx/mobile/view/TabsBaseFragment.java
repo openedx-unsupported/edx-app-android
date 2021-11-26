@@ -19,7 +19,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -35,6 +34,8 @@ import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 

@@ -3,12 +3,16 @@ package org.edx.mobile.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.text.TextUtils;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProgramWebViewActivity extends BaseSingleFragmentActivity {
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";

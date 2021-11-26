@@ -3,6 +3,7 @@ package org.edx.mobile.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.edx.mobile.exception.ErrorMessage
@@ -14,9 +15,11 @@ import org.edx.mobile.model.iap.CheckoutResponse
 import org.edx.mobile.model.iap.ExecuteOrderResponse
 import org.edx.mobile.repositorie.InAppPurchasesRepository
 import retrofit2.Response
+import javax.inject.Inject
 
-class InAppPurchasesViewModel(
-    private val repository: InAppPurchasesRepository = InAppPurchasesRepository.getInstance()
+@HiltViewModel
+class InAppPurchasesViewModel @Inject constructor(
+    private val repository: InAppPurchasesRepository
 ) : ViewModel() {
 
     private val _showLoader = MutableLiveData<Boolean>()

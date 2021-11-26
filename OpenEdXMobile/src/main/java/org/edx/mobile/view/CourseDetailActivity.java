@@ -11,9 +11,12 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.module.analytics.Analytics;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Activity that holds the fragments related to the course detail.
  */
+@AndroidEntryPoint
 public class CourseDetailActivity extends BaseSingleFragmentActivity {
 
     public static Intent newIntent(@NonNull Context context, @NonNull CourseDetail courseDetail) {

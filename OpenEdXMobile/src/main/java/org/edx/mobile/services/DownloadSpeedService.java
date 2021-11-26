@@ -1,13 +1,12 @@
 package org.edx.mobile.services;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
@@ -23,17 +22,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import roboguice.service.RoboService;
 
 /**
  * Created by marcashman on 2014-12-01.
  */
-public class DownloadSpeedService extends RoboService {
+public class DownloadSpeedService extends Service {
 
     private static final String TAG = DownloadSpeedService.class.getCanonicalName();
     private static final long NS_PER_SEC = 1000000000;
@@ -53,10 +53,10 @@ public class DownloadSpeedService extends RoboService {
     private static final Logger logger = new Logger(DownloadSpeedService.class);
 
     @Inject
-    private OkHttpClientProvider okHttpClientProvider;
+    OkHttpClientProvider okHttpClientProvider;
 
     @Inject
-    private AnalyticsRegistry analyticsRegistry;
+    AnalyticsRegistry analyticsRegistry;
 
     SpeedTestHandler messageHandler;
 
@@ -67,7 +67,7 @@ public class DownloadSpeedService extends RoboService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if(intent != null) {
+        if (intent != null) {
             Message msg = messageHandler.obtainMessage();
 
             DownloadDescriptor descriptor = intent.getParcelableExtra(EXTRA_FILE_DESC);
@@ -96,7 +96,7 @@ public class DownloadSpeedService extends RoboService {
         super.onCreate();
     }
 
-    private void startThread(){
+    private void startThread() {
         HandlerThread thread = new HandlerThread("SpeedTestThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         Looper serviceLooper = thread.getLooper();
@@ -116,8 +116,8 @@ public class DownloadSpeedService extends RoboService {
                     .build();
 
             Request request = new Request.Builder()
-                .url(file.getUrl())
-                .build();
+                    .url(file.getUrl())
+                    .build();
 
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -134,7 +134,7 @@ public class DownloadSpeedService extends RoboService {
                     } else {
                         long length = response.body().string().length();
                         double seconds = (System.nanoTime() - startTime) / NS_PER_SEC;
-                        if( seconds != 0 ) {
+                        if (seconds != 0) {
                             final float downloadSpeedKps = (float) ((length / seconds) / 1024);
                             setCurrentDownloadSpeed(downloadSpeedKps);
                             reportDownloadSpeed(downloadSpeedKps);
@@ -142,27 +142,27 @@ public class DownloadSpeedService extends RoboService {
                     }
                 }
             });
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error(ex);
         }
 
     }
 
-    private void reportDownloadSpeed(float downloadSpeedKps){
-        try{
+    private void reportDownloadSpeed(float downloadSpeedKps) {
+        try {
 
             if (NetworkUtil.isConnectedWifi(DownloadSpeedService.this)) {
-                analyticsRegistry.trackUserConnectionSpeed(Analytics.Values.WIFI,   downloadSpeedKps);
+                analyticsRegistry.trackUserConnectionSpeed(Analytics.Values.WIFI, downloadSpeedKps);
             } else if (NetworkUtil.isConnectedMobile(DownloadSpeedService.this)) {
-                analyticsRegistry.trackUserConnectionSpeed(Analytics.Values.CELL_DATA,   downloadSpeedKps);
+                analyticsRegistry.trackUserConnectionSpeed(Analytics.Values.CELL_DATA, downloadSpeedKps);
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
-    private void setCurrentDownloadSpeed(float downloadSpeedKps){
+    private void setCurrentDownloadSpeed(float downloadSpeedKps) {
         PrefManager manager = new PrefManager(this, PrefManager.Pref.WIFI);
         manager.put(PrefManager.Key.SPEED_TEST_KBPS, downloadSpeedKps);
     }
@@ -177,9 +177,9 @@ public class DownloadSpeedService extends RoboService {
             super.handleMessage(msg);
             int messageType = msg.what;
 
-            if(messageType == RUN_SPEED_TEST_MESSAGE){
+            if (messageType == RUN_SPEED_TEST_MESSAGE) {
                 final DownloadDescriptor file = (DownloadDescriptor) msg.obj;
-                if(file != null){
+                if (file != null) {
                     scheduleNewDownload(file);
                 }
             }
@@ -187,14 +187,14 @@ public class DownloadSpeedService extends RoboService {
     }
 
     private void scheduleNewDownload(final DownloadDescriptor file) {
-        if(timerTask != null) {
+        if (timerTask != null) {
             timerTask.cancel();
             timer.cancel();
             timerTask = null;
             timer = null;
         }
 
-        if(file.shouldForceDownload()) {
+        if (file.shouldForceDownload()) {
             performDownload(file);
         } else {
             timerTask = new TimerTask() {
@@ -209,5 +209,4 @@ public class DownloadSpeedService extends RoboService {
             timer.schedule(timerTask, DELAY_IN_MILLISECONDS);
         }
     }
-
 }

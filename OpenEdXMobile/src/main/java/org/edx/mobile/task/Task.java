@@ -1,13 +1,15 @@
 package org.edx.mobile.task;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.os.Looper;
 import android.view.View;
 
-import com.google.inject.Inject;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.logger.Logger;
@@ -19,14 +21,14 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.lang.ref.WeakReference;
 
-import roboguice.util.RoboAsyncTask;
+import dagger.hilt.android.EntryPointAccessors;
 
 /**
  * This class is deprecated. Issues in it's
  * implementation include the lack of a guarantee of the
  * result not being delivered to the callback method
  * after cancellation.
- *
+ * <p>
  * New asynchronous HTTP request implementations should
  * consider using Retrofit's asynchronous API. If that's
  * not sufficient, or if the implementation is not of an
@@ -34,7 +36,7 @@ import roboguice.util.RoboAsyncTask;
  * should be considered instead.
  */
 @Deprecated
-public abstract class Task<T> extends RoboAsyncTask<T> {
+public abstract class Task<T> extends AsyncTask<Void, Void, T> {
 
     protected final Handler handler = new Handler();
     protected final Logger logger = new Logger(getClass().getName());
@@ -45,9 +47,11 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     @Nullable
     private WeakReference<TaskMessageCallback> messageCallback;
 
-    private View progressView;
+    private WeakReference<View> progressView;
 
-    @Inject
+    @NonNull
+    protected final WeakReference<Context> context;
+
     protected IEdxEnvironment environment;
 
     private final CallTrigger callTrigger;
@@ -56,9 +60,11 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         this(context, CallTrigger.LOADING_UNCACHED);
     }
 
+    @SuppressWarnings("deprecation")
     public Task(Context context, CallTrigger callTrigger) {
-        super(context);
-
+        this.context = new WeakReference<>(context);
+        this.environment = EntryPointAccessors
+                .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class).getEnvironment();
         if (context instanceof TaskProcessCallback) {
             setTaskProcessCallback((TaskProcessCallback) context);
         }
@@ -66,7 +72,9 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     }
 
     public void setProgressDialog(@Nullable View progressView) {
-        this.progressView = progressView;
+        if (progressView != null) {
+            this.progressView = new WeakReference<>(progressView);
+        }
         if (progressView != null) {
             this.progressCallback = null;
         }
@@ -103,7 +111,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     @Override
     protected void onPreExecute() {
         if (progressView != null) {
-            progressView.setVisibility(View.VISIBLE);
+            progressView.get().setVisibility(View.VISIBLE);
         }
         final TaskProgressCallback callback = getProgressCallback();
         if (callback != null) {
@@ -112,29 +120,40 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     }
 
     @Override
-    protected void onFinally() {
+    protected void onPostExecute(T unused) {
+        super.onPostExecute(unused);
         stopProgress();
     }
 
-    protected void stopProgress() {
-        if (progressView != null) {
-            progressView.setVisibility(View.GONE);
-            progressView.setAnimation(null);
-        }
-        final TaskProgressCallback callback = getProgressCallback();
-        if (callback != null) {
-            callback.finishProcess();
-        }
-    }
-
     @Override
-    protected void onException(Exception ex) {
+    protected void onCancelled() {
+        super.onCancelled();
+        stopProgress();
         final TaskMessageCallback callback = getMessageCallback();
         if (callback == null) {
             return;
         }
 
-        callback.onMessage(getMessageType(), ErrorUtils.getErrorMessage(ex, callTrigger, context));
+        callback.onMessage(getMessageType(),
+                ErrorUtils.getErrorMessage(new Exception(getMessageType().name()),
+                        callTrigger, context.get()));
+    }
+
+    @Override
+    protected void onCancelled(T unused) {
+        super.onCancelled(unused);
+        this.onCancelled();
+    }
+
+    protected void stopProgress() {
+        if (progressView != null) {
+            progressView.get().setVisibility(View.GONE);
+            progressView.get().setAnimation(null);
+        }
+        final TaskProgressCallback callback = getProgressCallback();
+        if (callback != null) {
+            callback.finishProcess();
+        }
     }
 
     /**
@@ -150,4 +169,10 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
                 return MessageType.FLYIN_ERROR;
         }
     }
+
+    protected void handleException(Exception e) {
+        new Handler(Looper.getMainLooper()).post(() -> onException(e));
+    }
+
+    public abstract void onException(Exception ex);
 }

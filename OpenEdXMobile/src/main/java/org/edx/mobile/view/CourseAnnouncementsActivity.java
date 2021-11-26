@@ -1,24 +1,26 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
 
-import com.google.inject.Inject;
+import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CourseAnnouncementsActivity extends BaseSingleFragmentActivity {
 
     @Inject
     CourseAPI api;
 
     private EnrolledCoursesResponse courseData;
-
 
     public static String TAG = CourseAnnouncementsActivity.class.getCanonicalName();
 

@@ -21,8 +21,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
@@ -46,9 +44,12 @@ import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-import roboguice.RoboGuice;
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import de.greenrobot.event.EventBus;
+
+@AndroidEntryPoint
 public class UserProfileFragment
         extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface>
         implements UserProfileBioTabParent, ScrollingPreferenceParent, RefreshListener, StaticFragmentPagerAdapter.FragmentLifecycleCallbacks {
@@ -69,7 +70,22 @@ public class UserProfileFragment
     }
 
     @Inject
-    private Router router;
+    Router router;
+
+    @Inject
+    AnalyticsRegistry analyticsRegistry;
+
+    @Inject
+    UserService userService;
+
+    @Inject
+    EventBus eventBus;
+
+    @Inject
+    UserPrefs userPrefs;
+
+    @Inject
+    Config config;
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -108,19 +124,18 @@ public class UserProfileFragment
     @NonNull
     @Override
     protected UserProfilePresenter createPresenter() {
-        final Injector injector = RoboGuice.getInjector(getActivity());
         final String username = getUsername();
         return new UserProfilePresenter(
-                injector.getInstance(AnalyticsRegistry.class),
+                analyticsRegistry,
                 new UserProfileInteractor(
                         username,
-                        injector.getInstance(UserService.class),
-                        injector.getInstance(EventBus.class),
-                        injector.getInstance(UserPrefs.class)),
+                        userService,
+                        eventBus,
+                        userPrefs),
                 new UserProfileTabsInteractor(
                         username,
-                        injector.getInstance(UserService.class),
-                        injector.getInstance(Config.class)
+                        userService,
+                        config
                 ));
     }
 

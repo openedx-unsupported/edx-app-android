@@ -5,15 +5,13 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseStatus;
@@ -25,6 +23,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -38,14 +42,15 @@ import retrofit2.http.Query;
 
 public interface CourseService {
     /**
-     * A RoboGuice Provider implementation for CourseService.
+     * A Provider implementation for CourseService.
      */
-    class Provider implements com.google.inject.Provider<CourseService> {
-        @Inject
-        RetrofitProvider retrofitProvider;
+    @Module
+    @InstallIn(SingletonComponent.class)
+    class Provider {
 
-        @Override
-        public CourseService get() {
+        @Singleton
+        @Provides
+        public CourseService get(@NonNull RetrofitProvider retrofitProvider) {
             return retrofitProvider.getWithOfflineCache().create(CourseService.class);
         }
     }
@@ -147,9 +152,14 @@ public interface CourseService {
     Call<Void> updateCoursewareCelebration(@Path("course_id") final String courseId, @Body HashMap<String, Boolean> courseBody);
 
     final class BlocksCompletionBody {
-        @NonNull String username;
-        @NonNull String courseKey;
-        @NonNull HashMap<String, String> blocks = new HashMap<>();
+        @NonNull
+        String username;
+
+        @NonNull
+        String courseKey;
+
+        @NonNull
+        HashMap<String, String> blocks = new HashMap<>();
 
         public BlocksCompletionBody(@NonNull String username, @NonNull String courseKey, @NonNull String[] blockIds) {
             this.username = username;

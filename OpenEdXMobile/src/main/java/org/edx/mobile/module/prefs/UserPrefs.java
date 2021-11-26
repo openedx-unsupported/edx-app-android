@@ -2,26 +2,30 @@ package org.edx.mobile.module.prefs;
 
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.model.api.ProfileModel;
 
-@Singleton
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+
+@Module
+@InstallIn(SingletonComponent.class)
 public class UserPrefs {
 
-    private Context context;
-
-    @NonNull
-    private final LoginPrefs loginPrefs;
+    private final Context context;
 
     @Inject
-    public UserPrefs(Context context, @NonNull LoginPrefs loginPrefs) {
+    LoginPrefs loginPrefs;
+
+    @Inject
+    public UserPrefs(@ApplicationContext Context context) {
         this.context = context;
-        this.loginPrefs = loginPrefs;
     }
 
     /**

@@ -1,11 +1,6 @@
 package org.edx.mobile.social;
 
-import android.app.Activity;
 import android.content.Context;
-
-import org.edx.mobile.model.api.CourseEntry;
-
-import java.util.List;
 
 public interface SocialProvider {
 

@@ -1,16 +1,18 @@
 package org.edx.mobile.task
 
 import android.content.Context
-import com.google.inject.Inject
+import dagger.hilt.android.EntryPointAccessors
+import org.edx.mobile.core.EdxDefaultModule.ProviderEntryPoint
 import org.edx.mobile.model.db.DownloadEntry
-import org.edx.mobile.player.TranscriptManager
 
-abstract class EnqueueDownloadTask(context: Context,
-                                   private var downloadList: List<DownloadEntry>) : Task<Long?>(context) {
-    @Inject
-    lateinit var transcriptManager: TranscriptManager
+abstract class EnqueueDownloadTask(
+    context: Context,
+    private var downloadList: List<DownloadEntry>
+) : Task<Long?>(context) {
+    private var transcriptManager = EntryPointAccessors
+        .fromApplication(context, ProviderEntryPoint::class.java).getTranscriptManager()
 
-    override fun call(): Long {
+    override fun doInBackground(vararg params: Void?): Long {
         var count = 0
         for (downloadEntry in downloadList) {
             if (environment.storage.addDownload(downloadEntry) != -1L) {
@@ -23,10 +25,5 @@ abstract class EnqueueDownloadTask(context: Context,
             }
         }
         return count.toLong()
-    }
-
-    override fun onException(ex: Exception) {
-        super.onException(ex)
-        logger.error(ex)
     }
 }

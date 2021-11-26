@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDiscussionTopicsBinding;
 import org.edx.mobile.discussion.CourseTopics;
@@ -34,9 +32,13 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         implements RefreshListener {
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
@@ -44,13 +46,13 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     private EnrolledCoursesResponse courseData;
 
     @Inject
-    private DiscussionService discussionService;
+    DiscussionService discussionService;
 
     @Inject
-    private DiscussionTopicsAdapter discussionTopicsAdapter;
+    DiscussionTopicsAdapter discussionTopicsAdapter;
 
     @Inject
-    private Router router;
+    Router router;
 
     private Call<CourseTopics> getTopicListCall;
 

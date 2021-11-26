@@ -3,22 +3,18 @@ package org.edx.mobile.base;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -37,6 +33,8 @@ import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -397,7 +395,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showAlertDialog(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
-        if (isInForeground) {
+        if (isInForeground()) {
             AlertDialogFragment.newInstance(title, message, onPositiveClick).show(getSupportFragmentManager(), null);
         }
     }
@@ -407,7 +405,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                                 @Nullable DialogInterface.OnClickListener onPositiveClick,
                                 @Nullable String negativeButtonText,
                                 @Nullable DialogInterface.OnClickListener onNegativeClick) {
-        if (isInForeground) {
+        if (isInForeground()) {
             AlertDialogFragment.newInstance(title, message, positiveButtonText, onPositiveClick, negativeButtonText, onNegativeClick)
                     .show(getSupportFragmentManager(), null);
         }

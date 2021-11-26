@@ -10,11 +10,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.databinding.FragmentDiscussionResponsesOrCommentsBinding;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
@@ -40,10 +39,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.android.components.FragmentComponent;
+import dagger.hilt.android.qualifiers.ActivityContext;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.RoboGuice;
 
+@AndroidEntryPoint
 public class CourseDiscussionResponsesFragment extends BaseFragment implements CourseDiscussionResponsesAdapter.Listener {
 
     private DiscussionThread discussionThread;
@@ -52,10 +59,10 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     private CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
 
     @Inject
-    private DiscussionService discussionService;
+    DiscussionService discussionService;
 
     @Inject
-    private Router router;
+    Router router;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
@@ -68,6 +75,10 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     private ResponsesLoader responsesLoader;
     private Call<DiscussionThread> getThreadCall;
     private FragmentDiscussionResponsesOrCommentsBinding binding;
+
+    @Inject
+    public CourseDiscussionResponsesFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -229,7 +240,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         router.showCourseDiscussionComments(getActivity(), response, discussionThread, courseData);
     }
 
-    private static class ResponsesLoader implements
+    @Module
+    @InstallIn(FragmentComponent.class)
+    static class ResponsesLoader implements
             InfiniteScrollUtils.PageLoader<DiscussionComment> {
         @NonNull
         private final Context context;
@@ -238,8 +251,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         private final boolean isQuestionTypeThread;
         private boolean hasMorePages = true;
 
-        @Inject
-        private DiscussionService discussionService;
+        DiscussionService discussionService;
 
         @Nullable
         private Call<Page<DiscussionComment>> getResponsesListCall;
@@ -248,13 +260,16 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         private boolean isFrozen;
         private Runnable deferredDeliveryRunnable;
 
-        public ResponsesLoader(@NonNull Context context, @NonNull String threadId,
+        @Inject
+        public ResponsesLoader(@ActivityContext @NonNull Context context, @NonNull String threadId,
                                boolean isQuestionTypeThread) {
             this.context = context;
             this.threadId = threadId;
             this.isQuestionTypeThread = isQuestionTypeThread;
             this.isFetchingEndorsed = isQuestionTypeThread;
-            RoboGuice.injectMembers(context, this);
+            discussionService = EntryPointAccessors
+                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
+                    .getDiscussionService();
         }
 
         @Override

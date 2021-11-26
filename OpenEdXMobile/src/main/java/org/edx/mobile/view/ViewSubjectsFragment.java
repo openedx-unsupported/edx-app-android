@@ -2,15 +2,16 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,17 +32,21 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ViewSubjectsFragment extends BaseFragment {
     private static final String KEY_SEARCH_QUERY = "query";
 
     @Inject
-    private AnalyticsRegistry analyticsRegistry;
+    AnalyticsRegistry analyticsRegistry;
+
     private FragmentViewSubjectsBinding binding;
     private SubjectsAdapter adapter;
     private String searchQuery;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_subjects, container, false);
 

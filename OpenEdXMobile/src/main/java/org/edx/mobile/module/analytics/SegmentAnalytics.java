@@ -7,8 +7,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.segment.analytics.Analytics.Builder;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
@@ -30,17 +28,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Segment.
  */
-@Singleton
+@Module
+@InstallIn(SingletonComponent.class)
 public class SegmentAnalytics implements Analytics {
 
     protected final Logger logger = new Logger(getClass().getName());
     private com.segment.analytics.Analytics tracker;
 
     @Inject
-    public SegmentAnalytics(@NonNull Context context, @NonNull Config config) {
+    public SegmentAnalytics(@ApplicationContext @NonNull Context context, @NonNull Config config) {
         final String writeKey = config.getSegmentConfig().getSegmentWriteKey();
         final boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
         final int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);

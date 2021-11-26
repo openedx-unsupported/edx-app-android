@@ -3,12 +3,10 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
@@ -38,33 +36,53 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.Lazy;
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 
-@Singleton
+@Module
+@InstallIn(SingletonComponent.class)
 public class Storage implements IStorage {
 
-    @Inject
-    private Context context;
-    @Inject
-    private IDatabase db;
-    @Inject
-    private IDownloadManager dm;
-    @Inject
-    private UserPrefs pref;
-    @Inject
-    private Config config;
-    @Inject
-    private LoginPrefs loginPrefs;
-    @Inject
-    private CourseAPI api;
-    @Inject
-    private VideoPrefs videoPrefs;
+    private final Context context;
 
     @Inject
-    protected IEdxEnvironment environment;
+    IDatabase db;
+
+    @Inject
+    IDownloadManager dm;
+
+    @Inject
+    UserPrefs pref;
+
+    @Inject
+    Config config;
+
+    @Inject
+    LoginPrefs loginPrefs;
+
+    @Inject
+    CourseAPI api;
+
+    @Inject
+    VideoPrefs videoPrefs;
+
+    // To remove the dependency cycle.
+    // ref: https://www.reddit.com/r/android_devs/comments/hc6dea/comment/fvffemo/?utm_source=share&utm_medium=web2x&context=3
+    protected Lazy<IEdxEnvironment> environment;
 
     private final Logger logger = new Logger(getClass().getName());
 
+    @Inject
+    public Storage(@ApplicationContext Context context, Lazy<IEdxEnvironment> environment) {
+        this.context = context;
+        this.environment = environment;
+    }
 
     public long addDownload(VideoModel model) {
         if(model.getVideoUrl()==null||model.getVideoUrl().length()<=0){
@@ -89,7 +107,7 @@ public class Storage implements IStorage {
             }
 
             // Fail the download if download directory isn't available
-            final File downloadDirectory = FileUtil.getDownloadDirectory(context, environment);
+            final File downloadDirectory = FileUtil.getDownloadDirectory(context, environment.get());
             if (downloadDirectory == null) return -1;
 
             // there is no any download ever marked for this URL

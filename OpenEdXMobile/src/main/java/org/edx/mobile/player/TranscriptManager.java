@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import androidx.annotation.Nullable;
-import androidx.annotation.NonNull;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.AppConstants;
@@ -24,22 +22,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
 import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
 
-@Singleton
+@Module
+@InstallIn(SingletonComponent.class)
 public class TranscriptManager {
+
     private final Logger logger = new Logger(getClass().getName());
     private final Context context;
     private AsyncTask<Void, Void, String> transcriptDownloader;
 
     @Inject
-    public TranscriptManager(Context context) {
+    public TranscriptManager(@ApplicationContext Context context) {
         this.context = context;
     }
 
     /**
      * This function checks if the file exists for that link
+     *
      * @param url
      * @return
      */
@@ -55,7 +62,8 @@ public class TranscriptManager {
 
     /**
      * This function is used to saved contents of a String to a file
-     * @param url - Url of Transcript
+     *
+     * @param url      - Url of Transcript
      * @param response - This is the String which needs to be saved into a file
      * @throws IOException
      */
@@ -73,6 +81,7 @@ public class TranscriptManager {
 
     /**
      * This function helps to get the file contents in a String
+     *
      * @param url - This is the URL for SRT files
      * @return String - This is the response of the File contents
      * @throws IOException
@@ -96,6 +105,7 @@ public class TranscriptManager {
 
     /**
      * This function helps to get the file contents in an InputStream
+     *
      * @param url - This is the URL for SRT files
      * @return String - This is the response of the File contents
      * @throws IOException
@@ -194,19 +204,20 @@ public class TranscriptManager {
 
     /**
      * This function is used to get string as response for the contents of a file
+     *
      * @param url - URL of the srt
      * @return String contents of the File
      */
-    public InputStream fetchTranscriptResponse(String url){
-        if(url==null){
+    public InputStream fetchTranscriptResponse(String url) {
+        if (url == null) {
             return null;
         }
 
         InputStream response = null;
         try {
-            if(has(url)){
+            if (has(url)) {
                 response = getInputStream(url);
-            return response;
+                return response;
             }
         } catch (IOException e) {
             logger.error(e);

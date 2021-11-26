@@ -1,17 +1,18 @@
 package org.edx.mobile.view.dialog;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
-
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
-import com.google.inject.Inject;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginService;
@@ -24,18 +25,17 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
-import roboguice.fragment.RoboDialogFragment;
 
-import static android.app.Activity.RESULT_OK;
-
-public class ResetPasswordDialogFragment extends RoboDialogFragment {
+public class ResetPasswordDialogFragment extends DialogFragment {
     private static final String ARG_LOGIN_EMAIL = "login_email";
 
     public static final int REQUEST_CODE = 0x5a3d7562;
 
     @Inject
-    private LoginService loginService;
+    LoginService loginService;
 
     @NonNull
     private ResetPasswordDialogBinding binding;

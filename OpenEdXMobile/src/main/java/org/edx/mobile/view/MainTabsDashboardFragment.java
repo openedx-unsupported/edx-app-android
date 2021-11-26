@@ -19,8 +19,10 @@ import org.edx.mobile.util.UiUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
+@AndroidEntryPoint
 public class MainTabsDashboardFragment extends TabsBaseFragment {
 
     @Override

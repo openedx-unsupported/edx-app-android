@@ -2,13 +2,13 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.Intent
-import com.google.inject.Inject
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.services.CourseManager
+import javax.inject.Inject
 
 /**
  * Provides support for offline mode handling within a Fragment.

@@ -14,7 +14,7 @@ import org.edx.mobile.util.TextUtils
 abstract class VideoQualityAdapter(
     context: Context?,
     environment: IEdxEnvironment?,
-    var selectedVideoQuality: VideoQuality
+    private var selectedVideoQuality: VideoQuality
 ) :
     BaseListAdapter<VideoQuality>(
         context,
@@ -55,7 +55,7 @@ abstract class VideoQualityAdapter(
         adapter: AdapterView<*>?, view: View?, position: Int,
         id: Long
     ) {
-        onItemClicked(getItem(position))
+        getItem(position)?.let { onItemClicked(it) }
     }
 
     abstract fun onItemClicked(videoQuality: VideoQuality)

@@ -1,13 +1,13 @@
 package org.edx.mobile.course;
 
+import static org.edx.mobile.http.constants.TimeInterval.HOUR;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+
 import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -53,10 +53,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.Call;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import static org.edx.mobile.http.constants.TimeInterval.HOUR;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import retrofit2.Call;
 
 @Singleton
 public class CourseAPI {

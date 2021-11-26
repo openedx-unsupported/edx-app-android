@@ -36,7 +36,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -73,11 +72,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
+@AndroidEntryPoint
 public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
         AudioManager.OnAudioFocusChangeListener, NetworkObserver,
         GoogleCastDelegate.CastSessionListener {

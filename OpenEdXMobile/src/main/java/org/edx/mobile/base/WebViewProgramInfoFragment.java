@@ -1,13 +1,16 @@
 package org.edx.mobile.base;
 
-import androidx.databinding.DataBindingUtil;
+import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
+
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentWebviewBinding;
@@ -17,8 +20,9 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.links.DefaultActionListener;
 import org.edx.mobile.view.BaseWebViewFragment;
 
-import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class WebViewProgramInfoFragment extends BaseWebViewFragment
         implements WebViewStatusListener {
     private FragmentWebviewBinding binding;

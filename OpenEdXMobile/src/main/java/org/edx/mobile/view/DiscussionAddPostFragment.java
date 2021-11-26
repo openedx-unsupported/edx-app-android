@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.databinding.FragmentAddPostBinding;
@@ -41,15 +39,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class DiscussionAddPostFragment extends BaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
-    private DiscussionService discussionService;
+    DiscussionService discussionService;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
@@ -64,6 +66,10 @@ public class DiscussionAddPostFragment extends BaseFragment {
 
     private int selectedTopicIndex;
     private FragmentAddPostBinding binding;
+
+    @Inject
+    public DiscussionAddPostFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

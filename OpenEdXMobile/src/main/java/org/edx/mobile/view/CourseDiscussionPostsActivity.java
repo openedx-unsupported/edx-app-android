@@ -8,21 +8,24 @@ import android.text.style.ImageSpan;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
 
     @Inject
-    private CourseDiscussionPostsThreadFragment courseDiscussionPostsThreadFragment;
+    CourseDiscussionPostsThreadFragment courseDiscussionPostsThreadFragment;
 
     @Inject
-    private CourseDiscussionPostsSearchFragment courseDiscussionPostsSearchFragment;
+    CourseDiscussionPostsSearchFragment courseDiscussionPostsSearchFragment;
 
     private String searchQuery;
     private DiscussionTopic discussionTopic;
@@ -50,7 +53,6 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
         }
 
         // TODO: Move argument setting logic to base class
-        // Currently RoboGuice doesn't allowing injecting arguments of a Fragment
         if (fragment.getArguments() == null) {
             final Bundle args = new Bundle();
             args.putAll(getIntent().getExtras());

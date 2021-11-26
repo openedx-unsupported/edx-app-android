@@ -15,7 +15,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -35,6 +34,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class WhatsNewFragment extends BaseFragment {
     private final Logger logger = new Logger(getClass().getName());
 
@@ -50,13 +54,14 @@ public class WhatsNewFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_whats_new, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Setting activity's title for accessibility

@@ -5,30 +5,33 @@ import android.webkit.CookieManager;
 
 import androidx.annotation.NonNull;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.authentication.LoginService;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.hilt.android.EntryPointAccessors;
 import de.greenrobot.event.EventBus;
 import okhttp3.Cookie;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import roboguice.RoboGuice;
 
 /**
- *  A central place for course data model transformation
+ * A central place for course data model transformation
  */
+@Singleton
 public class EdxCookieManager {
 
     // We'll assume that cookies are valid for at least one hour; after that
-    // they'll be requeried on API levels lesser than Marshmallow (which
+    // they'll be required on API levels lesser than Marshmallow (which
     // provides an error callback with the HTTP error code) prior to usage.
     private static final long FRESHNESS_INTERVAL = TimeUnit.HOURS.toMillis(1);
     /**
@@ -42,18 +45,21 @@ public class EdxCookieManager {
 
     private static EdxCookieManager instance;
 
-    @Inject
-    private Config config;
-
-    @Inject
-    private LoginService loginService;
+    Config config;
+    LoginService loginService;
 
     private Call<RequestBody> loginCall;
 
+    @Inject
+    public EdxCookieManager(Config config, LoginService loginService) {
+        this.config = config;
+        this.loginService = loginService;
+    }
+
     public static synchronized EdxCookieManager getSharedInstance(@NonNull final Context context) {
-        if ( instance == null ) {
-            instance = new EdxCookieManager();
-            RoboGuice.getInjector(context).injectMembers(instance);
+        if (instance == null) {
+            instance = EntryPointAccessors.fromApplication(context,
+                    EdxDefaultModule.ProviderEntryPoint.class).getEdxCookieManager();
         }
         return instance;
     }
@@ -63,7 +69,7 @@ public class EdxCookieManager {
         authSessionCookieExpiration = -1;
     }
 
-    public synchronized  void tryToRefreshSessionCookie( ){
+    public synchronized void tryToRefreshSessionCookie() {
         if (loginCall == null || loginCall.isCanceled()) {
             loginCall = loginService.login();
             loginCall.enqueue(new Callback<RequestBody>() {

@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import static org.edx.mobile.util.links.WebViewLink.Authority.ENROLLED_COURSE_INFO;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,18 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.util.links.WebViewLink.Authority.ENROLLED_COURSE_INFO;
-
+@AndroidEntryPoint
 public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {
 
     @Inject

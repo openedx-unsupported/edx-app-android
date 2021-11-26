@@ -132,12 +132,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     // Google Firebase
     implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation ("com.google.firebase:firebase-messaging:20.2.0") {
-        // This exclusion has been added due to a conflict between this library and Roboguice
-        // (which has already added the javax.inject group) causing the following error during
-        // compile time: Error: Program type already present: javax.inject.Inject
-        exclude group: 'javax.inject'
-    }
+    implementation "com.google.firebase:firebase-messaging:20.2.0"
+
     // Add the dependency for the Performance Monitoring library
     implementation 'com.google.firebase:firebase-perf:17.0.2'
     // Firebase remote config

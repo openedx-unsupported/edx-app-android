@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
@@ -21,12 +19,16 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ActivityContext;
+
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
 
     @Inject
-    public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
+    public DiscussionPostsAdapter(@ActivityContext Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
     }
 

@@ -23,8 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentAuthenticatedWebviewBinding;
 import org.edx.mobile.deeplink.Screen;
@@ -49,18 +47,21 @@ import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
-import org.edx.mobile.viewModel.ViewModelFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
+@AndroidEntryPoint
 public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     @Inject
-    private CourseManager courseManager;
+    CourseManager courseManager;
 
     private CourseDateViewModel courseDateViewModel;
     private PreLoadingListener preloadingListener;
@@ -257,7 +258,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void initObserver() {
-        courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
+        courseDateViewModel = new ViewModelProvider(this).get(CourseDateViewModel.class);
 
         courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), showLoader -> {
             if (showLoader) {

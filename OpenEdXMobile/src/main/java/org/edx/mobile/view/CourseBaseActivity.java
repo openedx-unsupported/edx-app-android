@@ -5,8 +5,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ActivityCourseBaseBinding;
@@ -21,6 +19,8 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 

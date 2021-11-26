@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -41,19 +38,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class CourseDiscussionCommentsFragment extends BaseFragment implements DiscussionCommentsAdapter.Listener {
 
     @Inject
-    private Router router;
+    Router router;
 
     @Inject
-    private Context context;
-
-    @Inject
-    private DiscussionService discussionService;
+    DiscussionService discussionService;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
@@ -69,6 +67,10 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private boolean hasMorePages = true;
 
     private FragmentDiscussionResponsesOrCommentsBinding binding;
+
+    @Inject
+    public CourseDiscussionCommentsFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,7 +125,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        router.showCourseDiscussionAddComment(context, discussionResponse, discussionThread);
+                        router.showCourseDiscussionAddComment(requireContext(), discussionResponse, discussionThread);
                     }
                 });
 
@@ -194,8 +196,8 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     public void reportComment(@NonNull DiscussionComment comment) {
         final Call<DiscussionComment> setCommentFlaggedCall = discussionService.setCommentFlagged(
                 comment.getIdentifier(), new FlagBody(!comment.isAbuseFlagged()));
-        setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
-                context, null, new DialogErrorNotification(this)) {
+        setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<>(
+                requireContext(), null, new DialogErrorNotification(this)) {
             @Override
             protected void onResponse(@NonNull final DiscussionComment comment) {
                 discussionCommentsAdapter.updateComment(comment);

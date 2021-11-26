@@ -1,17 +1,21 @@
 package org.edx.mobile.view;
 
+import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SUBJECT;
+import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,9 +35,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SUBJECT;
-import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class WebViewDiscoverCoursesFragment extends WebViewDiscoverFragment {
     private static final int VIEW_SUBJECTS_REQUEST_CODE = 999;
 

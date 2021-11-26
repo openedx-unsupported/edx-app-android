@@ -3,8 +3,6 @@ package org.edx.mobile.module.analytics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Singleton;
-
 import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.images.ShareUtils;
 
@@ -12,11 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
+
 /**
  * A registry for enabled Analytics implementations, that delegates all methods to them.
  */
-@Singleton
+@Module
+@InstallIn(SingletonComponent.class)
 public class AnalyticsRegistry implements Analytics {
+
+    @Inject
+    AnalyticsRegistry() {
+    }
+
     @NonNull
     private List<Analytics> services = new ArrayList<>();
 
