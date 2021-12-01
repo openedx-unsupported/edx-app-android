@@ -344,6 +344,8 @@
     <string name="title_calendar_out_of_date">Your course calendar is out of date</string>
     <!-- Message course calendar is out-of-date  -->
     <string name="message_calendar_out_of_date">Your course dates have been shifted and your course calendar is no longer up to date with your new schedule.</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Syncing calendar...</string>
 
     <!-- Label My Courses Graded content Button -->
     <string name="course_value_prop_button">Learn more</string>

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -19,6 +20,7 @@ import roboguice.fragment.RoboDialogFragment;
  * Wrapper class to create a basic fragment dialog.
  */
 public class AlertDialogFragment extends RoboDialogFragment {
+    protected static final String ARG_LAYOUT_RES = "ARG_LAYOUT_RES";
     protected static final String ARG_TITLE = "ARG_TITLE";
     protected static final String ARG_TITLE_RES = "ARG_TITLE_RES";
     protected static final String ARG_MESSAGE = "ARG_MESSAGE";
@@ -139,6 +141,22 @@ public class AlertDialogFragment extends RoboDialogFragment {
         return fragment;
     }
 
+    /**
+     * Creates a new instance of simple custom layout dialog that could have title and layout Id
+     *
+     * @param titleResId  Resource Id of title
+     * @param layoutResId Resource Id of layout
+     * @return New instance of dialog.
+     */
+    public static AlertDialogFragment newInstance(@StringRes int titleResId, final @LayoutRes int layoutResId) {
+        final AlertDialogFragment fragment = new AlertDialogFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_TITLE_RES, titleResId);
+        args.putInt(ARG_LAYOUT_RES, layoutResId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +173,7 @@ public class AlertDialogFragment extends RoboDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Bundle args = getArguments();
+        final int layoutResId = args.getInt(ARG_LAYOUT_RES);
         final int titleResId = args.getInt(ARG_TITLE_RES);
         final int messageResId = args.getInt(ARG_MESSAGE_RES);
         final CharSequence title = titleResId != 0 ?
@@ -166,6 +185,9 @@ public class AlertDialogFragment extends RoboDialogFragment {
                 .setMessage(message)
                 .create();
         alertDialog.setCanceledOnTouchOutside(false);
+        if (layoutResId != 0) {
+            alertDialog.setView(getActivity().getLayoutInflater().inflate(layoutResId, null));
+        }
         if (title != null) {
             alertDialog.setTitle(title);
         }

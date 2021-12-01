@@ -38,7 +38,6 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.CourseDateBlock;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.CourseManager;
@@ -74,6 +73,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private String accountName = "";
     private boolean forceReloadComponent = false;
     private FragmentAuthenticatedWebviewBinding binding;
+    private AlertDialogFragment loaderDialog;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String courseName, String enrollmentMode, boolean isSelfPaced) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
@@ -102,6 +102,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         courseName = getStringArgument(Router.EXTRA_COURSE_NAME);
         calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseName);
         accountName = CalendarUtils.getUserAccountForSync(environment);
+        loaderDialog = AlertDialogFragment.newInstance(R.string.title_syncing_calendar, R.layout.alert_dialog_progress);
         if (getActivity() instanceof PreLoadingListener) {
             preloadingListener = (PreLoadingListener) getActivity();
         } else {
@@ -258,6 +259,17 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void initObserver() {
         courseDateViewModel = new ViewModelProvider(this, new ViewModelFactory()).get(CourseDateViewModel.class);
 
+        courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), showLoader -> {
+            if (showLoader) {
+                loaderDialog.setCancelable(false);
+                loaderDialog.showNow(getChildFragmentManager(), null);
+            } else {
+                loaderDialog.dismiss();
+                showCalendarUpdatedSnackbar();
+                trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
+            }
+        });
+
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
@@ -331,15 +343,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void updateCalendarEvents() {
         trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
         long newCalId = CalendarUtils.createOrUpdateCalendar(getContextOrThrow(), accountName, CalendarContract.ACCOUNT_TYPE_LOCAL, calendarTitle);
-        if (courseDateViewModel.getCourseDates().getValue() != null) {
-            for (CourseDateBlock courseDateBlock : courseDateViewModel.getCourseDates().getValue().getCourseDateBlocks()) {
-                ConfigUtil.Companion.checkCalendarSyncEnabled(environment.getConfig(), response ->
-                        CalendarUtils.addEventsIntoCalendar(getContextOrThrow(), newCalId, unit.getCourseId(),
-                                courseName, courseDateBlock, response.isDeepLinkEnabled()));
-            }
-            showCalendarUpdatedSnackbar();
-            trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
-        }
+        ConfigUtil.Companion.checkCalendarSyncEnabled(environment.getConfig(), response ->
+                courseDateViewModel.addOrUpdateEventsInCalendar(getContextOrThrow(),
+                        newCalId, unit.getCourseId(), courseName, response.isDeepLinkEnabled(), true));
     }
 
     private void removeCalendar(Long calendarId) {
@@ -350,7 +356,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void trackCalendarEvent(String eventName, String biValue) {
-        environment.getAnalyticsRegistry().trackCalendarEvent(eventName, biValue, unit.getCourseId(), enrollmentMode, isSelfPaced);
+        environment.getAnalyticsRegistry().trackCalendarEvent(eventName, biValue, unit.getCourseId(),
+                enrollmentMode, isSelfPaced, courseDateViewModel.getSyncingCalendarTime());
+        courseDateViewModel.resetSyncingCalendarTime();
     }
 
     private void loadUnit(Boolean forceRefresh) {

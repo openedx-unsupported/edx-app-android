@@ -120,6 +120,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidXVersion"
     // For the optional Nullable annotation
     implementation "androidx.annotation:annotation:$androidXVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases

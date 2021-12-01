@@ -776,11 +776,16 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
+                                   @NonNull String courseId, @NonNull String userType,
+                                   @NonNull boolean isSelfPaced, long elapsedTime) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
         event.putCourseId(courseId);
         event.putString(Keys.USER_TYPE, userType);
         event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        if (elapsedTime > 0L) {
+            event.putLong(Keys.ELAPSED_TIME, elapsedTime);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
