@@ -61,6 +61,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     private lateinit var accountName: String
     private lateinit var keyValMap: Map<String, CharSequence>
     private var isCalendarExist: Boolean = false
+    private lateinit var loaderDialog: AlertDialogFragment
 
 
     companion object {
@@ -108,6 +109,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         )
 
         errorNotification = FullScreenErrorNotification(binding.swipeContainer)
+        loaderDialog = AlertDialogFragment.newInstance(R.string.title_syncing_calendar, R.layout.alert_dialog_progress)
 
         binding.swipeContainer.setOnRefreshListener {
             // Hide the progress bar as swipe layout has its own progress indicator
@@ -131,6 +133,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
         viewModel.bannerInfo.observe(viewLifecycleOwner, Observer {
             initDatesBanner(it)
+        })
+
+        viewModel.syncLoader.observe(viewLifecycleOwner, Observer { syncLoader ->
+            if (syncLoader) {
+                loaderDialog.isCancelable = false
+                loaderDialog.showNow(childFragmentManager, null)
+            } else {
+                checkIfCalendarExists()
+                dismissLoader()
+            }
         })
 
         viewModel.courseDates.observe(viewLifecycleOwner, Observer { dates ->
@@ -204,7 +216,14 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                         accountName = accountName,
                         calendarTitle = calendarTitle
                     )
-                    addOrUpdateEventsInCalendar(newCalId, true)
+                    viewModel.addOrUpdateEventsInCalendar(
+                        contextOrThrow,
+                        newCalId,
+                        courseData.courseId,
+                        courseData.course.name,
+                        isDeepLinkEnabled,
+                        true
+                    )
                 },
                 getString(R.string.label_remove_course_calendar),
                 { _: DialogInterface?, _: Int ->
@@ -328,28 +347,30 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             binding.switchSync.isChecked = false
             return
         }
-        addOrUpdateEventsInCalendar(calendarId, false)
+        viewModel.addOrUpdateEventsInCalendar(
+            contextOrThrow,
+            calendarId,
+            courseData.courseId,
+            courseData.course.name,
+            isDeepLinkEnabled,
+            false
+        )
     }
 
-    private fun addOrUpdateEventsInCalendar(calendarId: Long, updateEvents: Boolean) {
-        val courseDates = viewModel.courseDates.value
-        courseDates?.courseDateBlocks?.forEach { courseDateBlock ->
-            CalendarUtils.addEventsIntoCalendar(
-                context = contextOrThrow,
-                calendarId = calendarId,
-                courseId = courseData.courseId,
-                courseName = courseData.course.name,
-                courseDateBlock = courseDateBlock,
-                isDeeplinkEnabled = isDeepLinkEnabled
-            )
-        }
-        checkIfCalendarExists()
-        if (updateEvents) {
+    private fun dismissLoader() {
+        loaderDialog.dismiss()
+        if (viewModel.areEventsUpdated) {
             showCalendarUpdatedSnackbar()
-            trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS)
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_UPDATE_SUCCESS,
+                Analytics.Values.CALENDAR_UPDATE_SUCCESS
+            )
         } else {
             calendarAddedSuccessDialog()
-            trackCalendarEvent(Analytics.Events.CALENDAR_ADD_SUCCESS, Analytics.Values.CALENDAR_ADD_SUCCESS)
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ADD_SUCCESS,
+                Analytics.Values.CALENDAR_ADD_SUCCESS
+            )
         }
     }
 
@@ -422,6 +443,14 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun trackCalendarEvent(eventName: String, biValue: String) {
-        environment.analyticsRegistry.trackCalendarEvent(eventName, biValue, courseData.courseId, courseData.mode, isSelfPaced)
+        environment.analyticsRegistry.trackCalendarEvent(
+            eventName,
+            biValue,
+            courseData.courseId,
+            courseData.mode,
+            isSelfPaced,
+            viewModel.getSyncingCalendarTime()
+        )
+        viewModel.resetSyncingCalendarTime()
     }
 }

@@ -539,9 +539,11 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
+                                   @NonNull String courseId, @NonNull String userType,
+                                   @NonNull boolean isSelfPaced, long elapsedTime) {
         for (Analytics service : services) {
-            service.trackCalendarEvent(eventName, biValue, courseId, userType, isSelfPaced);
+            service.trackCalendarEvent(eventName, biValue, courseId, userType, isSelfPaced, elapsedTime);
         }
     }
 

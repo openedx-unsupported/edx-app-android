@@ -573,9 +573,11 @@ public interface Analytics {
      * @param courseId    Id of the course
      * @param userType    Whether the Account type of the user is audit or verified
      * @param isSelfPaced Whether the course is self-paced or instructor paced
+     * @param elapsedTime events creation/updating time in milliseconds
      */
     void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
-                            @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced);
+                            @NonNull String courseId, @NonNull String userType,
+                            @NonNull boolean isSelfPaced, long elapsedTime);
 
     /**
      * Track the open in browser banner display.
@@ -712,6 +714,7 @@ public interface Analytics {
         String SPECIAL_EXAM_INFO = "special_exam_info";
         String VALUE = "value";
         String OLD_VALUE = "old_value";
+        String ELAPSED_TIME = "elapsed_time";
     }
 
     interface Values {
