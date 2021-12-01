@@ -21,6 +21,7 @@ public class RegistrationFormField {
     private @SerializedName("defaultOption")    RegistrationOption defaultOption; // may be nil
     private @SerializedName("supplementalText") String supplementalText;
     private @SerializedName("supplementalLink") String supplementalLink;
+    private @SerializedName("exposed")          boolean exposed;
 
     public boolean isRequired() {
         return required;
@@ -28,6 +29,10 @@ public class RegistrationFormField {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isExposed() {
+        return exposed;
     }
 
     public String getPlaceholder() {

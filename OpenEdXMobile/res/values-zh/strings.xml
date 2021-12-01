@@ -89,9 +89,9 @@
   <string name="login_failed">请确保输入正确的用户名/邮箱与密码，再重试。</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">创建账号即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
+  <string name="by_creating_account">创建账号即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">登录此App即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
+  <string name="by_signing_in">登录此App即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name}用户协议</string>
   <!--Label for Terms of Service and Honor Code-->

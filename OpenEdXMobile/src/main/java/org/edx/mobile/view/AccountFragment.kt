@@ -134,7 +134,7 @@ class AccountFragment : BaseFragment() {
                         })
                 videoQualityDialog.show(childFragmentManager, VideoDownloadQualityDialogFragment.TAG)
 
-                environment.analyticsRegistry?.trackVideoDownloadQualityClicked(
+                trackEvent(
                     Analytics.Events.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED,
                     Analytics.Values.PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED
                 )
@@ -315,6 +315,6 @@ class AccountFragment : BaseFragment() {
     }
 
     private fun trackEvent(eventName: String, biValue: String) {
-        environment?.analyticsRegistry?.trackProfileScreenEvent(eventName, biValue)
+        environment?.analyticsRegistry?.trackEvent(eventName, biValue)
     }
 }

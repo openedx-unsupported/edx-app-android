@@ -89,9 +89,9 @@
   <string name="login_failed">Certifique-se de que seu nome de usuário ou endereço de e-mail e senha estão corretos e tente novamente.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">Ao criar uma conta, você concorda com o {license} e {tos_and_honor_code} e o reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}</string>
+  <string name="by_creating_account">Ao criar uma conta, você concorda com o {license} e {tos_and_honor_code} e o reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">Ao assinar esse aplicativo, você concorda com o {license} e {tos_and_honor_code} e reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}</string>
+  <string name="by_signing_in">Ao assinar esse aplicativo, você concorda com o {license} e {tos_and_honor_code} e reconhece que a {platform_name} e cada Membro processe seus dados pessoais de acordo com a {privacy_policy}.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name} Contrato de Licença de Usuário Final</string>
   <!--Label for Terms of Service and Honor Code-->

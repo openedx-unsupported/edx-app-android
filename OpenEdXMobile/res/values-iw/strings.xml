@@ -89,9 +89,9 @@
   <string name="login_failed">אנא ודא את נכונות שם המשתמש או כתובת הדוא\"ל והסיסמה, ונסה שוב. </string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">יצירת החשבון מהווה את הסכמתך ל{license}  ול{tos_and_honor_code} והכרה מצדך בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישיים שלך בהתאם ל{privacy_policy}</string>
+  <string name="by_creating_account">יצירת החשבון מהווה את הסכמתך ל{license}  ול{tos_and_honor_code} והכרה מצדך בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישיים שלך בהתאם ל{privacy_policy}.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">כניסה אל האפליקציה מהווה הסכמה ל{license} ול{tos_and_honor_code} והכרה בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישים שלך בהתאם ל{privacy_policy}</string>
+  <string name="by_signing_in">כניסה אל האפליקציה מהווה הסכמה ל{license} ול{tos_and_honor_code} והכרה בכך ש{platform_name} וכל \'חבר\' מעבדים נתונים אישים שלך בהתאם ל{privacy_policy}.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">הסכם רישיון משתמש קצה ב-{platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->

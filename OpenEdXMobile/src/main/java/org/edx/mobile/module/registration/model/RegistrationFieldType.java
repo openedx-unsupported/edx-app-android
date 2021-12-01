@@ -24,5 +24,8 @@ public enum RegistrationFieldType {
     @SerializedName("plaintext")
     PLAINTEXT,
 
+    @SerializedName("checkbox")
+    CHECKBOX,
+
     UNKNOWN
 }

@@ -147,7 +147,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/errorBase</item>
         <item name="android:gravity">start|center_vertical</item>
-        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:textSize">@dimen/edx_xxx_small</item>
         <item name="android:paddingEnd">@dimen/widget_margin_half</item>
         <item name="android:paddingStart">@dimen/widget_margin_half</item>
     </style>

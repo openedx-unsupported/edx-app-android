@@ -599,28 +599,20 @@ public interface Analytics {
     void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName);
 
     /**
-     * Track event triggered on Profile screen
-     *
-     * @param eventName Name of the event
-     * @param biValue   BiValue of the event
-     */
-    void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue);
-
-    /**
-     * Track event triggered on Video download Quality Modal clicked
-     *
-     * @param eventName Name of the event
-     * @param biValue   BiValue of the event
-     */
-    void trackVideoDownloadQualityClicked(String eventName, String biValue);
-
-    /**
      * Track event triggered on Video Download Quality is changed
      *
      * @param selectedVideoQuality newly selected {@link VideoQuality}
      * @param oldVideoQuality      previously selected {@link VideoQuality}
      */
     void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality);
+
+    /**
+     * Track event triggered on Screen
+     *
+     * @param eventName Name of the event
+     * @param biValue   BiValue of the event
+     */
+    void trackEvent(@NonNull String eventName, @NonNull String biValue);
 
     interface Keys {
         String NAME = "name";
@@ -884,6 +876,10 @@ public interface Analytics {
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
         String VIDEO_DOWNLOAD_QUALITY_CHANGED = "edx.bi.app.video_download_quality.changed";
+        // Account Registration
+        String REGISTRATION_OPT_IN_TURNED_ON = "edx.bi.app.user.register.opt_in.on";
+        String REGISTRATION_OPT_IN_TURNED_OFF = "edx.bi.app.user.register.opt_in.off";
+
     }
 
     interface Screens {
@@ -1056,6 +1052,9 @@ public interface Analytics {
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";
         String VIDEO_DOWNLOAD_QUALITY_CHANGED = "Video Download Quality Changed";
+        // Account Registration
+        String REGISTRATION_OPT_IN_TURNED_ON = "Registration: Opt-in Turned On";
+        String REGISTRATION_OPT_IN_TURNED_OFF = "Registration: Opt-in Turned Off";
     }
 
     /**
