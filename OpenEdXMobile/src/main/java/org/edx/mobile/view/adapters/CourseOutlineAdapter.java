@@ -303,7 +303,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
-        viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
+        viewHolder.rowSubtitleVideoSize.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
 
@@ -318,7 +318,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private void getRowViewForLeaf(ViewHolder viewHolder, final SectionRow row) {
         final CourseComponent unit = row.component;
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
-        viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
+        viewHolder.rowSubtitleVideoSize.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
@@ -391,14 +391,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.rowSubtitle.setText(org.edx.mobile.util.TextUtils.getVideoDurationString(context, videoData.duration));
         }
         if (videoData.getSize() > 0L) {
-            viewHolder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
-            viewHolder.rowSubtitleDueDate.setText(MemoryUtil.format(context, videoData.getSize()));
-            // Set appropriate right margin of subtitle
-            final int rightMargin = (int) context.getResources().getDimension(R.dimen.widget_margin_double);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
-                    viewHolder.rowSubtitle.getLayoutParams();
-            params.setMargins(0, 0, rightMargin, 0);
-            params.setMarginEnd(rightMargin);
+            viewHolder.rowSubtitleVideoSize.setVisibility(View.VISIBLE);
+            viewHolder.rowSubtitleVideoSize.setText(MemoryUtil.format(context, videoData.getSize()));
         }
         if (!VideoUtil.isVideoDownloadable(videoBlockModel.getData())) {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
@@ -489,8 +483,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     R.color.neutralBlack));
             if (!TextUtils.isEmpty(component.getDueDate())) {
                 try {
-                    holder.rowSubtitleDueDate.setText(getFormattedDueDate(component.getDueDate()));
-                    holder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
+                    holder.rowSubtitle.setText(String.format("%s %s", holder.rowSubtitle.getText().toString(),
+                            getFormattedDueDate(component.getDueDate())));
                 } catch (IllegalArgumentException e) {
                     logger.error(e);
                 }
@@ -724,8 +718,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.row_title);
         holder.rowSubtitle = (TextView) convertView
                 .findViewById(R.id.row_subtitle);
-        holder.rowSubtitleDueDate = (TextView) convertView
-                .findViewById(R.id.row_subtitle_due_date);
+        holder.rowSubtitleVideoSize = (TextView) convertView
+                .findViewById(R.id.row_subtitle_video_size);
         holder.rowSubtitleIcon = (AppCompatImageView) convertView
                 .findViewById(R.id.row_subtitle_icon);
         holder.lockedContent = (AppCompatImageView) convertView
@@ -755,7 +749,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         AppCompatImageView rowCompleted;
         TextView rowTitle;
         TextView rowSubtitle;
-        TextView rowSubtitleDueDate;
+        TextView rowSubtitleVideoSize;
         AppCompatImageView rowSubtitleIcon;
         AppCompatImageView bulkDownload;
         View downloadBackground;

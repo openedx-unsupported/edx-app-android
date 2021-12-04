@@ -82,9 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:layout_marginEnd="@dimen/widget_margin_half"
-                    android:ellipsize="end"
-                    android:singleLine="true"
+                    android:layout_marginEnd="@dimen/widget_margin_double"
                     android:textColor="@color/neutralXXDark"
                     android:textDirection="locale"
                     android:textSize="@dimen/edx_small"
@@ -93,7 +91,7 @@
                     tools:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/row_subtitle_due_date"
+                    android:id="@+id/row_subtitle_video_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
@@ -101,7 +99,7 @@
                     android:textDirection="locale"
                     android:textSize="@dimen/edx_small"
                     android:visibility="gone"
-                    tools:text="due today at 17:00 PKT"
+                    tools:text="28.4 MB"
                     tools:visibility="visible" />
 
             </LinearLayout>
