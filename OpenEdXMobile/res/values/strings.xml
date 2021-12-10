@@ -193,23 +193,6 @@
     <string name="label_ended">Ended {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending {date}</string>
-    <!-- Error Message when course dates are not available -->
-    <string name="course_dates_unavailable_message">Course dates are not currently available.</string>
-    <!-- Message Course Dates Reset Successful -->
-    <string name="course_dates_reset_successful">Your dates have been successfully shifted.</string>
-    <!-- Message Course Dates Reset Unsuccessful -->
-    <string name="course_dates_reset_unsuccessful">Your dates could not be shifted. Please try again.</string>
-    <!-- Subtitle labels for video durations in hours-->
-    <plurals name="video_duration_hour">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
-    </plurals>
-    <!-- Subtitle labels for video durations in minutes-->
-    <plurals name="video_duration_minutes">
-        <item quantity="one">%d min</item>
-        <item quantity="other">%d mins</item>
-    </plurals>
-
     <!-- Label for date when course is expiring in a specific time frame like in 2 days -->
     <string name="label_expires">Course access expires {date}</string>
     <!-- Label for date when course is expiring on a specific date like on December 5 -->
@@ -419,10 +402,6 @@
     <string name="assessment_needed_updating_youtube">This video requires that you update the YouTube app.</string>
     <!-- Label for button to update youtube app -->
     <string name="assessment_update_youtube">Update YouTube</string>
-    <!-- Message on shift course dates successfully on Assessment -->
-    <string name="assessment_shift_dates_success_msg">Your due dates have been successfully shifted to help you stay on track.</string>
-    <!-- Label to view shifted dates -->
-    <string name="assessment_view_all_dates"><u>View all dates</u></string>
 
     <!-- Video List -->
     <!-- Title of video download screen -->

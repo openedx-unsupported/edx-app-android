@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Heading of Purchases Field  -->
+    <string name="label_purchase">Purchases</string>
+    <!--  Title of Purchases Field  -->
+    <string name="title_purchase">Restore purchases</string>
+    <!--  Description of Purchases Field  -->
+    <string name="description_purchase">Sign into the Play Store to restore access to courses you have previously paid to upgrade</string>
+</resources>

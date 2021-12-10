@@ -9,18 +9,10 @@
     <string name="profile_visibility_off_message">Your profile information is only visible to you. Only your username is visible to others on {platform_name}.</string>
 
     <!--  String for Profile Screen  -->
-    <!-- Button text to show user Video Settings screen -->
-    <string name="label_video_settings">Video Settings</string>
     <!--  Heading of Wifi Field  -->
     <string name="label_wifi">Wifi</string>
     <!--  Heading of Personal Information  -->
     <string name="label_personal_information">Personal Information</string>
-    <!--  Heading of Purchases Field  -->
-    <string name="label_purchase">Purchases</string>
-    <!--  Title of Purchases Field  -->
-    <string name="title_purchase">Restore purchases</string>
-    <!--  Description of Purchases Field  -->
-    <string name="description_purchase">Sign into the Play Store to restore access to courses you have previously paid to upgrade</string>
     <!--  Heading of Help Field  -->
     <string name="label_help">Help</string>
     <!--  Description of Submit feedback Field  -->

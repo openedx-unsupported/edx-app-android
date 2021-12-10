@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">Video Settings</string>
     <!-- Title of Video Quality Dialog -->
     <string name="video_download_quality_title">Video download quality</string>
     <!-- Auto Video Quality option -->
@@ -52,5 +54,16 @@
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s video deleted</item>
         <item quantity="other">%s videos deleted</item>
+    </plurals>
+
+    <!-- Subtitle labels for video durations in hours-->
+    <plurals name="video_duration_hour">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <!-- Subtitle labels for video durations in minutes-->
+    <plurals name="video_duration_minutes">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d mins</item>
     </plurals>
 </resources>
