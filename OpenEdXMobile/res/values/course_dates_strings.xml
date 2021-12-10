@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Today</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Verified Only</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Completed</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Past Due</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Due Next</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Not Yet Released</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">Sync to calendar</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">Automatically sync all deadlines and due dates for this course to your calendar.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” Would Like to Access Your Calendar</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} would like to use your calendar list to subscribe to your personalized {platform_name} calendar for this course.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">Add Calendar \“{course_name}\”</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">Would you like to add the {platform_name} calendar \“{course_name}\” ? \n\nYou can edit or remove your course calendar any time in Calendar or Settings.</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” has been added to your phone\'s calendar.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">Your course calendar has been added.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">Remove calendar \“{course_name}\”</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">Would you like to remove the {platform_name} calendar \“{course_name}\” ?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">Your course calendar has been updated.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">Your course calendar is out of date</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">Your course dates have been shifted and your course calendar is no longer up to date with your new schedule.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Error Adding Calendar, Please try later</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">Remove Course Calendar</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Syncing calendar...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">Your due dates have been successfully shifted to help you stay on track.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>View all dates</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">Course dates are not currently available.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">Your dates have been successfully shifted.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">Your dates could not be shifted. Please try again.</string>
+    <!-- endregion -->
+</resources>
