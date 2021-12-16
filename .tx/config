@@ -18,6 +18,36 @@ file_filter = OpenEdXMobile/res/values-<lang>/labels.xml
 source_file = OpenEdXMobile/res/values/labels.xml
 source_lang = en
 
+[edx-mobile-apps.android-app-iap_strings]
+file_filter = OpenEdXMobile/res/values-<lang>/iap_strings.xml
+source_file = OpenEdXMobile/res/values/iap_strings.xml
+source_lang = en
+
+[edx-mobile-apps.android-app-profile_strings]
+file_filter = OpenEdXMobile/res/values-<lang>/profile_strings.xml
+source_file = OpenEdXMobile/res/values/profile_strings.xml
+source_lang = en
+
+[edx-mobile-apps.android-app-video_strings]
+file_filter = OpenEdXMobile/res/values-<lang>/video_strings.xml
+source_file = OpenEdXMobile/res/values/video_strings.xml
+source_lang = en
+
+[edx-mobile-apps.android-app-course_banners_strings]
+file_filter = OpenEdXMobile/res/values-<lang>/course_banners_strings.xml
+source_file = OpenEdXMobile/res/values/course_banners_strings.xml
+source_lang = en
+
+[edx-mobile-apps.android-app-course_dates_strings]
+file_filter = OpenEdXMobile/res/values-<lang>/course_dates_strings.xml
+source_file = OpenEdXMobile/res/values/course_dates_strings.xml
+source_lang = en
+
+[edx-mobile-apps.android-app-course_modal_strings]
+file_filter = OpenEdXMobile/res/values-<lang>/course_modal_strings.xml
+source_file = OpenEdXMobile/res/values/course_modal_strings.xml
+source_lang = en
+
 [edx-mobile-apps.app-localizable-profiles]
 file_filter = OpenEdXMobile/res/raw-<lang>/profiles.json
 source_file = OpenEdXMobile/res/raw/profiles.json
