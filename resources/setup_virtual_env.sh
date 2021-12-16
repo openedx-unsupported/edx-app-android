@@ -31,7 +31,7 @@ rm -r "./$virtual_env_dir"
 fi
 
 print_message "creating virtual environment"
-virtualenv -p /usr/bin/python3.6 "./$virtual_env_dir"
+virtualenv -p /usr/bin/python3.8 "./$virtual_env_dir"
 }
 
 install_requirements(){
