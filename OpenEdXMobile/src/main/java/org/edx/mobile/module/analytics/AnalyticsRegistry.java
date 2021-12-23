@@ -566,23 +566,16 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue) {
-        for (Analytics service : services) {
-            service.trackProfileScreenEvent(eventName, biValue);
-        }
-    }
-
-    @Override
-    public void trackVideoDownloadQualityClicked(String eventName, String biValue) {
-        for (Analytics service : services) {
-            service.trackVideoDownloadQualityClicked(eventName, biValue);
-        }
-    }
-
-    @Override
     public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
         for (Analytics service : services) {
             service.trackVideoDownloadQualityChanged(selectedVideoQuality, oldVideoQuality);
+        }
+    }
+
+    @Override
+    public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
+        for (Analytics service : services) {
+            service.trackEvent(eventName, biValue);
         }
     }
 }

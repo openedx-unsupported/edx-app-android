@@ -9,7 +9,6 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
-import android.text.style.URLSpan;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -88,19 +87,19 @@ public class TextUtils {
         String privacyPolicyUri = ConfigUtil.getAgreementUrl(context, config.getAgreementUrlsConfig(), AgreementUrlType.PRIVACY_POLICY);
 
         if (!android.text.TextUtils.isEmpty(eulaUri)) {
-            eulaSpan.setSpan(new URLSpan(TextUtils.createAppUri(
+            eulaSpan.setSpan(new UrlSpanNoUnderline(TextUtils.createAppUri(
                     context.getResources().getString(R.string.end_user_title), eulaUri)),
                     0, eula.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if (!android.text.TextUtils.isEmpty(tosUri)) {
-            tosSpan.setSpan(new URLSpan(TextUtils.createAppUri(
+            tosSpan.setSpan(new UrlSpanNoUnderline(TextUtils.createAppUri(
                     context.getResources().getString(R.string.terms_of_service_title), tosUri)),
                     0, tos.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if (!android.text.TextUtils.isEmpty(privacyPolicyUri)) {
-            privacyPolicySpan.setSpan(new URLSpan(TextUtils.createAppUri(
+            privacyPolicySpan.setSpan(new UrlSpanNoUnderline(TextUtils.createAppUri(
                     context.getResources().getString(R.string.privacy_policy_title), privacyPolicyUri)),
                     0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

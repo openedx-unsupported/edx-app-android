@@ -785,7 +785,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (isVideoMode && isOnCourseOutline) {
             videoQualityLayout.setVisibility(View.VISIBLE);
             videoQualityLayout.setOnClickListener(v -> {
-                environment.getAnalyticsRegistry().trackVideoDownloadQualityClicked(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,
+                environment.getAnalyticsRegistry().trackEvent(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,
                         Analytics.Values.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED);
                 showVideoQualitySelectionModal(courseComponent);
             });

@@ -89,9 +89,9 @@
 
     <!-- License Agreement related string on Login and Regiser screens -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}</string>
+    <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}.</string>
     <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}</string>
+    <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}.</string>
     <!-- Label for End User License Agreement -->
     <string name="licensing_agreement">{platform_name} End User License Agreement</string>
     <!-- Label for Terms of Service and Honor Code -->

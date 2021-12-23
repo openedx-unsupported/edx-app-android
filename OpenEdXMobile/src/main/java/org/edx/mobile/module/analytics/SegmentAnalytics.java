@@ -1098,25 +1098,18 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackProfileScreenEvent(@NonNull String eventName, @NonNull String biValue) {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, biValue);
-        trackSegmentEvent(eventName, aEvent.properties);
-    }
-
-    @Override
-    public void trackVideoDownloadQualityClicked(String eventName, String biValue) {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, biValue);
-        trackSegmentEvent(eventName, aEvent.properties);
-    }
-
-    @Override
     public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
         aEvent.data.putValue(Keys.VALUE, selectedVideoQuality.getValue());
         aEvent.data.putValue(Keys.OLD_VALUE, oldVideoQuality.getValue());
         trackSegmentEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED, aEvent.properties);
+    }
+
+    @Override
+    public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
+        trackSegmentEvent(eventName, aEvent.properties);
     }
 }

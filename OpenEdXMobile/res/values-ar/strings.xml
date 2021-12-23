@@ -90,9 +90,9 @@
   <string name="login_failed">رجاء تأكد من أنك تستخدم البريد الإلكتروني أو اسم المستخدم وكلمة السر الصحيحين، وحاول مرة أخرى.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">يعني إنشاء حساب أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
+  <string name="by_creating_account">يعني إنشاء حساب أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">يعني تسجيل الدخول إلى هذا التطبيق أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
+  <string name="by_signing_in">يعني تسجيل الدخول إلى هذا التطبيق أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">اتفاقية ترخيص المستخدم في {platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->

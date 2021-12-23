@@ -346,10 +346,11 @@
     </style>
 
     <style name="agreement_text_style">
-        <item name="android:textColor">@color/neutralBlack</item>
-        <item name="android:layout_marginTop">@dimen/widget_margin</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:textColor">@color/neutralXDark</item>
+        <item name="android:textColorLink">@color/primaryDarkColor</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="lineHeight">@dimen/edx_x_small</item>
     </style>
 
     <!-- Styles from the edX style guide will be nested under "edX" -->
