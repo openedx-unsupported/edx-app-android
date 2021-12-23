@@ -6,4 +6,9 @@
     <string name="title_purchase">Restore purchases</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Sign into the Play Store to restore access to courses you have previously paid to upgrade</string>
+
+    <!-- Title of Upgrade Complete Alert -->
+    <string name="title_upgrade_complete">Upgrade complete</string>
+    <!-- Message for successful course upgrade -->
+    <string name="upgrade_success_message">Thank you for your purchase. You can pick up right where you left off and enjoy full access to your course content.</string>
 </resources>
