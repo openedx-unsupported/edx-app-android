@@ -147,6 +147,17 @@
                     android:minWidth="@dimen/small_icon_size"
                     android:minHeight="@dimen/small_icon_size"
                     app:srcCompat="@drawable/ic_download" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/loading_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:visibility="visible"
+                    app:indicatorSize="@dimen/edx_large"
+                    app:trackThickness="@dimen/edx_x_quarter_margin"
+                    tools:visibility="visible" />
             </FrameLayout>
 
             <TextView

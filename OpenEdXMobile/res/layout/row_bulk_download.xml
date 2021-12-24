@@ -14,17 +14,32 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="@dimen/ic_large"
-            android:layout_height="@dimen/ic_large"
+        <FrameLayout
+            android:id="@+id/icon_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/widget_margin_double"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_videocam"
-            app:tint="@color/primaryBaseColor" />
+            app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="@dimen/ic_large"
+                android:layout_height="@dimen/ic_large"
+                app:srcCompat="@drawable/ic_videocam"
+                app:tint="@color/primaryBaseColor" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorSize="@dimen/edx_large"
+                app:trackThickness="@dimen/edx_x_quarter_margin" />
+
+        </FrameLayout>
         <LinearLayout
             android:id="@+id/ll_content"
             android:layout_width="0dp"
@@ -35,7 +50,7 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sw_download"
-            app:layout_constraintStart_toEndOf="@+id/iv_icon"
+            app:layout_constraintStart_toEndOf="@+id/icon_container"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
