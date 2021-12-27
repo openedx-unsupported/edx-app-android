@@ -96,9 +96,11 @@
                     android:inputType="text|textMultiLine"
                     tools:hint="@string/discussion_body_hint_discussion" />
 
-                <FrameLayout
+                <LinearLayout
                     android:id="@+id/add_post_button"
-                    style="@style/edX.Widget.CreationButtonLayout">
+                    style="@style/edX.Widget.CreationButtonLayout"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/add_post_button_text"
@@ -108,7 +110,7 @@
                     <include
                         android:id="@+id/button_progress_indicator"
                         layout="@layout/button_progress_indicator" />
-                </FrameLayout>
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

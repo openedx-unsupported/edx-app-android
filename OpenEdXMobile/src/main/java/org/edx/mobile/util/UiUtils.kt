@@ -10,9 +10,6 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
@@ -108,25 +105,6 @@ object UiUtils {
         val dr = DrawableCompat.wrap(BitmapDrawable(context.resources, bitmap))
         dr.setBounds(0, 0, size, size)
         return dr
-    }
-
-    fun setAnimation(imageView: ImageView, animation: Animation) {
-        if (animation == Animation.NONE) {
-            imageView.animation = null
-            return
-        }
-        val anim = RotateAnimation(
-                0.0f,
-                360.0f,
-                android.view.animation.Animation.RELATIVE_TO_SELF,
-                0.5f,
-                android.view.animation.Animation.RELATIVE_TO_SELF,
-                0.5f
-        )
-        anim.interpolator = LinearInterpolator()
-        anim.repeatCount = android.view.animation.Animation.INFINITE
-        anim.duration = 1000
-        imageView.startAnimation(anim)
     }
 
     fun setTextViewDrawableStart(context: Context, textView: TextView, @DrawableRes iconResId: Int, resSize: Int) =

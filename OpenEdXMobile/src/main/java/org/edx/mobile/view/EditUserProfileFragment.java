@@ -21,10 +21,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -55,7 +55,6 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
@@ -190,7 +189,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
 
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        UiUtils.INSTANCE.setAnimation(viewHolder.profileImageProgress, UiUtils.Animation.ROTATION);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
@@ -242,7 +240,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         public final TextView changePhoto;
         public final TextView tvProfileVisibilityOff;
         public final LinearLayout llProfileVisibilityOff;
-        public final AppCompatImageView profileImageProgress;
+        public final CircularProgressIndicator profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);

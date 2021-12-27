@@ -65,10 +65,12 @@
                     android:hint="@string/discussion_add_response_hint"
                     android:inputType="text|textMultiLine" />
 
-                <FrameLayout
+                <LinearLayout
                     android:id="@+id/btnAddComment"
                     style="@style/edX.Widget.CreationButtonLayout"
-                    android:contentDescription="@string/discussion_add_response_button_description">
+                    android:contentDescription="@string/discussion_add_response_button_description"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/btnAddCommentText"
@@ -78,7 +80,7 @@
                     <include
                         android:id="@+id/button_progress_indicator"
                         layout="@layout/button_progress_indicator" />
-                </FrameLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -43,8 +42,6 @@ import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtils;
-import org.edx.mobile.util.UiUtils.Animation;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 
@@ -296,7 +293,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
             binding.pbDownload.setVisibility(View.GONE);
 
-            setViewState(R.drawable.ic_videocam, Animation.NONE, R.string.download_complete,
+            setViewState(false, R.string.download_complete,
                     binding.tvSubtitle.getResources().getQuantityString(R.plurals.download_total, videosStatus.total),
                     "total_videos_count", videosStatus.total + "", "total_videos_size",
                     MemoryUtil.format(binding.tvSubtitle.getContext(), videosStatus.totalVideosSize));
@@ -307,8 +304,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         } else if (videosStatus.allVideosDownloading(switchState)) {
             initDownloadProgressView();
 
-            // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
-            setViewState(R.drawable.custom_circular_progress_bar, Animation.ROTATION, R.string.downloading_videos,
+            setViewState(true, R.string.downloading_videos,
                     binding.tvSubtitle.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
@@ -322,8 +318,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             ViewCompat.setImportantForAccessibility(binding.getRoot(), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
             setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else if (switchState == SwitchState.IN_PROCESS) {
-            // TODO: Animation.PULSE causes lag when a spinner stays on screen for a while. Fix in LEARNER-5053
-            setViewState(R.drawable.custom_circular_progress_bar, Animation.ROTATION, R.string.download_starting,
+            setViewState(true, R.string.download_starting,
                     binding.tvSubtitle.getResources().getString(R.string.download_remaining),
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
@@ -340,8 +335,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
             binding.pbDownload.setVisibility(View.GONE);
 
-            setViewState(R.drawable.ic_videocam, Animation.NONE,
-                    R.string.download_to_device,
+            setViewState(false, R.string.download_to_device,
                     binding.tvSubtitle.getResources().getQuantityString(R.plurals.download_total, videosStatus.remaining),
                     "total_videos_count", videosStatus.remaining + "", "total_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
@@ -354,15 +348,17 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         setSwitchState();
     }
 
-    private void setViewState(@DrawableRes int iconResId, @NonNull Animation animation,
-                              @StringRes int titleRes, @NonNull String descPattern,
+    private void setViewState(boolean showProgress, @StringRes int titleRes, @NonNull String descPattern,
                               @NonNull String firstPlaceholder, @NonNull String firstPlaceholderVal,
                               @NonNull String secondPlaceholder, @NonNull String secondPlaceholderVal) {
-        if (getContext() != null) {
-            binding.ivIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(getContext(), iconResId));
-            UiUtils.INSTANCE.setAnimation(binding.ivIcon, animation);
-            binding.tvTitle.setText(titleRes);
+        if (showProgress) {
+            binding.ivIcon.setVisibility(View.GONE);
+            binding.loadingIndicator.setVisibility(View.VISIBLE);
+        } else {
+            binding.ivIcon.setVisibility(View.VISIBLE);
+            binding.loadingIndicator.setVisibility(View.GONE);
         }
+        binding.tvTitle.setText(titleRes);
         setSubtitle(descPattern, firstPlaceholder, firstPlaceholderVal, secondPlaceholder, secondPlaceholderVal);
     }
 

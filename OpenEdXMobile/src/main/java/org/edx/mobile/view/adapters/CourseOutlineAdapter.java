@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -571,21 +572,22 @@ public class CourseOutlineAdapter extends BaseAdapter {
             , View.OnClickListener listener) {
         switch (state) {
             case DOWNLOADING:
-                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(row.bulkDownload.getContext(),
-                        R.drawable.custom_circular_progress_bar, R.dimen.edx_large, R.color.primaryBaseColor));
-                row.bulkDownload.setTag(R.drawable.custom_circular_progress_bar);
+                row.bulkDownloadLoading.setVisibility(View.VISIBLE);
+                row.bulkDownloadLoading.setTag(DownloadEntry.DownloadedState.DOWNLOADING);
+                row.bulkDownload.setVisibility(View.GONE);
                 row.downloadBackground.setVisibility(View.GONE);
-                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.ROTATION);
                 break;
             case DOWNLOADED:
+                row.bulkDownloadLoading.setVisibility(View.GONE);
                 row.downloadBackground.setVisibility(View.VISIBLE);
+                row.bulkDownload.setVisibility(View.VISIBLE);
                 row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
                         R.drawable.ic_download_done, R.dimen.edx_large));
                 row.bulkDownload.setTag(R.drawable.ic_download_done);
-                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.NONE);
                 break;
             case ONLINE:
-                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.NONE);
+                row.bulkDownloadLoading.setVisibility(View.GONE);
+                row.bulkDownload.setVisibility(View.VISIBLE);
                 row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
                         R.drawable.ic_download, R.dimen.edx_large));
@@ -730,6 +732,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (AppCompatImageView) convertView
                 .findViewById(R.id.bulk_download);
+        holder.bulkDownloadLoading = (CircularProgressIndicator) convertView
+                .findViewById(R.id.loading_indicator);
         holder.downloadBackground = (View) convertView
                 .findViewById(R.id.download_background);
         holder.bulkDownload.setColorFilter(R.color.primaryXLightColor);
@@ -752,6 +756,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         TextView rowSubtitleVideoSize;
         AppCompatImageView rowSubtitleIcon;
         AppCompatImageView bulkDownload;
+        CircularProgressIndicator bulkDownloadLoading;
         View downloadBackground;
         AppCompatImageView lockedContent;
         TextView noOfVideos;

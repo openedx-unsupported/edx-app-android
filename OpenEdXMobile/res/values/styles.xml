@@ -25,22 +25,7 @@
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:textColorLink">@color/infoBase</item>
-        <!-- Default progress bar style is currently the same as large. Which means
-             that there is no attribute for the medium one. But since we're not using
-             any of the other sizes anywhere currently, it doesn't matter for now. -->
-        <item name="android:progressBarStyle">@style/edX.Widget.ProgressBar</item>
-        <item name="android:progressBarStyleSmall">@style/edX.Widget.ProgressBar.Small</item>
-        <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title
-        </item>
-        <item name="android:progressBarStyleLarge">@style/edX.Widget.ProgressBar.Large</item>
-        <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
-        <item name="android:progressBarStyleSmallInverse">
-            @style/edX.Widget.ProgressBar.Small.Inverse
-        </item>
-        <item name="android:progressBarStyleLargeInverse">
-            @style/edX.Widget.ProgressBar.Large.Inverse
-        </item>
         <item name="mediaRouteTheme">@style/MediaRouterTheme</item>
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
         <item name="fontItalic">@font/inter_italic</item>
@@ -254,6 +239,17 @@
         </item>
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
+    </style>
+
+    <style name="Widget.App.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CircularProgressIndicator</item>
+        <item name="indicatorSize">@dimen/ic_x_large</item>
+        <item name="trackThickness">@dimen/edx_x_quarter_margin</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="ThemeOverlay.App.CircularProgressIndicator" parent="">
+        <item name="colorPrimary">@color/neutralWhiteT</item>
     </style>
 
     <style name="bulk_download_progress_bar" parent="android:Widget.ProgressBar.Horizontal">
@@ -523,53 +519,6 @@
         <item name="android:overlapAnchor">true</item>
         <item name="overlapAnchor">true</item>
     </style>
-
-    <style name="edX.Widget.ProgressBar" parent="android:Widget.ProgressBar">
-        <!-- We're using the Font Awesome spinner icon for the moment, so we
-             need to use IconProgressBar to be able to define it in XML.
-             Since, this should be used everywhere, it's set up as the
-             default style for ProgressBar as well. -->
-        <item name="android:indeterminateDrawable">@drawable/custom_circular_progress_bar</item>
-        <item name="android:indeterminateTint">@color/primaryBaseColor</item>
-        <item name="android:indeterminateTintMode">src_in</item>
-        <item name="android:indeterminateDuration">600</item>
-        <item name="android:mirrorForRtl">true</item>
-        <!-- Since we use xx_large for the standard ProgressBar
-             style, we'll have xxxx_large as the large style,
-             android base as the small style. -->
-        <item name="android:minWidth">@dimen/ic_xx_large</item>
-        <item name="android:maxWidth">@dimen/ic_xx_large</item>
-        <item name="android:minHeight">@dimen/ic_xx_large</item>
-        <item name="android:maxHeight">@dimen/ic_xx_large</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Large">
-        <item name="android:minWidth">@dimen/ic_xxxx_large</item>
-        <item name="android:maxWidth">@dimen/ic_xxxx_large</item>
-        <item name="android:minHeight">@dimen/ic_xxxx_large</item>
-        <item name="android:maxHeight">@dimen/ic_xxxx_large</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Small">
-        <item name="android:minWidth">@dimen/ic_base</item>
-        <item name="android:maxWidth">@dimen/ic_base</item>
-        <item name="android:minHeight">@dimen/ic_base</item>
-        <item name="android:maxHeight">@dimen/ic_base</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Inverse">
-        <item name="android:indeterminateTint">@color/white</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Large.Inverse">
-        <item name="android:indeterminateTint">@color/white</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Small.Inverse">
-        <item name="android:indeterminateTint">@color/white</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Small.Title" />
 
     <style name="edX.Widget.SegmentedControlSegment">
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>

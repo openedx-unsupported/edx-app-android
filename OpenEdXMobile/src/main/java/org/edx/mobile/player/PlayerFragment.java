@@ -23,7 +23,6 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +35,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
@@ -185,8 +185,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_player, null);
-        ((ProgressBar) view.findViewById(R.id.loading_indicator)).setIndeterminateTintList(
-                ContextCompat.getColorStateList(view.getContext(), R.color.white));
+        ((CircularProgressIndicator) view.findViewById(R.id.loading_indicator)).setIndicatorColor(
+                ContextCompat.getColor(getContext(), R.color.white));
         return view;
     }
 
