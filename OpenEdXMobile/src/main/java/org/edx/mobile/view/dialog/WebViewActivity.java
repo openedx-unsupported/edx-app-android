@@ -11,7 +11,8 @@ import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
+
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -49,7 +50,7 @@ public class WebViewActivity extends BaseFragmentActivity {
             getIntent().putExtra(ARG_URL, url).putExtra(ARG_TITLE, title);
         }
 
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.loading_indicator);
+        final CircularProgressIndicator progress = (CircularProgressIndicator) findViewById(R.id.loading_indicator);
         progress.setVisibility(View.GONE);
 
         webView = (WebView) findViewById(R.id.webView);

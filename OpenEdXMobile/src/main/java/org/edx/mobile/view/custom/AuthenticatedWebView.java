@@ -17,13 +17,14 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -393,7 +394,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         return pageIsLoaded;
     }
 
-    public ProgressBar getProgressWheel() {
+    public CircularProgressIndicator getProgressWheel() {
         return binding.loadingIndicator.loadingIndicator;
     }
 
