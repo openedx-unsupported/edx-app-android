@@ -67,18 +67,6 @@ task copyLintBuildArtifacts(type: Copy) {
 }
 copyLintBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
-// Copies acceptance test reports to the 'artifacts' directory
-task copyAcceptanceTestBuildArtifacts { task ->
-    doLast {
-        // copy acceptance test reports
-        srcPath = "AcceptanceTests/Test-Reports"
-        task.project.exec {
-            commandLine = ['cp', '-R', srcPath, 'artifacts']
-        }
-    }
-}
-copyAcceptanceTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
-
 // Disables preDex which reduces the amount of memory required to build an APK. This is important
 // for CI where there is a memory limit. PreDex is also not useful in CI where a new build is
 // desired on every run.
