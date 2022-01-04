@@ -178,7 +178,7 @@ class DataBindingHelperUtils {
                     return
                 }
             }
-            addDateBadge(textView, courseDateType.getTitle(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
+            addDateBadge(textView, courseDateType.getStringResIdForDateType(), badgeBackground, textAppearance, badgeIcon, badgeStrokeColor)
         }
 
         /**
@@ -202,8 +202,12 @@ class DataBindingHelperUtils {
         /**
          * Method to add the date badge at the end in given title with styles attributes
          */
-        private fun addDateBadge(textView: TextView, title: String, badgeBackground: Int, textAppearance: Int,
+        private fun addDateBadge(textView: TextView, titleRes: Int, badgeBackground: Int, textAppearance: Int,
                                  badgeIcon: Drawable?, badgeStrokeColor: Int) {
+            val title = when (titleRes) {
+                -1 -> ""
+                else -> textView.resources.getString(titleRes)
+            }
             // add badge title so can identify the actual badge position
             val titleWithBadge = SpannableStringBuilder((textView.text as Spannable))
             // add space before badge title

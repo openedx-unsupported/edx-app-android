@@ -14,16 +14,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -42,6 +43,7 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.DeleteAccountImageTask;
+import org.edx.mobile.user.FieldType;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
@@ -53,7 +55,6 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
@@ -66,8 +67,6 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
-
 
 public class EditUserProfileFragment extends BaseFragment implements BaseFragment.PermissionListener {
 
@@ -76,7 +75,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
     private static final int CHOOSE_PHOTO_REQUEST = 3;
     private static final int CROP_PHOTO_REQUEST = 4;
 
-    @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
 
     private Call<Account> getAccountCall;
@@ -113,6 +111,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
 
+        parseExtras();
 
         final Activity activity = getActivity();
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
@@ -184,9 +183,12 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         setData(account, formDescription);
     }
 
+    private void parseExtras() {
+        username = getArguments().getString(EditUserProfileActivity.EXTRA_USERNAME);
+    }
+
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        UiUtils.INSTANCE.setAnimation(viewHolder.profileImageProgress, UiUtils.Animation.ROTATION);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
@@ -236,16 +238,20 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         public final TextView username;
         public final ViewGroup fields;
         public final TextView changePhoto;
-        public final AppCompatImageView profileImageProgress;
+        public final TextView tvProfileVisibilityOff;
+        public final LinearLayout llProfileVisibilityOff;
+        public final CircularProgressIndicator profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);
             this.loadingIndicator = parent.findViewById(R.id.loading_indicator);
-            this.profileImage = (CircleImageView) parent.findViewById(R.id.profile_image);
-            this.username = (TextView) parent.findViewById(R.id.username);
-            this.fields = (ViewGroup) parent.findViewById(R.id.fields);
-            this.changePhoto = (TextView) parent.findViewById(R.id.change_photo);
-            this.profileImageProgress = (AppCompatImageView) parent.findViewById(R.id.profile_image_progress);
+            this.profileImage = parent.findViewById(R.id.profile_image);
+            this.username = parent.findViewById(R.id.username);
+            this.fields = parent.findViewById(R.id.fields);
+            this.tvProfileVisibilityOff = parent.findViewById(R.id.tv_profile_visibility_off);
+            this.llProfileVisibilityOff = parent.findViewById(R.id.ll_profile_visibility_off);
+            this.changePhoto = parent.findViewById(R.id.change_photo);
+            this.profileImageProgress = parent.findViewById(R.id.profile_image_progress);
         }
     }
 
@@ -260,7 +266,11 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         } else {
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
-            viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
+            if (account.requiresParentalConsent()) {
+                viewHolder.changePhoto.setVisibility(View.GONE);
+            } else {
+                viewHolder.changePhoto.setVisibility(View.VISIBLE);
+            }
             viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.primaryBaseColor : R.color.primaryXLightColor);
 
             if (account.getProfileImage().hasImage()) {
@@ -281,8 +291,9 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             final LayoutInflater layoutInflater = LayoutInflater.from(viewHolder.fields.getContext());
             viewHolder.fields.removeAllViews();
             for (final FormField field : formDescription.getFields()) {
-                if (null == field.getFieldType()) {
-                    // Missing field type; ignore this field
+                if (null == field.getFieldType() ||
+                        (account.requiresParentalConsent() && field.getFieldType() == FieldType.SWITCH)) {
+                    // ignore this field if Missing field type OR user didn't set YOB or is less than 13
                     continue;
                 }
                 switch (field.getFieldType()) {
@@ -372,6 +383,17 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                     }
                 }
             }
+            if (account.requiresParentalConsent()) {
+                viewHolder.llProfileVisibilityOff.setVisibility(View.VISIBLE);
+                String profileVisibilityMessage = ResourceUtil.getFormattedString(
+                        getResources(),
+                        R.string.profile_visibility_off_message,
+                        "platform_name",
+                        getString(R.string.platform_name)).toString();
+                viewHolder.tvProfileVisibilityOff.setText(profileVisibilityMessage);
+            } else {
+                viewHolder.llProfileVisibilityOff.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -453,10 +475,10 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(instructions);
-        final RadioGroup group = ((RadioGroup) view.findViewById(R.id.options));
+        final RadioGroup group = view.findViewById(R.id.options);
         {
-            final RadioButton optionOne = ((RadioButton) view.findViewById(R.id.option_one));
-            final RadioButton optionTwo = ((RadioButton) view.findViewById(R.id.option_two));
+            final RadioButton optionOne = view.findViewById(R.id.option_one);
+            final RadioButton optionTwo = view.findViewById(R.id.option_two);
             optionOne.setText(field.getOptions().getValues().get(0).getName());
             optionOne.setTag(field.getOptions().getValues().get(0).getValue());
             optionTwo.setText(field.getOptions().getValues().get(1).getName());

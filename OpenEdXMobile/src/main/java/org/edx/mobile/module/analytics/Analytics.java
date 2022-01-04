@@ -3,6 +3,7 @@ package org.edx.mobile.module.analytics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.Map;
@@ -404,16 +405,6 @@ public interface Analytics {
     void trackSubjectClicked(@NonNull String subjectId);
 
     /**
-     * Track the pressing of 'Download Video to SD Card' switch to ON state.
-     */
-    void trackDownloadToSdCardSwitchOn();
-
-    /**
-     * Track the pressing of 'Download Video to SD Card' switch to OFF state.
-     */
-    void trackDownloadToSdCardSwitchOff();
-
-    /**
      * Track the parameters relevant to the experiment of Firebase Remote Configs.
      * Ref: https://openedx.atlassian.net/browse/LEARNER-7394
      *
@@ -506,7 +497,8 @@ public interface Analytics {
 
     /**
      * Track the tapped occurrence when a user taps "Show more/Show less" in an embedded value prop.
-     *  @param courseId    course id of the course on which button is tapped
+     *
+     * @param courseId    course id of the course on which button is tapped
      * @param componentId Component id of course unit
      * @param price       Price for which the course can upgrade
      * @param isSelfPaced Whether the course is self-paced or instructor paced
@@ -581,9 +573,11 @@ public interface Analytics {
      * @param courseId    Id of the course
      * @param userType    Whether the Account type of the user is audit or verified
      * @param isSelfPaced Whether the course is self-paced or instructor paced
+     * @param elapsedTime events creation/updating time in milliseconds
      */
     void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
-                            @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced);
+                            @NonNull String courseId, @NonNull String userType,
+                            @NonNull boolean isSelfPaced, long elapsedTime);
 
     /**
      * Track the open in browser banner display.
@@ -595,6 +589,30 @@ public interface Analytics {
                                        @NonNull String userType, @NonNull String courseId,
                                        @NonNull String componentId, @NonNull String componentType,
                                        @NonNull String openedUrl);
+
+    /**
+     * Track screen viewed
+     *
+     * @param eventName  Name of the screen event
+     * @param screenName Screen name on which event is triggered
+     */
+    void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName);
+
+    /**
+     * Track event triggered on Video Download Quality is changed
+     *
+     * @param selectedVideoQuality newly selected {@link VideoQuality}
+     * @param oldVideoQuality      previously selected {@link VideoQuality}
+     */
+    void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality);
+
+    /**
+     * Track event triggered on Screen
+     *
+     * @param eventName Name of the event
+     * @param biValue   BiValue of the event
+     */
+    void trackEvent(@NonNull String eventName, @NonNull String biValue);
 
     interface Keys {
         String NAME = "name";
@@ -686,6 +704,9 @@ public interface Analytics {
         String PROPERTIES = "properties";
         String SERVICE = "service";
         String SPECIAL_EXAM_INFO = "special_exam_info";
+        String VALUE = "value";
+        String OLD_VALUE = "old_value";
+        String ELAPSED_TIME = "elapsed_time";
     }
 
     interface Values {
@@ -841,6 +862,24 @@ public interface Analytics {
         // Open in Banner
         String OPEN_IN_BROWSER_BANNER_DISPLAYED = "edx.bi.app.navigation.component.open_in_browser_banner.displayed";
         String OPEN_IN_BROWSER_BANNER_TAPPED = "edx.bi.app.navigation.component.open_in_browser_banner.tapped";
+        // Profile Page Screen Events
+        String SCREEN_NAVIGATION = "edx.bi.app.navigation.screen";
+        String PERSONAL_INFORMATION_CLICKED = "edx.bi.app.profile.personal_info.clicked";
+        String FAQ_CLICKED = "eedx.bi.app.profile.faq.clicked";
+        String WIFI_ON = "edx.bi.app.profile.wifi.switch.on";
+        String WIFI_OFF = "edx.bi.app.profile.wifi.switch.off";
+        String WIFI_ALLOW = "edx.bi.app.profile.wifi.allow";
+        String WIFI_DONT_ALLOW = "edx.bi.app.profile.wifi.dont_allow";
+        String EMAIL_SUPPORT_CLICKED = "edx.bi.app.profile.email_support.clicked";
+        String DELETE_ACCOUNT_CLICKED = "edx.bi.app.profile.delete_account.clicked";
+        // Video Download Quality
+        String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
+        String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
+        String VIDEO_DOWNLOAD_QUALITY_CHANGED = "edx.bi.app.video_download_quality.changed";
+        // Account Registration
+        String REGISTRATION_OPT_IN_TURNED_ON = "edx.bi.app.user.register.opt_in.on";
+        String REGISTRATION_OPT_IN_TURNED_OFF = "edx.bi.app.user.register.opt_in.off";
+
     }
 
     interface Screens {
@@ -865,8 +904,7 @@ public interface Analytics {
         String FIND_DEGREES = "Find Degrees";
         String MY_COURSES = "My Courses";
         String MY_PROGRAM = "My Programs";
-        String SETTINGS = "Settings";
-        String ACCOUNT_SETTINGS = "Account Settings";
+        String PROFILE = "Profile";
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";
         String FORUM_VIEW_TOPIC_THREADS = "Forum: View Topic Threads";
@@ -894,6 +932,8 @@ public interface Analytics {
         String PLS_COURSE_UNIT_ASSIGNMENT = "assignments_screen";
         String SPECIAL_EXAM_BLOCK = "Special Exam Blocked Screen";
         String EMPTY_SUBSECTION_OUTLINE = "Empty Section Outline";
+        // Video Download Quality
+        String VIDEO_DOWNLOAD_QUALITY = "Video Download Quality";
     }
 
     interface Events {
@@ -998,6 +1038,23 @@ public interface Analytics {
         // Open in Banner
         String OPEN_IN_BROWSER_BANNER_DISPLAYED = "Open in Browser Banner Displayed";
         String OPEN_IN_BROWSER_BANNER_TAPPED = "Open in Browser Banner Tapped";
+        // Profile Page Screen Events
+        String PROFILE_PAGE_VIEWED = "Profile Page View";
+        String PERSONAL_INFORMATION_CLICKED = "Personal Information Clicked";
+        String FAQ_CLICKED = "FAQ Clicked";
+        String WIFI_ON = "Wifi On";
+        String WIFI_OFF = "Wifi Off";
+        String WIFI_ALLOW = "Wifi Allow";
+        String WIFI_DONT_ALLOW = "Wifi Dont Allow";
+        String EMAIL_SUPPORT_CLICKED = "Email Support Clicked";
+        String DELETE_ACCOUNT_CLICKED = "Profile: Delete Account Clicked";
+        // Video Download Quality
+        String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
+        String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";
+        String VIDEO_DOWNLOAD_QUALITY_CHANGED = "Video Download Quality Changed";
+        // Account Registration
+        String REGISTRATION_OPT_IN_TURNED_ON = "Registration: Opt-in Turned On";
+        String REGISTRATION_OPT_IN_TURNED_OFF = "Registration: Opt-in Turned Off";
     }
 
     /**

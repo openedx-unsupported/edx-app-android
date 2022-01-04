@@ -43,19 +43,12 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import roboguice.RoboGuice;
-import roboguice.inject.InjectExtra;
 
 public class CourseDiscussionResponsesFragment extends BaseFragment implements CourseDiscussionResponsesAdapter.Listener {
 
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD, optional = true)
     private DiscussionThread discussionThread;
-
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD_ID, optional = true)
     private String threadId;
-
-    @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
     private EnrolledCoursesResponse courseData;
-
     private CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
 
     @Inject
@@ -72,11 +65,16 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Nullable
     private Call<DiscussionThread> getAndReadThreadCall;
 
-    private InfiniteScrollUtils.InfiniteListController controller;
-
     private ResponsesLoader responsesLoader;
     private Call<DiscussionThread> getThreadCall;
     private FragmentDiscussionResponsesOrCommentsBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+        parseExtras();
+    }
 
     @Nullable
     @Override
@@ -109,6 +107,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         }
     }
 
+    private void parseExtras() {
+        discussionThread = (DiscussionThread) getArguments().getSerializable(Router.EXTRA_DISCUSSION_THREAD);
+        threadId = getArguments().getString(Router.EXTRA_DISCUSSION_THREAD_ID);
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
+    }
+
     private void loadThreadResponses() {
         final Activity activity = getActivity();
         responsesLoader = new ResponsesLoader(activity,
@@ -117,7 +121,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
                 activity, this, this, discussionThread, courseData);
-        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
+        InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
                 binding.discussionRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         binding.discussionRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
 
@@ -171,12 +175,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                         R.string.course_discussion_unanswered_title);
                 break;
         }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override

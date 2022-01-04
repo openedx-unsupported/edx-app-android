@@ -112,11 +112,13 @@
                         android:textColor="@color/infoBase"
                         android:textSize="@dimen/edx_x_small" />
 
-                    <FrameLayout
+                    <LinearLayout
                         android:id="@+id/login_button_layout"
                         style="@style/edX.Widget.SignInButtonLayout"
                         android:contentDescription="@string/login_btn"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/login_btn_tv"
@@ -126,7 +128,7 @@
                         <include
                             android:id="@+id/progress"
                             layout="@layout/button_progress_indicator" />
-                    </FrameLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/panel_login_social"

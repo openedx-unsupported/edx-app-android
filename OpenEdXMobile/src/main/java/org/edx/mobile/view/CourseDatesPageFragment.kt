@@ -56,9 +56,12 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
     private var courseData: EnrolledCoursesResponse = EnrolledCoursesResponse()
     private var isSelfPaced: Boolean = true
+    private var isDeepLinkEnabled: Boolean = false
     private lateinit var calendarTitle: String
     private lateinit var accountName: String
+    private lateinit var keyValMap: Map<String, CharSequence>
     private var isCalendarExist: Boolean = false
+    private lateinit var loaderDialog: AlertDialogFragment
 
 
     companion object {
@@ -97,11 +100,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         viewModel = ViewModelProvider(this, ViewModelFactory()).get(CourseDateViewModel::class.java)
 
         courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
-        calendarTitle = "${environment.config.platformName} - ${courseData.course.name}"
         isSelfPaced = courseData.course.isSelfPaced
-        accountName = environment.loginPrefs.currentUserProfile?.email ?: CalendarUtils.LOCAL_USER
+        calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
+        accountName = CalendarUtils.getUserAccountForSync(environment)
+        keyValMap = mapOf(
+            AppConstants.PLATFORM_NAME to environment.config.platformName,
+            AppConstants.COURSE_NAME to calendarTitle
+        )
 
         errorNotification = FullScreenErrorNotification(binding.swipeContainer)
+        loaderDialog = AlertDialogFragment.newInstance(R.string.title_syncing_calendar, R.layout.alert_dialog_progress)
 
         binding.swipeContainer.setOnRefreshListener {
             // Hide the progress bar as swipe layout has its own progress indicator
@@ -127,6 +135,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             initDatesBanner(it)
         })
 
+        viewModel.syncLoader.observe(viewLifecycleOwner, Observer { syncLoader ->
+            if (syncLoader) {
+                loaderDialog.isCancelable = false
+                loaderDialog.showNow(childFragmentManager, null)
+            } else {
+                checkIfCalendarExists()
+                dismissLoader()
+            }
+        })
+
         viewModel.courseDates.observe(viewLifecycleOwner, Observer { dates ->
             if (dates.courseDateBlocks.isNullOrEmpty()) {
                 viewModel.setError(ErrorMessage.COURSE_DATES_CODE, HttpStatus.NO_CONTENT, getString(R.string.course_dates_unavailable_message))
@@ -136,11 +154,14 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                     layoutManager = LinearLayoutManager(context)
                     adapter = CourseDatesAdapter(dates.courseDatesMap, onDateItemClick)
                 }
-                if (CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                    val calendarId = CalendarUtils.getCalendarId(contextOrThrow, accountName, calendarTitle)
-                    if (CalendarUtils.compareEvents(requireContext(), calendarId, dates.courseDateBlocks).not()) {
-                        showCalendarOutOfDateDialog(calendarId)
-                    }
+                val outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
+                    requireContext(),
+                    accountName,
+                    calendarTitle,
+                    dates.courseDateBlocks
+                )
+                if (outdatedCalenderId != -1L) {
+                    showCalendarOutOfDateDialog(outdatedCalenderId)
                 }
             }
         })
@@ -190,7 +211,19 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 getString(R.string.label_update_now),
                 { _: DialogInterface?, _: Int ->
                     trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE)
-                    addOrUpdateEventsInCalendar(calendarId, true)
+                    val newCalId = CalendarUtils.createOrUpdateCalendar(
+                        context = contextOrThrow,
+                        accountName = accountName,
+                        calendarTitle = calendarTitle
+                    )
+                    viewModel.addOrUpdateEventsInCalendar(
+                        contextOrThrow,
+                        newCalId,
+                        courseData.courseId,
+                        courseData.course.name,
+                        isDeepLinkEnabled,
+                        true
+                    )
                 },
                 getString(R.string.label_remove_course_calendar),
                 { _: DialogInterface?, _: Int ->
@@ -213,18 +246,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             binding.syncCalendarContainer.visibility = View.GONE
             return
         }
-        if (isSelfPaced) {
-            ConfigUtil.checkCalendarSyncEnabled(environment.config, object : ConfigUtil.OnCalendarSyncListener {
-                override fun onCalendarSyncResponse(response: CourseDatesCalendarSync) {
-                    if (!response.disabledVersions.contains(VERSION_NAME) && ((response.isSelfPlacedEnable && isSelfPaced) || (response.isInstructorPlacedEnable && !isSelfPaced))) {
-                        binding.syncCalendarContainer.visibility = View.VISIBLE
-                        initializedSyncContainer()
-                    }
+        ConfigUtil.checkCalendarSyncEnabled(environment.config, object : ConfigUtil.OnCalendarSyncListener {
+            override fun onCalendarSyncResponse(response: CourseDatesCalendarSync) {
+                if (!response.disabledVersions.contains(VERSION_NAME) && ((response.isSelfPlacedEnable && isSelfPaced) || (response.isInstructorPlacedEnable && !isSelfPaced))) {
+                    binding.syncCalendarContainer.visibility = View.VISIBLE
+                    isDeepLinkEnabled = response.isDeepLinkEnabled
+                    initializedSyncContainer()
                 }
-            })
-        } else {
-            binding.syncCalendarContainer.visibility = View.GONE
-        }
+            }
+        })
+
         CourseDateUtil.setupCourseDatesBanner(view = binding.banner.root, isCourseDatePage = true, courseId = courseData.courseId,
                 enrollmentMode = courseData.mode, isSelfPaced = isSelfPaced, screenName = Analytics.Screens.PLS_COURSE_DATES,
                 analyticsRegistry = environment.analyticsRegistry, courseBannerInfoModel = courseBannerInfo,
@@ -276,7 +307,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun askForCalendarSync() {
         val title: String = ResourceUtil.getFormattedString(resources, R.string.title_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
-        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_add_course_calendar, keyValMap).toString()
 
         val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
                 { _: DialogInterface, _: Int ->
@@ -302,41 +333,44 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun insertCalendarEvent() {
         val calendarId: Long = CalendarUtils.createOrUpdateCalendar(
-            context = contextOrThrow,
-            accountName = accountName,
-            calendarTitle = calendarTitle
+                context = contextOrThrow,
+                accountName = accountName,
+                calendarTitle = calendarTitle
         )
         // if app unable to create the Calendar for the course
         if (calendarId == -1L) {
             Toast.makeText(
-                contextOrThrow,
-                getString(R.string.adding_calendar_error_message),
-                Toast.LENGTH_SHORT
+                    contextOrThrow,
+                    getString(R.string.adding_calendar_error_message),
+                    Toast.LENGTH_SHORT
             ).show()
             binding.switchSync.isChecked = false
             return
         }
-        addOrUpdateEventsInCalendar(calendarId, false)
+        viewModel.addOrUpdateEventsInCalendar(
+            contextOrThrow,
+            calendarId,
+            courseData.courseId,
+            courseData.course.name,
+            isDeepLinkEnabled,
+            false
+        )
     }
 
-    private fun addOrUpdateEventsInCalendar(calendarId: Long, updateEvents: Boolean) {
-        val courseDates = viewModel.courseDates.value
-        if (updateEvents) {
-            CalendarUtils.deleteAllCalendarEvents(
-                    context = requireContext(),
-                    calendarId = calendarId
-            )
-        }
-        courseDates?.courseDateBlocks?.forEach { courseDateBlock ->
-            CalendarUtils.addEventsIntoCalendar(context = contextOrThrow, calendarId = calendarId, courseName = courseData.course.name, courseDateBlock = courseDateBlock)
-        }
-        checkIfCalendarExists()
-        if (updateEvents) {
+    private fun dismissLoader() {
+        loaderDialog.dismiss()
+        if (viewModel.areEventsUpdated) {
             showCalendarUpdatedSnackbar()
-            trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS)
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_UPDATE_SUCCESS,
+                Analytics.Values.CALENDAR_UPDATE_SUCCESS
+            )
         } else {
             calendarAddedSuccessDialog()
-            trackCalendarEvent(Analytics.Events.CALENDAR_ADD_SUCCESS, Analytics.Values.CALENDAR_ADD_SUCCESS)
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ADD_SUCCESS,
+                Analytics.Values.CALENDAR_ADD_SUCCESS
+            )
         }
     }
 
@@ -369,7 +403,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun askCalendarRemoveDialog(calendarId: Long) {
         val title: String = ResourceUtil.getFormattedString(resources, R.string.title_remove_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
-        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_remove_course_calendar, AppConstants.COURSE_NAME, calendarTitle).toString()
+        val message: String = ResourceUtil.getFormattedString(resources, R.string.message_remove_course_calendar, keyValMap).toString()
 
         val alertDialog = AlertDialogFragment.newInstance(title, message, getString(R.string.label_remove),
                 { _: DialogInterface, _: Int ->
@@ -409,6 +443,14 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun trackCalendarEvent(eventName: String, biValue: String) {
-        environment.analyticsRegistry.trackCalendarEvent(eventName, biValue, courseData.courseId, courseData.mode, isSelfPaced)
+        environment.analyticsRegistry.trackCalendarEvent(
+            eventName,
+            biValue,
+            courseData.courseId,
+            courseData.mode,
+            isSelfPaced,
+            viewModel.getSyncingCalendarTime()
+        )
+        viewModel.resetSyncingCalendarTime()
     }
 }

@@ -1,54 +1,356 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/button_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:divider="@drawable/edx_divider"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/widget_margin"
-            android:showDividers="middle|end"
-            android:splitMotionEvents="false">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/profile_btn"
-                style="@style/account_option"
-                android:text="@string/profile_title" />
+                style="@style/profile_field_description"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:text="@string/label_video_settings"
+                android:textAllCaps="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/edx_default_margin"
+                android:layout_marginTop="@dimen/edx_half_margin"
+                android:layout_marginEnd="@dimen/edx_default_margin"
+                android:layout_marginBottom="@dimen/edx_half_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:text="@string/settings_wifi_top" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_wifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/calendar_sync_switch_widget_height"
+                    android:layout_marginStart="@dimen/edx_half_margin"
+                    app:theme="@style/Calendar.Sync.Switch"
+                    app:trackTint="@color/switch_track_color" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/settings_btn"
-                style="@style/account_option"
-                android:text="@string/label_settings" />
+                style="@style/profile_field_description"
+                android:text="@string/settings_wifi_bottom" />
+
+            <LinearLayout
+                android:id="@+id/container_sdCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/edx_default_margin"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:layout_marginEnd="@dimen/edx_default_margin"
+                android:layout_marginBottom="@dimen/edx_half_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:text="@string/settings_download_to_sdcard_title" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_sdCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/calendar_sync_switch_widget_height"
+                    android:layout_marginStart="@dimen/edx_half_margin"
+                    app:theme="@style/Calendar.Sync.Switch"
+                    app:trackTint="@color/switch_track_color" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/feedback_btn"
-                style="@style/account_option"
-                android:text="@string/label_submit_feedback" />
+                android:id="@+id/tv_description_sdCard"
+                style="@style/profile_field_description"
+                android:text="@string/settings_download_to_sdcard_subtitle" />
+
+
+            <LinearLayout
+                android:id="@+id/container_video_quality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:background="@drawable/selectable_rounded_box_overlay"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/edx_default_margin"
+                android:paddingEnd="@dimen/edx_default_margin">
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="@dimen/edx_half_margin"
+                    android:text="@string/video_download_quality_title" />
+
+                <TextView
+                    android:id="@+id/tv_video_download_quality"
+                    style="@style/profile_field_description"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/auto_recommended_text" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edx_line"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:background="@color/neutralXLight" />
+
+            <LinearLayout
+                android:id="@+id/container_personal_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectable_rounded_box_overlay"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/edx_default_margin"
+                android:paddingBottom="@dimen/edx_default_margin"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/profile_field_description"
+                    android:text="@string/label_personal_information"
+                    android:textAllCaps="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/edx_default_margin"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:layout_marginEnd="@dimen/edx_default_margin"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_email"
+                            style="@style/profile_field_title"
+                            android:layout_width="match_parent"
+                            android:text="@string/profile_email_description" />
+
+                        <TextView
+                            android:id="@+id/tv_username"
+                            style="@style/profile_field_title"
+                            android:layout_width="match_parent"
+                            android:text="@string/profile_username_description" />
+                    </LinearLayout>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="@dimen/user_profile_mini_image_width"
+                        android:layout_height="@dimen/user_profile_mini_image_height"
+                        android:layout_marginStart="@dimen/edx_half_margin"
+                        android:background="@drawable/white_circle"
+                        android:padding="@dimen/user_profile_mini_image_padding"
+                        android:scaleType="centerCrop"
+                        app:civ_border_color="@color/neutralXLight"
+                        app:civ_border_width="1dp"
+                        app:srcCompat="@color/primaryXLightColor"
+                        tools:src="@drawable/profile_photo_placeholder" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_view_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/edx_half_margin"
+                        android:background="@drawable/ic_chevron_right"
+                        android:backgroundTint="@color/primaryBaseColor"
+                        android:paddingStart="@dimen/edx_half_margin"
+                        android:paddingEnd="@dimen/edx_half_margin" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_limited_profile"
+                    style="@style/profile_field_description"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:text="@string/profile_sharing_limited_by_you"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edx_line"
+                android:background="@color/neutralXLight" />
+
+            <LinearLayout
+                android:id="@+id/container_purchases"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectable_rounded_box_overlay"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/edx_default_margin"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/profile_field_description"
+                    android:text="@string/label_purchase"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/edx_default_margin"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:layout_marginEnd="@dimen/edx_default_margin"
+                    android:layout_weight="0"
+                    android:text="@string/title_purchase" />
+
+                <TextView
+                    style="@style/profile_field_description"
+                    android:text="@string/description_purchase" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edx_line"
+                    android:layout_marginTop="@dimen/edx_default_margin"
+                    android:background="@color/neutralXLight" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/logout_btn"
-                style="@style/account_option"
-                android:text="@string/logout" />
+                android:id="@+id/tv_help"
+                style="@style/profile_field_description"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:text="@string/label_help"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
+            <LinearLayout
+                android:id="@+id/container_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edx_half_margin"
+                android:layout_marginBottom="@dimen/edx_half_margin"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/edx_default_margin"
+                    android:layout_marginEnd="@dimen/edx_default_margin"
+                    android:layout_weight="0"
+                    android:text="@string/label_submit_feedback" />
+
+                <TextView
+                    android:id="@+id/tv_feedback_description"
+                    style="@style/profile_field_description"
+                    android:text="@string/description_submit_feedback" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_email_support"
+                    style="@style/edX.Widget.ProfileActionBorderedButton"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:focusable="true"
+                    android:text="@string/label_submit_feedback_btn" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/container_faq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:layout_marginBottom="@dimen/edx_default_margin"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    style="@style/profile_field_title"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/edx_default_margin"
+                    android:layout_marginEnd="@dimen/edx_default_margin"
+                    android:layout_weight="0"
+                    android:text="@string/title_get_support" />
+
+                <TextView
+                    android:id="@+id/tv_get_support_description"
+                    style="@style/profile_field_description"
+                    android:text="@string/description_get_support" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_faq"
+                    style="@style/edX.Widget.ProfileActionBorderedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_view_button_height"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:text="@string/label_view_faq_btn"
+                    android:includeFontPadding="false"
+                    app:backgroundTint="@null"
+                    app:icon="@drawable/ic_open_in_new"
+                    app:iconGravity="textEnd"
+                    app:iconSize="@dimen/ic_small"
+                    app:iconTint="@color/primaryBaseColor" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edx_line"
+                android:background="@color/neutralXLight" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_sign_out"
+                style="@style/edX.Widget.ProfileActionBorderedButton"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:text="@string/label_sign_out_btn"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/app_version"
+                style="@style/profile_field_description"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:layout_marginBottom="@dimen/edx_default_margin"
+                android:lineHeight="@dimen/edx_margin"
+                android:textSize="@dimen/edx_xx_small"
+                tools:text="Version X.X.X" />
+
+            <LinearLayout
+                android:id="@+id/container_delete_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/neutralWhite"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_delete_account"
+                    style="@style/edX.Widget.ProfileActionBorderedButton"
+                    android:layout_marginTop="@dimen/button_horizontal_padding"
+                    android:layout_marginBottom="@dimen/edx_half_margin"
+                    android:background="@drawable/edx_error_base_bordered_button"
+                    android:text="@string/label_delete_account_btn"
+                    android:textColor="@color/errorBase" />
+
+                <TextView
+                    style="@style/profile_field_description"
+                    android:layout_marginBottom="@dimen/divider_with_text_margin"
+                    android:text="@string/description_delete_account"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_version_no"
-            style="@style/regular_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edx_margin"
-            android:gravity="center_horizontal"
-            android:textColor="@color/primaryBaseColor"
-            android:textSize="@dimen/drawer_app_version_text"
-            tools:text="Version Major.Minor.Patch" />
-    </LinearLayout>
+    </ScrollView>
 </layout>

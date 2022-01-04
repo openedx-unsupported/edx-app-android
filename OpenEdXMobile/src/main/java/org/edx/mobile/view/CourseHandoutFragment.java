@@ -33,13 +33,10 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.Request;
-import roboguice.inject.InjectExtra;
 
 public class CourseHandoutFragment extends BaseFragment implements RefreshListener {
-    protected final Logger logger = new Logger(getClass().getName());
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
-    private EnrolledCoursesResponse courseData;
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
     private AnalyticsRegistry analyticsRegistry;
@@ -50,14 +47,15 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
     @Inject
     private OkHttpClientProvider okHttpClientProvider;
 
+    private EnrolledCoursesResponse courseData;
     private FullScreenErrorNotification errorNotification;
-
     private SnackbarErrorNotification snackbarErrorNotification;
     private FragmentWebviewWithPaddingsBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parseExtras();
         analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_HANDOUTS, courseData.getCourse().getId(), null);
     }
 
@@ -76,6 +74,10 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         snackbarErrorNotification = new SnackbarErrorNotification(binding.webview);
         new URLInterceptorWebViewClient(requireActivity(), binding.webview, false, null).setAllLinksAsExternal(true);
         loadData();
+    }
+
+    private void parseExtras() {
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
     }
 
     private void loadData() {

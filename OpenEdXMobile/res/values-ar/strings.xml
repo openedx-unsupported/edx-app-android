@@ -46,7 +46,7 @@
   <string name="share_course_button">مشاركة المُساق</string>
   <!--Share course-->
   <string name="share_course_message">أحضر حاليًا مساقًا ممتعًا على منصّة {platform_name}! اطلع عليه:</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">التحميل من خلال الـ Wi-Fi فقط</string>
   <!--Label explaining what wifi only means in detail-->
@@ -90,9 +90,9 @@
   <string name="login_failed">رجاء تأكد من أنك تستخدم البريد الإلكتروني أو اسم المستخدم وكلمة السر الصحيحين، وحاول مرة أخرى.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">يعني إنشاء حساب أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
+  <string name="by_creating_account">يعني إنشاء حساب أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">يعني تسجيل الدخول إلى هذا التطبيق أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}</string>
+  <string name="by_signing_in">يعني تسجيل الدخول إلى هذا التطبيق أنك توافق على {license} و{tos_and_honor_code}، كما يعني موافقتك على تمكين {platform_name} وجميع الأعضاء من معالجة بياناتك الشخصية بموجب {privacy_policy}.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">اتفاقية ترخيص المستخدم في {platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->
@@ -107,8 +107,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">عرض التحميلات الحاليّة</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">الدخول إلى صفحتك الشخصية</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">المساقات</string>
   <!--Title of user's program list screen-->
@@ -129,14 +127,8 @@
   <string name="toggle_turn_off">إطفاء</string>
   <!--Logout button label-->
   <string name="logout">تسجيل الخروج</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">الإعدادات</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">نوع إصدار التطبيق</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">الإعدادات</string>
-  <!--Title of Account screen-->
-  <string name="title_account">الحساب</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">استعادة كلمة السر</string>
@@ -631,8 +623,6 @@
   <string name="profile_sharing_limited_by_other_user">هذا الشخص حاليًا يشارك جزء محدود من معلومات صفحته الشخصية.</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">يجب أن يتجاوز عمرك 13 عامًا لتتمكّن من مشاركة صفحتك الشخصية بالكامل.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">إعدادات الحساب</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">يبدو أن ملفك الشخصي غير مكتمل. دعنا نساعدك لتبدأ.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

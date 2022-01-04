@@ -361,7 +361,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                             watchedStateCallback);
         }
-        markComponentCompleted();
+        markComponentCompletion(true);
         courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
             @Override
             protected void onResponse(@NonNull JSONObject responseBody) {
@@ -431,10 +431,12 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                 // p.s. Without this listener the getHeight function returns 0
                 transcriptListLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                     public void onGlobalLayout() {
-                        transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        final float transcriptRowHeight = getResources().getDimension(R.dimen.transcript_row_height);
-                        final float listviewHeight = transcriptListView.getHeight();
-                        topOffset = (listviewHeight / 2) - (transcriptRowHeight / 2);
+                        if (getActivity() != null) {
+                            transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            final float transcriptRowHeight = getActivity().getResources().getDimension(R.dimen.transcript_row_height);
+                            final float listviewHeight = transcriptListView.getHeight();
+                            topOffset = (listviewHeight / 2) - (transcriptRowHeight / 2);
+                        }
                     }
                 };
                 transcriptListView.getViewTreeObserver().addOnGlobalLayoutListener(transcriptListLayoutListener);

@@ -1,5 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- the theme applied to the application or activity -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -26,21 +25,7 @@
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:textColorLink">@color/infoBase</item>
-        <!-- Default progress bar style is currently the same as large. Which means
-             that there is no attribute for the medium one. But since we're not using
-             any of the other sizes anywhere currently, it doesn't matter for now. -->
-        <item name="android:progressBarStyle">@style/edX.Widget.ProgressBar</item>
-        <item name="android:progressBarStyleSmall">@style/edX.Widget.ProgressBar.Small</item>
-        <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title</item>
-        <item name="android:progressBarStyleLarge">@style/edX.Widget.ProgressBar.Large</item>
-        <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
-        <item name="android:progressBarStyleSmallInverse">
-            @style/edX.Widget.ProgressBar.Small.Inverse
-        </item>
-        <item name="android:progressBarStyleLargeInverse">
-            @style/edX.Widget.ProgressBar.Large.Inverse
-        </item>
         <item name="mediaRouteTheme">@style/MediaRouterTheme</item>
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
         <item name="fontItalic">@font/inter_italic</item>
@@ -241,7 +226,8 @@
     <style name="video_player_bottom_control">
         <item name="android:layout_width">@dimen/video_player_bottom_control_width</item>
         <item name="android:layout_height">@dimen/video_player_bottom_control_height</item>
-        <item name="android:layout_marginStart">@dimen/video_player_bottom_control_left_margin</item>
+        <item name="android:layout_marginStart">@dimen/video_player_bottom_control_left_margin
+        </item>
         <item name="android:layout_marginEnd">@dimen/video_player_bottom_control_right_margin</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="tint">@color/white</item>
@@ -249,29 +235,26 @@
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success</item>
+        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success
+        </item>
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
+    </style>
+
+    <style name="Widget.App.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CircularProgressIndicator</item>
+        <item name="indicatorSize">@dimen/ic_x_large</item>
+        <item name="trackThickness">@dimen/edx_x_quarter_margin</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="ThemeOverlay.App.CircularProgressIndicator" parent="">
+        <item name="colorPrimary">@color/neutralWhiteT</item>
     </style>
 
     <style name="bulk_download_progress_bar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
         <item name="android:progressDrawable">@drawable/bulk_download_progress_bar_horizontal</item>
-    </style>
-
-    <style name="edX.Widget.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="android:switchTextAppearance">@style/edX.TextAppearance.Switch</item>
-        <item name="android:showText">true</item>
-        <item name="android:textOff">@string/toggle_turn_off</item>
-        <item name="android:textOn">@string/toggle_turn_on</item>
-        <item name="android:thumb">@drawable/switch_inner</item>
-        <item name="android:thumbTextPadding">8dp</item>
-        <item name="android:track">@drawable/switch_track</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:switchMinWidth">90dp</item>
-        <item name="android:background">@null</item>
     </style>
 
     <style name="bulk_download_switch" parent="Theme.AppCompat.Light">
@@ -347,7 +330,8 @@
     <style name="discussion_action_bar_icon">
         <item name="android:layout_width">@dimen/edx_small</item>
         <item name="android:layout_height">@dimen/edx_small</item>
-        <item name="android:layout_marginEnd">@dimen/discussion_responses_action_bar_icon_margin</item>
+        <item name="android:layout_marginEnd">@dimen/discussion_responses_action_bar_icon_margin
+        </item>
     </style>
 
     <style name="profile_image">
@@ -358,10 +342,11 @@
     </style>
 
     <style name="agreement_text_style">
-        <item name="android:textColor">@color/neutralBlack</item>
-        <item name="android:layout_marginTop">@dimen/widget_margin</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:textColor">@color/neutralXDark</item>
+        <item name="android:textColorLink">@color/primaryDarkColor</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="lineHeight">@dimen/edx_x_small</item>
     </style>
 
     <!-- Styles from the edX style guide will be nested under "edX" -->
@@ -472,6 +457,22 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
+    <style name="edX.Widget.ProfileActionBorderedButton" parent="edX.Widget.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/profile_view_button_height</item>
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:textColor">@color/primaryBaseColor</item>
+        <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:layout_marginStart">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginEnd">@dimen/edx_default_margin</item>
+        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="edX.Widget.BaseSizeButton" parent="edX.Widget.ActionBorderedButton">
         <item name="android:textSize">@dimen/edx_base</item>
     </style>
@@ -519,53 +520,6 @@
         <item name="overlapAnchor">true</item>
     </style>
 
-    <style name="edX.Widget.ProgressBar" parent="android:Widget.ProgressBar">
-        <!-- We're using the Font Awesome spinner icon for the moment, so we
-             need to use IconProgressBar to be able to define it in XML.
-             Since, this should be used everywhere, it's set up as the
-             default style for ProgressBar as well. -->
-        <item name="android:indeterminateDrawable">@drawable/custom_circular_progress_bar</item>
-        <item name="android:indeterminateTint">@color/primaryBaseColor</item>
-        <item name="android:indeterminateTintMode">src_in</item>
-        <item name="android:indeterminateDuration">600</item>
-        <item name="android:mirrorForRtl">true</item>
-        <!-- Since we use xx_large for the standard ProgressBar
-             style, we'll have xxxx_large as the large style,
-             android base as the small style. -->
-        <item name="android:minWidth">@dimen/ic_xx_large</item>
-        <item name="android:maxWidth">@dimen/ic_xx_large</item>
-        <item name="android:minHeight">@dimen/ic_xx_large</item>
-        <item name="android:maxHeight">@dimen/ic_xx_large</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Large">
-        <item name="android:minWidth">@dimen/ic_xxxx_large</item>
-        <item name="android:maxWidth">@dimen/ic_xxxx_large</item>
-        <item name="android:minHeight">@dimen/ic_xxxx_large</item>
-        <item name="android:maxHeight">@dimen/ic_xxxx_large</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Small">
-        <item name="android:minWidth">@dimen/ic_base</item>
-        <item name="android:maxWidth">@dimen/ic_base</item>
-        <item name="android:minHeight">@dimen/ic_base</item>
-        <item name="android:maxHeight">@dimen/ic_base</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Inverse">
-        <item name="android:indeterminateTint">@color/white</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Large.Inverse">
-        <item name="android:indeterminateTint">@color/white</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Small.Inverse">
-        <item name="android:indeterminateTint">@color/white</item>
-    </style>
-
-    <style name="edX.Widget.ProgressBar.Small.Title" />
-
     <style name="edX.Widget.SegmentedControlSegment">
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
@@ -585,6 +539,26 @@
     <style name="Calendar.Sync.Switch" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/primaryDarkColor</item>
         <item name="colorSwitchThumbNormal">@color/neutralDark</item>
+        <item name="android:textOff">@string/toggle_turn_off</item>
+        <item name="android:textOn">@string/toggle_turn_on</item>
+    </style>
+
+    <style name="list_item_divider" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edx_divider_length</item>
+        <item name="background">@color/neutralXLight</item>
+    </style>
+
+    <style name="UpdateNowProgress" parent="AppTheme">
+        <item name="android:indeterminate">true</item>
+        <item name="indicatorColor">@color/white</item>
+        <item name="indicatorSize">@dimen/upgrade_now_progress_indicator_size</item>
+        <item name="trackThickness">@dimen/upgrade_now_progress_indicator_thickness</item>
+    </style>
+
+    <style name="DialogSlideUpAndDownAnimation" >
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
 </resources>

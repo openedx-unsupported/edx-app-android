@@ -43,27 +43,19 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
 public class DiscussionAddPostFragment extends BaseFragment {
 
-    static public String TAG = DiscussionAddPostFragment.class.getCanonicalName();
-    static public String ENROLLMENT = TAG + ".enrollment";
-    static public String TOPIC = TAG + ".topic";
-
     protected final Logger logger = new Logger(getClass().getName());
-
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
-    private EnrolledCoursesResponse courseData;
-
-    @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC)
-    private DiscussionTopic discussionTopic;
 
     @Inject
     private DiscussionService discussionService;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
+
+    private EnrolledCoursesResponse courseData;
+    private DiscussionTopic discussionTopic;
 
     private ViewGroup container;
 
@@ -72,6 +64,12 @@ public class DiscussionAddPostFragment extends BaseFragment {
 
     private int selectedTopicIndex;
     private FragmentAddPostBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        parseExtras();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -169,6 +167,11 @@ public class DiscussionAddPostFragment extends BaseFragment {
         };
         binding.titleEditText.addTextChangedListener(textWatcher);
         binding.bodyEditText.addTextChangedListener(textWatcher);
+    }
+
+    private void parseExtras() {
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
+        discussionTopic = (DiscussionTopic) getArguments().getSerializable(Router.EXTRA_DISCUSSION_TOPIC);
     }
 
     private void setPostButtonEnabledState() {

@@ -20,6 +20,7 @@ import com.segment.analytics.integrations.Integration;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.JavaUtil;
@@ -870,20 +871,6 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDownloadToSdCardSwitchOn() {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_ON);
-        trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_ON, aEvent.properties);
-    }
-
-    @Override
-    public void trackDownloadToSdCardSwitchOff() {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
-        trackSegmentEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, aEvent.properties);
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putAll(values);
@@ -1073,12 +1060,17 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
+                                   @NonNull String courseId, @NonNull String userType,
+                                   @NonNull boolean isSelfPaced, @Nullable long elapsedTime) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.USER_TYPE, userType);
         aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        if (elapsedTime > 0L) {
+            aEvent.data.putValue(Keys.ELAPSED_TIME, elapsedTime);
+        }
         trackSegmentEvent(eventName, aEvent.properties);
     }
 
@@ -1094,6 +1086,30 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
         aEvent.data.putValue(Keys.COMPONENT_TYPE, componentType);
         aEvent.data.putValue(Keys.OPENED_URL, openedUrl);
+        trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        aEvent.properties.putValue(Keys.NAME, Values.SCREEN_NAVIGATION);
+        trackSegmentEvent(Events.PROFILE_PAGE_VIEWED, aEvent.properties);
+    }
+
+    @Override
+    public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
+        aEvent.data.putValue(Keys.VALUE, selectedVideoQuality.getValue());
+        aEvent.data.putValue(Keys.OLD_VALUE, oldVideoQuality.getValue());
+        trackSegmentEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED, aEvent.properties);
+    }
+
+    @Override
+    public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
         trackSegmentEvent(eventName, aEvent.properties);
     }
 }

@@ -1,11 +1,6 @@
-/*
- * CourseDetailFragment
- *
- * Main fragment that populates the course detail screen. The course card fragment is created first
- * and then the additional items are added if given.
- */
-
 package org.edx.mobile.view;
+
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
@@ -52,16 +46,14 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import roboguice.inject.InjectExtra;
 
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-
+/**
+ * Main fragment that populates the course detail screen. The course card fragment is created first
+ * and then the additional items are added if given.
+ */
 public class CourseDetailFragment extends BaseFragment {
 
     private static final int LOG_IN_REQUEST_CODE = 42;
-
-    @Nullable
-    private Call<CourseDetail> getCourseDetailCall;
 
     private TextView mCourseTextName;
     private TextView mCourseTextDetails;
@@ -83,9 +75,7 @@ public class CourseDetailFragment extends BaseFragment {
 
     static public final String COURSE_DETAIL = "course_detail";
 
-    @InjectExtra(COURSE_DETAIL)
     CourseDetail courseDetail;
-
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -101,11 +91,7 @@ public class CourseDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            courseDetail = bundle.getParcelable(Router.EXTRA_COURSE_DETAIL);
-        }
+        parseExtras();
     }
 
     /**
@@ -114,13 +100,12 @@ public class CourseDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Course Card View
-        View view;
-        view = inflater.inflate(R.layout.fragment_course_dashboard, container, false);
-        mCourseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        mCourseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        mHeaderImageView = (AppCompatImageView) view.findViewById(R.id.header_image_view);
-        mHeaderPlayIcon = (AppCompatImageView) view.findViewById(R.id.header_play_icon);
-        mCourseDetailLayout = (LinearLayout) view.findViewById(R.id.dashboard_detail);
+        final View view = inflater.inflate(R.layout.fragment_course_dashboard, container, false);
+        mCourseTextName = view.findViewById(R.id.course_detail_name);
+        mCourseTextDetails = view.findViewById(R.id.course_detail_extras);
+        mHeaderImageView = view.findViewById(R.id.header_image_view);
+        mHeaderPlayIcon = view.findViewById(R.id.header_play_icon);
+        mCourseDetailLayout = view.findViewById(R.id.dashboard_detail);
 
         mHeaderPlayIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,19 +133,19 @@ public class CourseDetailFragment extends BaseFragment {
         // Short Description
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
         final View child = inflater.inflate(R.layout.fragment_course_detail, mCourseDetailLayout, false);
-        mShortDescription = (TextView) child.findViewById(R.id.course_detail_short_description);
+        mShortDescription = child.findViewById(R.id.course_detail_short_description);
         if (courseDetail.short_description == null || courseDetail.short_description.isEmpty()) {
             ((ViewGroup) mShortDescription.getParent()).removeView(mShortDescription);
         }
         mCourseDetailLayout.addView(child);
 
         // Enrollment Button
-        mEnrollButton = (Button) child.findViewById(R.id.button_enroll_now);
+        mEnrollButton = child.findViewById(R.id.button_enroll_now);
         configureEnrollButton();
 
         // Course Detail Fields - Each field will be created manually.
 
-        courseDetailFieldLayout = (LinearLayout) view.findViewById(R.id.course_detail_fields);
+        courseDetailFieldLayout = view.findViewById(R.id.course_detail_fields);
         if (courseDetail.effort != null && !courseDetail.effort.isEmpty()) {
             ViewHolder holder = createCourseDetailFieldViewHolder(inflater, mCourseDetailLayout);
             holder.rowIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_dashboard));
@@ -169,8 +154,8 @@ public class CourseDetailFragment extends BaseFragment {
         }
 
         //  About this Course
-        courseAbout = (FrameLayout) view.findViewById(R.id.course_detail_course_about);
-        courseAboutWebView = (EdxWebView) courseAbout.findViewById(R.id.course_detail_course_about_webview);
+        courseAbout = view.findViewById(R.id.course_detail_course_about);
+        courseAboutWebView = courseAbout.findViewById(R.id.course_detail_course_about_webview);
     }
 
     @Override
@@ -193,6 +178,10 @@ public class CourseDetailFragment extends BaseFragment {
                 courseDetail.start_display);
         mCourseTextDetails.setText(CourseCardUtils.getDescription(courseDetail.org, courseDetail.number, formattedDate));
         mCourseTextName.setText(courseDetail.name);
+    }
+
+    private void parseExtras() {
+        courseDetail = getArguments().getParcelable(COURSE_DETAIL);
     }
 
     private void setCourseImage() {
@@ -220,7 +209,7 @@ public class CourseDetailFragment extends BaseFragment {
      * overview, remove the courseAbout view.
      */
     private void populateAboutThisCourse() {
-        getCourseDetailCall = courseApi.getCourseDetail(courseDetail.course_id);
+        final Call<CourseDetail> getCourseDetailCall = courseApi.getCourseDetail(courseDetail.course_id);
         final Activity activity = getActivity();
         final TaskProgressCallback pCallback = activity instanceof TaskProgressCallback ? (TaskProgressCallback) activity : null;
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
@@ -267,9 +256,9 @@ public class CourseDetailFragment extends BaseFragment {
         ViewHolder holder = new ViewHolder();
         holder.rowView = inflater.inflate(R.layout.course_detail_field, parent, false);
 
-        holder.rowIcon = (AppCompatImageView) holder.rowView.findViewById(R.id.course_detail_field_icon);
-        holder.rowFieldName = (TextView) holder.rowView.findViewById(R.id.course_detail_field_name);
-        holder.rowFieldText = (TextView) holder.rowView.findViewById(R.id.course_detail_field_text);
+        holder.rowIcon = holder.rowView.findViewById(R.id.course_detail_field_icon);
+        holder.rowFieldName = holder.rowView.findViewById(R.id.course_detail_field_name);
+        holder.rowFieldText = holder.rowView.findViewById(R.id.course_detail_field_text);
 
         courseDetailFieldLayout.addView(holder.rowView, 0);
         return holder;
@@ -285,7 +274,7 @@ public class CourseDetailFragment extends BaseFragment {
 
     /**
      * Sets the onClickListener and the text for the enrollment button.
-     *
+     * <br/>
      * If the current course is found in the list of cached course enrollment list, the button will
      * be for viewing a course, otherwise, it will be used to enroll in a course. One clicked, user
      * is then taken to the dashboard for target course.
@@ -298,6 +287,7 @@ public class CourseDetailFragment extends BaseFragment {
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
                     mEnrolled = true;
+                    break;
                 }
             }
         } catch (Exception ex) {

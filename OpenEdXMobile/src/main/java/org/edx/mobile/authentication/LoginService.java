@@ -9,6 +9,7 @@ import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.constants.ApiConstants.TokenType;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.model.api.UnacknowledgedNoticeResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 
@@ -136,4 +137,11 @@ public interface LoginService {
     @NonNull
     @GET(URL_MY_USER_INFO)
     Call<ProfileModel> getProfile();
+
+    /**
+     * @return unacknowledged notices list for currently authenticated user.
+     */
+    @NonNull
+    @GET(ApiConstants.URL_UNACKNOWLEDGED_NOTICE)
+    Call<UnacknowledgedNoticeResponse> getUnacknowledgedNotice();
 }

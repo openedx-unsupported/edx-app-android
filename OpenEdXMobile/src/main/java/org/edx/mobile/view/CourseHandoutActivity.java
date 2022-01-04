@@ -16,6 +16,8 @@ public class CourseHandoutActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        return new CourseHandoutFragment();
+        final CourseHandoutFragment courseHandoutFragment = new CourseHandoutFragment();
+        courseHandoutFragment.setArguments(getIntent().getExtras());
+        return courseHandoutFragment;
     }
 }

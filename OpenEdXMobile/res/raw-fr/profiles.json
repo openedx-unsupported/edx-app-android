@@ -15,19 +15,6 @@
               "accessibility_hint" : "Change what information is shared with others."
     },
     {
-              "name" : "year_of_birth",
-              "label" : "Birth year",
-              "type" : "select",
-              "options" : {
-                "range_min" : 1896,
-                "range_max" : 2020,
-                "allows_none" : true,
-                "none_label" : "No birth year"
-              },
-              "instructions" : "You must specify your birth year before you can share your full profile.",
-              "sub_instructions" : "This will not be displayed publicly"
-    },
-    {
               "name" : "country",
               "label" : "Location",
               "type" : "select",

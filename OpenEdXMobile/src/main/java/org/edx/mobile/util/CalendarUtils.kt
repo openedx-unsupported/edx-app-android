@@ -7,9 +7,16 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
+import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import io.branch.indexing.BranchUniversalObject
+import io.branch.referral.util.ContentMetadata
+import io.branch.referral.util.LinkProperties
 import org.edx.mobile.R
+import org.edx.mobile.core.IEdxEnvironment
+import org.edx.mobile.deeplink.DeepLink
+import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.course.CourseDateBlock
 import java.util.*
@@ -19,7 +26,7 @@ object CalendarUtils {
     private val logger = Logger(DateUtil::class.java.name)
     private const val REMINDER_24_HOURS = 24 * 60
     private const val REMINDER_48_HOURS = 2 * 24 * 60
-    const val LOCAL_USER = "local_user"
+    private const val LOCAL_USER = "local_user"
 
     val permissions = arrayOf(android.Manifest.permission.WRITE_CALENDAR, android.Manifest.permission.READ_CALENDAR)
 
@@ -43,6 +50,7 @@ object CalendarUtils {
     /**
      * Create or update the calendar if it is already existed in mobile calendar app
      */
+    @JvmStatic
     fun createOrUpdateCalendar(
         context: Context,
         accountName: String,
@@ -71,7 +79,7 @@ object CalendarUtils {
      * Method to create a separate calendar based on course name in mobile calendar app
      */
     @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    fun createCalendar(
+    private fun createCalendar(
         context: Context,
         accountName: String,
         accountType: String,
@@ -134,16 +142,36 @@ object CalendarUtils {
     /**
      * Method to add important dates of course as calendar event into calendar of mobile app
      */
-    fun addEventsIntoCalendar(context: Context, calendarId: Long, courseName: String, courseDateBlock: CourseDateBlock) {
+    @JvmStatic
+    fun addEventsIntoCalendar(
+        context: Context,
+        calendarId: Long,
+        courseId: String,
+        courseName: String,
+        courseDateBlock: CourseDateBlock,
+        isDeeplinkEnabled: Boolean
+    ) {
         val date = courseDateBlock.getDateCalendar()
         // start time of the event added to the calendar
         val startMillis: Long = Calendar.getInstance().run {
-            set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.HOUR_OF_DAY) - 1, date.get(Calendar.MINUTE))
+            set(
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH),
+                date.get(Calendar.HOUR_OF_DAY) - 1,
+                date.get(Calendar.MINUTE)
+            )
             timeInMillis
         }
         // end time of the event added to the calendar
         val endMillis: Long = Calendar.getInstance().run {
-            set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE))
+            set(
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH),
+                date.get(Calendar.HOUR_OF_DAY),
+                date.get(Calendar.MINUTE)
+            )
             timeInMillis
         }
 
@@ -151,7 +179,15 @@ object CalendarUtils {
             put(CalendarContract.Events.DTSTART, startMillis)
             put(CalendarContract.Events.DTEND, endMillis)
             put(CalendarContract.Events.TITLE, "${AppConstants.ASSIGNMENT_DUE} : $courseName")
-            put(CalendarContract.Events.DESCRIPTION, courseDateBlock.title)
+            put(
+                CalendarContract.Events.DESCRIPTION,
+                getEventDescription(
+                    context = context,
+                    courseId = courseId,
+                    courseDateBlock = courseDateBlock,
+                    isDeeplinkEnabled = isDeeplinkEnabled
+                )
+            )
             put(CalendarContract.Events.CALENDAR_ID, calendarId)
             put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
         }
@@ -160,10 +196,39 @@ object CalendarUtils {
     }
 
     /**
+     * Method to generate & add deeplink into event description
+     *
+     * @return event description with deeplink for assignment block else block title
+     */
+    private fun getEventDescription(
+        context: Context, courseId: String, courseDateBlock: CourseDateBlock, isDeeplinkEnabled: Boolean
+    ): String {
+        var eventDescription = courseDateBlock.title
+        if (isDeeplinkEnabled && !TextUtils.isEmpty(courseDateBlock.blockId)) {
+            val metaData = ContentMetadata()
+                .addCustomMetadata(DeepLink.Keys.SCREEN_NAME, Screen.COURSE_COMPONENT)
+                .addCustomMetadata(DeepLink.Keys.COURSE_ID, courseId)
+                .addCustomMetadata(DeepLink.Keys.COMPONENT_ID, courseDateBlock.blockId)
+
+            val branchUniversalObject = BranchUniversalObject()
+                .setCanonicalIdentifier("${Screen.COURSE_COMPONENT}\n${courseDateBlock.blockId}")
+                .setTitle(courseDateBlock.title)
+                .setContentDescription(courseDateBlock.title)
+                .setContentMetadata(metaData)
+
+            val linkProperties = LinkProperties()
+                .addControlParameter("\$desktop_url", courseDateBlock.link)
+
+            eventDescription += "\n" + branchUniversalObject.getShortUrl(context, linkProperties)
+        }
+        return eventDescription
+    }
+
+    /**
      * Method to add a reminder to the given calendar events
      *
      * @param context
-     * @param uri calender event Uri
+     * @param uri Calendar event Uri
      */
     private fun addReminderToEvent(context: Context, uri: Uri) {
         val eventId: Long = uri.lastPathSegment.toLong()
@@ -217,7 +282,11 @@ object CalendarUtils {
      * Method to compare the calendar events with course dates
      * @return  true if the events are the same as calendar dates otherwise false
      */
-    fun compareEvents(context: Context, calendarId: Long, courseDateBlocks: List<CourseDateBlock>): Boolean {
+    private fun compareEvents(
+        context: Context,
+        calendarId: Long,
+        courseDateBlocks: List<CourseDateBlock>
+    ): Boolean {
         val cursor = getCalendarEvents(context, calendarId)
         // Creating a local copy of courseDateBlock as this method required nested iteration to compare events
         // To decrease the loop complexity we can remove object from list if they matched with existed events.
@@ -228,22 +297,29 @@ object CalendarUtils {
         cursor?.run {
             if (moveToFirst()) {
                 do {
-                    val startDate = Calendar.getInstance().apply { timeInMillis = getLong(getColumnIndex(CalendarContract.Events.DTSTART)) }
+                    val startDate = Calendar.getInstance().apply {
+                        timeInMillis = getLong(getColumnIndex(CalendarContract.Events.DTSTART))
+                    }
                     val description = getString(getColumnIndex(CalendarContract.Events.DESCRIPTION))
-                    run breaker@{
-                        datesList.forEachIndexed { index, unit ->
-                            if (unit.title.equals(description, ignoreCase = true)) {
-                                val date = unit.getDateCalendar()
-                                // Comparing the existed events start time with current dates block
-                                // As event started 1 hour before it's due time so mincing 1 hour from current date block
-                                if (date.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
+                    if (description != null) {
+                        run breaker@{
+                            datesList.forEachIndexed { index, unit ->
+                                if (description.contains(unit.title, ignoreCase = true)) {
+                                    val date = unit.getDateCalendar()
+                                    // As event started 1 hour before it's due time so mincing 1 hour from current date
+                                    date.add(Calendar.HOUR_OF_DAY, -1)
+
+                                    // Comparing the existed events start time with current dates block
+                                    if (date.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
                                         date.get(Calendar.MONTH) == startDate.get(Calendar.MONTH) &&
                                         date.get(Calendar.DAY_OF_MONTH) == startDate.get(Calendar.DAY_OF_MONTH) &&
-                                        date.get(Calendar.HOUR_OF_DAY) - 1 == startDate.get(Calendar.HOUR_OF_DAY) &&
-                                        date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)) {
-                                    count++
-                                    datesList.removeAt(index)
-                                    return@breaker
+                                        date.get(Calendar.HOUR_OF_DAY) == startDate.get(Calendar.HOUR_OF_DAY) &&
+                                        date.get(Calendar.MINUTE) == startDate.get(Calendar.MINUTE)
+                                    ) {
+                                        count++
+                                        datesList.removeAt(index)
+                                        return@breaker
+                                    }
                                 }
                             }
                         }
@@ -251,30 +327,9 @@ object CalendarUtils {
                 } while (moveToNext())
             }
         }
-        return (cursor?.count != 0 && cursor?.count == count)
-    }
-
-    /**
-     * Method to delete the events for the given calendar id
-     *
-     * @param context [Context]
-     * @param calendarId calendarId to query the events
-     *
-     * */
-    fun deleteAllCalendarEvents(context: Context, calendarId: Long) {
-        val cursor = getCalendarEvents(context, calendarId)
-        cursor?.run {
-            if (moveToFirst()) {
-                do {
-                    val deleteUri = ContentUris.withAppendedId(
-                            CalendarContract.Events.CONTENT_URI,
-                            getLong(getColumnIndex(CalendarContract.Events._ID))
-                    )
-                    val rowDelete = context.contentResolver.delete(deleteUri, null, null)
-                    logger.debug("Rows deleted: $rowDelete")
-                } while (moveToNext())
-            }
-        }
+        val areEventsEqual = cursor?.count != 0 && cursor?.count == count
+        cursor?.close()
+        return areEventsEqual
     }
 
     /**
@@ -307,5 +362,60 @@ object CalendarUtils {
         val intent = Intent(Intent.ACTION_VIEW)
                 .setData(builder.build())
         fragment.startActivity(intent)
+    }
+
+    /**
+     * Helper method used to check that the calendar if outdated for the course or not
+     *
+     * @param context - current [Context] of the application
+     * @param accountName Name of the calendar owner
+     * @param calendarTitle Title for the course Calendar
+     * @param courseDateBlocks Course dates events
+     *
+     * @return Calendar Id if Calendar is outdated otherwise -1
+     *
+     */
+    @JvmStatic
+    fun isCalendarOutOfDate(
+        context: Context,
+        accountName: String,
+        calendarTitle: String,
+        courseDateBlocks: List<CourseDateBlock>
+    ): Long {
+        if (isCalendarExists(context, accountName, calendarTitle)) {
+            val calendarId = getCalendarId(context, accountName, calendarTitle)
+            if (compareEvents(context, calendarId, courseDateBlocks).not()) {
+                return calendarId
+            }
+        }
+        return -1
+    }
+
+    /**
+     * Method to get the current user account as the Calendar owner
+     *
+     * @param environment Relevant configuration environment.
+     *
+     * @return calendar owner account or "local_user"
+     */
+    @JvmStatic
+    fun getUserAccountForSync(environment: IEdxEnvironment): String {
+        return environment.loginPrefs.currentUserProfile?.email ?: LOCAL_USER
+    }
+
+    /**
+     * Method to create the Calendar title for the platform against the course
+     *
+     * @param environment Relevant configuration environment.
+     * @param courseName Name of the course for that creating the Calendar events.
+     *
+     * @return title of the Calendar against the course
+     */
+    @JvmStatic
+    fun getCourseCalendarTitle(
+        environment: IEdxEnvironment,
+        courseName: String
+    ): String {
+        return "${environment.config.platformName} - $courseName"
     }
 }

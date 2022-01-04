@@ -34,8 +34,8 @@ class AccountActivityScreenshotTests {
     @Test
     fun testScreenshot_recordAccountActivity() {
         activity?.runOnUiThread {
-            (activity?.findViewById<View>(R.id.tv_version_no) as TextView).text = String.format("%s %s",
-                    activity?.getString(R.string.label_version), TestValues.DUMMY_APP_VERSION)
+            (activity?.findViewById<View>(R.id.app_version) as TextView).text = String.format("%s %s",
+                    activity?.getString(R.string.label_app_version), TestValues.DUMMY_APP_VERSION)
             Screenshot.snap(activity?.findViewById(android.R.id.content)).setName(javaClass.name + "_" + testName.methodName).record()
         }
     }

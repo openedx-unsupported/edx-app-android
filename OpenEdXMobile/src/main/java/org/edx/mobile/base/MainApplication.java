@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
@@ -21,11 +22,14 @@ import com.google.inject.Module;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
+import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.AppUpdatedEvent;
 import org.edx.mobile.event.NewRelicEvent;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.UnacknowledgedNoticeResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
@@ -40,6 +44,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import io.branch.referral.Branch;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import roboguice.RoboGuice;
 
 /**
@@ -150,6 +157,36 @@ public abstract class MainApplication extends MultiDexApplication {
             Appboy.configure(this, appboyConfig);
             registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener(true, true));
         }
+    }
+
+    public void showBanner(LoginAPI loginAPI, boolean delayCall) {
+        if (delayCall) {
+            new Handler().postDelayed(() -> callBannerAPI(loginAPI), 10000);
+        } else {
+            callBannerAPI(loginAPI);
+        }
+    }
+
+    private void callBannerAPI(LoginAPI loginAPI) {
+        loginAPI.getUnacknowledgedNotice().enqueue(new Callback<UnacknowledgedNoticeResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UnacknowledgedNoticeResponse> call,
+                                   @NonNull Response<UnacknowledgedNoticeResponse> response) {
+                if (getEnvironment(getApplicationContext()).getLoginPrefs().getUsername() != null
+                        && response.isSuccessful() && response.code() == HttpStatus.OK) {
+                    if (response.body() != null && !response.body().getResults().isEmpty()) {
+                        getEnvironment(getApplicationContext()).getRouter().showAuthenticatedWebViewActivity(
+                                getApplicationContext(), response.body().getResults().get(0), "", true
+                        );
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UnacknowledgedNoticeResponse> call, @NonNull Throwable throwable) {
+
+            }
+        });
     }
 
     private void checkIfAppVersionUpgraded(Context context) {

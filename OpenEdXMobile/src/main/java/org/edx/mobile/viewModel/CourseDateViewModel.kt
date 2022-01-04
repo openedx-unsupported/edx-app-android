@@ -1,8 +1,13 @@
 package org.edx.mobile.viewModel
 
+import android.content.Context
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.edx.mobile.exception.ErrorMessage
@@ -14,12 +19,17 @@ import org.edx.mobile.model.course.CourseBannerInfoModel
 import org.edx.mobile.model.course.CourseDates
 import org.edx.mobile.model.course.ResetCourseDates
 import org.edx.mobile.repositorie.CourseDatesRepository
+import org.edx.mobile.util.CalendarUtils
 import retrofit2.Response
 import java.util.*
 
 class CourseDateViewModel(
         private val repository: CourseDatesRepository = CourseDatesRepository.getInstance()
 ) : ViewModel() {
+
+    private val _syncLoader = MutableLiveData<Boolean>()
+    val syncLoader: LiveData<Boolean>
+        get() = _syncLoader
 
     private val _showLoader = MutableLiveData<Boolean>()
     val showLoader: LiveData<Boolean>
@@ -44,6 +54,52 @@ class CourseDateViewModel(
     private val _errorMessage = MutableLiveData<ErrorMessage>()
     val errorMessage: LiveData<ErrorMessage>
         get() = _errorMessage
+
+    private var syncingCalendarTime: Long = 0L
+    var areEventsUpdated: Boolean = false
+
+    fun getSyncingCalendarTime(): Long = syncingCalendarTime
+    fun resetSyncingCalendarTime() {
+        syncingCalendarTime = 0L
+    }
+
+    fun addOrUpdateEventsInCalendar(
+        context: Context,
+        calendarId: Long,
+        courseId: String,
+        courseName: String,
+        isDeepLinkEnabled: Boolean,
+        updatedEvent: Boolean
+    ) {
+        resetSyncingCalendarTime()
+        val syncingCalendarStartTime: Long = Calendar.getInstance().timeInMillis
+        areEventsUpdated = updatedEvent
+        _syncLoader.value = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+            courseDates.value?.let { courseDates ->
+                courseDates.courseDateBlocks?.forEach { courseDateBlock ->
+                    CalendarUtils.addEventsIntoCalendar(
+                        context = context,
+                        calendarId = calendarId,
+                        courseId = courseId,
+                        courseName = courseName,
+                        courseDateBlock = courseDateBlock,
+                        isDeeplinkEnabled = isDeepLinkEnabled
+                    )
+                }
+                syncingCalendarTime = Calendar.getInstance().timeInMillis - syncingCalendarStartTime
+                if (courseDates.courseDateBlocks?.size == 0) {
+                    syncingCalendarTime = 0
+                } else if (syncingCalendarTime < 1000) {
+                    // Add 1 sec delay to dismiss the dialog to avoid flickering
+                    // if the event creation time is less then 1 sec
+                    SystemClock.sleep(1000 - syncingCalendarTime)
+                }
+            } ?: run { syncingCalendarTime = 0 }
+            _syncLoader.postValue(false)
+        }
+    }
 
     fun fetchCourseDates(courseID: String, forceRefresh: Boolean, showLoader: Boolean = false, isSwipeRefresh: Boolean = false) {
         _errorMessage.value = null

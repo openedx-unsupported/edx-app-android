@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.AnalyticsUtils;
 import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.images.ShareUtils;
@@ -596,18 +597,6 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackDownloadToSdCardSwitchOn() {
-        final FirebaseEvent event = new FirebaseEvent(Events.DOWNLOAD_TO_SD_CARD_ON, Values.DOWNLOAD_TO_SD_CARD_SWITCH_ON);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
-    public void trackDownloadToSdCardSwitchOff() {
-        final FirebaseEvent event = new FirebaseEvent(Events.DOWNLOAD_TO_SD_CARD_OFF, Values.DOWNLOAD_TO_SD_CARD_SWITCH_OFF);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final FirebaseEvent event = new FirebaseEvent(experimentName);
         event.putMap(values);
@@ -787,11 +776,16 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
+                                   @NonNull String courseId, @NonNull String userType,
+                                   @NonNull boolean isSelfPaced, long elapsedTime) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
         event.putCourseId(courseId);
         event.putString(Keys.USER_TYPE, userType);
         event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        if (elapsedTime > 0L) {
+            event.putLong(Keys.ELAPSED_TIME, elapsedTime);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
@@ -806,6 +800,28 @@ public class FirebaseAnalytics implements Analytics {
         event.putString(Keys.COMPONENT_ID, componentId);
         event.putString(Keys.COMPONENT_TYPE, componentType);
         event.putString(Keys.OPENED_URL, openedUrl);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, Values.SCREEN_NAVIGATION);
+        event.putString(Keys.SCREEN_NAME, screenName);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
+        final FirebaseEvent event = new FirebaseEvent(Analytics.Events.VIDEO_DOWNLOAD_QUALITY_CHANGED,
+                Analytics.Values.VIDEO_DOWNLOAD_QUALITY_CHANGED);
+        event.putString(Keys.VALUE, selectedVideoQuality.getValue());
+        event.putString(Keys.OLD_VALUE, oldVideoQuality.getValue());
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

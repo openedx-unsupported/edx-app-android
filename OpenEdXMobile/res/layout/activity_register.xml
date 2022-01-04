@@ -63,24 +63,12 @@
                     android:layout_marginTop="@dimen/widget_margin_half"
                     android:orientation="vertical" />
 
-                <LinearLayout
-                    android:id="@+id/field_seperator"
+                <org.edx.mobile.view.custom.DividerWithTextView
+                    android:id="@+id/optional_field_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/edx_margin"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/optional_field_tv"
-                        style="@style/semibold_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/edx_x_small"
-                        android:layout_marginEnd="@dimen/edx_x_small"
-                        android:focusable="true"
-                        android:text="@string/show_optional_text"
-                        android:textSize="@dimen/edx_small" />
-                </LinearLayout>
+                    android:layout_marginBottom="0dp"
+                    android:text="@string/show_optional_text" />
 
                 <LinearLayout
                     android:id="@+id/optional_fields_layout"
@@ -89,19 +77,11 @@
                     android:orientation="vertical"
                     android:visibility="gone" />
 
-                <FrameLayout
-                    android:id="@+id/createAccount_button_layout"
-                    style="@style/edX.Widget.SignInButtonLayout"
-                    android:contentDescription="@string/create_account_btn"
-                    android:focusable="true">
-
-                    <TextView
-                        android:id="@+id/create_account_tv"
-                        style="@style/edX.Widget.SignInButton"
-                        android:text="@string/create_account_text" />
-
-                    <include layout="@layout/button_progress_indicator" />
-                </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/optionally_exposed_fields_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <TextView
                     android:id="@+id/by_creating_account_tv"
@@ -109,6 +89,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="@string/by_creating_account" />
+
+                <LinearLayout
+                    android:id="@+id/createAccount_button_layout"
+                    style="@style/edX.Widget.SignInButtonLayout"
+                    android:contentDescription="@string/create_account_btn"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/create_account_tv"
+                        style="@style/edX.Widget.SignInButton"
+                        android:text="@string/create_account_text" />
+
+                    <include layout="@layout/button_progress_indicator" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 

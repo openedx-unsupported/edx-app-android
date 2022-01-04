@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -17,6 +18,8 @@ public class CertificateActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        return new CertificateFragment();
+        final CertificateFragment certificateFragment = new CertificateFragment();
+        certificateFragment.setArguments(getIntent().getExtras());
+        return certificateFragment;
     }
 }

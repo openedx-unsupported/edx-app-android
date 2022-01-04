@@ -1,6 +1,7 @@
 package org.edx.mobile.deeplink;
 
 import android.app.Activity;
+
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
@@ -34,7 +35,12 @@ public class DeepLinkManager {
             }
             return;
         }
+        router.showMainDashboard(activity, deepLink);
+    }
 
+    public static void proceedDeeplink(@NonNull Activity activity, @NonNull final DeepLink deepLink) {
+        final Router router = new Router(new Config(activity));
+        @ScreenDef final String screenName = deepLink.getScreenName();
         switch (screenName) {
             case Screen.COURSE_DASHBOARD:
             case Screen.COURSE_VIDEOS:
@@ -43,8 +49,9 @@ public class DeepLinkManager {
             case Screen.COURSE_HANDOUT:
             case Screen.COURSE_ANNOUNCEMENT:
             case Screen.DISCUSSION_POST:
-            case Screen.DISCUSSION_TOPIC: {
-                router.showCourseDashboardTabs(activity, null, deepLink.getCourseId(),
+            case Screen.DISCUSSION_TOPIC:
+            case Screen.COURSE_COMPONENT: {
+                router.showCourseDashboardTabs(activity, null, deepLink.getCourseId(), deepLink.getComponentId(),
                         deepLink.getTopicID(), deepLink.getThreadID(), false, screenName);
                 break;
             }
@@ -55,12 +62,8 @@ public class DeepLinkManager {
                 router.showMainDashboard(activity, screenName, deepLink.getPathId());
                 break;
             }
-            case Screen.PROFILE: {
-                router.showUserProfile(activity, username);
-                break;
-            }
-            case Screen.SETTINGS:
-            case Screen.ACCOUNT: {
+            case Screen.PROFILE:
+            case Screen.USER_PROFILE: {
                 router.showAccountActivity(activity, screenName);
                 break;
             }

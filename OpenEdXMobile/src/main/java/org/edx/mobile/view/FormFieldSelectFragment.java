@@ -35,16 +35,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import roboguice.inject.InjectExtra;
-
 public class FormFieldSelectFragment extends BaseFragment {
-
-    @InjectExtra(FormFieldActivity.EXTRA_FIELD)
-    private FormField formField;
 
     private static final String COUNTRIES = "countries";
     private static final String LANGUAGES = "languages";
+
+    private FormField formField;
     private FragmentFormFieldSelectBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        parseExtras();
+    }
 
     @Nullable
     @Override
@@ -77,8 +80,8 @@ public class FormFieldSelectFragment extends BaseFragment {
         }
         if (!TextUtils.isEmpty(formField.getInstructions())) {
             final View instructionsContainer = LayoutInflater.from(view.getContext()).inflate(R.layout.form_field_instructions_header, binding.list, false);
-            final TextView instructions = (TextView) instructionsContainer.findViewById(R.id.instructions);
-            final TextView subInstructions = (TextView) instructionsContainer.findViewById(R.id.sub_instructions);
+            final TextView instructions = instructionsContainer.findViewById(R.id.instructions);
+            final TextView subInstructions = instructionsContainer.findViewById(R.id.sub_instructions);
             instructions.setText(formField.getInstructions());
             if (TextUtils.isEmpty(formField.getSubInstructions())) {
                 subInstructions.setVisibility(View.GONE);
@@ -139,6 +142,10 @@ public class FormFieldSelectFragment extends BaseFragment {
         UiUtils.INSTANCE.setTextViewDrawableStart(context, textView, iconResId, R.dimen.edx_base,
                 R.color.neutralDark);
         listView.addHeaderView(textView, new FormOption(labelValue, value), true);
+    }
+
+    private void parseExtras() {
+        formField = (FormField) getArguments().getSerializable(FormFieldActivity.EXTRA_FIELD);
     }
 
     private void selectCurrentOption() {

@@ -1,8 +1,11 @@
 package org.edx.mobile.view.custom;
 
+import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -14,7 +17,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -22,7 +24,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.AuthenticatedWebviewBinding;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.FileSelectionEvent;
@@ -38,8 +44,6 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 
 import de.greenrobot.event.EventBus;
-
-import static org.edx.mobile.util.WebViewUtil.EMPTY_HTML;
 
 /**
  * A custom webview which authenticates the user before loading a page,
@@ -93,12 +97,13 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
      *                             web browser.
      * @param isManuallyReloadable A flag that decides if we should give show/hide reload button.
      * @param interceptAjaxRequest A flag that decides if webview intercept the webpage ajax request.
-     * @param completionCallback
+     * @param completionCallback   Callback to handle component completion
+     * @param pageUrlCallback      Callback to dismiss the current Webpage and open the screen if available
      */
     @SuppressLint("SetJavaScriptEnabled")
     public void initWebView(@NonNull FragmentActivity fragmentActivity, boolean isAllLinksExternal,
                             boolean isManuallyReloadable, boolean interceptAjaxRequest,
-                            URLInterceptorWebViewClient.CompletionCallback completionCallback) {
+                            URLInterceptorWebViewClient.CompletionCallback completionCallback, OverridePageUrlCallback pageUrlCallback) {
         this.isManuallyReloadable = isManuallyReloadable;
         binding.webview.getSettings().setJavaScriptEnabled(true);
         webViewClient = new URLInterceptorWebViewClient(fragmentActivity, binding.webview, interceptAjaxRequest,
@@ -134,6 +139,38 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                     showErrorMessage(R.string.network_error_message, R.drawable.ic_error);
                 }
                 super.onReceivedHttpError(view, request, errorResponse);
+            }
+
+            /**
+             * Method is usable for Android 6.0 and below otherwise app didn't get the control when a URL is
+             * about to be loaded in the current WebView.
+             * Ref: https://developer.android.com/reference/android/webkit/WebViewClient#shouldOverrideUrlLoading(android.webkit.WebView,%20java.lang.String)
+             */
+            @Deprecated
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return shouldOverrideUrlLoadingWrapper(Uri.parse(url)) || super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return shouldOverrideUrlLoadingWrapper(request.getUrl()) || super.shouldOverrideUrlLoading(view, request);
+            }
+
+            public boolean shouldOverrideUrlLoadingWrapper(@NonNull Uri uri) {
+                String overrideUrl = uri.toString();
+                if (overrideUrl.contains("logout")) {
+                    forceLogoutUser();
+                    return true;
+                }
+                if (overrideUrl.contains("show_screen_without_dismissing")) {
+                    pageUrlCallback.onUrlClick(false, uri.getQueryParameter("screen_name"));
+                    return true;
+                } else if (overrideUrl.contains("dismiss")) {
+                    pageUrlCallback.onUrlClick(true, uri.getQueryParameter("screen_name"));
+                    return true;
+                }
+                return false;
             }
 
             public void onPageFinished(WebView view, String url) {
@@ -357,7 +394,17 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         return pageIsLoaded;
     }
 
-    public ProgressBar getProgressWheel() {
+    public CircularProgressIndicator getProgressWheel() {
         return binding.loadingIndicator.loadingIndicator;
+    }
+
+    private void forceLogoutUser() {
+        IEdxEnvironment environment = MainApplication.getEnvironment(getContext());
+        environment.getRouter().forceLogout(getContext(), environment.getAnalyticsRegistry(),
+                environment.getNotificationDelegate());
+    }
+
+    public interface OverridePageUrlCallback {
+        void onUrlClick(boolean canDismiss, @Nullable String screenName);
     }
 }

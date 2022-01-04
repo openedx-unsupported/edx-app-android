@@ -120,6 +120,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidXVersion"
     // For the optional Nullable annotation
     implementation "androidx.annotation:annotation:$androidXVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases
@@ -154,7 +155,7 @@ dependencies {
     implementation "androidx.mediarouter:mediarouter:$androidXVersion"
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
-    implementation 'com.facebook.android:facebook-login:5.9.0'
+    implementation 'com.facebook.android:facebook-login:11.1.1'
     implementation 'com.microsoft.identity.client:msal:0.3+'
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'com.google.code.gson:gson:2.7'
@@ -221,7 +222,7 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Material components like Chips and TabLayoutMediator
-    implementation 'com.google.android.material:material:1.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.5.0-alpha02'
 
     // Braze SDK Integration
     implementation 'com.appboy:appboy-segment-integration:7.0.0'
@@ -270,6 +271,16 @@ dependencies {
         exclude group: 'org.hamcrest'
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
+    implementation "com.android.billingclient:billing-ktx:$kotlin_version_billing"
+
+    /**
+     * Using debugImplementation here, so that LeakCanary only runs with debug variants of the builds.
+     * p.s. it won't run with the debuggable variant.
+     *
+     * Following link explains setting up LeakCanary for different product flavors:
+     * https://square.github.io/leakcanary/recipes/#setting-up-leakcanary-for-different-product-flavors
+     */
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }
 
 configurations {

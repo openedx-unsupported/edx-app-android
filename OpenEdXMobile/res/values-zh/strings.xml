@@ -45,7 +45,7 @@
   <string name="share_course_button">分享课程</string>
   <!--Share course-->
   <string name="share_course_message">我正在{platform_name}上学习课程！看一看：</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">仅在Wi-Fi下载</string>
   <!--Label explaining what wifi only means in detail-->
@@ -89,9 +89,9 @@
   <string name="login_failed">请确保输入正确的用户名/邮箱与密码，再重试。</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">创建账号即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
+  <string name="by_creating_account">创建账号即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">登录此App即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息</string>
+  <string name="by_signing_in">登录此App即表示您同意{license}、{tos_and_honor_code}和允许{platform_name}及其团队成员按照{privacy_policy}使用您的个人信息.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name}用户协议</string>
   <!--Label for Terms of Service and Honor Code-->
@@ -106,8 +106,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">查看当前下载</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">打开您的用户资料</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">课程</string>
   <!--Title of user's program list screen-->
@@ -128,14 +126,8 @@
   <string name="toggle_turn_off">关</string>
   <!--Logout button label-->
   <string name="logout">退出</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">设置</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">应用版本</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">设置</string>
-  <!--Title of Account screen-->
-  <string name="title_account">账号</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">重置密码</string>
@@ -594,8 +586,6 @@
   <string name="profile_sharing_limited_by_other_user">此人当前仅分享部分资料</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">您必须年满13岁才能分享完整的用户资料。</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">账号设置</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">您的资料似乎不完整。我们来帮助您完善资料。</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

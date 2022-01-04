@@ -44,32 +44,12 @@
     <!-- Label for searching subjects -->
     <string name="search_subjects">Search Subject</string>
 
-    <!-- Google Cast -->
-
-    <!-- Description of a button that will cast/un-cast the app to a remote device -->
-    <string name="media_route_menu_title">Play on&#8230;</string>
-    <!-- Google cast Introduction title -->
-    <string name="introducing_cast_text">Introducing Cast</string>
-    <!-- Text to describe that video is casting on the remote device -->
-    <string name="remote_device_casting_message">Video is casting to remote device</string>
-
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->
     <string name="share_course_button">Share your course</string>
     <!-- Share course -->
     <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
-
-    <!-- Settings Page -->
-    <!-- Label for wifi only switch -->
-    <string name="settings_wifi_top">Wi-Fi only download</string>
-    <!-- Label explaining what wifi only means in detail -->
-    <string name="settings_wifi_bottom">Only download content when Wi-Fi is turned on</string>
-
-    <!-- Label for the Download to sd-card setting -->
-    <string name="settings_download_to_sdcard_title">Download Video to SD Card</string>
-    <!-- Label explaining the download location setting in detail -->
-    <string name="settings_download_to_sdcard_subtitle">Videos will be downloaded to the SD Card if available</string>
 
     <!-- Certificate Page -->
     <!-- Description of button that will open the certificate sharing menu -->
@@ -109,9 +89,9 @@
 
     <!-- License Agreement related string on Login and Regiser screens -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}</string>
+    <string name="by_creating_account">By creating an account, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}.</string>
     <!-- Sign In agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}</string>
+    <string name="by_signing_in">By signing in to this app, you agree to the {license} and {tos_and_honor_code} and you acknowledge that {platform_name} and each Member process your personal data in accordance with the {privacy_policy}.</string>
     <!-- Label for End User License Agreement -->
     <string name="licensing_agreement">{platform_name} End User License Agreement</string>
     <!-- Label for Terms of Service and Honor Code -->
@@ -128,8 +108,6 @@
     <!-- Navigation Drawer Labels -->
     <!-- Button text to show user current downloads screen -->
     <string name="label_current_downloads">View current downloads</string>
-    <!-- Content description for edit profile button -->
-    <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">Courses</string>
     <!-- Title of user's program list screen -->
@@ -143,21 +121,11 @@
     <!-- Title of Find Courses tab on Main Dashboard screen -->
     <string name="label_discovery">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
-    <string name="label_submit_feedback">Submit Feedback</string>
+    <string name="label_submit_feedback">Submit feedback</string>
     <!-- Toggle switch on state label -->
     <string name="toggle_turn_on">On</string>
     <!-- Toggle switch off state label -->
     <string name="toggle_turn_off">Off</string>
-    <!-- Logout button label -->
-    <string name="logout">Logout</string>
-    <!-- Settings screen title -->
-    <string name="settings_txt">Settings</string>
-    <!-- Settings screen version -->
-    <string name="label_version">App Version</string>
-    <!-- Button text to show user Settings screen -->
-    <string name="label_settings">Settings</string>
-    <!-- Title of Account screen -->
-    <string name="title_account">Account</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
@@ -173,13 +141,6 @@
         If you don’t see it in the next few minutes, make sure to check your spam folder.</string>
     <!-- Password reset dialog prompt -->
     <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
-    <!-- Label explaining toggle for cellular data access -->
-    <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
-    <!-- Info message text for to let use know how many videos were deleted -->
-    <plurals name="delete_video_snackbar_msg">
-        <item quantity="one">%s video deleted</item>
-        <item quantity="other">%s videos deleted</item>
-    </plurals>
     <!-- Alert dialog title for users with zero rated data -->
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
@@ -232,110 +193,6 @@
     <string name="label_ended">Ended {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending {date}</string>
-    <!-- Error Message when course dates are not available -->
-    <string name="course_dates_unavailable_message">Course dates are not currently available.</string>
-    <!-- Message Course Dates Reset Successful -->
-    <string name="course_dates_reset_successful">Your dates have been successfully shifted.</string>
-    <!-- Message Course Dates Reset Unsuccessful -->
-    <string name="course_dates_reset_unsuccessful">Your dates could not be shifted. Please try again.</string>
-    <!-- Message Course Dashboard Info Banner -->
-    <string name="course_dashboard_info_banner"><b>We\'ve built a suggested schedule to help you stay on track.</b>
-        But don\'t worry—it\'s flexible so you can learn at your own pace. If you happen to fall behind on our suggested dates,
-        you\'ll be able to adjust them to keep yourself on track.</string>
-    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
-    <string name="course_dashboard_banner_upgrade_to_graded"><b>You are auditing this course,</b>
-        which means that you are unable to participate in graded assignments. To complete graded assignments as part of this course, you can upgrade today.</string>
-    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
-    <string name="course_dates_banner_upgrade_to_graded_button">Upgrade now</string>
-    <!-- Message Course Dashboard Banner Upgrade to Reset -->
-    <string name="course_dashboard_banner_upgrade_to_reset"><b>You are auditing this course,</b>
-        which means that you are unable to participate in graded assignments. It looks like you missed some important deadlines based on our suggested schedule. To complete graded assignments as part of this course and shift the past due assignments into the future, you can upgrade today.</string>
-    <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date"><b>It looks like you missed some important deadlines based on our suggested schedule.</b>
-        To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
-    <!-- Label Course Dates Banner Reset Date Button -->
-    <string name="course_dates_banner_reset_date_button">Shift due dates</string>
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Course Schedule</string>
-    <!-- Message Course Dates Info Banner -->
-    <string name="course_dates_info_banner">We built a suggested schedule to help you stay on track. But don’t worry – it’s flexible so you can learn at your own pace.
-        If you happen to fall behind, you’ll be able to adjust the dates to keep yourself on track.</string>
-    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
-    <string name="course_dates_banner_upgrade_to_graded">To complete graded assignments as part of this course, you can upgrade today.</string>
-    <!-- Message Course Dates Banner Upgrade to Reset -->
-    <string name="course_dates_banner_upgrade_to_reset">You are auditing this course,
-        which means that you are unable to participate in graded assignments. It looks like you missed some important deadlines based on our suggested schedule. To complete graded assignments as part of this course and shift the past due assignments into the future, you can upgrade today.</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">It looks like you missed some important deadlines based on our suggested schedule.
-        To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
-    <!-- Label Course Card Graded Message -->
-    <string name="value_prop_course_card_message">Unlock to access more features</string>
-
-
-    <!-- Title Sync to calendar  -->
-    <string name="sync_to_calendar">Sync to calendar</string>
-    <!-- Title Sync to calendar  -->
-    <string name="sync_to_calendar_message">Automatically sync all deadlines and due dates for this course to your calendar.</string>
-    <!-- Title to request calendar permission  -->
-    <string name="title_request_calendar_permission">\“{platform_name}\” Would Like to Access Your Calendar</string>
-    <!-- Message to request calendar permission  -->
-    <string name="message_request_calendar_permission">{platform_name} would like to use your calendar list to subscribe to your personalized {platform_name} calendar for this course.</string>
-    <!-- Title to add calendar for course  -->
-    <string name="title_add_course_calendar">Add Calendar \“{course_name}\”</string>
-    <!-- Message to add calendar for course  -->
-    <string name="message_add_course_calendar">Would you like to add the edX calendar \“{course_name}\” ? \n\nYou can edit or remove your course calendar any time in Calendar or Settings.</string>
-    <!-- Success Message after calendar for course added first time -->
-    <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” has been added to your phone\'s calendar.</string>
-    <!-- Success Message after calendar for course added -->
-    <string name="message_after_course_calendar_added">Your course calendar has been added.</string>
-    <!-- Title to remove calendar for course  -->
-    <string name="title_remove_course_calendar">Remove calendar \“{course_name}\”</string>
-    <!-- Message to remove calendar for course  -->
-    <string name="message_remove_course_calendar">Would you like to remove the edX calendar \“{course_name}\” ?</string>
-    <!-- Success Message after calendar for course removed -->
-    <string name="message_after_course_calendar_removed">Your course calendar has been removed.</string>
-    <!-- Success Message after calendar for course update -->
-    <string name="message_after_course_calendar_updated">Your course calendar has been updated.</string>
-    <!-- Title course calendar is out-of-date  -->
-    <string name="title_calendar_out_of_date">Your course calendar is out of date</string>
-    <!-- Message course calendar is out-of-date  -->
-    <string name="message_calendar_out_of_date">Your course dates have been shifted and your course calendar is no longer up to date with your new schedule.</string>
-
-    <!-- Label My Courses Graded content Button -->
-    <string name="course_value_prop_button">Learn more</string>
-    <!-- Label Course Modal heading -->
-    <string name="course_modal_heading">Upgrade {course_name}</string>
-    <!-- Label Course Modal features -->
-    <string name="course_modal_earn_certificate">Earn a verified certificate of completion to showcase on your resume</string>
-    <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
-    <string name="course_modal_full_access_course">Full access to course content and course material even after the course ends</string>
-    <string name="course_modal_support_non_profit">Support our non-profit mission at {platform_name}</string>
-    <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">Upgrade now for $99</string>
-    <!-- Title Course Locked Modal  -->
-    <string name="course_locked_modal_title">Learn more about locked features</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>How to unlock graded assignments</u></string>
-    <!-- Label Course Modal Graded Assignments Locked -->
-    <string name="course_modal_graded_assignment_locked">Graded assignments are locked</string>
-    <!-- Label Course Modal Graded Assignments Locked description -->
-    <string name="course_modal_graded_assignment_locked_description">Upgrade to gain access to locked features like this one and get the most out of your course</string>
-    <!-- Label Course Modal Graded Assignments show more -->
-    <string name="course_modal_graded_assignment_show_more"><u>Show more</u></string>
-    <!-- Label Course Modal Graded Assignments show less -->
-    <string name="course_modal_graded_assignment_show_less"><u>Show less</u></string>
-    <!-- Subtitle labels for video durations in hours-->
-    <plurals name="video_duration_hour">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
-    </plurals>
-    <!-- Subtitle labels for video durations in minutes-->
-    <plurals name="video_duration_minutes">
-        <item quantity="one">%d min</item>
-        <item quantity="other">%d mins</item>
-    </plurals>
-
-
     <!-- Label for date when course is expiring in a specific time frame like in 2 days -->
     <string name="label_expires">Course access expires {date}</string>
     <!-- Label for date when course is expiring on a specific date like on December 5 -->
@@ -545,10 +402,6 @@
     <string name="assessment_needed_updating_youtube">This video requires that you update the YouTube app.</string>
     <!-- Label for button to update youtube app -->
     <string name="assessment_update_youtube">Update YouTube</string>
-    <!-- Message on shift course dates successfully on Assessment -->
-    <string name="assessment_shift_dates_success_msg">Your due dates have been successfully shifted to help you stay on track.</string>
-    <!-- Label to view shifted dates -->
-    <string name="assessment_view_all_dates"><u>View all dates</u></string>
 
     <!-- Video List -->
     <!-- Title of video download screen -->
@@ -771,65 +624,6 @@
     <string name="forum_follow">Follow</string>
     <string name="forum_unfollow">Unfollow</string>
 
-    <!-- User Profiles -->
-    <!-- Window title for the user profile screen -->
-    <string name="profile_title">Profile</string>
-    <!-- The accessibility description for the username section -->
-    <string name="profile_username_description">Username: {username}</string>
-    <!-- The accessibility description for the language section -->
-    <string name="profile_language_description">Language: {language}</string>
-    <!-- The accessibility description for the location section -->
-    <string name="profile_location_description">Location: {location}</string>
-    <!-- The accessibility description for the "About Me" section -->
-    <string name="profile_about_me_description">About me: {about_me}</string>
-    <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
-    <string name="profile_toolbar_edit_button">Edit</string>
-    <!-- Shown when viewing your own profile and you are not sharing a full profile -->
-    <string name="profile_sharing_limited_by_you">You are currently sharing a limited profile</string>
-    <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
-    <string name="profile_sharing_limited_by_other_user">This person is currently sharing a limited profile</string>
-    <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
-    <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile.</string>
-    <!-- Shown as button below the explanation for age of consent; it launches the edit profile screen -->
-    <string name="profile_consent_needed_edit_button">Account Settings</string>
-    <!-- Shown when viewing your own incomplete profile -->
-    <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet. Let’s get you started.</string>
-    <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
-    <string name="profile_incomplete_edit_button">Get Started</string>
-    <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
-    <string name="profile_incomplete_about_me">No “About me” info provided.</string>
-    <!-- Window title for edit profile screen -->
-    <string name="edit_user_profile_title">Edit profile</string>
-    <!-- How most profile fields are formatted when viewing the edit screen -->
-    <string name="edit_user_profile_field">{label}: {value}</string>
-    <!-- Default placeholder if a profile field is blank -->
-    <string name="edit_user_profile_field_placeholder">Select</string>
-    <!-- Button that saves changes to a profile text field -->
-    <string name="edit_user_profile_textarea_submit_button">Submit</string>
-    <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
-    <string name="edit_user_profile_current_language">Current language: {current_language}</string>
-    <!-- An option that will set the user profile's location to the country of their device's configured locale -->
-    <string name="edit_user_profile_current_location">Current location: {current_location}</string>
-    <!-- Button label that will open gallery or camera for choosing new profile photo -->
-    <string name="edit_user_profile_change_photo">Change</string>
-    <!-- Content Description for change photo button -->
-    <string name="edit_user_profile_change_photo_description">Change profile picture</string>
-    <!-- Button that will open a camera for taking a new profile photo -->
-    <string name="edit_user_profile_take_photo">Take photo</string>
-    <!-- Button that will open photo gallery for choosing a new profile photo -->
-    <string name="edit_user_profile_choose_photo">Choose a photo</string>
-    <!-- Button that will open a camera for taking a new profile photo -->
-    <string name="edit_user_profile_remove_photo">Remove photo</string>
-    <!-- Title when cropping newly selected profile photo -->
-    <string name="edit_user_profile_photo_crop_title">Crop and resize</string>
-    <!-- Button that will exit the crop tool without saving the image -->
-    <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
-    <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
-    <string name="edit_user_profile_photo_crop_save">Choose</string>
-    <!-- Tab title for section of profile that displays a user's bio -->
-    <string name="profile_tab_bio">About</string>
-    <!-- Tab title for section of profile that lists a user's accomplishments -->
-    <string name="profile_tab_accomplishment">Accomplishments</string>
     <!-- Button that will initiate sharing one of a user's accomplishments -->
     <string name="share_accomplishment_button">Share your accomplishment</string>
     <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
@@ -864,10 +658,4 @@
     <string name="celebration_share_message">I\'m on my way to completing {course_name} online with @{platform_name}online. What are you spending your time learning? #my{platform_name}journey</string>
     <!-- accessibility label for section completion-->
     <string name="course_outline_completion_description">Completed</string>
-    <!-- Open in browser message -->
-    <string name="open_in_browser_message">This part of the course may work best in a web browser.</string>
-    <!-- Open in browser Title -->
-    <string name="open_in_browser_text"><u>Open in browser</u></string>
-    <!-- Error message while creating calendar for the course events -->
-    <string name="adding_calendar_error_message">Error Adding Calendar, Please try later</string>
 </resources>

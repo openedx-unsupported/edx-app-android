@@ -9,9 +9,9 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.core.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,6 +39,7 @@ import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
+import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 @Singleton
@@ -47,7 +48,6 @@ public class Router {
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
     public static final String EXTRA_COURSE_NAME = "course_name";
-    public static final String EXTRA_COURSE_DETAIL = "course_detail";
     public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_COURSE_UPGRADE_DATA = "course_upgrade_data";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
@@ -111,12 +111,6 @@ public class Router {
         sourceActivity.startActivity(programInfoIntent);
     }
 
-    public void showSettings(Activity sourceActivity) {
-        Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
-        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(settingsIntent);
-    }
-
     public void showLaunchScreen(Context context) {
         final Intent launchIntent = new Intent(context,
                 config.isNewLogistrationEnabled()
@@ -148,7 +142,7 @@ public class Router {
     }
 
     public void showMainDashboard(@NonNull Activity sourceActivity) {
-        showMainDashboard(sourceActivity, null);
+        showMainDashboard(sourceActivity, (String) null);
     }
 
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName) {
@@ -164,21 +158,34 @@ public class Router {
         sourceActivity.startActivity(intent);
     }
 
+    public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable DeepLink deepLink) {
+        Intent intent = MainDashboardActivity.newIntent(deepLink);
+        sourceActivity.startActivity(intent);
+    }
+
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
                                         boolean announcements) {
-        showCourseDashboardTabs(activity, model, null, null, null, announcements, null);
+        showCourseDashboardTabs(activity, model, null, null, null, null, announcements, null);
+    }
+
+    public void showCourseDashboardTabs(@NonNull Activity activity,
+                                        @Nullable String courseId,
+                                        @Nullable @ScreenDef String screenName) {
+        activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, null, courseId,
+                null, null, null, false, screenName));
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
                                         @Nullable String courseId,
+                                        @Nullable String componentId,
                                         @Nullable String topicId,
                                         @Nullable String threadId,
                                         boolean announcements,
                                         @Nullable @ScreenDef String screenName) {
         activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId,
-                topicId, threadId, announcements, screenName));
+                componentId, topicId, threadId, announcements, screenName));
     }
 
     public void showCourseUpgradeWebViewActivity(@NonNull Context context,
@@ -346,14 +353,27 @@ public class Router {
         context.startActivity(addResponseIntent);
     }
 
+    public void showAuthenticatedWebViewActivity(@NonNull Context context, @Nullable CourseComponent unit) {
+        context.startActivity(AuthenticatedWebViewActivity.newIntent(context, unit));
+    }
+
+    public void showAuthenticatedWebViewActivity(@NonNull Context context, @NonNull String url,
+                                                 @NonNull String name, boolean isModalView) {
+        context.startActivity(AuthenticatedWebViewActivity.newIntent(context, url, name, isModalView));
+    }
+
+    public void showWebViewActivity(@NonNull Context context, @NonNull String url, @NonNull String name) {
+        context.startActivity(WebViewActivity.newIntent(context, url, name));
+    }
+
     /**
      * Clear the login data and exit to the splash screen. This should only be called internally;
      * for handling manual logout,
      * {@link #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
-     * @param context  The context.
-     * @param analyticsRegistry  The analytics provider object.
-     * @param delegate The notification delegate.
+     * @param context           The context.
+     * @param analyticsRegistry The analytics provider object.
+     * @param delegate          The notification delegate.
      * @see #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
@@ -373,9 +393,9 @@ public class Router {
      * logout internally (e.g. in response to refresh token expiration),
      * {@link #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
-     * @param context  The context.
-     * @param analyticsRegistry  The analytics provider object.
-     * @param delegate The notification delegate.
+     * @param context           The context.
+     * @param analyticsRegistry The analytics provider object.
+     * @param delegate          The notification delegate.
      * @see #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {

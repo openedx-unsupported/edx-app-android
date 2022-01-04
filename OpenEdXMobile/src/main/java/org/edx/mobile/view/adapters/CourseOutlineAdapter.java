@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -303,7 +304,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
-        viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
+        viewHolder.rowSubtitleVideoSize.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
 
@@ -318,7 +319,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private void getRowViewForLeaf(ViewHolder viewHolder, final SectionRow row) {
         final CourseComponent unit = row.component;
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
-        viewHolder.rowSubtitleDueDate.setVisibility(View.GONE);
+        viewHolder.rowSubtitleVideoSize.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
@@ -391,14 +392,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.rowSubtitle.setText(org.edx.mobile.util.TextUtils.getVideoDurationString(context, videoData.duration));
         }
         if (videoData.getSize() > 0L) {
-            viewHolder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
-            viewHolder.rowSubtitleDueDate.setText(MemoryUtil.format(context, videoData.getSize()));
-            // Set appropriate right margin of subtitle
-            final int rightMargin = (int) context.getResources().getDimension(R.dimen.widget_margin_double);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
-                    viewHolder.rowSubtitle.getLayoutParams();
-            params.setMargins(0, 0, rightMargin, 0);
-            params.setMarginEnd(rightMargin);
+            viewHolder.rowSubtitleVideoSize.setVisibility(View.VISIBLE);
+            viewHolder.rowSubtitleVideoSize.setText(MemoryUtil.format(context, videoData.getSize()));
         }
         if (!VideoUtil.isVideoDownloadable(videoBlockModel.getData())) {
             viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
@@ -489,8 +484,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     R.color.neutralBlack));
             if (!TextUtils.isEmpty(component.getDueDate())) {
                 try {
-                    holder.rowSubtitleDueDate.setText(getFormattedDueDate(component.getDueDate()));
-                    holder.rowSubtitleDueDate.setVisibility(View.VISIBLE);
+                    holder.rowSubtitle.setText(String.format("%s %s", holder.rowSubtitle.getText().toString(),
+                            getFormattedDueDate(component.getDueDate())));
                 } catch (IllegalArgumentException e) {
                     logger.error(e);
                 }
@@ -577,21 +572,22 @@ public class CourseOutlineAdapter extends BaseAdapter {
             , View.OnClickListener listener) {
         switch (state) {
             case DOWNLOADING:
-                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(row.bulkDownload.getContext(),
-                        R.drawable.custom_circular_progress_bar, R.dimen.edx_large, R.color.primaryBaseColor));
-                row.bulkDownload.setTag(R.drawable.custom_circular_progress_bar);
+                row.bulkDownloadLoading.setVisibility(View.VISIBLE);
+                row.bulkDownloadLoading.setTag(DownloadEntry.DownloadedState.DOWNLOADING);
+                row.bulkDownload.setVisibility(View.GONE);
                 row.downloadBackground.setVisibility(View.GONE);
-                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.ROTATION);
                 break;
             case DOWNLOADED:
+                row.bulkDownloadLoading.setVisibility(View.GONE);
                 row.downloadBackground.setVisibility(View.VISIBLE);
+                row.bulkDownload.setVisibility(View.VISIBLE);
                 row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
                         R.drawable.ic_download_done, R.dimen.edx_large));
                 row.bulkDownload.setTag(R.drawable.ic_download_done);
-                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.NONE);
                 break;
             case ONLINE:
-                UiUtils.INSTANCE.setAnimation(row.bulkDownload, UiUtils.Animation.NONE);
+                row.bulkDownloadLoading.setVisibility(View.GONE);
+                row.bulkDownload.setVisibility(View.VISIBLE);
                 row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
                         R.drawable.ic_download, R.dimen.edx_large));
@@ -724,8 +720,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.row_title);
         holder.rowSubtitle = (TextView) convertView
                 .findViewById(R.id.row_subtitle);
-        holder.rowSubtitleDueDate = (TextView) convertView
-                .findViewById(R.id.row_subtitle_due_date);
+        holder.rowSubtitleVideoSize = (TextView) convertView
+                .findViewById(R.id.row_subtitle_video_size);
         holder.rowSubtitleIcon = (AppCompatImageView) convertView
                 .findViewById(R.id.row_subtitle_icon);
         holder.lockedContent = (AppCompatImageView) convertView
@@ -736,6 +732,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (AppCompatImageView) convertView
                 .findViewById(R.id.bulk_download);
+        holder.bulkDownloadLoading = (CircularProgressIndicator) convertView
+                .findViewById(R.id.loading_indicator);
         holder.downloadBackground = (View) convertView
                 .findViewById(R.id.download_background);
         holder.bulkDownload.setColorFilter(R.color.primaryXLightColor);
@@ -755,9 +753,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
         AppCompatImageView rowCompleted;
         TextView rowTitle;
         TextView rowSubtitle;
-        TextView rowSubtitleDueDate;
+        TextView rowSubtitleVideoSize;
         AppCompatImageView rowSubtitleIcon;
         AppCompatImageView bulkDownload;
+        CircularProgressIndicator bulkDownloadLoading;
         View downloadBackground;
         AppCompatImageView lockedContent;
         TextView noOfVideos;

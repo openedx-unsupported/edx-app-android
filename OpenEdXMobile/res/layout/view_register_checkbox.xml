@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/register_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_half_margin"
+            android:gravity="top|start"
+            android:paddingTop="@dimen/edx_half_margin"
+            android:textColor="@color/neutralBlackT"
+            android:textSize="@dimen/edx_xxx_small"
+            app:buttonTint="@color/neutralBlackT"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lineHeight="@dimen/edx_margin"
+            tools:text="By creating an account, I agree that edX may send me marketing messages." />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

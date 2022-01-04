@@ -37,7 +37,7 @@
   <string name="share_course_button">講座をシェア</string>
   <!--Share course-->
   <string name="share_course_message">私は {platform_name} の講座を受講中です！こちらを見てください：</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">Wi-Fi 使用ダウンロード</string>
   <!--Label explaining what wifi only means in detail-->
@@ -90,8 +90,6 @@
   <string name="dropdown_list_prefix">ドロップダウンリスト</string>
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">あなたのプロフィールを開く</string>
   <!--Title of user's course list screen-->
   <!--Title of user's program list screen-->
   <!--Title of native Find Courses Screen-->
@@ -107,12 +105,8 @@
   <string name="toggle_turn_off">オフ</string>
   <!--Logout button label-->
   <string name="logout">ログアウト</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">設定</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">アプリバージョン</string>
-  <!--Button text to show user Settings screen-->
-  <!--Title of Account screen-->
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">パスワードを変更</string>
@@ -527,8 +521,6 @@
   <string name="profile_sharing_limited_by_other_user">現在、限定プロフィールを公開しています</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">全プロフィールを公開するには13歳以上でなければなりません。</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">アカウント設定</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">プロフィールが出来ていないようです。作成しましょう。</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

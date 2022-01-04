@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,8 @@ public class Config {
     private static final String PLATFORM_NAME = "PLATFORM_NAME";
     private static final String PLATFORM_DESTINATION_NAME = "PLATFORM_DESTINATION_NAME";
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
+    private static final String FAQ_URL = "FAQ_URL";
+    private static final String DELETE_ACCOUNT_URL = "DELETE_ACCOUNT_URL";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
     private static final String APP_UPDATE_URIS = "APP_UPDATE_URIS";
@@ -559,20 +562,24 @@ public class Config {
         @SerializedName("PRIVACY_POLICY_URL")
         private String privacyPolicyUrl;
 
-        public String getEulaUrl() {
-            return eulaUrl;
+        @SerializedName("SUPPORTED_LANGUAGES")
+        private ArrayList<String> supportedLanguages;
+
+        public String getAgreementUrl(@NonNull AgreementUrlType urlType){
+            switch (urlType) {
+                case TOS:
+                    return tosUrl;
+                case EULA:
+                    return eulaUrl;
+                case PRIVACY_POLICY:
+                    return privacyPolicyUrl;
+                default:
+                    return null;
+            }
         }
 
-        public String getTosUrl() {
-            return tosUrl;
-        }
-
-        public String getPrivacyPolicyUrl() {
-            return privacyPolicyUrl;
-        }
-
-        public boolean isAtleastOneAgreementUrlAvailable() {
-            return !TextUtils.isEmpty(eulaUrl) || !TextUtils.isEmpty(tosUrl) || !TextUtils.isEmpty(privacyPolicyUrl);
+        public ArrayList<String> getSupportedLanguages() {
+            return supportedLanguages;
         }
     }
 
@@ -670,6 +677,14 @@ public class Config {
 
     public String getFeedbackEmailAddress() {
         return getString(FEEDBACK_EMAIL_ADDRESS);
+    }
+
+    public String getFaqUrl() {
+        return getString(FAQ_URL);
+    }
+
+    public String getDeleteAccountUrl() {
+        return getString(DELETE_ACCOUNT_URL);
     }
 
     public String getOAuthClientId() {

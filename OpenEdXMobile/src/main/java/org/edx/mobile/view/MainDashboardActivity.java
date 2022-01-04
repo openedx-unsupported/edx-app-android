@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,11 +16,11 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
@@ -32,6 +31,7 @@ import java.text.ParseException;
 
 import de.greenrobot.event.EventBus;
 
+import static org.edx.mobile.view.Router.EXTRA_DEEP_LINK;
 import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
@@ -40,9 +40,6 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
 
     @Inject
     NotificationDelegate notificationDelegate;
-
-    @Inject
-    private LoginPrefs loginPrefs;
 
     public static Intent newIntent(@Nullable @ScreenDef String screenName, @Nullable String pathId) {
         // These flags will make it so we only have a single instance of this activity,
@@ -53,11 +50,16 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
                 .putExtra(EXTRA_PATH_ID, pathId);
     }
 
+    public static Intent newIntent(@Nullable DeepLink deepLink) {
+        return IntentFactory.newIntentForComponent(MainDashboardActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .putExtra(EXTRA_DEEP_LINK, deepLink);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWhatsNew();
-        addClickListenerOnProfileButton();
     }
 
     @Override
@@ -150,15 +152,6 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
         }
     }
 
-    private void addClickListenerOnProfileButton() {
-        findViewById(R.id.toolbar_profile_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showUserProfile(MainDashboardActivity.this, loginPrefs.getUsername());
-            }
-        });
-    }
-
     @Override
     protected void configureActionBar() {
         ActionBar bar = getSupportActionBar();
@@ -171,7 +164,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
 
     @Override
     protected int getToolbarLayoutId() {
-        return R.layout.toolbar_with_profile_button;
+        return R.layout.toolbar_with_search_view;
     }
 
     @Override
@@ -207,16 +200,6 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
         final View titleView = findViewById(R.id.toolbar_title_view);
         if (titleView != null && titleView instanceof TextView) {
             return (TextView) titleView;
-        }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public ImageView getProfileView() {
-        final View profileView = findViewById(R.id.toolbar_profile_image);
-        if (profileView != null && profileView instanceof ImageView) {
-            return (ImageView) profileView;
         }
         return null;
     }

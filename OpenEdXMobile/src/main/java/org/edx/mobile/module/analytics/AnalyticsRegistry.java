@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.google.inject.Singleton;
 
+import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.util.images.ShareUtils;
 
 import java.util.ArrayList;
@@ -413,20 +414,6 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackDownloadToSdCardSwitchOn() {
-        for (Analytics service : services) {
-            service.trackDownloadToSdCardSwitchOn();
-        }
-    }
-
-    @Override
-    public void trackDownloadToSdCardSwitchOff() {
-        for (Analytics service : services) {
-            service.trackDownloadToSdCardSwitchOff();
-        }
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         for (Analytics service : services) {
             service.trackExperimentParams(experimentName, values);
@@ -552,9 +539,11 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue, @NonNull String courseId, @NonNull String userType, @NonNull boolean isSelfPaced) {
+    public void trackCalendarEvent(@NonNull String eventName, @NonNull String biValue,
+                                   @NonNull String courseId, @NonNull String userType,
+                                   @NonNull boolean isSelfPaced, long elapsedTime) {
         for (Analytics service : services) {
-            service.trackCalendarEvent(eventName, biValue, courseId, userType, isSelfPaced);
+            service.trackCalendarEvent(eventName, biValue, courseId, userType, isSelfPaced, elapsedTime);
         }
     }
 
@@ -566,6 +555,27 @@ public class AnalyticsRegistry implements Analytics {
         for (Analytics service : services) {
             service.trackOpenInBrowserBannerEvent(eventName, biValue, userType, courseId,
                     componentId, componentType, openedUrl);
+        }
+    }
+
+    @Override
+    public void trackScreenViewEvent(@NonNull String eventName, @NonNull String screenName) {
+        for (Analytics service : services) {
+            service.trackScreenViewEvent(eventName, screenName);
+        }
+    }
+
+    @Override
+    public void trackVideoDownloadQualityChanged(@NonNull VideoQuality selectedVideoQuality, @NonNull VideoQuality oldVideoQuality) {
+        for (Analytics service : services) {
+            service.trackVideoDownloadQualityChanged(selectedVideoQuality, oldVideoQuality);
+        }
+    }
+
+    @Override
+    public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
+        for (Analytics service : services) {
+            service.trackEvent(eventName, biValue);
         }
     }
 }

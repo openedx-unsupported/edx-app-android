@@ -1,9 +1,10 @@
 package org.edx.mobile.user;
 
 import android.content.Context;
+import android.webkit.MimeTypeMap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.webkit.MimeTypeMap;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -62,9 +63,10 @@ public class UserAPI {
 
         @Override
         protected void onResponse(@NonNull final Account account) {
+            // Store the logged in user Info for Profile Screen
+            loginPrefs.setUserInfo(username, account.getEmail(), account.getProfileImage(),
+                    !account.requiresParentalConsent() && account.getAccountPrivacy() == Account.Privacy.PRIVATE);
             EventBus.getDefault().post(new AccountDataLoadedEvent(account));
-            // Store the logged in user's ProfileImage
-            loginPrefs.setProfileImage(username, account.getProfileImage());
         }
     }
 

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -39,13 +40,11 @@ import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.view.IRegistrationFieldView;
-import org.edx.mobile.module.registration.view.RegistrationSelectView;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
@@ -76,9 +75,11 @@ public class RegisterActivity extends BaseFragmentActivity
     private ViewGroup createAccountBtn;
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
+    private LinearLayout optionallyExposedFieldsLayout;
     private TextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
+    private DividerWithTextView optionalText;
     private View loadingIndicator;
     private View registrationForm;
     private View facebookButton;
@@ -88,9 +89,6 @@ public class RegisterActivity extends BaseFragmentActivity
 
     @Inject
     LoginPrefs loginPrefs;
-
-    @Inject
-    AnalyticsRegistry analyticsRegistry;
 
     @Inject
     private LoginService loginService;
@@ -154,7 +152,7 @@ public class RegisterActivity extends BaseFragmentActivity
         TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
         agreementMessageView.setMovementMethod(LinkMovementMethod.getInstance());
         agreementMessageView.setText(org.edx.mobile.util.TextUtils.generateLicenseText(
-                environment.getConfig(), getResources(), R.string.by_creating_account));
+                environment.getConfig(), this, R.string.by_creating_account));
 
         createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
@@ -168,17 +166,19 @@ public class RegisterActivity extends BaseFragmentActivity
         createAccountTv = (TextView) findViewById(R.id.create_account_tv);
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
-        final TextView optional_text = (TextView) findViewById(R.id.optional_field_tv);
-        optional_text.setTextColor(optional_text.getLinkTextColors().getDefaultColor());
-        optional_text.setOnClickListener(new View.OnClickListener() {
+        optionallyExposedFieldsLayout = (LinearLayout) findViewById(R.id.optionally_exposed_fields_layout);
+        optionalText = (DividerWithTextView) findViewById(R.id.optional_field_tv);
+        optionalText.setTextColor(ContextCompat.getColor(this, R.color.primaryXLightColor));
+        optionalText.setDividerColor(ContextCompat.getColor(this, R.color.neutralBase));
+        optionalText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (optionalFieldsLayout.getVisibility() == View.VISIBLE) {
-                    optionalFieldsLayout.setVisibility(v.GONE);
-                    optional_text.setText(getString(R.string.show_optional_text));
+                    optionalFieldsLayout.setVisibility(View.GONE);
+                    optionalText.setText(getString(R.string.show_optional_text));
                 } else {
-                    optionalFieldsLayout.setVisibility(v.VISIBLE);
-                    optional_text.setText(getString(R.string.hide_optional_text));
+                    optionalFieldsLayout.setVisibility(View.VISIBLE);
+                    optionalText.setText(getString(R.string.hide_optional_text));
                 }
             }
         });
@@ -295,20 +295,21 @@ public class RegisterActivity extends BaseFragmentActivity
         for (RegistrationFormField field : form.getFields()) {
             IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
             if (fieldView != null) mFieldViews.add(fieldView);
-            // Add item selected listener for spinner views
-            if (field.getFieldType().equals(RegistrationFieldType.MULTI)) {
-                RegistrationSelectView selectView = (RegistrationSelectView) fieldView;
-            }
         }
 
         // add required and optional fields to the window
         for (IRegistrationFieldView v : mFieldViews) {
             if (v.getField().isRequired()) {
                 requiredFieldsLayout.addView(v.getView());
+            } else if (!v.getField().isRequired() && v.getField().isExposed()) {
+                optionallyExposedFieldsLayout.addView(v.getView());
             } else {
                 optionalFieldsLayout.addView(v.getView());
             }
         }
+
+        if (optionalFieldsLayout.getChildCount() == 0)
+            optionalText.setVisibility(View.GONE);
 
         // enable all the views
         tryToSetUIInteraction(true);
@@ -602,9 +603,6 @@ public class RegisterActivity extends BaseFragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
-//        if(email_et.getText().toString().length()==0){
-//            displayLastEmailId();
-//        }
         socialLoginDelegate.onActivityStarted();
     }
 
@@ -704,6 +702,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         for (IRegistrationFieldView v : mFieldViews) {
             v.setEnabled(enable);
+            setActionListeners(v);
         }
 
         facebookButton.setClickable(enable);
@@ -711,5 +710,28 @@ public class RegisterActivity extends BaseFragmentActivity
         microsoftButton.setClickable(enable);
 
         return true;
+    }
+
+    /**
+     * Sets actions listener on views used in Registration form
+     *
+     * @param view
+     */
+    private void setActionListeners(IRegistrationFieldView view) {
+        if (RegistrationFieldType.CHECKBOX == view.getField().getFieldType()) {
+            view.setActionListener(() -> {
+                if (view.getCurrentValue().getAsBoolean()) {
+                    environment.getAnalyticsRegistry().trackEvent(
+                            Analytics.Events.REGISTRATION_OPT_IN_TURNED_ON,
+                            Analytics.Values.REGISTRATION_OPT_IN_TURNED_ON
+                    );
+                } else {
+                    environment.getAnalyticsRegistry().trackEvent(
+                            Analytics.Events.REGISTRATION_OPT_IN_TURNED_OFF,
+                            Analytics.Values.REGISTRATION_OPT_IN_TURNED_OFF
+                    );
+                }
+            });
+        }
     }
 }

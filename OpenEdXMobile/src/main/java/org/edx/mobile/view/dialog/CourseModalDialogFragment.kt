@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.android.billingclient.api.Purchase
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
+import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.ResourceUtil
 import roboguice.fragment.RoboDialogFragment
@@ -19,6 +21,8 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     private var courseId: String = ""
     private var price: String = ""
     private var isSelfPaced: Boolean = false
+
+    private var billingProcessor: BillingProcessor? = null
 
     @Inject
     private lateinit var environment: IEdxEnvironment
@@ -36,6 +40,11 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         return binding.root
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dialog?.window?.attributes?.windowAnimations = R.style.DialogSlideUpAndDownAnimation
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
@@ -47,14 +56,45 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         }
 
         binding.dialogTitle.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_heading, KEY_COURSE_NAME, arguments?.getString(KEY_COURSE_NAME))
-        binding.layoutUpgradeFeature.supportNonProfit.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_support_non_profit, KEY_MODAL_PLATFORM, arguments?.getString(KEY_MODAL_PLATFORM))
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
-        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (environment.config.isIAPEnabled) View.VISIBLE else View.GONE
-        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-            environment.analyticsRegistry.trackUpgradeNowClicked(courseId, price, null, isSelfPaced)
+
+        if (environment.config.isIAPEnabled) {
+            binding.layoutUpgradeBtn.root.visibility = View.VISIBLE
+            binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+                enableUpgradeButton(false)
+                purchaseProduct("org.edx.mobile.test_product")
+                environment.analyticsRegistry.trackUpgradeNowClicked(
+                    courseId,
+                    price,
+                    null,
+                    isSelfPaced
+                )
+            }
+            billingProcessor =
+                BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
+                    override fun onPurchaseCancel() {
+                        enableUpgradeButton(true)
+                    }
+
+                    override fun onPurchaseComplete(purchase: Purchase) {
+                        enableUpgradeButton(true)
+                    }
+                })
+        } else {
+            binding.layoutUpgradeBtn.root.visibility = View.GONE
         }
+    }
+
+    private fun enableUpgradeButton(enable: Boolean) {
+        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (enable) View.VISIBLE else View.GONE
+        binding.layoutUpgradeBtn.loadingIndicator.visibility =
+            if (!enable) View.VISIBLE else View.GONE
+    }
+
+    private fun purchaseProduct(productId: String) {
+        activity?.let { billingProcessor?.purchaseItem(it, productId) }
     }
 
     companion object {
@@ -78,5 +118,10 @@ class CourseModalDialogFragment : RoboDialogFragment() {
             frag.arguments = args
             return frag
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        billingProcessor?.disconnect()
     }
 }

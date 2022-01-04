@@ -45,7 +45,7 @@
   <string name="share_course_button">Partagez votre cours</string>
   <!--Share course-->
   <string name="share_course_message">Je suis un cours sur {platform_name}! Check this out:</string>
-  <!--Settings Page-->
+  <!--Profile Page-->
   <!--Label for wifi only switch-->
   <string name="settings_wifi_top">Téléchargement uniquement disponible en Wi-Fi</string>
   <!--Label explaining what wifi only means in detail-->
@@ -89,9 +89,9 @@
   <string name="login_failed">Veuillez vérifier que votre nom d\'utilisateur ou adresse e-mail et mot de passe sont corrects puis réessayez.</string>
   <!--License Agreement related string on Login and Regiser screens-->
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_creating_account">En créant un compte, vous acceptez les {license} et {tos_and_honor_code} et vous reconnaissez que {platform_name} et chaque membre traitent vos données personnelles conformément à la {privacy_policy}</string>
+  <string name="by_creating_account">En créant un compte, vous acceptez les {license} et {tos_and_honor_code} et vous reconnaissez que {platform_name} et chaque membre traitent vos données personnelles conformément à la {privacy_policy}.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">En vous connectant à cette application, vous acceptez les {license} et {tos_and_honor_code} et vous reconnaissez que {platform_name} et chaque membre traitent vos données personnelles conformément à la {privacy_policy}</string>
+  <string name="by_signing_in">En vous connectant à cette application, vous acceptez les {license} et {tos_and_honor_code} et vous reconnaissez que {platform_name} et chaque membre traitent vos données personnelles conformément à la {privacy_policy}.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">engagements de licence {platform_name}</string>
   <!--Label for Terms of Service and Honor Code-->
@@ -106,8 +106,6 @@
   <!--Navigation Drawer Labels-->
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">Voir les téléchargements en cours</string>
-  <!--Content description for edit profile button-->
-  <string name="open_profile_button">Ouvrir votre profil</string>
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Cours</string>
   <!--Title of user's program list screen-->
@@ -128,14 +126,8 @@
   <string name="toggle_turn_off">Off</string>
   <!--Logout button label-->
   <string name="logout">Déconnexion</string>
-  <!--Settings screen title-->
-  <string name="settings_txt">Paramètres</string>
-  <!--Settings screen version-->
+  <!--Profile screen version-->
   <string name="label_version">Version de l\'App</string>
-  <!--Button text to show user Settings screen-->
-  <string name="label_settings">Paramètres</string>
-  <!--Title of Account screen-->
-  <string name="title_account">Compte</string>
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Réinitialiser le mot de passe</string>
@@ -599,8 +591,6 @@
   <string name="profile_sharing_limited_by_other_user">Cette personne partage son profil limite</string>
   <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
   <string name="profile_consent_needed_explanation">Vous devez avoir au moins 13 ans pour partager votre profil complet.</string>
-  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
-  <string name="profile_consent_needed_edit_button">Paramètres</string>
   <!--Shown when viewing your own incomplete profile-->
   <string name="profile_incomplete_explanation">Il semblerait que votre profil est incomplet. Allons-y.</string>
   <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->

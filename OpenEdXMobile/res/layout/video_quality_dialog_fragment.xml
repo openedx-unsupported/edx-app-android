@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_roundedbg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_header_video_quality"
+            style="@style/bold_edx_black_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:padding="@dimen/edx_default_margin"
+            android:text="@string/video_download_quality_title"
+            android:textSize="@dimen/edx_small" />
+
+        <TextView
+            android:id="@+id/tv_video_quality_message"
+            style="@style/regular_edx_black_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="@dimen/edx_default_margin"
+            android:textSize="@dimen/edx_xx_small"
+            tools:text="@string/video_download_quality_message" />
+
+        <View
+            android:id="@+id/top_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_player_settings_divider_height"
+            android:background="@color/neutralXLight" />
+
+        <ListView
+            android:id="@+id/video_quality_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:divider="@color/neutralLight"
+            android:dividerHeight="@dimen/video_player_settings_divider_height"
+            android:listSelector="@drawable/selectable_rounded_box_overlay"
+            tools:layout_height="250dp" />
+
+        <View
+            android:id="@+id/bottom_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_player_settings_divider_height"
+            android:background="@color/neutralXLight" />
+
+    </LinearLayout>
+
+</layout>

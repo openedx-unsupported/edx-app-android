@@ -16,8 +16,6 @@ import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
 
-import roboguice.inject.InjectExtra;
-
 public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
 
     @Inject
@@ -26,14 +24,21 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
     @Inject
     private CourseDiscussionPostsSearchFragment courseDiscussionPostsSearchFragment;
 
-    @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
-
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
-
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        parseExtras();
+    }
+
+    private void parseExtras() {
+        searchQuery = getIntent().getStringExtra(Router.EXTRA_SEARCH_QUERY);
+        discussionTopic = (DiscussionTopic) getIntent().getSerializableExtra(Router.EXTRA_DISCUSSION_TOPIC);
+        courseData = (EnrolledCoursesResponse) getIntent().getSerializableExtra(Router.EXTRA_COURSE_DATA);
+    }
 
     @Override
     public Fragment getFirstFragment() {

@@ -9,19 +9,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentCourseUnitGradeBinding;
+import org.edx.mobile.inapppurchases.BillingProcessor;
 import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
-
-import static org.edx.mobile.util.AppConstants.PLATFORM_NAME;
 
 public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     private FragmentCourseUnitGradeBinding binding;
+    private BillingProcessor billingProcessor;
 
     public static CourseUnitMobileNotSupportedFragment newInstance(@NonNull CourseComponent unit, @NonNull boolean isSelfPaced, @NonNull String price) {
         final CourseUnitMobileNotSupportedFragment fragment = new CourseUnitMobileNotSupportedFragment();
@@ -50,11 +52,7 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
                 String price = getStringArgument(Router.EXTRA_PRICE);
                 binding.containerLayoutNotAvailable.setVisibility(View.GONE);
                 binding.llGradedContentLayout.setVisibility(View.VISIBLE);
-                binding.layoutUpgradeBtn.btnUpgrade.setVisibility(environment.getConfig().isIAPEnabled() ? View.VISIBLE : View.GONE);
-
-                binding.layoutUpgradeFeature.supportNonProfit.setText(
-                        ResourceUtil.getFormattedString(getResources(), R.string.course_modal_support_non_profit, PLATFORM_NAME, environment.getConfig().getPlatformName()));
-
+                setUpUpgradeButton(isSelfPaced, price);
                 binding.toggleShow.setOnClickListener(v -> {
                     boolean showMore = binding.layoutUpgradeFeature.containerLayout.getVisibility() == View.GONE;
                     binding.layoutUpgradeFeature.containerLayout.setVisibility(showMore ? View.VISIBLE : View.GONE);
@@ -62,10 +60,6 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
                     environment.getAnalyticsRegistry().trackValuePropShowMoreLessClicked(unit.getCourseId(),
                             unit.getId(), price, isSelfPaced, showMore);
                 });
-
-                binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener(v ->
-                        environment.getAnalyticsRegistry().trackUpgradeNowClicked(unit.getCourseId(),
-                                price, unit.getId(), isSelfPaced));
             } else {
                 binding.containerLayoutNotAvailable.setVisibility(View.VISIBLE);
                 binding.llGradedContentLayout.setVisibility(View.GONE);
@@ -89,11 +83,66 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
         });
     }
 
+    private void setUpUpgradeButton(boolean isSelfPaced, String price) {
+        if (environment.getConfig().isIAPEnabled()) {
+            binding.layoutUpgradeBtn.getRoot().setVisibility(View.VISIBLE);
+            binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener(v -> {
+                enableUpgradeButton(false);
+                purchaseProduct("org.edx.mobile.test_product");
+                environment.getAnalyticsRegistry().trackUpgradeNowClicked(unit.getCourseId(),
+                        price, unit.getId(), isSelfPaced);
+            });
+
+            billingProcessor = new BillingProcessor(requireContext(), new BillingProcessor.BillingFlowListeners() {
+                @Override
+                public void onPurchaseCancel() {
+                    enableUpgradeButton(true);
+                }
+
+                @Override
+                public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                    // Nothing do here
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {
+                    // Nothing do here
+                }
+
+                @Override
+                public void onPurchaseComplete(@NonNull Purchase purchase) {
+                    enableUpgradeButton(true);
+                }
+            });
+        } else {
+            binding.layoutUpgradeBtn.getRoot().setVisibility(View.GONE);
+        }
+    }
+
+    private void enableUpgradeButton(boolean enable) {
+        binding.layoutUpgradeBtn.btnUpgrade.setVisibility(enable ? View.VISIBLE : View.GONE);
+        binding.layoutUpgradeBtn.loadingIndicator.setVisibility(!enable ? View.VISIBLE : View.GONE);
+    }
+
+    private void purchaseProduct(String productId) {
+        if (billingProcessor != null) {
+            billingProcessor.purchaseItem(requireActivity(), productId);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (unit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS && environment.getRemoteFeaturePrefs().isValuePropEnabled()) {
             environment.getAnalyticsRegistry().trackLockedContentTapped(unit.getCourseId(), unit.getBlockId());
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (billingProcessor != null) {
+            billingProcessor.disconnect();
         }
     }
 }

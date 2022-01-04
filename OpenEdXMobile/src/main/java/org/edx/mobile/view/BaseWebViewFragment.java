@@ -9,8 +9,8 @@ import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
@@ -39,7 +39,7 @@ public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
     protected final Logger logger = new Logger(getClass().getName());
 
     private EdxWebView webView;
-    protected ProgressBar progressWheel;
+    protected CircularProgressIndicator progressWheel;
 
     protected FullScreenErrorNotification errorNotification;
 
@@ -59,7 +59,7 @@ public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
 
         errorNotification = initFullScreenErrorNotification();
         webView = (EdxWebView) view.findViewById(R.id.webview);
-        progressWheel = (ProgressBar) view.findViewById(R.id.loading_indicator);
+        progressWheel = (CircularProgressIndicator) view.findViewById(R.id.loading_indicator);
 
         initWebView();
     }

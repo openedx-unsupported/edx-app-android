@@ -3,9 +3,10 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.VideoModel;
@@ -78,7 +79,10 @@ public class VideoUtil {
     @Nullable
     public static String getPreferredVideoUrlForDownloading(@NonNull VideoData video) {
         String preferredVideoUrl = null;
-        final VideoInfo preferredVideoInfo = video.encodedVideos.getPreferredVideoInfoForDownloading();
+        final VideoInfo preferredVideoInfo = video.encodedVideos
+                .getPreferredVideoInfoForDownloading(
+                        MainApplication.getEnvironment(MainApplication.instance()).getLoginPrefs().getVideoQuality()
+                );
 
         if (preferredVideoInfo != null &&
                 !TextUtils.isEmpty(preferredVideoInfo.url) &&

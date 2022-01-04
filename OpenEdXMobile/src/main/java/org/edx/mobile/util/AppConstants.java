@@ -33,6 +33,9 @@ public enum AppConstants {
     public static final String PLATFORM_NAME = "platform_name";
     public static final String COURSE_NAME = "course_name";
     public static final String ASSIGNMENT_DUE = "Assignment Due";
+    public static final String EMAIL = "email";
+    public static final String USERNAME = "username";
+    public static final String DIALOG = "dialog";
 
     /**
      * This class defines all the Firebase constants related to the app.
