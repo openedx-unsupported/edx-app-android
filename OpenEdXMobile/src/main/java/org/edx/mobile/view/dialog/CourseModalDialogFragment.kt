@@ -16,7 +16,6 @@ import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.ResourceUtil
 import roboguice.fragment.RoboDialogFragment
-import java.util.Locale
 import javax.inject.Inject
 
 class CourseModalDialogFragment : RoboDialogFragment() {
@@ -83,17 +82,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
                     }
 
                     override fun onPurchaseComplete(purchase: Purchase) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            enableUpgradeButton(true)
-                        }
-                        AlertDialogFragment.newInstance(
-                            getString(R.string.title_upgrade_complete),
-                            getString(R.string.upgrade_success_message),
-                            getString(R.string.label_continue).toUpperCase(Locale.ROOT),
-                            null,
-                            null,
-                            null
-                        ).show(childFragmentManager, null)
+                        onProductPurchased()
                     }
                 })
         } else {
@@ -109,6 +98,20 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
     private fun purchaseProduct(productId: String) {
         activity?.let { billingProcessor?.purchaseItem(it, productId) }
+    }
+
+    private fun onProductPurchased() {
+        CoroutineScope(Dispatchers.Main).launch {
+            enableUpgradeButton(true)
+        }
+        AlertDialogFragment.newInstance(
+            getString(R.string.title_upgrade_complete),
+            getString(R.string.upgrade_success_message),
+            getString(R.string.label_continue),
+            null,
+            null,
+            null
+        ).show(childFragmentManager, null)
     }
 
     companion object {

@@ -276,6 +276,10 @@ public class CourseComponent implements IBlock, IPathNode {
         return type != null ? type.isContainer() : (children != null && children.size() > 0);
     }
 
+    public boolean isVideoBlock() {
+        return (type != null && type == BlockType.VIDEO);
+    }
+
     /**
      * get direct children who have child.  it is not based on the block type, but on
      * the real tree structure.
