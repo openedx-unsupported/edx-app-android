@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
@@ -101,7 +100,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     }
 
     private fun onProductPurchased() {
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             enableUpgradeButton(true)
         }
         AlertDialogFragment.newInstance(
