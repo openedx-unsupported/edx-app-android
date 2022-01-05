@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>Hemos creado un cronograma sugerido para ayudarte a mantenerte encaminado en el curso.</b>
+        Pero no te preocupes, es flexible para que puedas aprender a tu propio ritmo. Si te atrasas en las fechas sugeridas,
+        podrás ajustarlas para mantenerte encaminado.</string>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b>Estás en la opción gratuita del curso,</b>
+        lo que significa que no podrás participar en las tareas calificadas. Para completar las tareas calificadas como parte de este curso, puedes cambiar a la opción paga.</string>
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
+    <string name="course_dates_banner_upgrade_to_graded_button">Acutalizar ahora</string>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>Estás en la opción gratuita del curso,</b>
+        lo que significa que no puedes participar en tareas calificadas. Parece que no cumpliste con algunos plazos importantes según nuestro calendario sugerido. Para completar las asignaciones calificadas como parte de este curso y cambiar las asignaciones vencidas al futuro, puedes cambiarte a la opción paga.</string>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>Parece que no has cumplido con algunos plazos importantes según nuestro calendario sugerido.</b>
+        Para mantenerte en el camino adecuado, puedes actualizar este calendario y mover las tareas vencidas hacia el futuro. No te preocupes, no perderás nada de lo que hayas avanzado cuando cambies las fechas de entrega.</string>
+    <!-- Label Course Dates Banner Reset Date Button -->
+    <string name="course_dates_banner_reset_date_button">Cambia las fechas de entrega</string>
+
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">Calendario del curso</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">Hemos creado un cronograma sugerido para ayudarte a mantenerte encaminado en el curso. Pero no te preocupes, es flexible para que puedas aprender a tu propio ritmo.
+        Si te atrasas en las fechas sugeridas, podrás ajustarlas para mantenerte encaminado.</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">Para completar las tareas calificadas como parte de este curso, puedes cambiar a la opción paga.</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset">Estás en la opción gratuita del curso,
+        lo que significa que no puedes participar en tareas calificadas. Parece que no cumpliste con algunos plazos importantes según nuestro calendario sugerido. Para completar las asignaciones calificadas como parte de este curso y cambiar las asignaciones vencidas al futuro, puedes cambiarte a la opción paga.</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">Parece que no has cumplido con algunos plazos importantes según nuestro calendario sugerido.
+        Para mantenerte en el camino adecuado, puedes actualizar este calendario y mover las tareas vencidas hacia el futuro. No te preocupes, no perderás nada de lo que hayas avanzado cuando cambies las fechas de entrega.</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">Obtener todos los beneficios</string>
+
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">Esta parte del curso puede funcionar mejor en un navegador web.</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>Abrir en el navegador</u></string>
+</resources>

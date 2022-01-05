@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Profile Page -->
+    <!-- Label for wifi only switch -->
+    <string name="settings_wifi_top">Sadece Wi-Fi ile indir</string>
+    <!-- Label explaining what wifi only means in detail -->
+    <string name="settings_wifi_bottom">Sadece Wi-Fi açıkken içerik indir</string>
+
+    <!-- Logout button label -->
+    <string name="logout">Çıkış</string>
+    <!-- Profile screen version -->
+    <string name="label_version">Uygulama sürümü</string>
+
+    <!-- User Profiles -->
+    <!-- Window title for the user profile screen -->
+    <string name="profile_title">Profil</string>
+    <!-- The accessibility description for the username section -->
+    <string name="profile_username_description">Kullanıcı adı: {username}</string>
+    <!-- The accessibility description for the language section -->
+    <string name="profile_language_description">Dil: {language}</string>
+    <!-- The accessibility description for the location section -->
+    <string name="profile_location_description">Konum: {location}</string>
+    <!-- The accessibility description for the "About Me" section -->
+    <string name="profile_about_me_description">Hakkımda: {about_me}</string>
+    <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
+    <string name="profile_toolbar_edit_button">Düzenle</string>
+    <!-- Shown when viewing your own profile and you are not sharing a full profile -->
+    <string name="profile_sharing_limited_by_you">Şu an kısıtlı profil paylaşıyorsunuz</string>
+    <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
+    <string name="profile_sharing_limited_by_other_user">Bu kullanıcı şu an kısıtlı profil paylaşıyor</string>
+    <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
+    <string name="profile_consent_needed_explanation">Tüm profilinizi paylaşmak için 13 yaşın üstünde olmalısınız.</string>
+    <!-- Shown when viewing your own incomplete profile -->
+    <string name="profile_incomplete_explanation">Profiliniz henüz tamamlanmadı gibi görünüyor. Haydi, doldurmaya başlayalım.</string>
+    <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
+    <string name="profile_incomplete_edit_button">Başla</string>
+    <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
+    <string name="profile_incomplete_about_me">\"Hakkımda\" bilgisi sağlanmamış.</string>
+    <!-- Window title for edit profile screen -->
+    <string name="edit_user_profile_title">Profili güncelle</string>
+    <!-- How most profile fields are formatted when viewing the edit screen -->
+    <string name="edit_user_profile_field">{label}: {value}</string>
+    <!-- Default placeholder if a profile field is blank -->
+    <string name="edit_user_profile_field_placeholder">Seç</string>
+    <!-- Button that saves changes to a profile text field -->
+    <string name="edit_user_profile_textarea_submit_button">Gönder</string>
+    <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
+    <string name="edit_user_profile_current_language">Şu anki dil: {current_language}</string>
+    <!-- An option that will set the user profile's location to the country of their device's configured locale -->
+    <string name="edit_user_profile_current_location">Şu anki konum: {current_location}</string>
+    <!-- Button label that will open gallery or camera for choosing new profile photo -->
+    <string name="edit_user_profile_change_photo">Değiştir</string>
+    <!-- Content Description for change photo button -->
+    <string name="edit_user_profile_change_photo_description">Profil resmini değiştir</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_take_photo">Fotoğraf çek</string>
+    <!-- Button that will open photo gallery for choosing a new profile photo -->
+    <string name="edit_user_profile_choose_photo">Fotoğraf seç</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_remove_photo">Fotoğrafı kaldır</string>
+    <!-- Title when cropping newly selected profile photo -->
+    <string name="edit_user_profile_photo_crop_title">Kes ve yeniden boyutlandır</string>
+    <!-- Button that will exit the crop tool without saving the image -->
+    <string name="edit_user_profile_photo_crop_cancel">İptal</string>
+    <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
+    <string name="edit_user_profile_photo_crop_save">Seç</string>
+    <!-- Tab title for section of profile that displays a user's bio -->
+    <string name="profile_tab_bio">Hakkımda</string>
+    <!-- Tab title for section of profile that lists a user's accomplishments -->
+    <string name="profile_tab_accomplishment">Başarılar</string>
+</resources>

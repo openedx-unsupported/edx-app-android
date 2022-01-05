@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label for the Download to sd-card setting -->
+    <string name="settings_download_to_sdcard_title">Télécharger la vidéo sur la carte SD</string>
+    <!-- Label explaining the download location setting in detail -->
+    <string name="settings_download_to_sdcard_subtitle">Les vidéos seront téléchargées sur la carte SD si disponible</string>
+    <!-- Label indicating that the only course content visible in the app is videos -->
+    <string name="lbl_showing_only_videos">Ne montrer que les vidéos</string>
+    <!-- Title of prompt indicating issue loading a video -->
+    <string name="network_error_header">Problème de chargement de la vidéo</string>
+    <!-- Content of prompt indicating issue loading a video -->
+    <string name="network_error_message">Merci de vérifier votre connexion Internet.</string>
+
+    <!-- Download error messages -->
+    <!-- Label shown on video list item whose download failed -->
+    <string name="error_download_failed">Téléchargement  échoué</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="file_size_exceeded">La taille du téléchargement dépasse l\'espace de stockage restant.</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="download_exceed_message">Les vidéos sélectionnées dépassent 1 Go.
+        Voulez-vous les télécharger?</string>
+
+    <!-- Message shown when user attempts to download a video over cellular data,
+    but has chosen to only allow video downloads over wifi -->
+    <string name="wifi_off_message">Vos paramètres actuels de téléchargement n\'autorisent que des téléchargements par Wi-Fi.
+        \n Merci de vous connecter à un réseau Wi-Fi ou de charger vos paramètres de téléchargement.</string>
+
+    <!-- Google Cast -->
+    <!-- Description of a button that will cast/un-cast the app to a remote device -->
+    <string name="media_route_menu_title">Lire sur…</string>
+    <!-- Google cast Introduction title -->
+    <string name="introducing_cast_text">Découvrez Cast</string>
+    <!-- Text to describe that video is casting on the remote device -->
+    <string name="remote_device_casting_message">La vidéo est diffusée sur un autre appareil</string>
+
+    <!-- Label explaining toggle for cellular data access -->
+    <string name="wifi_dialog_message_help">Autoriser l\'appareil à télécharger les vidéos en utilisant la connexion de données quand le Wi-Fi n\'est pas disponible. Ceci peut entraîner des frais supplémentaires.</string>
+    <!-- Info message text for to let use know how many videos were deleted -->
+    <plurals name="delete_video_snackbar_msg">
+        <item quantity="one">%s vidéo supprimée</item>
+        <item quantity="other">%s vidéos supprimées</item>
+    </plurals>
+</resources>
