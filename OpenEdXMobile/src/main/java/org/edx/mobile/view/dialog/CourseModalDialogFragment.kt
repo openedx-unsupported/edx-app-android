@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
+import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
@@ -79,7 +81,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
                     }
 
                     override fun onPurchaseComplete(purchase: Purchase) {
-                        enableUpgradeButton(true)
+                        onProductPurchased()
                     }
                 })
         } else {
@@ -95,6 +97,20 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
     private fun purchaseProduct(productId: String) {
         activity?.let { billingProcessor?.purchaseItem(it, productId) }
+    }
+
+    private fun onProductPurchased() {
+        lifecycleScope.launch {
+            enableUpgradeButton(true)
+        }
+        AlertDialogFragment.newInstance(
+            getString(R.string.title_upgrade_complete),
+            getString(R.string.upgrade_success_message),
+            getString(R.string.label_continue),
+            null,
+            null,
+            null
+        ).show(childFragmentManager, null)
     }
 
     companion object {
