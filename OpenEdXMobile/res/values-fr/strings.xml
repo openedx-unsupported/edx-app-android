@@ -33,27 +33,13 @@
   <string name="view_all_subjects">Voir tous les sujets</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">Rechercher des sujets</string>
-  <!--Google Cast-->
-  <!--Description of a button that will cast/un-cast the app to a remote device-->
-  <string name="media_route_menu_title">Lire sur…</string>
-  <!--Google cast Introduction title-->
-  <string name="introducing_cast_text">Découvrez Cast</string>
-  <!--Text to describe that video is casting on the remote device-->
-  <string name="remote_device_casting_message">La vidéo est diffusée sur un autre appareil</string>
+
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Partagez votre cours</string>
   <!--Share course-->
   <string name="share_course_message">Je suis un cours sur {platform_name}! Check this out:</string>
-  <!--Profile Page-->
-  <!--Label for wifi only switch-->
-  <string name="settings_wifi_top">Téléchargement uniquement disponible en Wi-Fi</string>
-  <!--Label explaining what wifi only means in detail-->
-  <string name="settings_wifi_bottom">Télécharger les données uniquement lorsque le Wi-Fi est activé</string>
-  <!--Label for the Download to sd-card setting-->
-  <string name="settings_download_to_sdcard_title">Télécharger la vidéo sur la carte SD</string>
-  <!--Label explaining the download location setting in detail-->
-  <string name="settings_download_to_sdcard_subtitle">Les vidéos seront téléchargées sur la carte SD si disponible</string>
+
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Partagez votre certificat</string>
@@ -124,10 +110,7 @@
   <string name="toggle_turn_on">On</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">Off</string>
-  <!--Logout button label-->
-  <string name="logout">Déconnexion</string>
-  <!--Profile screen version-->
-  <string name="label_version">Version de l\'App</string>
+
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Réinitialiser le mot de passe</string>
@@ -142,13 +125,6 @@
         Vérifiez votre dossier de spams si vous ne le recevez pas dans les 5 minutes.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Saisir l\'email de votre compte, nous vous enverrons un message pour réinitialiser votre mot de passe.</string>
-  <!--Label explaining toggle for cellular data access-->
-  <string name="wifi_dialog_message_help">Autoriser l\'appareil à télécharger les vidéos en utilisant la connexion de données quand le Wi-Fi n\'est pas disponible. Ceci peut entraîner des frais supplémentaires.</string>
-  <!--Info message text for to let use know how many videos were deleted-->
-  <plurals name="delete_video_snackbar_msg">
-    <item quantity="one">%s vidéo supprimée</item>
-    <item quantity="other">%s vidéos supprimées</item>
-  </plurals>
   <!--Alert dialog title for users with zero rated data-->
   <string name="leaving_app_data_title">Déconnexion de l\'App {platform_name}</string>
   <!--Alert dialog content for users with zero rated data-->
@@ -572,63 +548,7 @@
   <string name="forum_post_i_am_following">Les posts que je suis</string>
   <string name="forum_follow">Suivre</string>
   <string name="forum_unfollow">Ne plussuivre</string>
-  <!--User Profiles-->
-  <!--Window title for the user profile screen-->
-  <string name="profile_title">Profil</string>
-  <!--The accessibility description for the username section-->
-  <string name="profile_username_description">Nom d\'utilisateur: {username}</string>
-  <!--The accessibility description for the language section-->
-  <string name="profile_language_description">Langue: {language}</string>
-  <!--The accessibility description for the location section-->
-  <string name="profile_location_description">Pays: {location}</string>
-  <!--The accessibility description for the "About Me" section-->
-  <string name="profile_about_me_description">À propos de moi: {about_me}</string>
-  <!--Label for toolbar icon that launches the edit profile screen for the current user-->
-  <string name="profile_toolbar_edit_button">Modifier</string>
-  <!--Shown when viewing your own profile and you are not sharing a full profile-->
-  <string name="profile_sharing_limited_by_you">Vous partagez votre profil limite</string>
-  <!--Shown when viewing another user's profile and that user is not sharing a full profile-->
-  <string name="profile_sharing_limited_by_other_user">Cette personne partage son profil limite</string>
-  <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
-  <string name="profile_consent_needed_explanation">Vous devez avoir au moins 13 ans pour partager votre profil complet.</string>
-  <!--Shown when viewing your own incomplete profile-->
-  <string name="profile_incomplete_explanation">Il semblerait que votre profil est incomplet. Allons-y.</string>
-  <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->
-  <string name="profile_incomplete_edit_button">Démarrer</string>
-  <!--This text is shown in place of the "About Me" text if the user has not filled in their "About Me"-->
-  <string name="profile_incomplete_about_me">Pas d\'information \"A propos de moi\".</string>
-  <!--Window title for edit profile screen-->
-  <string name="edit_user_profile_title">Modifier le profil</string>
-  <!--How most profile fields are formatted when viewing the edit screen-->
-  <string name="edit_user_profile_field">{label}: {value}</string>
-  <!--Default placeholder if a profile field is blank-->
-  <string name="edit_user_profile_field_placeholder">Sélectionner</string>
-  <!--Button that saves changes to a profile text field-->
-  <string name="edit_user_profile_textarea_submit_button">Envoyer</string>
-  <!--An option that will set the user profile's primary language to the language of their device's configured locale-->
-  <string name="edit_user_profile_current_language">Langue: {current_language}</string>
-  <!--An option that will set the user profile's location to the country of their device's configured locale-->
-  <string name="edit_user_profile_current_location">Lieu: {current_location}</string>
-  <!--Button label that will open gallery or camera for choosing new profile photo-->
-  <string name="edit_user_profile_change_photo">Modifier</string>
-  <!--Content Description for change photo button-->
-  <string name="edit_user_profile_change_photo_description">Modifier la photo de profil</string>
-  <!--Button that will open a camera for taking a new profile photo-->
-  <string name="edit_user_profile_take_photo">Prendre un photo</string>
-  <!--Button that will open photo gallery for choosing a new profile photo-->
-  <string name="edit_user_profile_choose_photo">Sélectionner une photo</string>
-  <!--Button that will open a camera for taking a new profile photo-->
-  <string name="edit_user_profile_remove_photo">Supprimer la photo</string>
-  <!--Title when cropping newly selected profile photo-->
-  <string name="edit_user_profile_photo_crop_title">Recadrer</string>
-  <!--Button that will exit the crop tool without saving the image-->
-  <string name="edit_user_profile_photo_crop_cancel">Annuler</string>
-  <!--Button that will confirm the crop region and continue to upload the cropped photo-->
-  <string name="edit_user_profile_photo_crop_save">Sélectionner</string>
-  <!--Tab title for section of profile that displays a user's bio-->
-  <string name="profile_tab_bio">À propos</string>
-  <!--Tab title for section of profile that lists a user's accomplishments-->
-  <string name="profile_tab_accomplishment">Accomplissements</string>
+
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">Partagez vos accomplissements</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->

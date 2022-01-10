@@ -21,10 +21,6 @@
   <string name="reset_no_network_message">您没有连接到网络，请检查您的网络连接。</string>
   <!--An error ocurred due to some kind of network failure-->
   <string name="network_connected_error">连接错误。请检查您的网络连接。</string>
-  <!--Title of prompt indicating issue loading a video-->
-  <string name="network_error_header">加载视频出现问题</string>
-  <!--Content of prompt indicating issue loading a video-->
-  <string name="network_error_message">请检查您的网络连接</string>
   <!--The server we are trying to use is not available right now-->
   <string name="network_service_unavailable">服务不可用。请稍后重试。</string>
   <!--Login error messages-->
@@ -46,19 +42,7 @@
   <string name="error_account_not_linked_desc_google">请确保您的Google账号与您{platform_destination}上的{platform_name}账号匹配。</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_desc_google_2">此Google账号尚未与任何{platform_name}账号相关联，请先注册。</string>
-  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
-  <!--Download error messages-->
-  <!--Label shown on video list item whose download failed-->
-  <string name="error_download_failed">下载失败</string>
-  <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <string name="file_size_exceeded">下载内容超出设备可用存储空间</string>
-  <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <!--Message shown when user attempts to download a video over cellular data,
-    but has chosen to only allow video downloads over wifi-->
-  <string name="wifi_off_message">当前下载设置只允许在Wi-Fi环境下下载。
-\n请连接到一个Wi-Fi网络或者更改下载设置。</string>
+
   <!--New version available-->
   <!--Snackbar notification shown when the current version of the app is unsupported-->
   <string name="app_version_unsupported">不支持您的新版本。</string>

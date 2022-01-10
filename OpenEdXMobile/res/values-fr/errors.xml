@@ -22,10 +22,6 @@
   <string name="reset_no_network_message">Vous n\'êtes pas connecté à Internet. Merci de vérifier votre connexion Internet.</string>
   <!--An error ocurred due to some kind of network failure-->
   <string name="network_connected_error">Une erreur de connexion est survenu. Veuillez vérifier votre connection internet.</string>
-  <!--Title of prompt indicating issue loading a video-->
-  <string name="network_error_header">Problème de chargement de la vidéo</string>
-  <!--Content of prompt indicating issue loading a video-->
-  <string name="network_error_message">Merci de vérifier votre connexion Internet.</string>
   <!--The server we are trying to use is not available right now-->
   <string name="network_service_unavailable">Service inaccessible. Veuillez réessayer ultérieurement.  </string>
   <!--Login error messages-->
@@ -53,18 +49,7 @@
   <string name="error_account_not_linked_desc_microsoft">Vérifiez que votre compte Microsoft est associé à votre compte {platform_name} sur {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
   <string name="error_account_not_linked_desc_microsoft_2">Ce compte Microsoft n\'est lié à aucun compte {platform_name}. Veuillez vous inscrire.</string>
-  <!--Download error messages-->
-  <!--Label shown on video list item whose download failed-->
-  <string name="error_download_failed">Téléchargement  échoué</string>
-  <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <string name="file_size_exceeded">La taille du téléchargement dépasse l\'espace de stockage restant.</string>
-  <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <string name="download_exceed_message">Les vidéos sélectionnées dépassent 1 Go.
-        Voulez-vous les télécharger?</string>
-  <!--Message shown when user attempts to download a video over cellular data,
-    but has chosen to only allow video downloads over wifi-->
-  <string name="wifi_off_message">Vos paramètres actuels de téléchargement n\'autorisent que des téléchargements par Wi-Fi.
-\n Merci de vous connecter à un réseau Wi-Fi ou de charger vos paramètres de téléchargement.</string>
+
   <!--New version available-->
   <!--Snackbar notification shown when the current version of the app is unsupported-->
   <string name="app_version_unsupported">Votre version n\'est plus prise en charge.</string>

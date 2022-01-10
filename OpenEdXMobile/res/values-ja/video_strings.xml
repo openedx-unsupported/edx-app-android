@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label indicating that the only course content visible in the app is videos -->
+    <string name="lbl_showing_only_videos">動画のみの利用</string>
+    <!-- Title of prompt indicating issue loading a video -->
+    <string name="network_error_header">動画の読込ができません</string>
+    <!-- Content of prompt indicating issue loading a video -->
+    <string name="network_error_message">インターネットへの接続設定を確認してください</string>
+
+    <!-- Download error messages -->
+    <!-- Label shown on video list item whose download failed -->
+    <string name="error_download_failed">ダウンロード失敗</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="file_size_exceeded">ダウンロードサイズがデバイスの記録装置の空き容量を上回っています。</string>
+
+    <!-- Message shown when user attempts to download a video over cellular data,
+    but has chosen to only allow video downloads over wifi -->
+    <string name="wifi_off_message">現在 ダウンロードは Wi-Fi 接続のみを使用する設定になっています。
+        Wi-Fi ネットワークに接続するか、ダウンロードの設定を変更してください。</string>
+
+    <!-- Label explaining toggle for cellular data access -->
+    <string name="wifi_dialog_message_help">Wi-Fi 接続が利用できない場合、通話回線を使って動画をダウンロードできるようにします。データ通信料が課金される場合があります。</string>
+    <!-- Info message text for to let use know how many videos were deleted -->
+    <plurals name="delete_video_snackbar_msg">
+        <item quantity="other">%s 件の動画を削除済</item>
+    </plurals>
+</resources>

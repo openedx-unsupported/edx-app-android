@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Profile Page -->
+    <!-- Label for wifi only switch -->
+    <string name="settings_wifi_top">Download nur über Wi-Fi</string>
+    <!-- Label explaining what wifi only means in detail -->
+    <string name="settings_wifi_bottom">Nur herunterladen, wenn WiFi aktiviert ist</string>
+
+    <!-- Logout button label -->
+    <string name="logout">Abmelden</string>
+    <!-- Profile screen version -->
+    <string name="label_version">App-Version</string>
+
+    <!-- User Profiles -->
+    <!-- Window title for the user profile screen -->
+    <string name="profile_title">Profil</string>
+    <!-- The accessibility description for the username section -->
+    <string name="profile_username_description">Benutzername: {username}</string>
+    <!-- The accessibility description for the language section -->
+    <string name="profile_language_description">Sprache: {language}</string>
+    <!-- The accessibility description for the location section -->
+    <string name="profile_location_description">Standort: {location}</string>
+    <!-- The accessibility description for the "About Me" section -->
+    <string name="profile_about_me_description">Über mich: {about_me}</string>
+    <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
+    <string name="profile_toolbar_edit_button">Bearbeiten</string>
+    <!-- Shown when viewing your own profile and you are not sharing a full profile -->
+    <string name="profile_sharing_limited_by_you">Ihr Profil ist nur teilweise sichtbar für andere Nutzer</string>
+    <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
+    <string name="profile_sharing_limited_by_other_user">Der Nutzer teilt derzeit nur ein limitiertes Profil.</string>
+    <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
+    <string name="profile_consent_needed_explanation">Sie müssen älter als 13 Jahre sein, um alle persönlichen Informationen teilen zu können.</string>
+    <!-- Shown when viewing your own incomplete profile -->
+    <string name="profile_incomplete_explanation">Vervollständigen Sie Ihr Profil.</string>
+    <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
+    <string name="profile_incomplete_edit_button">Beginnen</string>
+    <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
+    <string name="profile_incomplete_about_me">Keine Informationen in \"Über mich\" vorhanden</string>
+    <!-- Window title for edit profile screen -->
+    <string name="edit_user_profile_title">Profil bearbeiten</string>
+    <!-- How most profile fields are formatted when viewing the edit screen -->
+    <string name="edit_user_profile_field">{label}: {value}</string>
+    <!-- Default placeholder if a profile field is blank -->
+    <string name="edit_user_profile_field_placeholder">auswählen</string>
+    <!-- Button that saves changes to a profile text field -->
+    <string name="edit_user_profile_textarea_submit_button">Absenden</string>
+    <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
+    <string name="edit_user_profile_current_language">Aktuelle Sprache: {current_language}</string>
+    <!-- An option that will set the user profile's location to the country of their device's configured locale -->
+    <string name="edit_user_profile_current_location">Aktueller Standort: {current_location}</string>
+    <!-- Button label that will open gallery or camera for choosing new profile photo -->
+    <string name="edit_user_profile_change_photo">Ändern</string>
+    <!-- Content Description for change photo button -->
+    <string name="edit_user_profile_change_photo_description">Profilbild ändern</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_take_photo">Foto aufnehmen</string>
+    <!-- Button that will open photo gallery for choosing a new profile photo -->
+    <string name="edit_user_profile_choose_photo">Foto auswählen</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_remove_photo">Foto entfernen</string>
+    <!-- Title when cropping newly selected profile photo -->
+    <string name="edit_user_profile_photo_crop_title">Zuschneiden und verändern</string>
+    <!-- Button that will exit the crop tool without saving the image -->
+    <string name="edit_user_profile_photo_crop_cancel">Abbrechen</string>
+    <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
+    <string name="edit_user_profile_photo_crop_save">Auswählen</string>
+    <!-- Tab title for section of profile that displays a user's bio -->
+    <string name="profile_tab_bio">Über</string>
+    <!-- Tab title for section of profile that lists a user's accomplishments -->
+    <string name="profile_tab_accomplishment">Leistungen</string>
+</resources>

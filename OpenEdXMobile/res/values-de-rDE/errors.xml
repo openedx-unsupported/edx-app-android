@@ -22,10 +22,6 @@
   <string name="reset_no_network_message">Sie sind nicht mit dem Internet verbunden. Bitte überprüfen sie ihre Internet Verbindung.</string>
   <!--An error ocurred due to some kind of network failure-->
   <string name="network_connected_error">Bitte überprüfen sie ihre Internet Verbindung.</string>
-  <!--Title of prompt indicating issue loading a video-->
-  <string name="network_error_header">Problem beim Laden des Videos</string>
-  <!--Content of prompt indicating issue loading a video-->
-  <string name="network_error_message">Bitte überprüfen sie ihre Internet Verbindung.</string>
   <!--The server we are trying to use is not available right now-->
   <string name="network_service_unavailable">Der Dienst ist momentan nicht verfügbar. Bitte probieren Sie es später noch einmal.</string>
   <!--Login error messages-->
@@ -47,21 +43,7 @@
   <string name="error_account_not_linked_desc_google">Stellen Sie sicher, dass Ihr Google-Konto mit Ihrem {platform_name} Benutzerkonto  auf {platform_destination} verbunden ist.</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_desc_google_2">Das Google-Konto ist nicht mit dem {platform_name} Benutzerkonto verbunden. Bitte registrieren Sie sich.</string>
-  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
-  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
-  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
-  <!--Download error messages-->
-  <!--Label shown on video list item whose download failed-->
-  <string name="error_download_failed">Download fehlgeschlagen</string>
-  <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <string name="file_size_exceeded">Die Grösse des Downloads übersteigt den verfügbaren Speicherplatz auf dem Gerät.</string>
-  <!--Confirmation message shown when attempting to download a large quantity of video data-->
-  <string name="download_exceed_message">Die von Ihnen ausgewählten Videos sind größer als 1GB.
-Möchten Sie die Videos herunterladen?</string>
-  <!--Message shown when user attempts to download a video over cellular data,
-    but has chosen to only allow video downloads over wifi-->
-  <string name="wifi_off_message">Ihr momentanen Einstellungen erlauben Downloads ausschliesslich über Wifi.
-\n Bitte verbinden sie sich mit einem Wifi Netzwerk oder ändern sie ihre Download Einstellungen.</string>
+
   <!--New version available-->
   <!--Snackbar notification shown when the current version of the app is unsupported-->
   <string name="app_version_unsupported">Ihre Version der App wird nicht weiter unterstützt.</string>

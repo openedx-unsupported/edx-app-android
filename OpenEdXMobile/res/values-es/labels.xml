@@ -1,11 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!--Divider between current time and total time. For example  "2:33/5:10"-->
   <string name="lbl_slash">/</string>
   <!--Button allowing user to open a web page corresponding to the current screen in a web browser-->
   <string name="lbl_view_on_web">VER EN LA WEB</string>
-  <!--Label indicating that the only course content visible in the app is videos-->
-  <string name="lbl_showing_only_videos">Mostrando solo videos</string>
   <!--A button's label that reloads the content on screen-->
   <string name="lbl_reload">Recargar</string>
   <!--Dialog Fragment Labels-->
@@ -41,8 +39,6 @@
   <string name="label_view_events">Ver eventos</string>
   <!--Alert dialog Update now button-->
   <string name="label_update_now">Actualizar ahora</string>
-  <!--Alert dialog remove course calendar button-->
-  <string name="label_remove_course_calendar">Eliminar calendario del curso</string>
   <!--Alert dialog Remove button-->
   <string name="label_remove">Eliminar</string>
   <!--Done button label-->
