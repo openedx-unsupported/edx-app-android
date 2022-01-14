@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatusException
@@ -119,7 +119,7 @@ class InAppPurchasesViewModel @Inject constructor(
             HttpStatusException(
                 Response.error<Any>(
                     httpStatusCode,
-                    ResponseBody.create(MediaType.parse("text/plain"), msg)
+                    ResponseBody.create("text/plain".toMediaTypeOrNull(), msg)
                 )
             )
         )
