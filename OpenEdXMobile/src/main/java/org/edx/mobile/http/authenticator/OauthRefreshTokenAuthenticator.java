@@ -10,6 +10,7 @@ import org.edx.mobile.authentication.LoginService;
 
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.event.LogoutEvent;
+import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.logger.Logger;
@@ -110,7 +111,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
                 .getInstance(RetrofitProvider.class).getNonOAuthBased().create(LoginService.class);
 
         AuthResponse refreshTokenData = executeStrict(loginService.refreshAccessToken(
-                "refresh_token", config.getOAuthClientId(), currentAuth.refresh_token));
+                ApiConstants.TOKEN_TYPE_REFRESH, config.getOAuthClientId(), currentAuth.refresh_token));
         loginPrefs.storeRefreshTokenResponse(refreshTokenData);
         return refreshTokenData;
     }

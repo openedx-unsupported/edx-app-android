@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
 import kotlinx.coroutines.launch
@@ -12,16 +13,22 @@ import org.edx.mobile.databinding.FragmentCourseUnitGradeBinding
 import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.view.dialog.AlertDialogFragment
+import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.viewModel.ViewModelFactory
 
 class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     private lateinit var binding: FragmentCourseUnitGradeBinding
     private var billingProcessor: BillingProcessor? = null
+    private lateinit var iapViewModel: InAppPurchasesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,10 +101,15 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private fun setUpUpgradeButton(isSelfPaced: Boolean, price: String) {
         if (environment.config.isIAPEnabled) {
+            iapViewModel = ViewModelProvider(
+                this,
+                ViewModelFactory()
+            ).get(InAppPurchasesViewModel::class.java)
+
+            initObserver()
             binding.layoutUpgradeBtn.root.setVisibility(true)
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-                enableUpgradeButton(false)
-                purchaseProduct("org.edx.mobile.test_product")
+                iapViewModel.addProductToBasket("org.edx.mobile.test_product1")
                 unit?.let {
                     environment.analyticsRegistry.trackUpgradeNowClicked(
                         it.courseId, price, it.id, isSelfPaced
@@ -107,16 +119,53 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
             billingProcessor = BillingProcessor(requireContext(), object : BillingFlowListeners {
                 override fun onPurchaseCancel() {
-                    enableUpgradeButton(true)
+                    iapViewModel.endLoading()
+                    showUpgradeErrorDialog()
                 }
 
                 override fun onPurchaseComplete(purchase: Purchase) {
-                    onProductPurchased()
+                    onProductPurchased(purchase.purchaseToken)
                 }
             })
         } else {
             binding.layoutUpgradeBtn.root.setVisibility(false)
         }
+    }
+
+    private fun initObserver() {
+        iapViewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver {
+            enableUpgradeButton(!it)
+        })
+
+        iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
+            if (it.paymentPageUrl.isNotEmpty())
+//              purchaseProduct(iapViewModel.getProductId())
+                purchaseProduct("org.edx.mobile.test_product")
+        })
+
+        iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
+            showUpgradeCompleteDialog()
+        })
+
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
+            if (errorMsg.throwable is HttpStatusException) {
+                when (errorMsg.throwable.statusCode) {
+                    HttpStatus.UNAUTHORIZED,
+                    HttpStatus.FORBIDDEN -> {
+                        environment.router?.forceLogout(
+                            requireContext(),
+                            environment.analyticsRegistry,
+                            environment.notificationDelegate
+                        )
+                        return@NonNullObserver
+                    }
+                    else -> showUpgradeErrorDialog()
+                }
+            } else {
+                showUpgradeErrorDialog()
+            }
+            iapViewModel.errorMessageShown()
+        })
     }
 
     private fun enableUpgradeButton(enable: Boolean) {
@@ -128,10 +177,33 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         activity?.let { billingProcessor?.purchaseItem(it, productId) }
     }
 
-    private fun onProductPurchased() {
+    private fun onProductPurchased(purchaseToken: String) {
         lifecycleScope.launch {
-            enableUpgradeButton(true)
+            executeOrder(purchaseToken)
         }
+    }
+
+    private fun executeOrder(purchaseToken: String) {
+        iapViewModel.executeOrder(purchaseToken = purchaseToken)
+    }
+
+    private fun showUpgradeErrorDialog() {
+        AlertDialogFragment.newInstance(
+            getString(R.string.title_upgrade_error),
+            getString(R.string.upgrade_error_message),
+            getString(R.string.label_close),
+            null,
+            getString(R.string.label_get_help),
+            { _, _ ->
+                environment.router?.showFeedbackScreen(
+                    requireActivity(),
+                    getString(R.string.email_subject_upgrade_error)
+                )
+            }
+        ).show(childFragmentManager, null)
+    }
+
+    private fun showUpgradeCompleteDialog() {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_complete),
             getString(R.string.upgrade_success_message),

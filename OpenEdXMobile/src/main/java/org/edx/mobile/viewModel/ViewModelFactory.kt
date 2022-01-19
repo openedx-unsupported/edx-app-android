@@ -12,6 +12,7 @@ class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
             when (modelClass) {
                 CourseDateViewModel::class.java -> CourseDateViewModel() as T
+                InAppPurchasesViewModel::class.java -> InAppPurchasesViewModel() as T
                 else -> throw IllegalArgumentException("Class doesn't exist in ViewModelFactory")
             }
 }

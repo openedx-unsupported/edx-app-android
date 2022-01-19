@@ -1,6 +1,7 @@
 package org.edx.mobile.view
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private lateinit var binding: FragmentMyCoursesListBinding
     private val logger = Logger(javaClass.simpleName)
     private var refreshOnResume = false
+    private var lastClickTime: Long = 0
 
     @Inject
     private lateinit var courseAPI: CourseAPI
@@ -70,8 +72,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             }
 
             override fun onValuePropClicked(courseId: String, courseName: String, price: String, isSelfPaced: Boolean) {
-                CourseModalDialogFragment.newInstance(environment.config.platformName, courseId, courseName, price, isSelfPaced)
-                        .show(childFragmentManager, CourseModalDialogFragment.TAG)
+                //This time is checked to avoid taps in quick succession
+                val currentTime = SystemClock.elapsedRealtime()
+                if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
+                    lastClickTime = currentTime
+                    CourseModalDialogFragment.newInstance(
+                        environment.config.platformName,
+                        courseId,
+                        courseName,
+                        price,
+                        isSelfPaced
+                    ).show(childFragmentManager, CourseModalDialogFragment.TAG)
+                }
             }
         }
         detectDeeplink()

@@ -11,4 +11,13 @@
     <string name="title_upgrade_complete">Upgrade complete</string>
     <!-- Message for successful course upgrade -->
     <string name="upgrade_success_message">Thank you for your purchase. You can pick up right where you left off and enjoy full access to your course content.</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">Upgrade Error</string>
+    <!-- Message for course upgrade error -->
+    <string name="upgrade_error_message">It looks like something went wrong when upgrading your course.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">Error upgrading course in app</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">Get Help</string>
 </resources>

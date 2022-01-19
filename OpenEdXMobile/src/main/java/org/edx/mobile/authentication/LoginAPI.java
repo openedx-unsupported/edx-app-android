@@ -80,10 +80,10 @@ public class LoginAPI {
 
     @NonNull
     public Response<AuthResponse> getAccessToken(@NonNull String username,
-                                       @NonNull String password) throws IOException {
-        String grantType = "password";
+                                                 @NonNull String password) throws IOException {
         String clientID = config.getOAuthClientId();
-        return loginService.getAccessToken(grantType, clientID, username, password).execute();
+        return loginService.getAccessToken(ApiConstants.GRANT_TYPE_PASSWORD, clientID, username,
+                password).execute();
     }
 
     @NonNull
