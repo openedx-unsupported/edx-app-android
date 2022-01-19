@@ -16,16 +16,17 @@ buildscript {
     project.apply from: "${rootDir}/constants.gradle"
     repositories {
         google()
-        mavenCentral()
+        mavenCentral()  //  This is the Maven Central repo
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath "com.google.gms:google-services:$gms_google_services"
         // Add the dependency for the Performance Monitoring plugin
         classpath 'com.google.firebase:perf-plugin:1.2.1'  // Performance Monitoring plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}"
         // Firebase Crashlytics Gradle plugin.
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
+        classpath "com.google.dagger:hilt-android-gradle-plugin:${hilt_version}"
     }
 }
 

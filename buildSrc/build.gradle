@@ -8,7 +8,7 @@ subprojects {
     apply plugin: "groovy"
 
     rootProject.dependencies {
-        it.runtime project(path)
+        it.runtimeOnly project(path)
     }
 
     it.repositories {
@@ -22,13 +22,12 @@ subprojects {
         // get picked up. We only have one buildSrc plugin
         // so it doesn't really matter, but if we ever get more
         // we should figure this out
-        implementation 'org.codehaus.groovy:groovy-all:2.5.4'
+        implementation "org.codehaus.groovy:groovy-all:3.0.8"
         implementation gradleApi()
-        implementation 'org.yaml:snakeyaml:1.14'
+        implementation "org.yaml:snakeyaml:1.29"
     }
 }
 
 repositories {
     mavenCentral()
 }
-

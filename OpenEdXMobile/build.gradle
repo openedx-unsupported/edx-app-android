@@ -8,13 +8,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.yaml:snakeyaml:1.14'
-
+        classpath 'org.yaml:snakeyaml:1.29'
         //Included for NewRelic
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:$newrelic_version"
         //Screenshot testing library
-        classpath 'com.facebook.testing.screenshot:plugin:0.11.0'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.facebook.testing.screenshot:plugin:0.14.0'
+        classpath "com.google.gms:google-services:$gms_google_services"
         // Jacoco-android Wrapper : https://github.com/arturdm/jacoco-android-gradle-plugin
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.5'
     }
@@ -33,7 +32,7 @@ edx {
 apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: file('gradle_scripts/AndroidHelper.gradle')
-
+apply plugin: 'dagger.hilt.android.plugin'
 jacoco {
     toolVersion = "0.8.4"
 }
@@ -119,8 +118,12 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidXVersion"
     // For the optional Nullable annotation
     implementation "androidx.annotation:annotation:$androidXVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    // Kotlin Extensions
+    implementation "androidx.core:core-ktx:$androidXKotlinCore"
+    implementation "androidx.fragment:fragment-ktx:$androidXKotlinFramgnet"
+    // For view model via hilt including ViewModelProvide.Factory
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidXLifeCycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidXLifeCycle"
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases
@@ -208,7 +211,7 @@ dependencies {
     }
 
     //New Relic Integration
-    implementation 'com.newrelic.agent.android:android-agent:5.4.1'
+    implementation "com.newrelic.agent.android:android-agent:$newrelic_version"
 
     // ViewPager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
@@ -273,6 +276,16 @@ dependencies {
      * https://square.github.io/leakcanary/recipes/#setting-up-leakcanary-for-different-product-flavors
      */
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // Hilt build dependencies
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    // For instrumentation tests
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:$hilt_version"
+    // For local unit tests
+    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptTest "com.google.dagger:hilt-compiler:$hilt_version"
 }
 
 configurations {
@@ -316,8 +329,9 @@ android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding true
+        dataBinding true
     }
 
     dexOptions {
@@ -404,12 +418,6 @@ android {
                                 fbLoginProtocolScheme: fbLoginProtocolScheme,
                                 sdCardEnabled        : config.get('DOWNLOAD_TO_SD_CARD_ENABLED') ?: true]
 
-        javaCompileOptions {
-
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
         testOptions.unitTests.includeAndroidResources = true
         // Exclude auto generated files from the code coverage report
         jacocoAndroidUnitTestReport {
@@ -520,8 +528,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 
