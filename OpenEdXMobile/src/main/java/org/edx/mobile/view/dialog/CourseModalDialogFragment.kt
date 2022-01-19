@@ -4,16 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
+import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.viewModel.ViewModelFactory
 import roboguice.fragment.RoboDialogFragment
 import javax.inject.Inject
 
@@ -25,20 +31,24 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     private var isSelfPaced: Boolean = false
 
     private var billingProcessor: BillingProcessor? = null
+    private lateinit var iapViewModel: InAppPurchasesViewModel
 
     @Inject
     private lateinit var environment: IEdxEnvironment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL,
-                R.style.AppTheme_NoActionBar)
+        setStyle(
+            STYLE_NORMAL,
+            R.style.AppTheme_NoActionBar
+        )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_upgrade_features, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DialogUpgradeFeaturesBinding.inflate(inflater)
         return binding.root
     }
 
@@ -49,60 +59,140 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
+        if (environment.config.isIAPEnabled) {
+            initBillingProcessor()
+        }
+    }
+
+    private fun initViews() {
         arguments?.let { bundle ->
             courseId = bundle.getString(KEY_COURSE_ID) ?: ""
             price = bundle.getString(KEY_COURSE_PRICE) ?: ""
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
-            environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, null, Analytics.Screens.COURSE_ENROLLMENT)
-            environment.analyticsRegistry.trackValuePropModalView(courseId, null, Analytics.Screens.COURSE_ENROLLMENT)
+            environment.analyticsRegistry.trackValuePropLearnMoreTapped(
+                courseId, null,
+                Analytics.Screens.COURSE_ENROLLMENT
+            )
+            environment.analyticsRegistry.trackValuePropModalView(
+                courseId, null,
+                Analytics.Screens.COURSE_ENROLLMENT
+            )
         }
 
-        binding.dialogTitle.text = ResourceUtil.getFormattedString(resources, R.string.course_modal_heading, KEY_COURSE_NAME, arguments?.getString(KEY_COURSE_NAME))
+        binding.dialogTitle.text = ResourceUtil.getFormattedString(
+            resources,
+            R.string.course_modal_heading,
+            KEY_COURSE_NAME,
+            arguments?.getString(KEY_COURSE_NAME)
+        )
+        binding.layoutUpgradeBtn.root.setVisibility(environment.config.isIAPEnabled)
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
+    }
 
-        if (environment.config.isIAPEnabled) {
-            binding.layoutUpgradeBtn.root.visibility = View.VISIBLE
-            binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-                enableUpgradeButton(false)
-                purchaseProduct("org.edx.mobile.test_product")
-                environment.analyticsRegistry.trackUpgradeNowClicked(
-                    courseId,
-                    price,
-                    null,
-                    isSelfPaced
-                )
-            }
-            billingProcessor =
-                BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
-                    override fun onPurchaseCancel() {
-                        enableUpgradeButton(true)
-                    }
+    private fun initBillingProcessor() {
+        iapViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory()
+        ).get(InAppPurchasesViewModel::class.java)
+        initObserver()
 
-                    override fun onPurchaseComplete(purchase: Purchase) {
-                        onProductPurchased()
-                    }
-                })
-        } else {
-            binding.layoutUpgradeBtn.root.visibility = View.GONE
+        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            iapViewModel.addProductToBasket("org.edx.mobile.test_product1")
+            environment.analyticsRegistry.trackUpgradeNowClicked(
+                courseId,
+                price,
+                null,
+                isSelfPaced
+            )
         }
+        billingProcessor =
+            BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
+                override fun onPurchaseCancel() {
+                    iapViewModel.endLoading()
+                    showUpgradeErrorDialog()
+                }
+
+                override fun onPurchaseComplete(purchase: Purchase) {
+                    onProductPurchased(purchase.purchaseToken)
+                }
+            })
+    }
+
+    private fun initObserver() {
+        iapViewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver {
+            enableUpgradeButton(!it)
+        })
+
+        iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
+            if (it.paymentPageUrl.isNotEmpty())
+//              purchaseProduct(iapViewModel.getProductId())
+                purchaseProduct("org.edx.mobile.test_product")
+        })
+
+        iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
+            showUpgradeCompleteDialog()
+        })
+
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
+            if (errorMsg.throwable is HttpStatusException) {
+                when (errorMsg.throwable.statusCode) {
+                    HttpStatus.UNAUTHORIZED,
+                    HttpStatus.FORBIDDEN -> {
+                        environment.router?.forceLogout(
+                            requireContext(),
+                            environment.analyticsRegistry,
+                            environment.notificationDelegate
+                        )
+                        return@NonNullObserver
+                    }
+                    else -> showUpgradeErrorDialog()
+                }
+            } else {
+                showUpgradeErrorDialog()
+            }
+            iapViewModel.errorMessageShown()
+        })
     }
 
     private fun enableUpgradeButton(enable: Boolean) {
-        binding.layoutUpgradeBtn.btnUpgrade.visibility = if (enable) View.VISIBLE else View.GONE
-        binding.layoutUpgradeBtn.loadingIndicator.visibility =
-            if (!enable) View.VISIBLE else View.GONE
+        binding.layoutUpgradeBtn.btnUpgrade.setVisibility(enable)
+        binding.layoutUpgradeBtn.loadingIndicator.setVisibility(!enable)
     }
 
     private fun purchaseProduct(productId: String) {
         activity?.let { billingProcessor?.purchaseItem(it, productId) }
     }
 
-    private fun onProductPurchased() {
+    private fun onProductPurchased(purchaseToken: String) {
         lifecycleScope.launch {
-            enableUpgradeButton(true)
+            executeOrder(purchaseToken)
         }
+    }
+
+    private fun executeOrder(purchaseToken: String) {
+        iapViewModel.executeOrder(purchaseToken = purchaseToken)
+    }
+
+    private fun showUpgradeErrorDialog() {
+        AlertDialogFragment.newInstance(
+            getString(R.string.title_upgrade_error),
+            getString(R.string.upgrade_error_message),
+            getString(R.string.label_close),
+            null,
+            getString(R.string.label_get_help),
+            { _, _ ->
+                environment.router?.showFeedbackScreen(
+                    requireActivity(),
+                    getString(R.string.email_subject_upgrade_error)
+                )
+            }
+        ).show(childFragmentManager, null)
+    }
+
+    private fun showUpgradeCompleteDialog() {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_complete),
             getString(R.string.upgrade_success_message),
@@ -111,6 +201,11 @@ class CourseModalDialogFragment : RoboDialogFragment() {
             null,
             null
         ).show(childFragmentManager, null)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        billingProcessor?.disconnect()
     }
 
     companion object {
@@ -122,7 +217,13 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         const val KEY_IS_SELF_PACED = "is_Self_Paced"
 
         @JvmStatic
-        fun newInstance(platformName: String, courseId: String, courseName: String, price: String, isSelfPaced: Boolean): CourseModalDialogFragment {
+        fun newInstance(
+            platformName: String,
+            courseId: String,
+            courseName: String,
+            price: String,
+            isSelfPaced: Boolean
+        ): CourseModalDialogFragment {
             val frag = CourseModalDialogFragment()
             val args = Bundle().apply {
                 putString(KEY_MODAL_PLATFORM, platformName)
@@ -134,10 +235,5 @@ class CourseModalDialogFragment : RoboDialogFragment() {
             frag.arguments = args
             return frag
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        billingProcessor?.disconnect()
     }
 }

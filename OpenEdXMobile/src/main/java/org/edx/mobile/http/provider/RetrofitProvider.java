@@ -17,13 +17,15 @@ public interface RetrofitProvider extends Provider<Retrofit> {
     @NonNull Retrofit get();
     @NonNull Retrofit getWithOfflineCache();
     @NonNull Retrofit getNonOAuthBased();
+    @NonNull Retrofit getIAPAuth();
 
     @Singleton
     class Impl implements RetrofitProvider {
         private static final int CLIENT_INDEX_DEFAULT = 0;
         private static final int CLIENT_INDEX_WITH_OFFLINE_CACHE = 1;
         private static final int CLIENT_INDEX_NON_OAUTH_BASED = 2;
-        private static final int CLIENTS_COUNT = 3;
+        private static final int CLIENT_INDEX_ECOMMERCE = 3;
+        private static final int CLIENTS_COUNT = 4;
 
         @Inject
         private Config config;
@@ -53,17 +55,30 @@ public interface RetrofitProvider extends Provider<Retrofit> {
         }
 
         @NonNull
+        public Retrofit getIAPAuth() {
+            return get(CLIENT_INDEX_ECOMMERCE, clientProvider.get());
+        }
+
+        @NonNull
         private synchronized Retrofit get(final int index, @NonNull final OkHttpClient client) {
             Retrofit retrofit = retrofits[index];
             if (retrofit == null) {
                 retrofit = new Retrofit.Builder()
                         .client(client)
-                        .baseUrl(config.getApiHostURL())
+                        .baseUrl(getBaseUrl(index))
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
                 retrofits[index] = retrofit;
             }
             return retrofit;
+        }
+
+        @NonNull
+        private String getBaseUrl(final int client) {
+            if (client == CLIENT_INDEX_ECOMMERCE) {
+                return config.getEcommerceURL();
+            }
+            return config.getApiHostURL();
         }
     }
 }

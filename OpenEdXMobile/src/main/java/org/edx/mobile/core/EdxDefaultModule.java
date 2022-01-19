@@ -1,6 +1,7 @@
 package org.edx.mobile.core;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.FieldNamingPolicy;
@@ -13,11 +14,12 @@ import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.http.provider.RetrofitProvider;
-import org.edx.mobile.http.util.CallUtil;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
+import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter;
 import org.edx.mobile.http.serialization.JsonPageDeserializer;
+import org.edx.mobile.http.util.CallUtil;
+import org.edx.mobile.inapppurchases.InAppPurchasesService;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.course.BlockData;
 import org.edx.mobile.model.course.BlockList;
@@ -83,6 +85,7 @@ public class EdxDefaultModule extends AbstractModule {
         bind(CourseService.class).toProvider(CourseService.Provider.class).in(Singleton.class);
         bind(DiscussionService.class).toProvider(DiscussionService.Provider.class).in(Singleton.class);
         bind(UserService.class).toProvider(UserService.Provider.class).in(Singleton.class);
+        bind(InAppPurchasesService.class).toProvider(InAppPurchasesService.Provider.class).in(Singleton.class);
 
         bind(IStorage.class).to(Storage.class);
 

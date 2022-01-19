@@ -36,6 +36,7 @@ public class Config {
 
     /* Individual configuration keys */
     private static final String API_HOST_URL = "API_HOST_URL";
+    private static final String ECOMMERCE_URL = "ECOMMERCE_URL";
     private static final String ENVIRONMENT_DISPLAY_NAME = "ENVIRONMENT_DISPLAY_NAME";
     private static final String PLATFORM_NAME = "PLATFORM_NAME";
     private static final String PLATFORM_DESTINATION_NAME = "PLATFORM_DESTINATION_NAME";
@@ -658,6 +659,10 @@ public class Config {
 
     public String getApiHostURL() {
         return getString(API_HOST_URL);
+    }
+
+    public String getEcommerceURL() {
+        return getString(ECOMMERCE_URL);
     }
 
     // User facing name of the platform like "edX"
