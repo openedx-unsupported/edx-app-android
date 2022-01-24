@@ -1,5 +1,26 @@
 [
   {
+    "version": "3.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Chất lượng tải xuống video",
+        "message": "Tùy chỉnh cài đặt tải xuống video trong Hồ sơ của bạn hoặc thẻ Video trong khóa học của bạn."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Đã cải thiện hỗ trợ ngôn ngữ",
+        "message": "Chúng tôi đã bổ sung thêm nhiều bản dịch trong suốt ứng dụng để bạn có thể học tập trên edX theo cách của bạn!"
+      }
+    ]
+  },
+  {
     "version": "2.26",
     "messages": [
       {

@@ -1,5 +1,26 @@
 [
   {
+    "version": "3.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Qualité de téléchargement vidéo",
+        "message": "Personnalisez vos paramètres de téléchargement vidéo dans votre profil ou dans l'onglet Vidéo de votre cours."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Meilleure prise en charge linguistique",
+        "message": "Nous avons ajouté davantage de traductions dans l'application, afin que vous puissiez apprendre sur edX à votre manière !"
+      }
+    ]
+  },
+  {
     "version": "2.26",
     "messages": [
       {

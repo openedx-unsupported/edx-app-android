@@ -1,5 +1,26 @@
 [
   {
+    "version": "3.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Video-Download-Qualität",
+        "message": "Passen Sie Ihre Video-Download-Einstellungen in Ihrem Profil oder auf der Registerkarte Video in Ihrem Kurs an."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Verbesserte Sprachunterstützung",
+        "message": "Wir haben der App weitere Übersetzungen hinzugefügt, damit Sie auf edX auf Ihre Weise lernen können!"
+      }
+    ]
+  },
+  {
     "version": "2.26",
     "messages": [
       {

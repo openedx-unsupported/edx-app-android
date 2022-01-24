@@ -1,5 +1,26 @@
 [
   {
+    "version": "3.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "视频下载质量",
+        "message": "在您的个人资料或课程的视频标签中自定义视频下载设置。"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "改善语言支持",
+        "message": "我们在整个 app 中增加了更多的翻译，因此您可以按照自己的方式在 edX 上学习！"
+      }
+    ]
+  },
+  {
     "version": "2.26",
     "messages": [
       {
