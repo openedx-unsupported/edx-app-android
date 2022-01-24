@@ -392,7 +392,8 @@ public class CourseAPI {
             @NonNull final BlockModel block,
             @NonNull final CourseComponent parent) {
 
-        if (block.isContainer()) {
+        //TODO this(block.specialExamInfo == null) needs to be fixed as this a quick fix for LEARNER-8570
+        if (block.isContainer() && block.specialExamInfo == null) {
             CourseComponent child = new CourseComponent(block, parent);
             for (BlockModel m : courseStructureV1Model.getDescendants(block)) {
                 normalizeCourseStructure(courseStructureV1Model, m, child);
