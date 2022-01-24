@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">了解更多详情</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">升级{course_name}的访问模式</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">获得一份经过验证的结业证书，以便在简历上展示</string>
+    <string name="course_modal_unlock_access"> 解锁所有课程活动的访问权限，包括分级作业</string>
+    <string name="course_modal_full_access_course">即使在课程结束后，也可以完全访问课程内容和课程材料</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">现在升级仅需 $99</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">了解关于锁定功能的更多详情</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>如何解锁分级作业</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">分级作业已锁定</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">升级以获得对锁定功能的访问，如此功能或更多关于本课程的访问能力</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>显示更多</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>简略显示</u></string>
+</resources>

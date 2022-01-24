@@ -23,13 +23,16 @@
   <!--Floating overlay text shown to user when user already enrolled in a course-->
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">ダッシュボードが表示できません。</string>
-
+  <!--Error message shown when browser cannot handle request for given web url-->
+  <!--Subjects Discovery-->
+  <!--Label for browsing courses by a subject-->
+  <!--Button's Label for viewing all subjects-->
+  <!--Label for searching subjects-->
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">講座をシェア</string>
   <!--Share course-->
   <string name="share_course_message">私は {platform_name} の講座を受講中です！こちらを見てください：</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">修了証をシェア</string>
@@ -89,7 +92,6 @@
   <string name="toggle_turn_on">オン</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">オフ</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">パスワードを変更</string>
@@ -142,7 +144,13 @@
   <string name="course_name">講座名</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">新規講座コンテンツ</string>
-
+  <!--Label for date when course starts-->
+  <!--Label for course that has ended-->
+  <!--Label for date when course is ending-->
+  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
+  <!--Label for date when course is expiring on a specific date like on December 5-->
+  <!--Label for date when course expired a specific time ago like 2 days ago-->
+  <!--Label for date when course expired on a specific date like on November 5-->
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">講座コンテンツ</string>
@@ -158,12 +166,14 @@
   <!--Label shown when no handouts are available for a course-->
   <string name="no_handouts_to_display">現在この講座のハンドアウトはありません。</string>
   <!--Label shown when no important dates are available for a course-->
+  <string name="no_course_dates_to_display">コース日付は現在利用できません。</string>
   <!--Title of the screen where user can delete videos-->
   <!--Label for a course item's due date for same day-->
   <!--Label for a course item's due date-->
   <!--Upgrade banner's description which appears on course outline screen.-->
   <!--Title upgrade to verified today course outline footer-->
   <!--Title of place order for course upgrade screen-->
+  <!--label for resume course section. Will be followed by course name-->
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -412,7 +422,7 @@
   <!--Introduction text on the launch screen when courses and program enabled-->
   <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
+  <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">任意のフィールドを表示する</string>
@@ -447,6 +457,7 @@
   <string name="android">アンドロイド</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">利用者フィードバック</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">カスタマー・レビュー</string>
   <!--Submit Feedback app version text-->
@@ -473,7 +484,6 @@
   <string name="forum_post_i_am_following">フォロー中の投稿</string>
   <string name="forum_follow">フォロー</string>
   <string name="forum_unfollow">フォロー解除</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">業績をシェア</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -492,4 +502,13 @@
   <string name="rating_bar">Rating コントロール</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">星 {num_of_stars} のうち、{rating}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <!--Title of the selector while the choosing file-->
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <!--Completion message for Celebration Modal-->
+  <!--Celebration message for Celebration Modal-->
+  <!--Button title appears on Celebration Modal to continue-->
+  <!--Sharing message when user wants to share the celebration-->
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">完了</string>
 </resources>

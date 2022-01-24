@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">اليوم</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">مسجل فقط</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">منجز</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">تجاوز تاريخ الاستلام</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">موعد الاستلام  التالي</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">لم يصدر بعد</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">مزامنة مع التقويم</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">مزامنة جميع المواعيد النهائية وتواريخ الاستحقاق الخاصة بهذه الدورة التدريبية تلقائيًا مع التقويم الخاص بك.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\ "{platform_name} \" ترغب في الوصول إلى التقويم الخاص بك</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">platform_name}} ترغب في استخدام قائمة التقويم الخاصة بك للاشتراك في تقويم {platform_name} المخصص الخاص بك لهذه الدورة.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">إضافة التقويم \ “{course_name} \”</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">هل ترغب في إضافة تقويم {platform_name} \ “{course_name} \”؟ \ n \ n يمكنك تحرير أو إزالة تقويم المقرر الدراسي الخاص بك في أي وقت في \"التقويم\" أو \"الإعدادات\".</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">لقد أُضِيفت الدورة \“{course_name}\” إلى التقويم في هاتفك.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">تمت إضافة تقويم المقرر الدراسي الخاص بك.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">إزالة التقويم \ “{course_name} \</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">هل ترغب في إزالة التقويم {platform_name} \ “{course_name} \”؟</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">لقد تم حذف تقويم دورتك</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">تم تحديث تقويم المقرر الدراسي الخاص بك.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">تقويم الدورة التدريبية الخاص بك قديم</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">تم تغيير تواريخ الدورة التدريبية الخاصة بك ولم يعد تقويم الدورة التدريبية محدثًا مع جدولك الجديد.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">خطأ في إضافة التقويم ، يرجى المحاولة لاحقًا</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">إزالة تقوم الدورة التدريبية</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">مزامنة التقويم...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">لقد غُيِّرت المواعيد المقررة لديك لمساعدتك على متابعة التقدم في المسار الصحيح.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>عرض جميع المواعيد</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">مواعيد الدورة غير متاحة في الوقت الراهن.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">لقد غُيِّرت المواعيد لديك بنجاح.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">تعذر تغيير المواعيد لديك. فيُرجى المحاولة مرة أخرى.</string>
+    <!-- endregion -->
+</resources>

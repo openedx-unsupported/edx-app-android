@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>Wir haben einen vorgeschlagenen Zeitplan erstellt, um Ihnen zu helfen, Ihre Planung einzuhalten.</b>
+Aber keine Sorge – er ist flexibel, sodass Sie in Ihrem eigenen Tempo lernen können. Sollten Sie mit unseren Terminvorschlägen in Verzug geraten,
+können sie Sie anpassen, um Ihren Zeitplan einzuhalten.</string>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b>Sie sind Gasthörer für diesen Kurs,</b>
+was bedeutet, dass Sie nicht an benoteten Aufgaben teilnehmen können. Um benotete Aufgaben im Rahmen dieses Kurses abzuschließen, können Sie noch heute ein Upgrade durchführen.</string>
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
+    <string name="course_dates_banner_upgrade_to_graded_button">Jetzt Upgrade durchführen</string>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>Sie sind Gasthörer für diesen Kurs,</b>
+was bedeutet, dass Sie nicht an benoteten Aufgaben teilnehmen können. Es sieht so aus, als ob Sie einige wichtige Fristen verpasst haben, basierend auf unserem vorgeschlagenen Zeitplan. Um benotete Aufgaben im Rahmen dieses Kurses abzuschließen und überfällige Aufgaben in die Zukunft zu verschieben, können Sie noch heute ein Upgrade durchführen.</string>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>Es sieht so aus, als ob Sie einige wichtige, auf unserem vorgeschlagenen Zeitplan basierende Fristen verpasst haben.</b>
+Um den Zeitplan einzuhalten, können Sie ihn aktualisieren und die überfälligen Aufgaben in die Zukunft verschieben. Keine Sorge – Sie verlieren keinen Ihrer Fortschritte, wenn Sie Ihre Fälligkeitstermine verschieben.</string>
+    <!-- Label Course Dates Banner Reset Date Button -->
+    <string name="course_dates_banner_reset_date_button">Fälligkeitstermine verschieben</string>
+
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">Kursplan</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">Wir haben einen vorgeschlagenen Zeitplan erstellt, um Ihnen zu helfen, Ihre Planung einzuhalten. Aber keine Sorge – er ist flexibel, sodass Sie in Ihrem eigenen Tempo lernen können.
+Wenn Sie in Verzug geraten, können Sie die Termine anpassen, um den Zeitplan einzuhalten.</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">Um benotete Aufgaben im Rahmen dieses Kurses abzuschließen, können Sie noch heute ein Upgrade durchführen.</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset">Sie sind Gasthörer für diesen Kurs,
+was bedeutet, dass Sie nicht an benoteten Aufgaben teilnehmen können. Es sieht so aus, als ob Sie einige wichtige Fristen verpasst haben, basierend auf unserem vorgeschlagenen Zeitplan. Um benotete Aufgaben im Rahmen dieses Kurses abzuschließen und überfällige Aufgaben in die Zukunft zu verschieben, können Sie noch heute ein Upgrade durchführen.</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">Es sieht so aus, als ob Sie einige wichtige, auf unserem vorgeschlagenen Zeitplan basierende Fristen verpasst haben.
+Um den Zeitplan einzuhalten, können Sie ihn aktualisieren und die überfälligen Aufgaben in die Zukunft verschieben. Keine Sorge – Sie verlieren keinen Ihrer Fortschritte, wenn Sie Ihre Fälligkeitstermine verschieben.</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">Führen Sie ein Upgrade durch, um auf weitere Funktionen zuzugreifen</string>
+
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">Dieser Teil des Kurses funktioniert möglicherweise am besten in einem Webbrowser.</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>Im Browser öffnen</u></string>
+</resources>

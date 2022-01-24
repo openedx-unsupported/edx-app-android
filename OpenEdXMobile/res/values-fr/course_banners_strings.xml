@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>Nous vous suggérons un programme prédéfini pour vous aider à rester sur la bonne voie.</b>
+        Mais ne vous inquiétez pas : il est flexible et vous pouvez donc apprendre à votre rythme. Si vous prenez du retard par rapport aux dates suggérées,
+        vous pouvez les ajuster afin de rester sur la bonne voie.</string>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b>Vous suivez ce cours en tant qu\'auditeur libre,</b>
+        ce qui signifie que vous ne pouvez pas participer aux devoirs notés. Pour faire les devoirs notés dans le cadre de ce cours, vous pouvez mettre à niveau votre inscription dès aujourd\'hui.</string>
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
+    <string name="course_dates_banner_upgrade_to_graded_button">Mettre à jour maintenant</string>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>Vous suivez ce cours en tant qu\'auditeur libre,</b>
+        ce qui signifie que vous ne pouvez pas participer aux devoirs notés. Il semblerait que vous ayez manqué des échéances importantes de notre programme suggéré. Pour faire les devoirs notés dans le cadre de ce cours et pouvoir rendre les devoirs passés un peu plus tard, vous pouvez mettre à niveau votre inscription dès aujourd\'hui.</string>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>Il semblerait que vous ayez manqué des échéances importantes de notre programme suggéré.</b>
+        Pour rester sur la bonne voie, vous pouvez mettre à jour ce programme et rendre les devoirs passés un peu plus tard. Ne vous inquiétez pas : en modifiant les échéances, vous ne perdrez pas les progrès que vous avez faits.</string>
+    <!-- Label Course Dates Banner Reset Date Button -->
+    <string name="course_dates_banner_reset_date_button">Déplacer les dates d\'échéances</string>
+
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">Programme du cours</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">Nous vous suggérons un programme prédéfini pour vous aider à rester sur la bonne voie. Mais ne vous inquiétez pas : il est flexible et vous pouvez donc apprendre à votre rythme.
+        Si vous prenez du retard, vous pouvez ajuster les dates afin de rester sur la bonne voie.</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">Pour faire les devoirs notés dans le cadre de ce cours, vous pouvez mettre à niveau votre inscription dès aujourd\'hui.</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset">Vous suivez ce cours en tant qu\'auditeur libre,
+        ce qui signifie que vous ne pouvez pas participer aux devoirs notés. Il semblerait que vous ayez manqué des échéances importantes de notre programme suggéré. Pour faire les devoirs notés dans le cadre de ce cours et pouvoir rendre les devoirs passés un peu plus tard, vous pouvez mettre à niveau votre inscription dès aujourd\'hui.</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">Il semblerait que vous ayez manqué des échéances importantes de notre programme suggéré.
+        Pour rester sur la bonne voie, vous pouvez mettre à jour ce programme et rendre les devoirs passés un peu plus tard. Ne vous inquiétez pas : en modifiant les échéances, vous ne perdrez pas les progrès que vous avez faits.</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">Mettez à niveau votre inscription pour accéder à davantage de fonctionnalités</string>
+
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">Cette partie du cours pourrait mieux fonctionner dans un navigateur web.</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>Ouvrir dans le navigateur</u></string>
+</resources>

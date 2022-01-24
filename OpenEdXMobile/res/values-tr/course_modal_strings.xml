@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">Daha fazlası</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">{course_name} kursunu yükseltin</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">Özgeçmişinizde sergileyebileceğiniz, doğrulanmış bir tamamlama sertifikası kazanın</string>
+    <string name="course_modal_unlock_access">Notlu ödevler dahil olmak üzere tüm kurs aktivitelerine erişimin kilidini açın</string>
+    <string name="course_modal_full_access_course">Kurs bittikten sonra dahi kurs içeriklerine ve kurs materyaline tam erişim</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">99$ karşılığında hemen yükseltin</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">Kilitli özellikler hakkında daha fazlasını öğrenin</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>Notlu ödevlerin kilidi nasıl açılır?</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">Notlu ödevler kilitli</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">Bunun gibi kilitli özelliklere erişim kazanmak ve kursunuzdan en iyi verimi almak için yükseltme yapın</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>Daha fazlasını göster</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>Daha azını göster</u></string>
+</resources>

@@ -56,6 +56,11 @@
         <item quantity="other">%s videos borrados</item>
     </plurals>
 
+    <!-- Subtitle labels for video durations in hours-->
+    <plurals name="video_duration_hour">
+        <item quantity="one">%d hora </item>
+        <item quantity="other">%d horas</item>
+    </plurals>
     <!-- Subtitle labels for video durations in minutes-->
     <plurals name="video_duration_minutes">
         <item quantity="one">%d</item>

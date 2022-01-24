@@ -33,13 +33,11 @@
   <string name="view_all_subjects">צפו בכל הנושאים</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">חפשו נושאר</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">שתפו את הקורסים שלכם</string>
   <!--Share course-->
   <string name="share_course_message">אני לוקח\ת קורס ב{platform_name}! תעיפו מבט:</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">שתפו את התעודה שלכם</string>
@@ -110,7 +108,6 @@
   <string name="toggle_turn_on">דולק</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">כבוי</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">איפוס סיסמה</string>
@@ -212,6 +209,7 @@
   <string name="upgrade_to_verified_today_title">שדרגו למסלול \'מאומת\' היום</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">ביצוע הזמנה</string>
+  <!--label for resume course section. Will be followed by course name-->
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -495,7 +493,7 @@
   <!--Introduction text on the launch screen when courses and program enabled-->
   <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
+  <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">הצג שדות רשות</string>
@@ -530,6 +528,7 @@
   <string name="android">אנדרואיד</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">משוב לקוח</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">ביקורת לקוחות</string>
   <!--Submit Feedback app version text-->
@@ -557,7 +556,6 @@
   <string name="forum_post_i_am_following">פוסטים שאני עוקב\ת אחריהם</string>
   <string name="forum_follow">עקוב</string>
   <string name="forum_unfollow">הסר מעקב</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">שתפו את ההישגים שלכם</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -576,4 +574,13 @@
   <string name="rating_bar">בקרת דירוג</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} מתוך {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <!--Title of the selector while the choosing file-->
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <!--Completion message for Celebration Modal-->
+  <!--Celebration message for Celebration Modal-->
+  <!--Button title appears on Celebration Modal to continue-->
+  <!--Sharing message when user wants to share the celebration-->
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">הושלם</string>
 </resources>

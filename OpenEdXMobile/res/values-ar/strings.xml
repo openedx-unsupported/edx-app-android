@@ -34,13 +34,11 @@
   <string name="view_all_subjects">استعراض كافة المواضيع</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">موضوع البحث</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">مشاركة المُساق</string>
   <!--Share course-->
   <string name="share_course_message">أحضر حاليًا مساقًا ممتعًا على منصّة {platform_name}! اطلع عليه:</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">مشاركة شهادتك</string>
@@ -111,7 +109,6 @@
   <string name="toggle_turn_on">تشغيل</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">إطفاء</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">استعادة كلمة السر</string>
@@ -125,7 +122,6 @@
   <string name="success_dialog_message_help">لقد أرسلنا رسالةً بتعليمات تغيير كلمة المرور إلى عنوان بريدك الإلكتروني. في حال لم تصلك خلال بضع دقائق، يُرجى التأكد فيما إذا اعتُبرت رسالة غير مرغوب فيها ’spam‘.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">أدخل البريد الإلكتروني الخاص بحسابك وسنرسل لك تعليمات لإعادة ضبط كلمة المرور.</string>
-
   <!--Alert dialog title for users with zero rated data-->
   <string name="leaving_app_data_title">مغادرة تطبيق {platform_name}</string>
   <!--Alert dialog content for users with zero rated data-->
@@ -213,10 +209,13 @@
   <string name="upgrade_to_verified_today_title">الترقية إلى مسار معتمَد الآن</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">إرسال طلب</string>
+  <!--label for resume course section. Will be followed by course name-->
+  <string name="label_resume">سيرة ذاتية</string>
   <!--Mobile Payments-->
   <string name="payments_info_header">تعقب موثوقية الشهادة</string>
   <string name="payments_info_details">إبراز معرفتك ومهاراتك الجديدة من خلال شهادة موثقة استخدم بيانات الاعتماد القيّمة هذه لتحسين فرص وظيفتك وتعزيز حياتك المهنية ، أو إبراز شهادتك في تطبيقات المدرسة.</string>
   <string name="audit_access_expires_on">تنتي صلاحية دخولك كمستع في تاريخ  {date}</string>
+  <string name="audit_access_expires_details">تفقد كل الوصول إلى المساق، بما في ذلك تقدمك، في {date}.</string>
   <string name="upgrade_deadline_details">الترقيةمن خلال {date} للحصول على وصول دائم  للمساق طالما كان موجوداً على الموقع.</string>
   <string name="locked_content_header">متاح لتأكيد التلاميذ</string>
   <string name="locked_content_details">التقييمات المتدرجة متاحة للتلاميذ المعتمدين. قم بالترقية أدناه لفتح هذه الخاصية.</string>
@@ -509,12 +508,19 @@
   <string name="or_register_with_email">أو سجّل اشتراكك باستخدام البريد الإلكتروني</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
+  <string name="launch_register">تسجيل</string>
   <!--Button leading user to log in screen-->
+  <string name="launch_login">تسجيل الدخول</string>
   <!--Introduction text on the launch screen-->
+  <string name="launch_text">مساقات من أفضل الجامعات في العالم في متناولك.</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
+  <string name="launch_text_courses_and_program">مساقات وبرامج من أفضل الجامعات في العالم في متناولك.</string>
   <!--Search View title on the launch screen-->
+  <string name="launch_search_title">ماذا تريد أن تتعلم؟</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">ابحث في دوراتنا التي تزيد عن ٣٠٠٠ </string>
+  <!--Label Explore all courses on the launch screen-->
+  <string name="label_explore_all_courses"><u>اكتشف كل الدورات</u></string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">أظهر الحقول الاختيارية</string>
@@ -550,6 +556,8 @@
   <string name="android">أندرويد</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">ملاحظات المستخدمين</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
+  <string name="email_subject_account_disabled">الحساب معطل</string>
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">آراء المستخدمين</string>
   <!--Submit Feedback app version text-->
@@ -577,7 +585,6 @@
   <string name="forum_post_i_am_following">المشاركات التي أتابعها</string>
   <string name="forum_follow">تابع</string>
   <string name="forum_unfollow">إلغاء المتابعة</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">شارك إنجازك</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -596,4 +603,20 @@
   <string name="rating_bar">التحكم بالتقييم</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} من {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">ما الجديد</string>
+  <!--Title of the selector while the choosing file-->
+  <string name="choose_file_title">اختر الملفات</string>
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <string name="celebratory_modal_title">تهانينا!</string>
+  <!--Completion message for Celebration Modal-->
+  <string name="celebratory_modal_message">لقد أكملت للتو القسم الأول من دورتك التدريبية.</string>
+  <!--Celebration message for Celebration Modal-->
+  <string name="celebratory_share_message">لقد ربحتها! 1 خصص لحظة للاحتفال ومشاركة تقدمك.</string>
+  <!--Button title appears on Celebration Modal to continue-->
+  <string name="keep_going_text">استمر</string>
+  <!--Sharing message when user wants to share the celebration-->
+  <string name="celebration_share_message">أنا في طريقي لإكمال {course_name} عبر الإنترنت باستخدام @ {platform_name} عبر الإنترنت. ماذا تقضي وقتك في التعلم؟ #my {platform_name}</string>
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">منجز</string>
 </resources>

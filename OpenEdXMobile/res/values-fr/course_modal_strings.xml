@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">En savoir plus</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">Mettre à niveau {course_name}</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">Obtenez un certificat d\'achèvement vérifié à ajouter à votre CV</string>
+    <string name="course_modal_unlock_access">Débloquez l\'accès à toutes les activités du cours, y compris les devoirs notés</string>
+    <string name="course_modal_full_access_course">Accès complet au contenu et aux supports de cours, même après la fin du cours</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">Mettre à niveau pour 99 $</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">En savoir plus sur les fonctionnalités verrouillées </string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>Comment déverrouiller les devoirs notés</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">Les devoirs notés sont verrouillés</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">Mettez à niveau votre inscription pour accéder aux fonctionnalités verrouillées comme celle-ci et ainsi tirer le maximum de vos cours</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>Montrer plus</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>Montrer moins</u></string>
+</resources>

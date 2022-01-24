@@ -7,7 +7,9 @@
     <!-- Label Course Modal features -->
     <string name="course_modal_earn_certificate">Obtén un certificado de finalización verificado para mostrarlo en tu curriculum vitae.</string>
     <string name="course_modal_unlock_access">Desbloquea el acceso a todas las actividades del curso, incluidas las tareas calificadas</string>
-    <string name="course_modal_full_access_course">Acceso total al contenido y al material del curso, incluso después de que finalice el curso</string>    <!-- Title Course Locked Modal  -->
+    <string name="course_modal_full_access_course">Acceso total al contenido y al material del curso, incluso después de que finalice el curso</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">Cambiate a la ruta paga por 99 dólares</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Obtén más información sobre funciones bloqueadas</string>
     <!-- Label Course Modal Unlock Graded Assignments -->

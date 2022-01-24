@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">Cài đặt video</string>
+    <!-- Title of Video Quality Dialog -->
+    <string name="video_download_quality_title">Chất lượng tải xuống video</string>
+    <!-- Auto Video Quality option -->
+    <string name="auto_recommended_text">Tự động (Khuyên dùng)</string>
+    <!-- 360p Video Quality option -->
+    <string name="video_quality_p360">360p (Kích thước tệp nhỏ nhất)</string>
+    <!-- 540p Video Quality option -->
+    <string name="video_quality_p540">540p</string>
+    <!-- 720p Video Quality option -->
+    <string name="video_quality_p720">720p (Chất lượng cao nhất)</string>
+    <!-- Message shows in Video Quality dialog -->
+    <string name="video_download_quality_message">Cài đặt này áp dụng cho tất cả video tải xuống trong ứng dụng {platform_name}. </string>
+
     <!-- Label for the Download to sd-card setting -->
     <string name="settings_download_to_sdcard_title">Tải Video vào Thẻ SD</string>
     <!-- Label explaining the download location setting in detail -->
@@ -16,6 +31,9 @@
     <string name="error_download_failed">Tải xuống thất bại</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">Kích thước tệp tải xuống vượt quá kích thước lưu trữ của thiết bị.</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="download_exceed_message">Các video bạn đã chọn có dung lượng lớn hơn 1 GB.
+        Bạn có muốn tải những video này xuống không?</string>
 
     <!-- Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi -->
@@ -35,5 +53,14 @@
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="other">%sđã xóa video</item>
+    </plurals>
+
+    <!-- Subtitle labels for video durations in hours-->
+    <plurals name="video_duration_hour">
+        <item quantity="other">%d giờ</item>
+    </plurals>
+    <!-- Subtitle labels for video durations in minutes-->
+    <plurals name="video_duration_minutes">
+        <item quantity="other">%d phút</item>
     </plurals>
 </resources>

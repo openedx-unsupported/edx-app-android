@@ -44,8 +44,12 @@
     <string name="title_calendar_out_of_date">Tu calendario de cursos está desactualizado</string>
     <!-- Message course calendar is out-of-date  -->
     <string name="message_calendar_out_of_date">Las fechas de tus cursos se han movido y tu calendario de cursos ya no está actualizado con tu nuevo horario.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Error al añadir el calendario, por favor, inténtalo más tarde</string>
     <!-- Alert dialog remove course calendar button -->
     <string name="label_remove_course_calendar">Eliminar calendario del curso</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Sincronizando calendario...</string>
     <!-- endregion -->
 
     <!-- Message on shift course dates successfully on Assessment -->

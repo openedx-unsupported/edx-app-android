@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Hôm nay</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Chỉ dành cho đã xác minh</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Đã hoàn thành</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Đã quá hạn</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Sắp đến hạn</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Chưa phát hành</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">Lịch</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">Tự động đồng bộ tất cả các hạn chót và ngày đến hạn cho khóa học này với lịch của bạn.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” muốn truy cập lịch của bạn</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} muốn sử dụng danh sách lịch của bạn để đăng ký lịch {platform_name} cá nhân hóa của bạn cho khóa học này.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">Thêm lịch \“{course_name}\”</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">Bạn có muốn thêm lịch {platform_name} \“{course_name}\” không? \n\nBạn có thể chỉnh sửa hoặc xóa lịch khóa học của mình bất cứ lúc nào trong Lịch hoặc Cài đặt.</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” đã được thêm vào lịch trên điện thoại của bạn.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">Lịch khóa học của bạn đã được thêm.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">Xóa lịch \“{course_name}\”</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">Bạn có muốn xóa lịch {platform_name} \“{course_name}\” không?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">Lịch khóa học của bạn đã được xóa.</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">Lịch khóa học của bạn đã được cập nhật.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">Lịch khóa học của bạn không cập nhật</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">Các mốc thời gian của khóa học đã được di chuyển và lịch khóa học không còn cập nhật với lịch biểu mới của bạn nữa.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Lỗi khi thêm lịch, vui lòng thử lại sau</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">Gỡ Lịch khóa học</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Đang đồng bộ lịch...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">Các ngày đến hạn đã được di chuyển thành công để giúp bạn luôn đi đúng hướng.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>Xem tất cả mốc thời gian</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">Các mốc thời gian của khóa học hiện không khả dụng.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">Các mốc thời gian của bạn đã được di chuyển thành công.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">Không thể di chuyển các mốc thời gian của bạn. Vui lòng thử lại.</string>
+    <!-- endregion -->
+</resources>

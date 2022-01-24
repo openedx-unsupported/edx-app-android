@@ -5,6 +5,36 @@
     <string name="settings_wifi_top">Chỉ tải xuống bằng Wi-Fi</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Chỉ tải nội dung xuống khi Wi-Fi đang bật</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">Thông tin hồ sơ của bạn chỉ hiển thị trước bạn. Chỉ có tên người dùng của bạn mới hiển thị trước những người khác trên {platform_name}.</string>
+
+    <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wi-Fi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">Thông tin cá nhân</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">Trợ giúp</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">Bạn muốn yêu cầu một tính năng hoặc đưa ra một số phản hồi về ứng dụng của chúng tôi?</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">Gửi email cho nhóm hỗ trợ</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">Nhận hỗ trợ</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">Để được trợ giúp thêm và tìm hiểu cách sử dụng ứng dụng di động {platform_name}, hãy truy cập phần hỏi đáp của chúng tôi.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">Xem Hỏi đáp</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">Đăng xuất</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">Xóa tài khoản của bạn</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">Xóa tài khoản</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">Làm theo hướng dẫn trên màn hình tiếp theo để xóa tài khoản của bạn và tất cả dữ liệu liên quan.</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">Phiên bản</string>
 
     <!-- Logout button label -->
     <string name="logout">Đăng xuất</string>
@@ -14,6 +44,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">Hồ sơ</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">Email: {email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">Tên người dùng: {username}</string>
     <!-- The accessibility description for the language section -->

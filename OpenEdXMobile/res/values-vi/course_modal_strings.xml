@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">Tìm hiểu thêm</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">Nâng cấp {course_name}</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">Giành chứng nhận hoàn thành được xác minh để thể hiện trên lý lịch của bạn</string>
+    <string name="course_modal_unlock_access">Mở khóa quyền truy cập tất cả các hoạt động khóa học, bao gồm bài tập chấm điểm</string>
+    <string name="course_modal_full_access_course">Quyền truy cập toàn bộ nội dung khóa học và tài liệu khóa học ngay cả sau khi kết thúc khóa học</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">Nâng cấp ngay với giá 99$</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">Tìm hiểu thêm về các tính năng bị khóa</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>Cách mở khóa bài tập chấm điểm</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">Bài tập chấm điểm bị khóa</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">Nâng cấp để có quyền truy cập các tính năng bị khóa như tính năng này và khai thác tối đa khóa học của bạn</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>Hiển thị thêm</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>Hiển thị ít hơn</u></string>
+</resources>

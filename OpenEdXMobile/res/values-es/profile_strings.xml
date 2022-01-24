@@ -5,8 +5,12 @@
     <string name="settings_wifi_top">Descarga solo posible mediante WiFi</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Sólo descargar contenido cuando el Wifi está encendido</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">La información de tu perfil solo es visible para ti. Solo tu nombre de usuario es visible para los demás en {platform_name}.</string>
 
     <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wifi</string>
     <!--  Heading of Personal Information  -->
     <string name="label_personal_information">Información personal</string>
     <!--  Heading of Help Field  -->

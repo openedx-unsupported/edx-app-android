@@ -5,6 +5,36 @@
     <string name="settings_wifi_top">التحميل من خلال الـ Wi-Fi فقط</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">تحميل المواد والبيانات عندما يكون الجهاز متصلاً بالـ Wi-Fi فقط.</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">معلومات ملفك الشخصي مرئية لك فقط. يظهر اسم المستخدم الخاص بك فقط للآخرين على {platform_name}.</string>
+
+    <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">واي فاي</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">المعلومات الشخصية</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">مساعدة</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">هل تتطلع إلى تقديم طلب ميزة أو تزويدنا ببعض التعليقات على تطبيقنا؟</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">أرسل بريدًا إلكترونيًا إلى فريق الدعم</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">تلفى الدعم</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">للحصول على مزيد من المساعدة ومعرفة كيفية استخدام تطبيق الجوال {platform_name} ، تفضل بزيارة الأسئلة الشائعة.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">مشاهدة التعليمات</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">خروج</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">احذف حسابك</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">احذف حسابي</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">تتبع التعليمات في الشاشة التالية لتحذف حسابك و كل البيانات المتعلقة</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">إصدار</string>
 
     <!-- Logout button label -->
     <string name="logout">تسجيل الخروج</string>
@@ -14,6 +44,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">الصفحة الشخصية</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">البريد الإلكتروني:{email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">اسم المستخدم: {username}</string>
     <!-- The accessibility description for the language section -->

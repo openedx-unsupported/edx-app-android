@@ -5,6 +5,36 @@
     <string name="settings_wifi_top">Sadece Wi-Fi ile indir</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Sadece Wi-Fi açıkken içerik indir</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">Profil bilgileriniz yalnızca size görünür. {platform_name} üzerinde yalnızca kullanıcı adınız başkalarına görünür olur.</string>
+
+    <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wifi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">Kişisel bilgiler</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">Yardım</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">Bir özellik isteğinde bulunmak veya bize uygulamamıza dair geri bildirim vermek mi istiyorsunuz?</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">Destek ekibine e-posta gönder</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">Destek alın</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">Daha fazla yardım almak ve {platform_name} mobil uygulamasının nasıl kullanılacağını öğrenmek için sıkça sorulan sorular bölümümüzü ziyaret edin.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">SSS\'yi Görüntüle</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">Oturumu kapat</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">Hesabınızı silin</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">Hesabı sil</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">Hesabınızı ve tüm ilgili verileri silmek için bir sonraki ekranda yer alan talimatları uygulayın.</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">Sürüm</string>
 
     <!-- Logout button label -->
     <string name="logout">Çıkış</string>
@@ -14,6 +44,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">Profil</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">E-posta: {email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">Kullanıcı adı: {username}</string>
     <!-- The accessibility description for the language section -->

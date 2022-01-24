@@ -5,6 +5,36 @@
     <string name="settings_wifi_top">הורדה רק בWi-Fi</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">הורד תוכן רק כאשר Wi-Fi מחובר</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">פרטי הפרופיל שלך גלויים רק לך. רק שם המשתמש שלך גלוי לאחרים ב-{platform_name}.</string>
+
+    <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wifi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">מידע אישי</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">עֶזרָה</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">מחפש להגיש בקשה או לתת לנו משוב על האפליקציה שלנו?</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">שלח אימייל לצוות התמיכה</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">קבל תמיכה</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">כדי לקבל עזרה וללמוד כיצד להשתמש באפליקציית {platform_name} לנייד, בקר בשאלות הנפוצות שלנו.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">הצג שאלות נפוצות</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">התנתק</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">תמחק את החשבון שלך</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">מחק חשבון</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">עקוב אחר ההוראות במסך הבא כדי למחוק את חשבונך ואת כל הנתונים הקשורים.</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">גִרְסָה</string>
 
     <!-- Logout button label -->
     <string name="logout">התנתקות</string>
@@ -14,6 +44,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">פרופיל</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">אימייל: {email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">שם משתמש: {username}</string>
     <!-- The accessibility description for the language section -->

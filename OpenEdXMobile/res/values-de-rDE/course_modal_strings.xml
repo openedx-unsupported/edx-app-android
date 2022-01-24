@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">Weitere Informationen</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">Upgrade für {course_name} durchführen</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">Verdienen Sie ein verifiziertes Abschlusszertifikat, das Sie in Ihrem Lebenslauf präsentieren können</string>
+    <string name="course_modal_unlock_access">Schalten Sie den Zugriff auf alle Kursaktivitäten frei, einschließlich benoteter Aufgaben</string>
+    <string name="course_modal_full_access_course">Voller Zugriff auf Kursinhalte und Kursmaterial auch nach Kursende</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">Upgrade jetzt durchführen für 99 US-Dollar</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">Erfahren Sie mehr über gesperrte Funktionen</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>So entsperren Sie benotete Aufgaben</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">Benotete Aufgaben sind gesperrt</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">Führen Sie ein Upgrade durch, um Zugriff auf gesperrte Funktionen wie diese zu erhalten und Ihren Kurs optimal zu nutzen</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>Mehr anzeigen</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>Weniger anzeigen</u></string>
+</resources>

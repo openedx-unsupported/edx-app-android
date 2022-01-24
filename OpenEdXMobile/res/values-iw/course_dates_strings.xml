@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">היום</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">מאומת בלבד</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">הושלם</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">עבר מועד</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">למועד הבא</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">עדיין לא שוחררו</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">סנכרון ללוח שנה</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">סנכרן אוטומטית את כל המועדים והתאריכים של קורס זה עם היומן שלך.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” רוצה לגשת ליומן שלך</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} מעוניין להשתמש ברשימת היומנים שלך כדי להירשם ליומן {platform_name} המותאם אישית שלך עבור קורס זה.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">הוסף יומן \“{course_name}\”</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">האם תרצה להוסיף את לוח השנה של {platform_name} \“{course_name}\”? \n\nאתה יכול לערוך או להסיר את יומן הקורס שלך בכל עת בלוח השנה או בהגדרות.</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\\"{course_name}\\" נוסף ללוח השנה של הטלפון שלך.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">יומן הקורס שלך נוסף.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">הסר את היומן \“{course_name}\”</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">האם תרצה להסיר את לוח השנה של {platform_name} \“{course_name}\”?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">יומן הקורס שלך הוסר.</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">יומן הקורס שלך עודכן.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">לוח השנה של הקורס שלך כבר לא מעודכן</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">תאריכי הקורסים שלך הועברו ויומן הקורס שלך אינו מעודכן עוד בלוח הזמנים החדש שלך.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">שגיאה בהוספת לוח שנה, אנא נסה שוב מאוחר יותר</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">הסר לוח שנה של הקורס</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">מסנכרן את היומן...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">תאריכי היעד שלך הועברו בהצלחה כדי לשמור אותך על המסלול.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>צפה בכל התאריכים</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">תאריכי הקורס אינם זמינים כרגע.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">התאריכים שלך הועברו בהצלחה.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">לא ניתן היה לשנות את התאריכים שלך. אנא נסה שוב בפעם אחרת.</string>
+    <!-- endregion -->
+</resources>

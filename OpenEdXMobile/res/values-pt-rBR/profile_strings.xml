@@ -5,6 +5,36 @@
     <string name="settings_wifi_top">Baixar somente com Wi-Fi</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Baixar conteúdo somente quando conectado ao Wi-Fi</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">As informações do seu perfil só ficam visíveis para você. Somente seu nome de usuário pode ser visto por outros usuários no {platform_name}.</string>
+
+    <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wi-Fi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">Informações pessoais</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">Ajuda</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">Gostaria de solicitar alguma funcionalidade ou deixar uma opinião sobre nosso aplicativo?</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">Enviar e-mail para a equipe de suporte</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">Obter suporte</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">Para obter mais ajuda e saber como usar o aplicativo para dispositivos móveis {platform_name}, consulte nossa página de perguntas frequentes.</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">Visualizar perguntas frequentes</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">Sair</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">Excluir sua conta</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">Excluir conta</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">Siga as instruções da próxima tela para excluir sua conta e todos os dados relacionados.</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">Versão</string>
 
     <!-- Logout button label -->
     <string name="logout">Sair</string>
@@ -14,6 +44,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">Perfil</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">E-mail: {email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">Nome de usuário: {username}</string>
     <!-- The accessibility description for the language section -->

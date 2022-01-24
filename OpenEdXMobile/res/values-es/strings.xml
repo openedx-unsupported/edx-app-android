@@ -34,13 +34,11 @@
   <string name="view_all_subjects">Ver todas las Asignaturas</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">Buscar Asignatura</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartir este curso</string>
   <!--Share course-->
   <string name="share_course_message">Estoy tomando un curso en {platform_name}! Dale un vistazo:</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Comparta su certificado</string>
@@ -111,7 +109,6 @@
   <string name="toggle_turn_on">Encendido</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">Apagado</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Restablecer contraseña</string>
@@ -176,7 +173,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="label_ended">Terminado el {date}</string>
   <!--Label for date when course is ending-->
   <string name="label_ending">Terminando el {date}</string>
-
   <!--Label for date when course is expiring in a specific time frame like in 2 days-->
   <string name="label_expires">El acceso a los cursos caduca en {date}</string>
   <!--Label for date when course is expiring on a specific date like on December 5-->
@@ -220,6 +216,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="payments_info_header">¡Obtenga un certificado verificado!</string>
   <string name="payments_info_details">Resalte el nuevo conocimiento y nuevas habilidades con un certificado verificado.\n\nUse esta valiosa credencial para mejorar sus perspectivas laborales y avanzar en su carrera, o resaltar su certificado en las solicitudes escolares.</string>
   <string name="audit_access_expires_on">Acceso de auditoría, gratuito, expira el {date}</string>
+  <string name="audit_access_expires_details">Tú pierdes todo el acceso al curso, incluyendo tu progreso, del {date}.</string>
   <string name="upgrade_deadline_details">Mejore su inscripción hasta el {date} para obtener acceso ilimitado al curso siempre y cuando el curso esté en el sitio.</string>
   <string name="locked_content_header">¡Disponible para estudiantes verificadas!</string>
   <string name="locked_content_details">Asignaciones calificables están disponibles para estudiantes con inscripción verificada. Mejore su inscripción debajo para desbloquearlas.</string>
@@ -368,7 +365,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="assessment_needed_updating_youtube">Debes actualizar la aplicación de YouTube para ver este video.</string>
   <!--Label for button to update youtube app-->
   <string name="assessment_update_youtube">Actualizar YouTube</string>
-
   <!--Video List-->
   <!--Title of video download screen-->
   <string name="title_download">Descargas</string>
@@ -574,7 +570,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="forum_post_i_am_following">Publicaciones que estoy siguiendo</string>
   <string name="forum_follow">Seguir</string>
   <string name="forum_unfollow">Dejar de seguir</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">Compartir este logro</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -596,6 +591,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">Novedades</string>
   <!--Title of the selector while the choosing file-->
+  <string name="choose_file_title">Selecciona los archivos</string>
   <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
   <string name="celebratory_modal_title">¡Felicitaciones!</string>
   <!--Completion message for Celebration Modal-->

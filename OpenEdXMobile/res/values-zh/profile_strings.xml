@@ -5,6 +5,36 @@
     <string name="settings_wifi_top">仅在Wi-Fi下载</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">仅在Wi-Fi开启时下载内容</string>
+    <!-- Text to clarify that around what is visible -->
+    <string name="profile_visibility_off_message">你的属性信息只能由你浏览。对于{platform_name}上的其他用户只显示你的用户名。</string>
+
+    <!--  String for Profile Screen  -->
+    <!--  Heading of Wifi Field  -->
+    <string name="label_wifi">Wifi</string>
+    <!--  Heading of Personal Information  -->
+    <string name="label_personal_information">个人信息</string>
+    <!--  Heading of Help Field  -->
+    <string name="label_help">帮助</string>
+    <!--  Description of Submit feedback Field  -->
+    <string name="description_submit_feedback">希望对我们的应用程序提出功能请求或提供一些反馈？</string>
+    <!--  Label of Submit feedback Button  -->
+    <string name="label_submit_feedback_btn">发email给支持服务团队</string>
+    <!--  Heading of Get Support Field  -->
+    <string name="title_get_support">获取支持</string>
+    <!--  Description of Get Support Field  -->
+    <string name="description_get_support">要获得更多帮助并了解如何使用{platform_name}移动应用程序，请访问我们的常见问题解答。</string>
+    <!--  Label of Get Support Button  -->
+    <string name="label_view_faq_btn">访问FAQ</string>
+    <!--  Label of Sign out Button  -->
+    <string name="label_sign_out_btn">登出</string>
+    <!-- Delete my account screen Title -->
+    <string name="title_delete_my_account">删除你的账户</string>
+    <!--  Label of Delete Account Button  -->
+    <string name="label_delete_account_btn">删除账户</string>
+    <!--  Description of Delete Account  -->
+    <string name="description_delete_account">按照下一屏幕上的说明删除您的帐户和所有相关数据。</string>
+    <!--  Label of App Version  -->
+    <string name="label_app_version">版本</string>
 
     <!-- Logout button label -->
     <string name="logout">退出</string>
@@ -14,6 +44,8 @@
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
     <string name="profile_title">个人资料</string>
+    <!-- The accessibility description for the email section -->
+    <string name="profile_email_description">电子邮件: {email}</string>
     <!-- The accessibility description for the username section -->
     <string name="profile_username_description">用户名：{username}</string>
     <!-- The accessibility description for the language section -->

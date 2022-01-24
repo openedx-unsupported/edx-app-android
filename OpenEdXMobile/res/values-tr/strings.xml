@@ -34,13 +34,11 @@
   <string name="view_all_subjects">Tüm Konulara Göz At</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">Konu Ara</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Dersinizi paylaşın</string>
   <!--Share course-->
   <string name="share_course_message">{platform_name} üzerinde ders alıyorum! Buna bir bak:</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Sertifikanı paylaş</string>
@@ -111,7 +109,6 @@
   <string name="toggle_turn_on">Açık</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">Kapalı</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Parolayı Sıfırla</string>
@@ -213,6 +210,8 @@
   <string name="upgrade_to_verified_today_title">Bugün Onaylı\'ya Yükseltin</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Sipariş Ver</string>
+  <!--label for resume course section. Will be followed by course name-->
+  <string name="label_resume">Devam et</string>
   <!--Mobile Payments-->
   <string name="payments_info_header">Onaylanmış Bir Sertifika Edinin!</string>
   <string name="payments_info_details">Doğrulanmış bir sertifika ile yeni bilgi ve becerilerinizi vurgulayın. \n\nİş fırsatlarınızı geliştirmek ve kariyerinizi geliştirmek için bu değerli sertifikayı kullanın veya okul başvurularınızda sertifikanızı vurgulayın.</string>
@@ -505,6 +504,8 @@
   <string name="launch_search_title">Ne öğrenmek istiyorsun?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <string name="launch_search_courses">3000+ kursumuzda arama yapın</string>
+  <!--Label Explore all courses on the launch screen-->
+  <string name="label_explore_all_courses"><u>Tüm dersleri keşfedin</u></string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Seçimlik alanları göster</string>
@@ -540,6 +541,8 @@
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Müşteri Geribildirimi</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
+  <string name="email_subject_account_disabled">Hesap devre dışı bırakılmıştır</string>
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">Müşteri İncelemeleri</string>
   <!--Submit Feedback app version text-->
@@ -567,7 +570,6 @@
   <string name="forum_post_i_am_following">Takibe Aldığım Gönderiler</string>
   <string name="forum_follow">Takip et</string>
   <string name="forum_unfollow">Takipten çık</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">Başarılarını paylaş</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -586,4 +588,19 @@
   <string name="rating_bar">Derecelendirme çubuğu</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{num_of_stars} üzerinden {rating}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">Neler Yeni</string>
+  <!--Title of the selector while the choosing file-->
+  <string name="choose_file_title">Dosya Seç</string>
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <string name="celebratory_modal_title">Tebrikler!</string>
+  <!--Completion message for Celebration Modal-->
+  <string name="celebratory_modal_message">Az önce dersinizin ilk bölümünü tamamladınız.</string>
+  <!--Celebration message for Celebration Modal-->
+  <string name="celebratory_share_message"><b>Bunu hak ettin!</b> Gelişimini kutlamak ve paylaşmak için bir dakikanı ayır.</string>
+  <!--Button title appears on Celebration Modal to continue-->
+  <string name="keep_going_text">Devam et</string>
+  <!--Sharing message when user wants to share the celebration-->
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">Tamamlandı</string>
 </resources>

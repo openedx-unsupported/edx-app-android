@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Bugün</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Yalnızca Onaylı</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Tamamlandı</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Tarihi Geçti</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Sırada Tarihi Gelen</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Henüz Yayınlanmadı</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">Takvim ile senkronize et</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">Bu kursa yönelik tüm son tarihleri ve bitiş tarihlerini otomatik olarak takviminizle senkronize edin.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” Takviminize Erişmek İstiyor</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} bu kurs için kişiselleştirilmiş {platform_name} takviminize abone olmak amacıyla takvim listenizi kullanmak istiyor.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">\“{course_name}\” Takvimini Ekleyin</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">{platform_name} \“{course_name}\” takvimini eklemek ister misiniz? \n\nKurs takviminizi Takvim veya Ayarlar kısmından herhangi bir zamanda düzenleyebilir veya kaldırabilirsiniz.</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” telefonunuzun takvimine eklendi.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">Kurs takviminiz eklendi.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">\“{course_name}\” takvimini kaldırın</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">{platform_name} \“{course_name}\” takvimini kaldırmak istiyor musunuz?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">Kurs takviminiz kaldırıldı.</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">Kurs takviminiz güncellendi.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">Kurs takviminiz güncel değil</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">Kurs tarihleriniz değiştirildi ve kurs takviminiz artık yeni programınıza göre güncel değil.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Takvim Eklenirken Hata, Lütfen daha sonra tekrar deneyin</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">Ders Takvimini Kaldır</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Takvim senkronize ediliyor...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">Plana uygun kalmanıza yardımcı olması için bitiş tarihleriniz başarıyla değiştirildi.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>Tüm tarihleri görüntüle</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">Ders tarihleri şu an mevcut değil.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">Tarihleriniz başarıyla değiştirildi.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">Tarihleriniz değiştirilemedi. Lütfen tekrar deneyin.</string>
+    <!-- endregion -->
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Heading of Purchases Field  -->
+    <string name="label_purchase">Compras</string>
+    <!--  Title of Purchases Field  -->
+    <string name="title_purchase">Restaurar compras</string>
+    <!--  Description of Purchases Field  -->
+    <string name="description_purchase">Inicia sesión en la Play Store para restablecer el acceso a los cursos por los que has pagado previamente </string>
+
+    <!-- Title of Upgrade Complete Alert -->
+    <string name="title_upgrade_complete">Actualización completa</string>
+    <!-- Message for successful course upgrade -->
+    <string name="upgrade_success_message">Gracias por tu compra. Puedes continuar justo donde estabas y disfrutar del acceso completo al contenido de tu curso.</string>
+</resources>

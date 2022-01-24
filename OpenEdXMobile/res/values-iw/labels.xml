@@ -33,10 +33,19 @@
   <string name="label_rate_the_app">דרגו את האפליקציה</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">עדכן</string>
+  <!--Alert dialog Don't allow button-->
+  <string name="label_do_not_allow">אל תאפשר</string>
+  <!--Alert dialog View Event button-->
+  <string name="label_view_events">הצג אירועים</string>
+  <!--Alert dialog Update now button-->
+  <string name="label_update_now">עדכן כעת</string>
+  <!--Alert dialog Remove button-->
   <!--Done button label-->
   <string name="label_done">בוצע</string>
   <!--Undo button label-->
   <string name="label_undo">בטל</string>
   <!--Label denoting an error-->
   <string name="label_error">שגיאה</string>
+  <!--Customer support text, using as button title for disabled user-->
+  <string name="label_customer_support">תמיכת לקוחות</string>
 </resources>

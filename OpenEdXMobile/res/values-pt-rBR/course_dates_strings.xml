@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Hoje</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Apenas verificado</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Concluído</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Em atraso</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Próximo do vencimento</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Ainda não liberado</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">Sincronize com o calendário</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">Sincronizar de forma automática com seu calendário, todos os prazos e datas previstas para este curso. </string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” Gostaria de acessar seu calenário</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} gostaria de usar sua lista de calendário para assinar o seu calendário {platform_name} personalizado para este curso.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">Adicionar Calendário \“{course_name}\”
+ </string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">Você deseja adicionar o calendário \\"{course_name}\\" do {platform_name}? \n\nVocê pode editar ou remover o calendário do seu curso a qualquer momento em \"Calendário\" ou \"Configurações\".</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">O curso \\"{course_name}\\" foi adicionado ao calendário do seu telefone.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">Seu calendário do curso foi adicionado.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">Remover Calendar \“{course_name}\”
+ </string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">Você deseja remover o calendário \“{course_name}\” do {platform_name}?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">O calendário do seu curso foi removido</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">O calendário do seu curso foi atualizado</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">O calendário do seu curso está atrasado</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">As datas do curso foram alteradas e seu calendário não está mais atualizado com a nova programação</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Erro ao adicionar calendário, tente mais tarde</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">Remover calendário do curso</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Sincronizando calendário</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">Suas datas foram alteradas com sucesso para te ajudar a mantê-lo no controle do tempo.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>Ver datas</u>
+ </string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">Não há datas do curso disponíveis no momento.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">Suas datas foram alteradas.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">Não foi possível alterar suas datas. Tente novamente.</string>
+    <!-- endregion -->
+</resources>

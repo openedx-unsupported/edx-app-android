@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">Heute</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">Nur für verifizierte Benutzer</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">Abgeschlossen</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">Überfällig</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">Als nächstes fällig</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">Noch nicht veröffentlicht</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">Mit Kalender synchronisieren</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">Synchronisieren Sie automatisch alle Fristen und Fälligkeitstermine für diesen Kurs mit Ihrem Kalender.</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\“ möchte auf Ihren Kalender zugreifen</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} möchte Ihre Kalenderliste verwenden, um Ihren personalisierten {platform_name}-Kalender für diesen Kurs zu abonnieren.</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">Kalender \\"{course_name}\\" hinzufügen</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">Möchten Sie den {platform_name}-Kalender \\"{course_name}\\" hinzufügen? \n\nSie können Ihren Kurskalender jederzeit im Kalender oder in den Einstellungen bearbeiten oder entfernen.</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\\"{course_name}\\" wurde dem Kalender Ihres Mobiltelefons hinzugefügt.</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">Ihr Kurskalender wurde hinzugefügt.</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">Kalender \\"{course_name}\\" entfernen</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">Möchten Sie den {platform_name}-Kalender \\"{course_name}\\" entfernen?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">Ihr Kurskalender wurde entfernt.</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">Ihr Kurskalender wurde aktualisiert.</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">Ihr Kurskalender ist veraltet</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">Ihre Kurstermine wurden verschoben und Ihr Kurskalender entspricht nicht mehr Ihrem neuen Kursplan.</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">Fehler beim Hinzufügen des Kalenders, bitte versuchen Sie es später erneut</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">Kurskalender entfernen</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">Kalender wird synchronisiert ...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">Ihre Fälligkeitstermine wurden erfolgreich verschoben, damit Sie Ihren Zeitplan einhalten können.</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>Alle Termine anzeigen</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">Kurstermine sind derzeit nicht verfügbar.</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">Ihre Termine wurden erfolgreich verschoben.</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">Ihre Termine konnten nicht verschoben werden. Bitte versuchen Sie es erneut.</string>
+    <!-- endregion -->
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>Chúng tôi đã xây dựng một lịch biểu gợi ý để giúp bạn đi đúng hướng.</b>
+        Nhưng đừng lo lắng—lịch biểu rất linh hoạt nên bạn có thể học theo tốc độ của riêng mình. Nếu bạn vô tình bị tụt lại sau những mốc thời gian mà chúng tôi đề xuất,
+        bạn sẽ có thể điều chỉnh các mốc đó để bạn luôn đi đúng hướng.</string>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b>Bạn đang dự thính khóa học này,</b>
+        điều này có nghĩa là bạn không thể tham gia vào các bài tập chấm điểm. Để hoàn thành các bài tập chấm điểm thuộc khóa học này, bạn có thể nâng cấp hôm nay.</string>
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
+    <string name="course_dates_banner_upgrade_to_graded_button">Nâng cấp ngay</string>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>Bạn đang dự thính khóa học này,</b>
+        điều này có nghĩa là bạn không thể tham gia vào các bài tập chấm điểm. Có vẻ như bạn đã bỏ lỡ một số hạn chót quan trọng dựa trên lịch biểu gợi ý của chúng tôi. Để hoàn thành các bài tập chấm điểm thuộc khóa học này và di chuyển các bài tập đã quá hạn đến tương lai, bạn có thể nâng cấp hôm nay.</string>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>Có vẻ như bạn đã bỏ lỡ một số hạn chót quan trọng dựa trên lịch biểu gợi ý của chúng tôi.</b>
+        Để duy trì đúng hướng đi, bạn có thể cập nhật lịch biểu này và di chuyển các bài tập đã quá hạn đến tương lai. Đừng lo lắng—bạn sẽ không mất bất kỳ tiến bộ nào mà bạn đã đạt được khi di chuyển ngày đến hạn.</string>
+    <!-- Label Course Dates Banner Reset Date Button -->
+    <string name="course_dates_banner_reset_date_button">Di chuyển ngày đến hạn</string>
+
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">Lịch biểu khóa học</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">Chúng tôi đã xây dựng một lịch biểu gợi ý để giúp bạn đi đúng hướng. Nhưng đừng lo lắng – lịch biểu rất linh hoạt nên bạn có thể học theo tốc độ của riêng mình.
+        Nếu bạn vô tình bị tụt lại phía sau, bạn sẽ có thể điều chỉnh các mốc thời gian để bạn luôn đi đúng hướng.</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">Để hoàn thành các bài tập chấm điểm thuộc khóa học này, bạn có thể nâng cấp hôm nay.</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset">Bạn đang dự thính khóa học này,
+        điều này có nghĩa là bạn không thể tham gia vào các bài tập chấm điểm. Có vẻ như bạn đã bỏ lỡ một số hạn chót quan trọng dựa trên lịch biểu gợi ý của chúng tôi. Để hoàn thành các bài tập chấm điểm thuộc khóa học này và di chuyển các bài tập đã quá hạn đến tương lai, bạn có thể nâng cấp hôm nay.</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">Có vẻ như bạn đã bỏ lỡ một số hạn chót quan trọng dựa trên lịch biểu gợi ý của chúng tôi.
+        Để duy trì đúng hướng đi, bạn có thể cập nhật lịch biểu này và di chuyển các bài tập đã quá hạn đến tương lai. Đừng lo lắng—bạn sẽ không mất bất kỳ tiến bộ nào mà bạn đã đạt được khi di chuyển ngày đến hạn.</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">Nâng cấp để truy cập thêm tính năng</string>
+
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">Phần này của khóa học có thể hoạt động tốt nhất trên một trình duyệt web.</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>Mở trong trình duyệt</u></string>
+</resources>
