@@ -17,6 +17,7 @@ import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
+import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.util.BrowserUtil
@@ -109,8 +110,10 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             initObserver()
             binding.layoutUpgradeBtn.root.setVisibility(true)
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-                iapViewModel.addProductToBasket("org.edx.mobile.test_product1")
                 unit?.let {
+                    ProductManager.getProductByCourseId(it.courseId)?.let { productId ->
+                        iapViewModel.addProductToBasket(productId)
+                    } ?: showUpgradeErrorDialog()
                     environment.analyticsRegistry.trackUpgradeNowClicked(
                         it.courseId, price, it.id, isSelfPaced
                     )
@@ -139,8 +142,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
         iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
             if (it.paymentPageUrl.isNotEmpty())
-//              purchaseProduct(iapViewModel.getProductId())
-                purchaseProduct("org.edx.mobile.test_product")
+                purchaseProduct(iapViewModel.getProductId())
         })
 
         iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
@@ -193,14 +195,13 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             getString(R.string.upgrade_error_message),
             getString(R.string.label_close),
             null,
-            getString(R.string.label_get_help),
-            { _, _ ->
-                environment.router?.showFeedbackScreen(
-                    requireActivity(),
-                    getString(R.string.email_subject_upgrade_error)
-                )
-            }
-        ).show(childFragmentManager, null)
+            getString(R.string.label_get_help)
+        ) { _, _ ->
+            environment.router?.showFeedbackScreen(
+                requireActivity(),
+                getString(R.string.email_subject_upgrade_error)
+            )
+        }.show(childFragmentManager, null)
     }
 
     private fun showUpgradeCompleteDialog() {
