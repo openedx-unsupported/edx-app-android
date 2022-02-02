@@ -11,7 +11,7 @@ pipeline {
             APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
             CONFIG_REPO_NAME = 'edx-mobile-config'
             TEST_PROJECT_REPO_NAME = 'edx-app-test'
-            AUT_NAME = 'edx-debuggable-3.0.2.apk'
+            AUT_NAME = 'edx-debuggable-3.0.3.apk'
             USER_NAME = credentials('AUTOMATION_USERNAME')
             USER_PASSWORD = credentials('AUTOMATION_PASSWORD')
     }

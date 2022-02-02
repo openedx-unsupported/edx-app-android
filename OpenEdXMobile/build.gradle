@@ -141,15 +141,7 @@ dependencies {
     // Firebase remote config
     implementation 'com.google.firebase:firebase-config:16.5.0'
 
-    // Add the In-App Messaging dependency:
-    implementation('com.google.firebase:firebase-inappmessaging-display:17.2.0') {
-        // This exclusion has been added due to a conflict between this library and Roboguice
-        // (which has already added the javax.inject group) causing the following error during
-        // compile time: Error: Program type already present: javax.inject.Inject
-        exclude group: 'javax.inject'
-    }
-
-//    Exo Player
+    // Exo Player
     implementation 'com.google.android.exoplayer:exoplayer:2.9.2'
 
     // Google cast sdk
