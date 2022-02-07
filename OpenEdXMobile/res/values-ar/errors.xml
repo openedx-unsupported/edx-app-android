@@ -10,6 +10,7 @@
   <!--Error message shown in alert when course enrollment request fails-->
   <string name="enrollment_error_message">تعذر تسجيلك فى هذا المساق حاليا باستخدام تطبيق  {platform_name}. الرجاء المحاولة مجددًا باستخدام متصفحك. </string>
   <!--Error message shown when a course section is not available on mobile-->
+  <string name="not_available_on_mobile">غير متوفر على الجوال</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">أنت غير متصل بالإنترنت.</string>
@@ -42,7 +43,12 @@
   <string name="error_account_not_linked_desc_google">تأكد من أن حساب قوقل الخاص بك مرتبط مع حسابك  {platform_name} في {platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_desc_google_2">هذا الحساب على جوجل غير مرتبط بأي حساب {platform_name}؛ رجاء بادر إلى التسجيل.</string>
-
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_title_microsoft">حساب Microsoft غير مرتبط بحساب {platform_name}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft">تأكد من أن حساب Microsoft الخاص بك مرتبط بحساب {platform_name} على {platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft_2">لم يتم ربط حساب Microsoft هذا بأي حساب على {platform_name}. يرجى التسجيل.</string>
   <!--New version available-->
   <!--Snackbar notification shown when the current version of the app is unsupported-->
   <string name="app_version_unsupported">النسخة التي لديك من التطبيق لم تعُد مدعومة.</string>
@@ -57,6 +63,7 @@
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">رجاء أدخل  %1$s.</string>
   <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
+  <string name="error_select_or_enter_field">الرجاء تحديد %1$s صالحة أو إدخالها.</string>
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length"> %1$s يجب أن يتكون من %2$d أحرف الأقل.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
@@ -74,4 +81,6 @@
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
   <string name="permission_not_granted">لا تمتلك الصلاحيات اللازمة</string>
+  <!--This error message will be shown if user tried to login with third party (facebook/google) and server returns 403 status code, Disabled user-->
+  <string name="auth_provider_disabled_user_error">تم تعطيل حسابك. الرجاء الاتصال بدعم العملاء للحصول على المساعدة.</string>
 </resources>

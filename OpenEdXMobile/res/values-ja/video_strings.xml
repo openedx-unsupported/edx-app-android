@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">動画設定</string>
+    <!-- Title of Video Quality Dialog -->
+    <string name="video_download_quality_title">動画のダウンロード品質</string>
+    <!-- Auto Video Quality option -->
+    <string name="auto_recommended_text">自動 (推奨)</string>
+    <!-- 360p Video Quality option -->
+    <string name="video_quality_p360">360p (最小ファイルサイズ)</string>
+    <!-- 540p Video Quality option -->
+    <string name="video_quality_p540">540p</string>
+    <!-- 720p Video Quality option -->
+    <string name="video_quality_p720">720p (最高品質)</string>
+    <!-- Message shows in Video Quality dialog -->
+    <string name="video_download_quality_message">この設定は、{platform_name}アプリ内のすべての動画ダウンロードに適用されます。</string>
+
+    <!-- Label for the Download to sd-card setting -->
+    <string name="settings_download_to_sdcard_title">動画をSDカードにダウンロード</string>
+    <!-- Label explaining the download location setting in detail -->
+    <string name="settings_download_to_sdcard_subtitle">該当する場合、動画がSDカードにダウンロードされます</string>
     <!-- Label indicating that the only course content visible in the app is videos -->
     <string name="lbl_showing_only_videos">動画のみの利用</string>
     <!-- Title of prompt indicating issue loading a video -->
@@ -12,16 +31,36 @@
     <string name="error_download_failed">ダウンロード失敗</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">ダウンロードサイズがデバイスの記録装置の空き容量を上回っています。</string>
+    <!-- Confirmation message shown when attempting to download a large quantity of video data -->
+    <string name="download_exceed_message">選択した動画のサイズが1GB以上あります。
+        これらの動画をダウンロードしますか？</string>
 
     <!-- Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi -->
     <string name="wifi_off_message">現在 ダウンロードは Wi-Fi 接続のみを使用する設定になっています。
         Wi-Fi ネットワークに接続するか、ダウンロードの設定を変更してください。</string>
 
+    <!-- Google Cast -->
+    <!-- Description of a button that will cast/un-cast the app to a remote device -->
+    <string name="media_route_menu_title">キャスト設定&#8230;</string>
+    <!-- Google cast Introduction title -->
+    <string name="introducing_cast_text">Castについて</string>
+    <!-- Text to describe that video is casting on the remote device -->
+    <string name="remote_device_casting_message">動画をリモートデバイスにキャストしています</string>
+
     <!-- Label explaining toggle for cellular data access -->
     <string name="wifi_dialog_message_help">Wi-Fi 接続が利用できない場合、通話回線を使って動画をダウンロードできるようにします。データ通信料が課金される場合があります。</string>
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="other">%s 件の動画を削除済</item>
+    </plurals>
+
+    <!-- Subtitle labels for video durations in hours-->
+    <plurals name="video_duration_hour">
+        <item quantity="other">%d時間</item>
+    </plurals>
+    <!-- Subtitle labels for video durations in minutes-->
+    <plurals name="video_duration_minutes">
+        <item quantity="other">%d分</item>
     </plurals>
 </resources>

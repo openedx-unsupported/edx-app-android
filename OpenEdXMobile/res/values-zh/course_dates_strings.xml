@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region: Course Date types -->
+    <!-- Label used when the date is Today -->
+    <string name="date_type_today">今天</string>
+    <!-- Label used when an assignment is for verified user only -->
+    <string name="date_type_verified_only">仅验证</string>
+    <!-- Label used when an assignment is completed -->
+    <string name="date_type_completed">完成的</string>
+    <!-- Label used when an assignment is past due -->
+    <string name="date_type_past_due">逾期的</string>
+    <!-- Label used when an assignment is due next -->
+    <string name="date_type_due_next">即将到期</string>
+    <!-- Label used when an assignment is not yet released -->
+    <string name="date_type_not_yet_released">尚未发布</string>
+    <!-- endregion -->
+
+    <!-- region: Sync to calendar -->
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar">同步到日程表</string>
+    <!-- Title Sync to calendar  -->
+    <string name="sync_to_calendar_message">自动同步本课程所有最后期限和截止日期到你的日程表。</string>
+    <!-- Title to request calendar permission  -->
+    <string name="title_request_calendar_permission">\“{platform_name}\” 要访问您的日程吗</string>
+    <!-- Message to request calendar permission  -->
+    <string name="message_request_calendar_permission">{platform_name} 想使用您的日程列表订阅这门课程个性化的{platform_name} 日程。</string>
+    <!-- Title to add calendar for course  -->
+    <string name="title_add_course_calendar">在添加 \“{course_name}\”课程的日程安排内容</string>
+    <!-- Message to add calendar for course  -->
+    <string name="message_add_course_calendar">需要在{platform_name} 日程中添加\“{course_name}\” 课程相关内容吗? \n\n你可以在任意时间通过日程或设置编辑或者删除你课程的日程安排。</string>
+    <!-- Success Message after calendar for course added first time -->
+    <string name="message_for_alert_after_course_calendar_added">\“{course_name}\” 已添加到您手机上的日历。</string>
+    <!-- Success Message after calendar for course added -->
+    <string name="message_after_course_calendar_added">你的课程日程已经被添加</string>
+    <!-- Title to remove calendar for course  -->
+    <string name="title_remove_course_calendar">删除\“{course_name}\”课程相关的日程安排</string>
+    <!-- Message to remove calendar for course  -->
+    <string name="message_remove_course_calendar">你想从 {platform_name} 日程安排中删除 \“{course_name}\”课程相关内容吗 ?</string>
+    <!-- Success Message after calendar for course removed -->
+    <string name="message_after_course_calendar_removed">你课程的日程已经被删除。</string>
+    <!-- Success Message after calendar for course update -->
+    <string name="message_after_course_calendar_updated">你的课程日程安排已经被更新。</string>
+    <!-- Title course calendar is out-of-date  -->
+    <string name="title_calendar_out_of_date">您的课程日程已过期</string>
+    <!-- Message course calendar is out-of-date  -->
+    <string name="message_calendar_out_of_date">您的课程日期已更改，当前您的课程日程表不再与您的新时间表保持同步。</string>
+    <!-- Error message while creating calendar for the course events -->
+    <string name="adding_calendar_error_message">添加日历时出错，请稍后再试</string>
+    <!-- Alert dialog remove course calendar button -->
+    <string name="label_remove_course_calendar">删除课程日历</string>
+    <!-- Title syncing calendar dialog  -->
+    <string name="title_syncing_calendar">同步日历...</string>
+    <!-- endregion -->
+
+    <!-- Message on shift course dates successfully on Assessment -->
+    <string name="assessment_shift_dates_success_msg">您已成功更改截止日期，因此可以保持学习进度。</string>
+    <!-- Label to view shifted dates -->
+    <string name="assessment_view_all_dates"><u>查看所有日期</u></string>
+
+    <!-- region: Course dates error -->
+    <!-- Error Message when course dates are not available -->
+    <string name="course_dates_unavailable_message">课程日期当前不可用。</string>
+    <!-- Message Course Dates Reset Successful -->
+    <string name="course_dates_reset_successful">您的日期已成功更改。</string>
+    <!-- Message Course Dates Reset Unsuccessful -->
+    <string name="course_dates_reset_unsuccessful">您的日期无法更改。请再次尝试。</string>
+    <!-- endregion -->
+</resources>

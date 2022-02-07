@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Heading of Purchases Field  -->
+    <string name="label_purchase">Mua</string>
+    <!--  Title of Purchases Field  -->
+    <string name="title_purchase">Khôi phục mua</string>
+    <!--  Description of Purchases Field  -->
+    <string name="description_purchase">Đăng nhập vào Play Store để khôi phục quyền truy cập các khóa học mà trước đó bạn đã trả tiền để nâng cấp</string>
+
+    <!-- Title of Upgrade Complete Alert -->
+    <string name="title_upgrade_complete">Hoàn thành nâng cấp</string>
+    <!-- Message for successful course upgrade -->
+    <string name="upgrade_success_message">Cảm ơn bạn đã mua. Bạn có thể tiếp tục từ nơi bạn đã bở dở và tận hưởng quyền truy cập toàn bộ nội dung khóa học.</string>
+</resources>

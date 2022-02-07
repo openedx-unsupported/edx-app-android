@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Button text to show user Video Settings screen -->
+    <string name="label_video_settings">Video Ayarları</string>
+    <!-- Title of Video Quality Dialog -->
+    <string name="video_download_quality_title">Video indirme kalitesi</string>
+    <!-- Auto Video Quality option -->
+    <string name="auto_recommended_text">Otomatik (Önerilen)</string>
+    <!-- 360p Video Quality option -->
+    <string name="video_quality_p360">360p (En küçük dosya boyutu)</string>
+    <!-- 540p Video Quality option -->
+    <string name="video_quality_p540">540p</string>
+    <!-- 720p Video Quality option -->
+    <string name="video_quality_p720">720p (En iyi kalite)</string>
+    <!-- Message shows in Video Quality dialog -->
+    <string name="video_download_quality_message">Bu ayar {platform_name} uygulamasındaki tüm video indirme işlemleri içindir.</string>
+
     <!-- Label for the Download to sd-card setting -->
     <string name="settings_download_to_sdcard_title">Videoyu SD Kart\'a İndir</string>
     <!-- Label explaining the download location setting in detail -->
@@ -39,5 +54,16 @@
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s video silindi.</item>
         <item quantity="other">%s video silindi.</item>
+    </plurals>
+
+    <!-- Subtitle labels for video durations in hours-->
+    <plurals name="video_duration_hour">
+        <item quantity="one">%d saat</item>
+        <item quantity="other">%d saat</item>
+    </plurals>
+    <!-- Subtitle labels for video durations in minutes-->
+    <plurals name="video_duration_minutes">
+        <item quantity="one">%d dakika</item>
+        <item quantity="other">%d dakika</item>
     </plurals>
 </resources>

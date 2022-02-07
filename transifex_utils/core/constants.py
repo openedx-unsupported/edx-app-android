@@ -24,6 +24,12 @@ WHATS_NEW_JSON = "whats_new.json"
 """List of all the supported transifex file templates."""
 files_templates = {
     "OpenEdXMobile/res/values-<lang>/strings.xml",
+    "OpenEdXMobile/res/values-<lang>/course_banners_strings.xml",
+    "OpenEdXMobile/res/values-<lang>/course_dates_strings.xml",
+    "OpenEdXMobile/res/values-<lang>/course_modal_strings.xml",
+    "OpenEdXMobile/res/values-<lang>/iap_strings.xml",
+    "OpenEdXMobile/res/values-<lang>/profile_strings.xml",
+    "OpenEdXMobile/res/values-<lang>/video_strings.xml",
     "OpenEdXMobile/res/values-<lang>/errors.xml",
     "OpenEdXMobile/res/values-<lang>/labels.xml",
     "OpenEdXMobile/res/raw-<lang>/" + PROFILES_JSON,

@@ -22,6 +22,7 @@
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">Vous êtes maintenant inscrit au cours.</string>
   <!--Floating overlay text shown to user when user already enrolled in a course-->
+  <string name="you_are_already_enrolled" tools:ignore="MissingTranslation">Vous êtes déjà inscrit à ce cours.</string>
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">Tableau de bord indisponible.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
@@ -33,13 +34,11 @@
   <string name="view_all_subjects">Voir tous les sujets</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">Rechercher des sujets</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Partagez votre cours</string>
   <!--Share course-->
   <string name="share_course_message">Je suis un cours sur {platform_name}! Check this out:</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Partagez votre certificat</string>
@@ -110,7 +109,6 @@
   <string name="toggle_turn_on">On</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">Off</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Réinitialiser le mot de passe</string>
@@ -212,7 +210,16 @@
   <string name="upgrade_to_verified_today_title">Passer au mode Validé aujourd\'hui</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Passer la commande</string>
+  <!--label for resume course section. Will be followed by course name-->
+  <string name="label_resume">Reprendre</string>
   <!--Mobile Payments-->
+  <string name="payments_info_header">Obtenir une attestation!</string>
+  <string name="payments_info_details">Highlight your new knowledge and skills with a verified certificate.\n\nUse this valuable credential to improve your job prospects and advance your career, or highlight your certificate in school applications.</string>
+  <string name="audit_access_expires_on">L\'accès au parcours audit expire le {date}</string>
+  <string name="audit_access_expires_details">Vous perdrez tout accès au cours, y compris votre progression, le {date}.</string>
+  <string name="upgrade_deadline_details">Mettez vous à niveau avant le {date} pour obtenir un accès illimité au cours tant qu\'il existe sur le site.</string>
+  <string name="locked_content_header">Disponible pour les étudiants vérifiés !</string>
+  <string name="locked_content_details">Les évaluations notées sont disponibles pour les apprenants vérifiés. Mettez vous à niveau ci-dessous pour les déverrouiller.</string>
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">Sujets de discussion</string>
@@ -439,7 +446,9 @@
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">Pause</string>
   <!--Accessibility Label for Rewind button on Video Player-->
+  <string name="video_player_rewind_button">Reculer de 10 secondes</string>
   <!--Accessibility Label for Forward button on Video Player-->
+  <string name="video_player_forward_button">Avancer de 15 secondes</string>
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">Retour 30 secondes</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -449,7 +458,9 @@
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">Quitter le plein écran</string>
   <!--Label for video playback rewind 10 sec in video player-->
+  <string name="video_player_rewind_time_sec">-10</string>
   <!--Label for video playback forward 15 sec in video player-->
+  <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">À la recherche d\'un nouveau challenge?</string>
   <!--Button label to bring up course finder-->
@@ -461,6 +472,7 @@
   <!--Google login method-->
   <string name="google_text">Google</string>
   <!--Microsoft login method-->
+  <string name="microsoft_text" tools:ignore="MissingTranslation">Microsoft</string>
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">Envoyer email avec...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
@@ -481,12 +493,19 @@
   <string name="or_register_with_email">ou s\'inscrire avec un email</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
+  <string name="launch_register">S\'inscrire</string>
   <!--Button leading user to log in screen-->
+  <string name="launch_login">Se connecter</string>
   <!--Introduction text on the launch screen-->
+  <string name="launch_text">Les cours des meilleures universités du monde dans votre poche.</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
+  <string name="launch_text_courses_and_program">Les cours et programmes des meilleures universités du monde dans votre poche.</string>
   <!--Search View title on the launch screen-->
+  <string name="launch_search_title">Que souhaitez-vous apprendre ?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">Cherchez parmi +3000 de nos cours</string>
+  <!--Label Explore all courses on the launch screen-->
+  <string name="label_explore_all_courses"><u>Parcourir tous les cours</u></string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Montrer les champs optionnels</string>
@@ -503,6 +522,7 @@
   <!--Text for successful registration with social token-->
   <string name="sign_up_with_facebook_ok">Connexion avec Facebook réussie.</string>
   <string name="sign_up_with_google_ok">Connexion avec Google réussie.</string>
+  <string name="sign_up_with_microsoft_ok" tools:ignore="MissingTranslation">Vous vous êtes connecté avec Microsoft avec succès.</string>
   <string name="sign_up_with_social_ok">Nous avons besoin d\'un petit peu plus d\'information pour apprendre sur {platform_name}.</string>
   <!--Continue registration after social login-->
   <string name="complete_registration">Terminer votre inscription</string>
@@ -521,6 +541,8 @@
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Retour client</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
+  <string name="email_subject_account_disabled">Compte désactivé</string>
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">Revue client</string>
   <!--Submit Feedback app version text-->
@@ -548,7 +570,6 @@
   <string name="forum_post_i_am_following">Les posts que je suis</string>
   <string name="forum_follow">Suivre</string>
   <string name="forum_unfollow">Ne plussuivre</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">Partagez vos accomplissements</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -567,4 +588,18 @@
   <string name="rating_bar">Control avis</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} sur {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">Les nouveautés</string>
+  <!--Title of the selector while the choosing file-->
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <string name="celebratory_modal_title">Félicitations !</string>
+  <!--Completion message for Celebration Modal-->
+  <string name="celebratory_modal_message">Vous venez de terminer la première partie de votre cours.</string>
+  <!--Celebration message for Celebration Modal-->
+  <string name="celebratory_share_message"><b>Vous l\'avez mérité !</b> Prenez un moment pour célébrer et partager votre progression.</string>
+  <!--Button title appears on Celebration Modal to continue-->
+  <string name="keep_going_text">Continuer</string>
+  <!--Sharing message when user wants to share the celebration-->
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">Terminé</string>
 </resources>

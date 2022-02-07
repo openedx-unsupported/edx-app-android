@@ -22,6 +22,7 @@
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">您已成功加入这门课程。</string>
   <!--Floating overlay text shown to user when user already enrolled in a course-->
+  <string name="you_are_already_enrolled" tools:ignore="MissingTranslation">您已被加入该课程。</string>
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">无法显示仪表板。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
@@ -33,13 +34,11 @@
   <string name="view_all_subjects">查看所有科目</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">搜索科目</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">分享课程</string>
   <!--Share course-->
   <string name="share_course_message">我正在{platform_name}上学习课程！看一看：</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">分享您的证书</string>
@@ -110,7 +109,6 @@
   <string name="toggle_turn_on">开</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">关</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">重置密码</string>
@@ -212,7 +210,16 @@
   <string name="upgrade_to_verified_today_title">立即升级到已验证状态</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">下订单</string>
+  <!--label for resume course section. Will be followed by course name-->
+  <string name="label_resume">恢复</string>
   <!--Mobile Payments-->
+  <string name="payments_info_header">追求一个被确认的证书！</string>
+  <string name="payments_info_details">用经过验证的证书突出显示您的新知识和技能。\n\n使用此有价值的证书来改善您的工作前景和职业发展，或者在学校申请中突出显示您的证书。</string>
+  <string name="audit_access_expires_on">旁听权限已过期 {date}</string>
+  <string name="audit_access_expires_details">你失去了课程的所有使用权，包括你的进度，在 {date}。</string>
+  <string name="upgrade_deadline_details">在{date}之前升级，以获得对课程的无限访问权——只要该课程存在于网站上。</string>
+  <string name="locked_content_header">可供认证学习者使用！</string>
+  <string name="locked_content_details">分级评估可跟踪学习者使用情况来进行相应验证。在下面进行升级以解锁此功能。</string>
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">讨论话题</string>
@@ -435,7 +442,9 @@
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">暂停</string>
   <!--Accessibility Label for Rewind button on Video Player-->
+  <string name="video_player_rewind_button">后退10秒</string>
   <!--Accessibility Label for Forward button on Video Player-->
+  <string name="video_player_forward_button">快进15秒</string>
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">后退30秒</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -445,7 +454,9 @@
   <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
   <string name="video_player_exit_fullscreen">退出全屏模式</string>
   <!--Label for video playback rewind 10 sec in video player-->
+  <string name="video_player_rewind_time_sec">-10</string>
   <!--Label for video playback forward 15 sec in video player-->
+  <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">寻找新的挑战？</string>
   <!--Button label to bring up course finder-->
@@ -457,6 +468,7 @@
   <!--Google login method-->
   <string name="google_text">Google</string>
   <!--Microsoft login method-->
+  <string name="microsoft_text" tools:ignore="MissingTranslation">微软</string>
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">选择发邮件的应用...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
@@ -477,12 +489,19 @@
   <string name="or_register_with_email">或用邮箱注册</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
+  <string name="launch_register">注册</string>
   <!--Button leading user to log in screen-->
+  <string name="launch_login">登陆</string>
   <!--Introduction text on the launch screen-->
+  <string name="launch_text">您将获得来自世界顶级大学的课程。</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
+  <string name="launch_text_courses_and_program">在你的口袋里装入来自世界上最好的大学的课程和计划。</string>
   <!--Search View title on the launch screen-->
+  <string name="launch_search_title">你想学什么？</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">搜索我们超过3000门的课程。</string>
+  <!--Label Explore all courses on the launch screen-->
+  <string name="label_explore_all_courses">发现所有的课程。</string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">显示可选信息</string>
@@ -499,6 +518,7 @@
   <!--Text for successful registration with social token-->
   <string name="sign_up_with_facebook_ok">您已成功授权Facebook登录。</string>
   <string name="sign_up_with_google_ok">您已成功授权Google登录。</string>
+  <string name="sign_up_with_microsoft_ok" tools:ignore="MissingTranslation">你已经成功地用微软登陆</string>
   <string name="sign_up_with_social_ok">您只需再多提供一点信息就可以在{platform_name}学习了。</string>
   <!--Continue registration after social login-->
   <string name="complete_registration">完成您的注册</string>
@@ -517,6 +537,8 @@
   <string name="android">安卓</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">用户反馈</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
+  <string name="email_subject_account_disabled">账户已禁用</string>
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">用户评价</string>
   <!--Submit Feedback app version text-->
@@ -544,7 +566,6 @@
   <string name="forum_post_i_am_following">我关注的帖子</string>
   <string name="forum_follow">关注</string>
   <string name="forum_unfollow">取消关注</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">分享您的成就</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -563,4 +584,20 @@
   <string name="rating_bar">评价控制</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} / {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">什么新功能</string>
+  <!--Title of the selector while the choosing file-->
+  <string name="choose_file_title">选择文件</string>
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <string name="celebratory_modal_title">恭喜！</string>
+  <!--Completion message for Celebration Modal-->
+  <string name="celebratory_modal_message">您已经完成了课程的第一部分。</string>
+  <!--Celebration message for Celebration Modal-->
+  <string name="celebratory_share_message">你做到了！花点时间来庆祝和分享你的进步吧。</string>
+  <!--Button title appears on Celebration Modal to continue-->
+  <string name="keep_going_text">继续努力</string>
+  <!--Sharing message when user wants to share the celebration-->
+  <string name="celebration_share_message">我在@{platform_name} 上进行 {course_name}在线课程学习。你在学习什么？#我的{platform_name}旅程</string>
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">完成的</string>
 </resources>

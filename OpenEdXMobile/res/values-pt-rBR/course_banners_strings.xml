@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>Criamos uma programação como sugestão para ajudar você a se manter no caminho certo.</b>
+        Mas não se preocupe: ela é flexível, possibilitando que você aprenda no seu próprio ritmo. Se não conseguir se manter em dia com as datas sugeridas,
+        você poderá ajustá-las da forma que for melhor para você.</string>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b>Você está participando deste curso,</b>
+o que significa que você não pode participar em avaliações. Para completar avaliações como uma parte deste curso, faça o upgrade hoje.</string>
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
+    <string name="course_dates_banner_upgrade_to_graded_button">Fazer o upgrade agora</string>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>Você está participando deste curso,</b>
+o que significa que você não pode participar em avaliações. Para completar avaliações como uma parte deste curso, faça o upgrade hoje. Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida. Para completar avaliações como parte deste curso e adiar tarefas já atrasadas, faça o upgrade hoje.</string>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida.</b>
+Para se ficar em dia, você pode atualizar esta programação e adiar as tarefas já atrasadas. Não se preocupe – você não perderá o progresso já feito.</string>
+    <!-- Label Course Dates Banner Reset Date Button -->
+    <string name="course_dates_banner_reset_date_button">Alterar datas de entrega</string>
+
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">Programação do Curso</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">Fizemos uma programação como sugestão para te ajudar a manter o ritmo. Mas não se preocupe, ela é flexível, assim você pode aprender no seu próprio ritmo. 
+Se você não conseguir acompanhar tudo nas datas sugeridas, você poderá ajustá-las de forma que seja melhor para você.</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">Para completar atividades avaliativas como uma parte deste curso, faça o upgrade hoje.</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset">Você está participando deste curso,
+o que significa que você não pode participar em avaliações. Para completar avaliações como uma parte deste curso, faça o upgrade hoje. Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida. Para completar avaliações como parte deste curso e adiar tarefas já atrasadas, faça o upgrade hoje.</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida.
+Para se ficar em dia, você pode atualizar esta programação e adiar as tarefas já atrasadas. Não se preocupe – você não perderá o progresso já feito.</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">Faça o upgrade para ter acesso a mais recursos</string>
+
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">Esta seção do curso pode funcionar melhor em um navegador</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>Abrir no browser</u></string>
+</resources>

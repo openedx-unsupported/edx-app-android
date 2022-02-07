@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Heading of Purchases Field  -->
+    <string name="label_purchase">购买</string>
+    <!--  Title of Purchases Field  -->
+    <string name="title_purchase">恢复购买</string>
+    <!--  Description of Purchases Field  -->
+    <string name="description_purchase">登录Play Store以恢复您以前已付费的课程的访问权限</string>
+
+    <!-- Title of Upgrade Complete Alert -->
+    <string name="title_upgrade_complete">升级已完成</string>
+    <!-- Message for successful course upgrade -->
+    <string name="upgrade_success_message">感谢您的购买。您可以继续此前的学习，完全访问课程内容。</string>
+</resources>

@@ -33,10 +33,19 @@
   <string name="label_rate_the_app">Uygulamayı Oyla</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">Güncelleştir</string>
+  <!--Alert dialog Don't allow button-->
+  <string name="label_do_not_allow">İzin verme</string>
+  <!--Alert dialog View Event button-->
+  <string name="label_view_events">Etkinlikleri Görüntüle</string>
+  <!--Alert dialog Update now button-->
+  <string name="label_update_now">Şimdi Güncelle</string>
+  <!--Alert dialog Remove button-->
   <!--Done button label-->
   <string name="label_done">Tamam</string>
   <!--Undo button label-->
   <string name="label_undo">Geri Al</string>
   <!--Label denoting an error-->
   <string name="label_error">Hata</string>
+  <!--Customer support text, using as button title for disabled user-->
+  <string name="label_customer_support">Kullanıcı Desteği</string>
 </resources>

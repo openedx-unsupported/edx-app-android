@@ -33,10 +33,21 @@
   <string name="label_rate_the_app">给 App 评分</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">更新</string>
+  <!--Alert dialog Don't allow button-->
+  <string name="label_do_not_allow">不允许</string>
+  <!--Alert dialog View Event button-->
+  <string name="label_view_events">查看活动</string>
+  <!--Alert dialog Update now button-->
+  <string name="label_update_now">立即更新</string>
+  <!--Alert dialog Remove button-->
+  <string name="label_remove">删除
+</string>
   <!--Done button label-->
   <string name="label_done">完成</string>
   <!--Undo button label-->
   <string name="label_undo">撤销</string>
   <!--Label denoting an error-->
   <string name="label_error">错误</string>
+  <!--Customer support text, using as button title for disabled user-->
+  <string name="label_customer_support">用户支持</string>
 </resources>

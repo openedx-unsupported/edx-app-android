@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">تعلم اكثر</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">ترقية {course_name}</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">احصل على شهادة إتمام موثقة لعرضها في سيرتك الذاتية</string>
+    <string name="course_modal_unlock_access">افتح الوصول إلى جميع أنشطة المقرر الدراسي ، بما في ذلك الواجبات المقدرة</string>
+    <string name="course_modal_full_access_course">الوصول الكامل إلى محتوى الدورة ومواد الدورة التدريبية حتى بعد انتهاء الدورة</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">قم بالتحديث  الآن مقابل 99 دولارًا</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">تعرف على المزيد حول الميزات المقفلة</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">كيفية فتح الواجبات المقدرة</string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">الواجبات المقدرة مؤمنة</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">قم بالترقية للوصول إلى الميزات المقفلة مثل هذه الميزة وتحقيق أقصى استفادة من الدورة التدريبية الخاصة بك</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more">اظهر المزيد</string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less">اظهر اقل</string>
+</resources>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-<!--Divider between current time and total time. For example  "2:33/5:10"-->
+  <!--Divider between current time and total time. For example  "2:33/5:10"-->
   <string name="lbl_slash">/</string>
   <!--Button allowing user to open a web page corresponding to the current screen in a web browser-->
   <string name="lbl_view_on_web">العرض على الموقع الإلكتروني</string>
@@ -33,10 +33,20 @@
   <string name="label_rate_the_app">قيّم التطبيق</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">تحديث</string>
+  <!--Alert dialog Don't allow button-->
+  <string name="label_do_not_allow">عدم السماح</string>
+  <!--Alert dialog View Event button-->
+  <string name="label_view_events">عرض الأحداث</string>
+  <!--Alert dialog Update now button-->
+  <string name="label_update_now">حدّث الآن</string>
+  <!--Alert dialog Remove button-->
+  <string name="label_remove">احذف</string>
   <!--Done button label-->
   <string name="label_done">تم</string>
   <!--Undo button label-->
   <string name="label_undo">رجوع</string>
   <!--Label denoting an error-->
   <string name="label_error">خطأ</string>
+  <!--Customer support text, using as button title for disabled user-->
+  <string name="label_customer_support">دعم العملاء‬</string>
 </resources>

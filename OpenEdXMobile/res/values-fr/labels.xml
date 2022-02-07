@@ -33,10 +33,20 @@
   <string name="label_rate_the_app">Classer l\'application</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
   <string name="label_update">Mettre à jour</string>
+  <!--Alert dialog Don't allow button-->
+  <string name="label_do_not_allow">Ne pas autoriser</string>
+  <!--Alert dialog View Event button-->
+  <string name="label_view_events">Voir les événements</string>
+  <!--Alert dialog Update now button-->
+  <string name="label_update_now">Mettre à jour</string>
+  <!--Alert dialog Remove button-->
+  <string name="label_remove">Enlever</string>
   <!--Done button label-->
   <string name="label_done">Fait</string>
   <!--Undo button label-->
   <string name="label_undo">Annuler</string>
   <!--Label denoting an error-->
   <string name="label_error">Erreur</string>
+  <!--Customer support text, using as button title for disabled user-->
+  <string name="label_customer_support">Assistance client</string>
 </resources>

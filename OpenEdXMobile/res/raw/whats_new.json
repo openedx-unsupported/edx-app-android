@@ -1,5 +1,26 @@
 [
   {
+    "version": "3.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Video download quality",
+        "message": "Customize your video download settings in your Profile or Video tab in your course."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Improved language support",
+        "message": "We have added more translations throughout the app so you can learn on edX your way!"
+      }
+    ]
+  },
+  {
     "version": "2.26",
     "messages": [
       {

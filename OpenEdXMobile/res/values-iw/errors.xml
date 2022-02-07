@@ -10,6 +10,7 @@
   <!--Error message shown in alert when course enrollment request fails-->
   <string name="enrollment_error_message">לא ניתן לרשום אתכם לקורס זה כעת באמצעות האפליקציה לנייד של {platform_name}. אנא נסו שוב דרך דפדפן הרשת שלכם.</string>
   <!--Error message shown when a course section is not available on mobile-->
+  <string name="not_available_on_mobile">לא זמין במכשיר נייד.</string>
   <!--Network error messages-->
   <!--Error shown when  user attempts an action but needs an internet connection-->
   <string name="network_not_connected">אינך מחובר לאינטרנט</string>
@@ -35,11 +36,19 @@
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
   <string name="error_account_not_linked_desc_fb">ודאו שחשבון הפייסבוק שלכם מקושר עם חשבון ה-{platform_name} שלכם ב-{platform_destination}</string>
   <!--Content of alert shown during login when user attempts login via Facebook without having linked their account-->
+  <string name="error_account_not_linked_desc_fb_2">חשבון Facebook זה אינו מקושר עם שום חשבון {platform_name}. אנא הירשמו.</string>
   <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_title_google">חשבון גוגל אינו מקושר עם חשבון ה-{platform_name}</string>
   <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
   <string name="error_account_not_linked_desc_google">ודאו שחשבון הגוגל שלכם מקושר עם חשבון ה-{platform_name} שלכם ב-{platform_destination}</string>
-
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_google_2">חשבון Google זה אינו מקושר עם שום חשבון {platform_name}. אנא הירשמו.</string>
+  <!--Title of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_title_microsoft">חשבון Microsoft אינו מקושר עם חשבון ה-{platform_name}</string>
+  <!--Content of alert shown during login when user attempts login via Google without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft">ודאו שחשבון Microsoft שלכם מקושר עם חשבון ה-{platform_name} שלכם ב-{platform_destination}</string>
+  <!--Content of alert shown during login when user attempts login via Microsoft without having linked their account-->
+  <string name="error_account_not_linked_desc_microsoft_2">חשבון Microsoft זה אינו מקושר עם שום חשבון {platform_name}. אנא הירשמו.</string>
   <!--New version available-->
   <!--Snackbar notification shown when the current version of the app is unsupported-->
   <string name="app_version_unsupported">גרסת האפליקציה שברשותכם אינה נתמכת עוד.</string>
@@ -54,6 +63,7 @@
   <!--Error prompt shown during registration to indicate an empty field. Argument is a field name-->
   <string name="error_enter_field">אנא הכנס את %1$s שלך.</string>
   <!--Error prompt shown during registration to indicate a field invalid input. Argument is a field name-->
+  <string name="error_select_or_enter_field">אנא בחר והזן %1$s תקף.</string>
   <!--Error prompt shown during registration when a field entry is too short. Arguments are 1) a field name, 2) a number-->
   <string name="error_min_length">%1$s חייב להיות באורך של לפחות %2$d תווים.</string>
   <!--Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number-->
@@ -61,6 +71,7 @@
   <!--Error message shown when a course hasn't started yet-->
   <string name="course_not_started">קורס זה טרם החל.</string>
   <!--Error message shown when a user's access has expired for a course-->
+  <string name="course_access_expired">פג תוקף הגישה שלך לקורס.</string>
   <!--Error message shown when a user can't perform an action on e.g. add a post/response/comment in forums-->
   <string name="action_not_completed">לא ניתן היה להשלים את הפעולה שלכם.</string>
   <!--Error dialog message shown when the user try to log in in app with un-supported version-->
@@ -69,4 +80,7 @@
   <string name="app_version_unsupported_register_msg">גרסת האפליקציה שברשותכם אינה נתמכת. עדכנו לגרסה האחרונה כדי להיכנס.</string>
   <!--Permission Error Messages-->
   <!--Error message shown when a permission is not granted-->
+  <string name="permission_not_granted">לא ניתנה הרשאה</string>
+  <!--This error message will be shown if user tried to login with third party (facebook/google) and server returns 403 status code, Disabled user-->
+  <string name="auth_provider_disabled_user_error">החשבון שלך מושבת. צור קשר עם תמיכת הלקוחות לקבלת עזרה.</string>
 </resources>

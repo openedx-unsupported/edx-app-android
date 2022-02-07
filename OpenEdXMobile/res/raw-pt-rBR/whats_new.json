@@ -1,5 +1,26 @@
 [
   {
+    "version": "3.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Qualidade do baixar do vídeo",
+        "message": "Personalize suas configurações de transferências de vídeo no seu Perfil ou na aba \"Vídeo\" do seu curso."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "Melhorias no suporte a idiomas",
+        "message": "Adicionamos mais traduções ao aplicativo para que você possa aprender no edX do seu jeito!"
+      }
+    ]
+  },
+  {
     "version": "2.26",
     "messages": [
       {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Message Course Dashboard Info Banner -->
+    <string name="course_dashboard_info_banner"><b>我们制定了一个建议的时间表，以帮助您保持合理进度。</b>
+        它很灵活，所以您可以按照自己的节奏学习。 如果您碰巧落后于我们建议的日期，
+        您可以调整日期，让自己的学习保持进度。</string>
+    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
+    <string name="course_dashboard_banner_upgrade_to_graded"><b> 您正在以审阅模式访问本课程，</b>
+这意味着你不能参加分级作业。要完成本课程一部分的分级作业，您可以今天进行功能升级。</string>
+    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
+    <string name="course_dates_banner_upgrade_to_graded_button">立即升级</string>
+    <!-- Message Course Dashboard Banner Upgrade to Reset -->
+    <string name="course_dashboard_banner_upgrade_to_reset"><b>您正在以审阅模式访问本课程，</b>
+ 这意味着你不能参加分级作业。根据我们建议的日程安排，您似乎错过了一些重要的截止日期。要完成本课程一部分的分级作业，并将过去到期的作业转移到未来，您可以今天进行功能升级。</string>
+    <!-- Message Course Dashboard Banner Reset Date -->
+    <string name="course_dashboard_banner_reset_date"><b>根据我们建议的日程安排，您似乎错过了一些重要的截止日期。</b>
+        为了让自己赶上进程，您可以更新此计划并将过期的任务转移到未来。不要担心，当你改变你的截止日期时，你不会失去你已经取得的任何过程记录。</string>
+    <!-- Label Course Dates Banner Reset Date Button -->
+    <string name="course_dates_banner_reset_date_button">改变截止日期</string>
+
+    <!-- Title Course Schedule  -->
+    <string name="course_schedule_title">课程表</string>
+    <!-- Message Course Dates Info Banner -->
+    <string name="course_dates_info_banner">我们制定了一个建议的时间表，以帮助您保持合理进度。但别担心，它很灵活，所以你可以按照自己的节奏学习。
+如果你碰巧落后了，你可以调整日期，让自己的学习保持进度。
+</string>
+    <!-- Message Course Dates Banner Upgrade to Complete Graded -->
+    <string name="course_dates_banner_upgrade_to_graded">要完成本课程一部分的分级作业，您可以今天进行功能升级。</string>
+    <!-- Message Course Dates Banner Upgrade to Reset -->
+    <string name="course_dates_banner_upgrade_to_reset"> 您正在以审阅模式访问本课程，
+这意味着你不能参加分级作业。根据我们建议的日程安排，您似乎错过了一些重要的截止日期。要完成本课程一部分的分级作业，并将过去到期的作业转移到未来，您可以今天进行功能升级。</string>
+    <!-- Message Course Dates Banner Reset Date -->
+    <string name="course_dates_banner_reset_date">根据我们建议的日程安排，您似乎错过了一些重要的截止日期。
+为了让自己赶上进程，您可以更新此计划并将过期的任务转移到未来。不要担心，当你改变你的截止日期时，你不会失去你已经取得的任何过程记录。</string>
+    <!-- Label Course Card Graded Message -->
+    <string name="value_prop_course_card_message">升级以访问更多功能</string>
+
+    <!-- Open in browser message -->
+    <string name="open_in_browser_message">课程这部分的内容最好在web浏览器中访问。</string>
+    <!-- Open in browser Title -->
+    <string name="open_in_browser_text"><u>在浏览器打开</u></string>
+</resources>

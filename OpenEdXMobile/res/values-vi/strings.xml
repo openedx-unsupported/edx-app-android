@@ -33,13 +33,11 @@
   <string name="view_all_subjects">Xem tất cả Môn học</string>
   <!--Label for searching subjects-->
   <string name="search_subjects">Tìm Môn học</string>
-
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Chia sẻ khóa học</string>
   <!--Share course-->
   <string name="share_course_message">Tôi đang tham gia khóa học ở {platform_name}! Tham gia cùng tôi ở:</string>
-
   <!--Certificate Page-->
   <!--Description of button that will open the certificate sharing menu-->
   <string name="share_certificate_button">Chia sẻ Giấy chứng nhận</string>
@@ -110,7 +108,6 @@
   <string name="toggle_turn_on">Bật</string>
   <!--Toggle switch off state label-->
   <string name="toggle_turn_off">Tắt</string>
-
   <!--Help Dialog Place Holder messages-->
   <!--Reset password alert dialog title-->
   <string name="confirm_dialog_title_help">Đặt lại mật khẩu</string>
@@ -212,6 +209,7 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="upgrade_to_verified_today_title">Nâng cấp ngay lên đã xác minh</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Đặt hàng</string>
+  <!--label for resume course section. Will be followed by course name-->
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -482,7 +480,7 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Introduction text on the launch screen when courses and program enabled-->
   <!--Search View title on the launch screen-->
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <!--Search view leading user to Find Courses & Program screen from the launch screen upon searching some text-->
+  <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">Hiển thị những trường tùy chọn</string>
@@ -517,6 +515,7 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Phản hồi của người dùng</string>
+  <!--Email subject line when user account is disabled to submit feedback about the app-->
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">Đánh giá của người dùng</string>
   <!--Submit Feedback app version text-->
@@ -544,7 +543,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="forum_post_i_am_following">Bài đăng tôi đang theo dõi</string>
   <string name="forum_follow">Theo dõi</string>
   <string name="forum_unfollow">Ngừng theo dõi</string>
-
   <!--Button that will initiate sharing one of a user's accomplishments-->
   <string name="share_accomplishment_button">Chia sẻ thành tựu cá nhân</string>
   <!--Text that pre-populates your post/email/SMS when sharing certificate-->
@@ -563,4 +561,13 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="rating_bar">Đánh giá điều khiển</string>
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} trên {num_of_stars}</string>
+  <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <!--Title of the selector while the choosing file-->
+  <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <!--Completion message for Celebration Modal-->
+  <!--Celebration message for Celebration Modal-->
+  <!--Button title appears on Celebration Modal to continue-->
+  <!--Sharing message when user wants to share the celebration-->
+  <!--accessibility label for section completion-->
+  <string name="course_outline_completion_description">Đã hoàn thành</string>
 </resources>

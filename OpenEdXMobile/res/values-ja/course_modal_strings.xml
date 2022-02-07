@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label My Courses Graded content Button -->
+    <string name="course_value_prop_button">詳細はこちら</string>
+    <!-- Label Course Modal heading -->
+    <string name="course_modal_heading">{course_name}をアップグレード</string>
+    <!-- Label Course Modal features -->
+    <string name="course_modal_earn_certificate">完了したコースの認定証を取得して、履歴書に表示させましょう</string>
+    <string name="course_modal_unlock_access">採点対象の課題を含む、すべてのコースアクティビティへのアクセスを入手</string>
+    <string name="course_modal_full_access_course">コース終了後でもコース内のすべてのコンテンツや資料を閲覧できます</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">$99で今すぐアップグレード</string>
+    <!-- Title Course Locked Modal  -->
+    <string name="course_locked_modal_title">制限付き機能についての詳細</string>
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment"><u>採点対象課題のロックを解除する方法</u></string>
+    <!-- Label Course Modal Graded Assignments Locked -->
+    <string name="course_modal_graded_assignment_locked">採点対象の課題がロックされています</string>
+    <!-- Label Course Modal Graded Assignments Locked description -->
+    <string name="course_modal_graded_assignment_locked_description">アップグレードしてロックされた機能にアクセスし、コースを最大限に活用しましょう</string>
+    <!-- Label Course Modal Graded Assignments show more -->
+    <string name="course_modal_graded_assignment_show_more"><u>もっと表示</u></string>
+    <!-- Label Course Modal Graded Assignments show less -->
+    <string name="course_modal_graded_assignment_show_less"><u>表示を隠す</u></string>
+</resources>
