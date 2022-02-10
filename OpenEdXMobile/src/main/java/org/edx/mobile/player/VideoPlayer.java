@@ -5,34 +5,35 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.view.View.OnClickListener;
 
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import androidx.annotation.NonNull;
+
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.OnSwipeListener;
 
 import java.util.Locale;
 
-import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
-
 @SuppressWarnings("serial")
-public class VideoPlayer implements Player.EventListener, AnalyticsListener, PlayerListener {
+public class VideoPlayer implements Player.Listener, AnalyticsListener, PlayerListener {
 
-    private SimpleExoPlayer exoPlayer;
+    private ExoPlayer exoPlayer;
     private Context context;
 
     // Player states
@@ -67,7 +68,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     /**
      * Resets all the fields of this player.
      *
-     * @param context
+     * @param context context of the current state of the application/object
      */
     private void init(Context context) {
         this.context = context;
@@ -82,7 +83,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     }
 
     private void initExoPlayer() {
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(this.context);
+        exoPlayer = new ExoPlayer.Builder(context).build();
         exoPlayer.addListener(this);
         exoPlayer.addAnalyticsListener(this);
         exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
@@ -154,7 +155,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     @Override
     public boolean isSeekable() {
         final boolean isSeekable = exoPlayer.getCurrentTimeline()
-                .getWindow(exoPlayer.getCurrentWindowIndex(), new Timeline.Window())
+                .getWindow(exoPlayer.getCurrentMediaItemIndex(), new Timeline.Window())
                 .isSeekable;
         if (!isSeekable) {
             logger.debug("Track not seekable");
@@ -172,16 +173,18 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     }
 
     @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+    public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
+        if (playWhenReady)
+            state = PlayerState.PLAYING;
+    }
+
+    @Override
+    public void onPlaybackStateChanged(int playbackState) {
         switch (playbackState) {
             case Player.STATE_READY:
                 state = PlayerState.PREPARED;
                 if (callback != null) {
                     callback.onPrepared();
-                }
-
-                if (playWhenReady) {
-                    state = PlayerState.PLAYING;
                 }
                 break;
             case Player.STATE_ENDED:
@@ -206,7 +209,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     }
 
     @Override
-    public void onDroppedVideoFrames(EventTime eventTime, int droppedFrames, long elapsedMs) {
+    public void onDroppedVideoFrames(@NonNull EventTime eventTime, int droppedFrames, long elapsedMs) {
         state = PlayerState.LAGGING;
         if (callback != null) {
             callback.onVideoLagging();
@@ -215,7 +218,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
     }
 
     @Override
-    public void onPlayerError(ExoPlaybackException error) {
+    public void onPlayerError(@NonNull PlaybackException error) {
         if (lastCurrentPosition != 0) {
             seekToWhenPrepared = lastCurrentPosition;
         }
@@ -224,14 +227,7 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
             callback.onError();
         }
 
-        if (error.type == ExoPlaybackException.TYPE_UNEXPECTED) {
-            logger.warn("ERROR: unexpected");
-        } else if (error.type == ExoPlaybackException.TYPE_RENDERER) {
-            logger.warn("ERROR: renderer");
-        } else if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-            logger.warn("ERROR: occurred while loading data from MediaSource");
-        }
-        logger.warn("ERROR: type=" + error.type + ";message=" + error.getMessage());
+        logger.warn("ERROR: type=" + error.getErrorCodeName() + ";message=" + error.getMessage());
     }
 
     @Override
@@ -275,7 +271,8 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
         if (videoUri != null) {
             final MediaSource mediaSource = getMediaSource(videoUri);
             exoPlayer.setPlayWhenReady(playWhenPrepared);
-            exoPlayer.prepare(mediaSource);
+            exoPlayer.setMediaSource(mediaSource);
+            exoPlayer.prepare();
             state = PlayerState.URI_SET;
             isPlayingLocally = !videoUri.startsWith("http");
             // notify that the player is now preparing
@@ -293,15 +290,16 @@ public class VideoPlayer implements Player.EventListener, AnalyticsListener, Pla
      */
     private MediaSource getMediaSource(String videoUrl) {
         final String userAgent = Util.getUserAgent(this.context, this.context.getString(R.string.app_name));
-        final DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this.context, userAgent);
+        final DataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory().setUserAgent(userAgent);
+        final MediaItem mediaItem = MediaItem.fromUri(Uri.parse(videoUrl));
         final MediaSource mediaSource;
 
-        if (VideoUtil.videoHasFormat(videoUrl, VIDEO_FORMAT_M3U8)) {
+        if (VideoUtil.videoHasFormat(videoUrl, AppConstants.VIDEO_FORMAT_M3U8)) {
             mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(videoUrl));
+                    .createMediaSource(mediaItem);
         } else {
-            mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(videoUrl));
+            mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(mediaItem);
         }
         return mediaSource;
     }

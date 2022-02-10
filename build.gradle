@@ -2,7 +2,7 @@ allprojects {
     repositories {
         // The order in which you list these repositories matter.
         google()
-        jcenter()
+        mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
         maven { url "https://appboy.github.io/appboy-android-sdk/sdk" }
@@ -16,8 +16,7 @@ buildscript {
     project.apply from: "${rootDir}/constants.gradle"
     repositories {
         google()
-        jcenter()       // This is the default repo
-        mavenCentral()  //  This is the Maven Central repo
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
