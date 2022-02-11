@@ -57,7 +57,7 @@ pipeline {
         stage('checkout test project repo') {
             steps {
                 dir("$TEST_PROJECT_REPO_NAME"){
-                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/edx/edx-app-test.git']]])
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/openedx/edx-app-test.git']]])
                 }
             }
         }
