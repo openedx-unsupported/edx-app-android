@@ -35,7 +35,7 @@ pipeline {
                         userRemoteConfigs: 
                                     [[credentialsId: 'jenkins-worker',
                                     refspec: '+refs/heads/*:refs/remotes/origin/*', 
-                                    url: "git@github.com:edx/${CONFIG_REPO_NAME}.git"]]
+                                    url: "git@github.com:openedx/${CONFIG_REPO_NAME}.git"]]
                             ]
                     }
                 }
