@@ -4,7 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.android.billingclient.api.*
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.SkuDetailsResponseListener
 import org.edx.mobile.logger.Logger
 
 /**
@@ -85,16 +94,6 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      */
     fun purchaseItem(activity: Activity, productId: String) {
         if (billingClient.isReady) {
-
-            // this block of code is only for test purpose only have to remove before merging it.
-            billingClient.queryPurchasesAsync(
-                BillingClient.SkuType.INAPP
-            ) { _, purchases ->
-                if (purchases.size > 0) {
-                    consumePurchase(purchases[0].purchaseToken)
-                }
-            }
-
             querySyncDetails(productId,
                 SkuDetailsResponseListener { billingResult, skuDetailsList ->
                     logger.debug(
@@ -152,14 +151,6 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
             { billingClient.startConnection(this@BillingProcessor) },
             RECONNECT_TIMER_START_MILLISECONDS
         )
-    }
-
-    private fun consumePurchase(purchaseToken: String) {
-        billingClient.consumeAsync(
-            ConsumeParams.newBuilder()
-                .setPurchaseToken(purchaseToken)
-                .build()
-        ) { billingResult, _ -> logger.debug(billingResult.responseCode.toString() + billingResult.debugMessage) }
     }
 
     /**

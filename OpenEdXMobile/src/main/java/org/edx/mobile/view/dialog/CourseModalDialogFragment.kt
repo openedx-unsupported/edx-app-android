@@ -15,6 +15,7 @@ import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.inapppurchases.BillingProcessor
+import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
@@ -100,7 +101,9 @@ class CourseModalDialogFragment : RoboDialogFragment() {
         initObserver()
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-            iapViewModel.addProductToBasket("org.edx.mobile.test_product1")
+            ProductManager.getProductByCourseId(courseId)?.let {
+                iapViewModel.addProductToBasket(it)
+            } ?: showUpgradeErrorDialog()
             environment.analyticsRegistry.trackUpgradeNowClicked(
                 courseId,
                 price,
@@ -128,8 +131,7 @@ class CourseModalDialogFragment : RoboDialogFragment() {
 
         iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
             if (it.paymentPageUrl.isNotEmpty())
-//              purchaseProduct(iapViewModel.getProductId())
-                purchaseProduct("org.edx.mobile.test_product")
+                purchaseProduct(iapViewModel.getProductId())
         })
 
         iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
@@ -182,14 +184,13 @@ class CourseModalDialogFragment : RoboDialogFragment() {
             getString(R.string.upgrade_error_message),
             getString(R.string.label_close),
             null,
-            getString(R.string.label_get_help),
-            { _, _ ->
-                environment.router?.showFeedbackScreen(
-                    requireActivity(),
-                    getString(R.string.email_subject_upgrade_error)
-                )
-            }
-        ).show(childFragmentManager, null)
+            getString(R.string.label_get_help)
+        ) { _, _ ->
+            environment.router?.showFeedbackScreen(
+                requireActivity(),
+                getString(R.string.email_subject_upgrade_error)
+            )
+        }.show(childFragmentManager, null)
     }
 
     private fun showUpgradeCompleteDialog() {

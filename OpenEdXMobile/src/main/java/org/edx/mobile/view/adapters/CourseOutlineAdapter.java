@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -47,6 +50,7 @@ import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
+import org.edx.mobile.view.dialog.CourseModalDialogFragment;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -614,9 +618,24 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     public View getCardView(View view) {
-        final TextView courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        final TextView courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        final AppCompatImageView headerImageView = (AppCompatImageView) view.findViewById(R.id.header_image_view);
+        final MaterialTextView courseTextName = view.findViewById(R.id.course_detail_name);
+        final MaterialTextView courseTextDetails = view.findViewById(R.id.course_detail_extras);
+        final AppCompatImageView headerImageView = view.findViewById(R.id.header_image_view);
+        final View upgradeBtn = view.findViewById(R.id.layout_upgrade_btn);
+        final MaterialButton upgradeBtnText = upgradeBtn.findViewById(R.id.btn_upgrade);
+
+        upgradeBtn.setVisibility(courseData.getMode().equalsIgnoreCase(EnrollmentMode.AUDIT
+                .toString()) ? View.VISIBLE : View.GONE);
+
+        upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
+                environment.getConfig().getPlatformName(),
+                courseData.getCourseId(),
+                courseData.getCourse().getName(),
+                courseData.getCourse().getPrice(),
+                courseData.getCourse().isSelfPaced())
+                .show(((AppCompatActivity) context).getSupportFragmentManager(),
+                        CourseModalDialogFragment.TAG));
+        upgradeBtnText.setText(R.string.value_prop_course_card_message);
 
         // Full course name should appear on the course's dashboard screen.
         courseTextName.setEllipsize(null);
