@@ -35,7 +35,7 @@ pipeline {
                         userRemoteConfigs: 
                                     [[credentialsId: 'jenkins-worker',
                                     refspec: '+refs/heads/*:refs/remotes/origin/*', 
-                                    url: "git@github.com:openedx/${CONFIG_REPO_NAME}.git"]]
+                                    url: "git@github.com:edx/${CONFIG_REPO_NAME}.git"]]
                             ]
                     }
                 }
@@ -57,7 +57,7 @@ pipeline {
         stage('checkout test project repo') {
             steps {
                 dir("$TEST_PROJECT_REPO_NAME"){
-                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/openedx/edx-app-test.git']]])
+                        checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/openedx/edx-app-test.git']]])
                 }
             }
         }
