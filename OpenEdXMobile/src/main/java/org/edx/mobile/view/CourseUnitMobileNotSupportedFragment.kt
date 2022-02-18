@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentCourseUnitGradeBinding
@@ -24,12 +25,14 @@ import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
-import org.edx.mobile.viewModel.ViewModelFactory
 
+@AndroidEntryPoint
 class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
+
     private lateinit var binding: FragmentCourseUnitGradeBinding
     private var billingProcessor: BillingProcessor? = null
-    private lateinit var iapViewModel: InAppPurchasesViewModel
+
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -102,11 +105,6 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private fun setUpUpgradeButton(isSelfPaced: Boolean, price: String) {
         if (environment.config.isIAPEnabled) {
-            iapViewModel = ViewModelProvider(
-                this,
-                ViewModelFactory()
-            ).get(InAppPurchasesViewModel::class.java)
-
             initObserver()
             binding.layoutUpgradeBtn.root.setVisibility(true)
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {

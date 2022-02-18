@@ -1,6 +1,9 @@
 package org.edx.mobile.view;
 
 
+import static org.edx.mobile.deeplink.Screen.COURSE_ANNOUNCEMENT;
+import static org.edx.mobile.deeplink.Screen.COURSE_HANDOUT;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.deeplink.ScreenDef;
@@ -22,14 +23,16 @@ import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.deeplink.Screen.COURSE_ANNOUNCEMENT;
-import static org.edx.mobile.deeplink.Screen.COURSE_HANDOUT;
-
+@AndroidEntryPoint
 public class ResourcesFragment extends OfflineSupportBaseFragment {
+
     @Inject
-    private IEdxEnvironment environment;
+    IEdxEnvironment environment;
 
     private EnrolledCoursesResponse courseData;
 

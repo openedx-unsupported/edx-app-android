@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.ErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
@@ -23,10 +23,10 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import dagger.hilt.android.EntryPointAccessors;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import roboguice.RoboGuice;
 
 /**
  * Generic abstract implementation of OkHttps's {@link Callback}
@@ -83,8 +83,7 @@ public abstract class ErrorHandlingOkCallback<T> implements Callback {
     /**
      * The Gson instance for converting the response body to the desired type.
      */
-    @Inject
-    private Gson gson;
+    Gson gson;
 
     /**
      * Create a new instance of this class.
@@ -239,11 +238,10 @@ public abstract class ErrorHandlingOkCallback<T> implements Callback {
         this.errorNotification = errorNotification;
         this.snackbarErrorNotification = snackbarErrorNotification;
         this.refreshListener = refreshListener;
-        // For the convenience of subclasses
-        RoboGuice.injectMembers(context, this);
         if (progressCallback != null) {
             progressCallback.startProcess();
         }
+        gson = EntryPointAccessors.fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class).getGSon();
     }
 
     /**

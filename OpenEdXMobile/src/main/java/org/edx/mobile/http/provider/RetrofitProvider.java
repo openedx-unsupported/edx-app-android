@@ -3,23 +3,34 @@ package org.edx.mobile.http.provider;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
 
 import org.edx.mobile.util.Config;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public interface RetrofitProvider extends Provider<Retrofit> {
-    @NonNull Retrofit get();
-    @NonNull Retrofit getWithOfflineCache();
-    @NonNull Retrofit getNonOAuthBased();
-    @NonNull Retrofit getIAPAuth();
+public interface RetrofitProvider {
 
-    @Singleton
+    @NonNull
+    Retrofit get();
+
+    @NonNull
+    Retrofit getWithOfflineCache();
+
+    @NonNull
+    Retrofit getNonOAuthBased();
+
+    @NonNull
+    Retrofit getIAPAuth();
+
+    @Module
+    @InstallIn(SingletonComponent.class)
     class Impl implements RetrofitProvider {
         private static final int CLIENT_INDEX_DEFAULT = 0;
         private static final int CLIENT_INDEX_WITH_OFFLINE_CACHE = 1;
@@ -28,15 +39,19 @@ public interface RetrofitProvider extends Provider<Retrofit> {
         private static final int CLIENTS_COUNT = 4;
 
         @Inject
-        private Config config;
+        Config config;
 
         @Inject
-        private OkHttpClientProvider clientProvider;
+        OkHttpClientProvider clientProvider;
 
         @Inject
-        private Gson gson;
+        Gson gson;
 
-        private Retrofit[] retrofits = new Retrofit[CLIENTS_COUNT];
+        @Inject
+        public Impl() {
+        }
+
+        private final Retrofit[] retrofits = new Retrofit[CLIENTS_COUNT];
 
         @NonNull
         @Override

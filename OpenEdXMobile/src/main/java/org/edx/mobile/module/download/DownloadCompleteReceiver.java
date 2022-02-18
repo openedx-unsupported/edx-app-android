@@ -1,11 +1,10 @@
 package org.edx.mobile.module.download;
 
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
@@ -15,16 +14,19 @@ import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.DataCallback;
 
-import roboguice.receiver.RoboBroadcastReceiver;
+import javax.inject.Inject;
 
-public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class DownloadCompleteReceiver extends BroadcastReceiver {
     private final Logger logger = new Logger(getClass().getName());
 
     @Inject
-    private IEdxEnvironment environment;
+    IEdxEnvironment environment;
 
     @Override
-    protected void handleReceive(final Context context, final Intent data) {
+    public void onReceive(Context context, Intent data) {
         if (data != null && data.getAction() != null) {
             switch (data.getAction()) {
                 case DownloadManager.ACTION_DOWNLOAD_COMPLETE:
@@ -88,5 +90,4 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
             }
         }
     }
-
 }

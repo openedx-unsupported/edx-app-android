@@ -23,10 +23,12 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.VideoUtil;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
+@AndroidEntryPoint
 public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment implements YouTubePlayer.OnInitializedListener {
 
     private YouTubePlayer youTubePlayer;

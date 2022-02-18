@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
@@ -20,11 +22,10 @@ import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
-import org.edx.mobile.viewModel.ViewModelFactory
-import roboguice.fragment.RoboDialogFragment
 import javax.inject.Inject
 
-class CourseModalDialogFragment : RoboDialogFragment() {
+@AndroidEntryPoint
+class CourseModalDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogUpgradeFeaturesBinding
     private var courseId: String = ""
@@ -32,10 +33,10 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     private var isSelfPaced: Boolean = false
 
     private var billingProcessor: BillingProcessor? = null
-    private lateinit var iapViewModel: InAppPurchasesViewModel
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
     @Inject
-    private lateinit var environment: IEdxEnvironment
+    lateinit var environment: IEdxEnvironment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,10 +95,6 @@ class CourseModalDialogFragment : RoboDialogFragment() {
     }
 
     private fun initBillingProcessor() {
-        iapViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory()
-        ).get(InAppPurchasesViewModel::class.java)
         initObserver()
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {

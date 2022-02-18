@@ -12,6 +12,9 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
     public static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit) {

@@ -1,11 +1,11 @@
 package org.edx.mobile.services;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
+import static org.edx.mobile.util.DownloadUtil.isDownloadSizeWithinLimit;
+
 import android.text.TextUtils;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -27,14 +27,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.util.DownloadUtil.isDownloadSizeWithinLimit;
-
-/**
- *
- */
-@Singleton
+@Module
+@InstallIn(SingletonComponent.class)
 public class VideoDownloadHelper {
     public interface DownloadManagerCallback {
         void onDownloadStarted(Long result);
@@ -53,11 +54,14 @@ public class VideoDownloadHelper {
     private DownloadSizeExceedDialog downloadFragment;
 
     @Inject
-    private IStorage storage;
+    IStorage storage;
 
     @Inject
-    private AnalyticsRegistry analyticsRegistry;
+    AnalyticsRegistry analyticsRegistry;
 
+    @Inject
+    public VideoDownloadHelper() {
+    }
 
     public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
@@ -169,17 +173,18 @@ public class VideoDownloadHelper {
         if (downloadList.isEmpty()) return;
 
         EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(activity, downloadList) {
+
             @Override
-            public void onSuccess(Long result) {
+            protected void onPostExecute(Long result) {
+                super.onPostExecute(result);
                 callback.onDownloadStarted(result);
                 logger.debug("EnqueueDownloadTask: STARTED = " + result);
             }
 
             @Override
             public void onException(Exception ex) {
-                super.onException(ex);
                 callback.onDownloadFailedToStart();
-                logger.warn("EnqueueDownloadTask: FAILED \n" + ex.toString());
+                logger.warn("EnqueueDownloadTask: FAILED \n" + ex);
             }
         };
 

@@ -1,6 +1,8 @@
 package org.edx.mobile.user;
 
-import com.google.inject.Inject;
+import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
@@ -8,6 +10,12 @@ import org.edx.mobile.profiles.BadgeAssertion;
 
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -21,18 +29,17 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
-
 public interface UserService {
     /**
-     * A RoboGuice Provider implementation for UserService.
+     * A Provider implementation for UserService.
      */
-    class Provider implements com.google.inject.Provider<UserService> {
-        @Inject
-        private RetrofitProvider retrofitProvider;
+    @Module
+    @InstallIn(SingletonComponent.class)
+    class Provider {
 
-        @Override
-        public UserService get() {
+        @Singleton
+        @Provides
+        public UserService get(@NonNull RetrofitProvider retrofitProvider) {
             return retrofitProvider.getWithOfflineCache().create(UserService.class);
         }
     }

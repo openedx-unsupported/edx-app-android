@@ -13,9 +13,6 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginAPI;
@@ -42,7 +39,14 @@ import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
-@Singleton
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
+
+@Module
+@InstallIn(SingletonComponent.class)
 public class Router {
     public static final String EXTRA_ANNOUNCEMENTS = "announcements";
     public static final String EXTRA_BUNDLE = "bundle";
@@ -74,12 +78,15 @@ public class Router {
     Config config;
 
     @Inject
-    private LoginAPI loginAPI;
-    @Inject
-    private LoginPrefs loginPrefs;
-    @Inject
-    private IStorage storage;
+    LoginAPI loginAPI;
 
+    @Inject
+    LoginPrefs loginPrefs;
+
+    @Inject
+    IStorage storage;
+
+    @Inject
     public Router() {
     }
 

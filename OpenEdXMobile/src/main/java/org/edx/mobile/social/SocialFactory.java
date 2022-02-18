@@ -3,22 +3,23 @@ package org.edx.mobile.social;
 import android.app.Activity;
 import android.content.Context;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.social.facebook.FacebookAuth;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.microsoft.MicrosoftAuth;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
+import javax.inject.Inject;
+
 public class SocialFactory {
+
     @Inject
-    static Config config;
+    Config config;
 
     //TODO - we should create a central place for application wide constants.
-    public static enum SOCIAL_SOURCE_TYPE {
+    public enum SOCIAL_SOURCE_TYPE {
         TYPE_UNKNOWN(-1, "unknown"), TYPE_GOOGLE(100, "google-oauth2"),
-        TYPE_FACEBOOK(101,"facebook"), TYPE_MICROSOFT(102,"microsoft");
+        TYPE_FACEBOOK(101, "facebook"), TYPE_MICROSOFT(102, "microsoft");
 
         private int code;
         private String value;

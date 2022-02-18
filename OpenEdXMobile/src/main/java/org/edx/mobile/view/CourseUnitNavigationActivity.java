@@ -19,8 +19,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
@@ -47,9 +45,13 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         BaseCourseUnitVideoFragment.HasComponent, PreLoadingListener {
     protected Logger logger = new Logger(getClass().getSimpleName());
@@ -61,7 +63,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private CourseUnitPagerAdapter pagerAdapter;
 
     @Inject
-    private CourseAPI courseApi;
+    CourseAPI courseApi;
 
     private PreLoadingListener.State viewPagerState = PreLoadingListener.State.DEFAULT;
 

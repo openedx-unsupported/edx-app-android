@@ -3,10 +3,9 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -23,9 +22,6 @@ public class MediaConsentUtils {
     public static final String DIALOG_TAG_CONFIRM_WIFI_OFF = TAG + ".wifioff";
     public static final String DIALOG_TAG_CONFIRM_LEAVING_APP = TAG + ".leaving";
 
-    @Inject
-    private static Config config;
-
     /**
      * Returns true if media can be streamed on the active network
      * without requiring user consent.
@@ -40,7 +36,7 @@ public class MediaConsentUtils {
                 return true;
             default:
                 return !MainApplication.getEnvironment(context).getUserPrefs().isDownloadOverWifiOnly() ||
-                        NetworkUtil.isOnZeroRatedNetwork(context, config);
+                        NetworkUtil.isOnZeroRatedNetwork(context, MainApplication.getEnvironment(context).getConfig());
         }
     }
 
@@ -62,7 +58,7 @@ public class MediaConsentUtils {
         dialogFragment.show(activity.getSupportFragmentManager(), tag);
     }
 
-    public static void showLeavingAppDataDialog(final FragmentActivity activity, final IDialogCallback consentCallback){
+    public static void showLeavingAppDataDialog(final FragmentActivity activity, final IDialogCallback consentCallback) {
 
         boolean connectedToWifi = NetworkUtil.isConnectedWifi(activity);
         if (connectedToWifi) {

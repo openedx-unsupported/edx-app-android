@@ -1,7 +1,6 @@
 package org.edx.mobile.base;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -17,8 +16,6 @@ import com.appboy.configuration.AppboyConfig;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.BuildConfig;
@@ -42,33 +39,42 @@ import org.edx.mobile.util.NotificationUtil;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.android.HiltAndroidApp;
 import de.greenrobot.event.EventBus;
 import io.branch.referral.Branch;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import roboguice.RoboGuice;
 
 /**
  * This class initializes the modules of the app based on the configuration.
  */
+@HiltAndroidApp
 public abstract class MainApplication extends MultiDexApplication {
 
     protected final Logger logger = new Logger(getClass().getName());
 
     public static MainApplication application;
 
-    public static final MainApplication instance() {
+    public static MainApplication instance() {
         return application;
     }
 
-    private Injector injector;
+    @Inject
+    Config config;
 
     @Inject
-    protected Config config;
+    AnalyticsRegistry analyticsRegistry;
 
     @Inject
-    protected AnalyticsRegistry analyticsRegistry;
+    SegmentAnalytics segmentAnalytics;
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
+
+    @Inject
+    IStorage iStorage;
 
     @Override
     public void onCreate() {
@@ -82,14 +88,6 @@ public abstract class MainApplication extends MultiDexApplication {
      */
     private void init() {
         application = this;
-        // FIXME: Disable RoboBlender to avoid annotation processor issues for now, as we already have plans to move to some other DI framework. See LEARNER-1687.
-        // ref: https://github.com/roboguice/roboguice/wiki/RoboBlender-wiki#disabling-roboblender
-        // ref: https://developer.android.com/studio/build/gradle-plugin-3-0-0-migration
-        RoboGuice.setUseAnnotationDatabases(false);
-        injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
-                (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
-
-        injector.injectMembers(this);
 
         EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
 
@@ -107,12 +105,12 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // Add Segment as an analytics provider if enabled in the config
         if (config.getSegmentConfig().isEnabled()) {
-            analyticsRegistry.addAnalyticsProvider(injector.getInstance(SegmentAnalytics.class));
+            analyticsRegistry.addAnalyticsProvider(segmentAnalytics);
         }
         if (config.getFirebaseConfig().isAnalyticsSourceFirebase()) {
             // Only add Firebase as an analytics provider if enabled in the config and Segment is disabled
             // because if Segment is enabled, we'll be using Segment's implementation for Firebase
-            analyticsRegistry.addAnalyticsProvider(injector.getInstance(FirebaseAnalytics.class));
+            analyticsRegistry.addAnalyticsProvider(firebaseAnalytics);
         }
 
         if (config.getFirebaseConfig().isEnabled()) {
@@ -213,7 +211,7 @@ public abstract class MainApplication extends MultiDexApplication {
     private void onAppUpdated(final long previousVersionCode, final long curVersionCode,
                               final String previousVersionName, final String curVersionName) {
         // Try repair of download data on updating of app version
-        injector.getInstance(IStorage.class).repairDownloadCompletionData();
+        iStorage.repairDownloadCompletionData();
         // Fire app updated event
         EventBus.getDefault().postSticky(new AppUpdatedEvent(previousVersionCode, curVersionCode,
                 previousVersionName, curVersionName));
@@ -233,12 +231,10 @@ public abstract class MainApplication extends MultiDexApplication {
         }
     }
 
-    public Injector getInjector() {
-        return injector;
-    }
-
     @NonNull
     public static IEdxEnvironment getEnvironment(@NonNull Context context) {
-        return RoboGuice.getInjector(context.getApplicationContext()).getInstance(IEdxEnvironment.class);
+        return EntryPointAccessors
+                .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
+                .getEnvironment();
     }
 }

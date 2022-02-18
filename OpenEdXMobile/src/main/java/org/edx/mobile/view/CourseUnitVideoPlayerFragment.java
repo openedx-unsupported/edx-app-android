@@ -19,6 +19,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.util.MediaConsentUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
@@ -26,6 +27,7 @@ import subtitleFile.TimedTextObject;
  * This class is responsible to display the video content through the native android player, also
  * maintain the view of the player controllers.
  */
+@AndroidEntryPoint
 public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
 
     protected final static String HAS_NEXT_UNIT_ID = "has_next_unit";

@@ -3,8 +3,6 @@ package org.edx.mobile.model.db;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
@@ -15,10 +13,12 @@ import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.JavaUtil;
 
+import javax.inject.Inject;
+
 public class DownloadEntry implements SectionItemInterface, VideoModel {
 
-    public static enum WatchedState { UNWATCHED, PARTIALLY_WATCHED, WATCHED}
-    public static enum DownloadedState { DOWNLOADING, DOWNLOADED, ONLINE }
+    public enum WatchedState { UNWATCHED, PARTIALLY_WATCHED, WATCHED}
+    public enum DownloadedState { DOWNLOADING, DOWNLOADED, ONLINE }
 
     public int id;
     public String username;

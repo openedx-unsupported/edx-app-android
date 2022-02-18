@@ -16,8 +16,6 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -32,6 +30,11 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CertificateFragment extends BaseFragment {
 
     static public final String ENROLLMENT = "enrollment";
@@ -91,7 +94,8 @@ public class CertificateFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_certificate, container, false);
         webview = view.findViewById(R.id.webview);
         final View loadingIndicator = view.findViewById(R.id.loading_indicator);
-        final URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(), webview, false, null);
+        final URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(),
+                webview, false, null);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
             public void onPageStarted() {

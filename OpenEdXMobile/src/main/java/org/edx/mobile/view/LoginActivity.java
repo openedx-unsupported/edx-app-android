@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -42,6 +41,11 @@ import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginActivity
         extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface>
         implements SocialLoginDelegate.MobileLoginCallback {
@@ -90,7 +94,7 @@ public class LoginActivity
                         SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
         activityLoginBinding.socialAuth.microsoftButton.getRoot().setOnClickListener(
                 socialLoginDelegate.createSocialButtonClickHandler(
-                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
+                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
 
         activityLoginBinding.loginButtonLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -253,6 +257,7 @@ public class LoginActivity
         activityLoginBinding.emailEt.setText(loginPrefs.getLastAuthenticatedEmail());
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void callServerForLogin() {
         if (!NetworkUtil.isConnected(this)) {
             showAlertDialog(getString(R.string.no_connectivity),
@@ -280,8 +285,11 @@ public class LoginActivity
             LoginTask logintask = new LoginTask(this, activityLoginBinding.emailEt.getText().toString().trim(),
                     activityLoginBinding.passwordEt.getText().toString()) {
                 @Override
-                public void onSuccess(@NonNull AuthResponse result) {
-                    onUserLoginSuccess(result.profile);
+                protected void onPostExecute(AuthResponse result) {
+                    super.onPostExecute(result);
+                    if (result != null) {
+                        onUserLoginSuccess(result.profile);
+                    }
                 }
 
                 @Override

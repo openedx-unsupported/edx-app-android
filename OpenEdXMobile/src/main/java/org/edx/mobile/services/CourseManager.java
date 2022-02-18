@@ -5,13 +5,13 @@ import android.util.LruCache;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.course.CourseComponent;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * This class manages the caching mechanism of courses data.
@@ -33,6 +33,7 @@ public class CourseManager {
     @Inject
     CourseAPI courseApi;
 
+    @Inject
     public CourseManager() {
         cachedComponent = new LruCache<>(NO_OF_COURSES_TO_CACHE);
     }

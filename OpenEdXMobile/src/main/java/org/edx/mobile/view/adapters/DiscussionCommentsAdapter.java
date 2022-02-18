@@ -13,9 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -27,15 +26,17 @@ import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.RoboGuice;
+import javax.inject.Inject;
 
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.android.scopes.FragmentScoped;
+
+@FragmentScoped
 public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements InfiniteScrollUtils.ListContentController<DiscussionComment> {
 
-    @Inject
-    private Config config;
+    Config config;
 
-    @Inject
-    private LoginPrefs loginPrefs;
+    LoginPrefs loginPrefs;
 
     @NonNull
     private final Context context;
@@ -48,6 +49,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
 
     @NonNull
     private DiscussionThread thread;
+
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
 
@@ -67,6 +69,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         void onClickAuthor(@NonNull String username);
     }
 
+    @Inject
     public DiscussionCommentsAdapter(@NonNull Context context, @NonNull Listener listener,
                                      @NonNull DiscussionThread thread,
                                      @NonNull DiscussionComment response) {
@@ -74,7 +77,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         this.listener = listener;
         this.thread = thread;
         this.response = response;
-        RoboGuice.getInjector(context).injectMembers(this);
+        EdxDefaultModule.ProviderEntryPoint provider = EntryPointAccessors.fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class);
+        config = provider.getEnvironment().getConfig();
+        loginPrefs = provider.getLoginPrefs();
     }
 
     @Override
@@ -90,8 +95,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == RowType.PROGRESS) {
             return new RecyclerView.ViewHolder(LayoutInflater.
                     from(parent.getContext()).
@@ -111,7 +117,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (getItemViewType(position) == RowType.PROGRESS) return;
         final ResponseOrCommentViewHolder holder = (ResponseOrCommentViewHolder) viewHolder;
         final DiscussionComment discussionComment;

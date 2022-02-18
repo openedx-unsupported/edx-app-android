@@ -4,15 +4,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.IOUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class SaveUriToFileTask extends
@@ -26,31 +28,28 @@ public abstract class SaveUriToFileTask extends
         this.uri = uri;
     }
 
-
-    public Uri call() throws Exception {
+    @Override
+    protected Uri doInBackground(Void... voids) {
         if ("file".equals(uri.getScheme())) {
             return uri; // URI already points to a file
         }
 
         {
-            final Uri fileUri = getFileUriFromMediaStoreUri(getContext(), uri);
+            final Uri fileUri = getFileUriFromMediaStoreUri(context.get(), uri);
             if (null != fileUri) {
                 return fileUri; // URI was successfully resolved to a file
             }
         }
 
         // URI does not point to a file; Download/copy it to a temporary file.
-        final File outputFile = new File(context.getExternalCacheDir(), "cropped-image" + System.currentTimeMillis() + ".jpg");
-        final InputStream inputStream = context.getContentResolver().openInputStream(uri);
-        try {
-            final FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
-            try {
+        final File outputFile = new File(context.get().getExternalCacheDir(), "cropped-image" + System.currentTimeMillis() + ".jpg");
+        try (InputStream inputStream = context.get().getContentResolver().openInputStream(uri)) {
+            try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
                 IOUtils.copy(inputStream, fileOutputStream);
-            } finally {
-                fileOutputStream.close();
             }
-        } finally {
-            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            handleException(e);
         }
         return Uri.fromFile(outputFile);
     }

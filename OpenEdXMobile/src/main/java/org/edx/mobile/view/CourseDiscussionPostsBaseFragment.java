@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+
+import javax.inject.Inject;
 
 
 public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment implements InfiniteScrollUtils.PageLoader<DiscussionThread> {

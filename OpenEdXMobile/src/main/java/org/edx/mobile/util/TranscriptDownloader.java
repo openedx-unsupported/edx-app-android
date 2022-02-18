@@ -3,15 +3,14 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.inject.Inject;
-
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
 import org.edx.mobile.logger.Logger;
 
+import dagger.hilt.android.EntryPointAccessors;
 import okhttp3.Request;
 import okhttp3.Response;
-import roboguice.RoboGuice;
 
 /**
  * {@link AsyncTask} to download the transcript in background thread and post the result on UI thread
@@ -21,12 +20,12 @@ public abstract class TranscriptDownloader extends AsyncTask<Void, Void, String>
 
     private final Logger logger = new Logger(TranscriptDownloader.class.getName());
     private String srtUrl;
-    @Inject
-    private OkHttpClientProvider okHttpClientProvider;
+
+    OkHttpClientProvider okHttpClientProvider;
 
     public TranscriptDownloader(Context context, String url) {
+        okHttpClientProvider = EntryPointAccessors.fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class).getOkHttpClientProvider();
         this.srtUrl = url;
-        RoboGuice.getInjector(context).injectMembers(this);
     }
 
     @Override

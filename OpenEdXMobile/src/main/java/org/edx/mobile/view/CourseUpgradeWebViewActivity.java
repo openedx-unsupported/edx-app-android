@@ -13,6 +13,9 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CourseUpgradeWebViewActivity extends BaseSingleFragmentActivity {
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";

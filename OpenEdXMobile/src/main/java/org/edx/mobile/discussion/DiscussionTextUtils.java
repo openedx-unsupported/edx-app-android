@@ -2,7 +2,6 @@ package org.edx.mobile.discussion;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.annotation.NonNull;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -16,10 +15,10 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.Config;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;
@@ -27,8 +26,6 @@ import java.util.Date;
 import java.util.List;
 
 public abstract class DiscussionTextUtils {
-    @Inject
-    private static Config config;
 
     private DiscussionTextUtils() {
     }
@@ -65,7 +62,7 @@ public abstract class DiscussionTextUtils {
             final String author = authorData.getAuthor();
             if (!TextUtils.isEmpty(author)) {
                 final SpannableString authorSpan = new SpannableString(author);
-                if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
+                if (MainApplication.getEnvironment(context).getConfig().isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
                     // Change the author text color and style
                     authorSpan.setSpan(new ForegroundColorSpan(context.getResources().
                                     getColor(R.color.primaryBaseColor)), 0,

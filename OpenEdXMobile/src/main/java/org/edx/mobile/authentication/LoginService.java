@@ -1,12 +1,14 @@
 package org.edx.mobile.authentication;
 
+import static org.edx.mobile.http.constants.ApiConstants.URL_MY_USER_INFO;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
-import com.google.inject.Inject;
 
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.constants.ApiConstants.TokenType;
+import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.UnacknowledgedNoticeResponse;
@@ -15,10 +17,15 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Retrofit;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -26,20 +33,19 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-import static org.edx.mobile.http.constants.ApiConstants.URL_MY_USER_INFO;
-
 public interface LoginService {
 
     /**
-     * A RoboGuice Provider implementation for LoginService.
+     * A Provider implementation for LoginService.
      */
-    class Provider implements com.google.inject.Provider<LoginService> {
-        @Inject
-        private Retrofit retrofit;
+    @Module
+    @InstallIn(SingletonComponent.class)
+    class Provider {
 
-        @Override
-        public LoginService get() {
-            return retrofit.create(LoginService.class);
+        @Singleton
+        @Provides
+        public LoginService get(@NonNull RetrofitProvider retrofitProvider) {
+            return retrofitProvider.get().create(LoginService.class);
         }
     }
 

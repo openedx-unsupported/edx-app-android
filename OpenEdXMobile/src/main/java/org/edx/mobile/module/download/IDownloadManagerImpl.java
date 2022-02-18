@@ -9,32 +9,39 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 
-@Singleton
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+
+@Module
+@InstallIn(SingletonComponent.class)
 public class IDownloadManagerImpl implements IDownloadManager {
 
-    private Context context;
+    private final Context context;
+
     @Inject
-    private DownloadManager dm;
+    DownloadManager dm;
+
     private final Logger logger = new Logger(getClass().getName());
 
     @Inject
-    public IDownloadManagerImpl(Context context) {
+    public IDownloadManagerImpl(@ApplicationContext Context context) {
         this.context = context;
     }
 
     @Override
-    public synchronized  NativeDownloadModel getDownload(long dmid) {
+    public synchronized NativeDownloadModel getDownload(long dmid) {
         //Need to check first if the download manager service is enabled
-        if(!isDownloadManagerEnabled())
+        if (!isDownloadManagerEnabled())
             return null;
 
         try {
@@ -44,7 +51,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
             Cursor cursor = dm.query(query);
             if (cursor.moveToFirst()) {
                 long downloaded = cursor.getLong(cursor
-                                .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                        .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                 long size = cursor.getLong(cursor
                         .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 String filepath = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
@@ -69,7 +76,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
                 return ndm;
             }
             cursor.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
         return null;
@@ -80,11 +87,11 @@ public class IDownloadManagerImpl implements IDownloadManager {
         long dmid = -1;
 
         //Need to check first if the download manager service is enabled
-        if(!isDownloadManagerEnabled())
+        if (!isDownloadManagerEnabled())
             return dmid;
 
         // skip if URL is not valid
-        if(url == null) {
+        if (url == null) {
             // URL is null
             return dmid;
         }
@@ -123,13 +130,13 @@ public class IDownloadManagerImpl implements IDownloadManager {
 
     @Override
     public synchronized int getProgressForDownload(long dmid) {
-        return getAverageProgressForDownloads(new long[] {dmid});
+        return getAverageProgressForDownloads(new long[]{dmid});
     }
 
     @Override
     public synchronized int getAverageProgressForDownloads(long[] dmids) {
         //Need to check first if the download manager service is enabled
-        if(!isDownloadManagerEnabled())
+        if (!isDownloadManagerEnabled())
             return 0;
 
         Query query = new Query();
@@ -141,10 +148,10 @@ public class IDownloadManagerImpl implements IDownloadManager {
                 float aggrPercent = 0;
                 do {
                     long downloaded = c
-                        .getLong(c
-                            .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                            .getLong(c
+                                    .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                     long size = c.getLong(c
-                        .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                            .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
                     aggrPercent += (100f * downloaded / size);
                 } while (c.moveToNext());
@@ -155,7 +162,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
                 return average;
             }
             c.close();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.debug(ex.getMessage());
         }
 
@@ -188,7 +195,7 @@ public class IDownloadManagerImpl implements IDownloadManager {
     @Override
     public synchronized boolean isDownloadComplete(long dmid) {
         //Need to check first if the download manager service is enabled
-        if(!isDownloadManagerEnabled())
+        if (!isDownloadManagerEnabled())
             return false;
 
         Query query = new Query();
@@ -208,8 +215,8 @@ public class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public synchronized boolean isDownloadManagerEnabled(){
-        if(context==null){
+    public synchronized boolean isDownloadManagerEnabled() {
+        if (context == null) {
             return false;
         }
 

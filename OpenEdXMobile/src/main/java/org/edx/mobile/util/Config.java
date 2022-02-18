@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +13,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.squareup.phrase.Phrase;
 
 import org.edx.mobile.BuildConfig;
@@ -28,7 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Singleton
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+
+@Module
+@InstallIn(SingletonComponent.class)
 public class Config {
 
     private static final Logger logger = new Logger(Config.class.getName());
@@ -566,7 +571,7 @@ public class Config {
         @SerializedName("SUPPORTED_LANGUAGES")
         private ArrayList<String> supportedLanguages;
 
-        public String getAgreementUrl(@NonNull AgreementUrlType urlType){
+        public String getAgreementUrl(@NonNull AgreementUrlType urlType) {
             switch (urlType) {
                 case TOS:
                     return tosUrl;
@@ -601,7 +606,7 @@ public class Config {
     }
 
     @Inject
-    public Config(Context context) {
+    public Config(@ApplicationContext Context context) {
         try {
             InputStream in = context.getAssets().open("config/config.json");
             JsonParser parser = new JsonParser();

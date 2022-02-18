@@ -6,9 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatusException
@@ -22,9 +23,11 @@ import org.edx.mobile.repositorie.CourseDatesRepository
 import org.edx.mobile.util.CalendarUtils
 import retrofit2.Response
 import java.util.*
+import javax.inject.Inject
 
-class CourseDateViewModel(
-        private val repository: CourseDatesRepository = CourseDatesRepository.getInstance()
+@HiltViewModel
+class CourseDateViewModel @Inject constructor(
+    private val repository: CourseDatesRepository
 ) : ViewModel() {
 
     private val _syncLoader = MutableLiveData<Boolean>()
@@ -101,31 +104,41 @@ class CourseDateViewModel(
         }
     }
 
-    fun fetchCourseDates(courseID: String, forceRefresh: Boolean, showLoader: Boolean = false, isSwipeRefresh: Boolean = false) {
+    fun fetchCourseDates(
+        courseID: String,
+        forceRefresh: Boolean,
+        showLoader: Boolean = false,
+        isSwipeRefresh: Boolean = false
+    ) {
         _errorMessage.value = null
         _swipeRefresh.value = isSwipeRefresh
         _showLoader.value = showLoader
         repository.getCourseDates(
-                courseId = courseID,
-                forceRefresh = forceRefresh,
-                callback = object : NetworkResponseCallback<CourseDates> {
-                    override fun onSuccess(result: Result.Success<CourseDates>) {
-                        if (result.isSuccessful && result.data != null) {
-                            _courseDates.postValue(result.data)
-                            fetchCourseDatesBannerInfo(courseID, true)
-                        } else {
-                            setError(ErrorMessage.COURSE_DATES_CODE, result.code, result.message)
-                        }
-                        _showLoader.postValue(false)
-                        _swipeRefresh.postValue(false)
+            courseId = courseID,
+            forceRefresh = forceRefresh,
+            callback = object : NetworkResponseCallback<CourseDates> {
+                override fun onSuccess(result: Result.Success<CourseDates>) {
+                    if (result.isSuccessful && result.data != null) {
+                        _courseDates.postValue(result.data)
+                        fetchCourseDatesBannerInfo(courseID, true)
+                    } else {
+                        setError(ErrorMessage.COURSE_DATES_CODE, result.code, result.message)
                     }
-
-                    override fun onError(error: Result.Error) {
-                        _showLoader.postValue(false)
-                        _errorMessage.postValue(ErrorMessage(ErrorMessage.COURSE_DATES_CODE, error.throwable))
-                        _swipeRefresh.postValue(false)
-                    }
+                    _showLoader.postValue(false)
+                    _swipeRefresh.postValue(false)
                 }
+
+                override fun onError(error: Result.Error) {
+                    _showLoader.postValue(false)
+                    _errorMessage.postValue(
+                        ErrorMessage(
+                            ErrorMessage.COURSE_DATES_CODE,
+                            error.throwable
+                        )
+                    )
+                    _swipeRefresh.postValue(false)
+                }
+            }
         )
     }
 
@@ -133,24 +146,29 @@ class CourseDateViewModel(
         _errorMessage.value = null
         _showLoader.value = showLoader
         repository.getCourseBannerInfo(
-                courseId = courseID,
-                callback = object : NetworkResponseCallback<CourseBannerInfoModel> {
-                    override fun onSuccess(result: Result.Success<CourseBannerInfoModel>) {
-                        if (result.isSuccessful && result.data != null) {
-                            _bannerInfo.postValue(result.data)
-                        } else {
-                            setError(ErrorMessage.BANNER_INFO_CODE, result.code, result.message)
-                        }
-                        _showLoader.postValue(false)
-                        _swipeRefresh.postValue(false)
+            courseId = courseID,
+            callback = object : NetworkResponseCallback<CourseBannerInfoModel> {
+                override fun onSuccess(result: Result.Success<CourseBannerInfoModel>) {
+                    if (result.isSuccessful && result.data != null) {
+                        _bannerInfo.postValue(result.data)
+                    } else {
+                        setError(ErrorMessage.BANNER_INFO_CODE, result.code, result.message)
                     }
-
-                    override fun onError(error: Result.Error) {
-                        _showLoader.postValue(false)
-                        _errorMessage.postValue(ErrorMessage(ErrorMessage.BANNER_INFO_CODE, error.throwable))
-                        _swipeRefresh.postValue(false)
-                    }
+                    _showLoader.postValue(false)
+                    _swipeRefresh.postValue(false)
                 }
+
+                override fun onError(error: Result.Error) {
+                    _showLoader.postValue(false)
+                    _errorMessage.postValue(
+                        ErrorMessage(
+                            ErrorMessage.BANNER_INFO_CODE,
+                            error.throwable
+                        )
+                    )
+                    _swipeRefresh.postValue(false)
+                }
+            }
         )
     }
 
@@ -160,30 +178,46 @@ class CourseDateViewModel(
         val courseBody = HashMap<String, String>()
         courseBody[ApiConstants.COURSE_KEY] = courseID
         repository.resetCourseDates(
-                body = courseBody,
-                callback = object : NetworkResponseCallback<ResetCourseDates> {
-                    override fun onSuccess(result: Result.Success<ResetCourseDates>) {
-                        if (result.isSuccessful && result.data != null) {
-                            _resetCourseDates.postValue(result.data)
-                            fetchCourseDates(courseID, forceRefresh = true, showLoader =  false, isSwipeRefresh = false)
-                        } else {
-                            setError(ErrorMessage.COURSE_RESET_DATES_CODE, result.code, result.message)
-                        }
-                        _showLoader.postValue(false)
-                        _swipeRefresh.postValue(false)
+            body = courseBody,
+            callback = object : NetworkResponseCallback<ResetCourseDates> {
+                override fun onSuccess(result: Result.Success<ResetCourseDates>) {
+                    if (result.isSuccessful && result.data != null) {
+                        _resetCourseDates.postValue(result.data)
+                        fetchCourseDates(
+                            courseID,
+                            forceRefresh = true,
+                            showLoader = false,
+                            isSwipeRefresh = false
+                        )
+                    } else {
+                        setError(ErrorMessage.COURSE_RESET_DATES_CODE, result.code, result.message)
                     }
-
-                    override fun onError(error: Result.Error) {
-                        _showLoader.postValue(false)
-                        _errorMessage.postValue(ErrorMessage(ErrorMessage.COURSE_RESET_DATES_CODE, error.throwable))
-                        _swipeRefresh.postValue(false)
-                    }
+                    _showLoader.postValue(false)
+                    _swipeRefresh.postValue(false)
                 }
+
+                override fun onError(error: Result.Error) {
+                    _showLoader.postValue(false)
+                    _errorMessage.postValue(
+                        ErrorMessage(
+                            ErrorMessage.COURSE_RESET_DATES_CODE,
+                            error.throwable
+                        )
+                    )
+                    _swipeRefresh.postValue(false)
+                }
+            }
         )
     }
 
     fun setError(errorCode: Int, httpStatusCode: Int, msg: String) {
-        _errorMessage.value = ErrorMessage(errorCode, HttpStatusException(Response.error<Any>(httpStatusCode,
-                ResponseBody.create(MediaType.parse("text/plain"), msg))))
+        _errorMessage.value = ErrorMessage(
+            errorCode, HttpStatusException(
+                Response.error<Any>(
+                    httpStatusCode,
+                    ResponseBody.create("text/plain".toMediaTypeOrNull(), msg)
+                )
+            )
+        )
     }
 }

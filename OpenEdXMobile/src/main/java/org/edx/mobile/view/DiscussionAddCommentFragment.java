@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.databinding.FragmentAddResponseOrCommentBinding;
@@ -34,9 +32,13 @@ import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class DiscussionAddCommentFragment extends BaseFragment {
 
     private DiscussionComment discussionResponse;
@@ -45,19 +47,23 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
-    private DiscussionService discussionService;
+    DiscussionService discussionService;
 
     @Inject
-    private Router router;
+    Router router;
 
     @Inject
-    private AnalyticsRegistry analyticsRegistry;
+    AnalyticsRegistry analyticsRegistry;
 
     @Inject
-    private Config config;
+    Config config;
 
     private Call<DiscussionComment> createCommentCall;
     private FragmentAddResponseOrCommentBinding binding;
+
+    @Inject
+    public DiscussionAddCommentFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
@@ -24,10 +25,11 @@ import javax.inject.Inject
  * Provides a webview which authenticates the user before loading a page,
  * Javascript can also be passed in arguments for evaluation.
  */
+@AndroidEntryPoint
 open class AuthenticatedWebViewFragment : BaseFragment() {
 
     @Inject
-    private lateinit var environment: IEdxEnvironment
+    lateinit var environment: IEdxEnvironment
 
     protected val logger = Logger(javaClass.name)
 
@@ -108,7 +110,12 @@ open class AuthenticatedWebViewFragment : BaseFragment() {
                         }
                     }
                 )
-                authWebViewBinding?.authWebview?.loadUrlWithJavascript(true, url, javascript)
+                url?.let {
+                    authWebViewBinding?.authWebview?.loadUrlWithJavascript(
+                        true,
+                        it, javascript
+                    )
+                }
             }
         }
     }

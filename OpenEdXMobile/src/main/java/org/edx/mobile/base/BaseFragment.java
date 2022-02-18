@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.R;
@@ -13,9 +16,8 @@ import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.util.PermissionsUtil;
 
 import de.greenrobot.event.EventBus;
-import roboguice.fragment.RoboFragment;
 
-public class BaseFragment extends RoboFragment {
+public class BaseFragment extends Fragment {
     public interface PermissionListener {
         void onPermissionGranted(String[] permissions, int requestCode);
 
@@ -33,6 +35,7 @@ public class BaseFragment extends RoboFragment {
 
     /**
      * Method to make getContext null safe
+     *
      * @return context if not null or throw exception else wise
      */
     public Context getContextOrThrow() {
@@ -43,6 +46,7 @@ public class BaseFragment extends RoboFragment {
 
     /**
      * Method to get String argument null safe
+     *
      * @param key requested argument
      * @return argument value if found or throw exception else wise
      */
@@ -55,6 +59,7 @@ public class BaseFragment extends RoboFragment {
 
     /**
      * Method to get Boolean argument null safe
+     *
      * @param key requested argument
      * @return argument value if found or throw exception else wise
      */

@@ -1,23 +1,26 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
+import androidx.core.view.ViewCompat;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ActivityContext;
 
 public class DiscussionTopicsAdapter extends BaseListAdapter<DiscussionTopicDepth> {
 
     private final int childPadding;
 
     @Inject
-    public DiscussionTopicsAdapter(Context context, IEdxEnvironment environment) {
+    public DiscussionTopicsAdapter(@ActivityContext Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_topic, environment);
         childPadding = context.getResources().getDimensionPixelOffset(R.dimen.edx_margin);
     }

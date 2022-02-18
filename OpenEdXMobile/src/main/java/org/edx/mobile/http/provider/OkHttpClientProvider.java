@@ -1,11 +1,8 @@
 package org.edx.mobile.http.provider;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -21,27 +18,48 @@ import org.edx.mobile.http.util.Tls12SocketFactory;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public interface OkHttpClientProvider extends Provider<OkHttpClient> {
-    @NonNull OkHttpClient get();
-    @NonNull OkHttpClient getWithOfflineCache();
-    @NonNull OkHttpClient getNonOAuthBased();
 
-    @Singleton
+    @NonNull
+    OkHttpClient get();
+
+    @NonNull
+    OkHttpClient getWithOfflineCache();
+
+    @NonNull
+    OkHttpClient getNonOAuthBased();
+
+    @Module
+    @InstallIn(SingletonComponent.class)
     class Impl implements OkHttpClientProvider {
         private static final int cacheSize = 10 * 1024 * 1024; // 10 MiB
 
         private static final int FLAG_IS_OAUTH_BASED = 1;
         private static final int USES_OFFLINE_CACHE = 1 << 1;
 
-        @Inject
-        private Context context;
+        private final Context context;
 
         private final OkHttpClient[] clients = new OkHttpClient[1 << 2];
+        private final OauthRefreshTokenAuthenticator oauthRefreshTokenAuthenticator;
+
+        @Inject
+        public Impl(@ApplicationContext Context context,
+                    OauthRefreshTokenAuthenticator oauthRefreshTokenAuthenticator) {
+            this.context = context;
+            this.oauthRefreshTokenAuthenticator = oauthRefreshTokenAuthenticator;
+        }
 
         @NonNull
         @Override
@@ -94,7 +112,7 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
                     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                     interceptors.add(loggingInterceptor);
                 }
-                builder.authenticator(new OauthRefreshTokenAuthenticator(context));
+                builder.authenticator(oauthRefreshTokenAuthenticator);
                 // Enable TLS 1.2 support
                 client = Tls12SocketFactory.enableTls12OnPreLollipop(builder).build();
                 clients[index] = client;

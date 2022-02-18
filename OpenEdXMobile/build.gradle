@@ -8,13 +8,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.yaml:snakeyaml:1.14'
-
+        classpath 'org.yaml:snakeyaml:1.29'
         //Included for NewRelic
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.1"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:$newrelic_version"
         //Screenshot testing library
-        classpath 'com.facebook.testing.screenshot:plugin:0.11.0'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.facebook.testing.screenshot:plugin:0.14.0'
+        classpath "com.google.gms:google-services:$gms_google_services"
         // Jacoco-android Wrapper : https://github.com/arturdm/jacoco-android-gradle-plugin
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.5'
     }
@@ -33,7 +32,7 @@ edx {
 apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: file('gradle_scripts/AndroidHelper.gradle')
-
+apply plugin: 'dagger.hilt.android.plugin'
 jacoco {
     toolVersion = "0.8.4"
 }
@@ -119,8 +118,12 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidXVersion"
     // For the optional Nullable annotation
     implementation "androidx.annotation:annotation:$androidXVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    // Kotlin Extensions
+    implementation "androidx.core:core-ktx:$androidXKotlinCore"
+    implementation "androidx.fragment:fragment-ktx:$androidXKotlinFramgnet"
+    // For view model via hilt including ViewModelProvide.Factory
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidXLifeCycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidXLifeCycle"
 
     // NOTE: Always update the version of google-services and firebase libraries using the ones
     // provided in this link: https://developers.google.com/android/guides/releases
@@ -129,12 +132,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     // Google Firebase
     implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation ("com.google.firebase:firebase-messaging:20.2.0") {
-        // This exclusion has been added due to a conflict between this library and Roboguice
-        // (which has already added the javax.inject group) causing the following error during
-        // compile time: Error: Program type already present: javax.inject.Inject
-        exclude group: 'javax.inject'
-    }
+    implementation "com.google.firebase:firebase-messaging:20.2.0"
+
     // Add the dependency for the Performance Monitoring library
     implementation 'com.google.firebase:firebase-perf:17.0.2'
     // Firebase remote config
@@ -161,17 +160,17 @@ dependencies {
      * backport critical fixes to the 3.12.x branch through December 31, 2020.
      * Ref: https://square.github.io/okhttp/#requirements
      */
-    implementation 'com.squareup.okhttp3:okhttp:3.12.8'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.8'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     /* Exclude dependencies defined statically at the top-
      * level, to prevent them from being resolved to the
      * latest version as a result of dynamic version
      * definitions in the transitive dependencies.
      */
-    implementation ('com.squareup.retrofit2:retrofit:2.8.1') {
+    implementation ('com.squareup.retrofit2:retrofit:2.9.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    implementation ('com.squareup.retrofit2:converter-gson:2.8.1') {
+    implementation ('com.squareup.retrofit2:converter-gson:2.9.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
@@ -208,7 +207,7 @@ dependencies {
     }
 
     //New Relic Integration
-    implementation 'com.newrelic.agent.android:android-agent:5.4.1'
+    implementation "com.newrelic.agent.android:android-agent:$newrelic_version"
 
     // ViewPager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
@@ -248,8 +247,8 @@ dependencies {
     testImplementation ('com.squareup.assertj:assertj-android-appcompat-v7:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testImplementation 'com.squareup.okhttp3:mockwebserver:3.12.8'
-    testImplementation ('com.squareup.retrofit2:retrofit-mock:2.8.1') {
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
+    testImplementation ('com.squareup.retrofit2:retrofit-mock:2.9.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
@@ -273,6 +272,16 @@ dependencies {
      * https://square.github.io/leakcanary/recipes/#setting-up-leakcanary-for-different-product-flavors
      */
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // Hilt build dependencies
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    // For instrumentation tests
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:$hilt_version"
+    // For local unit tests
+    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptTest "com.google.dagger:hilt-compiler:$hilt_version"
 }
 
 configurations {
@@ -316,8 +325,9 @@ android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding true
+        dataBinding true
     }
 
     dexOptions {
@@ -404,12 +414,6 @@ android {
                                 fbLoginProtocolScheme: fbLoginProtocolScheme,
                                 sdCardEnabled        : config.get('DOWNLOAD_TO_SD_CARD_ENABLED') ?: true]
 
-        javaCompileOptions {
-
-            annotationProcessorOptions {
-                includeCompileClasspath false
-            }
-        }
         testOptions.unitTests.includeAndroidResources = true
         // Exclude auto generated files from the code coverage report
         jacocoAndroidUnitTestReport {
@@ -520,8 +524,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 

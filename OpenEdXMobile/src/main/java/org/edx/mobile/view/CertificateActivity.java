@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CertificateActivity extends BaseSingleFragmentActivity {
 
     public static Intent newIntent(@NonNull Context context, @NonNull EnrolledCoursesResponse courseData) {

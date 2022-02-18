@@ -16,8 +16,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.event.VideoPlaybackEvent;
@@ -40,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import subtitleFile.Caption;
@@ -108,10 +108,12 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
 
     @Inject
     LoginPrefs loginPrefs;
+
     @Inject
-    private CourseAPI courseApi;
+    CourseAPI courseApi;
+
     @Inject
-    private TranscriptManager transcriptManager;
+    TranscriptManager transcriptManager;
 
     private ViewTreeObserver.OnGlobalLayoutListener transcriptListLayoutListener;
 

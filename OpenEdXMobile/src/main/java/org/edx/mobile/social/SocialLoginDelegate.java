@@ -1,19 +1,19 @@
 package org.edx.mobile.social;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.View;
 
-import com.google.inject.Inject;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.logger.Logger;
@@ -33,6 +33,7 @@ import org.edx.mobile.view.ICommonUI;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 
+import dagger.hilt.android.EntryPointAccessors;
 
 /**
  * Code refactored from Login Activity, for the logic of login to social site are the same
@@ -196,71 +197,78 @@ public class SocialLoginDelegate {
     }
 
 
-    private class ProfileTask extends Task<ProfileModel> {
+    class ProfileTask extends Task<ProfileModel> {
 
         private String accessToken;
         private String backend;
 
-        @Inject
         LoginAPI loginAPI;
 
         public ProfileTask(Context context, String accessToken, String backend) {
             super(context);
             this.accessToken = accessToken;
             this.backend = backend;
-        }
-
-        @Override
-        public void onSuccess(ProfileModel result) {
-            callback.onUserLoginSuccess(result);
+            loginAPI = EntryPointAccessors
+                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
+                    .getLoginAPI();
         }
 
         @Override
         public void onException(Exception ex) {
-            super.onException(ex);
             callback.onUserLoginFailure(ex, this.accessToken, this.backend);
         }
 
         @Override
-        public ProfileModel call() throws Exception {
+        protected void onPostExecute(ProfileModel result) {
+            super.onPostExecute(result);
+            callback.onUserLoginSuccess(result);
+        }
+
+        @Override
+        protected ProfileModel doInBackground(Void... voids) {
             final AuthResponse auth;
-            if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-                try {
-                    auth = loginAPI.logInUsingFacebook(accessToken);
-                } catch (LoginAPI.AccountNotLinkedException e) {
-                    throw new LoginException(makeLoginErrorMessage(e));
+            try {
+                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
+                    try {
+                        auth = loginAPI.logInUsingFacebook(accessToken);
+                    } catch (LoginAPI.AccountNotLinkedException e) {
+                        throw new LoginException(makeLoginErrorMessage(e));
+                    }
+                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
+                    try {
+                        auth = loginAPI.logInUsingGoogle(accessToken);
+                    } catch (LoginAPI.AccountNotLinkedException e) {
+                        throw new LoginException(makeLoginErrorMessage(e));
+                    }
+                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT)) {
+                    try {
+                        auth = loginAPI.logInUsingMicrosoft(accessToken);
+                    } catch (LoginAPI.AccountNotLinkedException e) {
+                        throw new LoginException(makeLoginErrorMessage(e));
+                    }
+                } else {
+                    throw new IllegalArgumentException("Unknown backend: " + backend);
                 }
-            } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-                try {
-                    auth = loginAPI.logInUsingGoogle(accessToken);
-                } catch (LoginAPI.AccountNotLinkedException e) {
-                    throw new LoginException(makeLoginErrorMessage(e));
-                }
-            } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT)) {
-                try {
-                    auth = loginAPI.logInUsingMicrosoft(accessToken);
-                } catch (LoginAPI.AccountNotLinkedException e) {
-                    throw new LoginException(makeLoginErrorMessage(e));
-                }
-            } else {
-                throw new IllegalArgumentException("Unknown backend: " + backend);
+                return auth.profile;
+            } catch (Exception ex) {
+                handleException(ex);
+                return null;
             }
-            return auth.profile;
         }
 
         public LoginErrorMessage makeLoginErrorMessage(@NonNull LoginAPI.AccountNotLinkedException e) throws LoginException {
             final boolean isFacebook = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK);
             final boolean isMicrosoft = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT);
-            if (feature == Feature.SIGN_IN && e.getResponseCode() ==  HttpURLConnection.HTTP_BAD_REQUEST) {
-                final String title =  activity.getResources().getString(R.string.login_error);
-                final CharSequence desc = ResourceUtil.getFormattedString(context.getResources(),
+            if (feature == Feature.SIGN_IN && e.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                final String title = activity.getResources().getString(R.string.login_error);
+                final CharSequence desc = ResourceUtil.getFormattedString(context.get().getResources(),
                         isFacebook ? R.string.error_account_not_linked_desc_fb_2 :
                                 isMicrosoft ? R.string.error_account_not_linked_desc_microsoft_2 :
                                         R.string.error_account_not_linked_desc_google_2,
                         "platform_name", environment.getConfig().getPlatformName());
                 throw new LoginException(new LoginErrorMessage(title, desc.toString()));
             }
-            final CharSequence title = ResourceUtil.getFormattedString(context.getResources(),
+            final CharSequence title = ResourceUtil.getFormattedString(context.get().getResources(),
                     isFacebook ? R.string.error_account_not_linked_title_fb :
                             isMicrosoft ? R.string.error_account_not_linked_title_microsoft :
                                     R.string.error_account_not_linked_title_google,
@@ -268,7 +276,7 @@ public class SocialLoginDelegate {
             final HashMap<String, CharSequence> descParamsDesc = new HashMap<>();
             descParamsDesc.put("platform_name", environment.getConfig().getPlatformName());
             descParamsDesc.put("platform_destination", environment.getConfig().getPlatformDestinationName());
-            final CharSequence desc = ResourceUtil.getFormattedString(context.getResources(),
+            final CharSequence desc = ResourceUtil.getFormattedString(context.get().getResources(),
                     isFacebook ? R.string.error_account_not_linked_desc_fb :
                             isMicrosoft ? R.string.error_account_not_linked_desc_microsoft : R.string.error_account_not_linked_desc_google,
                     descParamsDesc);
@@ -293,22 +301,27 @@ public class SocialLoginDelegate {
                 callback.showAlertDialog(activity.getString(R.string.no_connectivity),
                         activity.getString(R.string.network_not_connected));
             } else {
+                @SuppressLint("StaticFieldLeak")
                 Task<Void> logout = new Task<Void>(activity) {
 
                     @Override
-                    public Void call() {
+                    protected Void doInBackground(Void... voids) {
                         socialLogout(socialType);
                         return null;
                     }
 
                     @Override
-                    public void onSuccess(Void result) {
-                        socialLogin(socialType);
+                    protected void onPostExecute(Void unused) {
+                        super.onPostExecute(unused);
+                        try {
+                            socialLogin(socialType);
+                        } catch (Exception ex) {
+                            handleException(ex);
+                        }
                     }
 
                     @Override
                     public void onException(Exception ex) {
-                        super.onException(ex);
                         if (activity instanceof ICommonUI)
                             ((ICommonUI) activity).tryToSetUIInteraction(true);
                     }

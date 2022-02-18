@@ -1,1 +1,1 @@
-include ':OpenEdXMobile', ':buildSrc'
+include ':OpenEdXMobile'

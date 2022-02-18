@@ -1,5 +1,8 @@
 package org.edx.mobile.view;
 
+import static org.edx.mobile.user.DataType.COUNTRY;
+import static org.edx.mobile.user.DataType.LANGUAGE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +16,9 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.FormField;
 
-import static org.edx.mobile.user.DataType.COUNTRY;
-import static org.edx.mobile.user.DataType.LANGUAGE;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class FormFieldActivity extends BaseSingleFragmentActivity
         implements Analytics.OnEventListener {
 

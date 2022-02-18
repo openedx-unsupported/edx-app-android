@@ -3,15 +3,14 @@ package org.edx.mobile.view;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -25,6 +24,8 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+
+import javax.inject.Inject;
 
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
@@ -47,7 +48,7 @@ public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
     protected IEdxEnvironment environment;
 
     @Inject
-    private OkHttpClientProvider okHttpClientProvider;
+    OkHttpClientProvider okHttpClientProvider;
 
     protected URLInterceptorWebViewClient client;
 

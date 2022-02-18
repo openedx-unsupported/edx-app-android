@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
@@ -32,6 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -39,7 +40,10 @@ import retrofit2.Response;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
-@Singleton
+import javax.inject.Inject;
+
+@Module
+@InstallIn(SingletonComponent.class)
 public class LoginAPI {
 
     @NonNull

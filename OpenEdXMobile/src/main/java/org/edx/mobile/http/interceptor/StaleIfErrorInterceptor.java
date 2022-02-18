@@ -23,13 +23,14 @@ public class StaleIfErrorInterceptor implements Interceptor {
     private static final Pattern PATTERN_STALE_IF_ERROR = Pattern.compile(
             "(?:^|[,;])\\s*stale-if-error\\s*(?:=\\s*[^,;\\s]+\\s*)?(?:$|[,;])");
 
+    @NonNull
     @Override
     public Response intercept(@NonNull final Chain chain) throws IOException {
         Request request = chain.request();
         // Verify that the HTTP method is for loading data only and doesn't have any side-effects,
         // and that the request doesn't contain the 'only-if-cached' Cache-Control directive to
         // force loading from the cache.
-        if (!HttpMethod.invalidatesCache(request.method()) &&
+        if (!HttpMethod.INSTANCE.invalidatesCache(request.method()) &&
                 !request.cacheControl().onlyIfCached()) {
             // If the request already has the 'stale-if-error' Cache-Control directive, then proceed
             // the request chain without interference.

@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.base.BaseSingleFragmentActivity
 import org.edx.mobile.model.course.CourseComponent
 
+@AndroidEntryPoint
 class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
 
     private var isModalView: Boolean = false

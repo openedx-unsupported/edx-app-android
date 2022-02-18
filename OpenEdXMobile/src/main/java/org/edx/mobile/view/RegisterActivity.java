@@ -40,6 +40,7 @@ import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
@@ -66,8 +67,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
     private static final int ACCESSIBILITY_FOCUS_DELAY_MS = 500;
@@ -91,7 +94,9 @@ public class RegisterActivity extends BaseFragmentActivity
     LoginPrefs loginPrefs;
 
     @Inject
-    private LoginService loginService;
+    LoginService loginService;
+
+    AnalyticsRegistry analyticsRegistry;
 
     @NonNull
     public static Intent newIntent() {
@@ -337,7 +342,8 @@ public class RegisterActivity extends BaseFragmentActivity
         final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(provider);
         final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
             @Override
-            public void onSuccess(AuthResponse auth) {
+            protected void onPostExecute(AuthResponse auth) {
+                super.onPostExecute(auth);
                 environment.getAnalyticsRegistry().trackRegistrationSuccess(appVersion, provider);
                 onUserLoginSuccess(auth.profile);
             }

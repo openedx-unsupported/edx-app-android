@@ -58,7 +58,7 @@ open class DeepLink(val screenName: String) : Parcelable {
         }
     }
 
-    constructor(source: Parcel) : this(source.readString()) {
+    constructor(source: Parcel) : this(source.readString().toString()) {
         this.courseId = source.readString()
         this.componentId = source.readString()
         this.pathId = source.readString()

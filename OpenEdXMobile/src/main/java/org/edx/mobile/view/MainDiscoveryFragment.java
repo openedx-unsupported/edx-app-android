@@ -1,6 +1,9 @@
 package org.edx.mobile.view;
 
 
+import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
+import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -18,8 +21,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -32,11 +33,12 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
-import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
-
+@AndroidEntryPoint
 public class MainDiscoveryFragment extends BaseFragment {
     @Inject
     protected IEdxEnvironment environment;

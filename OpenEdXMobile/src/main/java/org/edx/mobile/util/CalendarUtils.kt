@@ -28,7 +28,10 @@ object CalendarUtils {
     private const val REMINDER_48_HOURS = 2 * 24 * 60
     private const val LOCAL_USER = "local_user"
 
-    val permissions = arrayOf(android.Manifest.permission.WRITE_CALENDAR, android.Manifest.permission.READ_CALENDAR)
+    val permissions = arrayOf(
+        android.Manifest.permission.WRITE_CALENDAR,
+        android.Manifest.permission.READ_CALENDAR
+    )
 
     /**
      * Check if the app has the calendar READ/WRITE permissions or not
@@ -91,10 +94,16 @@ object CalendarUtils {
         contentValues.put(CalendarContract.Calendars.ACCOUNT_NAME, accountName)
         contentValues.put(CalendarContract.Calendars.ACCOUNT_TYPE, accountType)
         contentValues.put(CalendarContract.Calendars.OWNER_ACCOUNT, accountName)
-        contentValues.put(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, CalendarContract.Calendars.CAL_ACCESS_ROOT)
+        contentValues.put(
+            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL,
+            CalendarContract.Calendars.CAL_ACCESS_ROOT
+        )
         contentValues.put(CalendarContract.Calendars.SYNC_EVENTS, 1)
         contentValues.put(CalendarContract.Calendars.VISIBLE, 1)
-        contentValues.put(CalendarContract.Calendars.CALENDAR_COLOR, ContextCompat.getColor(context, R.color.primaryBaseColor))
+        contentValues.put(
+            CalendarContract.Calendars.CALENDAR_COLOR,
+            ContextCompat.getColor(context, R.color.primaryBaseColor)
+        )
         val creationUri: Uri? = asSyncAdapter(
             Uri.parse(CalendarContract.Calendars.CONTENT_URI.toString()),
             accountName,
@@ -103,9 +112,9 @@ object CalendarUtils {
         creationUri?.let {
             val calendarData: Uri? = context.contentResolver.insert(creationUri, contentValues)
             calendarData?.let {
-                val id = calendarData.lastPathSegment.toLong()
+                val id = calendarData.lastPathSegment?.toLong()
                 logger.debug("Calendar ID $id")
-                return id
+                return id ?: -1
             }
         }
         return -1
@@ -118,24 +127,28 @@ object CalendarUtils {
     fun getCalendarId(context: Context, accountName: String, calendarTitle: String): Long {
         var calendarId = -1
         val projection = arrayOf(
-                CalendarContract.Calendars._ID,
-                CalendarContract.Calendars.ACCOUNT_NAME,
-                CalendarContract.Calendars.NAME)
+            CalendarContract.Calendars._ID,
+            CalendarContract.Calendars.ACCOUNT_NAME,
+            CalendarContract.Calendars.NAME
+        )
         val calendarContentResolver = context.contentResolver
-        val cursor: Cursor = calendarContentResolver.query(
-                CalendarContract.Calendars.CONTENT_URI, projection,
-                CalendarContract.Calendars.ACCOUNT_NAME + "=? and (" +
-                        CalendarContract.Calendars.NAME + "=? or " +
-                        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME + "=?)", arrayOf(accountName, calendarTitle,
-                calendarTitle), null)
-        if (cursor.moveToFirst()) {
+        val cursor = calendarContentResolver.query(
+            CalendarContract.Calendars.CONTENT_URI, projection,
+            CalendarContract.Calendars.ACCOUNT_NAME + "=? and (" +
+                    CalendarContract.Calendars.NAME + "=? or " +
+                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME + "=?)", arrayOf(
+                accountName, calendarTitle,
+                calendarTitle
+            ), null
+        )
+        if (cursor?.moveToFirst() == true) {
             if (cursor.getString(cursor.getColumnIndex(CalendarContract.Calendars.NAME))
                     .equals(calendarTitle)
             ) {
                 calendarId = cursor.getInt(cursor.getColumnIndex(CalendarContract.Calendars._ID))
             }
         }
-        cursor.close()
+        cursor?.close()
         return calendarId.toLong()
     }
 
@@ -192,7 +205,7 @@ object CalendarUtils {
             put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
         }
         val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-        addReminderToEvent(context = context, uri = uri)
+        uri?.let { addReminderToEvent(context = context, uri = it) }
     }
 
     /**
@@ -201,7 +214,10 @@ object CalendarUtils {
      * @return event description with deeplink for assignment block else block title
      */
     private fun getEventDescription(
-        context: Context, courseId: String, courseDateBlock: CourseDateBlock, isDeeplinkEnabled: Boolean
+        context: Context,
+        courseId: String,
+        courseDateBlock: CourseDateBlock,
+        isDeeplinkEnabled: Boolean
     ): String {
         var eventDescription = courseDateBlock.title
         if (isDeeplinkEnabled && !TextUtils.isEmpty(courseDateBlock.blockId)) {
@@ -231,7 +247,7 @@ object CalendarUtils {
      * @param uri Calendar event Uri
      */
     private fun addReminderToEvent(context: Context, uri: Uri) {
-        val eventId: Long = uri.lastPathSegment.toLong()
+        val eventId: Long? = uri.lastPathSegment?.toLong()
         logger.debug("Event ID $eventId")
         // Adding reminder on the start of event
         val eventValues = ContentValues().apply {
@@ -264,17 +280,17 @@ object CalendarUtils {
     private fun getCalendarEvents(context: Context, calendarId: Long): Cursor? {
         val calendarContentResolver = context.contentResolver
         val projection = arrayOf(
-                CalendarContract.Events._ID,
-                CalendarContract.Events.DTSTART,
-                CalendarContract.Events.DESCRIPTION
+            CalendarContract.Events._ID,
+            CalendarContract.Events.DTSTART,
+            CalendarContract.Events.DESCRIPTION
         )
         val selection = CalendarContract.Events.CALENDAR_ID + "=?"
         return calendarContentResolver.query(
-                CalendarContract.Events.CONTENT_URI,
-                projection,
-                selection,
-                arrayOf(calendarId.toString()),
-                null
+            CalendarContract.Events.CONTENT_URI,
+            projection,
+            selection,
+            arrayOf(calendarId.toString()),
+            null
         )
     }
 
@@ -336,7 +352,11 @@ object CalendarUtils {
      * Method to delete the course calendar from the mobile calendar app
      */
     fun deleteCalendar(context: Context, calendarId: Long) {
-        context.contentResolver.delete(Uri.parse("content://com.android.calendar/calendars/$calendarId"), null, null)
+        context.contentResolver.delete(
+            Uri.parse("content://com.android.calendar/calendars/$calendarId"),
+            null,
+            null
+        )
     }
 
     /**
@@ -357,10 +377,10 @@ object CalendarUtils {
 
     fun openCalendarApp(fragment: Fragment) {
         val builder: Uri.Builder = CalendarContract.CONTENT_URI.buildUpon()
-                .appendPath("time")
+            .appendPath("time")
         ContentUris.appendId(builder, Calendar.getInstance().timeInMillis)
         val intent = Intent(Intent.ACTION_VIEW)
-                .setData(builder.build())
+            .setData(builder.build())
         fragment.startActivity(intent)
     }
 

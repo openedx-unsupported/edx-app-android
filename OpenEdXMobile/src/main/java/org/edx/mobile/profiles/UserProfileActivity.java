@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.module.analytics.Analytics;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserProfileActivity extends BaseSingleFragmentActivity {
     public static final String EXTRA_USERNAME = "username";
 

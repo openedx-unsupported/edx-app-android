@@ -6,9 +6,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.course.CourseComponent;
@@ -25,16 +22,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Singleton
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
+
+@Module
+@InstallIn(SingletonComponent.class)
 public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Inject
-    private final LoginPrefs loginPrefs;
+    LoginPrefs loginPrefs;
 
     @Inject
-    public IDatabaseImpl(Context context, LoginPrefs loginPrefs) {
+    public IDatabaseImpl(@ApplicationContext Context context) {
         super(context);
-        this.loginPrefs = loginPrefs;
     }
 
     @Nullable

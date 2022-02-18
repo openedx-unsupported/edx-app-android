@@ -1,5 +1,13 @@
 package org.edx.mobile.view;
 
+import static org.edx.mobile.view.Router.EXTRA_ANNOUNCEMENTS;
+import static org.edx.mobile.view.Router.EXTRA_COURSE_COMPONENT_ID;
+import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
+import static org.edx.mobile.view.Router.EXTRA_COURSE_ID;
+import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_THREAD_ID;
+import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_TOPIC_ID;
+import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
+
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,16 +20,10 @@ import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
-import static org.edx.mobile.view.Router.EXTRA_ANNOUNCEMENTS;
-import static org.edx.mobile.view.Router.EXTRA_COURSE_COMPONENT_ID;
-import static org.edx.mobile.view.Router.EXTRA_COURSE_DATA;
-import static org.edx.mobile.view.Router.EXTRA_COURSE_ID;
-import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_THREAD_ID;
-import static org.edx.mobile.view.Router.EXTRA_DISCUSSION_TOPIC_ID;
-import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
-
+@AndroidEntryPoint
 public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
     public static Intent newIntent(@NonNull Context activity,
                                    @Nullable EnrolledCoursesResponse courseData,

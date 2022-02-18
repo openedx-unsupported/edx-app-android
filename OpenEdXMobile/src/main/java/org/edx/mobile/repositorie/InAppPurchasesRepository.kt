@@ -1,6 +1,5 @@
 package org.edx.mobile.repositorie
 
-import org.edx.mobile.base.MainApplication
 import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
 import org.edx.mobile.inapppurchases.InAppPurchasesAPI
@@ -10,21 +9,8 @@ import org.edx.mobile.model.iap.ExecuteOrderResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import roboguice.RoboGuice
 
-class InAppPurchasesRepository {
-
-    private var iapAPI: InAppPurchasesAPI =
-        RoboGuice.getInjector(MainApplication.application)
-            .getInstance(InAppPurchasesAPI::class.java)
-
-    companion object {
-        private var instance: InAppPurchasesRepository? = null
-        fun getInstance(): InAppPurchasesRepository =
-            instance ?: synchronized(this) {
-                instance ?: InAppPurchasesRepository().also { instance = it }
-            }
-    }
+class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
 
     fun addToBasket(productId: String, callback: NetworkResponseCallback<AddToBasketResponse>) {
         iapAPI.addToBasket(productId).enqueue(object : Callback<AddToBasketResponse> {

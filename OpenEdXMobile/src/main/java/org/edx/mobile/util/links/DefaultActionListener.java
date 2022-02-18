@@ -1,19 +1,17 @@
 package org.edx.mobile.util.links;
 
 import android.os.Handler;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Toast;
-
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
@@ -32,9 +30,10 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.util.HashMap;
 import java.util.Map;
 
+import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.android.qualifiers.ActivityContext;
 import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
-import roboguice.RoboGuice;
 
 /**
  * A ready to use implementation of {@link org.edx.mobile.view.custom.URLInterceptorWebViewClient.ActionListener}
@@ -55,26 +54,24 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
         void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn);
     }
 
-    @Inject
-    private IEdxEnvironment environment;
-
-    @Inject
-    private CourseService courseService;
-
-    @Inject
-    private CourseAPI courseApi;
+    IEdxEnvironment environment;
+    CourseService courseService;
+    CourseAPI courseApi;
 
     private FragmentActivity activity;
     private View progressWheel;
     private EnrollCallback enrollCallback;
     private boolean isTaskInProgress = false;
 
-    public DefaultActionListener(@NonNull FragmentActivity activity, @NonNull View progressWheel,
+    public DefaultActionListener(@ActivityContext @NonNull FragmentActivity activity, @NonNull View progressWheel,
                                  @NonNull EnrollCallback enrollCallback) {
         this.activity = activity;
         this.progressWheel = progressWheel;
         this.enrollCallback = enrollCallback;
-        RoboGuice.injectMembers(activity, this);
+        EdxDefaultModule.ProviderEntryPoint provider = EntryPointAccessors.fromApplication(activity, EdxDefaultModule.ProviderEntryPoint.class);
+        this.environment = provider.getEnvironment();
+        this.courseService = provider.getCourseService();
+        this.courseApi = provider.getCourseAPI();
     }
 
     @Override
@@ -198,6 +195,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
 
     /**
      * Method to open enrolled course dashboard based on courseId
+     *
      * @param courseId
      */
     private void openEnrolledCourseDashboard(@NonNull final String courseId) {

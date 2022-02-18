@@ -3,9 +3,11 @@ package org.edx.mobile.view
 import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.base.BaseSingleFragmentActivity
 import org.edx.mobile.deeplink.ScreenDef
 
+@AndroidEntryPoint
 class AccountActivity : BaseSingleFragmentActivity() {
 
     companion object {
