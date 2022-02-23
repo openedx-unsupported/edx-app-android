@@ -9,7 +9,7 @@
     <string name="course_modal_unlock_access">Unlock access to all course activities, including graded assignments</string>
     <string name="course_modal_full_access_course">Full access to course content and course material even after the course ends</string>
     <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">Upgrade now for $99</string>
+    <string name="label_upgrade_course_button">Upgrade now for {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Learn more about locked features</string>
     <!-- Label Course Modal Unlock Graded Assignments -->

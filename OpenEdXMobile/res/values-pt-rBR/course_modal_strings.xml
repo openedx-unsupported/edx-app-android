@@ -9,7 +9,7 @@
     <string name="course_modal_unlock_access">Desbloqueie o acesso a todas as atividades do curso, incluindo tarefas com nota</string>
     <string name="course_modal_full_access_course">Acesso completo ao conteúdo e materiais do curso, mesmo após concluí-lo.</string>
     <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">Atualizar agora por US$ 99</string>
+    <string name="label_upgrade_course_button">Atualizar agora por {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Saiba mais sobre os recursos bloqueados</string>
     <!-- Label Course Modal Unlock Graded Assignments -->

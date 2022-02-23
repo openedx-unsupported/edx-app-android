@@ -16,11 +16,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="@dimen/upgrade_now_button_padding"
-            android:text="@string/label_upgrade_course_button"
             app:backgroundTint="@color/secondaryBaseColor"
             app:icon="@drawable/ic_lock"
             app:iconGravity="textStart"
-            app:iconTint="@color/edx_brand_button_text" />
+            app:iconTint="@color/edx_brand_button_text"
+            tools:text="@string/course_dates_banner_upgrade_to_graded_button" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loading_indicator"

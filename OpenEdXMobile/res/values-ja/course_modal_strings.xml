@@ -9,7 +9,7 @@
     <string name="course_modal_unlock_access">採点対象の課題を含む、すべてのコースアクティビティへのアクセスを入手</string>
     <string name="course_modal_full_access_course">コース終了後でもコース内のすべてのコンテンツや資料を閲覧できます</string>
     <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">$99で今すぐアップグレード</string>
+    <string name="label_upgrade_course_button">{price}で今すぐアップグレード</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">制限付き機能についての詳細</string>
     <!-- Label Course Modal Unlock Graded Assignments -->

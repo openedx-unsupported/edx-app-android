@@ -161,7 +161,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      * @param productId SKU of the product
      * @param listener [SkuDetailsResponseListener]
      * */
-    private fun querySyncDetails(productId: String, listener: SkuDetailsResponseListener) {
+    fun querySyncDetails(productId: String, listener: SkuDetailsResponseListener) {
         billingClient.querySkuDetailsAsync(
             SkuDetailsParams.newBuilder()
                 .setType(BillingClient.SkuType.INAPP)

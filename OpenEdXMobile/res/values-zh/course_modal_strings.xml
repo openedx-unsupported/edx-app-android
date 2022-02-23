@@ -9,7 +9,7 @@
     <string name="course_modal_unlock_access"> 解锁所有课程活动的访问权限，包括分级作业</string>
     <string name="course_modal_full_access_course">即使在课程结束后，也可以完全访问课程内容和课程材料</string>
     <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">现在升级仅需 $99</string>
+    <string name="label_upgrade_course_button">现在升级仅需 {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">了解关于锁定功能的更多详情</string>
     <!-- Label Course Modal Unlock Graded Assignments -->
