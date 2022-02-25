@@ -1,4 +1,4 @@
-# Run commitlint on the commit messages in a pull request.
+# Run commitlint on the commit messages in a pull request. Test
 
 name: Lint Commit Messages
 
