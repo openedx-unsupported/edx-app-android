@@ -47,19 +47,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_view_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:shimmer_base_color="@color/neutralXLight"
-                app:shimmer_colored="true"
-                app:shimmer_highlight_color="@color/neutralLight">
-
-                <include
-                    android:id="@+id/layout_upgrade_btn"
-                    layout="@layout/layout_upgrade_btn" />
-
-            </com.facebook.shimmer.ShimmerFrameLayout>
+            <include
+                android:id="@+id/layout_upgrade_btn"
+                layout="@layout/layout_upgrade_btn" />
         </LinearLayout>
     </ScrollView>
 </layout>

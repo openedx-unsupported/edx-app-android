@@ -117,7 +117,7 @@ class CourseModalDialogFragment : DialogFragment() {
                     // Shimmer container taking sometime to get ready and perform the animation, so
                     // by adding the some delay fixed that issue for lower-end devices, and for the
                     // proper animation.
-                    binding.shimmerViewContainer.postDelayed({
+                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
                         fetchProductPrice()
                     }, 1500)
                 }
@@ -147,13 +147,14 @@ class CourseModalDialogFragment : DialogFragment() {
                             AppConstants.PRICE,
                             skuDetail.price
                         ).toString()
+                    // The app get the sku details instantly, so add some wait to perform
+                    // animation at least one cycle.
+                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+                        binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
+                    }, 500)
+                } else {
+                    showUpgradeErrorDialog()
                 }
-                // The app get the sku details instantly, so add some wait to perform
-                // animation at least one cycle.
-                binding.shimmerViewContainer.postDelayed({
-                    binding.shimmerViewContainer.stopShimmer()
-                    binding.shimmerViewContainer.hideShimmer()
-                }, 500)
             }
         } ?: showUpgradeErrorDialog()
     }
