@@ -118,8 +118,9 @@ class CourseModalDialogFragment : DialogFragment() {
                     // by adding the some delay fixed that issue for lower-end devices, and for the
                     // proper animation.
                     binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        fetchProductPrice()
+                        initializeProductPrice()
                     }, 1500)
+                    binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
                 }
 
                 override fun onPurchaseCancel() {
@@ -133,7 +134,7 @@ class CourseModalDialogFragment : DialogFragment() {
             })
     }
 
-    private fun fetchProductPrice() {
+    private fun initializeProductPrice() {
         ProductManager.getProductByCourseId(courseId)?.let {
             billingProcessor?.querySyncDetails(
                 productId = it
@@ -151,6 +152,7 @@ class CourseModalDialogFragment : DialogFragment() {
                     // animation at least one cycle.
                     binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
                         binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
+                        binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
                     }, 500)
                 } else {
                     showUpgradeErrorDialog()

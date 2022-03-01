@@ -129,8 +129,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     // by adding the some delay fixed that issue for lower-end devices, and for the
                     // proper animation.
                     binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        unit?.let { fetchProductPrice(it.courseId) }
+                        unit?.let { initializeProductPrice(it.courseId) }
                     }, 1500)
+                    binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
                 }
 
                 override fun onPurchaseCancel() {
@@ -147,7 +148,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         }
     }
 
-    private fun fetchProductPrice(courseId: String) {
+    private fun initializeProductPrice(courseId: String) {
         ProductManager.getProductByCourseId(courseId)?.let {
             billingProcessor?.querySyncDetails(
                 productId = it
@@ -165,6 +166,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     // animation at least one cycle.
                     binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
                         binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
+                        binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
                     }, 500)
                 } else {
                     showUpgradeErrorDialog()
