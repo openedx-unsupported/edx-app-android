@@ -264,6 +264,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
     implementation "com.android.billingclient:billing-ktx:$kotlin_version_billing"
 
+    // dependency on Shimmer for Android
+    implementation "com.facebook.shimmer:shimmer:0.5.0"
+
     /**
      * Using debugImplementation here, so that LeakCanary only runs with debug variants of the builds.
      * p.s. it won't run with the debuggable variant.

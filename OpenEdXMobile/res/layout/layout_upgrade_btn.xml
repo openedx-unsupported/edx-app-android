@@ -3,32 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/upgrade_now_button_height"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/edx_brand_button">
+        app:shimmer_base_color="@color/neutralXLight"
+        app:shimmer_colored="true"
+        app:shimmer_highlight_color="@color/neutralLight">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_upgrade"
-            style="@style/edX.Widget.ActionBrandPillButton"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:padding="@dimen/upgrade_now_button_padding"
-            android:text="@string/label_upgrade_course_button"
-            app:backgroundTint="@color/secondaryBaseColor"
-            app:icon="@drawable/ic_lock"
-            app:iconGravity="textStart"
-            app:iconTint="@color/edx_brand_button_text" />
+            android:layout_height="@dimen/upgrade_now_button_height"
+            android:background="@drawable/edx_brand_button">
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/loading_indicator"
-            style="@style/UpdateNowProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </FrameLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_upgrade"
+                style="@style/edX.Widget.ActionBrandPillButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="@dimen/upgrade_now_button_padding"
+                app:backgroundTint="@color/secondaryBaseColor"
+                app:icon="@drawable/ic_lock"
+                app:iconGravity="textStart"
+                app:iconTint="@color/edx_brand_button_text"
+                tools:text="@string/course_dates_banner_upgrade_to_graded_button" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/loading_indicator"
+                style="@style/UpdateNowProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 </layout>

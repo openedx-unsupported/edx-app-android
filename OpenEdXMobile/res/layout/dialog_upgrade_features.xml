@@ -50,7 +50,6 @@
             <include
                 android:id="@+id/layout_upgrade_btn"
                 layout="@layout/layout_upgrade_btn" />
-
         </LinearLayout>
     </ScrollView>
 </layout>

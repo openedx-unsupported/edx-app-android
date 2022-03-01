@@ -9,7 +9,7 @@
     <string name="course_modal_unlock_access">בטל את הנעילה של גישה לכל פעילויות הקורס, כולל אותן מטלות מדורגות</string>
     <string name="course_modal_full_access_course">ליהנות מגישה מלאה לתכני הקורס ולחומר הקורס גם לאחר סיום הקורס</string>
     <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">שדרג עכשיו תמורת $99</string>
+    <string name="label_upgrade_course_button">שדרג עכשיו תמורת {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">למידע נוסף על תכונות נעולות</string>
     <!-- Label Course Modal Unlock Graded Assignments -->

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
@@ -110,6 +112,17 @@ class CourseModalDialogFragment : DialogFragment() {
         }
         billingProcessor =
             BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
+                override fun onBillingSetupFinished(billingResult: BillingResult) {
+                    super.onBillingSetupFinished(billingResult)
+                    // Shimmer container taking sometime to get ready and perform the animation, so
+                    // by adding the some delay fixed that issue for lower-end devices, and for the
+                    // proper animation.
+                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+                        initializeProductPrice()
+                    }, 1500)
+                    binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
+                }
+
                 override fun onPurchaseCancel() {
                     iapViewModel.endLoading()
                     showUpgradeErrorDialog()
@@ -119,6 +132,33 @@ class CourseModalDialogFragment : DialogFragment() {
                     onProductPurchased(purchase.purchaseToken)
                 }
             })
+    }
+
+    private fun initializeProductPrice() {
+        ProductManager.getProductByCourseId(courseId)?.let {
+            billingProcessor?.querySyncDetails(
+                productId = it
+            ) { _, skuDetails ->
+                val skuDetail = skuDetails?.get(0)
+                if (skuDetail?.sku == it) {
+                    binding.layoutUpgradeBtn.btnUpgrade.text =
+                        ResourceUtil.getFormattedString(
+                            resources,
+                            R.string.label_upgrade_course_button,
+                            AppConstants.PRICE,
+                            skuDetail.price
+                        ).toString()
+                    // The app get the sku details instantly, so add some wait to perform
+                    // animation at least one cycle.
+                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+                        binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
+                        binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
+                    }, 500)
+                } else {
+                    showUpgradeErrorDialog()
+                }
+            }
+        } ?: showUpgradeErrorDialog()
     }
 
     private fun initObserver() {
