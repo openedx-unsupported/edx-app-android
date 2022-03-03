@@ -61,7 +61,6 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
                     discussionTopic != null);
             fragment.setArguments(args);
         }
-        fragment.setRetainInstance(true);
 
         return fragment;
     }

@@ -17,8 +17,6 @@ public class CourseDiscussionResponsesActivity extends BaseSingleFragmentActivit
     @Override
     public Fragment getFirstFragment() {
         courseDiscussionResponsesFragment.setArguments(getIntent().getExtras());
-        courseDiscussionResponsesFragment.setRetainInstance(true);
-
         return courseDiscussionResponsesFragment;
     }
 }

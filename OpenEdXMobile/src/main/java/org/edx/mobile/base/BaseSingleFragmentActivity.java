@@ -77,10 +77,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     private void loadFirstFragment() throws Exception {
         Fragment singleFragment = getFirstFragment();
 
-        //this activity will only ever hold this lone fragment, so we
-        // can afford to retain the instance during activity recreation
-        singleFragment.setRetainInstance(true);
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.my_groups_list_container, singleFragment, FIRST_FRAG_TAG);
         fragmentTransaction.disallowAddToBackStack();

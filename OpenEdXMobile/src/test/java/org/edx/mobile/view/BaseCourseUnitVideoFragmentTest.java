@@ -71,7 +71,6 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
     public void initializeTest() {
         final BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
-        assertTrue(fragment.getRetainInstance());
 
         final View view = fragment.getView();
         assertNotNull(view);
