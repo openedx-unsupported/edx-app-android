@@ -581,6 +581,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 row.bulkDownloadLoading.setTag(DownloadEntry.DownloadedState.DOWNLOADING);
                 row.bulkDownload.setVisibility(View.GONE);
                 row.downloadBackground.setVisibility(View.GONE);
+                row.bulkDownloadLoading.setContentDescription(state.toString());
                 break;
             case DOWNLOADED:
                 row.bulkDownloadLoading.setVisibility(View.GONE);
