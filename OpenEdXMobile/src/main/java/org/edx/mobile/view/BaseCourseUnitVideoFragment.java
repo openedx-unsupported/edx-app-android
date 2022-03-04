@@ -162,7 +162,6 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         unit = getArguments() == null ? null :
                 (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         EventBus.getDefault().registerSticky(this);

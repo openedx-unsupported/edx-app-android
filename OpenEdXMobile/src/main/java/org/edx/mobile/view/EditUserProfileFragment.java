@@ -112,7 +112,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
 

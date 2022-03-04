@@ -61,7 +61,6 @@ public class CourseTabsDashboardActivityTest extends BaseFragmentActivityTest {
 //                .findFragmentByTag(CourseOutlineFragment.TAG);
 //        assertNotNull(fragment);
 //        assertThat(fragment).isInstanceOf(CourseOutlineFragment.class);
-//        assertTrue(fragment.getRetainInstance());
 //        Bundle args = fragment.getArguments();
 //        assertNotNull(args);
 //        Bundle data = intent.getBundleExtra(Router.EXTRA_BUNDLE);

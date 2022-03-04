@@ -25,11 +25,6 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
     @Override
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        if(getParentFragment() == null) {
-            // retain instance is inherited through the fragment tree
-            // so don't need it for fragments with parents
-            setRetainInstance(true);
-        }
         if (null == presenter) {
             if (getContext().getApplicationContext() instanceof PresenterInjector) {
                 //noinspection unchecked
