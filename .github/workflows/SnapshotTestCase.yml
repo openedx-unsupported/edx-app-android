@@ -83,18 +83,6 @@ jobs:
           fi
         shell: bash
 
-
-      - name: Run tests
-        if: always()
-        run: |
-          ./gradlew test
-          if [[ $? -eq 0 ]]; then
-          echo "Tests passed. Do something." >&2
-          else
-          echo "Tests didn't pass. Do something." >&2
-          fi
-        shell: bash
-
 #      - name: Run tests
 #        uses: ReactiveCircus/android-emulator-runner@v2
 #        with:
