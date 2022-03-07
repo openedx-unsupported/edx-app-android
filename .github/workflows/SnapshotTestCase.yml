@@ -87,6 +87,11 @@ jobs:
           script: |
             chmod +x gradlew
             ./gradlew jacocoTestProdDebugUnitTestReport
+            if [[ $? -eq 0 ]]; then
+                echo "Tests passed. Do something."
+            else
+                echo "Tests didn't pass. Do something."
+            fi
 
 #      - name: Run E2E
 #        if: always()
