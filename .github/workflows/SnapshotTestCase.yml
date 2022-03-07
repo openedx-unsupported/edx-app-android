@@ -16,8 +16,8 @@ jobs:
           distribution: 'adopt'
           java-version: '8'
 
-  #      - name: Build Project
-  #        run: ./gradlew assembleDebug
+      - name: Build Project
+        run: ./gradlew assembleDebug
 
   test:
     needs: build
@@ -28,11 +28,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: set up JDK 8
+      - name: set up JDK 11
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '8'
+          java-version: '11'
 
       - name: Setup python
         uses: actions/setup-python@v2
@@ -131,11 +131,11 @@ jobs:
           name: report
           path: artifacts
 
-#      - name: Download Test Reports Folder
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: report
-#          path: OpenEdXMobile/build/reports/coverage/debug
+      - name: Download Test Reports Folder
+        uses: actions/download-artifact@v2
+        with:
+          name: report
+          path: OpenEdXMobile/build/reports/coverage/debug
 
       - name: Upload Test Report
         run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
