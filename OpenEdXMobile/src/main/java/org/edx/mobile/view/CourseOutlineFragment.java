@@ -784,7 +784,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void setUpVideoQualityHeader(CourseComponent courseComponent) {
-        if (isVideoMode && isOnCourseOutline) {
+        if (isVideoMode && isOnCourseOutline && courseComponent.getDownloadableVideosCount() > 0) {
             videoQualityLayout.setVisibility(View.VISIBLE);
             videoQualityLayout.setOnClickListener(v -> {
                 environment.getAnalyticsRegistry().trackEvent(Analytics.Events.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED,
