@@ -1,5 +1,5 @@
 SHELL := /usr/bin/env bash
-.PHONY: help test requirements clean emulator quality test validate e2e artifacts
+.PHONY: help testi1 requirements clean emulator quality test validate e2e artifacts
 
 help :
 	@echo ''
