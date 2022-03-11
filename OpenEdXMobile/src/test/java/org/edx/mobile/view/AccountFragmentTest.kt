@@ -2,13 +2,13 @@ package org.edx.mobile.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.fragment_account.*
 import org.assertj.core.api.Assertions
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.robolectric.shadows.support.v4.SupportFragmentController
-import roboguice.activity.RoboFragmentActivity
 
 class AccountFragmentTest : UiTest() {
 
@@ -17,7 +17,10 @@ class AccountFragmentTest : UiTest() {
     override fun setUp() {
         super.setUp()
         fragment = AccountFragment.newInstance(null)
-        SupportFragmentController.setupFragment(fragment, RoboFragmentActivity::class.java, android.R.id.content, mock(Bundle::class.java))
+        SupportFragmentController.setupFragment(
+            fragment,
+            FragmentActivity::class.java, android.R.id.content, mock(Bundle::class.java)
+        )
     }
 
     @Test
@@ -28,9 +31,9 @@ class AccountFragmentTest : UiTest() {
     @Test
     fun checkButtonsVisibility() {
         if (config.isUserProfilesEnabled) {
-            Assertions.assertThat(fragment.profile_btn.visibility).isEqualTo(View.VISIBLE)
+            Assertions.assertThat(fragment.btn_view_profile.visibility).isEqualTo(View.VISIBLE)
         } else {
-            Assertions.assertThat(fragment.profile_btn.visibility).isEqualTo(View.GONE)
+            Assertions.assertThat(fragment.btn_view_profile.visibility).isEqualTo(View.GONE)
         }
     }
 }

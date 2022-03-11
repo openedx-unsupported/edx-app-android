@@ -2,8 +2,9 @@ package org.edx.mobile.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.inject.Injector
+import org.edx.mobile.Injector
 import org.edx.mobile.course.CourseAPI
+import org.edx.mobile.repositorie.CourseDatesRepository
 import org.edx.mobile.test.http.HttpBaseTestCase
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
@@ -24,7 +25,7 @@ class CourseDateViewModelTest : HttpBaseTestCase() {
     @Throws(Exception::class)
     override fun setUp() {
         super.setUp()
-        courseDateViewModel = CourseDateViewModel()
+        courseDateViewModel = CourseDateViewModel(CourseDatesRepository(courseAPI))
     }
 
     @Throws(Exception::class)
@@ -35,7 +36,12 @@ class CourseDateViewModelTest : HttpBaseTestCase() {
 
     @Test
     fun startViewModel() {
-        courseDateViewModel.fetchCourseDates(courseID = "", isSwipeRefresh = false)
+        courseDateViewModel.fetchCourseDates(
+            courseID = "",
+            isSwipeRefresh = false,
+            forceRefresh = false,
+            showLoader = false
+        )
         assertNotNull(courseDateViewModel.courseDates.getOrAwaitValue())
     }
 }

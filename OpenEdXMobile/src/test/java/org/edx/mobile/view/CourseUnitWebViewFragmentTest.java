@@ -1,8 +1,15 @@
 package org.edx.mobile.view;
 
-import androidx.annotation.NonNull;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import android.view.View;
 import android.webkit.WebView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
@@ -20,13 +27,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import roboguice.activity.RoboFragmentActivity;
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 public class CourseUnitWebViewFragmentTest extends UiTest {
 
     EnrolledCoursesResponse courseData;
@@ -34,7 +34,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
     /**
      * Method to initialize Course Data from API
      */
-    private void initializeCourseData(){
+    private void initializeCourseData() {
         try {
             courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         } catch (Exception e) {
@@ -70,7 +70,8 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
     @Test
     public void initializeTest() throws CourseContentNotValidException {
         initializeCourseData();
-        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getMode(), false);
+        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getCourse().getName(),
+                courseData.getMode(), false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, PreLoadingListenerActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
@@ -86,7 +87,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
      * The {@link CourseUnitWebViewFragment} requires its parent activity to implement the
      * {@link PreLoadingListener} interface, which is why this dummy activity has been created.
      */
-    private static class PreLoadingListenerActivity extends RoboFragmentActivity implements PreLoadingListener {
+    private static class PreLoadingListenerActivity extends FragmentActivity implements PreLoadingListener {
         @Override
         public void setLoadingState(@NonNull State newState) {
 

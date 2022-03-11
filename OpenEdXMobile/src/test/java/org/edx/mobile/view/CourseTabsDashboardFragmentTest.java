@@ -1,20 +1,20 @@
 package org.edx.mobile.view;
 
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import static org.junit.Assert.assertNotNull;
+
 import android.view.View;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.junit.Test;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
-
-import roboguice.activity.RoboFragmentActivity;
-
-import static org.assertj.android.api.Assertions.assertThat;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertNotNull;
 
 public class CourseTabsDashboardFragmentTest extends UiTest {
     protected EnrolledCoursesResponse getCourseData() {
@@ -33,7 +33,7 @@ public class CourseTabsDashboardFragmentTest extends UiTest {
     @Test
     public void initializeTest() {
         CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData(), "testsCourseId", Screen.COURSE_DASHBOARD);
-        SupportFragmentTestUtil.startVisibleFragment(fragment, RoboFragmentActivity.class, android.R.id.content);
+        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentActivity.class, android.R.id.content);
         View view = fragment.getView();
         assertNotNull(view);
 

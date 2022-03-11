@@ -1,5 +1,10 @@
 package org.edx.mobile.view;
 
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -8,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.fragment.app.FragmentActivity;
+
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -15,25 +22,13 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.junit.Test;
-import org.robolectric.annotation.Config;
+import org.robolectric.shadows.support.v4.SupportFragmentController;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
-
-import roboguice.activity.RoboFragmentActivity;
-
-import static org.assertj.android.api.Assertions.assertThat;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 // We should add mock downloads, mock play, and state retention tests
 // later. Also, online/offline transition tests; although the
 // onOnline() and onOffline() methods don't seem to be called from
 // anywhere yet?
-
-// The SDK version needs to be lesser than Lollipop because of this
-// issue: https://github.com/robolectric/robolectric/issues/1810
-@Config(sdk = 19)
 public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
 
     protected abstract BaseCourseUnitVideoFragment getCourseUnitPlayerFragmentInstance();
@@ -70,7 +65,8 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
     @Test
     public void initializeTest() {
         final BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
-        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
+        SupportFragmentController.setupFragment(fragment, FragmentUtilActivity.class,
+                android.R.id.content, null);
 
         final View view = fragment.getView();
         assertNotNull(view);
@@ -125,7 +121,7 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
     }
 
-    private static class FragmentUtilActivity extends RoboFragmentActivity implements CourseUnitFragment.HasComponent {
+    private static class FragmentUtilActivity extends FragmentActivity implements CourseUnitFragment.HasComponent {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

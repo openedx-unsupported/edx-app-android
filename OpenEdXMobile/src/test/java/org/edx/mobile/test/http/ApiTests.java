@@ -1,17 +1,26 @@
 package org.edx.mobile.test.http;
 
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mockStatic;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.inject.Injector;
 
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
+import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
@@ -40,16 +49,6 @@ import java.util.List;
 
 import okhttp3.Request;
 
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mockStatic;
-
 /**
  * This class contains unit tests for API calls to server.
  * <p/>
@@ -63,13 +62,6 @@ public class ApiTests extends HttpBaseTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-    }
-
-    @Override
-    protected void inject(Injector injector) throws Exception {
-        super.inject(injector);
-        courseAPI = injector.getInstance(CourseAPI.class);
-        courseService = injector.getInstance(CourseService.class);
     }
 
     // TODO: Debug and fix test failure
@@ -153,7 +145,8 @@ public class ApiTests extends HttpBaseTestCase {
         String updatesUrl = courses.get(0).getCourse().getCourse_updates();
 
         List<AnnouncementsModel> res = executeStrict(
-                new TypeToken<List<AnnouncementsModel>>() {},
+                new TypeToken<List<AnnouncementsModel>>() {
+                },
                 okHttpClient.newCall(new Request.Builder()
                         .url(updatesUrl)
                         .get()

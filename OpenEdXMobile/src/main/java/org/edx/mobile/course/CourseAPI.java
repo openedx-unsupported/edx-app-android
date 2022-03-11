@@ -76,6 +76,13 @@ public class CourseAPI {
         this.userPrefs = userPrefs;
     }
 
+    // Used only for the unit tests cuz Hilt not provide dependency injection for unit test case.
+    public CourseAPI(@NonNull Config config, @NonNull CourseService courseService, @NonNull UserPrefs userPrefs) {
+        this.config = config;
+        this.courseService = courseService;
+        this.userPrefs = userPrefs;
+    }
+
     @NonNull
     public Call<Page<CourseDetail>> getCourseList(final int page) {
         return courseService.getCourseList(getUsername(), true, config.getOrganizationCode(), page);

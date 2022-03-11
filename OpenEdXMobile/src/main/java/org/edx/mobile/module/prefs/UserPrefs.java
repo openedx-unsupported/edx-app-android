@@ -28,6 +28,12 @@ public class UserPrefs {
         this.context = context;
     }
 
+    // Used only for the unit tests cuz Hilt not provide dependency injection for unit test case.
+    public UserPrefs(Context context, LoginPrefs loginPrefs) {
+        this.context = context;
+        this.loginPrefs = loginPrefs;
+    }
+
     /**
      * Returns true if the "download over wifi only" is turned ON, false otherwise.
      *

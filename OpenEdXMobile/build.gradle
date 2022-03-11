@@ -39,6 +39,8 @@ jacoco {
 // Inspiration https://medium.com/@android2ee/playing-with-gradle-3-and-some-few-code-coverage-on-android-with-jacoco-47df7c9328ae
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    // ref: https://stackoverflow.com/a/68139455
+    jacoco.excludes = ['jdk.internal.*']
 }
 /**
  * Computes a semantic version string, e.g. "1.0" or "2.5.7" by parsing git branches or tags.
@@ -228,7 +230,7 @@ dependencies {
     testImplementation ("org.mockito:mockito-core:2.19.0"){
         exclude group: 'org.hamcrest'
     }
-    testImplementation "org.robolectric:robolectric:4.3.1"
+    testImplementation "org.robolectric:robolectric:4.7.3"
     testImplementation "com.github.nimbl3:robolectric.shadows-supportv4:4.1-SNAPSHOT"
     testImplementation "org.robolectric:shadows-multidex:4.0.1"
     testImplementation 'org.assertj:assertj-core:2.5.0'

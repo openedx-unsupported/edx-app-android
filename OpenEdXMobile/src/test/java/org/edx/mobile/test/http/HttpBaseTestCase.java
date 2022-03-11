@@ -1,27 +1,34 @@
 package org.edx.mobile.test.http;
 
+import static org.junit.Assert.assertNotNull;
+
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.inject.Injector;
 
+import org.edx.mobile.Injector;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor;
-import org.edx.mobile.http.provider.OkHttpClientProvider;
+import org.edx.mobile.model.course.BlockData;
+import org.edx.mobile.model.course.BlockList;
+import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.notification.DummyNotificationDelegate;
+import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.test.util.MockDataUtil;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
-import org.robolectric.android.util.concurrent.RoboExecutorService;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -29,13 +36,10 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * use MockWebService for Api test
@@ -78,11 +82,6 @@ public class HttpBaseTestCase extends BaseTestCase {
         server.setDispatcher(new MockResponseDispatcher());
         server.start();
 
-        okHttpClient = new OkHttpClient.Builder()
-                .dispatcher(new Dispatcher(new RoboExecutorService()))
-                .addInterceptor(new OnlyIfCachedStrippingInterceptor())
-                .build();
-
         super.setUp();
     }
 
@@ -96,34 +95,15 @@ public class HttpBaseTestCase extends BaseTestCase {
     }
 
     @Override
-    public void addBindings() {
-        super.addBindings();
-        module.addBinding(OkHttpClient.class, okHttpClient);
-        module.addBinding(OkHttpClientProvider.class, new OkHttpClientProvider() {
-            @Override
-            public OkHttpClient getWithOfflineCache() {
-                return okHttpClient;
-            }
-
-            @Override
-            public OkHttpClient getNonOAuthBased() {
-                return okHttpClient;
-            }
-
-            @Override
-            public OkHttpClient get() {
-                return okHttpClient;
-            }
-        });
-    }
-
-    @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        loginAPI = injector.getInstance(LoginAPI.class);
+        LoginPrefs loginPref = new LoginPrefs(context);
         loginService = injector.getInstance(LoginService.class);
-        courseAPI = injector.getInstance(CourseAPI.class);
+        loginAPI = new LoginAPI(loginService, config, loginPref, new AnalyticsRegistry(),
+                new DummyNotificationDelegate(), injector.getGson());
         courseService = injector.getInstance(CourseService.class);
+        UserPrefs userPrefs = new UserPrefs(context, loginPref);
+        courseAPI = new CourseAPI(config, courseService, userPrefs);
     }
 
     /**
@@ -275,7 +255,7 @@ public class HttpBaseTestCase extends BaseTestCase {
                     // TODO: Return different responses based on the parameters?
                     response.setBody(MockDataUtil.getMockResponse("get_course_structure"));
                     response.setResponseCode(HttpStatus.OK);
-                }else if (urlMatches(path, "/api/course_home/v1/dates/")) {
+                } else if (urlMatches(path, "/api/course_home/v1/dates/")) {
                     response.setBody(MockDataUtil.getMockResponse("course_dates"));
                     response.setResponseCode(HttpStatus.OK);
                 }
@@ -300,5 +280,4 @@ public class HttpBaseTestCase extends BaseTestCase {
             return generateMockResponse(recordedRequest);
         }
     }
-
 }
