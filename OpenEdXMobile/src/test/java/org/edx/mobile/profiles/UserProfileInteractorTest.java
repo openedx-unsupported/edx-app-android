@@ -4,11 +4,11 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import org.edx.mobile.base.BaseTest;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.test.BaseTest;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.ProfileImage;

@@ -6,21 +6,19 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.gson.JsonObject;
 
-import org.edx.mobile.Injector;
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.Injector;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
-import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.test.util.MockDataUtil;
-import org.edx.mobile.util.Config;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import dagger.Lazy;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

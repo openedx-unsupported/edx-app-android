@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mockStatic;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.edx.mobile.base.http.HttpBaseTestCase;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.model.Filter;

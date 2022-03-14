@@ -6,17 +6,36 @@ import static org.junit.Assert.assertNotNull;
 
 import android.view.View;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.UiTest;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.support.v4.SupportFragmentController;
 
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.HiltTestApplication;
+
+@HiltAndroidTest
+@Config(application = HiltTestApplication.class)
+@RunWith(RobolectricTestRunner.class)
 public class CourseTabsDashboardFragmentTest extends UiTest {
+    @Rule()
+    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
+
+    @Before
+    public void init() {
+        hiltAndroidRule.inject();
+    }
+
     protected EnrolledCoursesResponse getCourseData() {
         EnrolledCoursesResponse courseData;
         try {
@@ -33,13 +52,14 @@ public class CourseTabsDashboardFragmentTest extends UiTest {
     @Test
     public void initializeTest() {
         CourseTabsDashboardFragment fragment = CourseTabsDashboardFragment.newInstance(getCourseData(), "testsCourseId", Screen.COURSE_DASHBOARD);
-        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentActivity.class, android.R.id.content);
+        SupportFragmentController.setupFragment(fragment, HiltTestActivity.class,
+                android.R.id.content, null);
         View view = fragment.getView();
         assertNotNull(view);
 
         View viewPager2 = view.findViewById(R.id.viewPager2);
         assertNotNull(viewPager2);
-        assertThat(viewPager2).isInstanceOf(ViewPager2.class);
+        Assertions.assertThat(viewPager2).isInstanceOf(ViewPager2.class);
     }
 
 // TODO: Following commented test cases will be revisited in LEARNER-5277 story.

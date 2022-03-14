@@ -1,29 +1,27 @@
-package org.edx.mobile.test.http;
+package org.edx.mobile.base.http;
 
 import static org.junit.Assert.assertNotNull;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.edx.mobile.Injector;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.authentication.LoginService;
+import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.Injector;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.model.course.BlockData;
-import org.edx.mobile.model.course.BlockList;
-import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.test.util.MockDataUtil;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
@@ -98,11 +96,11 @@ public class HttpBaseTestCase extends BaseTestCase {
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
         LoginPrefs loginPref = new LoginPrefs(context);
-        loginService = injector.getInstance(LoginService.class);
-        loginAPI = new LoginAPI(loginService, config, loginPref, new AnalyticsRegistry(),
-                new DummyNotificationDelegate(), injector.getGson());
-        courseService = injector.getInstance(CourseService.class);
         UserPrefs userPrefs = new UserPrefs(context, loginPref);
+        loginService = injector.getInstance(LoginService.class);
+        loginAPI = new LoginAPI(loginService, config, loginPref,
+                new AnalyticsRegistry(), new DummyNotificationDelegate(), injector.getGson());
+        courseService = injector.getInstance(CourseService.class);
         courseAPI = new CourseAPI(config, courseService, userPrefs);
     }
 
@@ -271,8 +269,10 @@ public class HttpBaseTestCase extends BaseTestCase {
      * according to the request urls
      */
     private class MockResponseDispatcher extends okhttp3.mockwebserver.Dispatcher {
+
+        @NonNull
         @Override
-        public MockResponse dispatch(RecordedRequest recordedRequest)
+        public MockResponse dispatch(@NonNull RecordedRequest recordedRequest)
                 throws InterruptedException {
             if (useArtificialDelay) {
                 Thread.sleep(calculateDelayForCall());

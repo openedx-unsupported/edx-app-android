@@ -1,13 +1,16 @@
 package org.edx.mobile.test.http;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.gson.Gson;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.http.HttpStatusException;
+import org.edx.mobile.http.util.CallUtil;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.PaginationData;
 import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.profiles.BadgeClass;
-import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.user.UserService;
 import org.junit.Test;
 
@@ -20,9 +23,6 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertEquals;
 
 public class UserApiTest extends BaseTestCase {
 
@@ -52,7 +52,7 @@ public class UserApiTest extends BaseTestCase {
         server.enqueue(new MockResponse().setBody(this.getTestBadgeString()));
 
         UserService service = retrofit.create(UserService.class);
-        Page<BadgeAssertion> badges = executeStrict(service.getBadges("user", 1));
+        Page<BadgeAssertion> badges = CallUtil.executeStrict(service.getBadges("user", 1));
 
         assertEquals(badges.getResults().size(), 1);
     }

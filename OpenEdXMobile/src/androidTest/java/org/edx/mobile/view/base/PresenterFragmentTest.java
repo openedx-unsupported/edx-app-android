@@ -1,13 +1,14 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view.base;
+
+import static org.mockito.Mockito.mock;
 
 import androidx.annotation.NonNull;
 
-import org.edx.mobile.base.BaseAppActivity;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.test.GenericSuperclassUtils;
-import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
-
-import static org.mockito.Mockito.mock;
+import org.edx.mobile.view.Presenter;
+import org.edx.mobile.view.PresenterFragment;
+import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 public abstract class PresenterFragmentTest<FragmentT extends PresenterFragment<PresenterT, ViewT>, PresenterT extends Presenter<ViewT>, ViewT> extends BaseTestCase {
 
@@ -18,7 +19,8 @@ public abstract class PresenterFragmentTest<FragmentT extends PresenterFragment<
     protected void startFragment(@NonNull final FragmentT fragment) {
         this.presenter = mock(getPresenterType());
         fragment.presenter = presenter;
-        SupportFragmentTestUtil.startVisibleFragment(fragment, HostActivity.class, android.R.id.content);
+        SupportFragmentController.setupFragment(fragment, HiltTestActivity.class,
+                android.R.id.content, null);
         this.fragment = fragment;
         this.view = fragment.view;
     }
@@ -26,8 +28,5 @@ public abstract class PresenterFragmentTest<FragmentT extends PresenterFragment<
     @SuppressWarnings("unchecked")
     private Class<PresenterT> getPresenterType() {
         return (Class<PresenterT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterFragmentTest.class)[1];
-    }
-
-    private static class HostActivity extends BaseAppActivity {
     }
 }

@@ -2,8 +2,8 @@ package org.edx.mobile.test;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.EmailUtil;
 import org.junit.Test;
 
 import java.text.ParseException;

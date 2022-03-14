@@ -1,4 +1,4 @@
-package org.edx.mobile
+package org.edx.mobile.base
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -17,15 +17,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Injector(config: Config) {
 
-    var synchronousExecutorService: SynchronousExecutorService = SynchronousExecutorService()
-    var dispatcher = Dispatcher(synchronousExecutorService)
+    private val synchronousExecutorService: SynchronousExecutorService =
+        SynchronousExecutorService()
+    private val dispatcher = Dispatcher(synchronousExecutorService)
 
-    private var okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .dispatcher(dispatcher)
         .addInterceptor(OnlyIfCachedStrippingInterceptor())
         .build()
 
-    private var retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()
         .client(okHttpClient)
         .baseUrl(config.apiHostURL)
         .addConverterFactory(GsonConverterFactory.create(getGson()))

@@ -2,15 +2,35 @@ package org.edx.mobile.view
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.FragmentActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
 import kotlinx.android.synthetic.main.fragment_account.*
 import org.assertj.core.api.Assertions
+import org.edx.mobile.base.UiTest
+import org.edx.mobile.view.base.HiltTestActivity
 import org.junit.Assert.assertNotNull
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import org.robolectric.shadows.support.v4.SupportFragmentController
 
+@HiltAndroidTest
+@Config(application = HiltTestApplication::class)
+@RunWith(RobolectricTestRunner::class)
 class AccountFragmentTest : UiTest() {
+
+    @get:Rule
+    var hiltAndroidRule = HiltAndroidRule(this)
+
+    @Before
+    public fun init() {
+        hiltAndroidRule.inject()
+    }
 
     private lateinit var fragment: AccountFragment
 
@@ -19,7 +39,7 @@ class AccountFragmentTest : UiTest() {
         fragment = AccountFragment.newInstance(null)
         SupportFragmentController.setupFragment(
             fragment,
-            FragmentActivity::class.java, android.R.id.content, mock(Bundle::class.java)
+            HiltTestActivity::class.java, android.R.id.content, mock(Bundle::class.java)
         )
     }
 

@@ -461,13 +461,13 @@ android {
         if (project.hasProperty('ASSETS')) {
             prod.assets.srcDirs = [ASSETS]
         }
-
+        // Shared directory of both unit and instrumentation to use common base classes.
         String sharedTestDir = 'src/sharedTest/java'
         test {
-            java.srcDir sharedTestDir
+            java.srcDirs += sharedTestDir
         }
         androidTest {
-            java.srcDir sharedTestDir
+            java.srcDirs += sharedTestDir
         }
     }
 

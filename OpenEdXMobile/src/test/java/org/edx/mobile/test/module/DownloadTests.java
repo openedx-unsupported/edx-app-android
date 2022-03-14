@@ -8,12 +8,12 @@ import android.app.Application;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
-import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.FileUtil;
 import org.junit.Test;
 

@@ -1,7 +1,11 @@
 package org.edx.mobile.base.http
 
-import java.util.concurrent.*
-
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 /**
  * This class enforce the Retrofit to execute request on the main thread and invoke callbacks for

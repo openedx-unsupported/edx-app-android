@@ -1,15 +1,14 @@
-package org.edx.mobile.login;
+package org.edx.mobile.view.login;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.view.LoginActivity;
 import org.edx.mobile.view.PresenterActivityTest;
-import org.edx.mobile.view.login.LoginPresenter;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginActivityTest extends PresenterActivityTest<LoginActivity, LoginPresenter, LoginPresenter.LoginViewInterface> {
 
@@ -20,7 +19,7 @@ public class LoginActivityTest extends PresenterActivityTest<LoginActivity, Logi
 
     @Test
     public void testSetSocialLoginButtons_withFacebookEnabled_facebookButtonIsVisible() {
-        view.setSocialLoginButtons(false, true , false);
+        view.setSocialLoginButtons(false, true, false);
         assertThat(activity.findViewById(R.id.panel_login_social).getVisibility()).isEqualTo(View.VISIBLE);
         assertThat(activity.findViewById(R.id.google_button).getVisibility()).isNotEqualTo(View.VISIBLE);
         assertThat(activity.findViewById(R.id.microsoft_button).getVisibility()).isNotEqualTo(View.VISIBLE);

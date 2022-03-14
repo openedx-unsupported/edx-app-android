@@ -1,12 +1,12 @@
 package org.edx.mobile.whatsnew;
 
-import org.edx.mobile.test.BaseTest;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
+import org.edx.mobile.base.BaseTest;
 import org.edx.mobile.whatsnew.WhatsNewItemModel.Platform;
 import org.junit.Test;
 
 import java.util.Arrays;
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class WhatsNewItemModelTest extends BaseTest {
     @Test

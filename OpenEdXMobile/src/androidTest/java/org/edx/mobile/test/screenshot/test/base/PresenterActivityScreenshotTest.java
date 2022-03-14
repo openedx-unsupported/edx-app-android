@@ -1,18 +1,22 @@
-package org.edx.mobile.view;
+package org.edx.mobile.test.screenshot.test.base;
+
+import static org.mockito.Mockito.mock;
 
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.UiThreadTestRule;
 
 import com.facebook.testing.screenshot.Screenshot;
 
+import org.edx.mobile.base.GenericSuperclassUtils;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.test.EdxInstrumentationTestApplication;
-import org.edx.mobile.test.GenericSuperclassUtils;
+import org.edx.mobile.view.Presenter;
+import org.edx.mobile.view.PresenterActivity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,8 +26,6 @@ import org.junit.runner.RunWith;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import static org.mockito.Mockito.mock;
 
 /**
  * Extend this class to create an instrumentation test that automatically:

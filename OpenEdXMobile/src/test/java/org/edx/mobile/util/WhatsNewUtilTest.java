@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.edx.mobile.R;
-import org.edx.mobile.test.BaseTest;
+import org.edx.mobile.base.BaseTest;
 import org.edx.mobile.whatsnew.WhatsNewItemModel;
 import org.edx.mobile.whatsnew.WhatsNewModel;
 import org.junit.Test;

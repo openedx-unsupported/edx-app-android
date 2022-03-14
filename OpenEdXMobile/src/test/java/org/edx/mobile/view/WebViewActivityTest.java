@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.test.BaseTestCase;
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;

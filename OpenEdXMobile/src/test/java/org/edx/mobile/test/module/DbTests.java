@@ -1,7 +1,7 @@
 package org.edx.mobile.test.module;
 
-import org.edx.mobile.Injector;
-import org.edx.mobile.core.EdxDefaultModule;
+import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.Injector;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -11,17 +11,13 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.test.BaseTestCase;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 import androidx.test.core.app.ApplicationProvider;
-
-import dagger.hilt.android.EntryPointAccessors;
 
 public class DbTests extends BaseTestCase {
 

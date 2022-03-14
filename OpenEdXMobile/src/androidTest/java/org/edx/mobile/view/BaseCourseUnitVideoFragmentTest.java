@@ -7,29 +7,46 @@ import static org.junit.Assert.assertNotNull;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.UiTest;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
+
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.HiltTestApplication;
 
 // We should add mock downloads, mock play, and state retention tests
 // later. Also, online/offline transition tests; although the
 // onOnline() and onOffline() methods don't seem to be called from
 // anywhere yet?
+@HiltAndroidTest
+@Config(application = HiltTestApplication.class)
+@RunWith(RobolectricTestRunner.class)
 public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
+
+    @Rule()
+    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
+
+    @Before
+    public void init() {
+        hiltAndroidRule.inject();
+    }
 
     protected abstract BaseCourseUnitVideoFragment getCourseUnitPlayerFragmentInstance();
 
@@ -65,7 +82,7 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
     @Test
     public void initializeTest() {
         final BaseCourseUnitVideoFragment fragment = CourseUnitVideoPlayerFragment.newInstance(getVideoUnit(), false, false);
-        SupportFragmentController.setupFragment(fragment, FragmentUtilActivity.class,
+        SupportFragmentController.setupFragment(fragment, HiltTestActivity.class,
                 android.R.id.content, null);
 
         final View view = fragment.getView();
@@ -113,36 +130,11 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
     @Test
     public void orientationChangeTest() {
         final BaseCourseUnitVideoFragment fragment = getCourseUnitPlayerFragmentInstance();
-        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
+        SupportFragmentTestUtil.startVisibleFragment(fragment, HiltTestActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);
 
         testOrientationChange(fragment, Configuration.ORIENTATION_LANDSCAPE);
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
-    }
-
-    private static class FragmentUtilActivity extends FragmentActivity implements CourseUnitFragment.HasComponent {
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            final LinearLayout view = new LinearLayout(this);
-            // noinspection ResourceType
-            view.setId(1);
-
-            setContentView(view);
-        }
-
-        @Override
-        public CourseComponent getComponent() {
-            return null;
-        }
-
-        @Override
-        public void navigateNextComponent() {
-        }
-
-        @Override
-        public void navigatePreviousComponent() {
-        }
     }
 }

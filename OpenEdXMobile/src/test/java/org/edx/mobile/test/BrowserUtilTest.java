@@ -1,14 +1,15 @@
 package org.edx.mobile.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import android.content.Intent;
 import android.net.Uri;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.util.BrowserUtil;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class BrowserUtilTest extends BaseTestCase {
     @Test
