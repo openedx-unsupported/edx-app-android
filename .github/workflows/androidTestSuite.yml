@@ -6,19 +6,48 @@ on:
       - master
 
 jobs:
-  android_ci:
-    name: Android API ${{ matrix.api-level }}
-    runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        api-level: [ 21, 27, 30 ]
+  android_test_cases:
+    name: Android Unit Tests
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup JDK 11
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: Run tests
+        run: |
+          chmod +x gradlew
+          ./gradlew jacocoTestProdDebugUnitTestReport
+          ./gradlew copyUnitTestBuildArtifacts
+
+      - name: Upload Test Report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Unit Test Report
+          path: artifacts
+
+      - name: Codecov Report
+        run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
+
+  android_screenshot:
+    name: Android Screenshot Tests
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
@@ -29,11 +58,8 @@ jobs:
         with:
           python-version: 2.7
 
-      - name: Install Pillow and Codecov
-        run: |
-          python -m pip install --upgrade pip
-          pip install --user codecov
-          pip install --user Pillow==6.2.2
+      - name: Install Pillow
+        run: pip install -r requirements.txt
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
@@ -45,14 +71,14 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-21
 
       - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
+          api-level: 21
           arch: x86
           target: google_apis
           disable-animations: false
@@ -60,27 +86,11 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: echo "Generated AVD snapshot for caching."
 
-      - name: Run tests
-        if: always()
-        uses: ReactiveCircus/android-emulator-runner@v2
-        with:
-          profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
-          arch: x86
-          target: google_apis
-          disable-animations: true
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            chmod +x gradlew
-            ./gradlew jacocoTestProdDebugUnitTestReport
-
       - name: Run E2E
-        if: always()
-        uses: ReactiveCircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
+          api-level: 21
           arch: x86
           target: google_apis
           disable-animations: true
@@ -88,39 +98,12 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
-
-      - name: Run Artifacts
-        uses: ReactiveCircus/android-emulator-runner@v2
-        with:
-          profile: Nexus 4
-          api-level: ${{ matrix.api-level }}
-          arch: x86
-          target: google_apis
-          disable-animations: true
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            ./gradlew copyLintBuildArtifacts
-            ./gradlew copyUnitTestBuildArtifacts
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
-
-      - name: Upload Screenshot Test cases report
-        uses: actions/upload-artifact@v2
-        with:
-          name: report
-          path: OpenEdXMobile/build/screenshotsProdDebuggableAndroidTest
+            mv OpenEdXMobile/screenshots artifacts/
 
       - name: Upload Test Report
+        if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: report
+          name: Screenshot Test Report
           path: artifacts
-
-      - name: Download Test Reports
-        uses: actions/download-artifact@v2
-        with:
-          name: report
-          path: OpenEdXMobile/build/reports/coverage/debug
-
-      - name: Upload Test Report
-        run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
