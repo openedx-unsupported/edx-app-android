@@ -32,7 +32,6 @@ jobs:
       # Run android unit tests & organize test reports
       - name: Run tests
         run: |
-        # Gradle requires executable permission to run some tests
           chmod +x gradlew
           ./gradlew jacocoTestProdDebugUnitTestReport
           ./gradlew copyUnitTestBuildArtifacts
