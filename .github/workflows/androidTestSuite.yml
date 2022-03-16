@@ -1,69 +1,91 @@
 name: Android Test Suite
+
+# The workflow will start for every PR against master branch
 on:
   pull_request:
   push:
     branches:
       - master
 
+# Multiple jobs run in parallel
 jobs:
   android_test_cases:
     name: Android Unit Tests
     runs-on: ubuntu-latest
 
     steps:
+      # Checkouts the current branch for processing
       - name: Checkout
         uses: actions/checkout@v2
 
+      # Setup the Java environment
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '11'
 
+      # Cache and restore the Gradle dependencies on multiple runs
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
+      # Run android unit tests & organize test reports
       - name: Run tests
         run: |
+        # Gradle requires executable permission to run some tests
           chmod +x gradlew
           ./gradlew jacocoTestProdDebugUnitTestReport
           ./gradlew copyUnitTestBuildArtifacts
 
+      # Uploads the folder or file in path to Github
       - name: Upload Test Report
+        # Run this step even if the previous fails
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Unit Test Report
           path: artifacts
 
+      # Upload the test report to Codecov for coverage report
       - name: Codecov Report
         run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
 
   android_screenshot:
     name: Android Screenshot Tests
+    # The macOS VM provided by GitHub Actions has HAXM installed so we are able to create a new AVD
+    # instance, launch an emulator with hardware acceleration, and run our Android tests directly
+    # on the VM.
+    # Ref: https://github.com/marketplace/actions/android-emulator-runner
     runs-on: macos-latest
 
     steps:
+      # Checkouts the current branch for processing
       - name: Checkout
         uses: actions/checkout@v2
 
+      # Setup the Java environment
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '11'
 
+      # Install Python 2.7 to support Pillow library for screenshot testing
+      # Ref: https://github.com/facebook/screenshot-tests-for-android#requirements
       - name: Setup Python 2.7
         uses: actions/setup-python@v2
         with:
           python-version: 2.7
 
+      # Install Pillow 6.2.2 for screenshot testing
       - name: Install Pillow
         run: pip install -r requirements.txt
 
+      # Cache and restore the Gradle dependencies on multiple runs
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
+      # Cache and restore the particular Android Virtual Device
       - name: AVD cache
         uses: actions/cache@v2
         id: avd-cache
@@ -73,6 +95,7 @@ jobs:
             ~/.android/adb*
           key: avd-21
 
+      # Create AVD for caching and to be used later
       - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
@@ -86,6 +109,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: echo "Generated AVD snapshot for caching."
 
+      # Run screenshot test cases and pull the screenshot from device to be used for reporting
       - name: Run E2E
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -101,6 +125,7 @@ jobs:
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
             mv OpenEdXMobile/screenshots artifacts/
 
+      # Uploads the folder or file in path to Github
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v2
