@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.provider.RetrofitProvider;
@@ -172,6 +174,7 @@ public interface CourseService {
 
     final class EnrollBody {
         @NonNull
+        @SerializedName("course_details")
         private final CourseDetails courseDetails;
 
         public EnrollBody(@NonNull final String courseId, final boolean emailOptIn) {
@@ -180,7 +183,10 @@ public interface CourseService {
 
         private static class CourseDetails {
             @NonNull
+            @SerializedName("course_id")
             private final String courseId;
+
+            @SerializedName("email_opt_in")
             private final boolean emailOptIn;
 
             CourseDetails(@NonNull final String courseId, final boolean emailOptIn) {
