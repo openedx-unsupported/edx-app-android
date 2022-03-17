@@ -3,7 +3,7 @@
 cd .. 
 cd edx-app-android-build
 print_message(){
-echo -e "\n************************************************\n$1\n"
+echo -e "\n*********************************************\n$1\n"
 }
 
 virtual_env_dir="virtual_env"
