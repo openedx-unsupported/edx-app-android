@@ -11,7 +11,7 @@ on:
 jobs:
   android_test_cases:
     name: Android Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       # Checkouts the current branch for processing
@@ -36,7 +36,7 @@ jobs:
           ./gradlew jacocoTestProdDebugUnitTestReport
           ./gradlew copyUnitTestBuildArtifacts
 
-      # Uploads the folder or file in path to Github
+      # Uploads the folder or file in path to GitHub
       - name: Upload Test Report
         # Run this step even if the previous fails
         if: always()
@@ -47,15 +47,21 @@ jobs:
 
       # Upload the test report to Codecov for coverage report
       - name: Codecov Report
-        run: bash <(curl -s https://codecov.io/bash) -f "artifacts/reports/jacoco/jacocoTestProdDebugUnitTestReport/jacocoTestProdDebugUnitTestReport.xml"
+        uses: codecov/codecov-action@v2
+        with:
+          directory: artifacts
+          files: jacocoTestProdDebugUnitTestReport.xml
+          fail_ci_if_error: true
+          verbose: true
 
   android_screenshot:
-    name: Android Screenshot Tests
+    name: Android Instrumented Tests
     # The macOS VM provided by GitHub Actions has HAXM installed so we are able to create a new AVD
     # instance, launch an emulator with hardware acceleration, and run our Android tests directly
     # on the VM.
+    # Includes Screenshot Tests
     # Ref: https://github.com/marketplace/actions/android-emulator-runner
-    runs-on: macos-latest
+    runs-on: macos-11
 
     steps:
       # Checkouts the current branch for processing
@@ -76,8 +82,8 @@ jobs:
         with:
           python-version: 2.7
 
-      # Install Pillow 6.2.2 for screenshot testing
-      - name: Install Pillow
+      # Install requirements for screenshot testing
+      - name: Install Requirements
         run: pip install -r requirements.txt
 
       # Cache and restore the Gradle dependencies on multiple runs
@@ -95,7 +101,7 @@ jobs:
           key: avd-21
 
       # Create AVD for caching and to be used later
-      - name: Create AVD and generate snapshot for caching
+      - name: Create AVD and generate a snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -124,7 +130,7 @@ jobs:
             ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
             mv OpenEdXMobile/screenshots artifacts/
 
-      # Uploads the folder or file in path to Github
+      # Uploads the folder or file in path to GitHub
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v2
