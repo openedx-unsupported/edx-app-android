@@ -1,12 +1,15 @@
 package org.edx.mobile.exception
 
+import androidx.annotation.StringRes
+
 /**
  * Error handling model class for ViewModel
  * handle exceptions/error based on errorCode
  */
 data class ErrorMessage(
     val errorCode: Int,
-    val throwable: Throwable
+    val throwable: Throwable,
+    @StringRes val errorResId: Int = 0
 ) {
     companion object {
         // Custom error codes

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,12 +17,12 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
-import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
@@ -126,7 +127,9 @@ class CourseModalDialogFragment : DialogFragment() {
 
                 override fun onPurchaseCancel() {
                     iapViewModel.endLoading()
-                    showUpgradeErrorDialog()
+                    showUpgradeErrorDialog(
+                        errorResId = R.string.error_payment_not_processed
+                    )
                 }
 
                 override fun onPurchaseComplete(purchase: Purchase) {
@@ -156,10 +159,10 @@ class CourseModalDialogFragment : DialogFragment() {
                         binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
                     }, 500)
                 } else {
-                    showUpgradeErrorDialog()
+                    showUpgradeErrorDialog(errorResId = R.string.error_price_not_fetched)
                 }
             }
-        } ?: showUpgradeErrorDialog()
+        } ?: showUpgradeErrorDialog(errorResId = R.string.error_price_not_fetched)
     }
 
     private fun initObserver() {
@@ -177,10 +180,9 @@ class CourseModalDialogFragment : DialogFragment() {
         })
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
-            if (errorMsg.throwable is HttpStatusException) {
-                when (errorMsg.throwable.statusCode) {
-                    HttpStatus.UNAUTHORIZED,
-                    HttpStatus.FORBIDDEN -> {
+            if (errorMsg.throwable is InAppPurchasesException) {
+                when (errorMsg.throwable.httpErrorCode) {
+                    HttpStatus.UNAUTHORIZED -> {
                         environment.router?.forceLogout(
                             requireContext(),
                             environment.analyticsRegistry,
@@ -188,10 +190,10 @@ class CourseModalDialogFragment : DialogFragment() {
                         )
                         return@NonNullObserver
                     }
-                    else -> showUpgradeErrorDialog()
+                    else -> showUpgradeErrorDialog(errorMsg.errorResId)
                 }
             } else {
-                showUpgradeErrorDialog()
+                showUpgradeErrorDialog(errorMsg.errorResId)
             }
             iapViewModel.errorMessageShown()
         })
@@ -216,10 +218,12 @@ class CourseModalDialogFragment : DialogFragment() {
         iapViewModel.executeOrder(purchaseToken = purchaseToken)
     }
 
-    private fun showUpgradeErrorDialog() {
+    private fun showUpgradeErrorDialog(
+        @StringRes errorResId: Int = R.string.general_error_message
+    ) {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
-            getString(R.string.upgrade_error_message),
+            getString(errorResId),
             getString(R.string.label_close),
             null,
             getString(R.string.label_get_help)

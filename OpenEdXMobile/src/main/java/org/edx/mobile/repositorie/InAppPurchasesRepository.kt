@@ -1,5 +1,7 @@
 package org.edx.mobile.repositorie
 
+import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.toInAppPurchasesResult
 import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
 import org.edx.mobile.inapppurchases.InAppPurchasesAPI
@@ -18,14 +20,7 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
                 call: Call<AddToBasketResponse>,
                 response: Response<AddToBasketResponse>
             ) {
-                callback.onSuccess(
-                    Result.Success<AddToBasketResponse>(
-                        isSuccessful = response.isSuccessful,
-                        data = response.body(),
-                        code = response.code(),
-                        message = response.message()
-                    )
-                )
+                response.toInAppPurchasesResult(callback, ErrorMessage.ADD_TO_BASKET_CODE)
             }
 
             override fun onFailure(call: Call<AddToBasketResponse>, t: Throwable) {
@@ -40,14 +35,7 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
                 call: Call<CheckoutResponse>,
                 response: Response<CheckoutResponse>
             ) {
-                callback.onSuccess(
-                    Result.Success<CheckoutResponse>(
-                        isSuccessful = response.isSuccessful,
-                        data = response.body(),
-                        code = response.code(),
-                        message = response.message()
-                    )
-                )
+                response.toInAppPurchasesResult(callback, ErrorMessage.CHECKOUT_CODE)
             }
 
             override fun onFailure(call: Call<CheckoutResponse>, t: Throwable) {
@@ -71,14 +59,7 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
                 call: Call<ExecuteOrderResponse>,
                 response: Response<ExecuteOrderResponse>
             ) {
-                callback.onSuccess(
-                    Result.Success<ExecuteOrderResponse>(
-                        isSuccessful = response.isSuccessful,
-                        data = response.body(),
-                        code = response.code(),
-                        message = response.message()
-                    )
-                )
+                response.toInAppPurchasesResult(callback, ErrorMessage.EXECUTE_ORDER_CODE)
             }
 
             override fun onFailure(call: Call<ExecuteOrderResponse>, t: Throwable) {
