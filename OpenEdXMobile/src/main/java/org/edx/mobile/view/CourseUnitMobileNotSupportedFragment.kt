@@ -199,7 +199,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
         iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
             if (it.paymentPageUrl.isNotEmpty())
-                purchaseProduct(iapViewModel.getProductId())
+                purchaseProduct(iapViewModel.productId)
         })
 
         iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
@@ -247,7 +247,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun executeOrder(purchaseToken: String) {
-        iapViewModel.executeOrder(purchaseToken = purchaseToken)
+        iapViewModel.setPurchaseToken(purchaseToken)
+        iapViewModel.executeOrder()
     }
 
     private fun showUpgradeErrorDialog(
@@ -257,6 +258,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         feedbackEndpoint: Int? = null,
         listener: DialogInterface.OnClickListener? = null
     ) {
+        // To restrict showing error dialog on an unattached fragment
+        if (!isAdded) return
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
             getString(errorResId),
