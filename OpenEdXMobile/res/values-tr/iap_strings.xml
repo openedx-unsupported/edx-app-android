@@ -6,9 +6,4 @@
     <string name="title_purchase">Satın alımları geri yükleyin</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Daha önce yükseltmek için ödeme yaptığınız kurslara erişimi geri yüklemek için Play Store\'da oturum açın</string>
-
-    <!-- Title of Upgrade Complete Alert -->
-    <string name="title_upgrade_complete">Yükseltme tamamlandı</string>
-    <!-- Message for successful course upgrade -->
-    <string name="upgrade_success_message">Satın alım işleminiz için teşekkür ederiz. Tam kaldığınız yerden devam edebilir ve kurs içeriğinize tam erişimin tadını çıkarabilirsiniz.</string>
 </resources>
