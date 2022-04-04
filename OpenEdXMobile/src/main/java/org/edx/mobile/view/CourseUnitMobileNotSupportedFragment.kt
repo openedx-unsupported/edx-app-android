@@ -17,6 +17,7 @@ import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
+import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.inapppurchases.ProductManager
@@ -186,7 +187,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         })
 
         iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
-            showUpgradeCompleteDialog()
+            showPurchaseSuccessSnackbar()
         })
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
@@ -244,15 +245,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         }.show(childFragmentManager, null)
     }
 
-    private fun showUpgradeCompleteDialog() {
-        AlertDialogFragment.newInstance(
-            getString(R.string.title_upgrade_complete),
-            getString(R.string.upgrade_success_message),
-            getString(R.string.label_continue),
-            null,
-            null,
-            null
-        ).show(childFragmentManager, null)
+    private fun showPurchaseSuccessSnackbar() {
+        SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
     }
 
     override fun onResume() {

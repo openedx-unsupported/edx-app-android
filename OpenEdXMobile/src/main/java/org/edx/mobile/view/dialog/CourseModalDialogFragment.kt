@@ -17,6 +17,7 @@ import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
+import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.module.analytics.Analytics
@@ -172,7 +173,7 @@ class CourseModalDialogFragment : DialogFragment() {
         })
 
         iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
-            showUpgradeCompleteDialog()
+            showPurchaseSuccessSnackbar()
         })
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
@@ -230,15 +231,8 @@ class CourseModalDialogFragment : DialogFragment() {
         }.show(childFragmentManager, null)
     }
 
-    private fun showUpgradeCompleteDialog() {
-        AlertDialogFragment.newInstance(
-            getString(R.string.title_upgrade_complete),
-            getString(R.string.upgrade_success_message),
-            getString(R.string.label_continue),
-            null,
-            null,
-            null
-        ).show(childFragmentManager, null)
+    private fun showPurchaseSuccessSnackbar() {
+        SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
     }
 
     override fun onDestroyView() {

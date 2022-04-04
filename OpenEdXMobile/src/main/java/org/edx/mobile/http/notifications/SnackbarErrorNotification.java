@@ -111,6 +111,15 @@ public class SnackbarErrorNotification extends ErrorNotification {
     }
 
     /**
+     * Show the error notification as a persistent Snackbar, according to the provided details.
+     *
+     * @param errorResId The resource ID of the error message.
+     */
+    public void showError(int errorResId) {
+        showError(errorResId, 0, 0, Snackbar.LENGTH_SHORT, null);
+    }
+
+    /**
      * Show the error notification as a persistent Snackbar, for offline mode.
      *
      * @param listener The {@link RefreshListener} to use when action item is pressed on Snackbar.

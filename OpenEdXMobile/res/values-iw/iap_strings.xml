@@ -6,9 +6,4 @@
     <string name="title_purchase">לשחזר רכישות</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">היכנס לחנות Play כדי לשחזר גישה לקורסים ששילמת בעבר כדי לשדרג</string>
-
-    <!-- Title of Upgrade Complete Alert -->
-    <string name="title_upgrade_complete">השדרוג הושלם</string>
-    <!-- Message for successful course upgrade -->
-    <string name="upgrade_success_message">תודה על רכישתך. אתה יכול להמשיך מאיפה שהפסקת וליהנות מגישה מלאה לתוכן הקורס שלך.</string>
 </resources>
