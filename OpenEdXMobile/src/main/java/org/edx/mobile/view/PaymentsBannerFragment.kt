@@ -6,12 +6,10 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_payments_banner.*
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
@@ -23,6 +21,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class PaymentsBannerFragment : BaseFragment() {
+
+    private lateinit var binding: FragmentPaymentsBannerBinding
 
     @Inject
     lateinit var environment: IEdxEnvironment
@@ -76,8 +76,7 @@ class PaymentsBannerFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentPaymentsBannerBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_payments_banner, container, false)
+        binding = FragmentPaymentsBannerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -92,10 +91,10 @@ class PaymentsBannerFragment : BaseFragment() {
         val courseData: EnrolledCoursesResponse =
             arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
         val showInfoButton: Boolean = arguments?.getBoolean(EXTRA_SHOW_INFO_BUTTON) ?: false
-        upgrade_to_verified_footer.visibility = View.VISIBLE
+        binding.upgradeToVerifiedFooter.visibility = View.VISIBLE
         if (showInfoButton) {
-            info.visibility = View.VISIBLE
-            info.setOnClickListener {
+            binding.info.visibility = View.VISIBLE
+            binding.info.setOnClickListener {
                 environment.router.showPaymentsInfoActivity(
                     context,
                     courseData,
@@ -103,19 +102,19 @@ class PaymentsBannerFragment : BaseFragment() {
                 )
             }
         } else {
-            info.visibility = View.GONE
+            binding.info.visibility = View.GONE
         }
         if (!TextUtils.isEmpty(courseUpgradeData.price)) {
-            tv_upgrade_price.text = courseUpgradeData.price
+            binding.tvUpgradePrice.text = courseUpgradeData.price
         } else {
-            tv_upgrade_price.visibility = View.GONE
+            binding.tvUpgradePrice.visibility = View.GONE
         }
 
         val courseUnit: CourseComponent? =
             arguments?.getSerializable(Router.EXTRA_COURSE_UNIT) as CourseComponent?
 
         courseUpgradeData.basketUrl?.let { basketUrl ->
-            ll_upgrade_button.setOnClickListener {
+            binding.llUpgradeButton.setOnClickListener {
                 environment.router?.showCourseUpgradeWebViewActivity(
                     context, basketUrl, courseData, courseUnit
                 )

@@ -44,14 +44,14 @@ jobs:
         with:
           name: Unit Test Report
           path: artifacts
-
+      # TODO: Enable once Codecov configured with the repo by setting up `fail_ci_if_error` to true
       # Upload the test report to Codecov for coverage report
       - name: Codecov Report
         uses: codecov/codecov-action@v2
         with:
           directory: artifacts
           files: jacocoTestProdDebugUnitTestReport.xml
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           verbose: true
 
   android_screenshot:
