@@ -15,8 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.resources.TextAppearanceConfig
-import kotlinx.android.synthetic.main.sub_item_course_date_block.view.*
 import org.edx.mobile.R
+import org.edx.mobile.databinding.SubItemCourseDateBlockBinding
 import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.course.CourseDateBlock
 
@@ -60,14 +60,18 @@ class DataBindingHelperUtils {
 
         @JvmStatic
         @BindingAdapter("binding:addView", "binding:clickListener", requireAll = true)
-        fun addView(linearLayout: LinearLayout, list: ArrayList<CourseDateBlock>, clickListener: OnDateBlockListener) {
+        fun addView(
+            linearLayout: LinearLayout,
+            list: ArrayList<CourseDateBlock>,
+            clickListener: OnDateBlockListener
+        ) {
             val inflater: LayoutInflater =
-                    linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             if (linearLayout.childCount < 2) {
                 // if all the item has the same date type so it means badge is already added in parent view
                 val parentBadgeAdded = hasSameDateTypes(list)
                 list.forEach { item ->
-                    val childView = inflater.inflate(R.layout.sub_item_course_date_block, null)
+                    val childView = SubItemCourseDateBlockBinding.inflate(inflater)
 
                     var labelType = ""
                     val title = SpannableStringBuilder(item.title)
@@ -81,13 +85,16 @@ class DataBindingHelperUtils {
                     }
 
                     if (item.title.isNotBlank()) childView.title.visibility = View.VISIBLE
-                    childView.title.setText(TextUtils.concat(labelType, title), TextView.BufferType.SPANNABLE)
+                    childView.title.setText(
+                        TextUtils.concat(labelType, title),
+                        TextView.BufferType.SPANNABLE
+                    )
                     isViewAccessible(childView.title, item.dateBlockBadge)
 
                     setSpanText(childView.description, item.description)
                     isViewAccessible(childView.description, item.dateBlockBadge)
 
-                    childView.setOnClickListener {
+                    childView.root.setOnClickListener {
                         if (item.showLink()) {
                             clickListener.onClick(item.link, item.blockId)
                         }
@@ -96,7 +103,7 @@ class DataBindingHelperUtils {
                         // Set update badge with sub date items
                         setBadge(childView.title, item, null, true)
                     }
-                    linearLayout.addView(childView)
+                    linearLayout.addView(childView.root)
                 }
             }
         }

@@ -1,12 +1,21 @@
-package org.edx.mobile.profiles;
+package org.edx.mobile.view.profiles;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
+import org.edx.mobile.profiles.AccomplishmentListAdapter;
+import org.edx.mobile.profiles.BadgeAssertion;
+import org.edx.mobile.profiles.UserProfileAccomplishmentsFragment;
+import org.edx.mobile.profiles.UserProfileAccomplishmentsPresenter;
 import org.edx.mobile.view.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +23,6 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.assertj.android.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.robolectric.Shadows.shadowOf;
 
 public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTest<
         UserProfileAccomplishmentsFragmentTest.TestableUserProfileAccomplishmentsFragment,
@@ -34,7 +38,7 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     public void before() {
         startFragment(new TestableUserProfileAccomplishmentsFragment(mockAdapter));
         binding = DataBindingUtil.getBinding(fragment.getView());
-        assertThat(binding).isNotNull();
+        Java6Assertions.assertThat(binding).isNotNull();
     }
 
     @Test

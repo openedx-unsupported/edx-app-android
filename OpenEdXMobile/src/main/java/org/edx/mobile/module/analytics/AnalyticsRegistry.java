@@ -24,7 +24,7 @@ import dagger.hilt.components.SingletonComponent;
 public class AnalyticsRegistry implements Analytics {
 
     @Inject
-    AnalyticsRegistry() {
+    public AnalyticsRegistry() {
     }
 
     @NonNull

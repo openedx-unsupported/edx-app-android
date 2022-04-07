@@ -4,11 +4,11 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import org.edx.mobile.base.BaseTest;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.test.BaseTest;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.ProfileImage;
@@ -100,7 +100,7 @@ public class UserProfileInteractorTest extends BaseTest {
     }
 
     @Test
-    public void whenProfileObserved_withNoAboutMe_emitsNoAboutMe() throws Exception {
+    public void whenProfileObserved_withNoAboutMe_emitsProfileWithNoAboutMe() throws Exception {
         configureBareMockAccount();
         createAndObserveInteractor();
         verify(profileObserver).onData(refEq(new UserProfileViewModel(
@@ -114,12 +114,12 @@ public class UserProfileInteractorTest extends BaseTest {
     }
 
     @Test
-    public void whenProfileObserved_withNoAboutMe_withPrivateAccount_asAnonymousUser_emitsLimitedProfileMessageAndEmptyContent() throws Exception {
+    public void whenProfileObserved_withNoAboutMe_withPrivateAccount_asAnonymousUser_emitsProfileMessageAndEmptyContent() throws Exception {
         final Account account = configureBareMockAccount();
         when(account.getAccountPrivacy()).thenReturn(Account.Privacy.PRIVATE);
         createAndObserveInteractor();
         verify(profileObserver).onData(refEq(new UserProfileViewModel(
-                UserProfileViewModel.LimitedProfileMessage.OTHER_USERS_PROFILE,
+                UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
                 new UserProfileBioModel(
@@ -152,7 +152,7 @@ public class UserProfileInteractorTest extends BaseTest {
         when(account.requiresParentalConsent()).thenReturn(true);
         createAndObserveInteractor();
         verify(profileObserver).onData(refEq(new UserProfileViewModel(
-                UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE,
+                UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
                 new UserProfileBioModel(
@@ -162,12 +162,12 @@ public class UserProfileInteractorTest extends BaseTest {
     }
 
     @Test
-    public void whenProfileObserved_withParentalConsentRequired_asAnonymousUser_showsNoAboutMe() {
+    public void whenProfileObserved_withParentalConsentRequired_emitsProfile_showsNoAboutMe() {
         final Account account = configureBareMockAccount();
         when(account.requiresParentalConsent()).thenReturn(true);
         createAndObserveInteractor();
         verify(profileObserver).onData(refEq(new UserProfileViewModel(
-                UserProfileViewModel.LimitedProfileMessage.OTHER_USERS_PROFILE,
+                UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
                 new UserProfileBioModel(

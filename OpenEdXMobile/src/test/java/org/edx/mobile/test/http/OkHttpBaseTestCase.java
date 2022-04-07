@@ -4,8 +4,8 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.test.BaseTestCase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
@@ -21,9 +21,9 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
 /**
- *  use MockWebService for Api test
- *  TODO - code refactoring need for OkHttpBaseTestCase and HttpBaseTestCase
- *  we need to depreciate OkHttpBaseTestCase soon.
+ * use MockWebService for Api test
+ * TODO - code refactoring need for OkHttpBaseTestCase and HttpBaseTestCase
+ * we need to depreciate OkHttpBaseTestCase soon.
  */
 @Ignore
 public class OkHttpBaseTestCase extends BaseTestCase {
@@ -67,8 +67,6 @@ public class OkHttpBaseTestCase extends BaseTestCase {
         super.tearDown();
         server.shutdown();
     }
-
-
 
     /**
      * Get the delay (in milliseconds) that should be used for delaying

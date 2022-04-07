@@ -1,22 +1,23 @@
 package org.edx.mobile.test.module;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import android.app.Application;
 
+import androidx.test.core.app.ApplicationProvider;
+
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
-import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.FileUtil;
 import org.junit.Test;
-import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class DownloadTests extends BaseTestCase {
 
@@ -25,14 +26,14 @@ public class DownloadTests extends BaseTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        dm = DownloadFactory.getInstance(RuntimeEnvironment.application);
+        dm = DownloadFactory.getInstance(ApplicationProvider.getApplicationContext());
     }
 
     @Test
     public void testAddDownload() throws Exception {
         File dir = null;
         try {
-            final Application application = RuntimeEnvironment.application;
+            final Application application = ApplicationProvider.getApplicationContext();
             final IEdxEnvironment environment = MainApplication.getEnvironment(application);
             dir = FileUtil.getDownloadDirectory(application, environment);
         } catch (Exception ex) {

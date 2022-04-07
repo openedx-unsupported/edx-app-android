@@ -1,10 +1,15 @@
 package org.edx.mobile.view;
 
-import androidx.annotation.NonNull;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import android.view.View;
 import android.webkit.WebView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.UiTest;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -12,29 +17,42 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HtmlBlockModel;
-import org.edx.mobile.view.custom.PreLoadingListener;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import roboguice.activity.RoboFragmentActivity;
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+import dagger.hilt.android.testing.HiltTestApplication;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+@HiltAndroidTest
+@Config(application = HiltTestApplication.class)
+@RunWith(RobolectricTestRunner.class)
 public class CourseUnitWebViewFragmentTest extends UiTest {
+
+    @Rule()
+    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
+
+    @Before
+    public void init() {
+        hiltAndroidRule.inject();
+    }
+
 
     EnrolledCoursesResponse courseData;
 
     /**
      * Method to initialize Course Data from API
      */
-    private void initializeCourseData(){
+    private void initializeCourseData() {
         try {
             courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
         } catch (Exception e) {
@@ -70,31 +88,17 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
     @Test
     public void initializeTest() throws CourseContentNotValidException {
         initializeCourseData();
-        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getMode(), false);
-        SupportFragmentTestUtil.startVisibleFragment(fragment, PreLoadingListenerActivity.class, android.R.id.content);
+        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit(), courseData.getCourse().getName(),
+                courseData.getMode(), false);
+        SupportFragmentController.setupFragment(fragment, HiltTestActivity.class,
+                android.R.id.content, null);
         View view = fragment.getView();
         assertNotNull(view);
 
         View courseUnitWebView = view.findViewById(R.id.webview);
         assertNotNull(courseUnitWebView);
-        assertThat(courseUnitWebView).isInstanceOf(WebView.class);
+        Java6Assertions.assertThat(courseUnitWebView).isInstanceOf(WebView.class);
         WebView webView = (WebView) courseUnitWebView;
         assertTrue(webView.getSettings().getJavaScriptEnabled());
-    }
-
-    /**
-     * The {@link CourseUnitWebViewFragment} requires its parent activity to implement the
-     * {@link PreLoadingListener} interface, which is why this dummy activity has been created.
-     */
-    private static class PreLoadingListenerActivity extends RoboFragmentActivity implements PreLoadingListener {
-        @Override
-        public void setLoadingState(@NonNull State newState) {
-
-        }
-
-        @Override
-        public boolean isMainUnitLoaded() {
-            return false;
-        }
     }
 }

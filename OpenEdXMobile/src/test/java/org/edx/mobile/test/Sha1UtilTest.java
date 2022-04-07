@@ -1,5 +1,6 @@
 package org.edx.mobile.test;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.util.Sha1Util;
 import org.junit.Test;
 

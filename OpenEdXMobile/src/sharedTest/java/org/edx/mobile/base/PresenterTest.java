@@ -1,11 +1,10 @@
-package org.edx.mobile.test;
+package org.edx.mobile.base;
 
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.view.Presenter;
 import org.junit.After;
-
-import static org.mockito.Mockito.mock;
+import org.mockito.Mockito;
 
 public abstract class PresenterTest<P extends Presenter<V>, V> extends BaseTest {
     protected P presenter;
@@ -13,7 +12,7 @@ public abstract class PresenterTest<P extends Presenter<V>, V> extends BaseTest 
 
     protected final void startPresenter(@NonNull P p) {
         presenter = p;
-        view = mock(getViewType());
+        view = Mockito.mock(getViewType());
         presenter.attachView(view);
     }
 

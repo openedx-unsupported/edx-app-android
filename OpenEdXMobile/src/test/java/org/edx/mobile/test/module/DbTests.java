@@ -1,7 +1,7 @@
 package org.edx.mobile.test.module;
 
-import com.google.inject.Injector;
-
+import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.Injector;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -11,13 +11,13 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.test.BaseTestCase;
 import org.junit.Test;
-import org.robolectric.RuntimeEnvironment;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
+
+import androidx.test.core.app.ApplicationProvider;
 
 public class DbTests extends BaseTestCase {
 
@@ -29,18 +29,19 @@ public class DbTests extends BaseTestCase {
     @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        loginPrefs = injector.getInstance(LoginPrefs.class);
+        loginPrefs = new LoginPrefs(context);
     }
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE, RuntimeEnvironment
-                .application );
+        db = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE,
+                ApplicationProvider.getApplicationContext());
 
         // Our database makes use of the authenticated user's username, so we must mock it.
         final ProfileModel profileModel = new ProfileModel();
         profileModel.username = username;
+
         loginPrefs.storeUserProfile(profileModel);
     }
 

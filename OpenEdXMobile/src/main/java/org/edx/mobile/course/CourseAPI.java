@@ -61,17 +61,19 @@ import retrofit2.Call;
 @Singleton
 public class CourseAPI {
 
-    @Inject
+    @NonNull
     protected Config config;
 
     @NonNull
     private final CourseService courseService;
+
     @NonNull
     private final UserPrefs userPrefs;
 
-
     @Inject
-    public CourseAPI(@NonNull CourseService courseService, @NonNull UserPrefs userPrefs) {
+    public CourseAPI(@NonNull Config config, @NonNull CourseService courseService,
+                     @NonNull UserPrefs userPrefs) {
+        this.config = config;
         this.courseService = courseService;
         this.userPrefs = userPrefs;
     }
@@ -148,7 +150,7 @@ public class CourseAPI {
     /**
      * @param courseId The course ID.
      * @return The course identified by the provided ID if available from the cache, null if no
-     *         course is found.
+     * course is found.
      */
     @Nullable
     public EnrolledCoursesResponse getCourseById(@NonNull final String courseId) throws Exception {
@@ -289,28 +291,28 @@ public class CourseAPI {
                                    @NonNull final String lectureId)
             throws Exception {
         //TODO - we may use a generic filter to fetch the data?
-        for(IBlock chapter : courseComponent.getChildren()){
-            if ( chapter.getId().equals(chapterId) ){
-                for(IBlock lecture : chapter.getChildren() ){
+        for (IBlock chapter : courseComponent.getChildren()) {
+            if (chapter.getId().equals(chapterId)) {
+                for (IBlock lecture : chapter.getChildren()) {
                     //TODO - check to see if need to compare id or not
-                    if ( lecture.getId().equals(lectureId) ){
+                    if (lecture.getId().equals(lectureId)) {
                         LectureModel lm = new LectureModel();
                         lm.name = lecture.getDisplayName();
-                        lm.videos = (ArrayList) mappingAllVideoResponseModelFrom((CourseComponent)lecture, null );
+                        lm.videos = (ArrayList) mappingAllVideoResponseModelFrom((CourseComponent) lecture, null);
                         return lm;
                     }
                 }
             }
         }
         //if we can not find object by id, try to get by name.
-        for(IBlock chapter : courseComponent.getChildren()){
-            if ( chapter.getDisplayName().equals(chapterName) ){
-                for(IBlock lecture : chapter.getChildren() ){
+        for (IBlock chapter : courseComponent.getChildren()) {
+            if (chapter.getDisplayName().equals(chapterName)) {
+                for (IBlock lecture : chapter.getChildren()) {
                     //TODO - check to see if need to compare id or not
-                    if ( lecture.getDisplayName().equals(lectureName) ){
+                    if (lecture.getDisplayName().equals(lectureName)) {
                         LectureModel lm = new LectureModel();
                         lm.name = lecture.getDisplayName();
-                        lm.videos = (ArrayList) mappingAllVideoResponseModelFrom((CourseComponent)lecture, null );
+                        lm.videos = (ArrayList) mappingAllVideoResponseModelFrom((CourseComponent) lecture, null);
                         return lm;
                     }
                 }
@@ -324,8 +326,8 @@ public class CourseAPI {
     public VideoResponseModel getVideoById(@NonNull final CourseComponent courseComponent,
                                            @NonNull final String videoId)
             throws Exception {
-        for(HasDownloadEntry item : courseComponent.getVideos()) {
-            VideoBlockModel model = (VideoBlockModel)item;
+        for (HasDownloadEntry item : courseComponent.getVideos()) {
+            VideoBlockModel model = (VideoBlockModel) item;
             if (model.getId().equals(videoId))
                 return mappingVideoResponseModelFrom((VideoBlockModel) item);
         }
@@ -333,7 +335,6 @@ public class CourseAPI {
     }
 
     /**
-     *
      * @param courseComponent
      * @param subsectionId
      * @return
@@ -351,7 +352,7 @@ public class CourseAPI {
                 for (VideoResponseModel v : entry.getValue()) {
                     // identify the subsection (module) if id matches
                     IPathNode node = v.getSection();
-                    if (node != null  && subsectionId.equals(node.getId())) {
+                    if (node != null && subsectionId.equals(node.getId())) {
                         return v;
                     }
                 }
@@ -368,6 +369,7 @@ public class CourseAPI {
 
     /**
      * Mapping from raw data structure from getCourseStructure() API
+     *
      * @param courseStructureV1Model
      * @return
      */
@@ -412,6 +414,7 @@ public class CourseAPI {
     /**
      * we map the new course outline data to old data model.
      * TODO : Ideally we should update all the code to match the new data model.
+     *
      * @param courseComponent
      * @return
      */
@@ -420,13 +423,13 @@ public class CourseAPI {
             @NonNull final CourseComponent courseComponent,
             @NonNull final Filter<VideoResponseModel> filter) {
         List<SectionItemInterface> items = new ArrayList<>();
-        for(HasDownloadEntry item : courseComponent.getVideos()){
-            VideoResponseModel model = mappingVideoResponseModelFrom((VideoBlockModel)item);
-            if ( filter == null )
-                items.add( model );
+        for (HasDownloadEntry item : courseComponent.getVideos()) {
+            VideoResponseModel model = mappingVideoResponseModelFrom((VideoBlockModel) item);
+            if (filter == null)
+                items.add(model);
             else {
-                if (filter.apply(model)){
-                    items.add( model );
+                if (filter.apply(model)) {
+                    items.add(model);
                 }
             }
         }
@@ -435,6 +438,7 @@ public class CourseAPI {
 
     /**
      * from new VideoBlockModel to legacy VideoRsponseModel
+     *
      * @param videoBlockModel
      * @return
      */
@@ -458,7 +462,7 @@ public class CourseAPI {
         SummaryModel model = new SummaryModel();
         model.setType(videoBlockModel.getType());
         model.setDisplayName(videoBlockModel.getDisplayName());
-        model.setDuration((int)videoBlockModel.getData().duration);
+        model.setDuration((int) videoBlockModel.getData().duration);
         model.setOnlyOnWeb(videoBlockModel.getData().onlyOnWeb);
         model.setId(videoBlockModel.getId());
         final VideoInfo videoInfo = videoBlockModel.getData().encodedVideos.getPreferredVideoInfo();
@@ -474,6 +478,7 @@ public class CourseAPI {
 
     /**
      * from new CourseComponent to legacy data structure.
+     *
      * @param courseComponent
      * @return
      */
@@ -481,16 +486,16 @@ public class CourseAPI {
     private static Map<String, SectionEntry> mappingCourseHierarchyFrom(
             @NonNull final CourseComponent courseComponent) {
         Map<String, SectionEntry> map = new HashMap<>();
-        for(IBlock block : courseComponent.getChildren()){
-            CourseComponent chapter = (CourseComponent)block;
+        for (IBlock block : courseComponent.getChildren()) {
+            CourseComponent chapter = (CourseComponent) block;
             SectionEntry entry = new SectionEntry();
             entry.chapter = chapter.getDisplayName();
             entry.isChapter = true;
             entry.section_url = chapter.getBlockUrl();
             map.put(entry.chapter, entry);
 
-            for( IBlock subBlock : chapter.getChildren() ){
-                CourseComponent section = (CourseComponent)subBlock;
+            for (IBlock subBlock : chapter.getChildren()) {
+                CourseComponent section = (CourseComponent) subBlock;
 
                 entry.sections.put(section.getDisplayName(),
                         (ArrayList) mappingAllVideoResponseModelFrom(section, null));

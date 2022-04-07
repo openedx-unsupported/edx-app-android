@@ -1,11 +1,13 @@
 package org.edx.mobile.test.http;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
 import android.content.Context;
 
-import org.edx.mobile.http.interceptor.GzipRequestInterceptor;
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.interceptor.GzipRequestInterceptor;
 import org.edx.mobile.http.interceptor.OauthHeaderRequestInterceptor;
-import org.edx.mobile.test.BaseTestCase;
 import org.junit.Ignore;
 import org.robolectric.RuntimeEnvironment;
 
@@ -26,16 +28,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
 @Ignore
 public class RetrofitOkhttpTestCase extends BaseTestCase {
 
     interface DummyService {
         @Headers("Cache-Control: no-cache")
-        @GET("/endpoint1")  Call<Object> getRequestNoCache(String nocache);
+        @GET("/endpoint1")
+        Call<Object> getRequestNoCache(String nocache);
 
-        @GET("/endpoint1")  Call<Object> getRequest(String nocache);
+        @GET("/endpoint1")
+        Call<Object> getRequest(String nocache);
     }
+
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
     protected Context context;
@@ -123,7 +127,7 @@ public class RetrofitOkhttpTestCase extends BaseTestCase {
         @Override
         public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
 
-            if (request.getPath().equals("/endpoint1")){
+            if (request.getPath().equals("/endpoint1")) {
                 return new MockResponse().setResponseCode(HttpStatus.OK);
             }
             return new MockResponse().setResponseCode(HttpStatus.NOT_FOUND);

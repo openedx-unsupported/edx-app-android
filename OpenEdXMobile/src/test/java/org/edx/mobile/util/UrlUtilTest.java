@@ -1,7 +1,7 @@
 package org.edx.mobile.util;
 
+import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.test.BaseTestCase;
 import org.junit.Test;
 
 import java.util.HashMap;

@@ -1,9 +1,14 @@
 package org.edx.mobile.test;
 
+import static org.edx.mobile.test.util.OkHttpTestUtil.defaultClient;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gson.JsonObject;
-import com.google.inject.Injector;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.Injector;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -11,7 +16,6 @@ import org.edx.mobile.test.util.MockDataUtil;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
@@ -23,11 +27,6 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
-import static org.edx.mobile.test.util.OkHttpTestUtil.defaultClient;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-@Config(sdk = 18)
 public final class AuthenticationTests extends BaseTestCase {
 
     private static final String API_HOST_URL = "API_HOST_URL"; // Config key for API host url
@@ -39,6 +38,8 @@ public final class AuthenticationTests extends BaseTestCase {
 
     private LoginPrefs loginPrefs;
 
+    OauthRefreshTokenAuthenticator oauthRefreshTokenAuthenticator;
+
     @Before
     public void setUp() throws Exception {
         mockServer.setDispatcher(dispatcher);
@@ -48,8 +49,12 @@ public final class AuthenticationTests extends BaseTestCase {
     @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        loginPrefs = injector.getInstance(LoginPrefs.class);
+        loginPrefs = new LoginPrefs(context);
         loginPrefs.storeAuthTokenResponse(MockDataUtil.getMockResponse("post_oauth2_access_token", AuthResponse.class), LoginPrefs.AuthBackend.PASSWORD);
+        oauthRefreshTokenAuthenticator = new OauthRefreshTokenAuthenticator(
+                () -> config,
+                injector::getRetrofitProvider,
+                () -> loginPrefs);
     }
 
     @Override
@@ -64,7 +69,7 @@ public final class AuthenticationTests extends BaseTestCase {
     public void testAuthenticate_forExpiredAccessToken() throws Exception {
         // create a client with the authenticator
         client = client.newBuilder()
-                .authenticator(new OauthRefreshTokenAuthenticator(context))
+                .authenticator(oauthRefreshTokenAuthenticator)
                 .build();
 
         // Build a new dummy request to trigger authenticator
@@ -99,7 +104,7 @@ public final class AuthenticationTests extends BaseTestCase {
     @Test
     public void testAuthenticate_notForExpiredAccessToken() throws Exception {
         client = client.newBuilder()
-                .authenticator(new OauthRefreshTokenAuthenticator(context))
+                .authenticator(oauthRefreshTokenAuthenticator)
                 .build();
 
         Request request = new Request.Builder()
@@ -117,7 +122,7 @@ public final class AuthenticationTests extends BaseTestCase {
         loginPrefs.storeAuthTokenResponse(MockDataUtil.getMockResponse("post_oauth2_access_token_no_refresh_token", AuthResponse.class), LoginPrefs.AuthBackend.PASSWORD);
 
         client = client.newBuilder()
-                .authenticator(new OauthRefreshTokenAuthenticator(context))
+                .authenticator(oauthRefreshTokenAuthenticator)
                 .build();
 
         Request request = new Request.Builder()

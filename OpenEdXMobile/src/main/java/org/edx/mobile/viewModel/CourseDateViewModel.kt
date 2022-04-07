@@ -46,16 +46,16 @@ class CourseDateViewModel @Inject constructor(
     val courseDates: LiveData<CourseDates>
         get() = _courseDates
 
-    private val _bannerInfo = MutableLiveData<CourseBannerInfoModel>()
-    val bannerInfo: LiveData<CourseBannerInfoModel>
+    private val _bannerInfo = MutableLiveData<CourseBannerInfoModel?>()
+    val bannerInfo: LiveData<CourseBannerInfoModel?>
         get() = _bannerInfo
 
-    private val _resetCourseDates = MutableLiveData<ResetCourseDates>()
-    val resetCourseDates: LiveData<ResetCourseDates>
+    private val _resetCourseDates = MutableLiveData<ResetCourseDates?>()
+    val resetCourseDates: LiveData<ResetCourseDates?>
         get() = _resetCourseDates
 
-    private val _errorMessage = MutableLiveData<ErrorMessage>()
-    val errorMessage: LiveData<ErrorMessage>
+    private val _errorMessage = MutableLiveData<ErrorMessage?>()
+    val errorMessage: LiveData<ErrorMessage?>
         get() = _errorMessage
 
     private var syncingCalendarTime: Long = 0L
@@ -119,7 +119,9 @@ class CourseDateViewModel @Inject constructor(
             callback = object : NetworkResponseCallback<CourseDates> {
                 override fun onSuccess(result: Result.Success<CourseDates>) {
                     if (result.isSuccessful && result.data != null) {
-                        _courseDates.postValue(result.data)
+                        result.data.let {
+                            _courseDates.postValue(it)
+                        }
                         fetchCourseDatesBannerInfo(courseID, true)
                     } else {
                         setError(ErrorMessage.COURSE_DATES_CODE, result.code, result.message)
