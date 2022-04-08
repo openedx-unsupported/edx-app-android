@@ -129,7 +129,7 @@
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
         android:background="@drawable/next_button_bg"
-        android:contentDescription="@string/continue_string"
+        android:contentDescription="@string/subodha_sign_up_and_start_learning"
         android:padding="5dp"
         android:text="@string/next"
         android:textColor="@color/white"

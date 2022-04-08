@@ -675,4 +675,8 @@
   <string name="rating_bar_selection">{rating} من {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">الإصدار {version_number} الميزات الجديدة</string>
+  <!-- Tabs Name -->
+  <string name="my_course">مقرري</string>
+  <string name="explore_course">يكتشف</string>
+  <string name="courses">الدورات</string>
 </resources>

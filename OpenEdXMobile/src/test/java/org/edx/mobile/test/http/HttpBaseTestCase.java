@@ -26,6 +26,7 @@ import org.robolectric.android.util.concurrent.RoboExecutorService;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,6 +80,9 @@ public class HttpBaseTestCase extends BaseTestCase {
         server.start();
 
         okHttpClient = new OkHttpClient.Builder()
+               /* .connectTimeout(100, TimeUnit.SECONDS)
+                .writeTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(100, TimeUnit.SECONDS)*/
                 .dispatcher(new Dispatcher(new RoboExecutorService()))
                 .addInterceptor(new OnlyIfCachedStrippingInterceptor())
                 .build();

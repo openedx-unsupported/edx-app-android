@@ -6,4 +6,21 @@
         <item>@id/cast_button_type_empty</item>
         <item>@id/cast_button_type_mute_toggle</item>
     </array>
+    <string-array name="subject_colors_name">
+        <item>#69A8DB</item>
+        <item>#FFB700</item>
+        <item>#F6CF8C</item>
+        <item>#55C2BB</item>
+        <item>#C8A1DE</item>
+        <item>#ff6474</item>
+        <item>#849dd7</item>
+        <item>#a0ad6a</item>
+        <item>#E0CAEC</item>
+        <item>#A4CBE9</item>
+        <item>#FFD570</item>
+    </string-array>
+    <string-array name="color_according_to_user">
+        <item>#147682</item>
+        <item>#FFB700</item>
+    </string-array>
 </resources>

@@ -656,4 +656,9 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="rating_bar_selection">{rating} de {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">Versão {version_number}, Novos recursos</string>
+
+  <!-- Tabs Name -->
+  <string name="my_course">My Course</string>
+  <string name="explore_course">Explore</string>
+  <string name="courses">Courses</string>
 </resources>

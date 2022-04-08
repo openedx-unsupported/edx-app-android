@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">@string/platform_name</string>
+   <!-- <string name="app_name" translatable="false">@string/platform_name</string>
     <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
-    <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
+    <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>-->
+
+    <string name="app_name" translatable="false">Subodha</string>
+    <string name="app_shortcut_name" translatable="false"></string>
+    <string name="phonetic_app_name" translatable="false"></string>
 
     <!-- Certificates -->
 
@@ -91,7 +95,7 @@
     <!-- Hint text for password field -->
     <string name="password">Password</string>
     <!-- Button text allowing user to reset their password -->
-    <string name="forgot_password">Forgot your password?</string>
+    <string name="forgot_password">Forgot Password?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
     <string name="login">Sign In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
@@ -157,7 +161,8 @@
     <!-- Button text to show user Settings screen -->
     <string name="label_settings">Settings</string>
     <!-- Title of Account screen -->
-    <string name="title_account">Account</string>
+    <string name="title_account">User Account Button</string>
+    <string name="search">Search Button</string>
 
     <!-- Help Dialog Place Holder messages -->
     <!-- Reset password alert dialog title -->
@@ -727,4 +732,87 @@
     <string name="rating_bar_selection">{rating} out of {num_of_stars}</string>
     <!-- Title of the Whats New screen e.g. Version 2.8.1 New Features -->
     <string name="whats_new_title">Version {version_number} New Features</string>
+
+    <!-- Tabs Name -->
+    <string name="my_course">My Course</string>
+    <string name="back">Back</string>
+    <string name="email_editbox">email</string>
+    <string name="password_editbox">password</string>
+    <string name="my_dashboard">MY"\n"DASHBOARD</string>
+    <string name="explore_course">EXPLORE"\n"COURSES</string>
+    <string name="explore_courses_without_second_line">EXPLORE COURSES</string>
+    <string name="courses">Courses</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_in_caps">SIGN IN</string>
+    <string name="enter_your_email_below">Enter your email below</string>
+    <string name="enter_your_password_below">Enter your password below</string>
+    <string name="keep_me_signed_in">Keep me signed-in</string>
+    <string name="create_a_new_account">To create a new account please write to</string>
+    <string name="gmail">xyz@gmail.com</string>
+    <string name="please_choose_language_of_preference">Please choose "\n"language of "\n"preference</string>
+    <string name="english">ENGLISH</string>
+    <string name="hindi">HINDI / हिंदी</string>
+    <string name="kannada">KANNADA / ಕನ್ನಡ</string>
+    <string name="tamil">TAMIL / தமிழ்</string>
+    <string name="next">NEXT</string>
+    <string name="course_caps">COURSE</string>
+    <string name="no_user_type">No user type</string>
+    <string name="account_settings">ACCOUNT SETTINGS</string>
+    <string name="prefered_language">PREFERED LANGUAGE</string>
+    <string name="user_account_type">USER ACCOUNT TYPE</string>
+    <string name="user_type_not_exist">User type not exist</string>
+    <string name="teacher">TEACHER</string>
+    <string name="student">STUDENT</string>
+    <string name="welocme_to_your_dashboard">WELCOME TO YOUR DASHBOARD</string>
+    <string name="you_are_not_enrolled_in_any_programs">You are not enrolled in any Programs</string>
+    <string name="caps_logout"><b>LOGOUT</b></string>
+    <string name="hello"><b>Hello</b></string>
+    <string name="explore_subjects"><b>Explore Subjects</b></string>
+    <string name="vision_empower">VISION EMPOWER</string>
+    <string name="select_a_program">Select a program</string>
+    <string name="enroll_in_program_to_view_course_content">Enroll in program to view course "\n"content</string>
+    <string name="enroll_in_program">ENROLL IN PROGRAM</string>
+    <string name="add_all_courses_to_dashboard">Add all courses to dashboard</string>
+    <string name="unenroll_from_program">UNENROLL FROM PROGRAM</string>
+    <string name="enrolled_in">Enrolled in</string>
+    <string name="program">Program</string>
+    <string name="our_partners"><b>Content Partners</b></string>
+    <string name="search_subodha">Search Subodha</string>
+    <string name="search_results"><b>Search Results</b></string>
+    <string name="view_more_results">View More Results</string>
+    <string name="organisations">Organisations</string>
+    <string name="added_to_the_dashboard_you_can_view_the_course_now">added to your Dashboard. You can view the course now</string>
+    <string name="removed">Removed</string>
+    <string name="from_your_dashboard">from your Dashboard</string>
+    <string name="view">VIEW</string>
+
+    <string name="your_enrolled_programs">YOUR ENROLLED PROGRAMS</string>
+    <string name="only_hindi">Hindi</string>
+    <string name="only_kannada">Kannada</string>
+    <string name="only_tamil">Tamil</string>
+    <string name="no_program_found">No Program Found</string>
+    <string name="no_course_found">No Course Found</string>
+    <string name="no_enrolled_in_any_programs">No Enrolled In Any programs</string>
+    <string name="continue_learning">CONTINUE LEARNING</string>
+    <string name="program_name">PROGRAM NAME</string>
+    <string name="continue_string">CONTINUE</string>
+    <string name="go_to_last_visit_section">go to last visit section</string>
+    <string name="subodha_sign_up_and_start_learning">subodha, sign up and start learning</string>
+    <string name="data_is_loading">Data is loading</string>
+    <string name="data_loaded">Data loaded</string>
+    <string name="no_course_info">No COURSE INFO</string>
+    <string name="sign_in_and_learn">Sign in and start learning</string>
+    <string name="subodha_learning_for_all">Subodha Learning for all</string>
+    <string name="your_accessible_learning_platform">Your accessible learning platform</string>
+    <string name="courses_available">courses available</string>
+    <string name="results_for">results for</string>
+    <string name="for_student">FOR STUDENTS</string>
+    <string name="for_teacher">FOR TEACHERS</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to log out?</string>
+    <string name="logout_confirmation">Logout confirmation</string>
+    <string name="program_is_successfully_added_to_dashboard">program successfully added to the dashboard</string>
+    <string name="program_is_successfully_removed_to_dashboard">program successfully removed to the dashboard</string>
+    <string name="status">Status</string>
+    <string name="app_text">Subodha is a learning management system "\n"containing accessible
+     resources for students with"\n" visual impairments and their educators.</string>
 </resources>

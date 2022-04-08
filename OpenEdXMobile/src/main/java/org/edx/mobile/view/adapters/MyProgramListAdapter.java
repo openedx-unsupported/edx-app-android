@@ -32,7 +32,7 @@ public class MyProgramListAdapter extends RecyclerView.Adapter<MyProgramListAdap
     @NonNull
     @Override
     public ProgramViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        return new ProgramViewHolder(RowProgramEnrolledItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        return new MyProgramListAdapter.ProgramViewHolder(RowProgramEnrolledItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 
     @Override

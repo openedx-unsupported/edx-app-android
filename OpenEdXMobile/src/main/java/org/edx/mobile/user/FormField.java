@@ -11,6 +11,9 @@ public class FormField implements Serializable {
     @SerializedName("required")
     boolean required;
     private
+    @SerializedName("editable")
+    boolean editable;
+    private
     @SerializedName("name")
     String name;
     private
@@ -43,6 +46,10 @@ public class FormField implements Serializable {
 
     public boolean isRequired() {
         return required;
+    }
+
+    public boolean isEditable() {
+        return editable;
     }
 
     public String getName() {

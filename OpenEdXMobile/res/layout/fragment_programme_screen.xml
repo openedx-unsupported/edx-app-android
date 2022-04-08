@@ -7,6 +7,11 @@
         android:layout_width="match_parent"
         android:background="@color/white"
         android:layout_height="match_parent">
+        <org.edx.mobile.view.custom.IconProgressBar
+            android:id="@+id/icon_progress"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"/>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested"

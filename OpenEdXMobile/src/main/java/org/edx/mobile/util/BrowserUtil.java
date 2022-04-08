@@ -15,6 +15,8 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
+import static com.google.common.net.HttpHeaders.USER_AGENT;
+
 public class BrowserUtil {
 
     private static final Logger logger = new Logger(BrowserUtil.class.getName());
@@ -27,6 +29,8 @@ public class BrowserUtil {
 
     @Inject
     private static IEdxEnvironment environment;
+    @Inject
+    public static Config config;
 
     /**
      * Opens given URL in native browser.

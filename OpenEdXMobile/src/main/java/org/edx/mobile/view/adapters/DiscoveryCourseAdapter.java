@@ -38,7 +38,7 @@ public class DiscoveryCourseAdapter extends RecyclerView.Adapter<DiscoveryCourse
                 inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);*/
-        return new DiscoveryCourseViewHolder(RowDiscoveryCourseBinding.
+        return new DiscoveryCourseAdapter.DiscoveryCourseViewHolder(RowDiscoveryCourseBinding.
                 inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 

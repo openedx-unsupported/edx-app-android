@@ -31,11 +31,14 @@ import java.util.Locale;
 
 import io.fabric.sdk.android.Kit;
 
+import static com.google.common.net.HttpHeaders.USER_AGENT;
+
 @Singleton
 public class Config {
 
     private static final Logger logger = new Logger(Config.class.getName());
     private JsonObject mProperties;
+    public static final String SUBODHA_DATABASE = "llf-database";
 
     /* Individual configuration keys */
     private static final String API_HOST_URL = "API_HOST_URL";
@@ -65,6 +68,9 @@ public class Config {
     private static final String API_URL_VERSION = "API_URL_VERSION";
     private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
 
+    //Discovery
+    private static final String DISCOVERY_BASE_URL = "DISCOVERY_BASE_URL";
+
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     private static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
@@ -82,6 +88,13 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
     private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
+    //Discourse and Analytics
+    public String getDiscoveryBaseUrl() {
+        return getString(DISCOVERY_BASE_URL);
+    }
+
+    //User agent for webview.
+    private static String USER_AGENT = "USER_AGENT";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -132,6 +145,7 @@ public class Config {
         public DegreeDiscoveryConfig getDegreeDiscoveryConfig() {
             return degreeDiscoveryConfig;
         }
+
     }
 
     public static class CourseDiscoveryConfig {
@@ -899,5 +913,8 @@ public class Config {
     @NonNull
     public YoutubePlayerConfig getYoutubePlayerConfig() {
         return getObjectOrNewInstance(YOUTUBE_PLAYER, YoutubePlayerConfig.class);
+    }
+    public String getUserAgent() {
+        return getString(USER_AGENT);
     }
 }

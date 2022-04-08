@@ -651,4 +651,9 @@
   <string name="rating_bar_selection">{rating} / {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">{version_number}版本，新功能</string>
+
+  <!-- Tabs Name -->
+  <string name="my_course">我的课程</string>
+  <string name="explore_course">探索</string>
+  <string name="courses">培训班</string>
 </resources>

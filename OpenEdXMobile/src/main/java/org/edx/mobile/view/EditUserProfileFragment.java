@@ -7,14 +7,17 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.TextViewCompat;
 import androidx.appcompat.widget.PopupMenu;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -45,6 +49,7 @@ import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.profiles.AdditionalFieldModel;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.user.*;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
@@ -85,6 +90,9 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
     private Account account;
 
     @Nullable
+    private AdditionalFieldModel additionalFieldModel;
+
+    @Nullable
     private FormDescription formDescription;
 
     @Nullable
@@ -109,7 +117,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
 
-
         final Activity activity = getActivity();
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         getAccountCall = userService.getAccount(username);
@@ -117,13 +124,17 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                 activity, username,
                 null, // Disable default loading indicator, we have our own
                 mCallback, CallTrigger.LOADING_CACHED));
-
+        additionalFieldModel = new AdditionalFieldModel();
+        additionalFieldModel.setGrade("9");
+        additionalFieldModel.setSchool("Children's Academy");
+        additionalFieldModel.setEducation_board("ICSE");
+        additionalFieldModel.setUser_type("volunteer");
         getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(activity) {
             @Override
             protected void onSuccess(@NonNull FormDescription formDescription) throws Exception {
                 EditUserProfileFragment.this.formDescription = formDescription;
                 if (null != viewHolder) {
-                    setData(account, formDescription);
+                    setData(account, formDescription, additionalFieldModel);
                 }
             }
         };
@@ -182,8 +193,9 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                 popup.show();
             }
         });
-        setData(account, formDescription);
+        setData(account, formDescription, additionalFieldModel);
     }
+
 
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
@@ -225,7 +237,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         if (event.getAccount().getUsername().equals(username)) {
             account = event.getAccount();
             if (null != viewHolder) {
-                setData(account, formDescription);
+                setData(account, formDescription, additionalFieldModel);
             }
         }
     }
@@ -250,7 +262,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         }
     }
 
-    public void setData(@Nullable final Account account, @Nullable FormDescription formDescription) {
+    public void setData(@Nullable final Account account, @Nullable FormDescription formDescription, @Nullable final AdditionalFieldModel additionalFieldModel) {
         if (null == viewHolder) {
             return;
         }
@@ -362,11 +374,13 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                         createField(layoutInflater, viewHolder.fields, field, displayValue, isLimited && !field.getName().equals(Account.YEAR_OF_BIRTH_SERIALIZED_NAME), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivityForResult(FormFieldActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
+                                if (field.isEditable())
+                                    startActivityForResult(FormFieldActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
                             }
                         });
                         break;
                     }
+
                     default: {
                         // Unknown field type; ignore this field
                         break;
@@ -434,6 +448,9 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         } else {
             valueObject = fieldValue;
         }
+        Log.d("field_name" , field.getName());
+        Log.d("field_value" , fieldValue);
+        Toast.makeText(getActivity(),field.getName(),Toast.LENGTH_LONG).show();
         userService.updateAccount(username, Collections.singletonMap(field.getName(), valueObject))
                 .enqueue(new AccountDataUpdatedCallback(getActivity(), username,
                         new DialogErrorNotification(this)) {
@@ -441,7 +458,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                     protected void onResponse(@NonNull final Account account) {
                         super.onResponse(account);
                         EditUserProfileFragment.this.account = account;
-                        setData(account, formDescription);
+                        setData(account, formDescription, additionalFieldModel);
                     }
                 });
     }
@@ -494,10 +511,11 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             put("value", formattedValue);
         }}));
         Context context = parent.getContext();
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, new IconDrawable(context, FontAwesomeIcons.fa_angle_right)
-                        .colorRes(context, R.color.edx_brand_gray_back)
-                        .sizeDp(context, 24), null);
+        if (field.isEditable())
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    textView, null, null, new IconDrawable(context, FontAwesomeIcons.fa_angle_right)
+                            .colorRes(context, R.color.edx_brand_gray_back)
+                            .sizeDp(context, 24), null);
         if (readOnly) {
             textView.setEnabled(false);
         } else {

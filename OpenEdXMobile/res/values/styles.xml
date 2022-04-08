@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
-        <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
+        <item name="actionModeBackground">@color/black</item>
         <item name="actionMenuTextColor">@color/toolbar_controls_color</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
@@ -107,6 +107,15 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+    <!-- Defined a new style with three items of color. -->
+    <style name="statusBarColor" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/edx_brand_primary_accent</item>
+
+        <!-- Defining that new color in ColorPrimaryDark -->
+        <item name="colorPrimaryDark">@color/status_bar_color</item>
+        <item name="colorAccent">@color/edx_brand_secondary_accent</item>
+    </style>
 
     <!-- AppBar Styles -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
@@ -141,6 +150,15 @@
         <item name="android:textSize">@dimen/edx_base</item>
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
+
+        <style name="AppTheme.NoActionBar.MyTheme" parent="@android:style/Theme.Holo.Light">
+            <item name="android:actionBarStyle">@style/MyActionBar</item>
+        </style>
+
+        <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+            <item name="android:background">@color/white</item>
+        </style>
+
 
     <style name="MyMenuTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">
         <item name="android:textAllCaps">false</item>
@@ -395,10 +413,10 @@
     </style>
 
     <style name="edX.Widget.SignInButtonLayout">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">250dp</item>
         <item name="android:layout_height">@dimen/edx_button_height</item>
         <item name="android:layout_marginTop">@dimen/edx_margin</item>
-        <item name="android:background">@drawable/edx_brand_single_state_button</item>
+        <item name="android:background">@drawable/subodha_launch_bg</item>
     </style>
 
     <style name="edX.Widget.SignInButton" parent="regular_white_text">
@@ -407,7 +425,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">@dimen/edx_base</item>
-        <item name="android:textColor">@color/edx_brand_button_text</item>
+       <!-- <item name="android:textColor">@color/edx_brand_button_text</item>-->
+        <item name="android:textColor">@color/grey_text</item>
         <item name="android:duplicateParentState">true</item>
     </style>
 

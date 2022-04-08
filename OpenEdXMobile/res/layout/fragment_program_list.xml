@@ -121,7 +121,7 @@
                             android:id="@+id/resume_course_continue"
                             android:layout_width="73dp"
                             android:layout_height="48dp"
-                            android:text="@string/continue_string"
+                            android:text="@string/go_to_last_visit_section"
                             android:textColor="@color/seach_hint_color"
                             android:layout_gravity="right"
                             android:layout_marginRight="22dp"

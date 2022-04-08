@@ -410,7 +410,11 @@
     <string name="password_editbox">ಪಾಸ್ವರ್ಡ್ ಎಡಿಟ್ಬಾಕ್ಸ್</string>
     <string name="email_editbox">ಇಮೇಲ್ ಸಂಪಾದನೆ ಪೆಟ್ಟಿಗೆ</string>
     <string name="back">ಹಿಂದೆ</string>
-    <string name="search">ಹುಡುಕಿ Kannada</string>
+    <string name="search">ಹುಡುಕಾಟ ಬಟನ್</string>
+    <string name="go_to_last_visit_section">ಕೊನೆಯ ಭೇಟಿ ವಿಭಾಗಕ್ಕೆ ಹೋಗಿ</string>
+    <string name="subodha_sign_up_and_start_learning">ಸುಬೋಧ, ಸೈನ್ ಅಪ್ ಮಾಡಿ ಮತ್ತು ಕಲಿಯಲು ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="data_is_loading">ಡೇಟಾ ಲೋಡ್ ಆಗುತ್ತಿದೆ</string>
+    <string name="data_loaded">ಡೇಟಾವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಿದೆ</string>
     <plurals name="download_total">
         <item quantity='one'>{total_videos_count} ವೀಡಿಯೊ, ಒಟ್ಟು {total_videos_size}</item>
         <item quantity='other'>{total_videos_count} ವೀಡಿಯೊಗಳು, ಒಟ್ಟು {total_videos_size}</item>
@@ -719,7 +723,7 @@
     <string name="title_reset_password_failed">ಪಾಸ್ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ದೋಷ</string>
     <string name="success_dialog_title_help">ಪಾಸ್ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಇಮೇಲ್ ಕಳುಹಿಸಲಾಗಿದೆ</string>
     <string name="confirm_dialog_title_help">ಪಾಸ್ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ</string>
-    <string name="title_account">ಬಳಕೆದಾರನ ಖಾತೆ</string>
+    <string name="title_account">ಬಳಕೆದಾರ ಖಾತೆ ಬಟನ್</string>
     <string name="label_settings">ಸಂಯೋಜನೆಗಳು</string>
     <string name="label_version">ಅಪ್ಲಿಕೇಶನ್ ಆವೃತ್ತಿ</string>
     <string name="settings_txt">ಸಂಯೋಜನೆಗಳು</string>

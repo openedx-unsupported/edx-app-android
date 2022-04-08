@@ -40,6 +40,9 @@ public interface UserService {
     @GET("/api/user/v1/accounts/{username}")
     Call<Account> getAccount(@Path("username") String username);
 
+    @GET("/mx-user-info/getdetail/{username}")
+    Call<UserInfo> getUserInfo(@Path("username") String username);
+
     @Headers({"Cache-Control: no-cache", "Content-type: application/merge-patch+json"})
     @PATCH("/api/user/v1/accounts/{username}")
     Call<Account> updateAccount(@Path("username") String username, @Body Map<String, Object> fields);

@@ -61,6 +61,7 @@ public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
         hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

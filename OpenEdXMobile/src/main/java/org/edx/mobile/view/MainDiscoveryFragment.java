@@ -37,6 +37,7 @@ import static org.edx.mobile.view.Router.EXTRA_PATH_ID;
 import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
 public class MainDiscoveryFragment extends BaseFragment {
+    public static final String TAG = MainDiscoveryFragment.class.getCanonicalName();
     @Inject
     protected IEdxEnvironment environment;
 
@@ -81,7 +82,7 @@ public class MainDiscoveryFragment extends BaseFragment {
 
     private void initFragments() {
         // Course discovery
-        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
+     //   if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
             Fragment courseDiscoveryFragment;
             if (ConfigUtil.Companion.isCourseWebviewDiscoveryEnabled(environment)) {
                 courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_webview");
@@ -99,7 +100,7 @@ public class MainDiscoveryFragment extends BaseFragment {
             courseDiscoveryFragment.setArguments(getArguments());
             fragmentsArray.put(R.id.option_courses, courseDiscoveryFragment);
             addTabItem(R.id.option_courses, R.string.label_my_courses);
-        }
+     //   }
 
         // Program discovery
         if (ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {

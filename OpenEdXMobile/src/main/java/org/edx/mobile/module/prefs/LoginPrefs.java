@@ -1,6 +1,7 @@
 package org.edx.mobile.module.prefs;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -8,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.authentication.AuthResponseJwt;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.Analytics;
@@ -39,9 +41,27 @@ public class LoginPrefs {
         pref = new PrefManager(context, PrefManager.Pref.LOGIN);
     }
 
-    public void storeAuthTokenResponse(@NonNull AuthResponse response, @NonNull AuthBackend backend) {
+    public void storeMxUserCourseAnswerData(String mCourseAnswerData) {
+        pref.put(PrefManager.Key.USER_COURSE_ANSWER_DATA, null);
+        pref.put(PrefManager.Key.USER_COURSE_ANSWER_DATA, mCourseAnswerData);
+    }
+
+    public void storeAuthTokenResponse(@NonNull AuthResponse response, @NonNull AuthResponseJwt response_jwt, @NonNull AuthBackend backend) {
         pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(response));
+        pref.put(PrefManager.Key.AUTH_JWT_JSON, gson.toJson(response_jwt));
         pref.put(PrefManager.Key.ANALYTICS_KEY_BACKEND, analyticsTokenFromAuthBackend(backend));
+    }
+
+    public void storeAuthJwtTokenResponse(@NonNull AuthResponseJwt response_jwt) {
+        pref.put(PrefManager.Key.AUTH_JWT_JSON, gson.toJson(response_jwt));
+    }
+
+    public void storeUserType(@NonNull String userType) {
+        pref.put(PrefManager.Key.USER_TYPE, userType);
+    }
+
+    public void storeUserFirstTime(@NonNull String first_time) {
+        pref.put(PrefManager.Key.USER_FIRST_TIME, first_time);
     }
 
     public void clearAuthTokenResponse() {
@@ -51,6 +71,14 @@ public class LoginPrefs {
 
     public void storeRefreshTokenResponse(@NonNull AuthResponse refreshTokenResponse) {
         pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(refreshTokenResponse));
+    }
+
+    public void storeselectedlanguage(@NonNull String selected_language) {
+        pref.put(PrefManager.Key.SELECTED_LANGUAGE, gson.toJson(selected_language));
+    }
+
+    public void storeRefreshTokenResponseJwt(@NonNull AuthResponseJwt refreshTokenResponse) {
+        pref.put(PrefManager.Key.AUTH_JWT_JSON, gson.toJson(refreshTokenResponse));
     }
 
     public void storeUserProfile(@NonNull ProfileModel res) {
@@ -64,6 +92,8 @@ public class LoginPrefs {
         saveDefaultPlaybackSpeed(VideoPlaybackSpeed.NORMAL.getSpeedValue());
         pref.put(PrefManager.Key.PROFILE_JSON, null);
         pref.put(PrefManager.Key.AUTH_JSON, null);
+        pref.put(PrefManager.Key.AUTH_JWT_JSON, null);
+        pref.put(PrefManager.Key.USER_FIRST_TIME, "true");
         EdxCookieManager.getSharedInstance(MainApplication.instance()).clearWebWiewCookie();
     }
 
@@ -117,13 +147,39 @@ public class LoginPrefs {
     }
 
     @Nullable
+    public String getAuthorizationHeaderJwt() {
+        final AuthResponseJwt auth = getCurrentAuthJwt();
+        if (auth == null || !auth.isSuccess()) {
+            // this might be a login with Facebook or Google
+            return getSocialLoginAccessToken();
+        } else {
+            return String.format("%s %s", "jwt", auth.access_token);
+        }
+    }
+
+    @Nullable
     public String getSocialLoginAccessToken() {
         return pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
     }
 
     @Nullable
+    public String getFirstTime() {
+        return pref.getString(PrefManager.Key.USER_FIRST_TIME);
+    }
+
+    @Nullable
     public String getSocialLoginProvider() {
         return pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
+    }
+
+    @Nullable
+    public String getUserType() {
+        return pref.getString(PrefManager.Key.USER_TYPE);
+    }
+
+    @Nullable
+    public String getselectedlanguage() {
+        return pref.getString(PrefManager.Key.SELECTED_LANGUAGE);
     }
 
     @Nullable
@@ -133,6 +189,15 @@ public class LoginPrefs {
             return null;
         }
         return gson.fromJson(json, AuthResponse.class);
+    }
+
+    @Nullable
+    public AuthResponseJwt getCurrentAuthJwt() {
+        final String json = pref.getString(PrefManager.Key.AUTH_JWT_JSON);
+        if (json == null) {
+            return null;
+        }
+        return gson.fromJson(json, AuthResponseJwt.class);
     }
 
     @Nullable

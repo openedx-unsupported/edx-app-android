@@ -1,6 +1,7 @@
 package org.edx.mobile.course;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -99,7 +100,8 @@ public interface CourseService {
     /**
      * @return Enrolled courses of given user, only from the cache.
      */
-    @Headers("Cache-Control: only-if-cached, max-stale")
+    @Headers("Cache-Control: only-if-cached, max-stale: 5000")
+    // @Headers("Cache-Control: only-if-cached, max-stale")
     @GET("/api/mobile/v1/users/{username}/course_enrollments")
     Call<List<EnrolledCoursesResponse>> getEnrolledCoursesFromCache(
             @Path("username") final String username,
@@ -135,9 +137,12 @@ public interface CourseService {
     Call<JSONObject> markBlocksCompletion(@Body BlocksCompletionBody completionBody);
 
     final class BlocksCompletionBody {
-        @NonNull String username;
-        @NonNull String courseKey;
-        @NonNull HashMap<String, String> blocks = new HashMap<>();
+        @NonNull
+        String username;
+        @NonNull
+        String courseKey;
+        @NonNull
+        HashMap<String, String> blocks = new HashMap<>();
 
         public BlocksCompletionBody(@NonNull String username, @NonNull String courseKey, @NonNull String[] blockIds) {
             this.username = username;

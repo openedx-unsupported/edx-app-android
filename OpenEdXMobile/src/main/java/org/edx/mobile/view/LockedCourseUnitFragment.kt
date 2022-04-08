@@ -47,7 +47,6 @@ class LockedCourseUnitFragment : CourseUnitFragment() {
         loadPaymentBannerFragment(courseData, courseUpgradeData)
         analyticsRegistry?.trackScreenView(Analytics.Screens.COURSE_UNIT_LOCKED)
     }
-
     private fun loadPaymentBannerFragment(courseData: EnrolledCoursesResponse,
                                           courseUpgradeData: CourseUpgradeResponse) {
         PaymentsBannerFragment.loadPaymentsBannerFragment(R.id.fragment_container, courseData, unit,

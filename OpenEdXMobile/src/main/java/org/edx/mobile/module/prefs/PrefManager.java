@@ -273,6 +273,9 @@ public class PrefManager {
     public static final class Key {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
+        public static final String AUTH_JWT_JSON = "auth_jwt_json";
+        public static final String USER_TYPE = "user_type";
+        public static final String USER_FIRST_TIME = "user_first_time";
         public static final String AUTH_EMAIL = "email";
         public static final String PROFILE_IMAGE = "profile_image";
         //TODO- need to rename these constants. causing confusion
@@ -293,6 +296,7 @@ public class PrefManager {
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
         public static final String DOWNLOAD_TO_SDCARD = "download_to_sdcard";
+        public static final String SELECTED_LANGUAGE = "selected_language";
 
         // Preference to save user app rating
         public static final String APP_RATING = "APP_RATING";
@@ -302,6 +306,7 @@ public class PrefManager {
         public static final String WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION";
         // Preference to keep track of Bulk download switch for a Course ID
         public static final String BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s";
+        public static final String USER_COURSE_ANSWER_DATA = "UserCourseAnswerData";
     }
 
     public static final class Value {

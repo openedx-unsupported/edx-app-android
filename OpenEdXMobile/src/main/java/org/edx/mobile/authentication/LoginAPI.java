@@ -1,6 +1,7 @@
 package org.edx.mobile.authentication;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -9,18 +10,24 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.coursemultilingual.CourseMultilingualModel;
+import org.edx.mobile.discovery.model.EnrollAndUnenrollData;
+import org.edx.mobile.discovery.model.EnrollResponse;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.constants.ApiConstants;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.programs.Programs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.observer.BasicObservable;
 import org.edx.mobile.util.observer.Observable;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -30,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
@@ -77,20 +86,93 @@ public class LoginAPI {
 
     @NonNull
     public Response<AuthResponse> getAccessToken(@NonNull String username,
-                                       @NonNull String password) throws IOException {
+                                                 @NonNull String password) throws IOException {
         String grantType = "password";
         String clientID = config.getOAuthClientId();
         return loginService.getAccessToken(grantType, clientID, username, password).execute();
     }
 
     @NonNull
+    public Response<AuthResponseJwt> getAccessTokenJwt() throws IOException {
+        String grantType = "client_credentials";
+        //String clientID = "YmYDTBGdwNDnaxbhvi5VwFggPhYvDQMQIUY1c9qa";
+        String clientID = "XT7PFJbrRg8TtdRzDlC3B6kgmJYLG8jDjq9u0i87";
+        String token_type = "jwt";
+        //String client_secret = "zrFONrV8sl5D1kWdfW1UKeL5WLHhhovP74DhVHnhsDOqYp6IMDhCWq8Ms3PdxNps5bJ7EWg4tiLBiONwl0D86OJCgUpjfngaEMi2NhvBhSmRgv9HYvtNNL0nQV2QC80m";
+        String client_secret = "mtzJ9vwJKQtoG81ChC4uhfOv5SVpO46srimGyF9k0TsbC1JN7tAJ0QcOgRXotTVPhu2kspKr7bgWXFRWuOLh4JAFeIxrmIkwDleK3dPQMnxpWGuxiWMlfgvAti99t7eB";
+        return loginService.getAccessTokenJwt(grantType, clientID, token_type, client_secret).execute();
+    }
+
+    @NonNull
+    public Response<List<Programs>> getMyprograms(String username) throws IOException {
+        return loginService.getMyPrograms(username).execute();
+    }
+
+    @NonNull
+    public Response<List<EnrolledCoursesResponse>> getMyCurses(String auth, String username) throws IOException {
+        return loginService.getMyCourses(username).execute();
+    }
+
+    @NonNull
+    public Response<List<CourseMultilingualModel>> getMyCoursesMultilingualTranslations(String courseId) throws IOException {
+        return loginService.getMyCoursesMultilingualTranslation(courseId).execute();
+    }
+
+    @NonNull
+    public Response<EnrollResponse> getEnroll(EnrollAndUnenrollData requestBody) throws IOException {
+        return loginService.getEnroll(requestBody).execute();
+    }
+
+
+    @NonNull
     public AuthResponse logInUsingEmail(@NonNull String email, @NonNull String password) throws Exception {
         final Response<AuthResponse> response = getAccessToken(email, password);
+        final Response<AuthResponseJwt> responseJwt = getAccessTokenJwt();
         if (!response.isSuccessful()) {
             throw new HttpStatusException(response);
         }
-        finishLogIn(response.body(), LoginPrefs.AuthBackend.PASSWORD, email.trim());
+        finishLogIn(response.body(), responseJwt.body(), LoginPrefs.AuthBackend.PASSWORD, email.trim());
         return response.body();
+    }
+
+    @NonNull
+    public EnrollResponse getAccessEnroll(EnrollAndUnenrollData enrollAndUnenrollData) throws Exception {
+        final Response<EnrollResponse> response = getEnroll(enrollAndUnenrollData);
+
+        if (!response.isSuccessful()) {
+            throw new HttpStatusException(response);
+        }
+        return response.body();
+    }
+
+    @NonNull
+    public AuthResponseJwt getAccessJwt() throws Exception {
+        final Response<AuthResponseJwt> responseJwt = getAccessTokenJwt();
+        Long milis = System.currentTimeMillis();
+        responseJwt.body().setCreation_time(milis);
+        if (!responseJwt.isSuccessful()) {
+            throw new HttpStatusException(responseJwt);
+        }
+        loginPrefs.storeAuthJwtTokenResponse(responseJwt.body());
+        return responseJwt.body();
+    }
+
+    @NonNull
+    public List<Programs> getMyPrograms(String username) throws Exception {
+        final Response<List<Programs>> responsePrograms = getMyprograms(username);
+        return responsePrograms.body();
+    }
+
+    @NonNull
+    public List<EnrolledCoursesResponse> getMyCourses(String auth, String username) throws Exception {
+        final Response<List<EnrolledCoursesResponse>> responsePrograms = getMyCurses(auth, username);
+        return responsePrograms.body();
+    }
+
+    @NonNull
+    public List<CourseMultilingualModel> getMyCoursesMultilingualTranslation(String courseId) throws Exception {
+        final Response<List<CourseMultilingualModel>> responsePrograms = getMyCoursesMultilingualTranslations(courseId);
+        return responsePrograms.body();
     }
 
     @NonNull
@@ -123,12 +205,12 @@ public class LoginAPI {
         if (data.error != null && data.error.equals(Integer.toString(HttpURLConnection.HTTP_UNAUTHORIZED))) {
             throw new AccountNotLinkedException(HttpURLConnection.HTTP_UNAUTHORIZED);
         }
-        finishLogIn(data, authBackend, "");
+        finishLogIn(data, null, authBackend, "");
         return data;
     }
 
-    private void finishLogIn(@NonNull AuthResponse response, @NonNull LoginPrefs.AuthBackend authBackend, @NonNull String usernameUsedToLogIn) throws Exception {
-        loginPrefs.storeAuthTokenResponse(response, authBackend);
+    private void finishLogIn(@NonNull AuthResponse response, @NonNull AuthResponseJwt response_jwt, @NonNull LoginPrefs.AuthBackend authBackend, @NonNull String usernameUsedToLogIn) throws Exception {
+        loginPrefs.storeAuthTokenResponse(response, response_jwt, authBackend);
         try {
             response.profile = getProfile();
         } catch (Throwable e) {
@@ -239,7 +321,9 @@ public class LoginAPI {
     }
 
     public static class AccountNotLinkedException extends Exception {
-        /** HTTP status code. */
+        /**
+         * HTTP status code.
+         */
         private int responseCode;
 
         public AccountNotLinkedException(int responseCode) {

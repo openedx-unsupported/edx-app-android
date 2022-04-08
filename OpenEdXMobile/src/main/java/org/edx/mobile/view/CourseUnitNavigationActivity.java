@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
@@ -16,12 +17,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.coursemultilingual.CourseMultilingualModel;
+import org.edx.mobile.coursemultilingual.CourseTranslation;
+import org.edx.mobile.coursemultilingual.MyCourseMultilingualtask;
 import org.edx.mobile.event.CourseUpgradedEvent;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.util.LocaleManager;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.edx.mobile.view.custom.PreLoadingListener;
@@ -57,6 +64,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Inject
     LastAccessManager lastAccessManager;
+    private List<CourseMultilingualModel> courseMultilingualModels;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,6 +183,83 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 courseData.getCourse().getId(), selectedUnit.getBlockId());
     }
 
+    private void getCoursemultilingualData(CourseComponent courseComponent, int curIndex) {
+        MyCourseMultilingualtask myCourseMultilingualtask = new MyCourseMultilingualtask(this,
+                courseData.getCourse().getId()) {
+            @Override
+            public void onSuccess(@NonNull List<CourseMultilingualModel> result) {
+                String text = "";
+                String prevText = "";
+                String nextText = "";
+                if (result != null) {
+                    if (courseComponent.getDisplayName() != null) {
+                        String selectedLanguage = LocaleManager.getLanguagePref(context);
+                        for (CourseMultilingualModel courseMultilingualModel : result) {
+                            if (courseMultilingualModel.getText() != null) {
+                                if (courseMultilingualModel.getText().toLowerCase().equals(courseComponent.getDisplayName().toLowerCase())) {
+                                    for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                                        if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                            text = courseTranslation.getConversion();
+                                        }
+                                    }
+                                } else if (curIndex+1 != unitList.size() && unitList.get(curIndex + 1).getParent().getDisplayName() != null && !unitList.get(curIndex + 1).getParent().getDisplayName().isEmpty() && courseMultilingualModel.getText().toLowerCase().
+                                        equals(unitList.get(curIndex + 1).getParent().getDisplayName().toLowerCase())) {
+                                    for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                                        if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                            nextText = courseTranslation.getConversion();
+                                        }
+                                    }
+                                } else if (curIndex != 0 && unitList.get(curIndex - 1) != null && unitList.get(curIndex - 1).getParent() != null && unitList.get(curIndex - 1).getParent().getDisplayName() != null && !unitList.get(curIndex - 1).getParent().getDisplayName().isEmpty() &&
+                                        courseMultilingualModel.getText().toLowerCase().
+                                                equals(unitList.get(curIndex - 1).getParent().getDisplayName().toLowerCase())) {
+                                    for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                                        if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                            prevText = courseTranslation.getConversion();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    courseMultilingualModels = result;
+                }
+                if (courseComponent.getDisplayName() != null) {
+                    if (text.isEmpty()) {
+                        setTitle(courseComponent.getDisplayName());
+                    } else {
+                        setTitle(text);
+                    }
+                }
+                if (curIndex != 0 && unitList.get(curIndex - 1).getParent().getDisplayName() != null) {
+                    if (prevText.isEmpty()) {
+                        mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
+                    } else {
+                        mPreviousUnitLbl.setText(prevText);
+                    }
+                }
+                if (curIndex+1 != unitList.size()  && unitList.get(curIndex + 1).getParent().getDisplayName() != null) {
+                    if (nextText.isEmpty()) {
+                        mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
+                    } else {
+                        mNextUnitLbl.setText(nextText);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                if (ex instanceof HttpStatusException &&
+                        ((HttpStatusException) ex).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                } else {
+
+                }
+            }
+        };
+        myCourseMultilingualtask.execute();
+    }
+
+
     private void tryToUpdateForEndOfSequential() {
         int curIndex = pager.getCurrentItem();
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
@@ -184,7 +269,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
-        setTitle(selectedUnit.getDisplayName());
+        // setTitle(selectedUnit.getDisplayName());
+        getCoursemultilingualData(selectedUnit, curIndex);
 
         String currentSubsectionId = selectedUnit.getParent().getId();
         if (curIndex + 1 <= pagerAdapter.getCount() - 1) {

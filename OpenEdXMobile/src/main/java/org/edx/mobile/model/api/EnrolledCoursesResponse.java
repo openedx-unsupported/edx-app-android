@@ -8,11 +8,22 @@ import org.edx.mobile.interfaces.SectionItemInterface;
 public class EnrolledCoursesResponse implements SectionItemInterface {
 
     private String auditAccessExpires;
+
+    public String getCourse_status() {
+        return course_status;
+    }
+
+    public void setCourse_status(String course_status) {
+        this.course_status = course_status;
+    }
+
+    private String course_status;
     private String created;
     private String mode;
     private boolean is_active;
     private CourseEntry course;
     private boolean isDiscussionBlackedOut = false;
+
     
     private CertificateModel certificate;
 

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,11 +40,16 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
+import org.edx.mobile.coursemultilingual.CourseMultilingualModel;
+import org.edx.mobile.coursemultilingual.CourseTranslation;
+import org.edx.mobile.coursemultilingual.MyCourseMultilingualtask;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.CourseContentNotValidException;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.loader.AsyncTaskResult;
@@ -66,6 +72,7 @@ import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.ConfigUtil;
+import org.edx.mobile.util.LocaleManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtil;
@@ -128,6 +135,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private CourseOutlineAdapter.DownloadListener downloadListener;
     private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
     private CourseUpgradeResponse courseUpgradeData;
+    private List<CourseMultilingualModel> courseMultilingualModels;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId,
@@ -180,6 +188,59 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         trackAATestCourseOutline();
         getCourseUpgradeFirebaseConfig();
         return view;
+    }
+
+    private void getCoursemultilingualData(CourseComponent courseComponent) {
+        MyCourseMultilingualtask myCourseMultilingualtask = new MyCourseMultilingualtask(getContext(),
+                courseData.getCourse().getId()) {
+            @Override
+            public void onSuccess(@NonNull List<CourseMultilingualModel> result) {
+                String text = "";
+                if (result != null) {
+                    if (courseComponent != null) {
+                        String selectedLanguage = LocaleManager.getLanguagePref(context);
+                        for (CourseMultilingualModel courseMultilingualModel : result) {
+                            if (courseMultilingualModel.getText() != null) {
+                                if (courseMultilingualModel.getText().toLowerCase().equals(courseComponent.getDisplayName().toLowerCase())) {
+                                    for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                                        if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                            text = courseTranslation.getConversion();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    courseMultilingualModels = result;
+                    adapter.setCourseMultilingualData(courseMultilingualModels);
+                }
+                if (courseComponent != null) {
+                    if (text != null) {
+                        if (text.isEmpty()) {
+                            if (getActivity()!=null)
+                            getActivity().setTitle(courseComponent.getDisplayName());
+                        } else {
+                            if (getActivity()!=null)
+                            getActivity().setTitle(text);
+                        }
+                    } else {
+                        if (getActivity()!=null)
+                        getActivity().setTitle(courseComponent.getDisplayName());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                if (ex instanceof HttpStatusException &&
+                        ((HttpStatusException) ex).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                } else {
+
+                }
+            }
+        };
+        myCourseMultilingualtask.execute();
     }
 
     @Override
@@ -329,6 +390,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             courseComponent = cached != null ? cached : courseComponent;
         }
         return courseComponent;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getCoursemultilingualData(null);
     }
 
     private void initListView(@NonNull View view) {
@@ -484,8 +551,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     https://stackoverflow.com/a/30552666
                     https://github.com/material-components/material-components-android/commit/2cb77c9331cc3c6a5034aace0238b96508acf47d
                      */
-                    @SuppressLint("WrongConstant")
-                    final Snackbar snackbar = Snackbar.make(listView,
+                    @SuppressLint("WrongConstant") final Snackbar snackbar = Snackbar.make(listView,
                             getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
                             SNACKBAR_SHOWTIME_MS);
                     snackbar.setAction(R.string.label_undo, new View.OnClickListener() {
@@ -547,6 +613,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
      * Load data to the adapter
      */
     private void loadData(@NonNull CourseComponent courseComponent) {
+        getCoursemultilingualData(courseComponent);
         courseComponentId = courseComponent.getId();
         if (courseData == null || getActivity() == null)
             return;

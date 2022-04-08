@@ -72,7 +72,11 @@
     <string name="password_editbox">கடவுச்சொல் திருத்தப்பெட்டி</string>
     <string name="email_editbox">மின்னஞ்சல் திருத்தப்பெட்டி</string>
     <string name="back">மீண்டும்</string>
-    <string name="search">தேடு</string>
+    <string name="search">தேடல் பொத்தான்</string>
+    <string name="go_to_last_visit_section">கடைசி வருகை பகுதிக்குச் செல்லவும்</string>
+    <string name="subodha_sign_up_and_start_learning">சுபோதா, பதிவு செய்து கற்கத் தொடங்குங்கள்</string>
+    <string name="data_is_loading">தரவு ஏற்றப்படுகிறது</string>
+    <string name="data_loaded">தரவு ஏற்றப்பட்டது</string>
     <plurals name="download_total">
         <item quantity='one'>{total_videos_count} வீடியோ, மொத்தம் {total_videos_size}</item>
         <item quantity='other'>{total_videos_count} வீடியோக்கள், மொத்தம் {total_videos_size}</item>
@@ -382,7 +386,7 @@
     <string name="title_reset_password_failed">கடவுச்சொல்லை மீட்டமைப்பதில் பிழை</string>
     <string name="success_dialog_title_help">கடவுச்சொல் மீட்டமைப்பு மின்னஞ்சல் அனுப்பப்பட்டது</string>
     <string name="confirm_dialog_title_help">கடவுச்சொல்லை மீட்டமைக்க</string>
-    <string name="title_account">பயனர் கணக்கு</string>
+    <string name="title_account">பயனர் கணக்கு பொத்தான்</string>
     <string name="label_settings">அமைப்புகள்</string>
     <string name="label_version">ஆப் பதிப்பு</string>
     <string name="settings_txt">அமைப்புகள்</string>

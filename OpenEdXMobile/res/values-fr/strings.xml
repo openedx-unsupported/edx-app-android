@@ -656,4 +656,9 @@
   <string name="rating_bar_selection">{rating} sur {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">Nouveautés de la version {version_number}</string>
+
+  <!-- Tabs Name -->
+  <string name="my_course">Mon cours</string>
+  <string name="explore_course">Explorer</string>
+  <string name="courses">Cours</string>
 </resources>

@@ -24,4 +24,5 @@ public class CourseUnitEmptyFragment extends CourseUnitFragment {
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_course_unit_empty, container, false);
     }
+
 }

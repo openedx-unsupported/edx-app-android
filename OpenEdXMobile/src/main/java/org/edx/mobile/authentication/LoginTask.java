@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.discovery.net.course.CourseApi;
 import org.edx.mobile.task.Task;
 
 public abstract class LoginTask extends Task<AuthResponse> {

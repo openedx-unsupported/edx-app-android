@@ -580,4 +580,9 @@
   <string name="rating_bar_selection">星 {num_of_stars} のうち、{rating}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">バージョン {version_number} 新機能</string>
+
+  <!-- Tabs Name -->
+  <string name="my_course">私のコース</string>
+  <string name="explore_course">探検</string>
+  <string name="courses">コース</string>
 </resources>

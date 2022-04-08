@@ -1,16 +1,15 @@
 package org.edx.mobile.view;
 
-import androidx.databinding.DataBindingUtil;
-
 import android.os.Bundle;
-
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -19,9 +18,10 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding;
 import org.edx.mobile.databinding.PanelFindCourseBinding;
 import org.edx.mobile.deeplink.Screen;
-import org.edx.mobile.event.MoveToDiscoveryTabEvent;
+import org.edx.mobile.discovery.views.NewMainDiscoveryFragment;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
+import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.HttpStatus;
@@ -36,7 +36,6 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCoursesAdapter;
 
 import java.util.ArrayList;
@@ -49,13 +48,14 @@ import de.greenrobot.event.EventBus;
 public class MyCoursesListFragment extends OfflineSupportBaseFragment
         implements RefreshListener,
         LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
-
+    public static final String TAG = MyCoursesListFragment.class.getCanonicalName();
     private static final int MY_COURSE_LOADER_ID = 0x905000;
 
     private MyCoursesAdapter adapter;
     private FragmentMyCoursesListBinding binding;
     private final Logger logger = new Logger(getClass().getSimpleName());
     private boolean refreshOnResume = false;
+    private OnExploreButtonClick onExploreButtonClick;
 
     @Inject
     private IEdxEnvironment environment;
@@ -64,6 +64,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     private LoginPrefs loginPrefs;
 
     private FullScreenErrorNotification errorNotification;
+    private NewMainDiscoveryFragment exploreBottomFragment;
 
     //TODO: All these callbacks aren't essentially part of MyCoursesListFragment and should move in
     // the Tabs container fragment that's going to be implemented in LEARNER-3251
@@ -84,12 +85,19 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
         };
     }
 
+    public MyCoursesListFragment setExploreButtonClick(OnExploreButtonClick answerChangeListener) {
+        this.onExploreButtonClick = answerChangeListener;
+        return this;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_courses_list, container, false);
+
         errorNotification = new FullScreenErrorNotification(binding.myCourseList);
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+       /* binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Hide the progress bar as swipe layout has its own progress indicator
@@ -97,13 +105,36 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
                 errorNotification.hideError();
                 loadData(false);
             }
+        });*/
+        String sourceString = "<b>" + getString(R.string.hello)  + "</b> ";
+        binding.hello.setText(Html.fromHtml(sourceString + " " + loginPrefs.getUsername()));
+     //   binding.hello.setText(getString(R.string.hello) + " " + loginPrefs.getUsername());
+        //binding.username.setText(loginPrefs.getUsername());
+        binding.exploreCourse.setVisibility(View.GONE);
+        binding.btnExploreCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onExploreButtonClick.onClick();
+            }
         });
-        UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer);
+        // UiUtil.setSwipeRefreshLayoutColors(binding.swipeContainer);
         // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(new View(getContext()), null, false);
         binding.myCourseList.setAdapter(adapter);
         binding.myCourseList.setOnItemClickListener(adapter);
         return binding.getRoot();
+    }
+
+    public void showFragmentWithoutBackstack(Fragment fragment, String tag) {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in_from_right,
+                        R.anim.slide_out_to_left,
+                        R.anim.slide_in_from_left,
+                        R.anim.slide_out_to_right
+                )
+                .replace(R.id.main_fragment, fragment, tag)
+                .commit();
     }
 
     @Override
@@ -121,6 +152,7 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     public void onLoadFinished(Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> asyncTaskResultLoader, AsyncTaskResult<List<EnrolledCoursesResponse>> result) {
         adapter.clear();
         final Exception exception = result.getEx();
+        //result.getResult().clear();
         if (exception != null) {
             if (exception instanceof AuthException) {
                 loginPrefs.clear();
@@ -154,7 +186,10 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
             updateDatabaseAfterDownload(newItems);
 
             if (result.getResult().size() > 0) {
+                binding.exploreCourse.setVisibility(View.GONE);
                 adapter.setItems(newItems);
+            } else {
+                binding.exploreCourse.setVisibility(View.VISIBLE);
             }
             addFindCoursesFooter();
             adapter.notifyDataSetChanged();
@@ -167,8 +202,10 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
                 binding.myCourseList.setVisibility(View.VISIBLE);
                 errorNotification.hideError();
             }
+        } else if (result.getResult() == null) {
+            binding.exploreCourse.setVisibility(View.VISIBLE);
         }
-        binding.swipeContainer.setRefreshing(false);
+        //  binding.swipeContainer.setRefreshing(false);
         binding.loadingIndicator.getRoot().setVisibility(View.GONE);
 
         if (!EventBus.getDefault().isRegistered(MyCoursesListFragment.this)) {
@@ -278,20 +315,20 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     protected void onRevisit() {
         super.onRevisit();
         if (NetworkUtil.isConnected(getActivity())) {
-            binding.swipeContainer.setEnabled(true);
+            //    binding.swipeContainer.setEnabled(true);
         }
     }
 
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         if (getActivity() != null) {
-            if (NetworkUtil.isConnected(getContext())) {
+           /* if (NetworkUtil.isConnected(getContext())) {
                 binding.swipeContainer.setEnabled(true);
             } else {
                 //Disable swipe functionality and hide the loading view
                 binding.swipeContainer.setEnabled(false);
                 binding.swipeContainer.setRefreshing(false);
-            }
+            }*/
             onNetworkConnectivityChangeEvent(event);
         }
     }
@@ -299,5 +336,9 @@ public class MyCoursesListFragment extends OfflineSupportBaseFragment
     @Override
     protected boolean isShowingFullScreenError() {
         return errorNotification != null && errorNotification.isShowing();
+    }
+
+    public interface OnExploreButtonClick {
+        void onClick();
     }
 }

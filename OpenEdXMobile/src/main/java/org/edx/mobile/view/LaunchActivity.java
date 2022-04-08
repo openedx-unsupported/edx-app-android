@@ -1,26 +1,27 @@
 package org.edx.mobile.view;
 
-import androidx.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.google.inject.Inject;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.databinding.ActivityLaunchBinding;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.prefs.LoginPrefs;
 
 public class LaunchActivity extends BaseFragmentActivity {
 
-    @Inject
-    LoginPrefs loginPrefs;
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // finally change the color
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.status_bar_color));
         final ActivityLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
         binding.signInTv.setOnClickListener(new OnClickListener() {
             @Override
@@ -28,13 +29,13 @@ public class LaunchActivity extends BaseFragmentActivity {
                 startActivity(environment.getRouter().getLogInIntent());
             }
         });
-        binding.signUpBtn.setOnClickListener(new OnClickListener() {
+/*        binding.signUpBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 environment.getAnalyticsRegistry().trackUserSignUpForAccount();
                 startActivity(environment.getRouter().getRegisterIntent());
             }
-        });
+        });*/
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
     }
 

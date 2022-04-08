@@ -29,7 +29,7 @@ public class OrganisationAdapter extends RecyclerView.Adapter<OrganisationAdapte
     @NonNull
     @Override
     public NewOrganisationViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        return new NewOrganisationViewHolder(RowOrganisationBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        return new OrganisationAdapter.NewOrganisationViewHolder(RowOrganisationBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 
     @Override

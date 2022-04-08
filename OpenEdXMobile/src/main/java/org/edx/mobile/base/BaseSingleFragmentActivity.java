@@ -1,10 +1,14 @@
 package org.edx.mobile.base;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.util.LocaleManager;
 import org.edx.mobile.view.AuthPanelUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -35,12 +40,20 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @NonNull
     View toolbarPlaceholder;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // finally change the color
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.status_bar_color));
         setContentView(R.layout.activity_single_fragment_base);
         addToolbar();
         super.setToolbarAsActionBar();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     /**
@@ -61,6 +74,9 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
             final View toolbar = getLayoutInflater().inflate(toolbarLayoutId, parent, false);
             parent.addView(toolbar, index);
         }
+    }
+    private void addToolbarColor(int colorCode) {
+
     }
 
     @LayoutRes

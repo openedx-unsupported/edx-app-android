@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,6 +91,9 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
 
     private List<MyProgramListModel> myProgramListModels = new ArrayList<>();
     private ResumeCourse resumeCourse;
+    Handler handler = new Handler();
+    Runnable runnable;
+    int delay = 5000;
 
     public static ProgramFragment newInstance(@Nullable Bundle bundle) {
         final ProgramFragment fragment = new ProgramFragment();
@@ -145,6 +149,7 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
         binding.enrollInProgram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.enrollInProgram.setEnabled(false);
                 String strings = discoveryCourseAdapter.getProgramCoursesIds();
                 EnrollAndUnenrollData.DataCreation dataCreation = new EnrollAndUnenrollData.DataCreation();
                 dataCreation.setCourses(strings);
@@ -161,6 +166,7 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
         binding.unenrollFromProgram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.unenrollFromProgram.setEnabled(false);
                 String strings = discoveryCourseAdapter.getProgramCoursesIds();
                 EnrollAndUnenrollData.DataCreation dataCreation = new EnrollAndUnenrollData.DataCreation();
                 dataCreation.setCourses(strings);
@@ -180,6 +186,22 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
     @Override
     public void onResume() {
         try {
+            handler.postDelayed(runnable = new Runnable() {
+                @Override
+                public void run() {
+                    handler.postDelayed(runnable, delay);
+                    if (binding.iconProgress.getVisibility() == View.VISIBLE) {
+                        binding.enrollInProgram.setEnabled(false);
+                        binding.unenrollFromProgram.setEnabled(false);
+                        Toast.makeText(getContext(), getActivity().getString(R.string.data_is_loading), Toast.LENGTH_SHORT).show();
+                    } else {
+                        binding.enrollInProgram.setEnabled(true);
+                        binding.unenrollFromProgram.setEnabled(true);
+                        Toast.makeText(getContext(), getActivity().getString(R.string.data_loaded), Toast.LENGTH_SHORT).show();
+                        handler.removeCallbacks(runnable);
+                    }
+                }
+            }, delay);
             getMyPrograms(true);
             getMyCourseList();
             //  loadData(true);
@@ -360,14 +382,16 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
             @Override
             protected void onSuccess(EnrollResponse enrollResponse) throws Exception {
                 super.onSuccess(enrollResponse);
+                binding.unenrollFromProgram.setEnabled(true);
+                binding.unenrollFromProgram.setEnabled(true);
                 if (enrollResponse.isStatus()) {
                     getMyCourseList();
                     getMyPrograms(false);
                     if (dataCreation.getAction().equals("enroll")) {
-                        Toast.makeText(getContext(), topic_name + " " +
+                     /*   Toast.makeText(getContext(), topic_name + " " +
                                         binding.programNameInCard.getText().toString() + " " +
                                         getString(R.string.added_to_the_dashboard_you_can_view_the_course_now),
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_LONG).show();*/
                         programModelAdapter.setProgramEnroll(true, program_selected_uuid);
                         discoveryCourseAdapter.setEnroll(true);
                         binding.enrollInProgram.setVisibility(View.GONE);
@@ -380,9 +404,9 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
                         binding.courseDatailUnenroll.setVisibility(View.GONE);
                         enrolledStatus(getString(R.string.program_is_successfully_added_to_dashboard));
                     } else {
-                        Toast.makeText(getContext(), getString(R.string.removed) + " " +
+                       /* Toast.makeText(getContext(), getString(R.string.removed) + " " +
                                 topic_name + " " + binding.programNameInCard.getText().toString() + " " +
-                                getString(R.string.from_your_dashboard), Toast.LENGTH_LONG).show();
+                                getString(R.string.from_your_dashboard), Toast.LENGTH_LONG).show();*/
                         programModelAdapter.setProgramEnroll(false, program_selected_uuid);
                         discoveryCourseAdapter.setEnroll(false);
                         binding.enrollInProgram.setVisibility(View.VISIBLE);
@@ -445,7 +469,7 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
             binding.linerProgramName.setVisibility(View.VISIBLE);
             binding.programNameInCard.setText(programResultList.getTitle());
 
-            if (programResultList.getAuthoring_organizations() != null) {
+            if (programResultList.getAuthoring_organizations() != null && programResultList.getAuthoring_organizations().size()>0) {
                 authorising_organisation = "";
                 if (programResultList.getAuthoring_organizations().size() > 1) {
                     for (AuthoringOrganisations authoringOrganisations : programResultList.getAuthoring_organizations()) {
@@ -603,6 +627,7 @@ public class ProgramFragment extends BaseFragment implements OnRecyclerItemClick
                         binding.courseCount.setVisibility(View.VISIBLE);
                     }
                 }
+                binding.iconProgress.setVisibility(View.GONE);
                 programModelAdapter.notifyDataSetChanged();
             }
 

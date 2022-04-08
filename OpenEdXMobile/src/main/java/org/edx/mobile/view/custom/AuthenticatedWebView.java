@@ -3,6 +3,8 @@ package org.edx.mobile.view.custom;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,11 +12,15 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -34,6 +40,7 @@ import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 
@@ -174,6 +181,139 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
         };
 
         webViewClient.setAllLinksAsExternal(isAllLinksExternal);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    public void initWebView(@NonNull final FragmentActivity fragmentActivity) {
+
+      /*  webView.clearCache(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+
+        //cache settings for webview
+        webView.getSettings().setAppCacheMaxSize(8 * 1024 * 1024); // 8MB
+        webView.getSettings().setAppCachePath(getContext().getCacheDir().getAbsolutePath());
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT); // load online by default*/
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }*/
+        webView.canGoBack();
+        webView.setOnKeyListener(new View.OnKeyListener() {
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK
+                        && event.getAction() == MotionEvent.ACTION_UP
+                        && webView.canGoBack()) {
+                    webView.goBack();
+                    return true;
+                }
+                return false;
+            }
+        });
+        webView.getSettings().setAppCacheMaxSize(1024 * 1024 * 8);
+        webView.getSettings().setAppCachePath(getContext().getApplicationContext().getCacheDir().getAbsolutePath());
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        //add user agent
+        String userAgent = webView.getSettings().getUserAgentString() + "/" + BrowserUtil.config.getUserAgent();
+        webView.getSettings().setUserAgentString(userAgent);
+
+        if (!NetworkUtil.isConnected(getContext())) {
+            // loading offline
+            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }
+
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                if (url != null) {
+                    // if (url.endsWith(".pdf")) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    fragmentActivity.startActivity(i);
+                    //    }
+                }
+            }
+        });
+
+        webViewClient = new URLInterceptorWebViewClient(fragmentActivity, webView) {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+                if (failingUrl!=null) {
+                    tryToLoadWebView(true);
+                    return;
+                }
+
+                didReceiveError = true;
+                hideLoadingProgress();
+                pageIsLoaded = false;
+                showErrorMessage(R.string.network_error_message, FontAwesomeIcons.fa_exclamation_circle);
+                super.onReceivedError(view, errorCode, description, failingUrl);
+            }
+
+            @Override
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                            WebResourceResponse errorResponse) {
+                // If error occurred for web page request
+                if (request.getUrl().toString().equals(view.getUrl())) {
+                    didReceiveError = true;
+                    switch (errorResponse.getStatusCode()) {
+                        case HttpStatus.FORBIDDEN:
+                        case HttpStatus.UNAUTHORIZED:
+                        case HttpStatus.NOT_FOUND:
+                            EdxCookieManager.getSharedInstance(getContext())
+                                    .tryToRefreshSessionCookie();
+                            break;
+                        default:
+                            hideLoadingProgress();
+                            break;
+                    }
+                    pageIsLoaded = false;
+                    showErrorMessage(R.string.network_error_message, FontAwesomeIcons.fa_exclamation_circle);
+                }
+                super.onReceivedHttpError(view, request, errorResponse);
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                if (!NetworkUtil.isConnected(getContext())) {
+                    showErrorView(getResources().getString(R.string.reset_no_network_message),
+                            FontAwesomeIcons.fa_wifi);
+                    hideLoadingProgress();
+                    pageIsLoaded = false;
+                    return;
+                }
+                if (didReceiveError) {
+                    didReceiveError = false;
+                    return;
+                }
+                if (url != null && url.equals("data:text/html," + EMPTY_HTML)) {
+                    //we load a local empty html page to release the memory
+                } else {
+                    pageIsLoaded = true;
+                    hideErrorMessage();
+                }
+
+                if (pageIsLoaded && !TextUtils.isEmpty(javascript)) {
+                    evaluateJavascript();
+                } else {
+                    hideLoadingProgress();
+                }
+                super.onPageFinished(view, url);
+            }
+        };
+
+        webViewClient.setAllLinksAsExternal(false);
     }
 
     public void loadUrl(boolean forceLoad, @NonNull String url) {

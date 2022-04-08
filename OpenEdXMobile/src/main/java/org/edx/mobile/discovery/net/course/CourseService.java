@@ -25,30 +25,30 @@ import retrofit2.http.Query;
 public interface CourseService {
 
     @GET("api/v1/subjects/")
-    Call<DiscoverySubject> getSubjects(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang);
+    Call<DiscoverySubject> getSubjects(@Header(DiscoveryConstants.AUTHORIZATION) String authorization,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang);
 
     @GET("api/v1/organizations/")
-    Call<OrganisationList> getOrganisation(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang);
+    Call<OrganisationList> getOrganisation(@Header(DiscoveryConstants.AUTHORIZATION) String authorization,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang);
 
     @GET("extandedapi/get-program-topics/")
-    Call<TagModel> getTopics(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("subject_name") String subjectName);
+    Call<TagModel> getTopics(@Header(DiscoveryConstants.AUTHORIZATION) String authorization,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("subject_name") String subjectName);
 
     @GET("api/v1/search/programs/details/")
-    Call<ProgramModel> getProgramsWithTopicName(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("program_topics") String subjectName);
+    Call<ProgramModel> getProgramsWithTopicName(@Header(DiscoveryConstants.AUTHORIZATION) String authorization ,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("program_topics") String subjectName);
 
     @GET("/extandedapi/custom-course-search/")
-    Call<SearchResult> getSearch(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("page_size") String page, @Query("q") String query);
+    Call<SearchResult> getSearch(@Header(DiscoveryConstants.AUTHORIZATION) String authorization ,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("page_size") String page, @Query("q") String query);
 
     @GET("/extandedapi/custom-course-search/")
-    Call<SearchResult> getSearchNextResult(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("page") String page, @Query("page_size") String page_size, @Query("q") String query);
+    Call<SearchResult> getSearchNextResult(@Header(DiscoveryConstants.AUTHORIZATION) String authorization ,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Query("page") String page ,@Query("page_size") String page_size, @Query("q") String query);
 
     @NonNull
     @FormUrlEncoded
     @POST("explore-courses/course-bulk/")
-    Call<AuthResponse> getEnroll(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Field("enroll") String data);
+    Call<AuthResponse> getEnroll(@Header(DiscoveryConstants.AUTHORIZATION) String authorization ,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Field("enroll") String data);
 
     @NonNull
     @FormUrlEncoded
     @POST("explore-courses/course-bulk/")
-    Call<AuthResponse> getUnenroll(@Header(DiscoveryConstants.AUTHORIZATION) String authorization, @Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Field("unenroll") EnrollAndUnenrollData data);
+    Call<AuthResponse> getUnenroll(@Header(DiscoveryConstants.AUTHORIZATION) String authorization,@Header(DiscoveryConstants.ACCEPT_LANGUAGE) String lang, @Field("unenroll") EnrollAndUnenrollData data);
 }

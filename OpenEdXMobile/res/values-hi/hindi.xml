@@ -73,7 +73,11 @@
     <string name="password_editbox">पासवर्ड संपादन बॉक्स</string>
     <string name="email_editbox">ईमेल संपादन बॉक्स</string>
     <string name="back">वापस</string>
-    <string name="search">खोज</string>
+    <string name="search">खोज बटन</string>
+    <string name="go_to_last_visit_section">अंतिम विज़िट अनुभाग पर जाएं</string>
+    <string name="subodha_sign_up_and_start_learning">सुबोध, साइन अप करें और सीखना शुरू करें</string>
+    <string name="data_is_loading">डेटा लोड हो रहा है</string>
+    <string name="data_loaded">डेटा लोड किया गया</string>
     <plurals name="download_total">
         <item quantity='one'>{total_videos_count} वीडियो, {total_videos_size} कुल</item>
         <item quantity='other'>{total_videos_count} वीडियो, {total_videos_size} कुल</item>
@@ -383,7 +387,7 @@
     <string name="title_reset_password_failed">पासवर्ड रीसेट करें त्रुटि</string>
     <string name="success_dialog_title_help">पासवर्ड रीसेट ई-मेल भेजा गया</string>
     <string name="confirm_dialog_title_help">पासवर्ड रीसेट</string>
-    <string name="title_account">उपभोक्ता खाता</string>
+    <string name="title_account">उपयोगकर्ता खाता बटन</string>
     <string name="label_settings">समायोजन</string>
     <string name="label_version">एप्लिकेशन वेरीज़न</string>
     <string name="settings_txt">समायोजन</string>

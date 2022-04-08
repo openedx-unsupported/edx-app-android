@@ -1,5 +1,6 @@
 package org.edx.mobile.base;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -29,6 +30,7 @@ import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.interfaces.OnActivityResultListener;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.LocaleManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
@@ -79,6 +81,11 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
     protected void setToolbarAsActionBar() {
         final View toolbar = findViewById(R.id.toolbar);
         if (toolbar != null && toolbar instanceof Toolbar) {
@@ -127,6 +134,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             findViewById(R.id.appbar).setOutlineProvider(null);
         }
     }
+    protected void hideToolbar() {
+        findViewById(R.id.toolbar).setVisibility(View.GONE);
+    }
 
     protected void configureActionBar() {
         ActionBar bar = getSupportActionBar();
@@ -134,6 +144,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             bar.setDisplayShowHomeEnabled(true);
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setIcon(android.R.color.transparent);
+            bar.setHomeActionContentDescription(getString(R.string.back));
         }
     }
 

@@ -47,4 +47,5 @@ public class CourseUnitDiscussionFragment extends CourseUnitFragment {
             fragmentTransaction.commit();
         }
     }
+
 }

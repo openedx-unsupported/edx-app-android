@@ -651,4 +651,8 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="rating_bar_selection">{rating} trên {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">Phiên bản {version_number} Tính năng mới</string>
+  <!-- Tabs Name -->
+  <string name="my_course">Khóa học của tôi</string>
+  <string name="explore_course">Khám phá</string>
+  <string name="courses">Các khóa học</string>
 </resources>

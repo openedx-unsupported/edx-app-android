@@ -31,7 +31,7 @@ public class NewSubjectAdapter extends RecyclerView.Adapter<NewSubjectAdapter.Ne
     @NonNull
     @Override
     public NewSubjectViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        return new NewSubjectViewHolder(RowSubjectsBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        return new NewSubjectAdapter.NewSubjectViewHolder(RowSubjectsBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 
     @Override

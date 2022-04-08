@@ -1,29 +1,44 @@
 package org.edx.mobile.authentication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RawRes;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.coursemultilingual.CourseMultilingualModel;
+import org.edx.mobile.discovery.DiscoveryConstants;
+import org.edx.mobile.discovery.model.EnrollAndUnenrollData;
+import org.edx.mobile.discovery.model.EnrollResponse;
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.constants.ApiConstants.TokenType;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.programs.Programs;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
+import static org.edx.mobile.http.constants.ApiConstants.URL_MY_COURSES;
+import static org.edx.mobile.http.constants.ApiConstants.URL_MY_COURSES_MULTILINGUAL_TRANSLATION;
+import static org.edx.mobile.http.constants.ApiConstants.URL_MY_PROGRAMS;
 import static org.edx.mobile.http.constants.ApiConstants.URL_MY_USER_INFO;
 
 public interface LoginService {
@@ -65,6 +80,22 @@ public interface LoginService {
                                       @Field("client_id") String client_id,
                                       @Field("username") String username,
                                       @Field("password") String password);
+
+    @NonNull
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_ACCESS_TOKEN)
+    Call<AuthResponseJwt> getAccessTokenJwt(@Field("grant_type") String grant_type,
+                                      @Field("client_id") String client_id,
+                                      @Field("token_type") String token_type,
+                                      @Field("client_secret") String client_secret);
+
+    @Headers("Content-Type: application/json")
+    @POST("explore-courses/course-bulk/")
+    Call<EnrollResponse> getEnroll(@Body EnrollAndUnenrollData data);
+
+    @Headers("Content-Type: application/json")
+    @POST("explore-courses/course-bulk/")
+    Call<AuthResponse> getUnEnroll(@Body EnrollAndUnenrollData data);
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -125,4 +156,16 @@ public interface LoginService {
     @NonNull
     @GET(URL_MY_USER_INFO)
     Call<ProfileModel> getProfile();
+
+    @NonNull
+    @GET(URL_MY_PROGRAMS)
+    Call<List<Programs>> getMyPrograms(@Query("username") String username);
+
+    @NonNull
+    @GET(URL_MY_COURSES)
+    Call<List<EnrolledCoursesResponse>> getMyCourses(@Query("username") String username);
+
+    @NonNull
+    @GET(URL_MY_COURSES_MULTILINGUAL_TRANSLATION)
+    Call<List<CourseMultilingualModel>> getMyCoursesMultilingualTranslation(@Query("course_key") String course_key);
 }

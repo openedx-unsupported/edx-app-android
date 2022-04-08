@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.webkit.WebView;
 import org.edx.mobile.R;
 import org.edx.mobile.event.UnitLoadedEvent;
 import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.util.LocaleManager;
 import org.edx.mobile.view.custom.AuthenticatedWebView;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -57,7 +59,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             throw new RuntimeException("Parent activity of this Fragment should implement the PreLoadingListener interface");
         }
         swipeContainer.setEnabled(false);
-        authWebView.initWebView(getActivity(), true, false);
+       // authWebView.initWebView(getActivity(), true, false);
+        authWebView.initWebView(getActivity());
         authWebView.getWebViewClient().setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override
             public void onPageStarted() {
@@ -97,11 +100,16 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     }
 
     private void loadUnit() {
-        if (authWebView != null) {
-            if (!authWebView.isPageLoaded() && !isPageLoading) {
-                authWebView.loadUrl(true, unit.getBlockUrl());
-                if (getUserVisibleHint()) {
-                    preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADING);
+        if (getActivity()!=null){
+            String selectedLanguage = "en";
+            selectedLanguage = LocaleManager.getLanguagePref(getActivity());
+            Log.d("webview_url" , unit.getBlockUrl() + "?language=" + selectedLanguage);
+            if (authWebView != null) {
+                if (!authWebView.isPageLoaded() && !isPageLoading) {
+                    authWebView.loadUrl(true, unit.getBlockUrl() + "?language=" + selectedLanguage);
+                    if (getUserVisibleHint()) {
+                        preloadingListener.setLoadingState(PreLoadingListener.State.MAIN_UNIT_LOADING);
+                    }
                 }
             }
         }
@@ -131,7 +139,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        authWebView.onDestroy();
+      //  authWebView.onDestroy();
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment;
 import org.edx.mobile.view.CourseUnitVideoPlayerFragment;
 import org.edx.mobile.view.CourseUnitWebViewFragment;
 import org.edx.mobile.view.CourseUnitYoutubePlayerFragment;
+import org.edx.mobile.view.NewCourseUnitFragment;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
     private EnrolledCoursesResponse courseData;
     private CourseUpgradeResponse courseUpgradeData;
     private CourseUnitFragment.HasComponent callback;
+    private NewCourseUnitFragment.HasComponent callback1;
 
     public CourseUnitPagerAdapter(FragmentManager manager,
                                   Config config,
@@ -110,7 +112,11 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
                 minifiedUnit.getType() != BlockType.PROBLEM) {
             unitFragment = CourseUnitEmptyFragment.newInstance(minifiedUnit);
         } else if (minifiedUnit instanceof HtmlBlockModel) {
-            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) minifiedUnit);
+            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) unit);
+           /* NewCourseUnitFragment newCourseUnitFragment;
+            newCourseUnitFragment = NewCourseUnitWebviewFragment.newInstance((HtmlBlockModel) unit);
+         //   newCourseUnitFragment.setHasComponentCallback(callback);
+            return newCourseUnitFragment;*/
         }
         //fallback
         else {

@@ -27,7 +27,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     @NonNull
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        return new SearchViewHolder(RowSearchItemsBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        return new SearchListAdapter.SearchViewHolder(RowSearchItemsBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 
     @Override

@@ -39,7 +39,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagsViewHolder
     @NonNull
     @Override
     public TagsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        return new TagsViewHolder(RowTagsBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
+        return new TagsAdapter.TagsViewHolder(RowTagsBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 
     @Override

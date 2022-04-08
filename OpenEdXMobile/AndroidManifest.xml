@@ -28,7 +28,7 @@
     <!-- Setup for Code Coverage -->
     <instrumentation
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
-        android:targetPackage="org.edx.mobile" />
+        android:targetPackage="org.edx.mobile"/>
 
     <application
         android:name=".base.RuntimeApplication"
@@ -37,21 +37,24 @@
         android:label="@string/app_name"
         tools:replace="android:supportsRtl"
         android:supportsRtl="${supportsRtl}"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
         <activity
             android:name="org.edx.mobile.view.SplashActivity"
-            android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoDisplayTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <intent-filter>
-                <data android:scheme="edx" android:host="open" />
+                <data
+                    android:scheme="edx"
+                    android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
@@ -59,9 +62,15 @@
 
         <activity
             android:name="org.edx.mobile.view.LaunchActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Launch" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.SeachScreenActivity"
+            android:screenOrientation="portrait"
+            android:label="Search Screen"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.edx.mobile.view.DiscoveryLaunchActivity"
@@ -70,22 +79,42 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:name="org.edx.mobile.view.MainBottomDashboardFragment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.LanguageSelectionScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.Welcome_screen"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name="org.edx.mobile.view.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
+        <activity
+            android:name="org.edx.mobile.view.NewLoginActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
         <activity
             android:name="org.edx.mobile.view.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <!--Intent filter to capture System Browser or Authenticator calling back to our app after sign-in-->
-        <activity
-            android:name="com.microsoft.identity.client.BrowserTabActivity">
+        <activity android:name="com.microsoft.identity.client.BrowserTabActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -103,6 +132,18 @@
         <activity
             android:name="org.edx.mobile.view.AccountActivity"
             android:label="@string/title_account"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.TagsFragmentActivity"
+            android:label="Tag Screen"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.ProgramActivity"
+            android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
@@ -210,7 +251,7 @@
             android:name="org.edx.mobile.view.CertificateActivity"
             android:label="@string/tab_label_certificate"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.SettingsActivity"
@@ -220,9 +261,9 @@
 
         <activity
             android:name=".profiles.UserProfileActivity"
-            android:label="@string/profile_title"
+            android:label="User Account Screen"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".view.EditUserProfileActivity"
@@ -250,7 +291,7 @@
         <activity
             android:name=".view.CourseTabsDashboardActivity"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name=".view.dialog.WebViewActivity"
@@ -260,7 +301,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="org.edx.mobile.innerlinks" />
-            </intent-filter>
+            </intent-filter>a
         </activity>
 
         <activity
@@ -271,7 +312,7 @@
         <activity
             android:name=".view.CourseUpgradeWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!--Google cast expanded controls activity-->
         <activity
@@ -280,7 +321,7 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.CastVideosTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
@@ -288,16 +329,20 @@
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
         <!-- Media status update receiver required for the SD Card storage feature -->
-        <receiver android:name=".receivers.MediaStatusReceiver" android:enabled="${sdCardEnabled}">
+        <receiver
+            android:name=".receivers.MediaStatusReceiver"
+            android:enabled="${sdCardEnabled}">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
                 <action android:name="android.intent.action.MEDIA_REMOVED" />
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+
                 <data android:scheme="file" />
             </intent-filter>
         </receiver>
@@ -310,19 +355,23 @@
         </receiver>
 
         <!-- Setup Facebook -->
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="${facebookAppId}"/>
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="${facebookAppId}" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="${fbLoginProtocolScheme}" />
             </intent-filter>
         </activity>
@@ -333,38 +382,44 @@
             android:value="@integer/google_play_services_version" />
 
         <!-- Setup Firebase -->
-        <meta-data android:name="firebase_analytics_collection_enabled"
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
             android:value="${firebaseEnabled}" />
 
         <!-- Branch -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="${branchKey}" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="${branchKey}" />
 
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
+        <receiver
+            android:name="io.branch.referral.InstallListener"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
         <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="${applicationId}.provider"
-                android:exported="false"
-                android:grantUriPermissions="true">
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/image_provider"/>
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/image_provider" />
         </provider>
 
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
 
         <!-- Notifications through Firebase Cloud Messaging (FCM) -->
-        <meta-data android:name="firebase_messaging_auto_init_enabled"
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
             android:value="${fcmEnabled}" />
         <service
             android:name="org.edx.mobile.notifications.services.NotificationService"
             android:enabled="${fcmEnabled}">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 

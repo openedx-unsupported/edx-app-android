@@ -3,16 +3,20 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DbStructure;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import roboguice.RoboGuice;
 
@@ -65,6 +69,8 @@ public class SecurityUtil {
         }
 
         // Now clear all the shared preferences except app related preferences
+        List<String> notclearDataList = new ArrayList<>();
+        notclearDataList.add(PrefManager.Pref.APP_INFO);
         PrefManager.nukeSharedPreferences(Collections.singletonList(PrefManager.Pref.APP_INFO));
 
         // Clear app level caching of all courses

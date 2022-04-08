@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.library.baseAdapters.BuildConfig;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.app.TaskStackBuilder;
@@ -14,7 +16,6 @@ import androidx.core.app.TaskStackBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -130,7 +131,8 @@ public class Router {
 
     @NonNull
     public Intent getLogInIntent(@Nullable DeepLink deepLink) {
-        return LoginActivity.newIntent(deepLink);
+        // return LoginActivity.newIntent(deepLink);
+        return NewLoginActivity.newIntent(deepLink);
     }
 
     @NonNull
@@ -144,8 +146,35 @@ public class Router {
     }
 
     public void showMainDashboard(@NonNull Activity sourceActivity) {
-        showMainDashboard(sourceActivity, null);
+        // showMainDashboard(sourceActivity, null);
+        showMainBottomDashboard(sourceActivity, null, null);
     }
+
+    public void showLanguage(@NonNull Activity sourceActivity) {
+        // showMainDashboard(sourceActivity, null);
+        showLanguageScreen(sourceActivity, null, null);
+    }
+
+    public void showWelcome(@NonNull Activity sourceActivity) {
+        // showMainDashboard(sourceActivity, null);
+        showWelcomeScreen(sourceActivity, null, null);
+    }
+
+    public void showMainBottomDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
+                                        @Nullable String pathId) {
+        sourceActivity.startActivity(MainBottomDashboardFragment.newIntent(screenName, pathId));
+    }
+
+    public void showLanguageScreen(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
+                                   @Nullable String pathId) {
+        sourceActivity.startActivity(LanguageSelectionScreen.newIntent(screenName, pathId));
+    }
+
+    public void showWelcomeScreen(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
+                                  @Nullable String pathId) {
+        sourceActivity.startActivity(Welcome_screen.newIntent(screenName, pathId));
+    }
+
 
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName) {
         showMainDashboard(sourceActivity, screenName, null);
@@ -343,9 +372,9 @@ public class Router {
      * for handling manual logout,
      * {@link #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
-     * @param context  The context.
-     * @param analyticsRegistry  The analytics provider object.
-     * @param delegate The notification delegate.
+     * @param context           The context.
+     * @param analyticsRegistry The analytics provider object.
+     * @param delegate          The notification delegate.
      * @see #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
@@ -357,7 +386,8 @@ public class Router {
         analyticsRegistry.resetIdentifyUser();
 
         delegate.unsubscribeAll();
-
+        loginPrefs = new LoginPrefs(context);
+        loginPrefs.storeUserFirstTime("true");
         showSplashScreen(context);
     }
 
@@ -367,9 +397,9 @@ public class Router {
      * logout internally (e.g. in response to refresh token expiration),
      * {@link #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)} should be used instead.
      *
-     * @param context  The context.
-     * @param analyticsRegistry  The analytics provider object.
-     * @param delegate The notification delegate.
+     * @param context           The context.
+     * @param analyticsRegistry The analytics provider object.
+     * @param delegate          The notification delegate.
      * @see #forceLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
@@ -378,6 +408,7 @@ public class Router {
         loginAPI.logOut();
         forceLogout(context, analyticsRegistry, delegate);
         SecurityUtil.clearUserData(context);
+        loginPrefs.storeUserFirstTime("true");
     }
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
@@ -385,6 +416,10 @@ public class Router {
         handoutIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(handoutIntent);
+    }
+
+    public void showUserProfile(@NonNull Context context, @NonNull String username, @NonNull String userType) {
+        context.startActivity(UserProfileActivity.newIntent(context, username, userType));
     }
 
     public void showUserProfile(@NonNull Context context, @NonNull String username) {
@@ -433,6 +468,18 @@ public class Router {
 
     public void showAccountActivity(@NonNull Activity activity) {
         activity.startActivity(AccountActivity.newIntent(activity, null));
+    }
+
+    public void showTagsActivity(@NonNull Activity activity, String tagName, int colorCode) {
+        activity.startActivity(TagsFragmentActivity.newIntent(activity, null, tagName, colorCode));
+    }
+
+    public void showSeachActivity(@NonNull Activity activity) {
+        activity.startActivity(SeachScreenActivity.newIntent(activity, null));
+    }
+
+    public void showProgramsActivity(@NonNull Activity activity, String programName, String program_uuid) {
+        activity.startActivity(ProgramActivity.newIntent(activity, null, programName, program_uuid));
     }
 
     public void showAccountActivity(@NonNull Activity activity, @Nullable @ScreenDef String screenName) {

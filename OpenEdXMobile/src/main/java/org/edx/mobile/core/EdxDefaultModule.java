@@ -11,6 +11,7 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.course.CourseService;
+import org.edx.mobile.discovery.DiscoveryRetrofitProvider;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.http.provider.RetrofitProvider;
@@ -76,9 +77,10 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(OkHttpClientProvider.class).to(OkHttpClientProvider.Impl.class);
         bind(RetrofitProvider.class).to(RetrofitProvider.Impl.class);
+
         bind(OkHttpClient.class).toProvider(OkHttpClientProvider.Impl.class).in(Singleton.class);
         bind(Retrofit.class).toProvider(RetrofitProvider.Impl.class).in(Singleton.class);
-
+        bind(DiscoveryRetrofitProvider.class).to(DiscoveryRetrofitProvider.Impl.class);
         bind(LoginService.class).toProvider(LoginService.Provider.class).in(Singleton.class);
         bind(CourseService.class).toProvider(CourseService.Provider.class).in(Singleton.class);
         bind(DiscussionService.class).toProvider(DiscussionService.Provider.class).in(Singleton.class);

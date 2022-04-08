@@ -15,7 +15,10 @@ public class ApiConstants {
     public static final String GROUP_ID = "groupId";
     public static final String ORG_CODE = "org";
 
-    public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
+    public static final String URL_MY_USER_INFO = "/api/mobile/v0.5/my_user_info";
+    public static final String URL_MY_PROGRAMS = "/explore-courses/enrolled-programs/";
+    public static final String URL_MY_COURSES = "/explore-courses/enrolled-courses/";
+    public static final String URL_MY_COURSES_MULTILINGUAL_TRANSLATION = "/mx-translations/multilingual/translations/";
 
     public static final String URL_ACCESS_TOKEN = "/oauth2/access_token/";
 
@@ -27,7 +30,7 @@ public class ApiConstants {
 
     public static final String URL_LOGIN = "/oauth2/login/";
 
-    public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
+    public static final String URL_LAST_ACCESS_FOR_COURSE = "/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 
     public static final String URL_REGISTRATION = "/user_api/v1/account/registration/";
 
@@ -41,7 +44,8 @@ public class ApiConstants {
 
     @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TokenType {}
+    public @interface TokenType {
+    }
 
     public static final int STANDARD_PAGE_SIZE = 20;
 

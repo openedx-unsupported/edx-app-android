@@ -27,6 +27,7 @@
     <color name="grey_medium">#666666</color>
     <color name="light_gray">#CCCCCC</color>
     <color name="grey_text">#464A50</color>
+    <color name="subodha_forget_color">#5618E8</color>
     <color name="grey_video_size_text">#9EA7B3</color>
     <color name="grey_text_mycourse">#454951</color>
     <color name="grey_act_background">#E2E3E5</color>
@@ -48,11 +49,12 @@
 
     <!-- Toolbar colors -->
     <color name="toolbar_background_color">@color/white</color>
-    <color name="toolbar_controls_color">@color/edx_brand_primary_base</color>
+    <color name="toolbar_controls_color">#4F4F4F</color>
 
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
     <color name="edx_brand_primary_dark">#065683</color>
     <color name="edx_brand_primary_base">#0075B4</color>
+    <color name="edx_brand_primary_base_blue">#2799FB</color>
     <color name="edx_brand_primary_accent">#2991C3</color>
     <color name="edx_brand_primary_back">#CCE3F0</color>
     <color name="edx_brand_primary_x_back">#F2F8FB</color>
@@ -79,4 +81,26 @@
     <color name="fb_blue">#4267B2</color>
     <color name="microsoft_dark">#333333</color>
     <color name="google_blue">#4285F4</color>
-</resources>
+    <color name="language_text_color">#4C4C4C</color>
+    <color name="language_next_color">#8C8C8C</color>
+    <color name="language_not_select_color">#F2F2F2</color>
+    <color name="language_not_select_border">#707070</color>
+    <color name="language_card_selection_color">#FADA8A</color>
+    <color name="language_card_after_selection_color">#F3C54D</color>
+    <color name="no_enrolled_course_card_color">#F6F6F6</color>
+    <color name="status_bar_color">#9E9E9E</color>
+    <color name="enroll_in_program_text_color">#F3C54F</color>
+    <color name="course_detail_enroll_color">#0AFFC1</color>
+    <color name="select_a_program_color">#465271</color>
+    <color name="organisation_color">#4C4C4C</color>
+    <color name="shimmer_placeholder">#dddddd</color>
+    <color name="seach_hint_color">#4C4C4C</color>
+    <color name="search_count_color">#A7A5A5</color>
+    <color name="search_background_color">#F1EDEC</color>
+    <color name="search_program_color">#092C8A</color>
+    <color name="program_screen_bg">#485474</color>
+    <color name="resume_course_program_name_color">#707070</color>
+    <color name="continue_color">#F3C54E</color>
+    <color name="edx_grayscale_neutral_light">#D2D0D0</color>
+    <color name="not_started_color">#C8A1DE</color>
+  </resources>

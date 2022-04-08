@@ -46,16 +46,16 @@ public class AccountFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
 
-        if (config.isUserProfilesEnabled()) {
+       // if (config.isUserProfilesEnabled()) {
             binding.profileBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     environment.getRouter().showUserProfile(getActivity(), loginPrefs.getUsername());
                 }
             });
-        } else {
-            binding.profileBtn.setVisibility(View.GONE);
-        }
+     //   } else {
+        //    binding.profileBtn.setVisibility(View.GONE);
+     //   }
 
         binding.settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override

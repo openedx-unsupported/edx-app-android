@@ -23,6 +23,8 @@ import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.coursemultilingual.CourseMultilingualModel;
+import org.edx.mobile.coursemultilingual.CourseTranslation;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -41,6 +43,7 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.FileUtil;
+import org.edx.mobile.util.LocaleManager;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
@@ -81,6 +84,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private EnrolledCoursesResponse courseData;
     private DownloadListener downloadListener;
     private boolean isVideoMode;
+    private List<CourseMultilingualModel> courseMultilingualModels;
 
     public CourseOutlineAdapter(final Context context, final EnrolledCoursesResponse courseData,
                                 final IEdxEnvironment environment, DownloadListener listener,
@@ -114,6 +118,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         return getItem(position).type;
+    }
+
+    public void setCourseMultilingualData(List<CourseMultilingualModel> courseMultilingualModelList) {
+        this.courseMultilingualModels = courseMultilingualModelList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -328,7 +337,30 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-        viewHolder.rowTitle.setText(unit.getDisplayName());
+        if (courseMultilingualModels != null) {
+            String text = "";
+            String selectedLanguage = LocaleManager.getLanguagePref(context);
+            for (CourseMultilingualModel courseMultilingualModel : courseMultilingualModels) {
+                if (courseMultilingualModel.getText() != null) {
+                    if (courseMultilingualModel.getText().toLowerCase().equals(unit.getDisplayName().toLowerCase())) {
+                        for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                            if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                text = courseTranslation.getConversion();
+                            }
+                        }
+                    }
+                }
+            }
+            if (text.isEmpty()) {
+                viewHolder.rowTitle.setText(unit.getDisplayName());
+            } else {
+                viewHolder.rowTitle.setText(text);
+            }
+        } else {
+            viewHolder.rowTitle.setText(unit.getDisplayName());
+        }
+
+        //  viewHolder.rowTitle.setText(unit.getDisplayName());
 
         boolean isDenialFeatureBasedEnrolments =
                 row.component.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS;
@@ -496,8 +528,29 @@ public class CourseOutlineAdapter extends BaseAdapter {
         //then do the string match to get the record
         String chapterId = path.get(1) == null ? "" : path.get(1).getDisplayName();
         String sequentialId = path.get(2) == null ? "" : path.get(2).getDisplayName();
+        if (courseMultilingualModels != null) {
+            String text = "";
+            String selectedLanguage = LocaleManager.getLanguagePref(context);
+            for (CourseMultilingualModel courseMultilingualModel : courseMultilingualModels) {
+                if (courseMultilingualModel.getText() != null) {
+                    if (courseMultilingualModel.getText().toLowerCase().equals(component.getDisplayName().toLowerCase())) {
+                        for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                            if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                text = courseTranslation.getConversion();
+                            }
+                        }
+                    }
+                }
+            }
+            if (text.isEmpty()) {
+                holder.rowTitle.setText(component.getDisplayName());
+            } else {
+                holder.rowTitle.setText(text);
+            }
+        } else {
+            holder.rowTitle.setText(component.getDisplayName());
+        }
 
-        holder.rowTitle.setText(component.getDisplayName());
         holder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         if (component.isGraded()) {
             holder.bulkDownload.setVisibility(View.INVISIBLE);
@@ -618,7 +671,30 @@ public class CourseOutlineAdapter extends BaseAdapter {
         final SectionRow row = this.getItem(position);
         TextView titleView = (TextView) convertView.findViewById(R.id.row_header);
         View separator = convertView.findViewById(R.id.row_separator);
-        titleView.setText(row.component.getDisplayName());
+        // titleView.setText(row.component.getDisplayName());
+        if (courseMultilingualModels != null) {
+            String text = "";
+            String selectedLanguage = LocaleManager.getLanguagePref(context);
+            for (CourseMultilingualModel courseMultilingualModel : courseMultilingualModels) {
+                if (courseMultilingualModel.getText() != null) {
+                    if (courseMultilingualModel.getText().toLowerCase().equals(row.component.getDisplayName().toLowerCase())) {
+                        for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                            if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                text = courseTranslation.getConversion();
+                            }
+                        }
+                    }
+                }
+            }
+            if (text.isEmpty()) {
+                titleView.setText(row.component.getDisplayName());
+            } else {
+                titleView.setText(text);
+            }
+        } else {
+            titleView.setText(row.component.getDisplayName());
+        }
+
         if (position == 0) {
             separator.setVisibility(View.GONE);
         } else {
@@ -643,7 +719,30 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .transform(new TopAnchorFillWidthTransformation())
                 .into(headerImageView);
 
-        courseTextName.setText(courseData.getCourse().getName());
+      //  courseTextName.setText(courseData.getCourse().getName());
+        if (courseMultilingualModels != null) {
+            String text = "";
+            String selectedLanguage = LocaleManager.getLanguagePref(context);
+            for (CourseMultilingualModel courseMultilingualModel : courseMultilingualModels) {
+                if (courseMultilingualModel.getText() != null) {
+                    if (courseMultilingualModel.getText().toLowerCase().equals(courseData.getCourse().getName().toLowerCase())) {
+                        for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                            if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                text = courseTranslation.getConversion();
+                            }
+                        }
+                    }
+                }
+            }
+            if (text.isEmpty()) {
+                courseTextName.setText(courseData.getCourse().getName());
+            } else {
+                courseTextName.setText(text);
+            }
+        } else {
+            courseTextName.setText(courseData.getCourse().getName());
+        }
+
         courseTextDetails.setText(CourseCardUtils.getFormattedDate(context, courseData));
 
         return view;
@@ -659,7 +758,29 @@ public class CourseOutlineAdapter extends BaseAdapter {
         final SectionRow sectionRow = getItem(position);
         final TextView lastAccessTextView = (TextView) convertView.findViewById(R.id.last_accessed_text);
         final View viewButton = convertView.findViewById(R.id.last_accessed_button);
-        lastAccessTextView.setText(sectionRow.component.getDisplayName());
+      //  lastAccessTextView.setText(sectionRow.component.getDisplayName());
+        if (courseMultilingualModels != null) {
+            String text = "";
+            String selectedLanguage = LocaleManager.getLanguagePref(context);
+            for (CourseMultilingualModel courseMultilingualModel : courseMultilingualModels) {
+                if (courseMultilingualModel.getText() != null) {
+                    if (courseMultilingualModel.getText().toLowerCase().equals(sectionRow.component.getDisplayName().toLowerCase())) {
+                        for (CourseTranslation courseTranslation : courseMultilingualModel.getTranslations()) {
+                            if (courseTranslation.getCode().equals(selectedLanguage)) {
+                                text = courseTranslation.getConversion();
+                            }
+                        }
+                    }
+                }
+            }
+            if (text.isEmpty()) {
+                lastAccessTextView.setText(sectionRow.component.getDisplayName());
+            } else {
+                lastAccessTextView.setText(text);
+            }
+        } else {
+            lastAccessTextView.setText(sectionRow.component.getDisplayName());
+        }
         viewButton.setOnClickListener(sectionRow.clickListener);
         return convertView;
     }
