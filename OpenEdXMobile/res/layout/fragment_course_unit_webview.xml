@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <org.edx.mobile.view.custom.EdxAssessmentWebView
+        android:id="@+id/course_unit_webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+    <include layout="@layout/loading_indicator" />
+
+    <TextView
+        android:id="@+id/content_unavailable_error_text"
+        style="@style/content_unavailable_error_text"
+        android:text="@string/reset_no_network_message" />
+
+</FrameLayout>

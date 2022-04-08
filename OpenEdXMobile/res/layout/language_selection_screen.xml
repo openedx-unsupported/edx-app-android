@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/next_button"
+        android:background="@drawable/subodha_sign_in_bg">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:text="@string/please_choose_language_of_preference" />
+
+        <LinearLayout
+            android:id="@+id/english"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@id/detail"
+            android:layout_marginRight="30dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:background="@drawable/language_card_selection">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/language_text_color"
+                android:layout_gravity="center"
+                android:text="@string/english" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hindi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@+id/english"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:background="@drawable/language_card_selection">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/language_text_color"
+                android:layout_gravity="center"
+                android:contentDescription="@string/only_hindi"
+                android:text="@string/hindi" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/kannada"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/hindi"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:contentDescription="@string/only_kannada"
+            android:background="@drawable/language_card_selection">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/kannada"
+                android:textSize="18sp"
+                android:textColor="@color/language_text_color"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tamil"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/kannada"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:contentDescription="@string/only_tamil"
+            android:background="@drawable/language_card_selection">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tamil"
+                android:textSize="18sp"
+                android:textColor="@color/language_text_color"
+                android:layout_gravity="center" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="12sp"
+        android:layout_marginBottom="12sp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:background="@drawable/next_button_bg"
+        android:contentDescription="@string/continue_string"
+        android:padding="5dp"
+        android:text="@string/next"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+
+
+</RelativeLayout>

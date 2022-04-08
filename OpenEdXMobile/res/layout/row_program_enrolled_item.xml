@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tag_card"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        app:cardCornerRadius="10dp"
+        android:backgroundTint="@color/white"
+        android:elevation="@dimen/cardview_compat_inset_shadow">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="85dp"
+                android:id="@+id/programColorCode"
+                android:background="@drawable/tags_side_background"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/tagsName"
+                    android:maxLines="2"
+                    android:text="Mathemativcs"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/seach_hint_color"
+                    android:textSize="11dp"
+                    android:ellipsize="end"
+                    android:gravity="start" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/programName"
+                    android:text="Mathemativcs"
+                    android:layout_marginTop="10dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16dp"
+                    android:gravity="start" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

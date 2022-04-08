@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="40dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
+
+                    <TextView
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/explore_subjects"
+                        android:textColor="@color/grey_text"
+                        android:textSize="30dp"
+                        android:importantForAccessibility="yes"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textStyle="normal" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <org.edx.mobile.view.custom.IconProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center_horizontal"
+                            android:padding="8dp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/error_msg_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:text="Please check your internet connection. \n Retry"
+                            android:textSize="18dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmerLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="MissingConstraints">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!--add  several shimmer placeholder layout -->
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                            <include layout="@layout/shimmer_subject_item_design"></include>
+
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_explore_course"
+                        android:layout_width="250dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="30dp"
+                    android:paddingBottom="50dp"
+                    android:background="@drawable/subodha_sign_in_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/our_partners"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:importantForAccessibility="yes"
+                        android:textSize="30dp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="50dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_organisation"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</layout>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:background="@color/white"
+                android:layout_marginRight="20dp">
+
+                <ImageView
+                    android:id="@+id/close_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="20dp"
+                    android:contentDescription="close"
+                    android:src="@drawable/ic_baseline_close_24" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:textSize="15dp"
+                    android:text="@string/account_settings"
+                    android:textColor="@color/grey_text" />
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textStyle="bold"
+                    android:textSize="40sp"
+                    android:textColor="@color/grey_text" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="50dp"
+                    android:background="@color/grey_text"
+                    android:layout_height="1dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:textSize="12dp"
+                    android:text="@string/prefered_language"
+                    android:textColor="@color/grey_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:layout_marginTop="40dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/english"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/english"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/profile_language_card_selection">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center|center_vertical"
+                            android:textColor="@color/language_text_color"
+                            android:text="@string/english" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hindi"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/only_hindi"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/profile_language_card_selection">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center|center_vertical"
+                            android:textColor="@color/language_text_color"
+                            android:text="@string/hindi" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/kannada"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="5dp"
+                        android:contentDescription="@string/only_kannada"
+                        android:background="@drawable/profile_language_card_selection">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center|center_vertical"
+                            android:textColor="@color/language_text_color"
+                            android:text="@string/kannada" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tamil"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        android:contentDescription="@string/only_tamil"
+                        android:background="@drawable/profile_language_card_selection">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center|center_vertical"
+                            android:textColor="@color/language_text_color"
+                            android:text="@string/tamil" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/prefered_lang_list"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="40dp"
+                    android:background="@color/grey_text"
+                    android:layout_height="1dp" />
+
+                <TextView
+                    android:id="@+id/txt_user_account_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:textSize="12dp"
+                    android:text="@string/user_account_type"
+                    android:textColor="@color/grey_text" />
+
+                <TextView
+                    android:id="@+id/no_user_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:textSize="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:text="@string/user_type_not_exist"
+                    android:textColor="@color/grey_text" />
+
+                <LinearLayout
+                    android:id="@+id/ln_user_account_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:layout_marginTop="40dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/teacher"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/profile_language_card_selection">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center|center_vertical"
+                            android:textColor="@color/language_text_color"
+                            android:text="@string/teacher" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/student"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/profile_language_card_selection">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center|center_vertical"
+                            android:textColor="@color/language_text_color"
+                            android:text="@string/student" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/logout_background">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center|center_vertical"
+                        android:textColor="@color/language_text_color"
+                        android:textStyle="bold"
+                        android:textSize="13dp"
+                        android:text="@string/caps_logout" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

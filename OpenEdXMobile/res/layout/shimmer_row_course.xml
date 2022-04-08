@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="12dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="12dp"
+        android:id="@+id/course"
+        android:textSize="12dp"
+        android:background="@color/shimmer_placeholder"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/course_card_not_enrolled"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:background="@color/shimmer_placeholder">
+
+
+    </LinearLayout>
+
+</LinearLayout>

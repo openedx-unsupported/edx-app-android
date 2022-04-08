@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout_organisation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:ignore="MissingConstraints">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/shimmer_organisations"
+                            android:layout_width="250dp"
+                            android:layout_height="12dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:textSize="12dp"
+                            android:background="@color/shimmer_placeholder"
+                            android:textColor="@color/organisation_color" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <TextView
+                    android:id="@+id/organisations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/organisation_color" />
+
+                <TextView
+                    android:id="@+id/tag_name"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:textStyle="bold"
+                    android:text=""
+                    android:textSize="30dp"
+                    android:textColor="@color/organisation_color"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/select_a_program"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/select_a_program_color"
+                    android:layout_marginRight="20dp"
+                    android:textSize="12dp"
+                    android:text="@string/select_a_program" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout_program"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="20dp"
+                    android:scrollbars="horizontal"
+                    android:layout_marginRight="20dp"
+                    tools:ignore="MissingConstraints">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!--add  several shimmer placeholder layout -->
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                        <include layout="@layout/shimmer_row_program"></include>
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="20dp"
+                    android:scrollbars="horizontal"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/rv_program" />
+
+                <LinearLayout
+                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        app:cardCornerRadius="20dp"
+                        android:layout_marginBottom="-20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/program_screen_bg">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.facebook.shimmer.ShimmerFrameLayout
+                                android:id="@+id/shimmerLayout_program_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                tools:ignore="MissingConstraints">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/shimmer_program_name_in_card"
+                                        android:layout_width="250dp"
+                                        android:layout_height="30dp"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_marginRight="20dp"
+                                        android:layout_marginTop="10dp"
+                                        android:text=""
+                                        android:textSize="30dp"
+                                        android:gravity="center_horizontal"
+                                        android:background="@color/shimmer_placeholder"
+                                        android:textStyle="bold"
+                                        android:maxLines="1"
+                                        android:ellipsize="end"
+                                        android:textColor="@color/white" />
+
+                                    <TextView
+                                        android:id="@+id/shimmer_enroll_text"
+                                        android:layout_width="250dp"
+                                        android:layout_height="12dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginRight="20dp"
+                                        android:layout_marginBottom="10dp"
+                                        android:background="@color/shimmer_placeholder"
+                                        android:gravity="center"
+                                        android:textSize="12dp"
+                                        android:textColor="@color/enroll_in_program_text_color" />
+                                </LinearLayout>
+                            </com.facebook.shimmer.ShimmerFrameLayout>
+
+                            <LinearLayout
+                                android:id="@+id/liner_program_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_centerHorizontal="true"
+                                android:visibility="gone"
+                                android:layout_gravity="center">
+
+                                <TextView
+                                    android:id="@+id/program_name_in_card"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginTop="10dp"
+                                    android:text=""
+                                    android:textSize="30dp"
+                                    android:gravity="center_horizontal"
+                                    android:textStyle="bold"
+                                    android:maxLines="1"
+                                    android:ellipsize="end"
+                                    android:textColor="@color/white" />
+
+                                <ImageView
+                                    android:id="@+id/iv_check"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:layout_marginTop="15dp"
+                                    android:visibility="gone"
+                                    android:importantForAccessibility="no"
+                                    app:srcCompat="@drawable/ic_baseline_check_circle_24_blue" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/course_status"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/liner_program_name"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/course_count"
+                                    android:layout_width="250dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="20dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:textSize="12dp"
+                                    android:visibility="gone"
+                                    android:text="@string/enroll_in_program_to_view_course_content"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:id="@+id/course_datail_unenroll"
+                                    android:layout_width="250dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="20dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:textSize="12dp"
+                                    android:visibility="gone"
+                                    android:text="@string/enroll_in_program_to_view_course_content"
+                                    android:textColor="@color/enroll_in_program_text_color" />
+
+                                <TextView
+                                    android:id="@+id/course_datail_enroll"
+                                    android:layout_width="250dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_gravity="center"
+                                    android:textSize="12dp"
+                                    android:gravity="center"
+                                    android:visibility="gone"
+                                    android:layout_below="@+id/liner_program_name"
+                                    android:textColor="@color/course_detail_enroll_color" />
+                            </LinearLayout>
+
+                            <com.facebook.shimmer.ShimmerFrameLayout
+                                android:id="@+id/shimmerLayout_course"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:visibility="visible"
+                                android:layout_below="@+id/course_status"
+                                tools:ignore="MissingConstraints">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <!--add  several shimmer placeholder layout -->
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                    <include layout="@layout/shimmer_row_course"></include>
+
+                                </LinearLayout>
+                            </com.facebook.shimmer.ShimmerFrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/error_msg_tv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="Please check your internet connection. \n Retry"
+                                    android:textSize="18dp"
+                                    android:textColor="@color/white"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_courses"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="110dp"
+                                android:visibility="visible"
+                                android:nestedScrollingEnabled="false"
+                                android:layout_below="@+id/course_status" />
+
+                            <TextView
+                                android:id="@+id/empty_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:visibility="gone"
+                                android:layout_alignParentBottom="true"
+                                android:text="dfsds" />
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/ln_enroll_info"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout_course_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/shimmer_enroll_in_program"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:textColor="@color/black"
+                        android:visibility="gone"
+                        android:textSize="15dp"
+                        android:background="@color/shimmer_placeholder" />
+
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <Button
+                android:id="@+id/enroll_in_program"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/add_all_courses_to_dashboard"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                android:textSize="15dp"
+                android:background="@drawable/bg_enroll_in_program" />
+
+            <Button
+                android:id="@+id/unenroll_from_program"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/unenroll_from_program"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:background="@drawable/bg_unenroll_from_program" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

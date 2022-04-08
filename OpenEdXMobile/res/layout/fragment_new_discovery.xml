@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/error_msg_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Please check your internet connection. \n Retry"
+        android:textSize="18dp"
+        android:visibility="visible" />
+
+   <!-- <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mx_learning_Circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:nestedScrollingEnabled="false"
+        android:orientation="vertical" />
+-->
+</androidx.constraintlayout.widget.ConstraintLayout>

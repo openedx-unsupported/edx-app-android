@@ -1,0 +1,58 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout android:id="@+id/explore_course"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            app:cardCornerRadius="10dp"
+            android:layout_centerVertical="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/no_enrolled_course_card_color"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="100dp"
+                    android:text="@string/welocme_to_your_dashboard"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal|center_vertical|center"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    android:text="@string/you_are_not_enrolled_in_any_programs" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:gravity="center"
+                    android:layout_marginBottom="100dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:background="@drawable/profile_language_select"
+                    android:layout_gravity="center_horizontal|center_vertical|center"
+                    android:text="@string/explore_course"
+                    android:layout_marginTop="20dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</layout>

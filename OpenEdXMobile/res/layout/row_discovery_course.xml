@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/course"
+                android:textSize="12dp"
+                android:textColor="@color/white" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout_status"
+                android:layout_width="75dp"
+                android:layout_height="16dp"
+                app:cardCornerRadius="5dp"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:background="@color/shimmer_placeholder"
+                android:textColor="@color/organisation_color">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="75dp"
+                        android:layout_height="16dp"
+                        android:id="@+id/shimmer_status"
+                        android:textSize="10dp"
+                        android:background="@color/shimmer_placeholder"
+                        android:textColor="@color/organisation_color" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_course_status"
+                android:layout_width="75dp"
+                app:cardCornerRadius="5dp"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:layout_height="16dp">
+
+                <LinearLayout
+                    android:id="@+id/ln_course_status"
+                    android:layout_width="75dp"
+                    android:gravity="center"
+                    android:layout_height="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/course_status"
+                        android:textSize="10dp"
+                        android:textColor="@color/seach_hint_color" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/course_card_not_enrolled"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/course_card_background">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/course_name"
+                android:textSize="16dp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/organisation_color" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/course_card_enrolled"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/course_card_enrolled">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/course_name_enrolled"
+                android:textSize="16dp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:maxLines="2"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:layout_toLeftOf="@+id/view_button"
+                android:layout_centerVertical="true"
+                android:text="evvervrevrev"
+                android:textColor="@color/organisation_color" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout_view_button"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_margin="8dp"
+                android:visibility="gone"
+                android:background="@color/shimmer_placeholder"
+                android:textColor="@color/organisation_color"
+                android:textSize="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:padding="8dp"
+                        android:textSize="12dp"
+                        android:background="@color/shimmer_placeholder"
+                        android:textColor="@color/organisation_color" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:text="@string/view"
+                android:layout_marginRight="10dp"
+                android:padding="8dp"
+                android:textSize="12dp"
+                android:visibility="gone"
+                android:textColor="@color/organisation_color"
+                android:background="@drawable/bg_black_border"
+                android:id="@+id/view_button" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:text="@string/continue_string"
+                android:layout_marginRight="10dp"
+                android:padding="8dp"
+                android:textSize="12dp"
+                android:visibility="gone"
+                android:textColor="@color/organisation_color"
+                android:background="@drawable/bg_black_border"
+                android:id="@+id/contnue_button" />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

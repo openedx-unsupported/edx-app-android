@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/ln_next"
+            android:background="@drawable/welcome_screen"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/back_arrow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/back"
+                android:src="@drawable/ic_baseline_arrow_back_24" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ln_next"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/next_button"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="12sp"
+                android:layout_marginBottom="12sp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20sp"
+                android:layout_marginRight="20sp"
+                android:background="@drawable/subodha_launch_bg"
+                android:contentDescription="@string/continue_string"
+                android:padding="5dp"
+                android:text="@string/next"
+                android:textColor="@color/grey_text"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

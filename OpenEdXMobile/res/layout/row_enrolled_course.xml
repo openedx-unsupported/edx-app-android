@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tag_card"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:cardCornerRadius="10dp"
+        android:backgroundTint="@color/white"
+        android:elevation="@dimen/cardview_compat_inset_shadow">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:id="@+id/tagColorCode"
+                android:background="@drawable/tags_side_background"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center"
+                android:id="@+id/tagsName"
+                android:text="Mathemativcs"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/grey_text"
+                android:textSize="15dp"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

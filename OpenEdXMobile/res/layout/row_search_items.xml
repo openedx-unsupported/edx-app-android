@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_item"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/course_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="dsdfdfsd"
+            android:textColor="@color/seach_hint_color" />
+
+        <TextView
+            android:id="@+id/program_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginTop="3dp"
+            android:text="dssdvs"
+            android:textColor="@color/search_program_color" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tag_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/seach_hint_color"
+                android:textSize="11dp"
+                android:layout_toLeftOf="@+id/arrow_right"
+                android:layout_marginTop="3dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="40dp"
+                android:text="dsdss" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+                <ImageButton
+                    android:id="@+id/arrow_right"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/white"
+                    android:layout_toLeftOf="@+id/arrow_right_net"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/seach_hint_color" />
+
+        <!-- <TextView
+             android:id="@+id/course_name"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textSize="20dp"
+             android:text="dsdfdfsd"
+             android:textColor="@color/seach_hint_color" />
+
+         <TextView
+             android:id="@+id/program_name"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textSize="15dp"
+             android:layout_marginTop="5dp"
+             android:text="dssdvs"
+             android:textColor="@color/search_program_color" />
+
+         <TextView
+             android:id="@+id/tag_name"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textColor="@color/seach_hint_color"
+             android:textSize="11dp"
+             android:layout_marginTop="5dp"
+             android:text="dsdss" />
+
+         <view
+             android:layout_width="match_parent"
+             android:layout_height="1dp"
+             android:layout_marginTop="10dp"
+             android:background="@color/seach_hint_color" />-->
+
+    </LinearLayout>
+</layout>

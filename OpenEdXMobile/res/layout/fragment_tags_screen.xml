@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/subjectName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/grey_text"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/userType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/grey_text"
+                android:textSize="15dp" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--add  several shimmer placeholder layout -->
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                    <include layout="@layout/shimmer_subject_item_design"></include>
+
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:id="@+id/rv_tags" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/error_msg_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Please check your internet connection. \n Retry"
+                android:textSize="18dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>
