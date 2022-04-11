@@ -5,13 +5,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -34,25 +35,25 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
             holder.duration.setText(item.getDuration());
         }
         holder.progress.setProgress(item.getPercent());
-        @DrawableRes final int progressDrawable;
+        @ColorRes final int progressColor;
         final String progressText;
         final String errorText;
         switch (item.getStatus()) {
             case PENDING: {
                 progressText = getContext().getString(R.string.download_pending);
-                progressDrawable = R.drawable.custom_progress_bar_horizontal_success;
+                progressColor = R.color.successBase;
                 errorText = null;
                 break;
             }
             case DOWNLOADING: {
                 progressText = getByteCountProgressText(item);
-                progressDrawable = R.drawable.custom_progress_bar_horizontal_success;
+                progressColor = R.color.successBase;
                 errorText = null;
                 break;
             }
             case FAILED: {
                 errorText = getContext().getString(R.string.error_download_failed);
-                progressDrawable = R.drawable.custom_progress_bar_horizontal_error;
+                progressColor = R.color.errorLight;
                 if (item.getDownloadedByteCount() > 0) {
                     progressText = getByteCountProgressText(item);
                 } else {
@@ -64,9 +65,8 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                 throw new IllegalArgumentException(item.getStatus().name());
             }
         }
-        holder.progress.setProgressDrawable(getContext()
-                .getResources()
-                .getDrawable(progressDrawable));
+        holder.progress.setIndicatorColor(getContext().getResources().getColor(progressColor));
+        holder.progress.setTrackColor(getContext().getResources().getColor(R.color.white));
         if (null == progressText) {
             holder.percent.setVisibility(View.GONE);
         } else {
@@ -109,7 +109,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
         final TextView percent;
         final AppCompatImageView cross_button;
         final TextView error;
-        final ProgressBar progress;
+        final LinearProgressIndicator progress;
 
         public ViewHolder(@NonNull View view) {
             title = (TextView) view.findViewById(R.id.downloads_name);
@@ -119,7 +119,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                     .findViewById(R.id.download_percentage);
             error = (TextView) view
                     .findViewById(R.id.txtDownloadFailed);
-            progress = (ProgressBar) view
+            progress = (LinearProgressIndicator) view
                     .findViewById(R.id.progressBar);
             cross_button = (AppCompatImageView) view
                     .findViewById(R.id.close_btn);

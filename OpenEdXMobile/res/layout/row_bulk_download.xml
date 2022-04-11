@@ -40,6 +40,7 @@
                 app:trackThickness="@dimen/edx_x_quarter_margin" />
 
         </FrameLayout>
+
         <LinearLayout
             android:id="@+id/ll_content"
             android:layout_width="0dp"
@@ -83,7 +84,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:theme="@style/bulk_download_switch" />
 
-        <ProgressBar
+        <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/pb_download"
             style="@style/bulk_download_progress_bar"
             android:layout_width="0dp"
