@@ -1,5 +1,6 @@
 package org.edx.mobile.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentCourseUnitGradeBinding
+import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
@@ -136,10 +138,13 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
                 }
 
-                override fun onPurchaseCancel() {
+                override fun onPurchaseCancel(responseCode: Int, message: String) {
                     iapViewModel.endLoading()
                     showUpgradeErrorDialog(
-                        errorResID = R.string.error_payment_not_processed
+                        errorResId = R.string.error_payment_not_processed,
+                        feedbackErrorCode = responseCode,
+                        feedbackErrorMessage = message,
+                        feedbackEndpoint = ErrorMessage.PAYMENT_SDK_CODE
                     )
                 }
 
@@ -153,12 +158,12 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun initializeProductPrice(courseId: String) {
-        ProductManager.getProductByCourseId(courseId)?.let {
+        ProductManager.getProductByCourseId(courseId)?.let { productId ->
             billingProcessor?.querySyncDetails(
-                productId = it
+                productId = productId
             ) { _, skuDetails ->
                 val skuDetail = skuDetails?.get(0)
-                if (skuDetail?.sku == it) {
+                if (skuDetail?.sku == productId) {
                     binding.layoutUpgradeBtn.btnUpgrade.text =
                         ResourceUtil.getFormattedString(
                             resources,
@@ -173,10 +178,18 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                         binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
                     }, 500)
                 } else {
-                    showUpgradeErrorDialog(errorResID = R.string.error_price_not_fetched)
+                    showUpgradeErrorDialog(
+                        errorResId = R.string.error_price_not_fetched,
+                        listener = { _, _ ->
+                            unit?.let { initializeProductPrice(it.courseId) }
+                        })
                 }
             }
-        } ?: showUpgradeErrorDialog(errorResID = R.string.error_price_not_fetched)
+        } ?: showUpgradeErrorDialog(
+            errorResId = R.string.error_price_not_fetched,
+            listener = { _, _ ->
+                unit?.let { initializeProductPrice(it.courseId) }
+            })
     }
 
     private fun initObserver() {
@@ -204,7 +217,12 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                         )
                         return@NonNullObserver
                     }
-                    else -> showUpgradeErrorDialog(errorMsg.errorResId)
+                    else -> showUpgradeErrorDialog(
+                        errorMsg.errorResId,
+                        errorMsg.throwable.httpErrorCode,
+                        errorMsg.throwable.errorMessage,
+                        errorMsg.errorCode
+                    )
                 }
             } else {
                 showUpgradeErrorDialog(errorMsg.errorResId)
@@ -233,20 +251,40 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun showUpgradeErrorDialog(
-        @StringRes errorResID: Int = R.string.general_error_message
+        @StringRes errorResId: Int = R.string.general_error_message,
+        feedbackErrorCode: Int? = null,
+        feedbackErrorMessage: String? = null,
+        feedbackEndpoint: Int? = null
     ) {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
-            getString(errorResID),
+            getString(errorResId),
             getString(R.string.label_close),
             null,
             getString(R.string.label_get_help)
         ) { _, _ ->
             environment.router?.showFeedbackScreen(
                 requireActivity(),
-                getString(R.string.email_subject_upgrade_error)
+                getString(R.string.email_subject_upgrade_error),
+                feedbackErrorCode,
+                feedbackEndpoint,
+                feedbackErrorMessage
             )
         }.show(childFragmentManager, null)
+    }
+
+    private fun showUpgradeErrorDialog(
+        @StringRes errorResId: Int = R.string.general_error_message,
+        listener: DialogInterface.OnClickListener
+    ) {
+        AlertDialogFragment.newInstance(
+            getString(R.string.title_upgrade_error),
+            getString(errorResId),
+            getString(R.string.try_again),
+            listener,
+            getString(R.string.label_cancel),
+            null
+        ).show(childFragmentManager, null)
     }
 
     private fun showPurchaseSuccessSnackbar() {

@@ -1,5 +1,6 @@
 package org.edx.mobile.view.dialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
+import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
@@ -125,10 +127,13 @@ class CourseModalDialogFragment : DialogFragment() {
                     binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
                 }
 
-                override fun onPurchaseCancel() {
+                override fun onPurchaseCancel(responseCode: Int, message: String) {
                     iapViewModel.endLoading()
                     showUpgradeErrorDialog(
-                        errorResId = R.string.error_payment_not_processed
+                        errorResId = R.string.error_payment_not_processed,
+                        feedbackErrorCode = responseCode,
+                        feedbackErrorMessage = message,
+                        feedbackEndpoint = ErrorMessage.PAYMENT_SDK_CODE
                     )
                 }
 
@@ -159,10 +164,18 @@ class CourseModalDialogFragment : DialogFragment() {
                         binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
                     }, 500)
                 } else {
-                    showUpgradeErrorDialog(errorResId = R.string.error_price_not_fetched)
+                    showUpgradeErrorDialog(
+                        errorResId = R.string.error_price_not_fetched,
+                        listener = { _, _ ->
+                            initializeProductPrice()
+                        })
                 }
             }
-        } ?: showUpgradeErrorDialog(errorResId = R.string.error_price_not_fetched)
+        } ?: showUpgradeErrorDialog(
+            errorResId = R.string.error_price_not_fetched,
+            listener = { _, _ ->
+                initializeProductPrice()
+            })
     }
 
     private fun initObserver() {
@@ -190,7 +203,12 @@ class CourseModalDialogFragment : DialogFragment() {
                         )
                         return@NonNullObserver
                     }
-                    else -> showUpgradeErrorDialog(errorMsg.errorResId)
+                    else -> showUpgradeErrorDialog(
+                        errorMsg.errorResId,
+                        errorMsg.throwable.httpErrorCode,
+                        errorMsg.throwable.errorMessage,
+                        errorMsg.errorCode
+                    )
                 }
             } else {
                 showUpgradeErrorDialog(errorMsg.errorResId)
@@ -219,7 +237,10 @@ class CourseModalDialogFragment : DialogFragment() {
     }
 
     private fun showUpgradeErrorDialog(
-        @StringRes errorResId: Int = R.string.general_error_message
+        @StringRes errorResId: Int = R.string.general_error_message,
+        feedbackErrorCode: Int? = null,
+        feedbackErrorMessage: String? = null,
+        feedbackEndpoint: Int? = null
     ) {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
@@ -230,9 +251,25 @@ class CourseModalDialogFragment : DialogFragment() {
         ) { _, _ ->
             environment.router?.showFeedbackScreen(
                 requireActivity(),
-                getString(R.string.email_subject_upgrade_error)
+                getString(R.string.email_subject_upgrade_error),
+                feedbackErrorCode,
+                feedbackEndpoint,
+                feedbackErrorMessage
             )
         }.show(childFragmentManager, null)
+    }
+
+    private fun showUpgradeErrorDialog(
+        @StringRes errorResId: Int = R.string.general_error_message,
+        listener: DialogInterface.OnClickListener
+    ) {
+        AlertDialogFragment.newInstance(
+            getString(R.string.title_upgrade_error),
+            getString(errorResId),
+            getString(R.string.try_again),
+            listener,
+            getString(R.string.label_cancel),
+        ) { _, _ -> dismiss() }.show(childFragmentManager, null)
     }
 
     private fun showPurchaseSuccessSnackbar() {

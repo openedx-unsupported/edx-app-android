@@ -23,6 +23,7 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -38,6 +39,8 @@ import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
+
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -507,5 +510,51 @@ public class Router {
                 .append(NEW_LINE).append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
         EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
+    }
+
+    public void showFeedbackScreen(
+            @NonNull FragmentActivity activity,
+            @NonNull String subject,
+            @Nullable Integer errorCode,
+            @Nullable Integer errorEndpoint,
+            @Nullable String errorMessage) {
+        final String NEW_LINE = "\n";
+        final String to = config.getFeedbackEmailAddress();
+        StringBuilder body = new StringBuilder();
+        body.append(String.format("%s %s", activity.getString(R.string.android_os_version), android.os.Build.VERSION.RELEASE))
+                .append(NEW_LINE)
+                .append(String.format("%s %s", activity.getString(R.string.app_version), BuildConfig.VERSION_NAME))
+                .append(NEW_LINE)
+                .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
+                .append(NEW_LINE)
+                .append(getFormattedErrorMessage(activity, errorCode, errorEndpoint, errorMessage))
+                .append(NEW_LINE)
+                .append(activity.getString(R.string.insert_feedback));
+        EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
+    }
+
+    private StringBuilder getFormattedErrorMessage(
+            @NonNull FragmentActivity activity,
+            Integer errorCode,
+            Integer errorEndpoint,
+            String errorMessage) {
+        final String NEW_LINE = "\n";
+        StringBuilder body = new StringBuilder();
+        if (errorEndpoint == null || errorCode == null) return body;
+        String endpoint;
+        if (errorEndpoint == ErrorMessage.ADD_TO_BASKET_CODE)
+            endpoint = "basket";
+        else if (errorEndpoint == ErrorMessage.CHECKOUT_CODE)
+            endpoint = "checkout";
+        else if (errorEndpoint == ErrorMessage.EXECUTE_ORDER_CODE)
+            endpoint = "execute";
+        else
+            endpoint = "payment";
+        body.append(String.format("%s: %s", activity.getString(R.string.label_error), endpoint));
+        body.append(String.format(Locale.ENGLISH, "-%d", errorCode));
+        if (errorMessage != null && !errorMessage.isEmpty())
+            body.append(String.format("-%s", errorMessage));
+        body.append(NEW_LINE);
+        return body;
     }
 }
