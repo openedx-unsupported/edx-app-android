@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +22,6 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -36,11 +34,10 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
+import org.edx.mobile.util.TextUtils;
 import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -162,7 +159,7 @@ public class Router {
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
                                   @Nullable String pathId) {
         Intent intent = MainDashboardActivity.newIntent(screenName, pathId);
-        if (!TextUtils.isEmpty(screenName)) {
+        if (!android.text.TextUtils.isEmpty(screenName)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
         sourceActivity.startActivity(intent);
@@ -527,34 +524,9 @@ public class Router {
                 .append(NEW_LINE)
                 .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
                 .append(NEW_LINE)
-                .append(getFormattedErrorMessage(activity, errorCode, errorEndpoint, errorMessage))
+                .append(TextUtils.getFormattedErrorMessage(activity, errorCode, errorEndpoint, errorMessage))
                 .append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
         EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
-    }
-
-    private StringBuilder getFormattedErrorMessage(
-            @NonNull FragmentActivity activity,
-            Integer errorCode,
-            Integer errorEndpoint,
-            String errorMessage) {
-        final String NEW_LINE = "\n";
-        StringBuilder body = new StringBuilder();
-        if (errorEndpoint == null || errorCode == null) return body;
-        String endpoint;
-        if (errorEndpoint == ErrorMessage.ADD_TO_BASKET_CODE)
-            endpoint = "basket";
-        else if (errorEndpoint == ErrorMessage.CHECKOUT_CODE)
-            endpoint = "checkout";
-        else if (errorEndpoint == ErrorMessage.EXECUTE_ORDER_CODE)
-            endpoint = "execute";
-        else
-            endpoint = "payment";
-        body.append(String.format("%s: %s", activity.getString(R.string.label_error), endpoint));
-        body.append(String.format(Locale.ENGLISH, "-%d", errorCode));
-        if (errorMessage != null && !errorMessage.isEmpty())
-            body.append(String.format("-%s", errorMessage));
-        body.append(NEW_LINE);
-        return body;
     }
 }

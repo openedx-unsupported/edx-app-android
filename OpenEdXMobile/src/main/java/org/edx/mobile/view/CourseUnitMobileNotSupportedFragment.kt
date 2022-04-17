@@ -254,15 +254,17 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         @StringRes errorResId: Int = R.string.general_error_message,
         feedbackErrorCode: Int? = null,
         feedbackErrorMessage: String? = null,
-        feedbackEndpoint: Int? = null
+        feedbackEndpoint: Int? = null,
+        listener: DialogInterface.OnClickListener? = null
     ) {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
             getString(errorResId),
-            getString(R.string.label_close),
-            null,
-            getString(R.string.label_get_help)
+            getString(if (listener != null) R.string.try_again else R.string.label_close),
+            listener,
+            getString(if (listener != null) R.string.label_cancel else R.string.label_get_help)
         ) { _, _ ->
+            listener?.let { return@newInstance }
             environment.router?.showFeedbackScreen(
                 requireActivity(),
                 getString(R.string.email_subject_upgrade_error),
@@ -271,20 +273,6 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 feedbackErrorMessage
             )
         }.show(childFragmentManager, null)
-    }
-
-    private fun showUpgradeErrorDialog(
-        @StringRes errorResId: Int = R.string.general_error_message,
-        listener: DialogInterface.OnClickListener
-    ) {
-        AlertDialogFragment.newInstance(
-            getString(R.string.title_upgrade_error),
-            getString(errorResId),
-            getString(R.string.try_again),
-            listener,
-            getString(R.string.label_cancel),
-            null
-        ).show(childFragmentManager, null)
     }
 
     private fun showPurchaseSuccessSnackbar() {
