@@ -66,7 +66,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
             }
         }
         holder.progress.setIndicatorColor(getContext().getResources().getColor(progressColor));
-        holder.progress.setTrackColor(getContext().getResources().getColor(R.color.white));
+        holder.progress.setTrackColor(getContext().getResources().getColor(R.color.neutralDark));
         if (null == progressText) {
             holder.percent.setVisibility(View.GONE);
         } else {
