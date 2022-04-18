@@ -237,7 +237,7 @@
         <item name="android:indeterminateOnly">false</item>
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
-        <item name="trackColor">@color/white</item>
+        <item name="trackColor">@color/neutralDark</item>
         <item name="indicatorColor">@color/successBase</item>
         <item name="trackCornerRadius">@dimen/edx_box_radius</item>
     </style>
