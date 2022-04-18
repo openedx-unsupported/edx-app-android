@@ -233,15 +233,16 @@
         <item name="tint">@color/white</item>
     </style>
 
-    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+    <style name="custom_horizontal_progress" parent="Widget.MaterialComponents.LinearProgressIndicator">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_success
-        </item>
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
+        <item name="trackColor">@color/neutralDark</item>
+        <item name="indicatorColor">@color/successBase</item>
+        <item name="trackCornerRadius">@dimen/edx_box_radius</item>
     </style>
 
-    <style name="Widget.App.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">>
+    <style name="Widget.App.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.CircularProgressIndicator</item>
         <item name="indicatorSize">@dimen/ic_x_large</item>
         <item name="trackThickness">@dimen/edx_x_quarter_margin</item>
@@ -252,9 +253,10 @@
         <item name="colorPrimary">@color/neutralWhiteT</item>
     </style>
 
-    <style name="bulk_download_progress_bar" parent="android:Widget.ProgressBar.Horizontal">
+    <style name="bulk_download_progress_bar" parent="Widget.MaterialComponents.LinearProgressIndicator">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/bulk_download_progress_bar_horizontal</item>
+        <item name="trackColor">@android:color/transparent</item>
+        <item name="indicatorColor">@color/successLight</item>
     </style>
 
     <style name="bulk_download_switch" parent="Theme.AppCompat.Light">
@@ -556,7 +558,7 @@
         <item name="trackThickness">@dimen/upgrade_now_progress_indicator_thickness</item>
     </style>
 
-    <style name="DialogSlideUpAndDownAnimation" >
+    <style name="DialogSlideUpAndDownAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
