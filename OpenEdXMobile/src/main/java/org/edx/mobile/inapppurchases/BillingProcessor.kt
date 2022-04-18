@@ -82,7 +82,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         if (purchases != null && !purchases[0].isAcknowledged) {
             acknowledgePurchase(purchases[0])
         } else if (purchases == null) {
-            listener?.onPurchaseCancel()
+            listener?.onPurchaseCancel(billingResult.responseCode, billingResult.debugMessage)
         }
     }
 
@@ -182,7 +182,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
 
         fun onBillingSetupFinished(billingResult: BillingResult) {}
 
-        fun onPurchaseCancel()
+        fun onPurchaseCancel(responseCode: Int, message: String)
 
         fun onPurchaseComplete(purchase: Purchase)
     }

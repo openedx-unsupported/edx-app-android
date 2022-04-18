@@ -20,5 +20,6 @@ data class ErrorMessage(
         const val ADD_TO_BASKET_CODE = 0x201
         const val CHECKOUT_CODE = 0x202
         const val EXECUTE_ORDER_CODE = 0x203
+        const val PAYMENT_SDK_CODE = 0x204
     }
 }

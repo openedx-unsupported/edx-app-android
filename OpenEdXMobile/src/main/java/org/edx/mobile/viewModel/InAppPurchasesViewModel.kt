@@ -23,8 +23,8 @@ class InAppPurchasesViewModel @Inject constructor(
     private val _showLoader = MutableLiveData<Boolean>()
     val showLoader: LiveData<Boolean> = _showLoader
 
-    private val _errorMessage = MutableLiveData<ErrorMessage>()
-    val errorMessage: LiveData<ErrorMessage> = _errorMessage
+    private val _errorMessage = MutableLiveData<ErrorMessage?>()
+    val errorMessage: LiveData<ErrorMessage?> = _errorMessage
 
     private val _checkoutResponse = MutableLiveData<CheckoutResponse>()
     val checkoutResponse: LiveData<CheckoutResponse> = _checkoutResponse

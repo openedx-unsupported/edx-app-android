@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +34,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
+import org.edx.mobile.util.TextUtils;
 import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
@@ -159,7 +159,7 @@ public class Router {
     public void showMainDashboard(@NonNull Activity sourceActivity, @Nullable @ScreenDef String screenName,
                                   @Nullable String pathId) {
         Intent intent = MainDashboardActivity.newIntent(screenName, pathId);
-        if (!TextUtils.isEmpty(screenName)) {
+        if (!android.text.TextUtils.isEmpty(screenName)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
         sourceActivity.startActivity(intent);
@@ -505,6 +505,27 @@ public class Router {
                 .append(NEW_LINE)
                 .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
                 .append(NEW_LINE).append(NEW_LINE)
+                .append(activity.getString(R.string.insert_feedback));
+        EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
+    }
+
+    public void showFeedbackScreen(
+            @NonNull FragmentActivity activity,
+            @NonNull String subject,
+            @Nullable Integer errorCode,
+            @Nullable Integer errorEndpoint,
+            @Nullable String errorMessage) {
+        final String NEW_LINE = "\n";
+        final String to = config.getFeedbackEmailAddress();
+        StringBuilder body = new StringBuilder();
+        body.append(String.format("%s %s", activity.getString(R.string.android_os_version), android.os.Build.VERSION.RELEASE))
+                .append(NEW_LINE)
+                .append(String.format("%s %s", activity.getString(R.string.app_version), BuildConfig.VERSION_NAME))
+                .append(NEW_LINE)
+                .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
+                .append(NEW_LINE)
+                .append(TextUtils.getFormattedErrorMessage(activity, errorCode, errorEndpoint, errorMessage))
+                .append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
         EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
     }

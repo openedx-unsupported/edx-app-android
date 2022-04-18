@@ -14,10 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.R;
+import org.edx.mobile.exception.ErrorMessage;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -183,5 +186,42 @@ public class TextUtils {
             return context.getResources().getQuantityString(R.plurals.video_duration_minutes, mins, mins);
         }
         return String.format("%s %s", context.getResources().getQuantityString(R.plurals.video_duration_hour, hours, hours), context.getResources().getQuantityString(R.plurals.video_duration_minutes, mins, mins));
+    }
+
+    /**
+     * Returns a StringBuilder containing the formatted error message.
+     * i.e Error: error_endpoint-error_code-error_message
+     *
+     * @param activity      Activity object to use for obtaining strings from strings.xml.
+     * @param errorCode     HTTP or SDK response code
+     * @param errorEndpoint Call endpoint
+     * @param errorMessage  Error message from HTTP call or SDK
+     * @return Formatted error message.
+     */
+    public static StringBuilder getFormattedErrorMessage(
+            @NonNull FragmentActivity activity,
+            Integer errorCode,
+            Integer errorEndpoint,
+            String errorMessage) {
+        final String NEW_LINE = "\n";
+        StringBuilder body = new StringBuilder();
+        if (errorEndpoint == null || errorCode == null) return body;
+
+        String endpoint;
+        if (errorEndpoint == ErrorMessage.ADD_TO_BASKET_CODE)
+            endpoint = "basket";
+        else if (errorEndpoint == ErrorMessage.CHECKOUT_CODE)
+            endpoint = "checkout";
+        else if (errorEndpoint == ErrorMessage.EXECUTE_ORDER_CODE)
+            endpoint = "execute";
+        else
+            endpoint = "payment";
+        body.append(String.format("%s: %s", activity.getString(R.string.label_error), endpoint));
+        body.append(String.format(Locale.ENGLISH, "-%d", errorCode));
+
+        if (errorMessage != null && !errorMessage.isEmpty())
+            body.append(String.format("-%s", errorMessage));
+        body.append(NEW_LINE);
+        return body;
     }
 }
