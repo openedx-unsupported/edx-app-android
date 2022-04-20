@@ -19,10 +19,8 @@ import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
-import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.ProductManager
-import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NonNullObserver
@@ -34,12 +32,15 @@ import javax.inject.Inject
 class CourseModalDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogUpgradeFeaturesBinding
+    private var screenName: String = ""
     private var courseId: String = ""
     private var price: String = ""
     private var isSelfPaced: Boolean = false
 
     private var billingProcessor: BillingProcessor? = null
-    private val iapViewModel: InAppPurchasesViewModel by viewModels()
+
+    private val iapViewModel: InAppPurchasesViewModel
+            by viewModels(ownerProducer = { requireActivity() })
 
     @Inject
     lateinit var environment: IEdxEnvironment
@@ -75,16 +76,15 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private fun initViews() {
         arguments?.let { bundle ->
-            courseId = bundle.getString(KEY_COURSE_ID) ?: ""
-            price = bundle.getString(KEY_COURSE_PRICE) ?: ""
+            screenName = bundle.getString(KEY_SCREEN_NAME, "")
+            courseId = bundle.getString(KEY_COURSE_ID, "")
+            price = bundle.getString(KEY_COURSE_PRICE, "")
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
             environment.analyticsRegistry.trackValuePropLearnMoreTapped(
-                courseId, null,
-                Analytics.Screens.COURSE_ENROLLMENT
+                courseId, null, screenName
             )
             environment.analyticsRegistry.trackValuePropModalView(
-                courseId, null,
-                Analytics.Screens.COURSE_ENROLLMENT
+                courseId, null, screenName
             )
         }
 
@@ -185,11 +185,7 @@ class CourseModalDialogFragment : DialogFragment() {
 
         iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
             if (it.paymentPageUrl.isNotEmpty())
-                purchaseProduct(iapViewModel.getProductId())
-        })
-
-        iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
-            showPurchaseSuccessSnackbar()
+                purchaseProduct(iapViewModel.productId)
         })
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
@@ -228,12 +224,10 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private fun onProductPurchased(purchaseToken: String) {
         lifecycleScope.launch {
-            executeOrder(purchaseToken)
+            iapViewModel.setPurchaseToken(purchaseToken)
+            iapViewModel.showFullScreenLoader(true)
+            dismiss()
         }
-    }
-
-    private fun executeOrder(purchaseToken: String) {
-        iapViewModel.executeOrder(purchaseToken = purchaseToken)
     }
 
     private fun showUpgradeErrorDialog(
@@ -243,6 +237,8 @@ class CourseModalDialogFragment : DialogFragment() {
         feedbackEndpoint: Int? = null,
         listener: DialogInterface.OnClickListener? = null
     ) {
+        // To restrict showing error dialog on an unattached fragment
+        if (!isAdded) return;
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
             getString(errorResId),
@@ -262,10 +258,6 @@ class CourseModalDialogFragment : DialogFragment() {
         }.show(childFragmentManager, null)
     }
 
-    private fun showPurchaseSuccessSnackbar() {
-        SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         billingProcessor?.disconnect()
@@ -274,6 +266,7 @@ class CourseModalDialogFragment : DialogFragment() {
     companion object {
         const val TAG: String = "CourseModalDialogFragment"
         const val KEY_MODAL_PLATFORM = "platform_name"
+        const val KEY_SCREEN_NAME = "screen_name"
         const val KEY_COURSE_ID = "course_id"
         const val KEY_COURSE_NAME = "course_name"
         const val KEY_COURSE_PRICE = "course_price"
@@ -282,6 +275,7 @@ class CourseModalDialogFragment : DialogFragment() {
         @JvmStatic
         fun newInstance(
             platformName: String,
+            screenName: String,
             courseId: String,
             courseName: String,
             price: String,
@@ -290,6 +284,7 @@ class CourseModalDialogFragment : DialogFragment() {
             val frag = CourseModalDialogFragment()
             val args = Bundle().apply {
                 putString(KEY_MODAL_PLATFORM, platformName)
+                putString(KEY_SCREEN_NAME, screenName)
                 putString(KEY_COURSE_ID, courseId)
                 putString(KEY_COURSE_NAME, courseName)
                 putString(KEY_COURSE_PRICE, price)

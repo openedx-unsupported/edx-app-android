@@ -171,7 +171,7 @@
     <dimen name="tab_indicator_selected_height">6dp</dimen>
 
     <!--edX typography-->
-    <dimen name="edx_xxxx_large">38sp</dimen>
+    <dimen name="edx_xxxx_large">32sp</dimen>
     <dimen name="edx_xxx_large">28sp</dimen>
     <dimen name="edx_xx_large">24sp</dimen>
     <dimen name="edx_x_large">21sp</dimen>
@@ -326,5 +326,12 @@
     <dimen name="upgrade_now_progress_indicator_size">28dp</dimen>
     <dimen name="upgrade_now_progress_indicator_thickness">3dp</dimen>
     <dimen name="upgrade_now_button_height">44dp</dimen>
+
+    <!-- Fullscreen loader -->
+    <dimen name="fullscreen_loader">48dp</dimen>
+    <dimen name="fullscreen_loader_margin">32dp</dimen>
+    <dimen name="fullscreen_margin">18dp</dimen>
+    <dimen name="fullscreen_margin_top">36dp</dimen>
+    <dimen name="fullscreen_message_line_height">36dp</dimen>
 
 </resources>

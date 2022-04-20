@@ -37,6 +37,7 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -632,6 +633,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
                 environment.getConfig().getPlatformName(),
+                Analytics.Screens.COURSE_DASHBOARD,
                 courseData.getCourseId(),
                 courseData.getCourse().getName(),
                 courseData.getCourse().getPrice(),

@@ -20,7 +20,7 @@ class InAppPurchasesViewModel @Inject constructor(
     private val repository: InAppPurchasesRepository
 ) : ViewModel() {
 
-    private val _showLoader = MutableLiveData<Boolean>()
+    private val _showLoader = MutableLiveData(false)
     val showLoader: LiveData<Boolean> = _showLoader
 
     private val _errorMessage = MutableLiveData<ErrorMessage?>()
@@ -32,21 +32,28 @@ class InAppPurchasesViewModel @Inject constructor(
     private val _executeOrderResponse = MutableLiveData<ExecuteOrderResponse>()
     val executeOrderResponse: LiveData<ExecuteOrderResponse> = _executeOrderResponse
 
-    private var productId: String = ""
+    private val _showFullscreenLoaderDialog = MutableLiveData(false)
+    val showFullscreenLoaderDialog: LiveData<Boolean> = _showFullscreenLoaderDialog
+
+    private val _refreshCourseData = MutableLiveData(false)
+    val refreshCourseData: LiveData<Boolean> = _refreshCourseData
+
+    private val _purchaseFlowComplete = MutableLiveData(false)
+    val purchaseFlowComplete: LiveData<Boolean> = _purchaseFlowComplete
+
+    private var _productId: String = ""
+    val productId: String
+        get() = _productId
+
+    private var _isVerificationPending = true
+    val isVerificationPending: Boolean
+        get() = _isVerificationPending
+
     private var basketId: Long = 0
-
-    fun getProductId() = productId
-
-    fun startLoading() {
-        _showLoader.value = true
-    }
-
-    fun endLoading() {
-        _showLoader.postValue(false)
-    }
+    private var purchaseToken: String = ""
 
     fun addProductToBasket(productId: String) {
-        this.productId = productId
+        _productId = productId
         startLoading()
         repository.addToBasket(
             productId = productId,
@@ -82,7 +89,8 @@ class InAppPurchasesViewModel @Inject constructor(
             })
     }
 
-    fun executeOrder(purchaseToken: String) {
+    fun executeOrder() {
+        _isVerificationPending = false
         repository.executeOrder(
             basketId = basketId,
             productId = productId,
@@ -92,6 +100,7 @@ class InAppPurchasesViewModel @Inject constructor(
                     result.data?.let {
                         _executeOrderResponse.value = it
                         orderExecuted()
+                        refreshCourseData(true)
                     }
                     endLoading()
                 }
@@ -103,17 +112,17 @@ class InAppPurchasesViewModel @Inject constructor(
             })
     }
 
+    private fun orderExecuted() {
+        _productId = ""
+        basketId = 0
+    }
+
     fun setError(errorCode: Int, throwable: Throwable) {
         _errorMessage.value = ErrorMessage(errorCode, throwable, getErrorMessage(throwable))
     }
 
     fun errorMessageShown() {
         _errorMessage.value = null
-    }
-
-    private fun orderExecuted() {
-        this.productId = ""
-        this.basketId = 0
     }
 
     private fun getErrorMessage(throwable: Throwable) = if (throwable is InAppPurchasesException) {
@@ -133,5 +142,31 @@ class InAppPurchasesViewModel @Inject constructor(
         }
     } else {
         R.string.general_error_message
+    }
+
+    private fun startLoading() {
+        _showLoader.value = true
+    }
+
+    fun endLoading() {
+        _showLoader.postValue(false)
+    }
+
+    fun setPurchaseToken(purchaseToken: String) {
+        this.purchaseToken = purchaseToken
+    }
+
+    fun showFullScreenLoader(show: Boolean) {
+        _showFullscreenLoaderDialog.value = show
+    }
+
+    fun refreshCourseData(refresh: Boolean) {
+        _refreshCourseData.postValue(refresh)
+    }
+
+    // To refrain the View Model from emitting further observable calls
+    fun resetPurchase(complete: Boolean) {
+        _isVerificationPending = true
+        _purchaseFlowComplete.postValue(complete)
     }
 }

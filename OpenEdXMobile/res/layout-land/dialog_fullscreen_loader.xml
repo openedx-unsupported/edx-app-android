@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/neutralWhite">
+
+        <include
+            android:id="@+id/loading_indicator"
+            layout="@layout/loading_indicator"
+            android:layout_width="@dimen/fullscreen_loader"
+            android:layout_height="@dimen/fullscreen_loader"
+            android:layout_marginTop="@dimen/fullscreen_margin_top"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/materialTextView"
+            style="@style/campaign_launch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fullscreen_loader_margin"
+            android:layout_marginEnd="@dimen/fullscreen_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/appCompatImageView"
+            app:layout_constraintTop_toTopOf="@+id/appCompatImageView"
+            tools:text="Unlocking\n full access\n to your course" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fullscreen_margin"
+            android:layout_marginTop="@dimen/fullscreen_margin"
+            android:layout_marginEnd="@dimen/fullscreen_loader_margin"
+            app:layout_constraintEnd_toStartOf="@+id/materialTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loading_indicator"
+            app:srcCompat="@drawable/ic_campaign_launch" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
