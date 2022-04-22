@@ -38,8 +38,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     private lateinit var binding: FragmentCourseUnitGradeBinding
     private var billingProcessor: BillingProcessor? = null
 
-    private val iapViewModel: InAppPurchasesViewModel by viewModels(ownerProducer = { requireActivity() })
-
+    private val iapViewModel: InAppPurchasesViewModel
+            by viewModels(ownerProducer = { requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -210,6 +210,12 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         }
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
+            // Error message observer should not observe EXECUTE or REFRESH error cases as they
+            // will be observed by FullscreenLoaderDialogFragment's observer.
+            if (listOf(ErrorMessage.EXECUTE_ORDER_CODE, ErrorMessage.COURSE_REFRESH_CODE)
+                    .contains(errorMsg.errorCode)
+            ) return@NonNullObserver
+
             if (errorMsg.throwable is InAppPurchasesException) {
                 when (errorMsg.throwable.httpErrorCode) {
                     HttpStatus.UNAUTHORIZED -> {
@@ -265,17 +271,18 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             getString(errorResId),
             getString(if (listener != null) R.string.try_again else R.string.label_close),
             listener,
-            getString(if (listener != null) R.string.label_cancel else R.string.label_get_help)
-        ) { _, _ ->
-            listener?.let { return@newInstance }
-            environment.router?.showFeedbackScreen(
-                requireActivity(),
-                getString(R.string.email_subject_upgrade_error),
-                feedbackErrorCode,
-                feedbackEndpoint,
-                feedbackErrorMessage
-            )
-        }.show(childFragmentManager, null)
+            getString(if (listener != null) R.string.label_cancel else R.string.label_get_help),
+            { _, _ ->
+                listener?.let { return@newInstance }
+                environment.router?.showFeedbackScreen(
+                    requireActivity(),
+                    getString(R.string.email_subject_upgrade_error),
+                    feedbackErrorCode,
+                    feedbackEndpoint,
+                    feedbackErrorMessage
+                )
+            }, false
+        ).show(childFragmentManager, null)
     }
 
     override fun onResume() {

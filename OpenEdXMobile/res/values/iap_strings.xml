@@ -18,6 +18,8 @@
     <string name="email_subject_upgrade_error">Error upgrading course in app</string>
     <!-- Get Help button label -->
     <string name="label_get_help">Get Help</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">Refresh to retry</string>
 
     <!--  Error Messages  -->
     <!--  Course didn't found against the course sku in the course upgrade API -->

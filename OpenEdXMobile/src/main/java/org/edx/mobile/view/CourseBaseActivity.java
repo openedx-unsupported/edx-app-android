@@ -56,6 +56,8 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
 
     protected abstract void onLoadData();
 
+    protected abstract void onCourseRefreshError(Throwable error);
+
     private FullScreenErrorNotification errorNotification;
 
     @Override
@@ -132,6 +134,12 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
                 }
                 invalidateOptionsMenu();
                 onLoadData();
+            }
+
+            @Override
+            protected void onFailure(@NonNull Throwable error) {
+                super.onFailure(error);
+                onCourseRefreshError(error);
             }
         });
     }

@@ -175,7 +175,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             NonNullObserver { refreshCourse ->
                 if (refreshCourse) {
                     refreshOnPurchase = true
-                    loadData(showProgress = false, fromCache = false)
+                    enrolledCoursesCall = courseAPI.enrolledCoursesWithoutStale
+                    getUserEnrolledCourses(false)
                     iapViewModel.refreshCourseData(false)
                 }
             })
@@ -298,7 +299,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     call.isCanceled -> logger.error(t)
                     fromCache -> loadData(showProgress = true, fromCache = false)
                     (fullscreenLoader?.isAdded == true) -> iapViewModel.setError(
-                        ErrorMessage.EXECUTE_ORDER_CODE,
+                        ErrorMessage.COURSE_REFRESH_CODE,
                         t
                     )
                     else -> {

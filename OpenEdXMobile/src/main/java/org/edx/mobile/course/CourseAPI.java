@@ -103,7 +103,15 @@ public class CourseAPI {
      */
     @NonNull
     public Call<List<EnrolledCoursesResponse>> getEnrolledCourses() {
-        return courseService.getEnrolledCourses(getUsername(), config.getOrganizationCode());
+        return courseService.getEnrolledCourses(null, getUsername(), config.getOrganizationCode());
+    }
+
+    /**
+     * @return Enrolled courses of given user without stale response.
+     */
+    @NonNull
+    public Call<List<EnrolledCoursesResponse>> getEnrolledCoursesWithoutStale() {
+        return courseService.getEnrolledCourses("stale-if-error=0", getUsername(), config.getOrganizationCode());
     }
 
     /**
@@ -217,7 +225,7 @@ public class CourseAPI {
 
     @NonNull
     public Call<CourseStructureV1Model> getCourseStructureWithoutStale(@NonNull String blocksApiVersion, @NonNull String courseId) {
-        return courseService.getCourseStructure(null, blocksApiVersion, getUsername(), courseId);
+        return courseService.getCourseStructure("stale-if-error=0", blocksApiVersion, getUsername(), courseId);
     }
 
     @NonNull
