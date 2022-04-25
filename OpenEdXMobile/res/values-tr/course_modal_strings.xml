@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">{price} karşılığında hemen yükseltin</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Kilitli özellikler hakkında daha fazlasını öğrenin</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>Notlu ödevlerin kilidi nasıl açılır?</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">Notlu ödevler kilitli</string>
     <!-- Label Course Modal Graded Assignments Locked description -->

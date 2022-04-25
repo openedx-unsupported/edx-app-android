@@ -37,4 +37,7 @@
     <string name="fullscreen_loader_unlocking">Unlocking</string>
     <string name="fullscreen_loader_full_access">full access</string>
     <string name="fullscreen_loader_to_your_course">to your course</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">Unlock graded assignments</string>
 </resources>

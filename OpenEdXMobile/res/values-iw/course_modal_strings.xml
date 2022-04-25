@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">שדרג עכשיו תמורת {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">למידע נוסף על תכונות נעולות</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>כיצד לפתוח מטלות מדורגות</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">מטלות עם ציון ננעלות</string>
     <!-- Label Course Modal Graded Assignments Locked description -->

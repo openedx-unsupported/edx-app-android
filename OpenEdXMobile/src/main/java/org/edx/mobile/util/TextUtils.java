@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.style.UnderlineSpan;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -223,5 +224,16 @@ public class TextUtils {
             body.append(String.format("-%s", errorMessage));
         body.append(NEW_LINE);
         return body;
+    }
+
+    /**
+     * @param context Context object to use for obtaining strings from strings.xml.
+     * @param resId   Resource ID of the text to be underlined.
+     * @return Underlined string
+     */
+    public static SpannableString underline(Context context, @StringRes int resId) {
+        SpannableString content = new SpannableString(context.getString(resId));
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        return content;
     }
 }

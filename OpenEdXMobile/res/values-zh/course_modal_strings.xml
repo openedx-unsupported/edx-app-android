@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">现在升级仅需 {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">了解关于锁定功能的更多详情</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>如何解锁分级作业</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">分级作业已锁定</string>
     <!-- Label Course Modal Graded Assignments Locked description -->

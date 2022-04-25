@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">Nâng cấp ngay với giá {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Tìm hiểu thêm về các tính năng bị khóa</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>Cách mở khóa bài tập chấm điểm</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">Bài tập chấm điểm bị khóa</string>
     <!-- Label Course Modal Graded Assignments Locked description -->
