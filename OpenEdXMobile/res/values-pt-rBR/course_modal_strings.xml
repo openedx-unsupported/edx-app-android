@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">Atualizar agora por {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Saiba mais sobre os recursos bloqueados</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>Como desbloquear tarefas com nota</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">As tarefas com nota estão bloqueadas</string>
     <!-- Label Course Modal Graded Assignments Locked description -->

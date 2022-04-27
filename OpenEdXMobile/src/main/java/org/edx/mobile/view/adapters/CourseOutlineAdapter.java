@@ -368,7 +368,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
         if (isDenialFeatureBasedEnrolments) {
             if (environment.getRemoteFeaturePrefs().isValuePropEnabled() &&
                     courseData.getMode().equalsIgnoreCase(EnrollmentMode.AUDIT.toString())) {
-                viewHolder.rowSubtitle.setText(R.string.course_modal_unlock_graded_assignment);
+                viewHolder.rowSubtitle.setText(org.edx.mobile.util.TextUtils.underline(
+                        context,
+                        R.string.course_modal_unlock_graded_assignment
+                ));
                 viewHolder.lockedContent.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.rowSubtitle.setText(R.string.not_available_on_mobile);

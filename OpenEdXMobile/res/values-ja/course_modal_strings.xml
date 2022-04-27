@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">{price}で今すぐアップグレード</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">制限付き機能についての詳細</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>採点対象課題のロックを解除する方法</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">採点対象の課題がロックされています</string>
     <!-- Label Course Modal Graded Assignments Locked description -->

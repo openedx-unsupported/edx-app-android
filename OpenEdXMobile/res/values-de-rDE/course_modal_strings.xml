@@ -12,8 +12,6 @@
     <string name="label_upgrade_course_button">Upgrade jetzt durchführen für {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Erfahren Sie mehr über gesperrte Funktionen</string>
-    <!-- Label Course Modal Unlock Graded Assignments -->
-    <string name="course_modal_unlock_graded_assignment"><u>So entsperren Sie benotete Aufgaben</u></string>
     <!-- Label Course Modal Graded Assignments Locked -->
     <string name="course_modal_graded_assignment_locked">Benotete Aufgaben sind gesperrt</string>
     <!-- Label Course Modal Graded Assignments Locked description -->
