@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import org.edx.mobile.R;
@@ -26,24 +28,30 @@ import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment;
+import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
+import org.edx.mobile.viewModel.InAppPurchasesViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -61,6 +69,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
+    private InAppPurchasesViewModel iapViewModel;
 
     @Inject
     CourseAPI courseApi;
@@ -69,6 +78,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     private boolean isFirstSection = false;
     private boolean isVideoMode = false;
+    private boolean refreshCourse = false;
+
+    private final FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.newInstance();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +93,23 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         pager2 = findViewById(R.id.pager2);
+        initAdapter();
+        // Enforce to intercept single scrolling direction
+        UiUtils.INSTANCE.enforceSingleScrollDirection(pager2);
+        findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
+
+        getBaseBinding().gotoPrev.setOnClickListener(view -> navigatePreviousComponent());
+        getBaseBinding().gotoNext.setOnClickListener(view -> navigateNextComponent());
+
+        if (getIntent() != null) {
+            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
+        }
+        if (!isVideoMode) {
+            getCourseCelebrationStatus();
+        }
+    }
+
+    private void initAdapter() {
         pagerAdapter = new CourseUnitPagerAdapter(this, environment.getConfig(),
                 unitList, courseData, courseUpgradeData, this);
         pager2.setAdapter(pagerAdapter);
@@ -108,19 +137,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 }
             }
         });
-        // Enforce to intercept single scrolling direction
-        UiUtils.INSTANCE.enforceSingleScrollDirection(pager2);
-        findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
-
-        getBaseBinding().gotoPrev.setOnClickListener(view -> navigatePreviousComponent());
-        getBaseBinding().gotoNext.setOnClickListener(view -> navigateNextComponent());
-
-        if (getIntent() != null) {
-            isVideoMode = getIntent().getExtras().getBoolean(Router.EXTRA_IS_VIDEOS_MODE);
-        }
-        if (!isVideoMode) {
-            getCourseCelebrationStatus();
-        }
     }
 
     private void getCourseCelebrationStatus() {
@@ -218,6 +234,31 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     @Override
+    public void refreshCourseData(@NonNull String courseId, @NonNull String componentId) {
+        refreshCourse = true;
+        updateCourseStructure(courseId, componentId);
+    }
+
+    @Override
+    public void initializeIAPObserver() {
+        iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
+        iapViewModel.getShowFullscreenLoaderDialog().observe(this, canShowLoader -> {
+            if (canShowLoader) {
+                fullScreenLoader.show(getSupportFragmentManager(), FullscreenLoaderDialogFragment.TAG);
+                iapViewModel.showFullScreenLoader(false);
+            }
+        });
+
+        iapViewModel.getPurchaseFlowComplete().observe(this, isPurchaseCompleted -> {
+            if (isPurchaseCompleted) {
+                fullScreenLoader.dismiss();
+                showPurchaseSuccessSnackbar();
+                iapViewModel.resetPurchase(false);
+            }
+        });
+    }
+
+    @Override
     protected void onLoadData() {
         selectedUnit = courseManager.getComponentById(blocksApiVersion, courseData.getCourse().getId(), courseComponentId);
         updateDataModel();
@@ -293,6 +334,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void updateDataModel() {
         unitList.clear();
         if (selectedUnit == null || selectedUnit.getRoot() == null) {
@@ -311,9 +353,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             selectedUnit.getRoot().fetchAllLeafComponents(leaves, EnumSet.allOf(BlockType.class));
         }
         unitList.addAll(leaves);
-        pagerAdapter.notifyDataSetChanged();
 
         int index = unitList.indexOf(selectedUnit);
+
+        if (refreshCourse) {
+            initAdapter();
+            resetPurchase();
+        }
+
         if (index >= 0) {
             pager2.setCurrentItem(index, false);
             tryToUpdateForEndOfSequential();
@@ -322,6 +369,36 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (pagerAdapter != null)
             pagerAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Add result data into the intent to trigger the signal that `courseData` is updated after
+        // the course was purchased from a locked component screen.
+        if (refreshCourse) {
+            Intent resultData = new Intent();
+            resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
+            setResult(RESULT_OK, resultData);
+            refreshCourse = false;
+        }
+        super.onBackPressed();
+    }
+
+    private void resetPurchase() {
+        if (fullScreenLoader.isAdded()) {
+            // Persist Fullscreen loader for at least 3 seconds
+            // for a better UX instead of a glitch
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    iapViewModel.resetPurchase(true);
+                }
+            }, FullscreenLoaderDialogFragment.FULLSCREEN_DISPLAY_DELAY);
+        }
+    }
+
+    private void showPurchaseSuccessSnackbar() {
+        new SnackbarErrorNotification(pager2).showError(R.string.purchase_success_message);
     }
 
     @Override

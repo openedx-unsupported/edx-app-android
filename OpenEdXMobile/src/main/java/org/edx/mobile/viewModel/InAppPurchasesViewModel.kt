@@ -29,9 +29,6 @@ class InAppPurchasesViewModel @Inject constructor(
     private val _checkoutResponse = MutableLiveData<CheckoutResponse>()
     val checkoutResponse: LiveData<CheckoutResponse> = _checkoutResponse
 
-    private val _executeOrderResponse = MutableLiveData<ExecuteOrderResponse>()
-    val executeOrderResponse: LiveData<ExecuteOrderResponse> = _executeOrderResponse
-
     private val _showFullscreenLoaderDialog = MutableLiveData(false)
     val showFullscreenLoaderDialog: LiveData<Boolean> = _showFullscreenLoaderDialog
 
@@ -98,7 +95,6 @@ class InAppPurchasesViewModel @Inject constructor(
             callback = object : NetworkResponseCallback<ExecuteOrderResponse> {
                 override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
                     result.data?.let {
-                        _executeOrderResponse.value = it
                         orderExecuted()
                         refreshCourseData(true)
                     }

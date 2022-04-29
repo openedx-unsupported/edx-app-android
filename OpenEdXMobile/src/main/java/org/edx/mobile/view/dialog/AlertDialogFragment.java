@@ -27,6 +27,7 @@ public class AlertDialogFragment extends DialogFragment {
     protected static final String ARG_TITLE_RES = "ARG_TITLE_RES";
     protected static final String ARG_MESSAGE = "ARG_MESSAGE";
     protected static final String ARG_MESSAGE_RES = "ARG_MESSAGE_RES";
+    protected static final String ARG_IS_CANCELABLE = "ARG_IS_CANCELABLE";
     @Nullable
     protected ButtonAttribute positiveButtonAttr;
     @Nullable
@@ -108,6 +109,29 @@ public class AlertDialogFragment extends DialogFragment {
                                                   final @Nullable DialogInterface.OnClickListener onPositiveClick,
                                                   final @Nullable String negativeText,
                                                   final @Nullable DialogInterface.OnClickListener onNegativeClick) {
+        return newInstance(title, message, positiveText, onPositiveClick, negativeText, onNegativeClick, true);
+    }
+
+    /**
+     * Creates a new instance of dialog that shows message, could have title, will have a positive
+     * button with given text and also could have negative button with given text.
+     *
+     * @param title           Title of dialog.
+     * @param message         Message of dialog.
+     * @param positiveText    Positive button text.
+     * @param onPositiveClick Positive button click listener.
+     * @param negativeText    Negative button text.
+     * @param onNegativeClick Negative button click listener.
+     * @param isCancelable    Flag to set dialog cancelable.
+     * @return New instance of dialog.
+     */
+    public static AlertDialogFragment newInstance(final @Nullable String title,
+                                                  final @NonNull String message,
+                                                  final @NonNull String positiveText,
+                                                  final @Nullable DialogInterface.OnClickListener onPositiveClick,
+                                                  final @Nullable String negativeText,
+                                                  final @Nullable DialogInterface.OnClickListener onNegativeClick,
+                                                  final boolean isCancelable) {
         final AlertDialogFragment fragment = new AlertDialogFragment();
         // Supply params as an argument.
         final Bundle arguments = new Bundle();
@@ -139,6 +163,7 @@ public class AlertDialogFragment extends DialogFragment {
                 return onNegativeClick;
             }
         };
+        arguments.putBoolean(ARG_IS_CANCELABLE, isCancelable);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -214,6 +239,8 @@ public class AlertDialogFragment extends DialogFragment {
                 negativeButton.setTypeface(null, Typeface.BOLD);
             }
         });
+        final boolean isCancelable = args.getBoolean(ARG_IS_CANCELABLE, false);
+        alertDialog.setCancelable(isCancelable);
         return alertDialog;
     }
 

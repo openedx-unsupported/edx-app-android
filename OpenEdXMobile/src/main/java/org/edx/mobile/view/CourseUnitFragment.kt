@@ -1,6 +1,7 @@
 package org.edx.mobile.view
 
 import android.os.Bundle
+import androidx.annotation.NonNull
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.model.course.CourseComponent
@@ -38,6 +39,20 @@ abstract class CourseUnitFragment : BaseFragment() {
     }
 
     /**
+     * Method to update the `courseData` after successful purchase of a course by the user.
+     */
+    fun updateCourseUnit(courseId: String, componentId: String) {
+        hasComponentCallback?.refreshCourseData(courseId, componentId)
+    }
+
+    /**
+     * Method to initialize IAP observers for the screen that needs to update the `courseData`.
+     */
+    fun initializeBaseObserver() {
+        hasComponentCallback?.initializeIAPObserver()
+    }
+
+    /**
      * This method contains the status that screen has the Casting supported video content or not.
      *
      * @return true if screen has casting supported video content, else false
@@ -50,5 +65,11 @@ abstract class CourseUnitFragment : BaseFragment() {
         val component: CourseComponent?
         fun navigateNextComponent()
         fun navigatePreviousComponent()
+
+        // Abstract method to update the `courseData` after successful purchase of a course by the user.
+        fun refreshCourseData(@NonNull courseId: String, @NonNull componentId: String)
+
+        // Abstract method to initialize IAP observers for the screen that needs to update the `courseData`.
+        fun initializeIAPObserver()
     }
 }

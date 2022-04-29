@@ -19,7 +19,6 @@ import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
-import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.inapppurchases.ProductManager
@@ -39,7 +38,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     private lateinit var binding: FragmentCourseUnitGradeBinding
     private var billingProcessor: BillingProcessor? = null
 
-    private val iapViewModel: InAppPurchasesViewModel by viewModels()
+    private val iapViewModel: InAppPurchasesViewModel by viewModels(ownerProducer = { requireActivity() })
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -202,9 +202,12 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 purchaseProduct(iapViewModel.productId)
         })
 
-        iapViewModel.executeOrderResponse.observe(viewLifecycleOwner, NonNullObserver {
-            showPurchaseSuccessSnackbar()
-        })
+        iapViewModel.refreshCourseData.observe(viewLifecycleOwner) { refreshCourse: Boolean ->
+            if (refreshCourse) {
+                iapViewModel.refreshCourseData(false)
+                unit?.let { updateCourseUnit(it.courseId, it.id) }
+            }
+        }
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
             if (errorMsg.throwable is InAppPurchasesException) {
@@ -242,13 +245,10 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private fun onProductPurchased(purchaseToken: String) {
         lifecycleScope.launch {
-            executeOrder(purchaseToken)
+            initializeBaseObserver()
+            iapViewModel.setPurchaseToken(purchaseToken)
+            iapViewModel.showFullScreenLoader(true)
         }
-    }
-
-    private fun executeOrder(purchaseToken: String) {
-        iapViewModel.setPurchaseToken(purchaseToken)
-        iapViewModel.executeOrder()
     }
 
     private fun showUpgradeErrorDialog(
@@ -276,10 +276,6 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 feedbackErrorMessage
             )
         }.show(childFragmentManager, null)
-    }
-
-    private fun showPurchaseSuccessSnackbar() {
-        SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
     }
 
     override fun onResume() {

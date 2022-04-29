@@ -328,6 +328,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowSubtitleVideoSize.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
+        viewHolder.lockedContent.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
         viewHolder.rowTitle.setText(unit.getDisplayName());
         viewHolder.rowContainer.setBackgroundResource(R.drawable.activated_item_selector);
