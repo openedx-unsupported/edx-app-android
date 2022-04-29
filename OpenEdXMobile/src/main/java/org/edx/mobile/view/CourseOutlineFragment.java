@@ -78,6 +78,7 @@ import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.ConfigUtil;
@@ -609,6 +610,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;
+            } else {
+                listView.removeHeaderView(bannerViewBinding.getRoot());
+                isBannerVisible = false;
             }
         } else {
             listView.removeHeaderView(bannerViewBinding.getRoot());
@@ -1035,9 +1039,27 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SHOW_COURSE_UNIT_DETAIL && resultCode == Activity.RESULT_OK
                 && data != null) {
-            final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
-                    courseData.getCourseId(), courseComponentId);
-            navigateToCourseUnit(data, courseData, outlineComp);
+            if (data.getBooleanExtra(AppConstants.COURSE_UPGRADED, false)) {
+                courseData.setMode(EnrollmentMode.VERIFIED.toString());
+                if (!isOnCourseOutline) {
+                    // As the Course Outline Fragment is used multiple time as a stack for CourseDashboard & SubComponents
+                    // So need to pass data from SubComponent screen to CourseDashboard to update the views after user
+                    // Purchase course from Locked Component
+                    Intent resultData = new Intent();
+                    resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
+                    requireActivity().setResult(Activity.RESULT_OK, resultData);
+                    fetchCourseComponent();
+                } else {
+                    // Update the User CourseEnrollments & Dates banner if after user
+                    // Purchase course from Locked Component
+                    courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), true);
+                    EventBus.getDefault().post(new MainDashboardRefreshEvent());
+                }
+            } else {
+                final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
+                        courseData.getCourseId(), courseComponentId);
+                navigateToCourseUnit(data, courseData, outlineComp);
+            }
         }
     }
 
