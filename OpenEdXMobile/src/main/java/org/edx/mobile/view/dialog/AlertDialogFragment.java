@@ -32,6 +32,8 @@ public class AlertDialogFragment extends DialogFragment {
     protected ButtonAttribute positiveButtonAttr;
     @Nullable
     protected ButtonAttribute negativeButtonAttr;
+    @Nullable
+    protected ButtonAttribute neutralButtonAttr;
 
     /**
      * Creates a new instance of simple dialog that shows message, could have title and will have
@@ -169,6 +171,79 @@ public class AlertDialogFragment extends DialogFragment {
     }
 
     /**
+     * Creates a new instance of dialog that shows message, could have title, will have a positive,
+     * negative and neutral button with given text.
+     *
+     * @param title           Title of dialog.
+     * @param message         Message of dialog.
+     * @param positiveText    Positive button text.
+     * @param onPositiveClick Positive button click listener.
+     * @param negativeText    Negative button text.
+     * @param onNegativeClick Negative button click listener.
+     * @param neutralText     Neutral button text.
+     * @param onNeutralClick  Neutral button click listener.
+     * @param isCancelable    Flag to set dialog cancelable.
+     * @return New instance of dialog.
+     */
+    public static AlertDialogFragment newInstance(final @Nullable String title,
+                                                  final @NonNull String message,
+                                                  final @NonNull String positiveText,
+                                                  final @Nullable DialogInterface.OnClickListener onPositiveClick,
+                                                  final @Nullable String negativeText,
+                                                  final @Nullable DialogInterface.OnClickListener onNegativeClick,
+                                                  final @Nullable String neutralText,
+                                                  final @Nullable DialogInterface.OnClickListener onNeutralClick,
+                                                  final boolean isCancelable) {
+        final AlertDialogFragment fragment = new AlertDialogFragment();
+        // Supply params as an argument.
+        final Bundle arguments = new Bundle();
+        arguments.putString(ARG_TITLE, title);
+        arguments.putString(ARG_MESSAGE, message);
+        fragment.positiveButtonAttr = new ButtonAttribute() {
+            @NonNull
+            @Override
+            public String getText() {
+                return positiveText;
+            }
+
+            @Nullable
+            @Override
+            public DialogInterface.OnClickListener getOnClickListener() {
+                return onPositiveClick;
+            }
+        };
+        fragment.negativeButtonAttr = new ButtonAttribute() {
+            @NonNull
+            @Override
+            public String getText() {
+                return negativeText;
+            }
+
+            @Nullable
+            @Override
+            public DialogInterface.OnClickListener getOnClickListener() {
+                return onNegativeClick;
+            }
+        };
+        fragment.neutralButtonAttr = new ButtonAttribute() {
+            @Nullable
+            @Override
+            String getText() {
+                return neutralText;
+            }
+
+            @Nullable
+            @Override
+            DialogInterface.OnClickListener getOnClickListener() {
+                return onNeutralClick;
+            }
+        };
+        arguments.putBoolean(ARG_IS_CANCELABLE, isCancelable);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    /**
      * Creates a new instance of simple custom layout dialog that could have title and layout Id
      *
      * @param titleResId  Resource Id of title
@@ -226,6 +301,10 @@ public class AlertDialogFragment extends DialogFragment {
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, negativeButtonAttr.getText(),
                     negativeButtonAttr.getOnClickListener());
         }
+        if (neutralButtonAttr != null) {
+            alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonAttr.getText(),
+                    neutralButtonAttr.getOnClickListener());
+        }
 
         alertDialog.setOnShowListener(dialog -> {
             if (positiveButtonAttr != null) {
@@ -238,8 +317,13 @@ public class AlertDialogFragment extends DialogFragment {
                 negativeButton.setTextColor(getContext().getResources().getColor(R.color.primaryBaseColor));
                 negativeButton.setTypeface(null, Typeface.BOLD);
             }
+            if (neutralButtonAttr != null) {
+                Button neutralButton = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                neutralButton.setTextColor(getContext().getResources().getColor(R.color.primaryBaseColor));
+                neutralButton.setTypeface(null, Typeface.BOLD);
+            }
         });
-        final boolean isCancelable = args.getBoolean(ARG_IS_CANCELABLE, false);
+        final boolean isCancelable = args.getBoolean(ARG_IS_CANCELABLE, true);
         alertDialog.setCancelable(isCancelable);
         return alertDialog;
     }

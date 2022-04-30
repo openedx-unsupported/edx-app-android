@@ -238,24 +238,25 @@ class CourseModalDialogFragment : DialogFragment() {
         listener: DialogInterface.OnClickListener? = null
     ) {
         // To restrict showing error dialog on an unattached fragment
-        if (!isAdded) return;
+        if (!isAdded) return
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
             getString(errorResId),
             getString(if (listener != null) R.string.try_again else R.string.label_close),
             listener,
-            getString(if (listener != null) R.string.label_cancel else R.string.label_get_help)
-        ) { _, _ ->
-            listener?.let { dismiss() } ?: run {
-                environment.router?.showFeedbackScreen(
-                    requireActivity(),
-                    getString(R.string.email_subject_upgrade_error),
-                    feedbackErrorCode,
-                    feedbackEndpoint,
-                    feedbackErrorMessage
-                )
-            }
-        }.show(childFragmentManager, null)
+            getString(if (listener != null) R.string.label_cancel else R.string.label_get_help),
+            { _, _ ->
+                listener?.let { dismiss() } ?: run {
+                    environment.router?.showFeedbackScreen(
+                        requireActivity(),
+                        getString(R.string.email_subject_upgrade_error),
+                        feedbackErrorCode,
+                        feedbackEndpoint,
+                        feedbackErrorMessage
+                    )
+                }
+            }, false
+        ).show(childFragmentManager, null)
     }
 
     override fun onDestroyView() {

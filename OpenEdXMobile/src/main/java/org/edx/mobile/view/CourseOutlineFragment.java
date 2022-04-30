@@ -202,7 +202,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 loadingIndicator.setVisibility(View.GONE);
                 errorNotification.hideError();
                 canFetchBannerInfo = true;
-                getCourseComponentFromServer(false);
+                getCourseComponentFromServer(false, true);
             }
         });
         UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
@@ -321,7 +321,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         iapViewModel.getRefreshCourseData().observe(getViewLifecycleOwner(), refreshCourse -> {
             if (refreshCourse) {
                 refreshOnPurchase = true;
-                getCourseComponentFromServer(false);
+                getCourseComponentFromServer(false, true);
                 iapViewModel.refreshCourseData(false);
             }
         });
@@ -441,10 +441,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             loadData(validateCourseComponent(courseComponent));
             loadingIndicator.setVisibility(View.GONE);
             // Send a server call in background for refreshed data
-            getCourseComponentFromServer(false);
+            getCourseComponentFromServer(false, false);
         } else {
             // Course data is neither available in app session cache nor available in persistable cache
-            getCourseComponentFromServer(true);
+            getCourseComponentFromServer(true, true);
         }
     }
 
@@ -453,7 +453,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         loadingIndicator.setVisibility(View.VISIBLE);
     }
 
-    public void getCourseComponentFromServer(boolean showProgress) {
+    public void getCourseComponentFromServer(boolean showProgress, boolean forceRefresh) {
         if (loadingIndicator.getVisibility() == View.VISIBLE) {
             showProgress = true;
         }
@@ -461,7 +461,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
         final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
         final String courseId = courseData.getCourseId();
-        getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
+
+        if (forceRefresh) {
+            getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
+        } else {
+            getHierarchyCall = courseApi.getCourseStructure(blocksApiVersion, courseId);
+        }
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
                 progressCallback, errorNotification, null, this) {
             @Override
@@ -478,6 +483,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 if (error instanceof CourseContentNotValidException) {
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
+                } else if (fullscreenLoader != null && fullscreenLoader.isAdded()) {
+                    iapViewModel.setError(ErrorMessage.COURSE_REFRESH_CODE, error);
                 }
                 swipeContainer.setRefreshing(false);
                 // Remove bulk video download if the course has NO downloadable videos
@@ -1108,7 +1115,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
         // Hide payments banner
         updatePaymentsBannerVisibility(View.GONE);
-        getCourseComponentFromServer(true);
+        getCourseComponentFromServer(true, true);
     }
 
     public void showResumeCourseView(CourseComponentStatusResponse response) {

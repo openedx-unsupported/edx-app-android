@@ -27,6 +27,7 @@ import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
+import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
@@ -262,6 +263,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     protected void onLoadData() {
         selectedUnit = courseManager.getComponentById(blocksApiVersion, courseData.getCourse().getId(), courseComponentId);
         updateDataModel();
+    }
+
+    @Override
+    protected void onCourseRefreshError(Throwable error) {
+        if (fullScreenLoader != null && fullScreenLoader.isAdded()) {
+            iapViewModel.setError(ErrorMessage.COURSE_REFRESH_CODE, error);
+        }
     }
 
     private void setCurrentUnit(CourseComponent component) {

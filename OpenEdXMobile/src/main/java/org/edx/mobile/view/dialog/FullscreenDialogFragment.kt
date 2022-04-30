@@ -1,5 +1,6 @@
 package org.edx.mobile.view.dialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -8,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogFullscreenLoaderBinding
+import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NonNullObserver
@@ -75,31 +76,52 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
                         )
                         return@NonNullObserver
                     }
-                    else -> showUpgradeErrorDialog(errorMsg.errorResId)
+                    else -> showUpgradeErrorDialog(
+                        feedbackErrorCode = errorMsg.throwable.httpErrorCode,
+                        feedbackErrorMessage = errorMsg.throwable.errorMessage,
+                        feedbackEndpoint = errorMsg.errorCode,
+                        retryListener = { _, _ -> iapViewModel.executeOrder() }
+                    )
                 }
             } else {
-                showUpgradeErrorDialog(errorMsg.errorResId)
+                showUpgradeErrorDialog(
+                    retryListener = { _, _ ->
+                        if (errorMsg.errorCode == ErrorMessage.EXECUTE_ORDER_CODE)
+                            iapViewModel.executeOrder()
+                        else
+                            iapViewModel.refreshCourseData(true)
+                    }
+                )
             }
             iapViewModel.errorMessageShown()
         })
     }
 
     private fun showUpgradeErrorDialog(
-        @StringRes errorResId: Int = R.string.general_error_message
+        feedbackErrorCode: Int? = null,
+        feedbackErrorMessage: String? = null,
+        feedbackEndpoint: Int? = null,
+        retryListener: DialogInterface.OnClickListener? = null
     ) {
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
-            getString(errorResId),
-            getString(R.string.label_close),
-            { _, _ -> resetPurchase() },
+            getString(R.string.error_course_not_fullfilled),
+            getString(R.string.label_refresh_to_retry),
+            retryListener,
             getString(R.string.label_get_help),
             { _, _ ->
                 environment.router?.showFeedbackScreen(
                     requireActivity(),
-                    getString(R.string.email_subject_upgrade_error)
+                    getString(R.string.email_subject_upgrade_error),
+                    feedbackErrorCode,
+                    feedbackEndpoint,
+                    feedbackErrorMessage
                 )
                 resetPurchase()
-            }).show(childFragmentManager, null)
+            },
+            getString(R.string.label_cancel),
+            { _, _ -> resetPurchase() }, false
+        ).show(childFragmentManager, null)
     }
 
     private fun getTitle(): SpannableStringBuilder {

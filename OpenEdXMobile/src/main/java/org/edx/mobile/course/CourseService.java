@@ -103,8 +103,10 @@ public interface CourseService {
      * @return Enrolled courses of given user.
      */
     @GET("/api/mobile/v1/users/{username}/course_enrollments")
-    Call<List<EnrolledCoursesResponse>> getEnrolledCourses(@Path("username") final String username,
-                                                           @Query("org") final String org);
+    Call<List<EnrolledCoursesResponse>> getEnrolledCourses(
+            @Header("Cache-Control") String cacheControlHeaderParam,
+            @Path("username") final String username,
+            @Query("org") final String org);
 
     /**
      * @return Enrolled courses of given user, only from the cache.
