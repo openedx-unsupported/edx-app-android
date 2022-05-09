@@ -10,7 +10,7 @@
         android:layout_gravity="center"
         app:shimmer_base_color="@color/neutralXLight"
         app:shimmer_colored="true"
-        app:shimmer_highlight_color="@color/neutralLight">
+        app:shimmer_highlight_color="@color/neutralBase">
 
         <FrameLayout
             android:layout_width="match_parent"
