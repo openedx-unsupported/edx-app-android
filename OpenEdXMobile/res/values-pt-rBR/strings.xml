@@ -477,6 +477,12 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="email_chooser_header">Enviar e-mail utilizando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Não há clientes de e-mail instalados</string>
+  <!--Search for a course prompt-->
+  <string name="search_for_courses">Procurar por cursos</string>
+  <!--Search for a program prompt-->
+  <string name="search_for_programs">Pesquisar por cursos</string>
+  <!--Search for a degree prompt-->
+  <string name="search_for_degrees">Pesquisar por níveis</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Já possui uma conta? Entrar</string>

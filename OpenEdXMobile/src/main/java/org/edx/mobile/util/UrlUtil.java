@@ -15,7 +15,6 @@ import java.util.Set;
 
 public class UrlUtil {
     public static final String QUERY_PARAM_SEARCH = "q";
-    public static final String QUERY_PARAM_SUBJECT = "subject";
 
     // Resolves a URL against a base URL. If the url is already absolute,
     // it just returns it. If the URL is relative it will resolve it against the base URL

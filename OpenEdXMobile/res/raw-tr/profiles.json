@@ -1,26 +1,26 @@
 {
     "fields":[
     {
-              "name" : "account_privacy",
+              "name" : "hesap gizliliği",
               "label" : "Diğer öğrenciler şunları görebilir:",
-              "type" : "switch",
+              "type" : "değiştir",
               "data_type" : "boolean",
               "options" : {
                 "values" : [
-                            { "name" : "Tam Profil", "value" : "all_users" },
-                            { "name" : "Kısıtlı Profil",  "value" : "private" }
+                            { "name" : "Tam Profil", "value" : "tüm kullanıcılar" },
+                            { "name" : "Kısıtlı Profil",  "value" : "gizli" }
                  ]
               },
               "instructions" : "Kısıtlandırılmış profil sadece sizin kullanıcı adınızı ve profil fotoğrafınızı paylaşır.",
               "accessibility_hint" : "Diğerleriyle hangi bilgilerin paylaştırılacağını belirleyin."
     },
     {
-              "name" : "country",
+              "name" : "ülke",
               "label" : "Konum",
-              "type" : "select",
+              "type" : "seç",
               "data_type" : "country",
               "options" : {
-                "reference" : "countries",
+                "reference" : "ülkeler",
                 "allows_none" : true,
                 "none_label" : "Konum yok"
               }
@@ -28,10 +28,10 @@
     {
               "name" : "language_proficiencies",
               "label" : "Konuşulan dil",
-              "type" : "select",
-              "data_type" : "language",
+              "type" : "seç",
+              "data_type" : "dil",
               "options" : {
-                "reference" : "languages",
+                "reference" : "diller",
                 "allows_none" : true,
                 "none_label" : "Konuşma dili yok"
               }

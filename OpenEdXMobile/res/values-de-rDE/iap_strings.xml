@@ -6,4 +6,5 @@
     <string name="title_purchase">Einkäufe wiederherstellen</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Melden Sie sich im Play Store an, um den Zugriff auf Kurse wiederherzustellen, für die Sie zuvor ein Upgrade bezahlt haben</string>
-</resources>
+
+    </resources>

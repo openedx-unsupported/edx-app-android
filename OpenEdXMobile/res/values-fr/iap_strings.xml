@@ -6,4 +6,7 @@
     <string name="title_purchase">Restaurer les achats</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Connectez-vous au Play Store pour restaurer l\'accès aux cours que vous avez payés</string>
-</resources>
+
+    <!-- Get Help button label -->
+    <string name="label_get_help">Obtenir de l\'aide</string>
+    </resources>

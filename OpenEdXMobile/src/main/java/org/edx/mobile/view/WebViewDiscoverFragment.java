@@ -112,8 +112,9 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     @NonNull
     protected String getInitialUrl() {
-        return URLUtil.isValidUrl(binding.webview.getUrl()) ?
-                binding.webview.getUrl() : environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().getBaseUrl();
+        return URLUtil.isValidUrl(binding.webview.getUrl()) ? binding.webview.getUrl() :
+                environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig()
+                        .getBaseUrl();
     }
 
     @SuppressWarnings("unused")

@@ -35,15 +35,6 @@
     <!-- Error message shown when browser cannot handle request for given web url -->
     <string name="cannot_open_url">Unable to open web page.</string>
 
-    <!-- Subjects Discovery -->
-
-    <!-- Label for browsing courses by a subject -->
-    <string name="browse_by_subject">Browse by Subject</string>
-    <!-- Button's Label for viewing all subjects -->
-    <string name="view_all_subjects">View All Subjects</string>
-    <!-- Label for searching subjects -->
-    <string name="search_subjects">Search Subject</string>
-
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->

@@ -17,7 +17,6 @@ languages = {
     'ar': 'ar',
 }
 
-SUBJECTS_JSON = "subjects.json"
 PROFILES_JSON = "profiles.json"
 WHATS_NEW_JSON = "whats_new.json"
 
@@ -33,6 +32,5 @@ files_templates = {
     "OpenEdXMobile/res/values-<lang>/errors.xml",
     "OpenEdXMobile/res/values-<lang>/labels.xml",
     "OpenEdXMobile/res/raw-<lang>/" + PROFILES_JSON,
-    "OpenEdXMobile/res/raw-<lang>/" + SUBJECTS_JSON,
     "OpenEdXMobile/res/raw-<lang>/" + WHATS_NEW_JSON,
 }

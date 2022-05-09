@@ -477,6 +477,12 @@
   <string name="email_chooser_header">E-postayı şununla gönder...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Hiçbir e-posta uygulaması yüklü değil</string>
+  <!--Search for a course prompt-->
+  <string name="search_for_courses">Dersleri ara</string>
+  <!--Search for a program prompt-->
+  <string name="search_for_programs">Programları ara</string>
+  <!--Search for a degree prompt-->
+  <string name="search_for_degrees">Diplomaları ara</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Hesabın var mı? Giriş yap</string>
@@ -595,6 +601,7 @@
   <!--Button title appears on Celebration Modal to continue-->
   <string name="keep_going_text">Devam et</string>
   <!--Sharing message when user wants to share the celebration-->
+  <string name="celebration_share_message">@{platform_name} online platformla çevrimiçi {course_name} kursunu tamamlamak üzereyim. Sen zamanını ne öğrenerek harcıyorsun? #my{platform_name}journey</string>
   <!--accessibility label for section completion-->
   <string name="course_outline_completion_description">Tamamlandı</string>
 </resources>

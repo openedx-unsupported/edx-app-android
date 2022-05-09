@@ -6,4 +6,18 @@
     <string name="title_purchase">恢复购买</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">登录Play Store以恢复您以前已付费的课程的访问权限</string>
-</resources>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">感谢您的购买！现在您可以享受全部功能了！</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">出现了一个错误</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">看起来您在升级您的课程时遇到了错误，如果这个错误始终无法被解决，请联系我们的技术支持。</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">在手机App中的课程升级操作遇到了错误。</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">联系客服获得帮助</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">您的账户当前无法被我们核验，请尝试登出后再重新登入手机APP。如果这个错误还是无法被解决，请联系我们的技术支持。</string>
+    </resources>

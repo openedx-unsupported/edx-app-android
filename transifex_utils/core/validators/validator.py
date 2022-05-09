@@ -1,6 +1,5 @@
 from core import constants, log
-from core.validators import (subjects_json_validator, profiles_json_validator,
-                             whats_new_json_validator, strings_validator)
+from core.validators import (profiles_json_validator, whats_new_json_validator, strings_validator)
 
 
 def validate_all_translations():
@@ -12,8 +11,6 @@ def validate_all_translations():
             strings_validator.validate(source_file, template)
         elif source_file.endswith(constants.PROFILES_JSON):
             profiles_json_validator.validate(source_file, template)
-        elif source_file.endswith(constants.SUBJECTS_JSON):
-            subjects_json_validator.validate(source_file, template)
         elif source_file.endswith(constants.WHATS_NEW_JSON):
             whats_new_json_validator.validate(source_file, template)
 

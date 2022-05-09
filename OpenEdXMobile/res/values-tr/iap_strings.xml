@@ -6,4 +6,28 @@
     <string name="title_purchase">Satın alımları geri yükleyin</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Daha önce yükseltmek için ödeme yaptığınız kurslara erişimi geri yüklemek için Play Store\'da oturum açın</string>
-</resources>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">Satın aldığınız için teşekkür ederiz. Kursunuza tam erişimin keyfini çıkarın!</string>
+
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">Kursunuzu yükseltirken bir şeyler ters gitmiş gibi görünüyor. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">Uygulamada kurs yükseltilirken hata oluştu</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">Yardım alın</string>
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">Yükseltmek istediğiniz kurs bulunamadı. Lütfen yükseltmenizi tekrar deneyin. Bu hata devam ederse, Destek ile iletişime geçin.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">Hesabınızın kimliği doğrulanamadı. Çıkış yapmayı ve uygulamada tekrar oturum açmayı deneyin. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">Yükseltmek istediğiniz kursun ödemesi zaten yapıldı. Ek yardım için Destek ile iletişime geçin.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">Ödemeniz şu anda işlenemedi. Lütfen tekrar deneyin. Ek yardım için Destek ile iletişime geçin.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">Kurs deneyiminizi güncellemeye çalıştığımızda bir şey oldu. Bu hata devam ederse, yardım için Destek ile iletişime geçin.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">İsteğiniz şu anda tamamlanamadı. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+
+    </resources>
