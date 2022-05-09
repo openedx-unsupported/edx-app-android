@@ -477,12 +477,6 @@ Du verlierst am {date} jeglichen Kurszugriff, einschliesslich Deines Fortschritt
   <string name="email_chooser_header">E-Mail senden via...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Kein E-Mail Client installiert</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Kurse suchen</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Programme suchen</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Nach Abschlüssen suchen</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Sie haben bereits ein Konto? Melden Sie sich hier an</string>

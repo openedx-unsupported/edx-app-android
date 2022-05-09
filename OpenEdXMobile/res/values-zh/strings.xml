@@ -473,12 +473,6 @@
   <string name="email_chooser_header">选择发邮件的应用...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">未安装任何邮箱客户端</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">搜索课程</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">查询专项</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">查询学位</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">已有账号？登录</string>

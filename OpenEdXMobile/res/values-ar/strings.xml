@@ -492,12 +492,6 @@
   <string name="email_chooser_header">أرسل بريداً إلكترونياً باستخدام:</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">لم يتم العثور على تطبيقات بريد إلكتروني لديك</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">البحث عن مساقات</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">البحث عن برامج</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">البحث عن درجات علمية</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">قمت بإنشاءِ حسابٍ مسبقاً؟ سجل الدخول</string>

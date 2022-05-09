@@ -472,12 +472,6 @@
   <string name="email_chooser_header">שלח דוא\"ל בעזרת...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">לא מותקנות תוכנות דואר אלקטרוני</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">חפש קורסים</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">חיפוש תכניות</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">חיפוש תארים</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">כבר יש לך חשבון? התחבר</string>

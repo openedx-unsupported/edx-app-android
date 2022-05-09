@@ -459,12 +459,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="email_chooser_header">Gửi e-mail bằng...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Không tìm thấy ứng dụng e-mail nào </string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Tìm khóa học</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Tìm chương trình</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Tìm bằng cấp</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Đã có tài khoản? Đăng nhập ngay</string>

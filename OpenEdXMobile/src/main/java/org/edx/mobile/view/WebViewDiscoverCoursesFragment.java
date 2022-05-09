@@ -58,21 +58,6 @@ public class WebViewDiscoverCoursesFragment extends WebViewDiscoverFragment {
                 getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    @Override
-    protected String getSearchUrl() {
-        return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl();
-    }
-
-    @Override
-    protected int getQueryHint() {
-        return R.string.search_for_courses;
-    }
-
-    @Override
-    protected boolean isSearchEnabled() {
-        return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isSearchEnabled();
-    }
-
     private void initSubjects() {
         panelBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.panel_filter_by_subject,
                 binding.flAddOnContainer, true);

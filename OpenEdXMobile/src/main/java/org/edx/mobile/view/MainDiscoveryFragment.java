@@ -46,8 +46,6 @@ public class MainDiscoveryFragment extends BaseFragment {
     @Nullable
     protected FragmentMainDiscoveryBinding binding;
 
-    private ToolbarCallbacks toolbarCallbacks;
-
     private SparseArray<Fragment> fragmentsArray = new SparseArray<>();
 
     @Override
@@ -72,25 +70,6 @@ public class MainDiscoveryFragment extends BaseFragment {
         if (getArguments() != null) {
             handleTabSelection(getArguments());
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        toolbarCallbacks = getActivity() instanceof ToolbarCallbacks ?
-                (ToolbarCallbacks) getActivity() : null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        onFragmentVisibilityChanged(true);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        onFragmentVisibilityChanged(false);
     }
 
     private void initFragments() {
@@ -273,46 +252,6 @@ public class MainDiscoveryFragment extends BaseFragment {
                 return R.id.option_degrees;
             default:
                 return -1;
-        }
-    }
-
-    public void onFragmentVisibilityChanged(final boolean isVisibleToUser) {
-        if (toolbarCallbacks != null && toolbarCallbacks.getSearchView() != null) {
-            // Sometimes when fragment visibility is changed by swiping left/right the viewpager,
-            // visibility of SearchView doesn't get changed accordingly, putting the code within
-            // runnable does the job in this case.
-            toolbarCallbacks.getSearchView().post(new Runnable() {
-                @Override
-                public void run() {
-                    // This check is added to fix a crash i-e- LEARNER-7137, it happens when the
-                    // fragment is no longer attached to its parent activity/fragment, so a simple
-                    // isAdded() check should resolve the issue. Ref: https://stackoverflow.com/a/44845661
-                    if (!isAdded()) {
-                        return;
-                    }
-                    final Fragment nativeCoursesFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_native");
-                    if ((nativeCoursesFragment != null && nativeCoursesFragment.isVisible()) || !isVisibleToUser) {
-                        toolbarCallbacks.getSearchView().setVisibility(View.GONE);
-                    } else {
-                        updateShownFragmentsVisibility();
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * This function lets the currently shown Fragment know that it has now become visible to
-     * the user by calling its {@link Fragment#setUserVisibleHint(boolean)} function.
-     */
-    private void updateShownFragmentsVisibility() {
-        for (int i = 0; i < fragmentsArray.size(); i++) {
-            final Fragment fragment = fragmentsArray.get(fragmentsArray.keyAt(i));
-            if (fragment != null && fragment.getUserVisibleHint()
-                    && fragment.isVisible()) {
-                fragment.setUserVisibleHint(true);
-                return;
-            }
         }
     }
 

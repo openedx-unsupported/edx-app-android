@@ -477,12 +477,6 @@
   <string name="email_chooser_header">E-postayı şununla gönder...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Hiçbir e-posta uygulaması yüklü değil</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Dersleri ara</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Programları ara</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Diplomaları ara</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Hesabın var mı? Giriş yap</string>

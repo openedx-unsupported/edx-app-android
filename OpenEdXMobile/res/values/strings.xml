@@ -521,12 +521,6 @@
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
     <string name="email_client_not_present">No e-mail clients installed</string>
-    <!-- Search for a course prompt -->
-    <string name="search_for_courses">Search for courses</string>
-    <!-- Search for a program prompt -->
-    <string name="search_for_programs">Search for programs</string>
-    <!-- Search for a degree prompt -->
-    <string name="search_for_degrees">Search for degrees</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->

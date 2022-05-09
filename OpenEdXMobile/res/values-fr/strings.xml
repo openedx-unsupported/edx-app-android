@@ -477,12 +477,6 @@
   <string name="email_chooser_header">Envoyer email avec...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Pas de client email installe</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Rechercher des cours</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Rechercher des programmes</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Rechercher des diplômes</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Vous avez déjà un compte ? Connectez-vous</string>
