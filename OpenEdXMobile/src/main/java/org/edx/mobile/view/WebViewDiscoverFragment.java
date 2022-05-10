@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentWebviewDiscoveryBinding;
-import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
@@ -26,12 +25,14 @@ import org.edx.mobile.util.links.DefaultActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
 /**
  * An abstract fragment providing basic functionality of searching the webpage via toolbar searchview.
  */
-public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
+@AndroidEntryPoint
+public class WebViewDiscoverFragment extends BaseWebViewFragment {
     private static final String INSTANCE_CURRENT_DISCOVER_URL = "current_discover_url";
 
     protected FragmentWebviewDiscoveryBinding binding;
@@ -130,17 +131,6 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         onNetworkConnectivityChangeEvent(event);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(@NonNull DiscoveryTabSelectedEvent event) {
-        // OfflineSupportBaseFragment.setUserVisibleHint(*) should be called automatically whenever
-        // the fragment visibility is changed to user but in the case of WebViewDiscoverCoursesFragment
-        // & WebViewDiscoverProgramsFragment setUserVisibleHint is not getting called on tab selection
-        // that's why we need to call it manually.
-        if (!isHidden()) {
-            setUserVisibleHint(getUserVisibleHint());
-        }
     }
 
     @Override
