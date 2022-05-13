@@ -60,7 +60,6 @@ public class Router {
     public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
     public static final String EXTRA_IS_VIDEOS_MODE = "videos_mode";
     public static final String EXTRA_IS_ON_COURSE_OUTLINE = "is_on_course_outline";
-    public static final String EXTRA_SUBJECT_FILTER = "subject_filter";
     public static final String EXTRA_PATH_ID = "path_id";
     public static final String EXTRA_SCREEN_NAME = "screen_name";
     public static final String EXTRA_SCREEN_SELECTED = "screen_selected";
@@ -469,10 +468,6 @@ public class Router {
     public void showPaymentsInfoActivity(@NonNull Context context, @NonNull EnrolledCoursesResponse courseDate,
                                          @NonNull CourseUpgradeResponse courseUpgrade) {
         context.startActivity(PaymentsInfoActivity.Companion.newIntent(context, courseDate, courseUpgrade));
-    }
-
-    public void showSubjectsActivityForResult(@NonNull Fragment fragment, int requestCode) {
-        fragment.startActivityForResult(ViewSubjectsActivity.newIntent(fragment.getActivity()), requestCode);
     }
 
     public void showProgramWebViewActivity(@NonNull Activity activity, final IEdxEnvironment environment,

@@ -6,13 +6,10 @@ import static org.edx.mobile.view.Router.EXTRA_SCREEN_NAME;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -39,8 +36,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainDashboardActivity extends OfflineSupportBaseActivity
-        implements ToolbarCallbacks {
+public class MainDashboardActivity extends OfflineSupportBaseActivity {
 
     @Inject
     NotificationDelegate notificationDelegate;
@@ -168,44 +164,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity
     }
 
     @Override
-    protected int getToolbarLayoutId() {
-        return R.layout.toolbar_with_search_view;
-    }
-
-    @Override
     public void setTitle(int titleId) {
         setTitle(getResources().getString(titleId));
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        final View toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            final TextView titleView = getTitleView();
-            if (titleView != null) {
-                titleView.setText(title);
-            }
-        }
-        super.setTitle(title);
-    }
-
-    @Override
-    @Nullable
-    public SearchView getSearchView() {
-        final View searchView = findViewById(R.id.toolbar_search_view);
-        if (searchView != null && searchView instanceof SearchView) {
-            return (SearchView) searchView;
-        }
-        return null;
-    }
-
-    @Override
-    @Nullable
-    public TextView getTitleView() {
-        final View titleView = findViewById(R.id.toolbar_title_view);
-        if (titleView != null && titleView instanceof TextView) {
-            return (TextView) titleView;
-        }
-        return null;
     }
 }

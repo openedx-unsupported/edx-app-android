@@ -26,13 +26,6 @@
   <string name="cannot_show_dashboard">Không thể hiển thị dashboard.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Không mở được trang web.</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Tìm theo Môn học</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Xem tất cả Môn học</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">Tìm Môn học</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Chia sẻ khóa học</string>
@@ -98,8 +91,6 @@
   <string name="label_find_courses">Tìm khóa học</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Khám phá</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">Bằng cấp</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Khám phá</string>
   <!--Button allowing users to send an email for feedback-->
@@ -459,12 +450,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="email_chooser_header">Gửi e-mail bằng...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Không tìm thấy ứng dụng e-mail nào </string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Tìm khóa học</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Tìm chương trình</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Tìm bằng cấp</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Đã có tài khoản? Đăng nhập ngay</string>

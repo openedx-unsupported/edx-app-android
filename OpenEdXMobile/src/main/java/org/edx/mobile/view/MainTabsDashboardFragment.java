@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
@@ -91,9 +90,8 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                 ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), R.drawable.ic_search,
-                    getArguments(),
-                    () -> EventBus.getDefault().post(new DiscoveryTabSelectedEvent())
-            ));
+                    getArguments(), () -> {
+            }));
         }
 
         return items;

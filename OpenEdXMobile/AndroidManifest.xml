@@ -181,11 +181,6 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.ViewSubjectsActivity"
-            android:label="@string/browse_by_subject"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
             android:label="@string/label_discover"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />

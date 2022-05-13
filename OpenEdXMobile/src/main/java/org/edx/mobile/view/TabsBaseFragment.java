@@ -112,7 +112,6 @@ public abstract class TabsBaseFragment extends BaseFragment {
         return (screenName.equals(Screen.PROGRAM) && item.getIconResId() == R.drawable.ic_collections_bookmark) ||
                 (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
                 (screenName.equals(Screen.PROGRAM_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
-                (screenName.equals(Screen.DEGREE_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
                 (screenName.equals(Screen.COURSE_VIDEOS) && item.getIconResId() == R.drawable.ic_videocam) ||
                 (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIconResId() == R.drawable.ic_forum) ||
                 (screenName.equals(Screen.DISCUSSION_POST) && item.getIconResId() == R.drawable.ic_forum) ||

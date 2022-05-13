@@ -177,10 +177,6 @@ public class Config {
         public boolean isSearchEnabled() {
             return null != webViewConfig && webViewConfig.isSearchEnabled();
         }
-
-        public boolean isSubjectFilterEnabled() {
-            return null != webViewConfig && webViewConfig.isSubjectFilterEnabled();
-        }
     }
 
     public static class ProgramDiscoveryConfig {
@@ -274,9 +270,6 @@ public class Config {
         @SerializedName("SEARCH_ENABLED")
         private boolean searchEnabled;
 
-        @SerializedName("SUBJECT_FILTER_ENABLED")
-        private boolean subjectFilterEnabled;
-
         public String getBaseUrl() {
             return baseUrl;
         }
@@ -287,10 +280,6 @@ public class Config {
 
         public boolean isSearchEnabled() {
             return searchEnabled;
-        }
-
-        public boolean isSubjectFilterEnabled() {
-            return subjectFilterEnabled;
         }
     }
 

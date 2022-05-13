@@ -24,10 +24,6 @@
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">ダッシュボードが表示できません。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <!--Button's Label for viewing all subjects-->
-  <!--Label for searching subjects-->
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">講座をシェア</string>

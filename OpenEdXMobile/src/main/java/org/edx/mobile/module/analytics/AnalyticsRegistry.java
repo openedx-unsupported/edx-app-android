@@ -413,13 +413,6 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackSubjectClicked(@NonNull String subjectId) {
-        for (Analytics service : services) {
-            service.trackSubjectClicked(subjectId);
-        }
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         for (Analytics service : services) {
             service.trackExperimentParams(experimentName, values);

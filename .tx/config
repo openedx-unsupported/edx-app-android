@@ -53,9 +53,3 @@ file_filter = OpenEdXMobile/res/raw-<lang>/profiles.json
 source_file = OpenEdXMobile/res/raw/profiles.json
 source_lang = en
 type = KEYVALUEJSON
-
-[edx-mobile-apps.app-localizable-subjects]
-file_filter = OpenEdXMobile/res/raw-<lang>/subjects.json
-source_file = OpenEdXMobile/res/raw/subjects.json
-source_lang = en
-type = KEYVALUEJSON

@@ -590,14 +590,6 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackSubjectClicked(@NonNull String subjectId) {
-        final FirebaseEvent event = new FirebaseEvent(Events.SUBJECT_DISCOVERY, Values.SUBJECT_CLICKED);
-        event.putString(Keys.SUBJECT_ID, subjectId);
-        event.putString(Keys.CATEGORY, Values.DISCOVERY);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final FirebaseEvent event = new FirebaseEvent(experimentName);
         event.putMap(values);

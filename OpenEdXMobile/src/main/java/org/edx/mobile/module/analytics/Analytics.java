@@ -398,13 +398,6 @@ public interface Analytics {
     void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos);
 
     /**
-     * Tracks the pressing of a subject item.
-     *
-     * @param subjectId ID of the subject.
-     */
-    void trackSubjectClicked(@NonNull String subjectId);
-
-    /**
      * Track the parameters relevant to the experiment of Firebase Remote Configs.
      * Ref: https://openedx.atlassian.net/browse/LEARNER-7394
      *
@@ -695,8 +688,6 @@ public interface Analytics {
         // Bulk download feature keys
         String TOTAL_DOWNLOADABLE_VIDEOS = "total_downloadable_videos";
         String REMAINING_DOWNLOADABLE_VIDEOS = "remaining_downloadable_videos";
-        // Subjects
-        String SUBJECT_ID = "subject_id";
         // Firebase Remote Configs keys for A/A test
         // Ref: https://openedx.atlassian.net/browse/LEARNER-7394
         String EXPERIMENT = "experiment";
@@ -815,10 +806,7 @@ public interface Analytics {
         // Discovery Courses Search
         String DISCOVERY_COURSES_SEARCH_LANDING = "landing_screen";
         String DISCOVERY_COURSES_SEARCH_TAB = "discovery_tab";
-        // Subjects
-        String SUBJECT_CLICKED = "edx.bi.app.discover.subject.clicked";
         String DISCOVERY = "discovery";
-        String VIEW_ALL_SUBJECTS = "View All Subjects";
         // Settings event values
         String DOWNLOAD_TO_SD_CARD_SWITCH_ON = "edx.bi.app.settings.sdcard.toggle.on";
         String DOWNLOAD_TO_SD_CARD_SWITCH_OFF = "edx.bi.app.settings.sdcard.toggle.off";
@@ -923,7 +911,6 @@ public interface Analytics {
         String DOWNLOADS = "Downloads";
         String FIND_COURSES = "Find Courses";
         String FIND_PROGRAMS = "Find Programs";
-        String FIND_DEGREES = "Find Degrees";
         String MY_COURSES = "My Courses";
         String MY_PROGRAM = "My Programs";
         String PROFILE = "Profile";
@@ -945,7 +932,6 @@ public interface Analytics {
         String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
         String WHATS_NEW = "WhatsNew: Whats New";
         String VIDEOS_COURSE_VIDEOS = "Videos: Course Videos";
-        String ALL_SUBJECTS = "Discover: All Subjects";
         String PAYMENTS_INFO_SCREEN = "Payments info";
         String COURSE_UNIT_LOCKED = "Course unit locked";
         String PLACE_ORDER_COURSE_UPGRADE = "Place order: course upgrade";
@@ -1011,7 +997,6 @@ public interface Analytics {
         // Bulk download events
         String BULK_DOWNLOAD_TOGGLE_ON = "Bulk Download Toggle On";
         String BULK_DOWNLOAD_TOGGLE_OFF = "Bulk Download Toggle Off";
-        String SUBJECT_DISCOVERY = "Subject Discovery";
         // Settings events
         String DOWNLOAD_TO_SD_CARD_ON = "Download to sd-card On";
         String DOWNLOAD_TO_SD_CARD_OFF = "Download to sd-card Off";
