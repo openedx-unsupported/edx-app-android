@@ -8,6 +8,11 @@ file_filter = OpenEdXMobile/res/values-<lang>/strings.xml
 source_file = OpenEdXMobile/res/values/strings.xml
 source_lang = en
 
+[edx-mobile-apps.android-app-strings-v2]
+file_filter = OpenEdXMobile/res/values-<lang>/strings_v2.xml
+source_file = OpenEdXMobile/res/values/strings_v2.xml
+source_lang = en
+
 [edx-mobile-apps.android-app-errors]
 file_filter = OpenEdXMobile/res/values-<lang>/errors.xml
 source_file = OpenEdXMobile/res/values/errors.xml
