@@ -27,13 +27,6 @@
   <string name="cannot_show_dashboard">Panel gösterilemiyor.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Web sayfası gösterilemiyor.</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Konulara göre Tara</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Tüm Konulara Göz At</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">Konu Ara</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Dersinizi paylaşın</string>
@@ -99,8 +92,6 @@
   <string name="label_find_courses">Dersleri Bul</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Keşfet</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">Diplomalar</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Keşfet</string>
   <!--Button allowing users to send an email for feedback-->
@@ -477,12 +468,6 @@
   <string name="email_chooser_header">E-postayı şununla gönder...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Hiçbir e-posta uygulaması yüklü değil</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Dersleri ara</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Programları ara</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Diplomaları ara</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Hesabın var mı? Giriş yap</string>

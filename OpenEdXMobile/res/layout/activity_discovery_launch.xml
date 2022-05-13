@@ -63,7 +63,7 @@
                 android:textSize="@dimen/edx_base" />
         </LinearLayout>
 
-        <Space
+        <android.widget.Space
             android:id="@+id/space"
             android:layout_width="0dp"
             android:layout_height="0dp"

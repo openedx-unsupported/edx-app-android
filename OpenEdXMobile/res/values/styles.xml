@@ -381,11 +381,6 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
-    <style name="edX.Widget.PrimaryRoundPillButton" parent="edX.Widget.ActionBrandPillButton">
-        <item name="android:background">@drawable/edx_primary_button_rounded_corners</item>
-    </style>
-
-
     <style name="edX.Widget.PrimaryActionButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

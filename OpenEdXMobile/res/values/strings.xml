@@ -35,15 +35,6 @@
     <!-- Error message shown when browser cannot handle request for given web url -->
     <string name="cannot_open_url">Unable to open web page.</string>
 
-    <!-- Subjects Discovery -->
-
-    <!-- Label for browsing courses by a subject -->
-    <string name="browse_by_subject">Browse by Subject</string>
-    <!-- Button's Label for viewing all subjects -->
-    <string name="view_all_subjects">View All Subjects</string>
-    <!-- Label for searching subjects -->
-    <string name="search_subjects">Search Subject</string>
-
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->
@@ -116,8 +107,6 @@
     <string name="label_find_courses">Find Courses</string>
     <!-- Title of webview based Find Courses Screen -->
     <string name="label_discover">Discover</string>
-    <!-- Title of Degrees tab on Discovery screen -->
-    <string name="label_degrees">Degrees</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
     <string name="label_discovery">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
@@ -521,12 +510,6 @@
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
     <string name="email_client_not_present">No e-mail clients installed</string>
-    <!-- Search for a course prompt -->
-    <string name="search_for_courses">Search for courses</string>
-    <!-- Search for a program prompt -->
-    <string name="search_for_programs">Search for programs</string>
-    <!-- Search for a degree prompt -->
-    <string name="search_for_degrees">Search for degrees</string>
 
     <!-- Landing Activity text -->
     <!-- Prompt leading user to sign in screen -->

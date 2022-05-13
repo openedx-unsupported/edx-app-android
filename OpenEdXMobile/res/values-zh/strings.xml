@@ -27,13 +27,6 @@
   <string name="cannot_show_dashboard">无法显示仪表板。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">无法打开网页</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">按科目浏览</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">查看所有科目</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">搜索科目</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">分享课程</string>
@@ -99,8 +92,6 @@
   <string name="label_find_courses">发现课程</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">探索</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">学位</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">发现课程</string>
   <!--Button allowing users to send an email for feedback-->
@@ -473,12 +464,6 @@
   <string name="email_chooser_header">选择发邮件的应用...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">未安装任何邮箱客户端</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">搜索课程</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">查询专项</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">查询学位</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">已有账号？登录</string>

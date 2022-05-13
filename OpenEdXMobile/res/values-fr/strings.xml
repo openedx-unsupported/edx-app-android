@@ -27,13 +27,6 @@
   <string name="cannot_show_dashboard">Tableau de bord indisponible.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Impossible d\'ouvrir la page web.</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Parcourir par sujet</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Voir tous les sujets</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">Rechercher des sujets</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Partagez votre cours</string>
@@ -99,8 +92,6 @@
   <string name="label_find_courses">Trouver des cours</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Découvrir</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">Diplômes</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Découverte</string>
   <!--Button allowing users to send an email for feedback-->
@@ -477,12 +468,6 @@
   <string name="email_chooser_header">Envoyer email avec...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Pas de client email installe</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Rechercher des cours</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Rechercher des programmes</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Rechercher des diplômes</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Vous avez déjà un compte ? Connectez-vous</string>

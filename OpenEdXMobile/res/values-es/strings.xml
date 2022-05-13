@@ -27,13 +27,6 @@
   <string name="cannot_show_dashboard">No es posible mostrar el panel de control.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">No se puede abrir la página web.</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Buscar por Asignatura</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Ver todas las Asignaturas</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">Buscar Asignatura</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartir este curso</string>
@@ -99,8 +92,6 @@
   <string name="label_find_courses">Encontrar cursos</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Exploración</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">Títulos</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->
@@ -477,12 +468,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="email_chooser_header">Enviar email usando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">No hay apps de correo instaladas</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Buscar cursos</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Buscar programas</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Buscar títulos</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>

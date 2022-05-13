@@ -27,13 +27,6 @@
   <string name="cannot_show_dashboard">Não é possível exibir o painel.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Não foi capaz de abrir a página.</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Navegue por Assunto</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Visualizar Todos os Assuntos</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">Procurar por Assunto</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Compartilhe seu curso</string>
@@ -99,8 +92,6 @@
   <string name="label_find_courses">Encontre cursos</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Descubra</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">Níveis</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Descubra</string>
   <!--Button allowing users to send an email for feedback-->
@@ -477,12 +468,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="email_chooser_header">Enviar e-mail utilizando...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Não há clientes de e-mail instalados</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Procurar por cursos</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Pesquisar por cursos</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Pesquisar por níveis</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Já possui uma conta? Entrar</string>

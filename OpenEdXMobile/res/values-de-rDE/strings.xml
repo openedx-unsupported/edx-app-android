@@ -27,13 +27,6 @@
   <string name="cannot_show_dashboard">Es ist ein Fehler aufgetreten, daher können Sie derzeit nicht auf Ihre Kursübersicht zugreifen.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Die Webseite kann nicht geöffnet werden.</string>
-  <!--Subjects Discovery-->
-  <!--Label for browsing courses by a subject-->
-  <string name="browse_by_subject">Themen erkunden</string>
-  <!--Button's Label for viewing all subjects-->
-  <string name="view_all_subjects">Alle Themen sehen</string>
-  <!--Label for searching subjects-->
-  <string name="search_subjects">Thema suchen</string>
   <!--Course Sharing-->
   <!--Description of button that will open the share course menu-->
   <string name="share_course_button">Meine Kurse teilen</string>
@@ -99,8 +92,6 @@
   <string name="label_find_courses">Finde Kurse</string>
   <!--Title of webview based Find Courses Screen-->
   <string name="label_discover">Erkunden</string>
-  <!--Title of Degrees tab on Discovery screen-->
-  <string name="label_degrees">Abschlüsse</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Suche</string>
   <!--Button allowing users to send an email for feedback-->
@@ -477,12 +468,6 @@ Du verlierst am {date} jeglichen Kurszugriff, einschliesslich Deines Fortschritt
   <string name="email_chooser_header">E-Mail senden via...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">Kein E-Mail Client installiert</string>
-  <!--Search for a course prompt-->
-  <string name="search_for_courses">Kurse suchen</string>
-  <!--Search for a program prompt-->
-  <string name="search_for_programs">Programme suchen</string>
-  <!--Search for a degree prompt-->
-  <string name="search_for_degrees">Nach Abschlüssen suchen</string>
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">Sie haben bereits ein Konto? Melden Sie sich hier an</string>
