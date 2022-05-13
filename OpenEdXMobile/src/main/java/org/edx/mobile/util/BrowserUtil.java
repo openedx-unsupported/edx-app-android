@@ -12,6 +12,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -22,6 +23,32 @@ public class BrowserUtil {
 
     private BrowserUtil() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Method to show an alert dialog to warn the user about opening the URL in an external browser
+     *
+     * @param activity      The reference of the activity displaying the dialog.
+     * @param platformName  User facing name of the platform.
+     * @param url           The URL to load.
+     * @param canTrackEvent Flag to track analytics event.
+     */
+    public static void showOpenInBrowserDialog(final FragmentActivity activity, final String platformName,
+                                               final String url, final boolean canTrackEvent) {
+        if (TextUtils.isEmpty(url) || activity == null) {
+            logger.warn("cannot open URL in browser, either URL or activity parameter is NULL");
+            return;
+        }
+        String title = activity.getString(R.string.label_leaving_the_app);
+        String msg = ResourceUtil.getFormattedString(activity.getResources(),
+                R.string.leaving_the_app_message, AppConstants.PLATFORM_NAME, platformName)
+                .toString();
+        String positiveBtn = activity.getString(R.string.label_continue);
+        String negativeBtn = activity.getString(R.string.label_cancel);
+        AlertDialogFragment.newInstance(title, msg,
+                positiveBtn, (dialog, which) -> open(activity, url, canTrackEvent),
+                negativeBtn, null)
+                .show(activity.getSupportFragmentManager(), "");
     }
 
     /**
