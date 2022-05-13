@@ -6,5 +6,4 @@
     <string name="title_purchase">購入内容を復元</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Playストアにサインインして、過去に有料でアップグレードしたコースへのアクセスを復元します</string>
-
-    </resources>
+</resources>

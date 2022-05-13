@@ -6,5 +6,4 @@
     <string name="title_purchase">Restaurar compras</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Inicia sesión en la Play Store para restablecer el acceso a los cursos por los que has pagado previamente </string>
-
-    </resources>
+</resources>

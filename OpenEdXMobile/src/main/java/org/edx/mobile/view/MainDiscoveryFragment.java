@@ -44,7 +44,7 @@ public class MainDiscoveryFragment extends BaseFragment {
         initFragments();
         EventBus.getDefault().register(this);
         if (getArguments() != null) {
-            handleTabSelection(getArguments());
+            handleDeepLink(getArguments());
         }
     }
 
@@ -76,10 +76,10 @@ public class MainDiscoveryFragment extends BaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ScreenArgumentsEvent event) {
-        handleTabSelection(event.getBundle());
+        handleDeepLink(event.getBundle());
     }
 
-    private void handleTabSelection(@NonNull Bundle bundle) {
+    private void handleDeepLink(@NonNull Bundle bundle) {
         @ScreenDef final String screenName = bundle.getString(Router.EXTRA_SCREEN_NAME);
         if (screenName == null) {
             return;

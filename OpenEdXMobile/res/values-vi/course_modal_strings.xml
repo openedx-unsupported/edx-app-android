@@ -8,6 +8,8 @@
     <string name="course_modal_earn_certificate">Giành chứng nhận hoàn thành được xác minh để thể hiện trên lý lịch của bạn</string>
     <string name="course_modal_unlock_access">Mở khóa quyền truy cập tất cả các hoạt động khóa học, bao gồm bài tập chấm điểm</string>
     <string name="course_modal_full_access_course">Quyền truy cập toàn bộ nội dung khóa học và tài liệu khóa học ngay cả sau khi kết thúc khóa học</string>
+    <!-- Label Course Upgrade button  -->
+    <string name="label_upgrade_course_button">Nâng cấp ngay với giá {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Tìm hiểu thêm về các tính năng bị khóa</string>
     <!-- Label Course Modal Graded Assignments Locked -->

@@ -6,8 +6,4 @@
     <string name="title_purchase">Restaurar compras</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Entre na Play Store para restaurar o acesso aos cursos que você já pagou para atualizar</string>
-
-    <!-- Message for successful course purchase -->
-    <string name="purchase_success_message">Agradecemos sua compra conosco. Aproveite seu acesso completo ao nosso curso </string>
-
-    </resources>
+</resources>
