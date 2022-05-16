@@ -70,8 +70,7 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     }
 
     public void setHasUpgradeOption(@NonNull CourseEntry courseData, String mode, View.OnClickListener onValuePropClick) {
-        if (!courseData.isEnded() && courseData.getDynamicUpgradeDeadline() != null &&
-                mode.equalsIgnoreCase(EnrollmentMode.AUDIT.toString())) {
+        if (!courseData.isEnded() && mode.equalsIgnoreCase(EnrollmentMode.AUDIT.toString())) {
             propContainer.setVisibility(View.VISIBLE);
             propContainer.setOnClickListener(onValuePropClick);
         } else {
