@@ -10,8 +10,11 @@ import org.edx.mobile.logger.Logger;
 
 import java.io.File;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 // adb shell am broadcast -a com.example.pkg.END_EMMA
 @SuppressLint("SdCardPath")
+@AndroidEntryPoint
 public class EndEmmaBroadcast extends BroadcastReceiver {
     protected final Logger logger = new Logger(getClass().getName());
 

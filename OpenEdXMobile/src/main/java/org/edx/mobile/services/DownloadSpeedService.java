@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -33,6 +34,7 @@ import okhttp3.Response;
 /**
  * Created by marcashman on 2014-12-01.
  */
+@AndroidEntryPoint
 public class DownloadSpeedService extends Service {
 
     private static final String TAG = DownloadSpeedService.class.getCanonicalName();

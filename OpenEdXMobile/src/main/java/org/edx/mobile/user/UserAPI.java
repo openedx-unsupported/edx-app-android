@@ -33,8 +33,12 @@ import retrofit2.Call;
 @InstallIn(SingletonComponent.class)
 public class UserAPI {
 
-    @Inject
     UserService userService;
+
+    @Inject
+    public UserAPI(@NonNull UserService userService) {
+        this.userService = userService;
+    }
 
     @Module
     @InstallIn(SingletonComponent.class)
