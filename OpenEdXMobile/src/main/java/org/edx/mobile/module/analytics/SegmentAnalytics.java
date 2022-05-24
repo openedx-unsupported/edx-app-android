@@ -44,6 +44,8 @@ public class SegmentAnalytics implements Analytics {
 
     @Inject
     public SegmentAnalytics(@ApplicationContext @NonNull Context context, @NonNull Config config) {
+        if (!config.getSegmentConfig().isEnabled()) return;
+
         final String writeKey = config.getSegmentConfig().getSegmentWriteKey();
         final boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
         final int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
