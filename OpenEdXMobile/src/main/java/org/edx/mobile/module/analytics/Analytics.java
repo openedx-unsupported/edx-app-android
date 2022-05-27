@@ -459,22 +459,18 @@ public interface Analytics {
     /**
      * Track the Value Prop Modal appearance
      *
-     * @param courseId     course id of the course through which the modal is appeared
-     * @param assignmentId Assignment id of course unit
-     * @param screenName   The screen name through which Modal will appear
+     * @param courseId   course id of the course through which the modal is appeared
+     * @param screenName The screen name through which Modal will appear
      */
-    void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId,
-                                 @NonNull String screenName);
+    void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName);
 
     /**
      * Track the Value Prop Learn more button tapped
      *
-     * @param courseId     course id of the course on which button is tapped
-     * @param assignmentId Assignment id of course unit
-     * @param screenName   The screen name on which button will be tapped
+     * @param courseId   course id of the course on which button is tapped
+     * @param screenName The screen name on which button will be tapped
      */
-    void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId,
-                                       @NonNull String screenName);
+    void trackValuePropLearnMoreTapped(@NonNull String courseId, @NonNull String screenName);
 
     /**
      * Track the tapped occurrence on locked content
@@ -483,17 +479,6 @@ public interface Analytics {
      * @param assignmentId Assignment id of course unit
      */
     void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId);
-
-    /**
-     * Track the tapped occurrence when a user taps "Upgrade Now" in an embedded or modal value prop.
-     *
-     * @param courseId    course id of the course on which button is tapped
-     * @param price       Price for which the course can upgrade
-     * @param componentId Component id of course unit
-     * @param isSelfPaced Whether the course is self-paced or instructor paced
-     */
-    void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
-                                @Nullable String componentId, boolean isSelfPaced);
 
     /**
      * Track the tapped occurrence when a user taps "Show more/Show less" in an embedded value prop.
@@ -614,6 +599,26 @@ public interface Analytics {
      */
     void trackEvent(@NonNull String eventName, @NonNull String biValue);
 
+    /**
+     * Track the In App Purchases events
+     *
+     * @param eventName   Name of the event
+     * @param biValue     BiValue of the event
+     * @param courseId    Id of the course
+     * @param isSelfPaced Whether the course is self-paced or instructor paced
+     * @param price       price of the course to buy
+     * @param componentId Component id of course unit
+     * @param elapsedTime time in milliseconds that app took to perform the action(price load, refresh course content)
+     * @param error       error that app sending in get help email
+     * @param errorAction action taken on the error dialog
+     * @param screenName  Screen name on which event is triggered
+     */
+    void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
+                                  @NonNull String courseId, boolean isSelfPaced, @Nullable String price,
+                                  @Nullable String componentId, long elapsedTime, @Nullable String error,
+                                  @Nullable String errorAction, @NonNull String screenName);
+
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -707,6 +712,8 @@ public interface Analytics {
         String VALUE = "value";
         String OLD_VALUE = "old_value";
         String ELAPSED_TIME = "elapsed_time";
+        String ERROR = "error";
+        String ERROR_ACTION = "error_action";
     }
 
     interface Values {
@@ -748,7 +755,6 @@ public interface Analytics {
         String USER_COURSE_UPGRADE_SUCCESS = "edx.bi.app.course.upgrade.success";
         String VALUE_PROP_LEARN_MORE_CLICKED = "edx.bi.app.value.prop.learn.more.clicked";
         String LOCKED_CONTENT_CLICKED = "edx.bi.app.course.unit.locked.content.clicked";
-        String COURSE_UPGRADE_NOW_CLICKED = "edx.bi.app.upgrade.button.clicked";
         String VALUE_PROP_SHOW_MORE_CLICKED = "edx.bi.app.value_prop.show_more.clicked";
         String VALUE_PROP_SHOW_LESS_CLICKED = "edx.bi.app.value_prop.show_less.clicked";
         String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
@@ -879,7 +885,22 @@ public interface Analytics {
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "edx.bi.app.user.register.opt_in.on";
         String REGISTRATION_OPT_IN_TURNED_OFF = "edx.bi.app.user.register.opt_in.off";
-
+        // In App Purchases Events
+        String IN_APP_PURCHASES = "in_app_purchases";
+        String ACTION_RELOAD_PRICE = "reload_price";
+        String ACTION_REFRESH = "refresh";
+        String ACTION_GET_HELP = "get_help";
+        String ACTION_CLOSE = "close";
+        String IAP_UPGRADE_NOW_CLICKED = "edx.bi.app.payments.upgrade_now.clicked";
+        String IAP_COURSE_UPGRADE_SUCCESS = "edx.bi.app.payments.course_upgrade_success";
+        String IAP_UNLOCK_UPGRADED_CONTENT_TIME = "edx.bi.app.payments.time_to_unlock_upgraded_content";
+        String IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME = "edx.bi.app.payments.time_to_unlock_content_after_refresh";
+        String IAP_PAYMENT_TIME = "edx.bi.app.payments.payment_time";
+        String IAP_LOAD_PRICE_TIME = "edx.bi.app.payments.time_to_load_price";
+        String IAP_PAYMENT_ERROR = "edx.bi.app.payments.payment_error";
+        String IAP_COURSE_UPGRADE_ERROR = "edx.bi.app.payments.course_upgrade_error";
+        String IAP_PRICE_LOAD_ERROR = "edx.bi.app.payments.price_load_error";
+        String IAP_ERROR_ALERT_ACTION = "edx.bi.app.payments.error_alert_action";
     }
 
     interface Screens {
@@ -890,6 +911,7 @@ public interface Analytics {
         String LOGIN = "Login";
         String COURSE_ENROLLMENT = "course_enrollment";
         String COURSE_UNIT = "course_unit";
+        String COURSE_COMPONENT = "course_component";
         String COURSE_DASHBOARD = "Course Dashboard";
         String COURSE_OUTLINE = "Course Outline";
         String COURSE_HANDOUTS = "Course Handouts";
@@ -1006,11 +1028,20 @@ public interface Analytics {
         String PLS_SHIFT_DATES = "PLS Shift Dates";
         String DATES_COURSE_COMPONENT_TAPPED = "Dates: Course Component Tapped";
         String DATES_UNSUPPORTED_COMPONENT_TAPPED = "Dates: Unsupported Component Tapped";
-        // Value Prop
+        // In App Purchases Events
+        String IAP_UPGRADE_NOW_CLICKED = "Payments: Upgrade Now Clicked";
+        String IAP_COURSE_UPGRADE_SUCCESS = "Payments: Course Upgrade Success";
+        String IAP_UNLOCK_UPGRADED_CONTENT_TIME = "Payments: Time to Unlock Upgraded Content";
+        String IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME = "Payments: Time to Unlock Upgraded Content After Refresh";
+        String IAP_PAYMENT_TIME = "Payments: Payment Time";
+        String IAP_LOAD_PRICE_TIME = "Payments: Time to Load Price";
+        String IAP_PAYMENT_ERROR = "Payments: Payment Error";
+        String IAP_COURSE_UPGRADE_ERROR = "Payments: Course Upgrade Error";
+        String IAP_PRICE_LOAD_ERROR = "Payments: Price Load Error";
+        String IAP_ERROR_ALERT_ACTION = "Payments: Error Alert Action";
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
         String COURSE_UNIT_LOCKED_CONTENT = "Value Prop Locked Content Clicked";
-        String COURSE_UPGRADE_NOW_CLICKED = "Upgrade Now Clicked";
         String VALUE_PROP_SHOW_MORE_CLICKED = "Value Prop Show More Clicked";
         String VALUE_PROP_SHOW_LESS_CLICKED = "Value Prop Show Less Clicked";
         // Course Celebration Modal

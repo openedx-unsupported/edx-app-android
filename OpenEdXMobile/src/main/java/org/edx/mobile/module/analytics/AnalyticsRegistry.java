@@ -11,16 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
+import javax.inject.Singleton;
 
 /**
  * A registry for enabled Analytics implementations, that delegates all methods to them.
  */
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class AnalyticsRegistry implements Analytics {
 
     @Inject
@@ -463,16 +459,16 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+    public void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName) {
         for (Analytics service : services) {
-            service.trackValuePropModalView(courseId, assignmentId, screenName);
+            service.trackValuePropModalView(courseId, screenName);
         }
     }
 
     @Override
-    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @NonNull String screenName) {
         for (Analytics service : services) {
-            service.trackValuePropLearnMoreTapped(courseId, assignmentId, screenName);
+            service.trackValuePropLearnMoreTapped(courseId, screenName);
         }
     }
 
@@ -480,14 +476,6 @@ public class AnalyticsRegistry implements Analytics {
     public void trackLockedContentTapped(@NonNull String courseId, @NonNull String assignmentId) {
         for (Analytics service : services) {
             service.trackLockedContentTapped(courseId, assignmentId);
-        }
-    }
-
-    @Override
-    public void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
-                                       @Nullable String componentId, boolean isSelfPaced) {
-        for (Analytics service : services) {
-            service.trackUpgradeNowClicked(courseId, price, componentId, isSelfPaced);
         }
     }
 
@@ -586,6 +574,18 @@ public class AnalyticsRegistry implements Analytics {
     public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
         for (Analytics service : services) {
             service.trackEvent(eventName, biValue);
+        }
+    }
+
+    @Override
+    public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
+                                         @NonNull String courseId, boolean isSelfPaced,
+                                         @Nullable String price, @Nullable String componentId,
+                                         long elapsedTime, @Nullable String error,
+                                         @Nullable String errorAction, @NonNull String screenName) {
+        for (Analytics service : services) {
+            service.trackInAppPurchasesEvent(eventName, biValue, courseId, isSelfPaced, price,
+                    componentId, elapsedTime, error, errorAction, screenName);
         }
     }
 }

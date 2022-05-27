@@ -72,7 +72,6 @@ public class Router {
     public static final String EXTRA_DEEP_LINK = "deep_link";
     public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
     public static final String EXTRA_IS_SELF_PACED = "is_self_paced";
-    public static final String EXTRA_PRICE = "course_price";
 
     @Inject
     Config config;
@@ -512,8 +511,6 @@ public class Router {
     public void showFeedbackScreen(
             @NonNull FragmentActivity activity,
             @NonNull String subject,
-            @Nullable Integer errorCode,
-            @Nullable Integer errorEndpoint,
             @Nullable String errorMessage) {
         final String NEW_LINE = "\n";
         final String to = config.getFeedbackEmailAddress();
@@ -524,7 +521,8 @@ public class Router {
                 .append(NEW_LINE)
                 .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
                 .append(NEW_LINE)
-                .append(TextUtils.getFormattedErrorMessage(activity, errorCode, errorEndpoint, errorMessage))
+                .append(String.format("%s: %s", activity.getString(R.string.label_error), errorMessage))
+                .append(NEW_LINE)
                 .append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
         EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
