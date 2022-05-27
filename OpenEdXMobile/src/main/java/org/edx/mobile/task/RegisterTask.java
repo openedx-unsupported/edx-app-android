@@ -5,25 +5,25 @@ import android.os.Bundle;
 
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.social.SocialFactory;
 
-import javax.inject.Inject;
-
+import dagger.hilt.android.EntryPointAccessors;
 
 public abstract class RegisterTask extends Task<AuthResponse> {
 
     private Bundle parameters;
     private SocialFactory.SOCIAL_SOURCE_TYPE backstoreType;
     private String accessToken;
-
-    @Inject
-    LoginAPI loginAPI;
+    private LoginAPI loginAPI;
 
     public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE backstoreType) {
         super(context);
         this.parameters = parameters;
         this.accessToken = accessToken;
         this.backstoreType = backstoreType;
+        loginAPI = EntryPointAccessors.fromApplication(
+                context, EdxDefaultModule.ProviderEntryPoint.class).getLoginAPI();
     }
 
     @Override

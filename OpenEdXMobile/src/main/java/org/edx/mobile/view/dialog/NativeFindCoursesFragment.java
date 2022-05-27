@@ -24,8 +24,10 @@ import org.edx.mobile.view.common.TaskMessageCallback;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class NativeFindCoursesFragment extends BaseFragment {
 
     @Inject
