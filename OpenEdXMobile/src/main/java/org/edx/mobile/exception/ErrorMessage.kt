@@ -22,5 +22,6 @@ data class ErrorMessage(
         const val EXECUTE_ORDER_CODE = 0x203
         const val PAYMENT_SDK_CODE = 0x204
         const val COURSE_REFRESH_CODE = 0x205
+        const val PRICE_CODE = 0x206
     }
 }

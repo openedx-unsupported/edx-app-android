@@ -34,6 +34,7 @@ import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.module.db.DataCallback
 import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.ConfigUtil.Companion.isCourseDiscoveryEnabled
@@ -69,6 +70,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private val iapViewModel: InAppPurchasesViewModel
             by viewModels(ownerProducer = { requireActivity() })
 
+    @Inject
+    lateinit var iapAnalytics: InAppPurchasesAnalytics
+
     private lateinit var errorNotification: FullScreenErrorNotification
     private lateinit var enrolledCoursesCall: Call<List<EnrolledCoursesResponse>>
     private var fullscreenLoader: FullscreenLoaderDialogFragment? = null
@@ -91,7 +95,6 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             override fun onValuePropClicked(
                 courseId: String,
                 courseName: String,
-                price: String,
                 isSelfPaced: Boolean
             ) {
                 //This time is checked to avoid taps in quick succession
@@ -99,11 +102,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
                     lastClickTime = currentTime
                     CourseModalDialogFragment.newInstance(
-                        environment.config.platformName,
                         Analytics.Screens.COURSE_ENROLLMENT,
                         courseId,
                         courseName,
-                        price,
                         isSelfPaced
                     ).show(childFragmentManager, CourseModalDialogFragment.TAG)
                 }
@@ -186,6 +187,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             NonNullObserver { isPurchaseCompleted ->
                 if (isPurchaseCompleted) {
                     fullscreenLoader?.dismiss()
+                    iapAnalytics.trackIAPEvent(Analytics.Events.IAP_COURSE_UPGRADE_SUCCESS)
+                    iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_TIME)
+                    iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME)
                     SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
                     iapViewModel.resetPurchase(false)
                 }
@@ -356,7 +360,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private fun resetPurchase() {
         if (refreshOnPurchase && fullscreenLoader?.isAdded == true) {
             Timer("", false).schedule(
-                FullscreenLoaderDialogFragment.FULLSCREEN_DISPLAY_DELAY
+                fullscreenLoader?.getRemainingVisibleTime()
+                    ?: FullscreenLoaderDialogFragment.MINIMUM_DISPLAY_DELAY
             ) {
                 refreshOnPurchase = false
                 iapViewModel.resetPurchase(true)

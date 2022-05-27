@@ -21,10 +21,10 @@ import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.ProductManager
-import org.edx.mobile.util.AppConstants
-import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.NonNullObserver
-import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.module.analytics.Analytics.Events
+import org.edx.mobile.module.analytics.Analytics.Values
+import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
+import org.edx.mobile.util.*
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import javax.inject.Inject
 
@@ -34,7 +34,6 @@ class CourseModalDialogFragment : DialogFragment() {
     private lateinit var binding: DialogUpgradeFeaturesBinding
     private var screenName: String = ""
     private var courseId: String = ""
-    private var price: String = ""
     private var isSelfPaced: Boolean = false
 
     private var billingProcessor: BillingProcessor? = null
@@ -44,6 +43,9 @@ class CourseModalDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var environment: IEdxEnvironment
+
+    @Inject
+    lateinit var iapAnalytics: InAppPurchasesAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,14 +80,14 @@ class CourseModalDialogFragment : DialogFragment() {
         arguments?.let { bundle ->
             screenName = bundle.getString(KEY_SCREEN_NAME, "")
             courseId = bundle.getString(KEY_COURSE_ID, "")
-            price = bundle.getString(KEY_COURSE_PRICE, "")
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
-            environment.analyticsRegistry.trackValuePropLearnMoreTapped(
-                courseId, null, screenName
+            iapAnalytics.initCourseValues(
+                courseId = courseId,
+                isSelfPaced = isSelfPaced,
+                screenName = screenName
             )
-            environment.analyticsRegistry.trackValuePropModalView(
-                courseId, null, screenName
-            )
+            environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, screenName)
+            environment.analyticsRegistry.trackValuePropModalView(courseId, screenName)
         }
 
         binding.dialogTitle.text = ResourceUtil.getFormattedString(
@@ -104,15 +106,10 @@ class CourseModalDialogFragment : DialogFragment() {
         initObserver()
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
             ProductManager.getProductByCourseId(courseId)?.let {
                 iapViewModel.addProductToBasket(it)
             } ?: showUpgradeErrorDialog()
-            environment.analyticsRegistry.trackUpgradeNowClicked(
-                courseId,
-                price,
-                null,
-                isSelfPaced
-            )
         }
         billingProcessor =
             BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
@@ -131,9 +128,9 @@ class CourseModalDialogFragment : DialogFragment() {
                     iapViewModel.endLoading()
                     showUpgradeErrorDialog(
                         errorResId = R.string.error_payment_not_processed,
-                        feedbackErrorCode = responseCode,
-                        feedbackErrorMessage = message,
-                        feedbackEndpoint = ErrorMessage.PAYMENT_SDK_CODE
+                        errorCode = responseCode,
+                        errorMessage = message,
+                        errorType = ErrorMessage.PAYMENT_SDK_CODE
                     )
                 }
 
@@ -144,6 +141,7 @@ class CourseModalDialogFragment : DialogFragment() {
     }
 
     private fun initializeProductPrice() {
+        iapAnalytics.initPriceTime()
         ProductManager.getProductByCourseId(courseId)?.let {
             billingProcessor?.querySyncDetails(
                 productId = it
@@ -163,9 +161,12 @@ class CourseModalDialogFragment : DialogFragment() {
                         binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
                         binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
                     }, 500)
+                    iapAnalytics.setPrice(skuDetail.price)
+                    iapAnalytics.trackIAPEvent(Events.IAP_LOAD_PRICE_TIME)
                 } else {
                     showUpgradeErrorDialog(
                         errorResId = R.string.error_price_not_fetched,
+                        errorType = ErrorMessage.PRICE_CODE,
                         listener = { _, _ ->
                             initializeProductPrice()
                         })
@@ -173,6 +174,7 @@ class CourseModalDialogFragment : DialogFragment() {
             }
         } ?: showUpgradeErrorDialog(
             errorResId = R.string.error_price_not_fetched,
+            errorType = ErrorMessage.PRICE_CODE,
             listener = { _, _ ->
                 initializeProductPrice()
             })
@@ -184,8 +186,10 @@ class CourseModalDialogFragment : DialogFragment() {
         })
 
         iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
-            if (it.paymentPageUrl.isNotEmpty())
+            if (it.paymentPageUrl.isNotEmpty()) {
+                iapAnalytics.initPaymentTime()
                 purchaseProduct(iapViewModel.productId)
+            }
         })
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
@@ -207,7 +211,7 @@ class CourseModalDialogFragment : DialogFragment() {
                     )
                 }
             } else {
-                showUpgradeErrorDialog(errorMsg.errorResId)
+                showUpgradeErrorDialog(errorMsg.errorResId, errorType = errorMsg.errorCode)
             }
             iapViewModel.errorMessageShown()
         })
@@ -224,6 +228,8 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private fun onProductPurchased(purchaseToken: String) {
         lifecycleScope.launch {
+            iapAnalytics.trackIAPEvent(eventName = Events.IAP_PAYMENT_TIME)
+            iapAnalytics.initUnlockContentTime()
             iapViewModel.setPurchaseToken(purchaseToken)
             iapViewModel.showFullScreenLoader(true)
             dismiss()
@@ -232,27 +238,72 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private fun showUpgradeErrorDialog(
         @StringRes errorResId: Int = R.string.general_error_message,
-        feedbackErrorCode: Int? = null,
-        feedbackErrorMessage: String? = null,
-        feedbackEndpoint: Int? = null,
+        errorCode: Int? = null,
+        errorMessage: String? = null,
+        errorType: Int? = null,
         listener: DialogInterface.OnClickListener? = null
     ) {
         // To restrict showing error dialog on an unattached fragment
         if (!isAdded) return
+        val feedbackErrorMessage: String = TextUtils.getFormattedErrorMessage(
+            errorCode,
+            errorType,
+            errorMessage
+        ).toString()
+
+        when (errorType) {
+            ErrorMessage.PAYMENT_SDK_CODE -> iapAnalytics.trackIAPEvent(
+                eventName = Events.IAP_PAYMENT_ERROR,
+                errorMsg = feedbackErrorMessage
+            )
+            ErrorMessage.PRICE_CODE -> iapAnalytics.trackIAPEvent(
+                eventName = Events.IAP_PRICE_LOAD_ERROR,
+                errorMsg = feedbackErrorMessage
+            )
+            else -> iapAnalytics.trackIAPEvent(
+                eventName = Events.IAP_COURSE_UPGRADE_ERROR,
+                errorMsg = feedbackErrorMessage
+            )
+        }
+
         AlertDialogFragment.newInstance(
             getString(R.string.title_upgrade_error),
             getString(errorResId),
             getString(if (listener != null) R.string.try_again else R.string.label_close),
-            listener,
+            { dialogInterface, i ->
+                listener?.onClick(dialogInterface, i).also {
+                    iapAnalytics.trackIAPEvent(
+                        eventName = Events.IAP_ERROR_ALERT_ACTION,
+                        errorMsg = feedbackErrorMessage,
+                        actionTaken = Values.ACTION_RELOAD_PRICE
+                    )
+                } ?: run {
+                    iapAnalytics.trackIAPEvent(
+                        eventName = Events.IAP_ERROR_ALERT_ACTION,
+                        errorMsg = feedbackErrorMessage,
+                        actionTaken = Values.ACTION_CLOSE
+                    )
+                }
+            },
             getString(if (listener != null) R.string.label_cancel else R.string.label_get_help),
             { _, _ ->
-                listener?.let { dismiss() } ?: run {
+                listener?.also {
+                    iapAnalytics.trackIAPEvent(
+                        eventName = Events.IAP_ERROR_ALERT_ACTION,
+                        errorMsg = feedbackErrorMessage,
+                        actionTaken = Values.ACTION_CLOSE
+                    )
+                    dismiss()
+                } ?: run {
                     environment.router?.showFeedbackScreen(
                         requireActivity(),
                         getString(R.string.email_subject_upgrade_error),
-                        feedbackErrorCode,
-                        feedbackEndpoint,
                         feedbackErrorMessage
+                    )
+                    iapAnalytics.trackIAPEvent(
+                        eventName = Events.IAP_ERROR_ALERT_ACTION,
+                        errorMsg = feedbackErrorMessage,
+                        actionTaken = Values.ACTION_GET_HELP
                     )
                 }
             }, false
@@ -266,29 +317,23 @@ class CourseModalDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG: String = "CourseModalDialogFragment"
-        const val KEY_MODAL_PLATFORM = "platform_name"
         const val KEY_SCREEN_NAME = "screen_name"
         const val KEY_COURSE_ID = "course_id"
         const val KEY_COURSE_NAME = "course_name"
-        const val KEY_COURSE_PRICE = "course_price"
         const val KEY_IS_SELF_PACED = "is_Self_Paced"
 
         @JvmStatic
         fun newInstance(
-            platformName: String,
             screenName: String,
             courseId: String,
             courseName: String,
-            price: String,
             isSelfPaced: Boolean
         ): CourseModalDialogFragment {
             val frag = CourseModalDialogFragment()
             val args = Bundle().apply {
-                putString(KEY_MODAL_PLATFORM, platformName)
                 putString(KEY_SCREEN_NAME, screenName)
                 putString(KEY_COURSE_ID, courseId)
                 putString(KEY_COURSE_NAME, courseName)
-                putString(KEY_COURSE_PRICE, price)
                 putBoolean(KEY_IS_SELF_PACED, isSelfPaced)
             }
             frag.arguments = args

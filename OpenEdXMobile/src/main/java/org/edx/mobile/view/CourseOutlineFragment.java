@@ -73,6 +73,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
@@ -143,6 +144,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
     @Inject
     VideoDownloadHelper downloadManager;
+
+    @Inject
+    InAppPurchasesAnalytics iapAnalytics;
 
     private CourseDateViewModel courseDateViewModel;
     private InAppPurchasesViewModel iapViewModel;
@@ -329,6 +333,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         iapViewModel.getPurchaseFlowComplete().observe(getViewLifecycleOwner(), isPurchaseCompleted -> {
             if (isPurchaseCompleted) {
                 fullscreenLoader.dismiss();
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_COURSE_UPGRADE_SUCCESS, "", "");
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_TIME, "", "");
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME, "", "");
                 // To refresh the Enrollment Mode from AUDIT to VERIFIED
                 EventBus.getDefault().post(new MainDashboardRefreshEvent());
                 new SnackbarErrorNotification(listView).showError(R.string.purchase_success_message);
@@ -663,7 +670,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     refreshOnPurchase = false;
                     iapViewModel.resetPurchase(true);
                 }
-            }, FullscreenLoaderDialogFragment.FULLSCREEN_DISPLAY_DELAY);
+            }, fullscreenLoader.getRemainingVisibleTime());
         }
     }
 

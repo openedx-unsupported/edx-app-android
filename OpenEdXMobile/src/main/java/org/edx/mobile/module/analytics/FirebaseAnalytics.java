@@ -653,24 +653,18 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackValuePropModalView(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+    public void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName) {
         final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_MODAL_VIEW);
         event.putCourseId(courseId);
-        if (!TextUtils.isEmpty(assignmentId)) {
-            event.putString(Keys.ASSIGNMENT_ID, assignmentId);
-        }
         event.putString(Keys.SCREEN_NAME, screenName);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
 
     @Override
-    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId, @NonNull String screenName) {
+    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @NonNull String screenName) {
         final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_LEARN_MORE_CLICKED, Values.VALUE_PROP_LEARN_MORE_CLICKED);
         event.putCourseId(courseId);
-        if (!TextUtils.isEmpty(assignmentId)) {
-            event.putString(Keys.ASSIGNMENT_ID, assignmentId);
-        }
         event.putString(Keys.SCREEN_NAME, screenName);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
@@ -681,20 +675,6 @@ public class FirebaseAnalytics implements Analytics {
         event.putCourseId(courseId);
         event.putString(Keys.ASSIGNMENT_ID, assignmentId);
         event.putString(Keys.SCREEN_NAME, Screens.COURSE_UNIT);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
-    public void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
-                                       @Nullable String componentId, boolean isSelfPaced) {
-
-        final FirebaseEvent event = new FirebaseEvent(Events.COURSE_UPGRADE_NOW_CLICKED, Values.COURSE_UPGRADE_NOW_CLICKED);
-        event.putCourseId(courseId);
-        event.putString(Keys.PRICE, price);
-        if (!TextUtils.isEmpty(componentId)) {
-            event.putString(Keys.COMPONENT_ID, componentId);
-        }
-        event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 
@@ -826,6 +806,35 @@ public class FirebaseAnalytics implements Analytics {
     @Override
     public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
+                                         @NonNull String courseId, boolean isSelfPaced,
+                                         @Nullable String price, @Nullable String componentId,
+                                         long elapsedTime, @Nullable String error, @Nullable String errorAction,
+                                         @NonNull String screenName) {
+        final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
+        event.putCourseId(courseId);
+        event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        event.putString(Keys.CATEGORY, Values.IN_APP_PURCHASES);
+        if (!TextUtils.isEmpty(price)) {
+            event.putString(Keys.PRICE, price);
+        }
+        if (!TextUtils.isEmpty(componentId)) {
+            event.putString(Keys.COMPONENT_ID, componentId);
+        }
+        if (elapsedTime > 0L) {
+            event.putLong(Keys.ELAPSED_TIME, elapsedTime);
+        }
+        if (!TextUtils.isEmpty(error)) {
+            event.putString(Keys.ERROR, error);
+        }
+        if (!TextUtils.isEmpty(errorAction)) {
+            event.putString(Keys.ERROR_ACTION, errorAction);
+        }
+        event.putString(Keys.SCREEN_NAME, screenName);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

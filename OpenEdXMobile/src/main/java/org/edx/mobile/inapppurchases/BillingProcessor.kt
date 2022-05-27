@@ -4,16 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.android.billingclient.api.AcknowledgePurchaseParams
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
-import com.android.billingclient.api.SkuDetailsResponseListener
+import com.android.billingclient.api.*
 import org.edx.mobile.logger.Logger
 
 /**
@@ -79,9 +70,13 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         billingResult: BillingResult,
         purchases: MutableList<Purchase>?
     ) {
-        if (purchases != null && !purchases[0].isAcknowledged) {
-            acknowledgePurchase(purchases[0])
-        } else if (purchases == null) {
+        if (purchases != null) {
+            if (!purchases[0].isAcknowledged) {
+                acknowledgePurchase(purchases[0])
+            } else {
+                listener?.onPurchaseComplete(purchases[0])
+            }
+        } else {
             listener?.onPurchaseCancel(billingResult.responseCode, billingResult.debugMessage)
         }
     }

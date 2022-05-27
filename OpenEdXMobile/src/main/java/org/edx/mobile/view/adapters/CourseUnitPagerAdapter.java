@@ -89,7 +89,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         final boolean isYoutubeVideo = (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
             if (courseUpgradeData == null) {
-                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced(), courseData.getCourse().getPrice());
+                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced());
             } else {
                 unitFragment = LockedCourseUnitFragment.newInstance(minifiedUnit, courseData, courseUpgradeData);
             }
@@ -106,7 +106,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         } else if (config.isDiscussionsEnabled() && minifiedUnit instanceof DiscussionBlockModel) {
             unitFragment = CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData);
         } else if (!minifiedUnit.isMultiDevice()) {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced(), courseData.getCourse().getPrice());
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced());
         } else if (minifiedUnit.getType() != BlockType.VIDEO &&
                 minifiedUnit.getType() != BlockType.HTML &&
                 minifiedUnit.getType() != BlockType.OTHERS &&
@@ -119,11 +119,11 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
             unitFragment = CourseUnitEmptyFragment.newInstance(minifiedUnit);
         } else if (minifiedUnit instanceof HtmlBlockModel) {
             minifiedUnit.setCourseId(courseData.getCourse().getId());
-            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) minifiedUnit,courseData.getCourse().getName(), courseData.getMode(), courseData.getCourse().isSelfPaced());
+            unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) minifiedUnit, courseData.getCourse().getName(), courseData.getMode(), courseData.getCourse().isSelfPaced());
         }
         //fallback
         else {
-            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced(), courseData.getCourse().getPrice());
+            unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData.getCourse().isSelfPaced());
         }
 
         unitFragment.setHasComponentCallback(callback);

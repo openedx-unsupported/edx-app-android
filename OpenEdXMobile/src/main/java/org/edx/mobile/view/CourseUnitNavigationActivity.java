@@ -36,6 +36,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtils;
@@ -74,6 +75,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Inject
     CourseAPI courseApi;
+
+    @Inject
+    InAppPurchasesAnalytics iapAnalytics;
 
     private PreLoadingListener.State viewPagerState = PreLoadingListener.State.DEFAULT;
 
@@ -253,6 +257,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         iapViewModel.getPurchaseFlowComplete().observe(this, isPurchaseCompleted -> {
             if (isPurchaseCompleted) {
                 fullScreenLoader.dismiss();
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_COURSE_UPGRADE_SUCCESS, "", "");
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_TIME, "", "");
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME, "", "");
                 showPurchaseSuccessSnackbar();
                 iapViewModel.resetPurchase(false);
             }
@@ -401,7 +408,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 public void run() {
                     iapViewModel.resetPurchase(true);
                 }
-            }, FullscreenLoaderDialogFragment.FULLSCREEN_DISPLAY_DELAY);
+            }, fullScreenLoader.getRemainingVisibleTime());
         }
     }
 

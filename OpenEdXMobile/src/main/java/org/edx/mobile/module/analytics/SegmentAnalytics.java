@@ -933,26 +933,18 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackValuePropModalView(@NonNull String courseId,
-                                        @Nullable String assignmentId, @NonNull String screenName) {
+    public void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        if (!TextUtils.isEmpty(assignmentId)) {
-            aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
-        }
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         trackSegmentEvent(Events.VALUE_PROP_MODAL_VIEW, aEvent.properties);
     }
 
     @Override
-    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @Nullable String assignmentId,
-                                              @NonNull String screenName) {
+    public void trackValuePropLearnMoreTapped(@NonNull String courseId, @NonNull String screenName) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.VALUE_PROP_LEARN_MORE_CLICKED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        if (!TextUtils.isEmpty(assignmentId)) {
-            aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
-        }
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         trackSegmentEvent(Events.VALUE_PROP_LEARN_MORE_CLICKED, aEvent.properties);
     }
@@ -964,20 +956,6 @@ public class SegmentAnalytics implements Analytics {
         aEvent.data.putValue(Keys.ASSIGNMENT_ID, assignmentId);
         aEvent.data.putValue(Keys.SCREEN_NAME, Screens.COURSE_UNIT);
         trackSegmentEvent(Events.COURSE_UNIT_LOCKED_CONTENT, aEvent.properties);
-    }
-
-    @Override
-    public void trackUpgradeNowClicked(@NonNull String courseId, @NonNull String price,
-                                       @Nullable String componentId, boolean isSelfPaced) {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.COURSE_UPGRADE_NOW_CLICKED);
-        aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        aEvent.data.putValue(Keys.PRICE, price);
-        if (!TextUtils.isEmpty(componentId)) {
-            aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
-        }
-        aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
-        trackSegmentEvent(Events.COURSE_UPGRADE_NOW_CLICKED, aEvent.properties);
     }
 
     @Override
@@ -1118,6 +1096,36 @@ public class SegmentAnalytics implements Analytics {
     public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
+        trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
+                                         @NonNull String courseId, boolean isSelfPaced,
+                                         @Nullable String price, @Nullable String componentId,
+                                         long elapsedTime, @Nullable String error, @Nullable String errorAction,
+                                         @NonNull String screenName) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, biValue);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.IN_APP_PURCHASES);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        if (!TextUtils.isEmpty(price)) {
+            aEvent.data.putValue(Keys.PRICE, price);
+        }
+        if (!TextUtils.isEmpty(componentId)) {
+            aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
+        }
+        if (elapsedTime > 0L) {
+            aEvent.data.putValue(Keys.ELAPSED_TIME, elapsedTime);
+        }
+        if (!TextUtils.isEmpty(error)) {
+            aEvent.data.putValue(Keys.ERROR, error);
+        }
+        if (!TextUtils.isEmpty(errorAction)) {
+            aEvent.data.putValue(Keys.ERROR_ACTION, errorAction);
+        }
+        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         trackSegmentEvent(eventName, aEvent.properties);
     }
 }
