@@ -344,8 +344,10 @@ public class RegisterActivity extends BaseFragmentActivity
             @Override
             protected void onPostExecute(AuthResponse auth) {
                 super.onPostExecute(auth);
-                environment.getAnalyticsRegistry().trackRegistrationSuccess(appVersion, provider);
-                onUserLoginSuccess(auth.profile);
+                if (auth != null) {
+                    environment.getAnalyticsRegistry().trackRegistrationSuccess(appVersion, provider);
+                    onUserLoginSuccess(auth.profile);
+                }
             }
 
             @Override
