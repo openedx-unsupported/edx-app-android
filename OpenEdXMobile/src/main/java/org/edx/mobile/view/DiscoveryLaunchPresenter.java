@@ -23,12 +23,11 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     @Override
     public void attachView(@NonNull ViewInterface view) {
         super.attachView(view);
-        if (environment.getConfig().getDiscoveryConfig() != null) {
-            Config.CourseDiscoveryConfig courseDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig();
-            Config.ProgramDiscoveryConfig programDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig();
+        if (environment.getConfig().getDiscoveryConfig() != null && environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
+            Config.DiscoveryConfig discoveryConfig = environment.getConfig().getDiscoveryConfig();
 
-            view.setEnabledButtons(courseDiscoveryConfig != null && courseDiscoveryConfig.isDiscoveryEnabled(),
-                    programDiscoveryConfig != null && programDiscoveryConfig.isDiscoveryEnabled(environment));
+            view.setEnabledButtons(discoveryConfig.getCourseUrlTemplate() != null,
+                    discoveryConfig.getProgramUrlTemplate() != null);
         } else {
             view.setEnabledButtons(false, false);
         }

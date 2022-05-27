@@ -4,6 +4,7 @@ import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SEARCH;
 import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
             searchQueryExtra = getArguments().getString(Router.EXTRA_SEARCH_QUERY);
         }
 
-        if (searchQueryExtra != null) {
+        if (!TextUtils.isEmpty(searchQueryExtra)) {
             initSearch(searchQueryExtra);
         } else {
             loadUrl(searchUrl == null || !URLUtil.isValidUrl(searchUrl) ? getInitialUrl() : searchUrl);
@@ -114,8 +115,7 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     @NonNull
     protected String getInitialUrl() {
         return URLUtil.isValidUrl(binding.webview.getUrl()) ? binding.webview.getUrl() :
-                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig()
-                        .getBaseUrl();
+                environment.getConfig().getDiscoveryConfig().getBaseUrl();
     }
 
     @SuppressWarnings("unused")
