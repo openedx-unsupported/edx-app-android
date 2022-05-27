@@ -439,7 +439,7 @@ public class Router {
 
     public void showFindCourses(@NonNull Context context, @Nullable String searchQuery,
                                 @ScreenDef @Nullable String screenName, @Nullable String pathId) {
-        if (!config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+        if (!config.getDiscoveryConfig().isDiscoveryEnabled()) {
             throw new RuntimeException("Course discovery is not enabled");
         }
         final Intent discoveryIntent = DiscoveryActivity.newIntent(context);

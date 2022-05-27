@@ -16,7 +16,6 @@ import com.google.gson.annotations.SerializedName;
 import com.squareup.phrase.Phrase;
 
 import org.edx.mobile.BuildConfig;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 
 import java.io.InputStream;
@@ -112,151 +111,43 @@ public class Config {
     }
 
     public static class DiscoveryConfig {
-        @SerializedName("COURSE")
-        private CourseDiscoveryConfig courseDiscoveryConfig;
+        @SerializedName("TYPE")
+        private String viewType;
 
-        @SerializedName("PROGRAM")
-        private ProgramDiscoveryConfig programDiscoveryConfig;
-
-        @SerializedName("DEGREE")
-        private DegreeDiscoveryConfig degreeDiscoveryConfig;
+        @SerializedName("WEBVIEW")
+        private WebViewConfig webViewConfig;
 
         public enum DiscoveryType {
             WEBVIEW,
             NATIVE
         }
 
-        public CourseDiscoveryConfig getCourseDiscoveryConfig() {
-            return courseDiscoveryConfig;
-        }
-
-        public ProgramDiscoveryConfig getProgramDiscoveryConfig() {
-            return programDiscoveryConfig;
-        }
-
-        public DegreeDiscoveryConfig getDegreeDiscoveryConfig() {
-            return degreeDiscoveryConfig;
-        }
-    }
-
-    public static class CourseDiscoveryConfig {
-        @SerializedName("TYPE")
-        private String typeConfig;
-
-        @SerializedName("WEBVIEW")
-        private WebViewConfig webViewConfig;
-
         @Nullable
         private DiscoveryConfig.DiscoveryType getDiscoveryType() {
-            if (null == typeConfig) {
+            if (null == viewType) {
                 return null;
             }
-            return DiscoveryConfig.DiscoveryType.valueOf(typeConfig.toUpperCase(Locale.US));
+            return DiscoveryConfig.DiscoveryType.valueOf(viewType.toUpperCase(Locale.US));
         }
 
         public boolean isDiscoveryEnabled() {
             return getDiscoveryType() != null;
         }
 
-        public boolean isWebviewDiscoveryEnabled() {
-            return getDiscoveryType() == DiscoveryConfig.DiscoveryType.WEBVIEW;
-        }
-
-        public WebViewConfig getWebViewConfig() {
-            return webViewConfig;
+        public boolean isWebViewDiscoveryEnabled() {
+            return getDiscoveryType() != null && getDiscoveryType() == DiscoveryType.WEBVIEW;
         }
 
         public String getBaseUrl() {
             return null == webViewConfig ? null : webViewConfig.getBaseUrl();
         }
 
-        public String getInfoUrlTemplate() {
-            return null == webViewConfig ? null : webViewConfig.getInfoUrlTemplate();
+        public String getCourseUrlTemplate() {
+            return null == webViewConfig ? null : webViewConfig.getCourseUrlTemplate();
         }
 
-        public boolean isSearchEnabled() {
-            return null != webViewConfig && webViewConfig.isSearchEnabled();
-        }
-    }
-
-    public static class ProgramDiscoveryConfig {
-        @SerializedName("TYPE")
-        private String typeConfig;
-
-        @SerializedName("WEBVIEW")
-        private WebViewConfig webViewConfig;
-
-        @Nullable
-        private DiscoveryConfig.DiscoveryType getDiscoveryType() {
-            if (null == typeConfig) {
-                return null;
-            }
-            return DiscoveryConfig.DiscoveryType.valueOf(typeConfig.toUpperCase(Locale.US));
-        }
-
-        public boolean isDiscoveryEnabled(@NonNull IEdxEnvironment environment) {
-            return getDiscoveryType() != null &&
-                    ConfigUtil.Companion.isCourseDiscoveryEnabled(environment) &&
-                    ConfigUtil.Companion.isCourseWebviewDiscoveryEnabled(environment)
-                    ;
-        }
-
-        public boolean isWebviewDiscoveryEnabled() {
-            return getDiscoveryType() == DiscoveryConfig.DiscoveryType.WEBVIEW;
-        }
-
-        public WebViewConfig getWebViewConfig() {
-            return webViewConfig;
-        }
-
-        public String getBaseUrl() {
-            return null == webViewConfig ? null : webViewConfig.getBaseUrl();
-        }
-
-        public String getInfoUrlTemplate() {
-            return null == webViewConfig ? null : webViewConfig.getInfoUrlTemplate();
-        }
-
-        public boolean isSearchEnabled() {
-            return null != webViewConfig && webViewConfig.isSearchEnabled();
-        }
-    }
-
-    public static class DegreeDiscoveryConfig {
-        @SerializedName("TYPE")
-        private String typeConfig;
-
-        @SerializedName("WEBVIEW")
-        private WebViewConfig webViewConfig;
-
-        @Nullable
-        private DiscoveryConfig.DiscoveryType getDiscoveryType() {
-            if (null == typeConfig) {
-                return null;
-            }
-            return DiscoveryConfig.DiscoveryType.valueOf(typeConfig.toUpperCase(Locale.US));
-        }
-
-        public boolean isDiscoveryEnabled(@NonNull IEdxEnvironment environment) {
-            return getDiscoveryType() != null && ConfigUtil.Companion.isProgramDiscoveryEnabled(environment) &&
-                    ConfigUtil.Companion.isProgramWebviewDiscoveryEnabled(environment)
-                    ;
-        }
-
-        public WebViewConfig getWebViewConfig() {
-            return webViewConfig;
-        }
-
-        public String getBaseUrl() {
-            return null == webViewConfig ? null : webViewConfig.getBaseUrl();
-        }
-
-        public String getInfoUrlTemplate() {
-            return null == webViewConfig ? null : webViewConfig.getInfoUrlTemplate();
-        }
-
-        public boolean isSearchEnabled() {
-            return null != webViewConfig && webViewConfig.isSearchEnabled();
+        public String getProgramUrlTemplate() {
+            return null == webViewConfig ? null : webViewConfig.getProgramUrlTemplate();
         }
     }
 
@@ -264,22 +155,22 @@ public class Config {
         @SerializedName("BASE_URL")
         private String baseUrl;
 
-        @SerializedName("DETAIL_TEMPLATE")
-        private String detailTemplate;
+        @SerializedName("COURSE_DETAIL_TEMPLATE")
+        private String courseDetailTemplate;
 
-        @SerializedName("SEARCH_ENABLED")
-        private boolean searchEnabled;
+        @SerializedName("PROGRAM_DETAIL_TEMPLATE")
+        private String programDetailTemplate;
 
         public String getBaseUrl() {
             return baseUrl;
         }
 
-        public String getInfoUrlTemplate() {
-            return detailTemplate;
+        public String getCourseUrlTemplate() {
+            return courseDetailTemplate;
         }
 
-        public boolean isSearchEnabled() {
-            return searchEnabled;
+        public String getProgramUrlTemplate() {
+            return programDetailTemplate;
         }
     }
 
@@ -798,7 +689,7 @@ public class Config {
         return getObjectOrNewInstance(PROGRAM, ProgramConfig.class);
     }
 
-    @Nullable
+    @NonNull
     public DiscoveryConfig getDiscoveryConfig() {
         return getObjectOrNewInstance(DISCOVERY, DiscoveryConfig.class);
     }

@@ -6,11 +6,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.BuildConfig
-import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.model.CourseDatesCalendarSync
 import org.json.JSONObject
 import java.lang.reflect.InvocationTargetException
-import java.util.*
 
 
 class ConfigUtil {
@@ -31,56 +29,6 @@ class ConfigUtil {
                 }
             }
             return false
-        }
-
-        /**
-         * Utility method to check the Course Discovery status
-         *
-         * @param environment       Relevant configuration environment.
-         * @return true if Discovery enabled in configurations false else wise
-         */
-        fun isCourseDiscoveryEnabled(environment: IEdxEnvironment): Boolean {
-            return environment.config.discoveryConfig?.courseDiscoveryConfig?.isDiscoveryEnabled == true
-        }
-
-        /**
-         * Utility method to check the Degree Discovery status
-         *
-         * @param environment       Relevant configuration environment.
-         * @return true if Degree Discovery enabled in configurations false else wise
-         */
-        fun isDegreeDiscoveryEnabled(environment: IEdxEnvironment): Boolean {
-            return environment.config.discoveryConfig?.degreeDiscoveryConfig?.isDiscoveryEnabled(environment) == true
-        }
-
-        /**
-         * Utility method to check the Course Webview Discovery status
-         *
-         * @param environment       Relevant configuration environment.
-         * @return true if Course Webview Discovery enabled in configurations false else wise
-         */
-        fun isCourseWebviewDiscoveryEnabled(environment: IEdxEnvironment): Boolean {
-            return environment.config.discoveryConfig?.courseDiscoveryConfig?.isWebviewDiscoveryEnabled == true
-        }
-
-        /**
-         * Utility method to check the Program Discovery status
-         *
-         * @param environment       Relevant configuration environment.
-         * @return true if Program Discovery enabled in configurations false else wise
-         */
-        fun isProgramDiscoveryEnabled(environment: IEdxEnvironment): Boolean {
-            return environment.config.discoveryConfig?.programDiscoveryConfig?.isDiscoveryEnabled(environment) == true
-        }
-
-        /**
-         * Utility method to check the Program Webview Discovery status
-         *
-         * @param environment       Relevant configuration environment.
-         * @return true if Program Webview Discovery enabled in configurations false else wise
-         */
-        fun isProgramWebviewDiscoveryEnabled(environment: IEdxEnvironment): Boolean {
-            return environment.config.discoveryConfig?.programDiscoveryConfig?.isWebviewDiscoveryEnabled == true
         }
 
         /**

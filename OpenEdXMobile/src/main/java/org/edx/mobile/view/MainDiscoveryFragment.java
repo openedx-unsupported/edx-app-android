@@ -18,7 +18,6 @@ import org.edx.mobile.databinding.FragmentMainDiscoveryBinding;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.ScreenArgumentsEvent;
-import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,22 +49,22 @@ public class MainDiscoveryFragment extends BaseFragment {
     }
 
     private void initFragments() {
-        // Course discovery
-        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
-            Fragment courseDiscoveryFragment;
-            if (ConfigUtil.Companion.isCourseWebviewDiscoveryEnabled(environment)) {
-                courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_webview");
-                if (courseDiscoveryFragment == null) {
-                    courseDiscoveryFragment = new WebViewDiscoverFragment();
-                    commitFragmentTransaction(courseDiscoveryFragment, "fragment_courses_webview");
+        if (environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
+            Fragment discoveryFragment;
+            if (environment.getConfig().getDiscoveryConfig().isWebViewDiscoveryEnabled()) {
+                discoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_discovery_webview");
+                if (discoveryFragment == null) {
+                    discoveryFragment = new WebViewDiscoverFragment();
+                    commitFragmentTransaction(discoveryFragment, "fragment_discovery_webview");
                 }
             } else {
-                courseDiscoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_courses_native");
-                if (courseDiscoveryFragment == null) {
-                    courseDiscoveryFragment = new NativeFindCoursesFragment();
-                    commitFragmentTransaction(courseDiscoveryFragment, "fragment_courses_native");
+                discoveryFragment = getChildFragmentManager().findFragmentByTag("fragment_discovery_native");
+                if (discoveryFragment == null) {
+                    discoveryFragment = new NativeFindCoursesFragment();
+                    commitFragmentTransaction(discoveryFragment, "fragment_discovery_native");
                 }
             }
+            discoveryFragment.setArguments(getArguments());
         }
     }
 

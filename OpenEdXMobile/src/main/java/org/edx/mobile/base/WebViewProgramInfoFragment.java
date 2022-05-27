@@ -97,11 +97,11 @@ public class WebViewProgramInfoFragment extends BaseWebViewFragment
             return binding.webview.getUrl();
         } else if (getArguments() != null) {
             final String pathId = getArguments().getString(EXTRA_PATH_ID);
-            return environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig()
-                    .getInfoUrlTemplate()
+            return environment.getConfig().getDiscoveryConfig()
+                    .getProgramUrlTemplate()
                     .replace("{" + EXTRA_PATH_ID + "}", pathId);
         }
-        return environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().getBaseUrl();
+        return environment.getConfig().getDiscoveryConfig().getBaseUrl();
     }
 
     @Override
