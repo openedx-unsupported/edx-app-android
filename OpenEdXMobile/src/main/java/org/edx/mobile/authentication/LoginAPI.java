@@ -1,8 +1,5 @@
 package org.edx.mobile.authentication;
 
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.constants.ApiConstants;
+import org.edx.mobile.http.util.CallUtil;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
@@ -23,8 +21,6 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.observer.BasicObservable;
-import org.edx.mobile.util.observer.Observable;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -58,9 +54,6 @@ public class LoginAPI {
 
     @NonNull
     private final NotificationDelegate notificationDelegate;
-
-    @NonNull
-    private final BasicObservable<LogInEvent> logInEvents = new BasicObservable<>();
 
     @NonNull
     private final Gson gson;
@@ -118,7 +111,7 @@ public class LoginAPI {
         final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
         final Response<AuthResponse> response = loginService.exchangeAccessToken(accessToken, config.getOAuthClientId(),
                 ApiConstants.TOKEN_TYPE_JWT, true, backend).execute();
-        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED || response.code() == HTTP_BAD_REQUEST) {
+        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED || response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
             // TODO: Introduce a more explicit error code to indicate that an account is not linked.
             throw new AccountNotLinkedException(response.code());
         }
@@ -155,7 +148,6 @@ public class LoginAPI {
             analyticsRegistry.trackUserLogin(backendKey);
         }
         notificationDelegate.resubscribeAll();
-        logInEvents.sendData(new LogInEvent());
     }
 
     public void logOut() {
@@ -188,11 +180,6 @@ public class LoginAPI {
     public AuthResponse registerUsingMicrosoft(@NonNull Bundle parameters, @NonNull String accessToken) throws Exception {
         register(parameters);
         return logInUsingMicrosoft(accessToken);
-    }
-
-    @NonNull
-    public Observable<LogInEvent> getLogInEvents() {
-        return logInEvents;
     }
 
     @NonNull
@@ -241,7 +228,7 @@ public class LoginAPI {
 
     @NonNull
     public ProfileModel getProfile() throws Exception {
-        ProfileModel data = executeStrict(loginService.getProfile());
+        ProfileModel data = CallUtil.executeStrict(loginService.getProfile());
         loginPrefs.storeUserProfile(data);
         return data;
     }
@@ -252,7 +239,6 @@ public class LoginAPI {
     }
 
     public static class AccountNotLinkedException extends Exception {
-        /** HTTP status code. */
         private int responseCode;
 
         public AccountNotLinkedException(int responseCode) {

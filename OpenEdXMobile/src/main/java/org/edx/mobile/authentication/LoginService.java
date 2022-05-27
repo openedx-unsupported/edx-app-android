@@ -1,7 +1,5 @@
 package org.edx.mobile.authentication;
 
-import static org.edx.mobile.http.constants.ApiConstants.URL_MY_USER_INFO;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
@@ -148,7 +146,7 @@ public interface LoginService {
      * @return basic profile information for currently authenticated user.
      */
     @NonNull
-    @GET(URL_MY_USER_INFO)
+    @GET(ApiConstants.URL_MY_USER_INFO)
     Call<ProfileModel> getProfile();
 
     /**
