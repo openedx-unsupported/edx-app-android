@@ -12,7 +12,6 @@ import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.UiUtils;
 
 import java.util.ArrayList;
@@ -85,8 +84,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     }));
         }
 
-        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment) ||
-                ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
+        if (environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), R.drawable.ic_search,
                     getArguments(), () -> {
@@ -98,7 +96,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull MoveToDiscoveryTabEvent event) {
-        if (!ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
+        if (!environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
             return;
         }
         if (binding != null) {

@@ -27,7 +27,6 @@ public class ConfigTests extends BaseTestCase {
     //TODO - should we place constant at a central place?
     /* Config keys */
     private static final String DISCOVERY = "DISCOVERY";
-    private static final String COURSE_DISCOVERY = "COURSE";
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
@@ -41,9 +40,9 @@ public class ConfigTests extends BaseTestCase {
     private static final String DISABLED_CARRIERS = "DISABLED_CARRIERS";
     private static final String CARRIERS = "CARRIERS";
     private static final String BASE_URL = "BASE_URL";
-    private static final String EXPLORE_SUBJECTS_URL = "EXPLORE_SUBJECTS_URL";
+    private static final String COURSE_DETAIL_TEMPLATE = "COURSE_DETAIL_TEMPLATE";
     private static final String TYPE = "TYPE";
-    private static final String DETAIL_TEMPLATE = "DETAIL_TEMPLATE";
+    private static final String PROGRAM_DETAIL_TEMPLATE = "PROGRAM_DETAIL_TEMPLATE";
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
     private static final String KEY = "KEY";
     private static final String SECRET = "SECRET";
@@ -107,8 +106,8 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
 
         assertNotNull(config.getDiscoveryConfig());
-        assertNull(config.getDiscoveryConfig().getCourseDiscoveryConfig());
-        assertNull(config.getDiscoveryConfig().getProgramDiscoveryConfig());
+        assertNull(config.getDiscoveryConfig().getCourseUrlTemplate());
+        assertNull(config.getDiscoveryConfig().getProgramUrlTemplate());
     }
 
     @Test
@@ -116,14 +115,12 @@ public class ConfigTests extends BaseTestCase {
         JsonObject configBase = new JsonObject();
         JsonObject discoveryConfig = new JsonObject();
         configBase.add(DISCOVERY, discoveryConfig);
-        JsonObject courseDiscoveryConfig = new JsonObject();
-        discoveryConfig.add(COURSE_DISCOVERY, courseDiscoveryConfig);
 
         Config config = new Config(configBase);
-        assertFalse(config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled());
-        assertFalse(config.getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled());
-        assertNull(config.getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl());
-        assertNull(config.getDiscoveryConfig().getCourseDiscoveryConfig().getInfoUrlTemplate());
+        assertFalse(config.getDiscoveryConfig().isDiscoveryEnabled());
+        assertNull(config.getDiscoveryConfig().getBaseUrl());
+        assertNull(config.getDiscoveryConfig().getCourseUrlTemplate());
+        assertNull(config.getDiscoveryConfig().getProgramUrlTemplate());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -132,12 +129,10 @@ public class ConfigTests extends BaseTestCase {
 
         JsonObject discoveryConfig = new JsonObject();
         configBase.add(DISCOVERY, discoveryConfig);
-        JsonObject courseDiscoveryConfig = new JsonObject();
-        discoveryConfig.add(COURSE_DISCOVERY, courseDiscoveryConfig);
-        courseDiscoveryConfig.add(TYPE, new JsonPrimitive("invalid type"));
+        discoveryConfig.add(TYPE, new JsonPrimitive("invalid type"));
 
         Config config = new Config(configBase);
-        assertFalse(config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled());
+        assertFalse(config.getDiscoveryConfig().isDiscoveryEnabled());
     }
 
     @RunWith(value = Parameterized.class)
@@ -167,46 +162,22 @@ public class ConfigTests extends BaseTestCase {
 
             JsonObject discoveryConfig = new JsonObject();
             configBase.add(DISCOVERY, discoveryConfig);
-            JsonObject courseDiscoveryConfig = new JsonObject();
-            discoveryConfig.add(COURSE_DISCOVERY, courseDiscoveryConfig);
 
             JsonObject webviewConfig = new JsonObject();
-            courseDiscoveryConfig.add(TYPE, new JsonPrimitive(course_enrollment_type));
+            discoveryConfig.add(TYPE, new JsonPrimitive(course_enrollment_type));
+
             webviewConfig.add(BASE_URL, new JsonPrimitive("fake-url"));
-            webviewConfig.add(DETAIL_TEMPLATE, new JsonPrimitive("fake-url-template"));
-            courseDiscoveryConfig.add("WEBVIEW", webviewConfig);
+            webviewConfig.add(COURSE_DETAIL_TEMPLATE, new JsonPrimitive("fake-course-url-template"));
+            webviewConfig.add(PROGRAM_DETAIL_TEMPLATE, new JsonPrimitive("fake-program-url-template"));
+            discoveryConfig.add("WEBVIEW", webviewConfig);
 
             Config config = new Config(configBase);
-            assertTrue(config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled());
-            assertEquals(config.getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled(), expected);
-            assertEquals(config.getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl(), "fake-url");
-            assertEquals(config.getDiscoveryConfig().getCourseDiscoveryConfig().getInfoUrlTemplate(), "fake-url-template");
+            assertTrue(config.getDiscoveryConfig().isDiscoveryEnabled());
+            assertEquals(config.getDiscoveryConfig().isWebViewDiscoveryEnabled(), expected);
+            assertEquals(config.getDiscoveryConfig().getBaseUrl(), "fake-url");
+            assertEquals(config.getDiscoveryConfig().getCourseUrlTemplate(), "fake-course-url-template");
+            assertEquals(config.getDiscoveryConfig().getProgramUrlTemplate(), "fake-program-url-template");
         }
-    }
-
-    @Test
-    public void testEnrollmentConfig_withExploreSubjectsEnabled() {
-        JsonObject configBase = new JsonObject();
-
-        JsonObject discoveryConfig = new JsonObject();
-        configBase.add(DISCOVERY, discoveryConfig);
-        JsonObject courseDiscoveryConfig = new JsonObject();
-
-        discoveryConfig.add(COURSE_DISCOVERY, courseDiscoveryConfig);
-        courseDiscoveryConfig.add(TYPE, new JsonPrimitive("invalid type"));
-
-        JsonObject webviewConfig = new JsonObject();
-        courseDiscoveryConfig.add(TYPE, new JsonPrimitive("WEBVIEW"));
-        webviewConfig.add(BASE_URL, new JsonPrimitive("fake-url"));
-        webviewConfig.add(EXPLORE_SUBJECTS_URL, new JsonPrimitive("explore-subjects-url"));
-        webviewConfig.add(DETAIL_TEMPLATE, new JsonPrimitive("fake-url-template"));
-        courseDiscoveryConfig.add("WEBVIEW", webviewConfig);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled());
-        assertTrue(config.getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled());
-        assertEquals(config.getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl(), "fake-url");
-        assertEquals(config.getDiscoveryConfig().getCourseDiscoveryConfig().getInfoUrlTemplate(), "fake-url-template");
     }
 
     @Test
