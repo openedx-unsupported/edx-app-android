@@ -1,3 +1,4 @@
+# required
 # Python 2.7 ir required to install Pillow library and it supports up to v6.2.2
 # Ref: https://github.com/facebook/screenshot-tests-for-android#requirements
 Pillow==6.2.2
