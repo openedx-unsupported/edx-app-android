@@ -59,7 +59,7 @@ public class ExampleScreenshotTest {
 
 1. Use `./gradlew clearScreenshots` to delete any screenshots in the emulator/device.
 1. Use the Android Studio interface to run a specific screenshot test or class. This screenshot test (if successful) will be saved to the emulator/device.
-  * If not set already, in "Edit Configurations" for the test, set the "Specific instrumentation runner" value to "org.edx.mobile.test.EdXTestRunner"
+  * If not set already, in "Edit Configurations" for the test, set the "Specific instrumentation runner" value to "org.edx.mobile.base.EdXTestRunner"
 2. Use `./gradlew recordMode pullScreenshots` to save the screenshot to the screenshots directory.
 
 

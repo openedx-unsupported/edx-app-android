@@ -39,7 +39,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AccountFragment : BaseFragment() {
 
-    private lateinit var binding: FragmentAccountBinding
+    lateinit var binding: FragmentAccountBinding
 
     @Inject
     lateinit var config: Config

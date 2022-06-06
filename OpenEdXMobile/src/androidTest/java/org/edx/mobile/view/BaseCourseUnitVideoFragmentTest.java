@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.base.UiTest;
 import org.edx.mobile.course.CourseAPI;
@@ -18,6 +19,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.base.HiltTestActivity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -113,14 +115,14 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
 
         final View playerContainer = view.findViewById(R.id.player_container);
         if (playerContainer != null) {
-            assertThat(playerContainer).isInstanceOf(ViewGroup.class);
+            Java6Assertions.assertThat(playerContainer).isInstanceOf(ViewGroup.class);
             ViewGroup.LayoutParams layoutParams = playerContainer.getLayoutParams();
             assertNotNull(layoutParams);
-            assertThat(layoutParams).hasWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            Assertions.assertThat(layoutParams.width).isEqualTo(ViewGroup.LayoutParams.MATCH_PARENT);
             final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
             final int height = isLandscape ? displayMetrics.heightPixels :
                     (displayMetrics.widthPixels * 9 / 16);
-            assertThat(layoutParams).hasHeight(height);
+            Assertions.assertThat(layoutParams.height).isEqualTo(height);
         }
     }
 

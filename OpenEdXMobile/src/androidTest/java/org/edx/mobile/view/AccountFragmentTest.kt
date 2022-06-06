@@ -5,10 +5,9 @@ import android.view.View
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import kotlinx.android.synthetic.main.fragment_account.*
 import org.assertj.core.api.Assertions
 import org.edx.mobile.base.UiTest
-import org.edx.mobile.view.base.HiltTestActivity
+import org.edx.mobile.base.HiltTestActivity
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -51,9 +50,10 @@ class AccountFragmentTest : UiTest() {
     @Test
     fun checkButtonsVisibility() {
         if (config.isUserProfilesEnabled) {
-            Assertions.assertThat(fragment.btn_view_profile.visibility).isEqualTo(View.VISIBLE)
+            Assertions.assertThat(fragment.binding.btnViewProfile.visibility)
+                .isEqualTo(View.VISIBLE)
         } else {
-            Assertions.assertThat(fragment.btn_view_profile.visibility).isEqualTo(View.GONE)
+            Assertions.assertThat(fragment.binding.btnViewProfile.visibility).isEqualTo(View.GONE)
         }
     }
 }

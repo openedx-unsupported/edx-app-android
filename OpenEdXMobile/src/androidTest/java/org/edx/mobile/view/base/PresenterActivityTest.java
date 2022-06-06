@@ -7,8 +7,8 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import org.edx.mobile.test.BaseTestCase;
-import org.edx.mobile.test.GenericSuperclassUtils;
+import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.GenericSuperclassUtils;
 import org.edx.mobile.view.Presenter;
 import org.edx.mobile.view.PresenterActivity;
 import org.robolectric.Robolectric;
@@ -25,9 +25,9 @@ public abstract class PresenterActivityTest<ActivityT extends PresenterActivity<
                 getActivityType(), intent);
         this.activity = controller.get();
         this.presenter = mock(getPresenterType());
-        activity.presenter = presenter;
+        activity.setPresenter(presenter);
         controller.setup();
-        this.view = activity.view;
+        this.view = activity.setPresenterView();
     }
 
     @SuppressWarnings("unchecked")

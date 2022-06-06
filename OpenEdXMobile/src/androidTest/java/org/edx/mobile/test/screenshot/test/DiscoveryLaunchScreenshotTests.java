@@ -1,8 +1,8 @@
 package org.edx.mobile.test.screenshot.test;
 
+import org.edx.mobile.test.screenshot.test.base.PresenterActivityScreenshotTest;
 import org.edx.mobile.view.DiscoveryLaunchActivity;
 import org.edx.mobile.view.DiscoveryLaunchPresenter;
-import org.edx.mobile.view.PresenterActivityScreenshotTest;
 import org.junit.Test;
 
 public class DiscoveryLaunchScreenshotTests extends PresenterActivityScreenshotTest<DiscoveryLaunchActivity, DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {

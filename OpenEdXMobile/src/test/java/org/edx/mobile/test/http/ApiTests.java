@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.edx.mobile.base.http.HttpBaseTestCase;
+import org.edx.mobile.base.util.MockDataUtil;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.model.Filter;
@@ -34,7 +35,6 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
-import org.edx.mobile.test.util.MockDataUtil;
 import org.edx.mobile.util.DateUtil;
 import org.json.JSONException;
 import org.json.JSONObject;

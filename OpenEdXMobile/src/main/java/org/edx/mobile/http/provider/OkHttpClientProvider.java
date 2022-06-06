@@ -7,12 +7,12 @@ import androidx.annotation.NonNull;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
-import org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor;
-import org.edx.mobile.http.interceptor.NoCacheHeaderStrippingInterceptor;
-import org.edx.mobile.http.interceptor.OauthHeaderRequestInterceptor;
-import org.edx.mobile.http.interceptor.StaleIfErrorHandlingInterceptor;
-import org.edx.mobile.http.interceptor.StaleIfErrorInterceptor;
-import org.edx.mobile.http.interceptor.UserAgentInterceptor;
+import org.edx.mobile.base.http.interceptor.NewVersionBroadcastInterceptor;
+import org.edx.mobile.base.http.interceptor.NoCacheHeaderStrippingInterceptor;
+import org.edx.mobile.base.http.interceptor.OauthHeaderRequestInterceptor;
+import org.edx.mobile.base.http.interceptor.StaleIfErrorHandlingInterceptor;
+import org.edx.mobile.base.http.interceptor.StaleIfErrorInterceptor;
+import org.edx.mobile.base.http.interceptor.UserAgentInterceptor;
 import org.edx.mobile.http.util.Tls12SocketFactory;
 
 import java.io.File;

@@ -14,7 +14,7 @@ import com.facebook.testing.screenshot.Screenshot;
 
 import org.edx.mobile.base.GenericSuperclassUtils;
 import org.edx.mobile.loader.AsyncTaskResult;
-import org.edx.mobile.test.EdxInstrumentationTestApplication;
+import org.edx.mobile.base.EdxInstrumentationTestApplication;
 import org.edx.mobile.view.Presenter;
 import org.edx.mobile.view.PresenterActivity;
 import org.junit.After;
@@ -58,7 +58,7 @@ public abstract class PresenterActivityScreenshotTest<ActivityT extends Presente
                 getTargetContext().getApplicationContext()).setNextPresenter(presenter);
         this.activity = mActivityRule.launchActivity(null);
         // To simplify tests, we automatically execute view methods on the application's UI thread.
-        this.view = UiThreadInvocationHandler.newProxyInstance(uiThreadTestRule, activity.view, getViewType());
+        this.view = UiThreadInvocationHandler.newProxyInstance(uiThreadTestRule, activity.setPresenterView(), getViewType());
     }
 
     @After

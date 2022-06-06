@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.base.util.TimeUtilsForTests;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.IAuthorData;
-import org.edx.mobile.test.util.TimeUtilsForTests;
 import org.edx.mobile.util.ResourceUtil;
 import org.junit.Test;
 import org.mockito.Mockito;

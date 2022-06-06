@@ -8,7 +8,8 @@ import com.google.gson.internal.bind.util.ISO8601Utils;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.base.BaseTestCase;
-import org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor;
+import org.edx.mobile.base.http.interceptor.NewVersionBroadcastInterceptor;
+import org.edx.mobile.base.util.TimeUtilsForTests;
 import org.edx.mobile.util.Version;
 import org.junit.AssumptionViolatedException;
 import org.junit.Ignore;
@@ -34,9 +35,8 @@ import okhttp3.Response;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.edx.mobile.http.HttpStatus.ACCEPTED;
 import static org.edx.mobile.http.HttpStatus.UPGRADE_REQUIRED;
-import static org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor.HEADER_APP_LATEST_VERSION;
-import static org.edx.mobile.http.interceptor.NewVersionBroadcastInterceptor.HEADER_APP_VERSION_LAST_SUPPORTED_DATE;
-import static org.edx.mobile.test.util.TimeUtilsForTests.DEFAULT_TIME;
+import static org.edx.mobile.base.http.interceptor.NewVersionBroadcastInterceptor.HEADER_APP_LATEST_VERSION;
+import static org.edx.mobile.base.http.interceptor.NewVersionBroadcastInterceptor.HEADER_APP_VERSION_LAST_SUPPORTED_DATE;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -187,7 +187,7 @@ public class NewVersionAvailableEventTest extends BaseTestCase {
             final Version currentVersion = new Version(BuildConfig.VERSION_NAME);
             for (final Version newVersion : new Version[] {
                     getVersionOffset(1), currentVersion, getVersionOffset(-1), null }) {
-                for (final Date lastSupportedDate : new Date[] { new Date(DEFAULT_TIME), null }) {
+                for (final Date lastSupportedDate : new Date[] { new Date(TimeUtilsForTests.DEFAULT_TIME), null }) {
                     for (final boolean isUnsupported : new boolean[] { true, false }) {
                         if (isUnsupported || lastSupportedDate != null ||
                                 (newVersion != null && newVersion.compareTo(currentVersion) > 0)) {
@@ -361,7 +361,7 @@ public class NewVersionAvailableEventTest extends BaseTestCase {
             final Version[] newVersionsSet =
                     new Version[] { getVersionOffset(2), getVersionOffset(1), null };
             final Date[] lastSupportedDatesSet =
-                    new Date[] { new Date(DEFAULT_TIME), new Date(DEFAULT_TIME + 1), null };
+                    new Date[] { new Date(TimeUtilsForTests.DEFAULT_TIME), new Date(TimeUtilsForTests.DEFAULT_TIME + 1), null };
             final boolean[] isUnsupportedValuesSet = new boolean[] { true, false };
 
             /* Add all the valid permutations where the event has higher priority based on the new

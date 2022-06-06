@@ -6,7 +6,7 @@ import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.view.LoginActivity;
-import org.edx.mobile.view.PresenterActivityTest;
+import org.edx.mobile.view.base.PresenterActivityTest;
 import org.junit.Before;
 import org.junit.Test;
 

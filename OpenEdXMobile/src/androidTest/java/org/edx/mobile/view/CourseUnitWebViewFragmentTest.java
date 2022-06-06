@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import android.view.View;
 import android.webkit.WebView;
 
+import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.base.UiTest;
 import org.edx.mobile.course.CourseAPI;
@@ -17,6 +17,7 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.base.HiltTestActivity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

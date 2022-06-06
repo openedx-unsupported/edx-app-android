@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import org.edx.mobile.base.http.SynchronousExecutorService
-import org.edx.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor
+import org.edx.mobile.base.http.interceptor.OnlyIfCachedStrippingInterceptor
 import org.edx.mobile.http.provider.RetrofitProvider
 import org.edx.mobile.model.course.BlockData
 import org.edx.mobile.model.course.BlockList

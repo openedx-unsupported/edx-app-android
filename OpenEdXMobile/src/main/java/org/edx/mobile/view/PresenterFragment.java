@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +29,7 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
         if (null == presenter) {
             if (getContext().getApplicationContext() instanceof PresenterInjector) {
                 //noinspection unchecked
-                presenter = (P)((PresenterInjector) getContext().getApplicationContext()).getPresenter();
+                presenter = (P) ((PresenterInjector) getContext().getApplicationContext()).getPresenter();
             }
             if (null == presenter) {
                 presenter = createPresenter();
@@ -60,6 +61,14 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
     public void onDestroy() {
         super.onDestroy();
         presenter.destroy();
+    }
+
+    public void setPresenter(P presenter) {
+        this.presenter = presenter;
+    }
+
+    public V getPresenterView() {
+        return getPresenterView();
     }
 }
 

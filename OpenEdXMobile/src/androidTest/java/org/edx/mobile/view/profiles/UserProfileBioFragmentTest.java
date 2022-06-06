@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 
 import androidx.databinding.DataBindingUtil;
 
+import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.databinding.FragmentUserProfileBioBinding;
 import org.edx.mobile.profiles.UserProfileBioFragment;
 import org.edx.mobile.profiles.UserProfileBioPresenter;

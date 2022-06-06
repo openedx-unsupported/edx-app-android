@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -27,7 +28,7 @@ public abstract class PresenterActivity<P extends Presenter<V>, V> extends BaseF
             if (null == presenter) {
                 if (getApplication() instanceof PresenterInjector) {
                     //noinspection unchecked
-                    presenter = (P)((PresenterInjector) getApplication()).getPresenter();
+                    presenter = (P) ((PresenterInjector) getApplication()).getPresenter();
                 }
                 if (null == presenter) {
                     presenter = createPresenter(savedInstanceState);
@@ -57,5 +58,13 @@ public abstract class PresenterActivity<P extends Presenter<V>, V> extends BaseF
             presenter.detachView();
             presenter.destroy();
         }
+    }
+
+    public void setPresenter(P presenter) {
+        this.presenter = presenter;
+    }
+
+    public V setPresenterView() {
+        return view;
     }
 }

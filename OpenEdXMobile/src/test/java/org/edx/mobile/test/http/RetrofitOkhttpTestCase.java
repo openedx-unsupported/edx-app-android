@@ -6,8 +6,8 @@ import android.content.Context;
 
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.http.interceptor.GzipRequestInterceptor;
-import org.edx.mobile.http.interceptor.OauthHeaderRequestInterceptor;
+import org.edx.mobile.base.http.interceptor.GzipRequestInterceptor;
+import org.edx.mobile.base.http.interceptor.OauthHeaderRequestInterceptor;
 import org.junit.Ignore;
 import org.robolectric.RuntimeEnvironment;
 

@@ -7,7 +7,7 @@ import com.facebook.testing.screenshot.Screenshot
 import org.edx.mobile.R
 import org.edx.mobile.base.MainApplication
 import org.edx.mobile.module.prefs.LoginPrefs
-import org.edx.mobile.test.feature.data.TestValues
+import org.edx.mobile.feature.data.TestValues
 import org.edx.mobile.view.AccountActivity
 import org.junit.After
 import org.junit.Before

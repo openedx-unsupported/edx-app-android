@@ -1,19 +1,19 @@
 package org.edx.mobile.view.profiles;
 
-import static org.assertj.android.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.robolectric.Shadows.shadowOf;
 
-import android.widget.TextView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
+import org.assertj.core.api.Assertions;
 import org.edx.mobile.R;
+import org.edx.mobile.base.profile.ProfileValues;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.profiles.UserProfileAccomplishmentsFragment;
 import org.edx.mobile.profiles.UserProfileBioFragment;
@@ -23,13 +23,14 @@ import org.edx.mobile.profiles.UserProfilePresenter;
 import org.edx.mobile.profiles.UserProfileTab;
 import org.edx.mobile.profiles.UserProfileViewModel;
 import org.edx.mobile.util.images.ErrorUtils;
-import org.edx.mobile.view.PresenterFragmentTest;
 import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
+import org.edx.mobile.view.base.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
@@ -68,7 +69,7 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
     @Test
     public void setName_updatesTextView() {
         view.setUsername(ProfileValues.USERNAME);
-        Assertions.assertThat((TextView) binding.nameText).hasText(ProfileValues.USERNAME);
+        Assertions.assertThat(binding.nameText.getText()).isEqualToIgnoringCase(ProfileValues.USERNAME);
     }
 
     @Test
@@ -86,20 +87,20 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
     @Test
     public void setProfile_withLoadingContentType_showsLoadingIndicatorAndHidesContent() {
         view.showLoading();
-        Assertions.assertThat(binding.contentLoadingIndicator.getRoot()).isVisible();
-        Assertions.assertThat(binding.profileBodyContent).isGone();
+        Assertions.assertThat(binding.contentLoadingIndicator.getRoot().getVisibility()).isEqualTo(View.VISIBLE);
+        Assertions.assertThat(binding.profileBodyContent.getVisibility()).isEqualTo(View.GONE);
     }
 
     @Test
     public void click_onEditProfileOption_callsEditProfile() {
         view.setEditProfileMenuButtonVisible(true);
-        shadowOf(fragment.getActivity()).clickMenuItem(R.id.edit_profile);
+        Shadows.shadowOf(fragment.getActivity()).clickMenuItem(R.id.edit_profile);
         verify(presenter).onEditProfile();
     }
 
     @Test
     public void click_onHomeButton_doesNotCallEditProfile() {
-        shadowOf(fragment.getActivity()).clickMenuItem(android.R.id.home);
+        Shadows.shadowOf(fragment.getActivity()).clickMenuItem(android.R.id.home);
         verify(presenter, never()).onEditProfile();
     }
 
@@ -114,10 +115,10 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
                         null
                 )
         ));
-        Assertions.assertThat(binding.profileBodyContent).isVisible();
+        Assertions.assertThat(binding.profileBodyContent.getVisibility()).isEqualTo(View.VISIBLE);
 //        assertThat(binding.noAboutMe).isVisible();
-        Assertions.assertThat(binding.languageContainer).isNotVisible();
-        Assertions.assertThat(binding.locationContainer).isNotVisible();
+        Assertions.assertThat(binding.languageContainer.getVisibility()).isNotEqualTo(View.VISIBLE);
+        Assertions.assertThat(binding.locationContainer.getVisibility()).isNotEqualTo(View.VISIBLE);
     }
 
     @Test
@@ -130,22 +131,22 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
                         UserProfileBioModel.ContentType.ABOUT_ME,
                         ProfileValues.ABOUT_ME)
         ));
-        Assertions.assertThat(binding.profileBodyContent).isVisible();
+        Assertions.assertThat(binding.profileBodyContent.getVisibility()).isEqualTo(View.VISIBLE);
 //        assertThat(binding.bioText).isVisible().hasText(ProfileValues.ABOUT_ME);
-        Assertions.assertThat(binding.languageContainer).isVisible();
-        Assertions.assertThat(binding.languageText).hasText(ProfileValues.LANGUAGE_NAME);
-        Assertions.assertThat(binding.locationContainer).isVisible();
-        Assertions.assertThat(binding.locationText).hasText(ProfileValues.COUNTRY_NAME);
+        Assertions.assertThat(binding.languageContainer.getVisibility()).isEqualTo(View.VISIBLE);
+        Assertions.assertThat(binding.languageText.getText()).isEqualTo(ProfileValues.LANGUAGE_NAME);
+        Assertions.assertThat(binding.locationContainer.getVisibility()).isEqualTo(View.VISIBLE);
+        Assertions.assertThat(binding.locationText.getText()).isEqualTo(ProfileValues.COUNTRY_NAME);
     }
 
     @Test
     public void showError_withRuntimeException_showsErrorTextAndHidesContent() {
         final RuntimeException error = new RuntimeException();
         view.showError(error);
-        Assertions.assertThat(binding.contentError.getRoot()).isVisible();
-        Assertions.assertThat(binding.contentError.contentErrorText).hasText(ErrorUtils.getErrorMessage(error, fragment.getActivity()));
-        Assertions.assertThat(binding.profileBodyContent).isNotVisible();
-        Assertions.assertThat(binding.contentLoadingIndicator.getRoot()).isNotVisible();
+        Assertions.assertThat(binding.contentError.getRoot().getVisibility()).isEqualTo(View.VISIBLE);
+        Assertions.assertThat(binding.contentError.contentErrorText.getText()).isEqualTo(ErrorUtils.getErrorMessage(error, fragment.getActivity()));
+        Assertions.assertThat(binding.profileBodyContent.getVisibility()).isNotEqualTo(View.VISIBLE);
+        Assertions.assertThat(binding.contentLoadingIndicator.getRoot().getVisibility()).isNotEqualTo(View.VISIBLE);
     }
 
     @Test
@@ -154,7 +155,7 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
         final List<UserProfileTab> tabs = Collections.singletonList(userProfileTab);
         view.showTabs(tabs);
         verify(fragment.mockAdapter).setItems(UserProfileFragment.pagerItemsFromProfileTabs(tabs, fragment.getResources()));
-        Assertions.assertThat(binding.profileSectionTabs).isNotVisible();
+        Assertions.assertThat(binding.profileSectionTabs.getVisibility()).isNotEqualTo(View.VISIBLE);
     }
 
     @Test
@@ -164,7 +165,7 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
         final List<UserProfileTab> tabs = Arrays.asList(userProfileTab, accomplishmentsTab);
         view.showTabs(tabs);
         verify(fragment.mockAdapter).setItems(UserProfileFragment.pagerItemsFromProfileTabs(tabs, fragment.getResources()));
-        Assertions.assertThat(binding.profileSectionTabs).isVisible();
+        Assertions.assertThat(binding.profileSectionTabs.getVisibility()).isNotEqualTo(View.VISIBLE);
     }
 
     public static class TestableUserProfileFragment extends UserProfileFragment {

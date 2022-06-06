@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import static org.assertj.android.api.Assertions.assertThat;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import static org.junit.Assert.assertNotNull;
 
@@ -8,10 +7,12 @@ import android.view.View;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import org.assertj.core.api.Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.base.UiTest;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.base.HiltTestActivity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

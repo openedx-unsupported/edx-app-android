@@ -11,12 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
 import org.edx.mobile.profiles.AccomplishmentListAdapter;
 import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.profiles.UserProfileAccomplishmentsFragment;
 import org.edx.mobile.profiles.UserProfileAccomplishmentsPresenter;
-import org.edx.mobile.view.PresenterFragmentTest;
+import org.edx.mobile.view.base.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -69,8 +71,8 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     public void test_startBadgeShareIntent_startsShareActivity() {
         final String badgeUrl = "http://example.com";
         view.startBadgeShareIntent(badgeUrl);
-        assertThat(shadowOf(fragment.getActivity()).getNextStartedActivity())
-                .hasAction(Intent.ACTION_SEND);
+        Assertions.assertThat(shadowOf(fragment.getActivity()).getNextStartedActivity().getAction())
+                .isEqualTo(Intent.ACTION_SEND);
     }
 
     @Test

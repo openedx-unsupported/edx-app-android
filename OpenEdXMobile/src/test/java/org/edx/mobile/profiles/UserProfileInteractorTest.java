@@ -1,10 +1,21 @@
 package org.edx.mobile.profiles;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.refEq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.base.BaseTest;
+import org.edx.mobile.base.profile.ProfileValues;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.api.ProfileModel;
@@ -24,16 +35,6 @@ import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.mock.Calls;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.refEq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 public class UserProfileInteractorTest extends BaseTest {
 
