@@ -1,12 +1,10 @@
 package org.edx.mobile.services;
 
-import android.content.Context;
 import android.webkit.CookieManager;
 
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.authentication.LoginService;
-import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
@@ -16,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.hilt.android.EntryPointAccessors;
 import de.greenrobot.event.EventBus;
 import okhttp3.Cookie;
 import okhttp3.RequestBody;
@@ -54,14 +51,6 @@ public class EdxCookieManager {
     public EdxCookieManager(Config config, LoginService loginService) {
         this.config = config;
         this.loginService = loginService;
-    }
-
-    public static synchronized EdxCookieManager getSharedInstance(@NonNull final Context context) {
-        if (instance == null) {
-            instance = EntryPointAccessors.fromApplication(context,
-                    EdxDefaultModule.ProviderEntryPoint.class).getEdxCookieManager();
-        }
-        return instance;
     }
 
     public void clearWebWiewCookie() {

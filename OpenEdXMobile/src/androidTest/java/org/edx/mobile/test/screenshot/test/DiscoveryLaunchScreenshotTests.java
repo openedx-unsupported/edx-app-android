@@ -5,6 +5,9 @@ import org.edx.mobile.view.DiscoveryLaunchActivity;
 import org.edx.mobile.view.DiscoveryLaunchPresenter;
 import org.junit.Test;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class DiscoveryLaunchScreenshotTests extends PresenterActivityScreenshotTest<DiscoveryLaunchActivity, DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
 
     @Test

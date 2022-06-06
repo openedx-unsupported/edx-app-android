@@ -12,9 +12,9 @@ import androidx.test.rule.UiThreadTestRule;
 
 import com.facebook.testing.screenshot.Screenshot;
 
+import org.edx.mobile.base.EdxInstrumentationTestApplication;
 import org.edx.mobile.base.GenericSuperclassUtils;
 import org.edx.mobile.loader.AsyncTaskResult;
-import org.edx.mobile.base.EdxInstrumentationTestApplication;
 import org.edx.mobile.view.Presenter;
 import org.edx.mobile.view.PresenterActivity;
 import org.junit.After;
@@ -26,6 +26,8 @@ import org.junit.runner.RunWith;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+
+import dagger.hilt.android.testing.HiltAndroidRule;
 
 /**
  * Extend this class to create an instrumentation test that automatically:
@@ -42,21 +44,25 @@ public abstract class PresenterActivityScreenshotTest<ActivityT extends Presente
     protected ViewT view;
     protected PresenterT presenter;
 
-    @Rule
-    public ActivityTestRule<ActivityT> mActivityRule = new ActivityTestRule<>(getActivityType(), true, false);
+    @Rule(order = 0)
+    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
 
-    @Rule
+    @Rule(order = 1)
+    public ActivityTestRule<ActivityT> activityRule = new ActivityTestRule<>(getActivityType(), true, false);
+
+    @Rule(order = 2)
     public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
-    @Rule
+    @Rule(order = 3)
     public TestName testName = new TestName();
 
     @Before
     public void before() {
+        hiltAndroidRule.inject();
         this.presenter = mock(getPresenterType());
         ((EdxInstrumentationTestApplication) InstrumentationRegistry.getInstrumentation().
                 getTargetContext().getApplicationContext()).setNextPresenter(presenter);
-        this.activity = mActivityRule.launchActivity(null);
+        this.activity = activityRule.launchActivity(null);
         // To simplify tests, we automatically execute view methods on the application's UI thread.
         this.view = UiThreadInvocationHandler.newProxyInstance(uiThreadTestRule, activity.setPresenterView(), getViewType());
     }

@@ -1,6 +1,5 @@
 package org.edx.mobile.profiles;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -12,6 +11,7 @@ import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.observer.CachingObservable;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 
 import java.util.Collections;
@@ -81,7 +81,7 @@ public class UserProfilePresenterTest extends PresenterTest<UserProfilePresenter
     @Test
     public void whenInteractorEmitsProfileImageError_noInteractionsWithView() {
         photoObservable.onError(new RuntimeException());
-        verify(view, never()).showError(any(Throwable.class));
+        verify(view, never()).showError(ArgumentMatchers.any(Throwable.class));
     }
 
     @Test

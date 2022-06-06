@@ -9,11 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.authentication.AuthResponse;
-import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.VideoPlaybackSpeed;
 
@@ -21,12 +20,15 @@ import javax.inject.Inject;
 
 import dagger.Module;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
 @Module
 @InstallIn(SingletonComponent.class)
 public class LoginPrefs {
+
+    private final Context context;
 
     public enum AuthBackend {
         PASSWORD,
@@ -44,6 +46,7 @@ public class LoginPrefs {
     @Inject
     public LoginPrefs(@ApplicationContext @NonNull Context context) {
         pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        this.context = context;
     }
 
     public void storeAuthTokenResponse(@NonNull AuthResponse response, @NonNull AuthBackend backend) {
@@ -73,7 +76,8 @@ public class LoginPrefs {
         pref.put(PrefManager.Key.AUTH_JSON, null);
         pref.put(PrefManager.Key.VIDEO_QUALITY, VideoQuality.AUTO.ordinal());
         pref.put(PrefManager.Key.PROFILE_IMAGE, null);
-        EdxCookieManager.getSharedInstance(MainApplication.instance()).clearWebWiewCookie();
+        EntryPointAccessors.fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
+                .getEdxCookieManager().clearWebWiewCookie();
     }
 
     public void saveSocialLoginToken(@NonNull String accessToken, @NonNull String backend) {

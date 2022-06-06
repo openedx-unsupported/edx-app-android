@@ -42,6 +42,9 @@ public class CertificateFragment extends BaseFragment {
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
+    @Inject
+    EdxCookieManager edxCookieManager;
+
     EnrolledCoursesResponse courseData;
 
     private WebView webview;
@@ -134,7 +137,7 @@ public class CertificateFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         // Clear cookies before loading so that social sharing buttons are not displayed inside web view
-        EdxCookieManager.getSharedInstance(getContext()).clearWebWiewCookie();
+        edxCookieManager.clearWebWiewCookie();
 
         webview.loadUrl(courseData.getCertificateURL());
     }

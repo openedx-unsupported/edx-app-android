@@ -1,24 +1,25 @@
 package org.edx.mobile.profiles;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
 
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.view.adapters.LoadingViewHolder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class AccomplishmentListAdapterTest extends BaseTestCase {
     private AccomplishmentListAdapter adapter;
@@ -66,7 +67,7 @@ public class AccomplishmentListAdapterTest extends BaseTestCase {
         adapter.setPageLoading(true);
         final LoadingViewHolder viewHolder = mock(LoadingViewHolder.class);
         adapter.onBindViewHolder(viewHolder, 0);
-        verifyZeroInteractions(viewHolder);
+        Mockito.verifyNoInteractions(viewHolder);
     }
 
     @Test

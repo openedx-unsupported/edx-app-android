@@ -28,6 +28,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.AuthenticatedWebviewBinding;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
@@ -43,6 +44,7 @@ import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 
+import dagger.hilt.android.EntryPointAccessors;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -60,6 +62,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     private boolean didReceiveError;
     private boolean isManuallyReloadable;
     private AuthenticatedWebviewBinding binding;
+    private EdxCookieManager ddxCookieManager;
 
     public AuthenticatedWebView(Context context) {
         super(context);
@@ -79,6 +82,9 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
     private void init() {
         binding = AuthenticatedWebviewBinding.inflate(LayoutInflater.from(getContext()), this, true);
         fullScreenErrorNotification = new FullScreenErrorNotification(binding.webview);
+        ddxCookieManager = EntryPointAccessors
+                .fromApplication(getContext(), EdxDefaultModule.ProviderEntryPoint.class)
+                .getEdxCookieManager();
     }
 
     public URLInterceptorWebViewClient getWebViewClient() {
@@ -128,8 +134,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                         case HttpStatus.FORBIDDEN:
                         case HttpStatus.UNAUTHORIZED:
                         case HttpStatus.NOT_FOUND:
-                            EdxCookieManager.getSharedInstance(getContext())
-                                    .tryToRefreshSessionCookie();
+                            ddxCookieManager.tryToRefreshSessionCookie();
                             break;
                         default:
                             hideLoadingProgress();
@@ -244,9 +249,8 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
         if (!TextUtils.isEmpty(url)) {
             // Requery the session cookie if unavailable or expired.
-            final EdxCookieManager cookieManager = EdxCookieManager.getSharedInstance(getContext());
-            if (cookieManager.isSessionCookieMissingOrExpired()) {
-                cookieManager.tryToRefreshSessionCookie();
+            if (ddxCookieManager.isSessionCookieMissingOrExpired()) {
+                ddxCookieManager.tryToRefreshSessionCookie();
             } else {
                 didReceiveError = false;
                 binding.webview.loadUrl(url);

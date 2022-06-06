@@ -148,6 +148,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Inject
     InAppPurchasesAnalytics iapAnalytics;
 
+    @Inject
+    EdxCookieManager edxCookieManager;
+
     private CourseDateViewModel courseDateViewModel;
     private InAppPurchasesViewModel iapViewModel;
 
@@ -912,7 +915,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     getCourseUpgradeStatus = null;
                     if (getActivity() != null) {
                         // Set the revenue cookie
-                        EdxCookieManager.getSharedInstance(getActivity()).setMobileCookie();
+                        edxCookieManager.setMobileCookie();
                         CourseUpgradeResponse courseUpgrade = response.body();
                         if (courseUpgrade != null && courseUpgrade.getShowUpsell()
                                 && !TextUtils.isEmpty(courseUpgrade.getBasketUrl())) {
