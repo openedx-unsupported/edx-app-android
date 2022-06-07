@@ -370,13 +370,15 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun detectDeeplink() {
+        var delayInCall = false
         if (arguments?.get(Router.EXTRA_DEEP_LINK) != null) {
             (arguments?.get(Router.EXTRA_DEEP_LINK) as DeepLink).let { deeplink ->
                 DeepLinkManager.proceedDeeplink(requireActivity(), deeplink)
-                MainApplication.instance().showBanner(loginAPI, true)
+                delayInCall = true
             }
-        } else {
-            MainApplication.instance().showBanner(loginAPI, false)
+        }
+        if (context?.applicationContext is MainApplication) {
+            (context?.applicationContext as MainApplication).showBanner(loginAPI, delayInCall)
         }
     }
 

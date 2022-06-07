@@ -67,7 +67,7 @@ public class SecurityUtil {
         }
 
         // Now clear all the shared preferences except app related preferences
-        PrefManager.nukeSharedPreferences(Collections.singletonList(PrefManager.Pref.APP_INFO));
+        PrefManager.nukeSharedPreferences(context, Collections.singletonList(PrefManager.Pref.APP_INFO));
 
         // Clear app level caching of all courses
         final CourseManager courseManager = EntryPointAccessors.fromApplication(

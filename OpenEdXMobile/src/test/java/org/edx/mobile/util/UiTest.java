@@ -1,4 +1,4 @@
-package org.edx.mobile.base;
+package org.edx.mobile.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

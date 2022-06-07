@@ -2,7 +2,9 @@ package org.edx.mobile.feature.interactor;
 
 import android.app.Instrumentation;
 import android.content.Intent;
-import androidx.test.InstrumentationRegistry;
+import android.os.SystemClock;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 public class AppInteractor {
     public AppLaunchInteractor launchApp() {
@@ -13,6 +15,7 @@ public class AppInteractor {
 
         instrumentation.startActivitySync(launchIntent);
         instrumentation.waitForIdleSync();
+        SystemClock.sleep(500);
         return new AppLaunchInteractor();
     }
 

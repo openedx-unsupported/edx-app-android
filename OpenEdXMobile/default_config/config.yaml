@@ -1,4 +1,5 @@
-API_HOST_URL: 'http://10.0.2.2:8000' # localhost is 10.0.2.2 in Android
+API_HOST_URL: 'http://localhost:8080' # mock server hostname in Android
+ECOMMERCE_URL: 'http://localhost:8080' # mock server hostname in Android
 ENVIRONMENT_DISPLAY_NAME: 'Localhost'
 PLATFORM_NAME: 'Your platform name here'
 PLATFORM_DESTINATION_NAME: 'example.com'

@@ -1,5 +1,5 @@
 
-package org.edx.mobile.view.base;
+package org.edx.mobile.base;
 
 import static org.mockito.Mockito.mock;
 

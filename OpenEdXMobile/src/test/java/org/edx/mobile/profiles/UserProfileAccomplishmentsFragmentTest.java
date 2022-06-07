@@ -1,8 +1,6 @@
-package org.edx.mobile.view.profiles;
+package org.edx.mobile.profiles;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.robolectric.Shadows.shadowOf;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -14,10 +12,6 @@ import androidx.databinding.DataBindingUtil;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
-import org.edx.mobile.profiles.AccomplishmentListAdapter;
-import org.edx.mobile.profiles.BadgeAssertion;
-import org.edx.mobile.profiles.UserProfileAccomplishmentsFragment;
-import org.edx.mobile.profiles.UserProfileAccomplishmentsPresenter;
 import org.edx.mobile.view.base.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Test;

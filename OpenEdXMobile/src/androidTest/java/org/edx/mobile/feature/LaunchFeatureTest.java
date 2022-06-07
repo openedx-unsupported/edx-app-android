@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class LaunchFeatureTest extends FeatureTest {
 
     @Inject
@@ -34,8 +37,8 @@ public class LaunchFeatureTest extends FeatureTest {
         environment.getLoginPrefs().storeUserProfile(TestValues.DUMMY_PROFILE);
         new AppInteractor()
                 .launchApp()
-                .observeLogInScreen()
-                .navigateBack()
-                .observeLandingScreen();
+                .observeLandingScreen()
+                .navigateToLogInScreen()
+                .observeLogInScreen();
     }
 }

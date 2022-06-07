@@ -6,8 +6,6 @@ import android.content.SharedPreferences.Editor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.edx.mobile.base.MainApplication;
-
 import java.util.List;
 
 /**
@@ -20,13 +18,8 @@ public class PrefManager {
     private Context context;
     private String prefName;
 
-    //FIXME - we should use MAApplication's context to clean up
-    //the code.
     public PrefManager(Context context, String prefName) {
-        if (MainApplication.instance() != null)
-            this.context = MainApplication.instance().getApplicationContext();
-        else
-            this.context = context;
+        this.context = context;
         this.prefName = prefName;
     }
 
@@ -322,14 +315,15 @@ public class PrefManager {
     /**
      * Clears all the shared preferences that are used in the app.
      *
+     * @param context
      * @param exceptions Names of the preferences that need to be skipped while clearing.
      */
-    public static void nukeSharedPreferences(@NonNull List<String> exceptions) {
+    public static void nukeSharedPreferences(Context context, @NonNull List<String> exceptions) {
         for (String prefName : Pref.getAll()) {
             if (exceptions.contains(prefName)) {
                 continue;
             }
-            MainApplication.application.getSharedPreferences(
+            context.getSharedPreferences(
                     prefName, Context.MODE_PRIVATE).edit().clear().apply();
         }
     }

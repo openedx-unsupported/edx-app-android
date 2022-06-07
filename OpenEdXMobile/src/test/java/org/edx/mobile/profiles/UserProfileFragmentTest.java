@@ -1,4 +1,4 @@
-package org.edx.mobile.view.profiles;
+package org.edx.mobile.profiles;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -15,13 +15,6 @@ import org.assertj.core.api.Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.base.profile.ProfileValues;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
-import org.edx.mobile.profiles.UserProfileAccomplishmentsFragment;
-import org.edx.mobile.profiles.UserProfileBioFragment;
-import org.edx.mobile.profiles.UserProfileBioModel;
-import org.edx.mobile.profiles.UserProfileFragment;
-import org.edx.mobile.profiles.UserProfilePresenter;
-import org.edx.mobile.profiles.UserProfileTab;
-import org.edx.mobile.profiles.UserProfileViewModel;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 import org.edx.mobile.view.base.PresenterFragmentTest;

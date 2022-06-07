@@ -4,6 +4,9 @@ import org.edx.mobile.feature.data.TestValues;
 import org.edx.mobile.feature.interactor.AppInteractor;
 import org.junit.Test;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class LogOutFeatureTest extends FeatureTest {
 
     @Test
@@ -13,8 +16,10 @@ public class LogOutFeatureTest extends FeatureTest {
                 .observeLandingScreen()
                 .navigateToLogInScreen()
                 .logIn(TestValues.ACTIVE_USER_CREDENTIALS)
-                .openNavigationDrawer()
+                .observeMyCoursesScreen()
+                .navigateToProfileScreen()
+                .observeProfileScreen()
                 .logOut()
-                .observeLogInScreen();
+                .observeLandingScreen();
     }
 }
