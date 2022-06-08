@@ -2,11 +2,12 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.os.Build;
+import android.view.View;
+import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import android.view.View;
-import android.webkit.WebView;
 
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
@@ -19,10 +20,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.ResponseBody;
-import retrofit2.Response;
 
 /**
  * Common webview helper for any view that needs to use a webview.
@@ -149,9 +147,7 @@ public class WebViewUtil {
                                         final int responseCode = response.code();
                                         if (responseCode >= HttpStatus.BAD_REQUEST) {
                                             errorNotification.showError(context,
-                                                    new HttpStatusException(Response.error(responseCode,
-                                                            ResponseBody.create(MediaType.parse("text/plain"),
-                                                                    response.message()))),
+                                                    new HttpStatusException(responseCode, response.message()),
                                                     actionTextResId, actionListener);
                                             viewInterface.hideLoadingProgress();
                                             viewInterface.clearWebView();

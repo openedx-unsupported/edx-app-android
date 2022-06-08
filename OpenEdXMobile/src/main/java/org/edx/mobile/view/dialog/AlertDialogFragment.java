@@ -323,8 +323,7 @@ public class AlertDialogFragment extends DialogFragment {
                 neutralButton.setTypeface(null, Typeface.BOLD);
             }
         });
-        final boolean isCancelable = args.getBoolean(ARG_IS_CANCELABLE, true);
-        alertDialog.setCancelable(isCancelable);
+        setCancelable(args.getBoolean(ARG_IS_CANCELABLE, true));
         return alertDialog;
     }
 

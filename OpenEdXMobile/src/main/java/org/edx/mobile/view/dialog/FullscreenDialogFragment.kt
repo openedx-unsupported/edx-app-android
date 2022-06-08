@@ -1,6 +1,5 @@
 package org.edx.mobile.view.dialog
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -18,11 +17,10 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogFullscreenLoaderBinding
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatus
-import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.InAppPurchasesException
+import org.edx.mobile.util.InAppPurchasesUtils
 import org.edx.mobile.util.NonNullObserver
-import org.edx.mobile.util.TextUtils
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import java.util.Calendar
 import javax.inject.Inject
@@ -35,6 +33,9 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var iapAnalytics: InAppPurchasesAnalytics
+
+    @Inject
+    lateinit var iapUtils: InAppPurchasesUtils
 
     private lateinit var binding: DialogFullscreenLoaderBinding
 
@@ -67,7 +68,9 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
             ?: Calendar.getInstance().timeInMillis
         intiViews()
         initObservers()
-        if (iapViewModel.isVerificationPending) {
+        if (iapViewModel.upgradeMode.isSilentMode()) {
+            iapViewModel.refreshCourseData(true)
+        } else if (iapViewModel.isVerificationPending) {
             iapViewModel.executeOrder()
         }
     }
@@ -93,81 +96,31 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
                         )
                         return@NonNullObserver
                     }
-                    else -> showUpgradeErrorDialog(
+                    else -> iapUtils.showPostUpgradeErrorDialog(
+                        context = this,
                         errorCode = errorMsg.throwable.httpErrorCode,
                         errorMessage = errorMsg.throwable.errorMessage,
                         errorType = errorMsg.errorCode,
-                        retryListener = { _, _ -> iapViewModel.executeOrder() }
+                        retryListener = { _, _ -> iapViewModel.executeOrder() },
+                        cancelListener = { _, _ -> resetPurchase() }
                     )
                 }
             } else {
-                showUpgradeErrorDialog(
+                iapUtils.showPostUpgradeErrorDialog(
+                    context = this,
                     errorType = errorMsg.errorCode,
                     retryListener = { _, _ ->
                         if (errorMsg.errorCode == ErrorMessage.EXECUTE_ORDER_CODE)
                             iapViewModel.executeOrder()
                         else
                             iapViewModel.refreshCourseData(true)
-                    }
+                    },
+                    cancelListener = { _, _ -> resetPurchase() }
+
                 )
             }
             iapViewModel.errorMessageShown()
         })
-    }
-
-    private fun showUpgradeErrorDialog(
-        errorCode: Int? = null,
-        errorMessage: String? = null,
-        errorType: Int? = null,
-        retryListener: DialogInterface.OnClickListener? = null
-    ) {
-
-        val feedbackErrorMessage: String = TextUtils.getFormattedErrorMessage(
-            errorCode,
-            errorType,
-            errorMessage
-        ).toString()
-
-        iapAnalytics.trackIAPEvent(
-            eventName = Analytics.Events.IAP_COURSE_UPGRADE_ERROR,
-            errorMsg = feedbackErrorMessage
-        )
-        AlertDialogFragment.newInstance(
-            getString(R.string.title_upgrade_error),
-            getString(R.string.error_course_not_fullfilled),
-            getString(R.string.label_refresh_to_retry),
-            retryListener?.also {
-                iapAnalytics.initRefreshContentTime()
-                iapAnalytics.trackIAPEvent(
-                    eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
-                    errorMsg = feedbackErrorMessage,
-                    actionTaken = Analytics.Values.ACTION_REFRESH
-                )
-            },
-            getString(R.string.label_get_help),
-            { _, _ ->
-                environment.router?.showFeedbackScreen(
-                    requireActivity(),
-                    getString(R.string.email_subject_upgrade_error),
-                    feedbackErrorMessage
-                )
-                iapAnalytics.trackIAPEvent(
-                    eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
-                    errorMsg = feedbackErrorMessage,
-                    actionTaken = Analytics.Values.ACTION_GET_HELP
-                )
-                resetPurchase()
-            },
-            getString(R.string.label_cancel),
-            { _, _ ->
-                iapAnalytics.trackIAPEvent(
-                    eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
-                    errorMsg = feedbackErrorMessage,
-                    actionTaken = Analytics.Values.ACTION_CLOSE
-                )
-                resetPurchase()
-            }, false
-        ).show(childFragmentManager, null)
     }
 
     private fun getTitle(): SpannableStringBuilder {

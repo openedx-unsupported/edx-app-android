@@ -9,8 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.constants.ApiConstants
@@ -21,7 +19,6 @@ import org.edx.mobile.model.course.CourseDates
 import org.edx.mobile.model.course.ResetCourseDates
 import org.edx.mobile.repositorie.CourseDatesRepository
 import org.edx.mobile.util.CalendarUtils
-import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
@@ -213,13 +210,6 @@ class CourseDateViewModel @Inject constructor(
     }
 
     fun setError(errorCode: Int, httpStatusCode: Int, msg: String) {
-        _errorMessage.value = ErrorMessage(
-            errorCode, HttpStatusException(
-                Response.error<Any>(
-                    httpStatusCode,
-                    ResponseBody.create("text/plain".toMediaTypeOrNull(), msg)
-                )
-            )
-        )
+        _errorMessage.value = ErrorMessage(errorCode, HttpStatusException(httpStatusCode, msg))
     }
 }

@@ -1,11 +1,9 @@
 package org.edx.mobile.view
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingResult
@@ -23,10 +21,15 @@ import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
-import org.edx.mobile.module.analytics.Analytics.*
+import org.edx.mobile.module.analytics.Analytics.Events
+import org.edx.mobile.module.analytics.Analytics.Screens
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
-import org.edx.mobile.util.*
-import org.edx.mobile.view.dialog.AlertDialogFragment
+import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.InAppPurchasesException
+import org.edx.mobile.util.InAppPurchasesUtils
+import org.edx.mobile.util.NonNullObserver
+import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import javax.inject.Inject
 
@@ -43,6 +46,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     @Inject
     lateinit var iapAnalytics: InAppPurchasesAnalytics
 
+    @Inject
+    lateinit var iapUtils: InAppPurchasesUtils
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -126,9 +131,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             binding.layoutUpgradeBtn.root.setVisibility(true)
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
                 iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
-                unit?.productSku?.let { productId ->
+                unit?.courseSku?.let { productId ->
                     iapViewModel.addProductToBasket(productId)
-                } ?: showUpgradeErrorDialog()
+                } ?: iapUtils.showUpgradeErrorDialog(this)
             }
 
             billingProcessor = BillingProcessor(requireContext(), object : BillingFlowListeners {
@@ -146,7 +151,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
                 override fun onPurchaseCancel(responseCode: Int, message: String) {
                     iapViewModel.endLoading()
-                    showUpgradeErrorDialog(
+                    iapUtils.showUpgradeErrorDialog(
+                        context = this@CourseUnitMobileNotSupportedFragment,
                         errorResId = R.string.error_payment_not_processed,
                         errorCode = responseCode,
                         errorMessage = message,
@@ -165,7 +171,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private fun initializeProductPrice() {
         iapAnalytics.initPriceTime()
-        unit?.productSku?.let { productId ->
+        unit?.courseSku?.let { productId ->
             billingProcessor?.querySyncDetails(
                 productId = productId
             ) { _, skuDetails ->
@@ -188,7 +194,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     iapAnalytics.setPrice(price)
                     iapAnalytics.trackIAPEvent(Events.IAP_LOAD_PRICE_TIME)
                 } else {
-                    showUpgradeErrorDialog(
+                    iapUtils.showUpgradeErrorDialog(
+                        context = this,
                         errorResId = R.string.error_price_not_fetched,
                         errorType = ErrorMessage.PRICE_CODE,
                         listener = { _, _ ->
@@ -196,7 +203,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                         })
                 }
             }
-        } ?: showUpgradeErrorDialog(
+        } ?: iapUtils.showUpgradeErrorDialog(
+            context = this,
             errorResId = R.string.error_price_not_fetched,
             errorType = ErrorMessage.PRICE_CODE,
             listener = { _, _ ->
@@ -240,15 +248,33 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                         )
                         return@NonNullObserver
                     }
-                    else -> showUpgradeErrorDialog(
-                        errorMsg.errorResId,
-                        errorMsg.throwable.httpErrorCode,
-                        errorMsg.throwable.errorMessage,
-                        errorMsg.errorCode
+                    HttpStatus.NOT_ACCEPTABLE -> {
+                        iapUtils.showPostUpgradeErrorDialog(
+                            context = this,
+                            errorResId = errorMsg.errorResId,
+                            errorCode = errorMsg.throwable.httpErrorCode,
+                            errorMessage = errorMsg.throwable.errorMessage,
+                            errorType = errorMsg.errorCode,
+                            retryListener = { _, _ ->
+                                iapViewModel.upgradeMode =
+                                    InAppPurchasesViewModel.UpgradeMode.SILENT
+                                iapViewModel.showFullScreenLoader(true)
+                            },
+                            cancelListener = null
+                        )
+                    }
+                    else -> iapUtils.showUpgradeErrorDialog(
+                        context = this,
+                        errorResId = errorMsg.errorResId,
+                        errorCode = errorMsg.throwable.httpErrorCode,
+                        errorMessage = errorMsg.throwable.errorMessage,
+                        errorType = errorMsg.errorCode
                     )
                 }
             } else {
-                showUpgradeErrorDialog(errorMsg.errorResId, errorType = errorMsg.errorCode)
+                iapUtils.showUpgradeErrorDialog(
+                    context = this, errorResId = errorMsg.errorResId, errorType = errorMsg.errorCode
+                )
             }
             iapViewModel.errorMessageShown()
         })
@@ -260,7 +286,11 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun purchaseProduct(productId: String) {
-        activity?.let { billingProcessor?.purchaseItem(it, productId) }
+        activity?.let { context ->
+            environment.loginPrefs.userId?.let { userId ->
+                billingProcessor?.purchaseItem(context, productId, userId)
+            }
+        }
     }
 
     private fun onProductPurchased(purchaseToken: String) {
@@ -271,80 +301,6 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             iapViewModel.setPurchaseToken(purchaseToken)
             iapViewModel.showFullScreenLoader(true)
         }
-    }
-
-    private fun showUpgradeErrorDialog(
-        @StringRes errorResId: Int = R.string.general_error_message,
-        errorCode: Int? = null,
-        errorMessage: String? = null,
-        errorType: Int? = null,
-        listener: DialogInterface.OnClickListener? = null
-    ) {
-        // To restrict showing error dialog on an unattached fragment
-        if (!isAdded) return
-
-        val feedbackErrorMessage: String = TextUtils.getFormattedErrorMessage(
-            errorCode,
-            errorType,
-            errorMessage
-        ).toString()
-
-        when (errorType) {
-            ErrorMessage.PAYMENT_SDK_CODE -> iapAnalytics.trackIAPEvent(
-                Events.IAP_PAYMENT_ERROR,
-                feedbackErrorMessage
-            )
-            ErrorMessage.PRICE_CODE -> iapAnalytics.trackIAPEvent(
-                Events.IAP_PRICE_LOAD_ERROR,
-                feedbackErrorMessage
-            )
-            else -> iapAnalytics.trackIAPEvent(
-                Events.IAP_COURSE_UPGRADE_ERROR,
-                feedbackErrorMessage
-            )
-        }
-
-        AlertDialogFragment.newInstance(
-            getString(R.string.title_upgrade_error),
-            getString(errorResId),
-            getString(if (listener != null) R.string.try_again else R.string.label_close),
-            { dialogInterface, i ->
-                listener?.onClick(dialogInterface, i).also {
-                    iapAnalytics.trackIAPEvent(
-                        Events.IAP_ERROR_ALERT_ACTION,
-                        feedbackErrorMessage,
-                        Values.ACTION_RELOAD_PRICE
-                    )
-                } ?: run {
-                    iapAnalytics.trackIAPEvent(
-                        Events.IAP_ERROR_ALERT_ACTION,
-                        feedbackErrorMessage,
-                        Values.ACTION_CLOSE
-                    )
-                }
-            },
-            getString(if (listener != null) R.string.label_cancel else R.string.label_get_help),
-            { _, _ ->
-                listener?.also {
-                    iapAnalytics.trackIAPEvent(
-                        Events.IAP_ERROR_ALERT_ACTION,
-                        feedbackErrorMessage,
-                        Values.ACTION_CLOSE
-                    )
-                } ?: run {
-                    environment.router?.showFeedbackScreen(
-                        requireActivity(),
-                        getString(R.string.email_subject_upgrade_error),
-                        feedbackErrorMessage
-                    )
-                    iapAnalytics.trackIAPEvent(
-                        Events.IAP_ERROR_ALERT_ACTION,
-                        feedbackErrorMessage,
-                        Values.ACTION_GET_HELP
-                    )
-                }
-            }, false
-        ).show(childFragmentManager, null)
     }
 
     override fun onResume() {
