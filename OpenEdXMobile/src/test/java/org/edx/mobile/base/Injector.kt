@@ -4,16 +4,14 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
-import org.edx.mobile.base.http.SynchronousExecutorService
-import org.edx.mobile.base.http.interceptor.OnlyIfCachedStrippingInterceptor
 import org.edx.mobile.http.provider.RetrofitProvider
 import org.edx.mobile.model.course.BlockData
 import org.edx.mobile.model.course.BlockList
 import org.edx.mobile.model.course.BlockType
+import org.edx.mobile.test.http.SynchronousExecutorService
 import org.edx.mobile.util.Config
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 class Injector(config: Config) {
 

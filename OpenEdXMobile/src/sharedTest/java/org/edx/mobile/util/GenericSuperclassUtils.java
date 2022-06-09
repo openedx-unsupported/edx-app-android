@@ -1,4 +1,4 @@
-package org.edx.mobile.base;
+package org.edx.mobile.util;
 
 import androidx.annotation.NonNull;
 

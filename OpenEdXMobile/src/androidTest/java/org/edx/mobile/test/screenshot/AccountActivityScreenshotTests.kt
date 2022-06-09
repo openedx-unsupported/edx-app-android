@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.ActivityTestRule
+import androidx.test.rule.GrantPermissionRule
 import com.facebook.testing.screenshot.Screenshot
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -28,6 +29,11 @@ class AccountActivityScreenshotTests {
 
     @get:Rule(order = 2)
     var testName = TestName()
+
+    @get:Rule(order = 3)
+    val grantPermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
 
     private var loginPrefs: LoginPrefs? = null
     private var activity: AccountActivity? = null

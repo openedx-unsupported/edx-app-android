@@ -4,9 +4,7 @@ import static org.mockito.Mockito.mock;
 
 import androidx.annotation.NonNull;
 
-import org.edx.mobile.base.BaseTestCase;
-import org.edx.mobile.base.GenericSuperclassUtils;
-import org.edx.mobile.base.HiltTestActivity;
+import org.edx.mobile.util.GenericSuperclassUtils;
 import org.edx.mobile.view.Presenter;
 import org.edx.mobile.view.PresenterFragment;
 import org.robolectric.shadows.support.v4.SupportFragmentController;

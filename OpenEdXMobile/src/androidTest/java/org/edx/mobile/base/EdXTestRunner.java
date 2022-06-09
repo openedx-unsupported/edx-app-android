@@ -11,8 +11,8 @@ import com.facebook.testing.screenshot.ScreenshotRunner;
 public class EdXTestRunner extends AndroidJUnitRunner {
     @Override
     public void onCreate(Bundle args) {
-        ScreenshotRunner.onCreate(this, args);
         super.onCreate(args);
+        ScreenshotRunner.onCreate(this, args);
     }
 
     @Override

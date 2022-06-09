@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.Injector;
-import org.edx.mobile.base.util.MockDataUtil;
+import org.edx.mobile.util.MockDataUtil;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.module.prefs.LoginPrefs;

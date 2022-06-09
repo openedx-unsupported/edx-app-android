@@ -4,15 +4,15 @@ import com.google.gson.Gson
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
-import org.edx.mobile.base.util.MockDataUtil
 import org.edx.mobile.feature.data.TestValues
+import org.edx.mobile.util.MockDataUtil
 
 class MockServerDispatcher {
 
     /**
      * Return error response from mock server
      */
-    internal inner class ErrorDispatcher : Dispatcher() {
+    internal inner class ResponseDispatcher : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
             val inValidToken = String.format(
                 "%s %s",
@@ -43,11 +43,12 @@ class MockServerDispatcher {
             ) {
                 MockResponse().setBody(MockDataUtil.getMockResponse("validate_registration_form"))
                     .setResponseCode(200)
-            }else if(request.method.equals("GET", true) && request.requestUrl.toString().contains("/api/mobile/v0.5/my_user_info")){
+            } else if (request.method.equals("GET", true) && request.requestUrl.toString()
+                    .contains("/api/mobile/v0.5/my_user_info")
+            ) {
                 MockResponse().setBody(MockDataUtil.getMockResponse("dummy_profile"))
                     .setResponseCode(200)
-            }
-            else {
+            } else {
                 MockResponse().setResponseCode(200)
             }
         }

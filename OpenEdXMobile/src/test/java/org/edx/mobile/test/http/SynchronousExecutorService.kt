@@ -1,4 +1,4 @@
-package org.edx.mobile.base.http
+package org.edx.mobile.test.http
 
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException

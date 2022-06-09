@@ -2,6 +2,7 @@ package org.edx.mobile.base;
 
 import androidx.annotation.NonNull;
 
+import org.edx.mobile.util.GenericSuperclassUtils;
 import org.edx.mobile.view.Presenter;
 import org.junit.After;
 import org.mockito.Mockito;

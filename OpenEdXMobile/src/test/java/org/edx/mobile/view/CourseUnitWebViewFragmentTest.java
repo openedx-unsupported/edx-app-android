@@ -10,7 +10,6 @@ import android.webkit.WebView;
 import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.base.HiltTestActivity;
-import org.edx.mobile.base.UiTest;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -18,35 +17,18 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HtmlBlockModel;
-import org.junit.Before;
-import org.junit.Rule;
+import org.edx.mobile.util.UiTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import dagger.hilt.android.testing.HiltAndroidRule;
-import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.HiltTestApplication;
-
-@HiltAndroidTest
-@Config(application = HiltTestApplication.class)
 @RunWith(RobolectricTestRunner.class)
 public class CourseUnitWebViewFragmentTest extends UiTest {
-
-    @Rule()
-    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
-
-    @Before
-    public void init() {
-        hiltAndroidRule.inject();
-    }
-
 
     EnrolledCoursesResponse courseData;
 

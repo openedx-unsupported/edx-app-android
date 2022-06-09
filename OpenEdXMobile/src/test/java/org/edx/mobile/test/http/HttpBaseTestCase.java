@@ -1,4 +1,4 @@
-package org.edx.mobile.base.http;
+package org.edx.mobile.test.http;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -15,7 +15,7 @@ import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.Injector;
-import org.edx.mobile.base.util.MockDataUtil;
+import org.edx.mobile.util.MockDataUtil;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.HttpStatus;

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.edx.mobile.base.http.HttpBaseTestCase;
+import org.edx.mobile.test.http.HttpBaseTestCase;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.junit.Before;
 import org.junit.Ignore;

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import org.edx.mobile.base.util.TimeUtilsForTests
+import org.edx.mobile.util.TimeUtilsForTests
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.util.Config
 import org.junit.After
@@ -37,7 +37,7 @@ abstract class BaseTestCase : BaseTest() {
     }
 
     /**
-     * subclass should inject the properties marked as @Inject
+     * subclass should inject the properties marked
      */
     @Throws(Exception::class)
     protected open fun inject(injector: Injector?) {

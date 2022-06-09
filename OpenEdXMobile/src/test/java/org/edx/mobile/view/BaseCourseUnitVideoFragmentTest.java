@@ -13,42 +13,25 @@ import android.view.ViewGroup;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Java6Assertions;
 import org.edx.mobile.R;
-import org.edx.mobile.base.UiTest;
+import org.edx.mobile.base.HiltTestActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.VideoBlockModel;
-import org.edx.mobile.base.HiltTestActivity;
-import org.junit.Before;
-import org.junit.Rule;
+import org.edx.mobile.util.UiTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
-
-import dagger.hilt.android.testing.HiltAndroidRule;
-import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.HiltTestApplication;
 
 // We should add mock downloads, mock play, and state retention tests
 // later. Also, online/offline transition tests; although the
 // onOnline() and onOffline() methods don't seem to be called from
 // anywhere yet?
-@HiltAndroidTest
-@Config(application = HiltTestApplication.class)
 @RunWith(RobolectricTestRunner.class)
 public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
-
-    @Rule()
-    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
-
-    @Before
-    public void init() {
-        hiltAndroidRule.inject();
-    }
 
     protected abstract BaseCourseUnitVideoFragment getCourseUnitPlayerFragmentInstance();
 

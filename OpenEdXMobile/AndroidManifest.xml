@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.edx.mobile"
-    android:installLocation="auto">
+    android:installLocation="auto"
+    android:sharedUserId="org.edx.mobile.uid">
 
     <!-- Required by app for server communication and video download -->
     <!-- Required by Segment -->

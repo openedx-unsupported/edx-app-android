@@ -13,11 +13,11 @@ import androidx.databinding.DataBindingUtil;
 
 import org.assertj.core.api.Assertions;
 import org.edx.mobile.R;
+import org.edx.mobile.base.PresenterFragmentTest;
 import org.edx.mobile.base.profile.ProfileValues;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
-import org.edx.mobile.view.base.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

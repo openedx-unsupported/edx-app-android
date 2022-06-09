@@ -9,33 +9,17 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import org.assertj.core.api.Assertions;
 import org.edx.mobile.R;
-import org.edx.mobile.base.UiTest;
+import org.edx.mobile.base.HiltTestActivity;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.base.HiltTestActivity;
-import org.junit.Before;
-import org.junit.Rule;
+import org.edx.mobile.util.UiTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 
-import dagger.hilt.android.testing.HiltAndroidRule;
-import dagger.hilt.android.testing.HiltAndroidTest;
-import dagger.hilt.android.testing.HiltTestApplication;
-
-@HiltAndroidTest
-@Config(application = HiltTestApplication.class)
 @RunWith(RobolectricTestRunner.class)
 public class CourseTabsDashboardFragmentTest extends UiTest {
-    @Rule()
-    public HiltAndroidRule hiltAndroidRule = new HiltAndroidRule(this);
-
-    @Before
-    public void init() {
-        hiltAndroidRule.inject();
-    }
 
     protected EnrolledCoursesResponse getCourseData() {
         EnrolledCoursesResponse courseData;

@@ -1,30 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Typeface;
-import androidx.annotation.AnimRes;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.content.res.ResourcesCompat;
-
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.TextView;
-
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.base.UiTest;
-import org.junit.Test;
-import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.Shadows;
-import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.android.controller.ActivityController;
-import org.robolectric.util.Scheduler;
-
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -33,6 +8,31 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
+
+import androidx.annotation.AnimRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.res.ResourcesCompat;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.util.UiTest;
+import org.junit.Test;
+import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
+import org.robolectric.android.controller.ActivityController;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.util.Scheduler;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
 public abstract class BaseFragmentActivityTest extends UiTest {
@@ -180,8 +180,8 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     public void animateLayoutsTest() {
         final BaseFragmentActivity activity =
                 Robolectric.buildActivity(
-                    getActivityClass(),
-                    getIntent()
+                        getActivityClass(),
+                        getIntent()
                 ).setup().get();
         final View view = new View(activity);
         view.setVisibility(View.GONE);

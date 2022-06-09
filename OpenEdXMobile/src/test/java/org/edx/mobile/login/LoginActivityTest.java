@@ -1,10 +1,12 @@
 package org.edx.mobile.login;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.PresenterActivityTest;
 import org.edx.mobile.view.LoginActivity;
-import org.edx.mobile.view.base.PresenterActivityTest;
 import org.edx.mobile.view.login.LoginPresenter;
 import org.junit.Before;
 import org.junit.Test;

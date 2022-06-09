@@ -126,9 +126,10 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
-            ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
-            mv OpenEdXMobile/screenshots artifacts/
+            ./gradlew connectedAndroidTest
+#            ./gradlew verifyProdDebuggableAndroidTestScreenshotTest -PdisablePreDex
+#            ./gradlew pullProdDebuggableAndroidTestScreenshots -PdisablePreDex
+#            mv OpenEdXMobile/screenshots artifacts/
 
       # Uploads the folder or file in path to GitHub
       - name: Upload Test Report

@@ -1,6 +1,9 @@
 package org.edx.mobile.profiles;
 
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -9,10 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.Java6Assertions;
+import org.edx.mobile.base.PresenterFragmentTest;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
-import org.edx.mobile.view.base.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,7 +35,7 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     public void before() {
         startFragment(new TestableUserProfileAccomplishmentsFragment(mockAdapter));
         binding = DataBindingUtil.getBinding(fragment.getView());
-        Java6Assertions.assertThat(binding).isNotNull();
+        assertThat(binding).isNotNull();
     }
 
     @Test
@@ -65,8 +66,8 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     public void test_startBadgeShareIntent_startsShareActivity() {
         final String badgeUrl = "http://example.com";
         view.startBadgeShareIntent(badgeUrl);
-        Assertions.assertThat(shadowOf(fragment.getActivity()).getNextStartedActivity().getAction())
-                .isEqualTo(Intent.ACTION_SEND);
+        assertThat(shadowOf(fragment.getActivity()).getNextStartedActivity())
+                .hasAction(Intent.ACTION_SEND);
     }
 
     @Test

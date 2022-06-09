@@ -1,4 +1,4 @@
-package org.edx.mobile.base.http.interceptor;
+package org.edx.mobile.test.http.interceptor;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

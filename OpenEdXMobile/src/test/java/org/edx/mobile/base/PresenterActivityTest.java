@@ -7,8 +7,7 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import org.edx.mobile.base.BaseTestCase;
-import org.edx.mobile.base.GenericSuperclassUtils;
+import org.edx.mobile.util.GenericSuperclassUtils;
 import org.edx.mobile.view.Presenter;
 import org.edx.mobile.view.PresenterActivity;
 import org.robolectric.Robolectric;

@@ -25,7 +25,7 @@ abstract class FeatureTest {
     @Before
     fun setup() {
         mockWebServer = MockWebServer()
-        mockWebServer.dispatcher = MockServerDispatcher().ErrorDispatcher()
+        mockWebServer.dispatcher = MockServerDispatcher().ResponseDispatcher()
         mockWebServer.start(8080)
 
         hiltAndroidRule.inject()

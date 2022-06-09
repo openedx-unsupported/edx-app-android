@@ -1,6 +1,6 @@
-package org.edx.mobile.test.screenshot.test;
+package org.edx.mobile.test.screenshot;
 
-import org.edx.mobile.test.screenshot.test.base.PresenterActivityScreenshotTest;
+import org.edx.mobile.test.screenshot.base.PresenterActivityScreenshotTest;
 import org.edx.mobile.view.DiscoveryLaunchActivity;
 import org.edx.mobile.view.DiscoveryLaunchPresenter;
 import org.junit.Test;

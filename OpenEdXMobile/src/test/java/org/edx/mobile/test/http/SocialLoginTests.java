@@ -1,6 +1,5 @@
 package org.edx.mobile.test.http;
 
-import org.edx.mobile.base.http.HttpBaseTestCase;
 import org.edx.mobile.model.api.ProfileModel;
 import org.junit.Test;
 

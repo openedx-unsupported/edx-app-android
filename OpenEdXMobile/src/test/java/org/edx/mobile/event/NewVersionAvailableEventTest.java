@@ -9,7 +9,7 @@ import com.google.gson.internal.bind.util.ISO8601Utils;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.http.interceptor.NewVersionBroadcastInterceptor;
-import org.edx.mobile.base.util.TimeUtilsForTests;
+import org.edx.mobile.util.TimeUtilsForTests;
 import org.edx.mobile.util.Version;
 import org.junit.AssumptionViolatedException;
 import org.junit.Ignore;

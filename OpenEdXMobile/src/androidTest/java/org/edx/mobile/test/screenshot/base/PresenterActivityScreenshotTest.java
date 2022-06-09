@@ -1,4 +1,4 @@
-package org.edx.mobile.test.screenshot.test.base;
+package org.edx.mobile.test.screenshot.base;
 
 import static org.mockito.Mockito.mock;
 
@@ -13,8 +13,8 @@ import androidx.test.rule.UiThreadTestRule;
 import com.facebook.testing.screenshot.Screenshot;
 
 import org.edx.mobile.base.EdxInstrumentationTestApplication;
-import org.edx.mobile.base.GenericSuperclassUtils;
 import org.edx.mobile.loader.AsyncTaskResult;
+import org.edx.mobile.util.GenericSuperclassUtils;
 import org.edx.mobile.view.Presenter;
 import org.edx.mobile.view.PresenterActivity;
 import org.junit.After;
