@@ -15,6 +15,9 @@ public class AppInteractor {
 
         instrumentation.startActivitySync(launchIntent);
         instrumentation.waitForIdleSync();
+        // MyCourse screen app triggers http request for cache, and then to remote. So wait
+        // 500 milli sec to check cache is available or not and then observe the current screen
+        // specially in emulators.
         SystemClock.sleep(500);
         return new AppLaunchInteractor();
     }

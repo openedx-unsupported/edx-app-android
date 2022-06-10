@@ -1,4 +1,4 @@
-package org.edx.mobile.test.screenshot.test
+package org.edx.mobile.test.screenshot
 
 import android.view.View
 import android.widget.TextView
@@ -12,10 +12,7 @@ import org.edx.mobile.R
 import org.edx.mobile.feature.data.TestValues
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.view.AccountActivity
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.rules.TestName
 
 @HiltAndroidTest
