@@ -3,6 +3,7 @@ package org.edx.mobile.feature.interactor
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -17,12 +18,16 @@ class ProfileScreenInteractor {
         isInActionBarInteraction()
             .check(ViewAssertions.matches(ViewMatchers.withText(title)))
             .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        getSignOutButton().check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         return this
     }
 
     fun logOut(): LandingScreenInteractor {
-        Espresso.onView(ViewMatchers.withText(R.string.label_sign_out_btn))
-            .perform(ViewActions.click())
+        getSignOutButton().perform(ViewActions.click())
         return LandingScreenInteractor()
+    }
+
+    private fun getSignOutButton(): ViewInteraction {
+        return Espresso.onView(ViewMatchers.withText(R.string.label_sign_out_btn))
     }
 }
