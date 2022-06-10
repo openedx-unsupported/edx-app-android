@@ -105,8 +105,8 @@ jobs:
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          profile: Nexus 4
-          api-level: 21
+          profile: Pixel 3
+          api-level: 27
           arch: x86
           target: google_apis
           disable-animations: false
@@ -118,8 +118,8 @@ jobs:
       - name: Run E2E
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          profile: Nexus 4
-          api-level: 21
+          profile: Pixel 3
+          api-level: 27
           arch: x86
           target: google_apis
           disable-animations: true
