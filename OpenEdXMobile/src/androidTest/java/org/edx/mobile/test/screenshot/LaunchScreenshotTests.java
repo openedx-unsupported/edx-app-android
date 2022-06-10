@@ -1,4 +1,4 @@
-package org.edx.mobile.test.screenshot.test;
+package org.edx.mobile.test.screenshot;
 
 import android.app.Activity;
 
@@ -8,6 +8,7 @@ import com.facebook.testing.screenshot.Screenshot;
 
 import org.edx.mobile.view.LaunchActivity;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -15,6 +16,7 @@ import org.junit.rules.TestName;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 
+@Ignore
 @HiltAndroidTest
 public class LaunchScreenshotTests {
 

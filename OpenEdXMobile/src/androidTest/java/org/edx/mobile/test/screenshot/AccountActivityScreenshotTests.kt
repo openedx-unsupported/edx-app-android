@@ -15,6 +15,7 @@ import org.edx.mobile.view.AccountActivity
 import org.junit.*
 import org.junit.rules.TestName
 
+@Ignore
 @HiltAndroidTest
 class AccountActivityScreenshotTests {
 
@@ -30,7 +31,6 @@ class AccountActivityScreenshotTests {
     @get:Rule(order = 3)
     val grantPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
 
     private var loginPrefs: LoginPrefs? = null
     private var activity: AccountActivity? = null
