@@ -571,6 +571,20 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
+    public void trackOpenInBrowserAlertTriggerEvent(@NonNull String url) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserAlertTriggerEvent(url);
+        }
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserAlertActionTaken(url, actionTaken);
+        }
+    }
+
+    @Override
     public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
                                          @NonNull String courseId, boolean isSelfPaced,
                                          @Nullable String price, @Nullable String componentId,
