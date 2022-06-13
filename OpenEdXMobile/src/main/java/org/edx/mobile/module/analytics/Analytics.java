@@ -607,6 +607,21 @@ public interface Analytics {
      */
     void trackEvent(@NonNull String eventName, @NonNull String biValue);
 
+    /**
+     * Track OpenInBrowser Alert trigger event
+     *
+     * @param url The about to be open Url
+     */
+    void trackOpenInBrowserAlertTriggerEvent(@NonNull String url);
+
+    /**
+     * Track action taken on OpenInBrowser Alert
+     *
+     * @param url         The about to be open Url
+     * @param actionTaken The action taken on Alert
+     */
+    void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken);
+
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -698,6 +713,7 @@ public interface Analytics {
         String VALUE = "value";
         String OLD_VALUE = "old_value";
         String ELAPSED_TIME = "elapsed_time";
+        String ALERT_ACTION = "alert_action";
     }
 
     interface Values {
@@ -867,6 +883,11 @@ public interface Analytics {
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "edx.bi.app.user.register.opt_in.on";
         String REGISTRATION_OPT_IN_TURNED_OFF = "edx.bi.app.user.register.opt_in.off";
+        // New Discovery Experience
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED = "edx.bi.app.discovery.external_link.opening.alert";
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN = "edx.bi.app.discovery.external_link.opening.alert_action";
+        String ACTION_CANCEL = "cancel";
+        String ACTION_CONTINUE = "continue";
 
     }
 
@@ -1040,6 +1061,9 @@ public interface Analytics {
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "Registration: Opt-in Turned On";
         String REGISTRATION_OPT_IN_TURNED_OFF = "Registration: Opt-in Turned Off";
+        // New Discovery Experience
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED = "Discovery: External Link Opening Alert";
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN = "Discovery: External Link Opening Alert Action";
     }
 
     /**
