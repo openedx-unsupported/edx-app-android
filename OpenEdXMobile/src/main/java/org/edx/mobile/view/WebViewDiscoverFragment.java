@@ -1,25 +1,23 @@
 package org.edx.mobile.view;
 
-import static org.edx.mobile.util.UrlUtil.QUERY_PARAM_SEARCH;
-import static org.edx.mobile.util.UrlUtil.buildUrlWithQueryParams;
-
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 
-import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentWebviewDiscoveryBinding;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
 import org.greenrobot.eventbus.EventBus;
@@ -30,19 +28,17 @@ import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
-/**
- * An abstract fragment providing basic functionality of searching the webpage via toolbar searchview.
- */
 @AndroidEntryPoint
 public class WebViewDiscoverFragment extends BaseWebViewFragment {
     private static final String INSTANCE_CURRENT_DISCOVER_URL = "current_discover_url";
 
     protected FragmentWebviewDiscoveryBinding binding;
+    private ViewTreeObserver.OnScrollChangedListener onScrollChangedListener;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_webview_discovery, container, false);
+        binding = FragmentWebviewDiscoveryBinding.inflate(inflater);
         return binding.getRoot();
     }
 
@@ -50,6 +46,8 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setWebViewActionListener();
+        setWebViewBackPressListener();
+
         // Check for search query in extras
         String searchQueryExtra = null;
         String searchUrl = null;
@@ -66,6 +64,13 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
         } else {
             loadUrl(searchUrl == null || !URLUtil.isValidUrl(searchUrl) ? getInitialUrl() : searchUrl);
         }
+
+        binding.swipeContainer.setOnRefreshListener(() -> {
+            loadUrl(binding.webview.getUrl());
+            binding.swipeContainer.setRefreshing(false);
+        });
+        UiUtils.INSTANCE.setSwipeRefreshLayoutColors(binding.swipeContainer);
+
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -89,6 +94,18 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
                 }));
     }
 
+    private void setWebViewBackPressListener() {
+        binding.webview.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && binding.webview.canGoBack()) {
+                    binding.webview.goBack();
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (URLUtil.isValidUrl(binding.webview.getUrl())) {
@@ -105,12 +122,12 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     private void initSearch(@NonNull String query) {
         String baseUrl = getInitialUrl();
-        if (baseUrl.contains(QUERY_PARAM_SEARCH)) {
-            baseUrl = UrlUtil.removeQueryParameterFromURL(baseUrl, QUERY_PARAM_SEARCH);
+        if (baseUrl.contains(UrlUtil.QUERY_PARAM_SEARCH)) {
+            baseUrl = UrlUtil.removeQueryParameterFromURL(baseUrl, UrlUtil.QUERY_PARAM_SEARCH);
         }
         final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(QUERY_PARAM_SEARCH, query);
-        loadUrl(buildUrlWithQueryParams(logger, baseUrl, queryParams));
+        queryParams.put(UrlUtil.QUERY_PARAM_SEARCH, query);
+        loadUrl(UrlUtil.buildUrlWithQueryParams(logger, baseUrl, queryParams));
     }
 
     @NonNull
@@ -139,5 +156,20 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     @Override
     protected boolean isShowingFullScreenError() {
         return errorNotification != null && errorNotification.isShowing();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        binding.swipeContainer.getViewTreeObserver().addOnScrollChangedListener(
+                onScrollChangedListener = () -> {
+                    binding.swipeContainer.setEnabled((binding.webview.getScrollY() == 0));
+                });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        binding.swipeContainer.getViewTreeObserver().removeOnScrollChangedListener(onScrollChangedListener);
     }
 }
