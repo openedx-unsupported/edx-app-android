@@ -11,16 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
+import javax.inject.Singleton;
 
 /**
  * A registry for enabled Analytics implementations, that delegates all methods to them.
  */
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class AnalyticsRegistry implements Analytics {
 
     @Inject
@@ -579,6 +575,20 @@ public class AnalyticsRegistry implements Analytics {
     public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
         for (Analytics service : services) {
             service.trackEvent(eventName, biValue);
+        }
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertTriggerEvent(@NonNull String url) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserAlertTriggerEvent(url);
+        }
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserAlertActionTaken(url, actionTaken);
         }
     }
 }

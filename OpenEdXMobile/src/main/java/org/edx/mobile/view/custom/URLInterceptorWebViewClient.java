@@ -20,6 +20,7 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.AjaxCallData;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
@@ -61,6 +62,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     private String hostForThisPage = null;
     private boolean ajaxInterceptorEmbed = false;
     Config config;
+    AnalyticsRegistry analyticsRegistry;
 
     /**
      * Tells if the page loading has been finished or not.
@@ -91,6 +93,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         this.activity = activity;
         this.config = EntryPointAccessors.fromApplication(activity.getApplicationContext(),
                 EdxDefaultModule.ProviderEntryPoint.class).getEnvironment().getConfig();
+        this.analyticsRegistry = EntryPointAccessors.fromApplication(activity.getApplicationContext(),
+                EdxDefaultModule.ProviderEntryPoint.class).getEnvironment().getAnalyticsRegistry();
         this.interceptAjaxRequest = interceptAjaxRequest;
         this.completionCallback = completionCallback;
         setupWebView(webView);
@@ -238,7 +242,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             // open URL in external web browser
             // return true means the host application handles the url
             // this should open the URL in the browser with user's confirmation
-            BrowserUtil.showOpenInBrowserDialog(activity, config.getPlatformName(), url, true);
+            BrowserUtil.showOpenInBrowserDialog(activity, config.getPlatformName(), url, analyticsRegistry, true);
             return true;
         } else {
             // return false means the current WebView handles the url.

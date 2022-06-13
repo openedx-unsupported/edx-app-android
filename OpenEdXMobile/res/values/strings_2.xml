@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--  Use this file to add new general strings and stop adding/editing strings in the older file strings.xml
-      Create a new strings file like strings_v3.xml file when the strings count reaches 100  -->
+      Create a new strings file like strings_3.xml file when the strings count reaches 100  -->
 
 <resources>
     <!-- Dialog Alert title for Open in browser -->

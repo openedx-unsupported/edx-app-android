@@ -29,17 +29,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Segment.
  */
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class SegmentAnalytics implements Analytics {
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -1108,5 +1105,24 @@ public class SegmentAnalytics implements Analytics {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
         trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertTriggerEvent(@NonNull String url) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.DISCOVERY);
+        aEvent.data.putValue(Keys.URL, url);
+        trackSegmentEvent(Events.DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED, aEvent.properties);
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.DISCOVERY);
+        aEvent.data.putValue(Keys.URL, url);
+        aEvent.data.putValue(Keys.ALERT_ACTION, actionTaken);
+        trackSegmentEvent(Events.DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN, aEvent.properties);
     }
 }
