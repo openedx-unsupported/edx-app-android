@@ -16,14 +16,11 @@ import org.edx.mobile.util.Sha1Util;
 import java.io.File;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class IDownloadManagerImpl implements IDownloadManager {
 
     private final Context context;

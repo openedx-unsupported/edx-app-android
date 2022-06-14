@@ -30,9 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -40,10 +40,7 @@ import retrofit2.Response;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
-import javax.inject.Inject;
-
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class LoginAPI {
 
     @NonNull
