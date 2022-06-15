@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
 import android.view.View.OnClickListener;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 
@@ -20,6 +21,7 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.util.Util;
 
 import org.edx.mobile.R;
@@ -186,6 +188,9 @@ public class VideoPlayer implements Player.Listener, AnalyticsListener, PlayerLi
                 if (callback != null) {
                     callback.onPrepared();
                 }
+                if (exoPlayer.getPlayWhenReady()) {
+                    state = PlayerState.PLAYING;
+                }
                 break;
             case Player.STATE_ENDED:
                 // onPlayerStateChanged with Player.STATE_ENDED called twice after calling
@@ -295,10 +300,16 @@ public class VideoPlayer implements Player.Listener, AnalyticsListener, PlayerLi
         final MediaSource mediaSource;
 
         if (VideoUtil.videoHasFormat(videoUrl, AppConstants.VIDEO_FORMAT_M3U8)) {
-            mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
+            mediaSource = new HlsMediaSource
+                    .Factory(dataSourceFactory)
+                    .createMediaSource(mediaItem);
+        } else if (URLUtil.isValidUrl(videoUrl)) {
+            mediaSource = new ProgressiveMediaSource
+                    .Factory(dataSourceFactory)
                     .createMediaSource(mediaItem);
         } else {
-            mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+            mediaSource = new ProgressiveMediaSource
+                    .Factory(new FileDataSource.Factory())
                     .createMediaSource(mediaItem);
         }
         return mediaSource;
