@@ -20,11 +20,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -41,8 +39,7 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
     @NonNull
     OkHttpClient getNonOAuthBased();
 
-    @Module
-    @InstallIn(SingletonComponent.class)
+    @Singleton
     class Impl implements OkHttpClientProvider {
         private static final int cacheSize = 10 * 1024 * 1024; // 10 MiB
 

@@ -16,17 +16,14 @@ import org.edx.mobile.util.images.ShareUtils;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Firebase.
  */
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class FirebaseAnalytics implements Analytics {
 
     protected final Logger logger = new Logger(getClass().getName());

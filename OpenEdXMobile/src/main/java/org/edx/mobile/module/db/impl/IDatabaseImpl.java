@@ -23,14 +23,11 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Inject

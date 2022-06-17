@@ -25,14 +25,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class Config {
 
     private static final Logger logger = new Logger(Config.class.getName());
