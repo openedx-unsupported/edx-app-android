@@ -41,12 +41,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.AndroidEntryPoint;
 import dagger.hilt.android.EntryPointAccessors;
-import dagger.hilt.android.components.FragmentComponent;
 import dagger.hilt.android.qualifiers.ActivityContext;
+import dagger.hilt.android.scopes.FragmentScoped;
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
@@ -240,8 +238,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         router.showCourseDiscussionComments(getActivity(), response, discussionThread, courseData);
     }
 
-    @Module
-    @InstallIn(FragmentComponent.class)
+    @FragmentScoped
     static class ResponsesLoader implements
             InfiniteScrollUtils.PageLoader<DiscussionComment> {
         @NonNull

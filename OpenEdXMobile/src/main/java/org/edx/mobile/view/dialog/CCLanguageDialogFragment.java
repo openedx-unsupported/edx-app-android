@@ -21,6 +21,9 @@ import java.util.LinkedHashMap;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CCLanguageDialogFragment extends DialogFragment {
 
     private final Logger logger = new Logger(getClass().getName());

@@ -21,11 +21,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import de.greenrobot.event.EventBus;
 
 /**
  * BroadcastReceiver to receive the removable storage (such as SD-card) status events.
  */
+@AndroidEntryPoint
 public class MediaStatusReceiver extends BroadcastReceiver {
 
     @Inject

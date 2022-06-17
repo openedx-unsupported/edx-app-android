@@ -9,12 +9,7 @@ import org.edx.mobile.social.microsoft.MicrosoftAuth;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
-import javax.inject.Inject;
-
 public class SocialFactory {
-
-    @Inject
-    Config config;
 
     //TODO - we should create a central place for application wide constants.
     public enum SOCIAL_SOURCE_TYPE {

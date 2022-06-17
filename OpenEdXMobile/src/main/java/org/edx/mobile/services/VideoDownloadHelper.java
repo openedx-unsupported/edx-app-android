@@ -28,14 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class VideoDownloadHelper {
     public interface DownloadManagerCallback {
         void onDownloadStarted(Long result);

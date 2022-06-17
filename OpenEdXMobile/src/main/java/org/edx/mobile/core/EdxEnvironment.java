@@ -13,14 +13,11 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject

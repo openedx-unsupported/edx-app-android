@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.edx.mobile.R;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EncodingsModel;
@@ -13,7 +12,6 @@ import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.JavaUtil;
 
-import javax.inject.Inject;
 
 public class DownloadEntry implements SectionItemInterface, VideoModel {
 
@@ -54,9 +52,6 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
      * available to cast in deep-link case after this TODO this issue will resolved.
      */
     public String videoThumbnail;
-
-    @Inject
-    IEdxEnvironment environment;
 
     /**
      * Returns duration in the readable format i.e. hh:mm:ss. Returns null if duration is zero or

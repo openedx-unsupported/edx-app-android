@@ -174,7 +174,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                                 break;
                             }
                             case R.id.remove_photo: {
-                                final Task task = new DeleteAccountImageTask(getActivity(), username);
+                                final Task<Void> task = new DeleteAccountImageTask(getActivity(), username);
                                 task.setProgressDialog(viewHolder.profileImageProgress);
                                 executePhotoTask(task);
                                 break;
@@ -193,7 +193,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         username = getArguments().getString(EditUserProfileActivity.EXTRA_USERNAME);
     }
 
-    private void executePhotoTask(Task task) {
+    private void executePhotoTask(Task<Void> task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
@@ -434,7 +434,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                 final Uri imageUri = CropImageActivity.getImageUriFromResult(data);
                 final Rect cropRect = CropImageActivity.getCropRectFromResult(data);
                 if (null != imageUri && null != cropRect) {
-                    final Task task = new SetAccountImageTask(getActivity(), username, imageUri, cropRect);
+                    final Task<Void> task = new SetAccountImageTask(getActivity(), username, imageUri, cropRect);
                     task.setProgressDialog(viewHolder.profileImageProgress);
                     executePhotoTask(task);
                     analyticsRegistry.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));

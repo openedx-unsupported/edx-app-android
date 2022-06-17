@@ -36,6 +36,7 @@ import org.edx.mobile.repositorie.CourseDatesRepository
 import org.edx.mobile.repositorie.InAppPurchasesRepository
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.services.EdxCookieManager
+import org.edx.mobile.user.UserAPI
 import org.edx.mobile.user.UserService
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -126,6 +127,8 @@ abstract class EdxDefaultModule {
         fun getEnvironment(): IEdxEnvironment
 
         fun getLoginAPI(): LoginAPI
+
+        fun getUserAPI(): UserAPI
 
         fun getLoginPrefs(): LoginPrefs
 
