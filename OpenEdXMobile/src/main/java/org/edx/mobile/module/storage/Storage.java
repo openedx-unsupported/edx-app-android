@@ -37,16 +37,13 @@ import java.io.FileInputStream;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.Lazy;
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class Storage implements IStorage {
 
     private final Context context;

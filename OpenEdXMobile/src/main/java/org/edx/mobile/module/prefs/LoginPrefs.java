@@ -18,14 +18,11 @@ import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.VideoPlaybackSpeed;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class LoginPrefs {
 
     public enum AuthBackend {

@@ -20,6 +20,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SpeedDialogFragment extends DialogFragment {
 
     public interface IListDialogCallback {

@@ -29,17 +29,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 
 /**
  * A concrete implementation of {@link Analytics} to report all the screens and events to Segment.
  */
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class SegmentAnalytics implements Analytics {
 
     protected final Logger logger = new Logger(getClass().getName());

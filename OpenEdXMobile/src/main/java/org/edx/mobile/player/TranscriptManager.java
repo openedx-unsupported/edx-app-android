@@ -23,16 +23,13 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import dagger.hilt.components.SingletonComponent;
 import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class TranscriptManager {
 
     private final Logger logger = new Logger(getClass().getName());

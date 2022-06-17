@@ -7,10 +7,8 @@ import com.google.gson.Gson;
 import org.edx.mobile.util.Config;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,8 +27,7 @@ public interface RetrofitProvider {
     @NonNull
     Retrofit getIAPAuth();
 
-    @Module
-    @InstallIn(SingletonComponent.class)
+    @Singleton
     class Impl implements RetrofitProvider {
         private static final int CLIENT_INDEX_DEFAULT = 0;
         private static final int CLIENT_INDEX_WITH_OFFLINE_CACHE = 1;

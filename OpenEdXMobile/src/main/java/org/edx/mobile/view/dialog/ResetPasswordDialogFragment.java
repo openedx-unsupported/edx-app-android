@@ -27,8 +27,10 @@ import org.edx.mobile.util.images.ErrorUtils;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 
+@AndroidEntryPoint
 public class ResetPasswordDialogFragment extends DialogFragment {
     private static final String ARG_LOGIN_EMAIL = "login_email";
 

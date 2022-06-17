@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.third_party.crop.CropUtil;
@@ -13,13 +14,11 @@ import org.edx.mobile.third_party.crop.CropUtil;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Inject;
-
+import dagger.hilt.android.EntryPointAccessors;
 import de.greenrobot.event.EventBus;
 
-public class SetAccountImageTask extends Task<Object> {
+public class SetAccountImageTask extends Task<Void> {
 
-    @Inject
     UserAPI userAPI;
 
     @NonNull
@@ -36,6 +35,8 @@ public class SetAccountImageTask extends Task<Object> {
         this.username = username;
         this.uri = uri;
         this.cropRect = cropRect;
+        this.userAPI = EntryPointAccessors.fromApplication(
+                context, EdxDefaultModule.ProviderEntryPoint.class).getUserAPI();
     }
 
     @Override
@@ -53,7 +54,7 @@ public class SetAccountImageTask extends Task<Object> {
     }
 
     @Override
-    protected void onPostExecute(Object unused) {
+    protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, uri));
     }

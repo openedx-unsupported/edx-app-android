@@ -34,19 +34,14 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
-import org.edx.mobile.util.TextUtils;
 import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
-
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class Router {
     public static final String EXTRA_ANNOUNCEMENTS = "announcements";
     public static final String EXTRA_BUNDLE = "bundle";

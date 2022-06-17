@@ -18,26 +18,26 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import java.io.File;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.hilt.InstallIn;
 import dagger.hilt.android.EntryPointAccessors;
-import dagger.hilt.components.SingletonComponent;
 import de.greenrobot.event.EventBus;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-@Module
-@InstallIn(SingletonComponent.class)
+@Singleton
 public class UserAPI {
 
-    @Inject
     UserService userService;
 
-    @Module
-    @InstallIn(SingletonComponent.class)
+    @Inject
+    public UserAPI(@NonNull UserService userService) {
+        this.userService = userService;
+    }
+
+    @Singleton
     public static class AccountDataUpdatedCallback extends ErrorHandlingCallback<Account> {
 
         @NonNull
