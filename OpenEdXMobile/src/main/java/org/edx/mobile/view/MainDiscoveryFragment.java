@@ -93,10 +93,10 @@ public class MainDiscoveryFragment extends BaseFragment {
                     environment.getRouter().showProgramWebViewActivity(getActivity(),
                             environment, pathId, getActivity().getString(R.string.label_my_programs));
                     break;
-                case Screen.COURSE_DISCOVERY:
+                case Screen.DISCOVERY_COURSE_DETAIL:
                     environment.getRouter().showCourseInfo(getActivity(), pathId);
                     break;
-                case Screen.PROGRAM_DISCOVERY:
+                case Screen.DISCOVERY_PROGRAM_DETAIL:
                     environment.getRouter().showProgramInfo(getActivity(), pathId);
                     break;
             }

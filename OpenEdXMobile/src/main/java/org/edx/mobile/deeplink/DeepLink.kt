@@ -17,7 +17,7 @@ open class DeepLink(val screenName: String) : Parcelable {
 
     var courseId: String? = null
     var componentId: String? = null
-    var pathId: String? = null
+    private var pathId: String? = null
     var topicID: String? = null
     var threadID: String? = null
 
@@ -75,5 +75,13 @@ open class DeepLink(val screenName: String) : Parcelable {
         writeString(pathId)
         writeString(topicID)
         writeString(threadID)
+    }
+
+    fun getPathId(): String? {
+        return if (screenName == Screen.DISCOVERY_COURSE_DETAIL) {
+            courseId
+        } else {
+            pathId
+        }
     }
 }
