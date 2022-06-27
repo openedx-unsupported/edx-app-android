@@ -431,7 +431,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             binding.myCourseList.addFooterView(footer.root, null, false)
             footer.courseBtn.setOnClickListener {
                 environment.analyticsRegistry?.trackUserFindsCourses()
-                EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.COURSE_DISCOVERY))
+                EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
             }
         }
         // Add empty view to cause divider to render at the bottom of the list.

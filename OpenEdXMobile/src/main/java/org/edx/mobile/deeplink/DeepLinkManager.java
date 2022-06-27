@@ -24,8 +24,9 @@ public class DeepLinkManager {
         @ScreenDef final String screenName = deepLink.getScreenName();
         if (username == null) {
             switch (screenName) {
-                case Screen.COURSE_DISCOVERY:
-                case Screen.PROGRAM_DISCOVERY:
+                case Screen.DISCOVERY:
+                case Screen.DISCOVERY_COURSE_DETAIL:
+                case Screen.DISCOVERY_PROGRAM_DETAIL:
                     router.showFindCourses(activity, screenName, deepLink.getPathId());
                     break;
                 default:
@@ -55,8 +56,9 @@ public class DeepLinkManager {
                 break;
             }
             case Screen.PROGRAM:
-            case Screen.COURSE_DISCOVERY:
-            case Screen.PROGRAM_DISCOVERY: {
+            case Screen.DISCOVERY:
+            case Screen.DISCOVERY_COURSE_DETAIL:
+            case Screen.DISCOVERY_PROGRAM_DETAIL: {
                 router.showMainDashboard(activity, screenName, deepLink.getPathId());
                 break;
             }
