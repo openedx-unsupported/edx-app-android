@@ -57,7 +57,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Enforce to intercept single scrolling direction
         if (binding != null) {
