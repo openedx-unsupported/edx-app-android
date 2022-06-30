@@ -930,10 +930,9 @@ public interface Analytics {
         String UNIT_DETAIL = "Unit Detail";
         String CERTIFICATE = "View Certificate";
         String DOWNLOADS = "Downloads";
-        String FIND_COURSES = "Find Courses";
-        String FIND_PROGRAMS = "Find Programs";
         String MY_COURSES = "My Courses";
         String MY_PROGRAM = "My Programs";
+        String FIND_COURSES = "Find Courses";
         String PROFILE = "Profile";
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";

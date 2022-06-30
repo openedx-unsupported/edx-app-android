@@ -87,7 +87,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
-
+                            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
                         }
                     }));
         }
@@ -96,6 +96,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), R.drawable.ic_search,
                     getArguments(), () -> {
+                environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
             }));
         }
 
