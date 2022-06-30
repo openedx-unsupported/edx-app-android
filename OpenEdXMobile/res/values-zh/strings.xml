@@ -90,8 +90,6 @@
   <string name="label_my_programs">学习计划</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">发现课程</string>
-  <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover">探索</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">发现课程</string>
   <!--Button allowing users to send an email for feedback-->

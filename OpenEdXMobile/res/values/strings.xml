@@ -105,8 +105,6 @@
     <string name="label_my_programs">Programs</string>
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
-    <!-- Title of webview based Find Courses Screen -->
-    <string name="label_discover">Discover</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
     <string name="label_discovery">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
