@@ -90,8 +90,6 @@
   <string name="label_my_programs">Programlar</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Dersleri Bul</string>
-  <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover">Keşfet</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Keşfet</string>
   <!--Button allowing users to send an email for feedback-->

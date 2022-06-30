@@ -90,8 +90,6 @@
   <string name="label_my_programs">Programas</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
-  <!--Title of webview based Find Courses Screen-->
-  <string name="label_discover">Exploración</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->

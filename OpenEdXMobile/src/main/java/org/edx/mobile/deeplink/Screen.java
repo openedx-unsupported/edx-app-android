@@ -14,8 +14,9 @@ public class Screen {
     public static final String PROGRAM = "program";
     public static final String PROFILE = "profile";
     public static final String USER_PROFILE = "user_profile";
-    public static final String COURSE_DISCOVERY = "course_discovery";
-    public static final String PROGRAM_DISCOVERY = "program_discovery";
+    public static final String DISCOVERY = "discovery";
+    public static final String DISCOVERY_COURSE_DETAIL = "discovery_course_detail";
+    public static final String DISCOVERY_PROGRAM_DETAIL = "discovery_program_detail";
     public static final String DISCUSSION_POST = "discussion_post";
     public static final String DISCUSSION_TOPIC = "discussion_topic";
     public static final String COURSE_COMPONENT = "course_component";
