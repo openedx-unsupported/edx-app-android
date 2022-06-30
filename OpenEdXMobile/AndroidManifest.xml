@@ -179,12 +179,12 @@
 
         <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
-            android:label="@string/label_discover"
+            android:label="@string/label_discovery"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.ProgramInfoActivity"
-            android:label="@string/label_discover"
+            android:label="@string/label_discovery"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
@@ -200,7 +200,7 @@
 
         <activity
             android:name=".view.DiscoveryActivity"
-            android:label="@string/label_discover"
+            android:label="@string/label_discovery"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity

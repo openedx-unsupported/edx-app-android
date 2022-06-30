@@ -41,7 +41,7 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.label_discover);
+        setTitle(R.string.label_discovery);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
     }
 
