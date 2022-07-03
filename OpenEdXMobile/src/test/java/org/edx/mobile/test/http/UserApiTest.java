@@ -9,8 +9,8 @@ import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.util.CallUtil;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.PaginationData;
-import org.edx.mobile.profiles.BadgeAssertion;
-import org.edx.mobile.profiles.BadgeClass;
+import org.edx.mobile.model.profile.BadgeAssertion;
+import org.edx.mobile.model.profile.BadgeClass;
 import org.edx.mobile.user.UserService;
 import org.junit.Test;
 

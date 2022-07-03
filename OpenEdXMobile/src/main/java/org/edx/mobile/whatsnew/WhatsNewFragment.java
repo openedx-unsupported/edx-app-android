@@ -22,6 +22,8 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentWhatsNewBinding;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.whatsnew.WhatsNewItemModel;
+import org.edx.mobile.model.whatsnew.WhatsNewModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtils;

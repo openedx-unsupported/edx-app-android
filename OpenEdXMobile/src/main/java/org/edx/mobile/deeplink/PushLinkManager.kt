@@ -3,7 +3,7 @@ package org.edx.mobile.deeplink
 import android.app.Activity
 import android.os.Bundle
 import com.google.firebase.messaging.RemoteMessage
-import de.greenrobot.event.EventBus
+import org.greenrobot.eventbus.EventBus
 import org.edx.mobile.event.PushLinkReceivedEvent
 import org.edx.mobile.logger.Logger
 

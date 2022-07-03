@@ -28,11 +28,12 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import okhttp3.Request;
 
 @AndroidEntryPoint
@@ -107,7 +108,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
                     @Override
                     protected void onFinish() {
                         if (!EventBus.getDefault().isRegistered(CourseHandoutFragment.this)) {
-                            EventBus.getDefault().registerSticky(CourseHandoutFragment.this);
+                            EventBus.getDefault().register(CourseHandoutFragment.this);
                         }
                     }
                 });
@@ -134,6 +135,7 @@ public class CourseHandoutFragment extends BaseFragment implements RefreshListen
         errorNotification.hideError();
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
         if (!NetworkUtil.isConnected(requireContext())) {

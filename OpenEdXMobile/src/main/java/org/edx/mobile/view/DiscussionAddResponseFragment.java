@@ -12,21 +12,22 @@ import androidx.annotation.NonNull;
 
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.databinding.FragmentAddResponseOrCommentBinding;
-import org.edx.mobile.discussion.CommentBody;
-import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.discussion.CommentBody;
+import org.edx.mobile.model.discussion.DiscussionComment;
+import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
 @AndroidEntryPoint

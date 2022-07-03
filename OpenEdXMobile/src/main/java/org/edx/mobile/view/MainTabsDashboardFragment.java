@@ -15,12 +15,13 @@ import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.UiUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class MainTabsDashboardFragment extends TabsBaseFragment {
@@ -98,6 +99,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         return items;
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull MoveToDiscoveryTabEvent event) {
         if (!ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {

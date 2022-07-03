@@ -93,6 +93,9 @@ import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.InAppPurchasesViewModel;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +106,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -501,7 +503,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onFinish() {
                 if (!EventBus.getDefault().isRegistered(CourseOutlineFragment.this)) {
-                    EventBus.getDefault().registerSticky(CourseOutlineFragment.this);
+                    EventBus.getDefault().register(CourseOutlineFragment.this);
                 }
                 swipeContainer.setRefreshing(false);
             }
@@ -829,7 +831,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (courseData == null || getActivity() == null)
             return;
         if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().registerSticky(this);
+            EventBus.getDefault().register(this);
         }
         if (!isOnCourseOutline) {
             // We only need to set the title of Course Outline screen, where we show a subsection's units
@@ -1089,23 +1091,27 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         return outlinePathSize <= 1;
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadCompletedEvent e) {
         adapter.notifyDataSetChanged();
         updateBulkDownloadFragment();
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaStatusChangeEvent e) {
         adapter.notifyDataSetChanged();
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     public void onEventMainThread(DownloadedVideoDeletedEvent e) {
         adapter.notifyDataSetChanged();
         updateBulkDownloadFragment();
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEvent(CourseDashboardRefreshEvent e) {
         errorNotification.hideError();
@@ -1116,6 +1122,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         fetchCourseComponent();
     }
 
+    @Subscribe(sticky = true)
     public void onEvent(CourseUpgradedEvent event) {
         if (!isOnCourseOutline || isVideoMode) {
             return;
@@ -1177,6 +1184,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         EventBus.getDefault().post(new CourseDashboardRefreshEvent());
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         onNetworkConnectivityChangeEvent(event);

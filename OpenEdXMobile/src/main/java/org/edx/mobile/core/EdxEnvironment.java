@@ -11,11 +11,10 @@ import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import de.greenrobot.event.EventBus;
 
 @Singleton
 public class EdxEnvironment implements IEdxEnvironment {

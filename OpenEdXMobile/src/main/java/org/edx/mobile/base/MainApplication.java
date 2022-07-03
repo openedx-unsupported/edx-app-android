@@ -36,12 +36,13 @@ import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.NotificationUtil;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.HiltAndroidApp;
-import de.greenrobot.event.EventBus;
 import io.branch.referral.Branch;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -218,6 +219,7 @@ public abstract class MainApplication extends MultiDexApplication {
     }
 
     public static class CrashlyticsCrashReportObserver {
+        @Subscribe
         @SuppressWarnings("unused")
         public void onEventMainThread(Logger.CrashReportEvent e) {
             FirebaseCrashlytics.getInstance().recordException(e.getError());
@@ -225,6 +227,7 @@ public abstract class MainApplication extends MultiDexApplication {
     }
 
     public static class NewRelicObserver {
+        @Subscribe
         @SuppressWarnings("unused")
         public void onEventMainThread(NewRelicEvent e) {
             NewRelic.setInteractionName("Display " + e.getScreenName());

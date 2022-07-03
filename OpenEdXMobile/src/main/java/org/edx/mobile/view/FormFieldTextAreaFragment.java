@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.user.FormField;
+import org.edx.mobile.model.user.FormField;
 
 import org.edx.mobile.base.BaseFragment;
 

@@ -3,7 +3,8 @@ package org.edx.mobile.whatsnew;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import org.edx.mobile.base.BaseTest;
-import org.edx.mobile.whatsnew.WhatsNewItemModel.Platform;
+import org.edx.mobile.model.whatsnew.WhatsNewItemModel;
+import org.edx.mobile.model.whatsnew.WhatsNewItemModel.Platform;
 import org.junit.Test;
 
 import java.util.Arrays;

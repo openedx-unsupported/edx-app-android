@@ -15,6 +15,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.util.VideoUtil;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 /**
  * BroadcastReceiver to receive the removable storage (such as SD-card) status events.

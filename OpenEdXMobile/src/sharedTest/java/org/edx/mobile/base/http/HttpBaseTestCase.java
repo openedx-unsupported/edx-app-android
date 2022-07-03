@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseTestCase;
@@ -18,6 +17,7 @@ import org.edx.mobile.base.Injector;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;

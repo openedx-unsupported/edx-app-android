@@ -15,27 +15,29 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDiscussionThreadPostsBinding;
-import org.edx.mobile.discussion.CourseDiscussionInfo;
-import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
-import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionService;
-import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
-import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.discussion.TimePeriod;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.discussion.CourseDiscussionInfo;
+import org.edx.mobile.model.discussion.CourseTopics;
+import org.edx.mobile.model.discussion.DiscussionRequestFields;
+import org.edx.mobile.model.discussion.DiscussionThread;
+import org.edx.mobile.model.discussion.DiscussionTopic;
+import org.edx.mobile.model.discussion.TimePeriod;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -49,7 +51,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
 @AndroidEntryPoint
@@ -242,6 +243,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
@@ -253,6 +255,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         }
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         // If a new response/comment was posted in a listed thread, we need to update the list
@@ -273,6 +276,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         }
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         DiscussionThread newThread = event.getDiscussionThread();

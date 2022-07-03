@@ -148,10 +148,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
     implementation 'com.facebook.android:facebook-login:11.1.1'
-    implementation 'com.microsoft.identity.client:msal:0.3+'
+    implementation "com.microsoft.identity.client:msal:3.0.2"
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'com.google.code.gson:gson:2.7'
-    implementation 'de.greenrobot:eventbus:2.4.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation "org.greenrobot:eventbus:3.3.1"
     implementation 'com.squareup.phrase:phrase:1.1.0'
     /*
      * REASON FOR NOT UPGRADING Okhttp TO LATEST VERSION
@@ -182,7 +182,7 @@ dependencies {
     implementation ('com.github.bumptech.glide:okhttp3-integration:4.11.0')
 
     // Segment Library
-    implementation 'com.segment.analytics.android:analytics:4.7.0'
+    implementation 'com.segment.analytics.android:analytics:4.10.4'
     // Segment's Firebase integration
     implementation 'com.segment.analytics.android.integrations:firebase:1.2.0'
     // Segment's GA integration
@@ -495,6 +495,9 @@ android {
         }
 
         release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // Only apply release signing configurations if keystore.properties is available
             if (project.file('signing/keystore.properties').exists()) {
                 apply from: 'signing/signing.gradle'

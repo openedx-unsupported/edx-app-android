@@ -2,6 +2,8 @@ package org.edx.mobile.discussion;
 
 import androidx.annotation.NonNull;
 
+import org.edx.mobile.model.discussion.DiscussionThread;
+
 public class DiscussionThreadPostedEvent {
     @NonNull
     private final DiscussionThread discussionThread;

@@ -17,7 +17,6 @@ import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginTask;
 import org.edx.mobile.databinding.ActivityLoginBinding;
 import org.edx.mobile.deeplink.DeepLink;
@@ -27,6 +26,7 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;

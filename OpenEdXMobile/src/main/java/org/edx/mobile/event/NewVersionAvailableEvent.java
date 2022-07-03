@@ -9,11 +9,10 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Version;
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.util.Date;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * An event signifying that a new version of the app is available on the app stores.

@@ -27,6 +27,8 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import okhttp3.Request;
 
 @AndroidEntryPoint
@@ -149,7 +150,7 @@ public class CourseAnnouncementsFragment extends BaseFragment implements Refresh
                             return;
                         }
                         if (!EventBus.getDefault().isRegistered(CourseAnnouncementsFragment.this)) {
-                            EventBus.getDefault().registerSticky(CourseAnnouncementsFragment.this);
+                            EventBus.getDefault().register(CourseAnnouncementsFragment.this);
                         }
                     }
                 });
@@ -176,6 +177,7 @@ public class CourseAnnouncementsFragment extends BaseFragment implements Refresh
         webView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEventMainThread(NetworkConnectivityChangeEvent event) {
         if (!NetworkUtil.isConnected(getContext())) {

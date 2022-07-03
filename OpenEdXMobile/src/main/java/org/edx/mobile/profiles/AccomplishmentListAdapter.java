@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.AccomplishmentItemBinding;
+import org.edx.mobile.model.profile.BadgeAssertion;
 import org.edx.mobile.view.adapters.LoadingViewHolder;
 
 import java.util.ArrayList;

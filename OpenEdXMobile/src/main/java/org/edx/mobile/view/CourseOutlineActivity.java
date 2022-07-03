@@ -18,6 +18,7 @@ import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
+import org.greenrobot.eventbus.Subscribe;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -74,6 +75,7 @@ public class CourseOutlineActivity extends BaseSingleFragmentActivity {
         return fragment;
     }
 
+    @Subscribe
     public void onEvent(CourseUpgradedEvent event) {
         finish();
     }

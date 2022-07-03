@@ -8,11 +8,11 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.task.Task;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
 import dagger.hilt.android.EntryPointAccessors;
-import de.greenrobot.event.EventBus;
 
 public class DeleteAccountImageTask extends Task<Void> {
 

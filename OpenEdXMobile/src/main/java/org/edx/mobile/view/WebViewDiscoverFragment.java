@@ -25,11 +25,11 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * An abstract fragment providing basic functionality of searching the webpage via toolbar searchview.
@@ -194,6 +194,7 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
                 binding.webview.getUrl() : getSearchUrl();
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(MainDashboardRefreshEvent event) {
         loadUrl(getInitialUrl());
@@ -204,11 +205,13 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         EventBus.getDefault().post(new MainDashboardRefreshEvent());
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         onNetworkConnectivityChangeEvent(event);
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull DiscoveryTabSelectedEvent event) {
         // OfflineSupportBaseFragment.setUserVisibleHint(*) should be called automatically whenever

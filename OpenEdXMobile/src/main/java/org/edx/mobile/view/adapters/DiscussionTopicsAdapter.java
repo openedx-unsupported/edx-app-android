@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.model.discussion.DiscussionTopicDepth;
 
 import javax.inject.Inject;
 

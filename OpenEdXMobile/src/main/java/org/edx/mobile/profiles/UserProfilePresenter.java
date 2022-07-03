@@ -3,6 +3,8 @@ package org.edx.mobile.profiles;
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.interfaces.RefreshListener;
+import org.edx.mobile.model.profile.UserProfileBioModel;
+import org.edx.mobile.model.profile.UserProfileViewModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.observer.Func1;
 import org.edx.mobile.util.observer.Observables;

@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.whatsnew.WhatsNewItemModel;
-import org.edx.mobile.whatsnew.WhatsNewModel;
+import org.edx.mobile.model.whatsnew.WhatsNewItemModel;
+import org.edx.mobile.model.whatsnew.WhatsNewModel;
 
 import java.text.ParseException;
 import java.util.ArrayList;

@@ -15,23 +15,25 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.databinding.FragmentDiscussionResponsesOrCommentsBinding;
-import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
-import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionService.FlagBody;
-import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.discussion.DiscussionComment;
+import org.edx.mobile.model.discussion.DiscussionRequestFields;
+import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,7 +43,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
 @AndroidEntryPoint
@@ -178,6 +179,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (null != event.getParent() && event.getParent().getIdentifier().equals(discussionResponse.getIdentifier())) {

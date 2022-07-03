@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.discussion.DiscussionTopic;
 import org.edx.mobile.util.UiUtils;
 
 import javax.inject.Inject;

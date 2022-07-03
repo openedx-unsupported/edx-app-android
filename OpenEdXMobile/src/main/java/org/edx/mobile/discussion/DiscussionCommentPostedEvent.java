@@ -3,6 +3,8 @@ package org.edx.mobile.discussion;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.edx.mobile.model.discussion.DiscussionComment;
+
 public class DiscussionCommentPostedEvent {
     @NonNull
     private final DiscussionComment comment;

@@ -19,6 +19,7 @@ import org.edx.mobile.R
 import org.edx.mobile.databinding.SubItemCourseDateBlockBinding
 import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.course.CourseDateBlock
+import org.edx.mobile.model.course.CourseDateType
 
 /**
  * DataBindingHelperUtils allows you to specify the method called to set a value,

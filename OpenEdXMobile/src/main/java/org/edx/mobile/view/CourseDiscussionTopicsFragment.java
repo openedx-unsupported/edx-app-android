@@ -13,10 +13,7 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDiscussionTopicsBinding;
-import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionService;
-import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -24,10 +21,15 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.discussion.CourseTopics;
+import org.edx.mobile.model.discussion.DiscussionTopic;
+import org.edx.mobile.model.discussion.DiscussionTopicDepth;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 import org.edx.mobile.view.common.TaskProgressCallback;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
 @AndroidEntryPoint
@@ -149,7 +150,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             @Override
             protected void onFinish() {
                 if (!EventBus.getDefault().isRegistered(CourseDiscussionTopicsFragment.this)) {
-                    EventBus.getDefault().registerSticky(CourseDiscussionTopicsFragment.this);
+                    EventBus.getDefault().register(CourseDiscussionTopicsFragment.this);
                 }
             }
         });
@@ -176,6 +177,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         SoftKeyboardUtil.clearViewFocus(binding.discussionTopicsSearchview);
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEvent(CourseDashboardRefreshEvent event) {
         errorNotification.hideError();
@@ -192,6 +194,7 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         return errorNotification != null && errorNotification.isShowing();
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         onNetworkConnectivityChangeEvent(event);

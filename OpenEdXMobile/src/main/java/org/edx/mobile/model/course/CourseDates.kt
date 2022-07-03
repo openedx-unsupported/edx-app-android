@@ -1,7 +1,6 @@
 package org.edx.mobile.model.course
 
 import com.google.gson.annotations.SerializedName
-import org.edx.mobile.util.CourseDateType
 import org.edx.mobile.util.DateUtil
 
 data class CourseDates(

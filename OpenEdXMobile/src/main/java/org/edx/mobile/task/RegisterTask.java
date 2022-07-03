@@ -3,9 +3,9 @@ package org.edx.mobile.task;
 import android.content.Context;
 import android.os.Bundle;
 
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.EdxDefaultModule;
+import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.social.SocialFactory;
 
 import dagger.hilt.android.EntryPointAccessors;

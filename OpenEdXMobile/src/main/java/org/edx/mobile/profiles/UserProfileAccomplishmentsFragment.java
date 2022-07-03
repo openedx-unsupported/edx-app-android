@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
+import org.edx.mobile.model.profile.BadgeAssertion;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.ResourceUtil;

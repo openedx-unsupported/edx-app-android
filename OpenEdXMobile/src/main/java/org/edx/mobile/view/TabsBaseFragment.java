@@ -32,12 +32,11 @@ import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public abstract class TabsBaseFragment extends BaseFragment {
     @Inject

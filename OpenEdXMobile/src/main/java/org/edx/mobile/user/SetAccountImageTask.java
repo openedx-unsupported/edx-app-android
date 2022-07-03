@@ -10,12 +10,12 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.third_party.crop.CropUtil;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
 
 import dagger.hilt.android.EntryPointAccessors;
-import de.greenrobot.event.EventBus;
 
 public class SetAccountImageTask extends Task<Void> {
 

@@ -11,9 +11,11 @@ import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.ErrorNotification;
+import org.edx.mobile.model.user.Account;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -21,7 +23,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.hilt.android.EntryPointAccessors;
-import de.greenrobot.event.EventBus;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

@@ -14,8 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.util.PermissionsUtil;
-
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 public class BaseFragment extends Fragment {
     public interface PermissionListener {

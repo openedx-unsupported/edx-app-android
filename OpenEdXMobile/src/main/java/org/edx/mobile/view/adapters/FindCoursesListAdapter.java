@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.model.course.CourseDetail;
 import org.edx.mobile.util.images.CourseCardUtils;
 
 

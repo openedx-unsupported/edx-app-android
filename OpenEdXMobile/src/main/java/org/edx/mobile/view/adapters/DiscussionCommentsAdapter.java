@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
-import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.model.discussion.DiscussionComment;
+import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.UiUtils;
