@@ -2,7 +2,11 @@ package org.edx.mobile.model.api;
 
 import android.text.TextUtils;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
+
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class EnrolledCoursesResponse implements SectionItemInterface {
@@ -13,8 +17,11 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     private boolean is_active;
     private CourseEntry course;
     private boolean isDiscussionBlackedOut = false;
-    
+
     private CertificateModel certificate;
+
+    @SerializedName("course_modes")
+    private ArrayList<CourseMode> courseModes;
 
     // derived fields (doesn't come in server response)
     public int videoCount;
@@ -60,7 +67,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         this.course = course;
     }
 
-    public String getCourseId(){
+    public String getCourseId() {
         return course.getId();
     }
 
@@ -95,7 +102,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     }
 
     public String getVideoCountReadable() {
-        return String.format("%d %s", videoCount, (videoCount==1 ? "Video" : "Videos"));
+        return String.format("%d %s", videoCount, (videoCount == 1 ? "Video" : "Videos"));
     }
 
     public String getCertificateURL() {
@@ -113,5 +120,19 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
 
     public void setDiscussionBlackedOut(boolean discussionBlackedOut) {
         isDiscussionBlackedOut = discussionBlackedOut;
+    }
+
+    public String getCourseProductSku() {
+        if (courseModes == null || courseModes.size() == 0) {
+            return null;
+        } else {
+            for (CourseMode courseMode : courseModes) {
+                String productSku = courseMode.getAndroidSku();
+                if (!TextUtils.isEmpty(productSku)) {
+                    return productSku;
+                }
+            }
+        }
+        return null;
     }
 }

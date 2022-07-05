@@ -21,7 +21,6 @@ import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
-import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics.*
@@ -128,7 +127,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
                 iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
                 unit?.let {
-                    ProductManager.getProductByCourseId(it.courseId)?.let { productId ->
+                    it.courseProductSku?.let { productId ->
                         iapViewModel.addProductToBasket(productId)
                     } ?: showUpgradeErrorDialog()
                 }
@@ -142,7 +141,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     // by adding the some delay fixed that issue for lower-end devices, and for the
                     // proper animation.
                     binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        unit?.let { initializeProductPrice(it.courseId) }
+                        unit?.let { initializeProductPrice() }
                     }, 1500)
                     binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
                 }
@@ -166,9 +165,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         }
     }
 
-    private fun initializeProductPrice(courseId: String) {
+    private fun initializeProductPrice() {
         iapAnalytics.initPriceTime()
-        ProductManager.getProductByCourseId(courseId)?.let { productId ->
+        unit?.courseProductSku?.let { productId ->
             billingProcessor?.querySyncDetails(
                 productId = productId
             ) { _, skuDetails ->
@@ -195,7 +194,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                         errorResId = R.string.error_price_not_fetched,
                         errorType = ErrorMessage.PRICE_CODE,
                         listener = { _, _ ->
-                            unit?.let { initializeProductPrice(it.courseId) }
+                            unit?.let { initializeProductPrice() }
                         })
                 }
             }
@@ -203,7 +202,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             errorResId = R.string.error_price_not_fetched,
             errorType = ErrorMessage.PRICE_CODE,
             listener = { _, _ ->
-                unit?.let { initializeProductPrice(it.courseId) }
+                unit?.let { initializeProductPrice() }
             })
     }
 

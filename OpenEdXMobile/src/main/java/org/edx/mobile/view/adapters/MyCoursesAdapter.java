@@ -47,7 +47,7 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
         }
         if (isValuePropEnabled) {
             holder.setHasUpgradeOption(courseData, enrollment.getMode(),
-                    v -> onValuePropClicked(courseData.getId(), courseData.getName(), courseData.isSelfPaced()));
+                    v -> onValuePropClicked(enrollment));
         }
     }
 
@@ -72,5 +72,5 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
 
     public abstract void onAnnouncementClicked(EnrolledCoursesResponse model);
 
-    public abstract void onValuePropClicked(String courseId, String courseName, boolean isSelfPaced);
+    public abstract void onValuePropClicked(EnrolledCoursesResponse selectedCourseData);
 }
