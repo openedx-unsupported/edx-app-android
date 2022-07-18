@@ -35,10 +35,13 @@
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
         android:targetPackage="org.edx.mobile" />
 
-    <!-- Required for Youtube package visibility on Android 11 or higher devices -->
-    <!-- Inspiration: https://stackoverflow.com/a/66473821/10840484 -->
+    <!-- Required for package visibility on Android 11 or higher devices -->
     <queries>
         <package android:name="com.google.android.youtube" />
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
     </queries>
 
     <!-- Required by branch.io -->
