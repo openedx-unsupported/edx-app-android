@@ -1,7 +1,7 @@
 package org.edx.mobile.view;
 
-import static org.edx.mobile.user.DataType.COUNTRY;
-import static org.edx.mobile.user.DataType.LANGUAGE;
+import static org.edx.mobile.model.user.DataType.COUNTRY;
+import static org.edx.mobile.model.user.DataType.LANGUAGE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.model.user.DataType;
+import org.edx.mobile.model.user.FormField;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.user.DataType;
-import org.edx.mobile.user.FormField;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

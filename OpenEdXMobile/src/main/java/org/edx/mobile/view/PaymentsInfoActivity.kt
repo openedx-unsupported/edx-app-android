@@ -12,6 +12,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.view.Router.EXTRA_COURSE_DATA
 import org.edx.mobile.view.Router.EXTRA_COURSE_UPGRADE_DATA
+import org.greenrobot.eventbus.Subscribe
 
 @AndroidEntryPoint
 class PaymentsInfoActivity : BaseSingleFragmentActivity() {
@@ -46,6 +47,7 @@ class PaymentsInfoActivity : BaseSingleFragmentActivity() {
         environment.analyticsRegistry.trackScreenView(Analytics.Screens.PAYMENTS_INFO_SCREEN)
     }
 
+    @Subscribe
     fun onEvent(event: CourseUpgradedEvent) {
         finish()
     }

@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.databinding.FragmentWhatsNewItemBinding;
+import org.edx.mobile.model.whatsnew.WhatsNewItemModel;
 import org.edx.mobile.util.UiUtils;
 
 public class WhatsNewItemFragment extends BaseFragment {

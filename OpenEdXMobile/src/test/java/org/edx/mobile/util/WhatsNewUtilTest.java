@@ -7,8 +7,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseTest;
-import org.edx.mobile.whatsnew.WhatsNewItemModel;
-import org.edx.mobile.whatsnew.WhatsNewModel;
+import org.edx.mobile.model.whatsnew.WhatsNewItemModel;
+import org.edx.mobile.model.whatsnew.WhatsNewModel;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 

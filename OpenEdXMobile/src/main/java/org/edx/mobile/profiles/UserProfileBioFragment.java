@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBioBinding;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.profile.UserProfileBioModel;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;

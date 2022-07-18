@@ -11,15 +11,17 @@ import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.profile.UserProfileBioModel;
+import org.edx.mobile.model.profile.UserProfileViewModel;
+import org.edx.mobile.model.user.Account;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.user.Account;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.observer.CachingObservable;
 import org.edx.mobile.util.observer.Observable;
-
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Exposes a given user's profile data and photo as a pair of observable view models
@@ -67,6 +69,7 @@ public class UserProfileInteractor implements RefreshListener {
         return photo;
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
         if (!event.getAccount().getUsername().equalsIgnoreCase(username)) {
@@ -75,6 +78,7 @@ public class UserProfileInteractor implements RefreshListener {
         handleNewAccount(event.getAccount());
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (!event.getUsername().equalsIgnoreCase(username)) {

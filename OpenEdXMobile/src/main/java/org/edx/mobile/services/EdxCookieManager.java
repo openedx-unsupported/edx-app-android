@@ -10,6 +10,7 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.hilt.android.EntryPointAccessors;
-import de.greenrobot.event.EventBus;
 import okhttp3.Cookie;
 import okhttp3.RequestBody;
 import retrofit2.Call;

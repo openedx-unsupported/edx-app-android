@@ -46,6 +46,8 @@ import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.viewModel.InAppPurchasesViewModel;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -58,7 +60,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 
 @AndroidEntryPoint
@@ -469,6 +470,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         return super.showGoogleCastButton();
     }
 
+    @Subscribe
     public void onEvent(CourseUpgradedEvent event) {
         finish();
     }

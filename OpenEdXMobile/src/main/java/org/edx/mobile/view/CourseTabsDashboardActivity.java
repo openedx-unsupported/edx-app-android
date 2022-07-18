@@ -19,9 +19,9 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.greenrobot.eventbus.EventBus;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {

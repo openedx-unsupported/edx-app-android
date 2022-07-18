@@ -53,6 +53,7 @@ import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 import org.edx.mobile.view.dialog.CourseModalDialogFragment;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -60,8 +61,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import de.greenrobot.event.EventBus;
 
 public class CourseOutlineAdapter extends BaseAdapter {
 

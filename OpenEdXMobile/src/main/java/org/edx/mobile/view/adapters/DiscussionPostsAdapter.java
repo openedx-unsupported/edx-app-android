@@ -15,7 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
 

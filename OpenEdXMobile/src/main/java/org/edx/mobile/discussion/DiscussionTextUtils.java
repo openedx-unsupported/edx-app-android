@@ -19,6 +19,9 @@ import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.model.discussion.DiscussionComment;
+import org.edx.mobile.model.discussion.DiscussionThread;
+import org.edx.mobile.model.discussion.IAuthorData;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;

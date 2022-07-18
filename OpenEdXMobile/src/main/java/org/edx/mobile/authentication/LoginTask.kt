@@ -3,6 +3,7 @@ package org.edx.mobile.authentication
 import android.content.Context
 import dagger.hilt.android.EntryPointAccessors
 import org.edx.mobile.core.EdxDefaultModule.ProviderEntryPoint
+import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.task.Task
 
 abstract class LoginTask(

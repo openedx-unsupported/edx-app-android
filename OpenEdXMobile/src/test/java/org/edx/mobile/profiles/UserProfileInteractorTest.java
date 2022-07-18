@@ -1,30 +1,5 @@
 package org.edx.mobile.profiles;
 
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
-import org.edx.mobile.base.BaseTest;
-import org.edx.mobile.event.AccountDataLoadedEvent;
-import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.user.Account;
-import org.edx.mobile.user.LanguageProficiency;
-import org.edx.mobile.user.ProfileImage;
-import org.edx.mobile.user.UserService;
-import org.edx.mobile.util.observer.Observer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import java.io.IOException;
-import java.util.Collections;
-
-import de.greenrobot.event.EventBus;
-import retrofit2.mock.Calls;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -34,6 +9,33 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import android.net.Uri;
+
+import androidx.annotation.NonNull;
+
+import org.edx.mobile.base.BaseTest;
+import org.edx.mobile.event.AccountDataLoadedEvent;
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.profile.UserProfileBioModel;
+import org.edx.mobile.model.profile.UserProfileViewModel;
+import org.edx.mobile.model.user.Account;
+import org.edx.mobile.model.user.LanguageProficiency;
+import org.edx.mobile.model.user.ProfileImage;
+import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.user.UserService;
+import org.edx.mobile.util.observer.Observer;
+import org.greenrobot.eventbus.EventBus;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.io.IOException;
+import java.util.Collections;
+
+import retrofit2.mock.Calls;
 
 public class UserProfileInteractorTest extends BaseTest {
 

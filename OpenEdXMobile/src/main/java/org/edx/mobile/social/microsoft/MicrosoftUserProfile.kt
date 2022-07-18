@@ -1,7 +1,9 @@
 package org.edx.mobile.social.microsoft
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 class MicrosoftUserProfile(
         @SerializedName("userPrincipalName")
         var email: String?,

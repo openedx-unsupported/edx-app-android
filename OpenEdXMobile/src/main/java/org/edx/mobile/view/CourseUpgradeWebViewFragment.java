@@ -15,11 +15,11 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class CourseUpgradeWebViewFragment extends AuthenticatedWebViewFragment {

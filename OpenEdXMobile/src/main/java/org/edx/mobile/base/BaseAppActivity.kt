@@ -7,11 +7,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.google.android.gms.cast.framework.CastStateListener
-import de.greenrobot.event.EventBus
 import org.edx.mobile.R
 import org.edx.mobile.event.NewRelicEvent
 import org.edx.mobile.googlecast.GoogleCastDelegate
 import org.edx.mobile.logger.Logger
+import org.greenrobot.eventbus.EventBus
 
 abstract class BaseAppActivity : AppCompatActivity(), CastStateListener {
 

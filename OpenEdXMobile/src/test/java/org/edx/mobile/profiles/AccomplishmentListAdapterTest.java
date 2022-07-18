@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.base.BaseTestCase;
+import org.edx.mobile.model.profile.BadgeAssertion;
 import org.edx.mobile.view.adapters.LoadingViewHolder;
 import org.junit.Before;
 import org.junit.Test;

@@ -6,7 +6,8 @@ import androidx.annotation.NonNull;
 
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.profiles.BadgeAssertion;
+import org.edx.mobile.model.profile.BadgeAssertion;
+import org.edx.mobile.model.user.Account;
 
 import java.util.Map;
 

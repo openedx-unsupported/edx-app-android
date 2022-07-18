@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.profile.BadgeAssertion;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.view.ViewHoldingPresenter;

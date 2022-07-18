@@ -1,16 +1,16 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.view.accessibility.CaptioningManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.TranscriptModel;
+import org.edx.mobile.model.user.FormOption;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.user.FormOption;
 
 import java.text.Collator;
 import java.util.ArrayList;

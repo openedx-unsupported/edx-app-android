@@ -2,7 +2,6 @@ package org.edx.mobile.model.course
 
 import com.google.gson.annotations.SerializedName
 import org.apache.commons.lang.time.DateUtils
-import org.edx.mobile.util.CourseDateType
 import org.edx.mobile.util.DateUtil
 import java.util.*
 

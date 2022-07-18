@@ -15,17 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.EdxDefaultModule;
-import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionService.FlagBody;
 import org.edx.mobile.discussion.DiscussionService.FollowBody;
 import org.edx.mobile.discussion.DiscussionService.VoteBody;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.discussion.DiscussionComment;
+import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
@@ -33,6 +33,7 @@ import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.qualifiers.ActivityContext;
 import dagger.hilt.android.scopes.FragmentScoped;
-import de.greenrobot.event.EventBus;
 
 @FragmentScoped
 public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter implements InfiniteScrollUtils.ListContentController<DiscussionComment> {

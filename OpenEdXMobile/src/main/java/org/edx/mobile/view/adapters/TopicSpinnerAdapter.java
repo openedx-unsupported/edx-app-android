@@ -11,8 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.model.discussion.DiscussionTopic;
+import org.edx.mobile.model.discussion.DiscussionTopicDepth;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;

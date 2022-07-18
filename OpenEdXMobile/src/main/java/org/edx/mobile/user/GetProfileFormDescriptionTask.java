@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 
 import org.edx.mobile.R;
+import org.edx.mobile.model.user.FormDescription;
 import org.edx.mobile.task.Task;
 
 import java.io.IOException;

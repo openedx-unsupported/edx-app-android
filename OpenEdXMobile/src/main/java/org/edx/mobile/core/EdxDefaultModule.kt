@@ -11,7 +11,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import de.greenrobot.event.EventBus
 import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.course.CourseService
@@ -38,6 +37,7 @@ import org.edx.mobile.services.CourseManager
 import org.edx.mobile.services.EdxCookieManager
 import org.edx.mobile.user.UserAPI
 import org.edx.mobile.user.UserService
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Retrofit
 import javax.inject.Singleton
 

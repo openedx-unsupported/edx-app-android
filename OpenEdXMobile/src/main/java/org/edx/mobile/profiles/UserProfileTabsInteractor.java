@@ -6,6 +6,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.profile.BadgeAssertion;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.observer.CachingObservable;

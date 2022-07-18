@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.model.course.CourseDetail;
 import org.edx.mobile.module.analytics.Analytics;
 
 import dagger.hilt.android.AndroidEntryPoint;

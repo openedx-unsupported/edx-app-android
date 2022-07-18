@@ -1,5 +1,7 @@
 package org.edx.mobile.social.google;
 
+import androidx.annotation.Keep;
+
 /**
   {
         "id": "00000000000000",
@@ -13,6 +15,7 @@ package org.edx.mobile.social.google;
         "locale": "en-US"
         }
 */
+@Keep
 public class GoogleUserProfile {
     public String id;
     public String email;

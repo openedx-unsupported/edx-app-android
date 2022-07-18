@@ -12,11 +12,11 @@ import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.services.DownloadSpeedService;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class NetworkConnectivityReceiver extends BroadcastReceiver {

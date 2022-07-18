@@ -38,16 +38,16 @@ import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
+import org.edx.mobile.model.user.Account;
+import org.edx.mobile.model.user.DataType;
+import org.edx.mobile.model.user.FieldType;
+import org.edx.mobile.model.user.FormDescription;
+import org.edx.mobile.model.user.FormField;
+import org.edx.mobile.model.user.LanguageProficiency;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.user.Account;
-import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.DeleteAccountImageTask;
-import org.edx.mobile.user.FieldType;
-import org.edx.mobile.user.FormDescription;
-import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
-import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
 import org.edx.mobile.user.UserService;
@@ -59,6 +59,8 @@ import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,7 +69,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 
@@ -222,11 +223,13 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         viewHolder = null;
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         UserProfileUtils.loadProfileImage(getContext(), event, viewHolder.profileImage);
     }
 
+    @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
         if (event.getAccount().getUsername().equals(username)) {

@@ -22,6 +22,12 @@ import androidx.annotation.NonNull;
 
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.discussion.CommentBody;
+import org.edx.mobile.model.discussion.CourseDiscussionInfo;
+import org.edx.mobile.model.discussion.CourseTopics;
+import org.edx.mobile.model.discussion.DiscussionComment;
+import org.edx.mobile.model.discussion.DiscussionThread;
+import org.edx.mobile.model.discussion.ThreadBody;
 
 import java.util.List;
 

@@ -42,6 +42,8 @@ import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +53,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class BulkDownloadFragment extends BaseFragment implements BaseFragment.PermissionListener {
@@ -585,6 +586,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         }
     }
 
+    @Subscribe
     public void onEvent(BulkVideosDownloadCancelledEvent event) {
         if (getView() == null) {
             // If fragment view is not created yet, mark the event and fire it once the view is created.
@@ -597,6 +599,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         updateUI();
     }
 
+    @Subscribe
     public void onEvent(BulkVideosDownloadStartedEvent event) {
         if (getView() == null) {
             // If fragment view is not created yet, mark the event and fire it once the view is created.

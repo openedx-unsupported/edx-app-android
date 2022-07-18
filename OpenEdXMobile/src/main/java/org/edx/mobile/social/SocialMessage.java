@@ -3,9 +3,12 @@ package org.edx.mobile.social;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Keep
 public class SocialMessage implements Parcelable {
     protected long id;
     protected String message;

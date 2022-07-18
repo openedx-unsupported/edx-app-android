@@ -2,7 +2,7 @@ package org.edx.mobile.event;
 
 import androidx.annotation.NonNull;
 
-import org.edx.mobile.user.Account;
+import org.edx.mobile.model.user.Account;
 
 /**
  * Fired whenever we get/update a user's account details.

@@ -5,15 +5,16 @@ import static org.edx.mobile.http.util.CallUtil.executeStrict;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +24,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Lazy;
-import de.greenrobot.event.EventBus;
 import okhttp3.Authenticator;
 import okhttp3.Request;
 import okhttp3.Response;

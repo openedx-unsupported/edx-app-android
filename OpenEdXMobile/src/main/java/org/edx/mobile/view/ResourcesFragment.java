@@ -22,11 +22,12 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class ResourcesFragment extends OfflineSupportBaseFragment {
@@ -46,7 +47,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().registerSticky(ResourcesFragment.this);
+        EventBus.getDefault().register(ResourcesFragment.this);
         courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_resources, container, false);
@@ -125,6 +126,7 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
         TextView subtitleView;
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
         onNetworkConnectivityChangeEvent(event);

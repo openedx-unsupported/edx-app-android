@@ -47,6 +47,8 @@ import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -55,7 +57,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import de.greenrobot.event.EventBus;
 
 @AndroidEntryPoint
 public class CourseUnitWebViewFragment extends CourseUnitFragment {
@@ -412,6 +413,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe
     public void onEventMainThread(UnitLoadedEvent event) {
         loadUnit(false);
     }

@@ -3,12 +3,14 @@ package org.edx.mobile.social;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 // Class is implementing Serializable in order to be included inside of CourseEntry. Ideally CourseEntry would implement Parcelable instead.
-
+@Keep
 public class SocialMember implements Parcelable, Serializable {
 
     protected long id;

@@ -32,6 +32,8 @@ import org.edx.mobile.player.TranscriptListener;
 import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.view.adapters.TranscriptAdapter;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -41,7 +43,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
@@ -164,7 +165,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         super.onCreate(savedInstanceState);
         unit = getArguments() == null ? null :
                 (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -523,6 +524,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
+    @Subscribe(sticky = true)
     public void onEvent(VideoPlaybackEvent event) {
         playPauseVideoPlayback(event.getPauseVideo());
         EventBus.getDefault().removeStickyEvent(event);

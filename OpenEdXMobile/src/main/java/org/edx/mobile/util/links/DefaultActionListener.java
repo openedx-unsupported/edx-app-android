@@ -26,13 +26,13 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.qualifiers.ActivityContext;
-import de.greenrobot.event.EventBus;
 import okhttp3.ResponseBody;
 
 /**

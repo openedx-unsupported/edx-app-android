@@ -10,7 +10,6 @@ import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import de.greenrobot.event.EventBus
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
@@ -22,17 +21,19 @@ import org.edx.mobile.event.AccountDataLoadedEvent
 import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
 import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.model.user.Account
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
-import org.edx.mobile.user.Account
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
 import org.edx.mobile.util.*
 import org.edx.mobile.view.dialog.IDialogCallback
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import javax.inject.Inject
 
@@ -318,7 +319,7 @@ class AccountFragment : BaseFragment() {
             prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false)
         } else {
             if (!EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().registerSticky(this)
+                EventBus.getDefault().register(this)
             }
             binding.switchSdCard.setOnCheckedChangeListener(null)
             binding.switchSdCard.isChecked = environment.userPrefs.isDownloadToSDCardEnabled
@@ -348,11 +349,13 @@ class AccountFragment : BaseFragment() {
         }
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     fun onEventMainThread(event: MediaStatusChangeEvent) {
         binding.switchSdCard.isEnabled = event.isSdCardAvailable
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     fun onEventMainThread(@NonNull event: AccountDataLoadedEvent) {
         if (!environment.config.isUserProfilesEnabled) {
@@ -361,6 +364,7 @@ class AccountFragment : BaseFragment() {
         initPersonalInfo()
     }
 
+    @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     fun onEventMainThread(event: ProfilePhotoUpdatedEvent) {
         UserProfileUtils.loadProfileImage(requireContext(), event, binding.profileImage)
