@@ -9,7 +9,11 @@ import org.edx.mobile.model.iap.AddToBasketResponse
 import org.edx.mobile.model.iap.CheckoutResponse
 import org.edx.mobile.model.iap.ExecuteOrderResponse
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 import javax.inject.Singleton
 
 interface InAppPurchasesService {
@@ -29,7 +33,7 @@ interface InAppPurchasesService {
     fun addToBasket(@Query("sku") productId: String): Call<AddToBasketResponse>
 
     @FormUrlEncoded
-    @POST("/api/v2/checkout/")
+    @POST("/api/iap/v1/checkout/")
     fun proceedCheckout(
         @Field("basket_id") basketId: Long,
         @Field("payment_processor") paymentProcessor: String
