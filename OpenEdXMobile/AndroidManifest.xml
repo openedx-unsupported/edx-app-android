@@ -41,6 +41,10 @@
         <package android:name="com.google.android.youtube" />
     </queries>
 
+    <!-- Required by branch.io -->
+    <!-- ref: https://help.branch.io/developers-hub/docs/android-basic-integration#configure-app -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+
     <application
         android:name=".base.RuntimeApplication"
         android:allowBackup="true"
@@ -339,12 +343,6 @@
         <!-- Branch -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="${branchKey}" />
 
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.provider"
@@ -386,5 +384,12 @@
             android:value="org.edx.mobile.googlecast.CastOptionsProvider" />
 
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
 
 </manifest>

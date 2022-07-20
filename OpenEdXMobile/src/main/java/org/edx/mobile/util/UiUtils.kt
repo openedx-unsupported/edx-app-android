@@ -149,8 +149,11 @@ object UiUtils {
      * @param fragment The fragment to restart.
      */
     fun restartFragment(fragment: Fragment?) {
-        fragment?.requireFragmentManager()?.beginTransaction()?.detach(fragment)?.attach(fragment)
-                ?.commitAllowingStateLoss()
+        val fragmentManager = fragment?.parentFragmentManager
+        fragmentManager?.run {
+            beginTransaction().detach(fragment).commitNowAllowingStateLoss()
+            beginTransaction().attach(fragment).commitAllowingStateLoss()
+        }
     }
 
     /**
