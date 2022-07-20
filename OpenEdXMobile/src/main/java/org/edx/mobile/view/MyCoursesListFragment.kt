@@ -514,7 +514,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             for (i in list.indices) {
                 //Check if the flag of isIs_active is marked to true,
                 //then activate all videos
-                if (list[i].isIs_active) {
+                if (list[i].isActive) {
                     //update all videos for a course fetched in the API as Activated
                     environment.database?.updateVideosActivatedForCourse(
                         list[i].course.id,

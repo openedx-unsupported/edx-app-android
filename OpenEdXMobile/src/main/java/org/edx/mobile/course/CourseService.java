@@ -157,10 +157,13 @@ public interface CourseService {
     Call<Void> updateCoursewareCelebration(@Path("course_id") final String courseId, @Body HashMap<String, Boolean> courseBody);
 
     final class BlocksCompletionBody {
+
         @NonNull
+        @SerializedName("username")
         String username;
 
         @NonNull
+        @SerializedName("course_key")
         String courseKey;
 
         @NonNull
