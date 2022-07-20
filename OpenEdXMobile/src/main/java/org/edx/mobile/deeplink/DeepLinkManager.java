@@ -52,7 +52,7 @@ public class DeepLinkManager {
             case Screen.DISCUSSION_TOPIC:
             case Screen.COURSE_COMPONENT: {
                 router.showCourseDashboardTabs(activity, null, deepLink.getCourseId(), deepLink.getComponentId(),
-                        deepLink.getTopicID(), deepLink.getThreadID(), false, screenName);
+                        deepLink.getTopicId(), deepLink.getThreadId(), false, screenName);
                 break;
             }
             case Screen.PROGRAM:

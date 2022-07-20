@@ -17,37 +17,42 @@ open class DeepLink(val screenName: String) : Parcelable {
 
     var courseId: String? = null
     var componentId: String? = null
-    private var pathId: String? = null
-    var topicID: String? = null
-    var threadID: String? = null
+    var topicId: String? = null
+    var threadId: String? = null
+    var pathId: String? = null
+        get() = if (screenName == Screen.DISCOVERY_COURSE_DETAIL) {
+            courseId
+        } else {
+            field
+        }
 
     constructor(screenName: String, paramsJson: JSONObject) : this(screenName) {
         courseId = paramsJson.optString(Keys.COURSE_ID)
         componentId = paramsJson.optString(Keys.COMPONENT_ID)
         pathId = paramsJson.optString(Keys.PATH_ID)
-        topicID = paramsJson.optString(Keys.TOPIC_ID)
-        threadID = paramsJson.optString(Keys.THREAD_ID)
+        topicId = paramsJson.optString(Keys.TOPIC_ID)
+        threadId = paramsJson.optString(Keys.THREAD_ID)
     }
 
     constructor(screenName: String, bundle: Bundle) : this(screenName) {
         courseId = bundle.getString(Keys.COURSE_ID)
         componentId = bundle.getString(Keys.COMPONENT_ID)
         pathId = bundle.getString(Keys.PATH_ID)
-        topicID = bundle.getString(Keys.TOPIC_ID)
-        threadID = bundle.getString(Keys.THREAD_ID)
+        topicId = bundle.getString(Keys.TOPIC_ID)
+        threadId = bundle.getString(Keys.THREAD_ID)
     }
 
     constructor(screenName: String, map: Map<String, String>) : this(screenName) {
         courseId = map[Keys.COURSE_ID]
         componentId = map[Keys.COMPONENT_ID]
         pathId = map[Keys.PATH_ID]
-        topicID = map[Keys.TOPIC_ID]
-        threadID = map[Keys.THREAD_ID]
+        topicId = map[Keys.TOPIC_ID]
+        threadId = map[Keys.THREAD_ID]
     }
 
     override fun toString(): String {
         return "DeepLink(screenName='$screenName', courseId=$courseId, componentId=$componentId, " +
-                "pathId=$pathId, topicID=$topicID, threadID=$threadID)"
+                "pathId=$pathId, topicID=$topicId, threadID=$threadId)"
     }
 
     companion object {
@@ -62,8 +67,8 @@ open class DeepLink(val screenName: String) : Parcelable {
         this.courseId = source.readString()
         this.componentId = source.readString()
         this.pathId = source.readString()
-        this.topicID = source.readString()
-        this.threadID = source.readString()
+        this.topicId = source.readString()
+        this.threadId = source.readString()
     }
 
     override fun describeContents() = 0
@@ -73,15 +78,7 @@ open class DeepLink(val screenName: String) : Parcelable {
         writeString(courseId)
         writeString(componentId)
         writeString(pathId)
-        writeString(topicID)
-        writeString(threadID)
-    }
-
-    fun getPathId(): String? {
-        return if (screenName == Screen.DISCOVERY_COURSE_DETAIL) {
-            courseId
-        } else {
-            pathId
-        }
+        writeString(topicId)
+        writeString(threadId)
     }
 }
