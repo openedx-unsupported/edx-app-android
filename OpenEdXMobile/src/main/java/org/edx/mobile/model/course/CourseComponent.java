@@ -42,7 +42,7 @@ public class CourseComponent implements IBlock, IPathNode {
     private String authorizationDenialMessage;
     private AuthorizationDenialReason authorizationDenialReason;
     private SpecialExamInfo specialExamInfo;
-    private String courseProductSku;
+    private String productSku;
 
     public CourseComponent() {
     }
@@ -68,7 +68,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.authorizationDenialMessage = other.authorizationDenialMessage;
         this.authorizationDenialReason = other.authorizationDenialReason;
         this.specialExamInfo = other.specialExamInfo;
-        this.courseProductSku = other.courseProductSku;
+        this.productSku = other.productSku;
     }
 
     /**
@@ -560,11 +560,11 @@ public class CourseComponent implements IBlock, IPathNode {
         return specialExamInfo;
     }
 
-    public String getCourseProductSku() {
-        return courseProductSku;
+    public String getProductSku() {
+        return productSku;
     }
 
-    public void setCourseProductSku(String courseProductSku) {
-        this.courseProductSku = courseProductSku;
+    public void setProductSku(String productSku) {
+        this.productSku = productSku;
     }
 }

@@ -72,5 +72,5 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
 
     public abstract void onAnnouncementClicked(EnrolledCoursesResponse model);
 
-    public abstract void onValuePropClicked(EnrolledCoursesResponse selectedCourseData);
+    public abstract void onValuePropClicked(EnrolledCoursesResponse model);
 }

@@ -638,7 +638,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
                         Analytics.Screens.PLS_COURSE_DASHBOARD,
                         courseData.getCourseId(),
-                        courseData.getCourseProductSku(),
+                        courseData.getProductSku(),
                         courseData.getCourse().getName(),
                         courseData.getCourse().isSelfPaced())
                 .show(((AppCompatActivity) context).getSupportFragmentManager(),

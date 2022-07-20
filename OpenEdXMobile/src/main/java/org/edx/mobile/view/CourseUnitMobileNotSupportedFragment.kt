@@ -127,7 +127,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
                 iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
                 unit?.let {
-                    it.courseProductSku?.let { productId ->
+                    it.productSku?.let { productId ->
                         iapViewModel.addProductToBasket(productId)
                     } ?: showUpgradeErrorDialog()
                 }
@@ -167,7 +167,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private fun initializeProductPrice() {
         iapAnalytics.initPriceTime()
-        unit?.courseProductSku?.let { productId ->
+        unit?.productSku?.let { productId ->
             billingProcessor?.querySyncDetails(
                 productId = productId
             ) { _, skuDetails ->

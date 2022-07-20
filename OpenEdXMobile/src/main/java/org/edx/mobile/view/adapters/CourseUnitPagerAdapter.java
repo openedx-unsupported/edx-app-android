@@ -84,7 +84,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
                 minifiedUnit = new HtmlBlockModel((HtmlBlockModel) unit);
             } else minifiedUnit = new CourseComponent(unit);
         }
-        minifiedUnit.setCourseProductSku(courseData.getCourseProductSku());
+        minifiedUnit.setProductSku(courseData.getProductSku());
         CourseUnitFragment unitFragment;
         final boolean isYoutubeVideo = (minifiedUnit instanceof VideoBlockModel && ((VideoBlockModel) minifiedUnit).getData().encodedVideos.getYoutubeVideoInfo() != null);
         if (minifiedUnit.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {

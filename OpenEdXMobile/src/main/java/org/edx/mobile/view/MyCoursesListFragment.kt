@@ -92,17 +92,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 }
             }
 
-            override fun onValuePropClicked(selectedCourseData: EnrolledCoursesResponse) {
+            override fun onValuePropClicked(model: EnrolledCoursesResponse) {
                 //This time is checked to avoid taps in quick succession
                 val currentTime = SystemClock.elapsedRealtime()
                 if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
                     lastClickTime = currentTime
                     CourseModalDialogFragment.newInstance(
                         Analytics.Screens.COURSE_ENROLLMENT,
-                        selectedCourseData.courseId,
-                        selectedCourseData.courseProductSku,
-                        selectedCourseData.course.name,
-                        selectedCourseData.course.isSelfPaced
+                        model.courseId,
+                        model.productSku,
+                        model.course.name,
+                        model.course.isSelfPaced
                     ).show(childFragmentManager, CourseModalDialogFragment.TAG)
                 }
             }

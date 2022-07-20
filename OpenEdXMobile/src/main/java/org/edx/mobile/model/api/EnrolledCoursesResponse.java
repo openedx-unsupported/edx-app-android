@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.course.EnrollmentMode;
 
 import java.util.ArrayList;
 
@@ -122,13 +123,14 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         isDiscussionBlackedOut = discussionBlackedOut;
     }
 
-    public String getCourseProductSku() {
+    public String getProductSku() {
         if (courseModes == null || courseModes.size() == 0) {
             return null;
         } else {
             for (CourseMode courseMode : courseModes) {
                 String productSku = courseMode.getAndroidSku();
-                if (!TextUtils.isEmpty(productSku)) {
+                if (EnrollmentMode.VERIFIED.name().equalsIgnoreCase(courseMode.getSlug()) &&
+                        !TextUtils.isEmpty(productSku)) {
                     return productSku;
                 }
             }

@@ -80,7 +80,7 @@ class CourseModalDialogFragment : DialogFragment() {
         arguments?.let { bundle ->
             screenName = bundle.getString(KEY_SCREEN_NAME, "")
             courseId = bundle.getString(KEY_COURSE_ID, "")
-            courseSku = bundle.getString(KEY_COURSE_PRODUCT)
+            courseSku = bundle.getString(KEY_COURSE_SKU)
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
             iapAnalytics.initCourseValues(
                 courseId = courseId,
@@ -320,7 +320,7 @@ class CourseModalDialogFragment : DialogFragment() {
         const val TAG: String = "CourseModalDialogFragment"
         const val KEY_SCREEN_NAME = "screen_name"
         const val KEY_COURSE_ID = "course_id"
-        const val KEY_COURSE_PRODUCT = "course_product"
+        const val KEY_COURSE_SKU = "course_sku"
         const val KEY_COURSE_NAME = "course_name"
         const val KEY_IS_SELF_PACED = "is_Self_Paced"
 
@@ -336,7 +336,7 @@ class CourseModalDialogFragment : DialogFragment() {
             val args = Bundle().apply {
                 putString(KEY_SCREEN_NAME, screenName)
                 putString(KEY_COURSE_ID, courseId)
-                putString(KEY_COURSE_PRODUCT, courseSku)
+                putString(KEY_COURSE_SKU, courseSku)
                 putString(KEY_COURSE_NAME, courseName)
                 putBoolean(KEY_IS_SELF_PACED, isSelfPaced)
             }

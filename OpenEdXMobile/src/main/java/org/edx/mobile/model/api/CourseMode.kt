@@ -5,11 +5,11 @@ import java.io.Serializable
 
 data class CourseMode(
     @SerializedName("slug")
-    val slug: String,
+    val slug: String?,
 
     @SerializedName("sku")
-    val sku: String,
+    val sku: String?,
 
     @SerializedName("android_sku")
-    val androidSku: String,
+    val androidSku: String?,
 ) : Serializable
