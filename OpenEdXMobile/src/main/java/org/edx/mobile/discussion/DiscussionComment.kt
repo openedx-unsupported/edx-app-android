@@ -28,7 +28,11 @@ import java.util.*
 class DiscussionComment : Serializable, IAuthorData, ProfileImageProvider {
     @SerializedName("id")
     val identifier: String? = null
+
+    @SerializedName("parent_id")
     val parentId: String? = null
+
+    @SerializedName("thread_id")
     val threadId: String? = null
 
     @SerializedName("raw_body")
@@ -36,10 +40,14 @@ class DiscussionComment : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("rendered_body")
     val renderedBody: String? = null
+
+    @SerializedName("author")
     private val author: String? = null
 
     @SerializedName("author_label")
     private val authorLabel: String? = null
+
+    @SerializedName("voted")
     val isVoted = false
 
     @SerializedName("vote_count")
@@ -50,6 +58,8 @@ class DiscussionComment : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("updated_at")
     val updatedAt: Date? = null
+
+    @SerializedName("endorsed")
     val isEndorsed = false
 
     @SerializedName("endorsed_by")
@@ -70,6 +80,8 @@ class DiscussionComment : Serializable, IAuthorData, ProfileImageProvider {
     @SerializedName("child_count")
     var childCount = 0
         private set
+
+    @SerializedName("users")
     var users: Map<String?, DiscussionUser>? = null
         private set
 

@@ -38,6 +38,8 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("id")
     val identifier: String? = null
+
+    @SerializedName("type")
     val type: ThreadType? = null
 
     @SerializedName("course_id")
@@ -51,6 +53,8 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("group_name")
     val groupName: String? = null
+
+    @SerializedName("title")
     val title: String? = null
 
     @SerializedName("raw_body")
@@ -58,30 +62,40 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("rendered_body")
     val renderedBody: String? = null
+
+    @SerializedName("author")
     private val author: String? = null
 
     @SerializedName("author_label")
     private val authorLabel: String? = null
+
+    @SerializedName("comment_count")
     var commentCount = 0
         private set
+
+    @SerializedName("unread_comment_count")
     var unreadCommentCount = 0
         private set
 
-    /**
-     * @return The response count, or -1 if it's not available.
-     */
-    // Since the response count field is not provided in the thread list
-    // query, it is defaulted to -1 to indicate that it's not available.
-    var responseCount = -1
-        private set
+    @SerializedName("comment_list_url")
     val commentListUrl: String? = null
+
+    @SerializedName("has_endorsed")
     val isHasEndorsed = false
+
+    @SerializedName("pinned")
     val isPinned = false
+
+    @SerializedName("closed")
     val isClosed = false
+
+    @SerializedName("following")
     val isFollowing = false
 
     @SerializedName("abuse_flagged")
     val isAbuseFlagged = false
+
+    @SerializedName("voted")
     val isVoted = false
 
     @SerializedName("vote_count")
@@ -95,6 +109,8 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("editable_fields")
     val editableFields: List<String>? = null
+
+    @SerializedName("read")
     var isRead = false
         set(read) {
             field = read
@@ -102,7 +118,18 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
                 unreadCommentCount = 0
             }
         }
+
+    @SerializedName("users")
     var users: Map<String?, DiscussionUser>? = null
+        private set
+
+    /**
+     * Since the response count field is not provided in the thread list query, it is defaulted
+     * to -1 to indicate that it's not available.
+     *
+     * @return The response count, or -1 if it's not available.
+     */
+    var responseCount = -1
         private set
 
     override fun getAuthor(): String? {

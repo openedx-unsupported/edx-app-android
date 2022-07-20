@@ -2,18 +2,31 @@ package org.edx.mobile.model.api;
 
 import android.text.TextUtils;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
 
 @SuppressWarnings("serial")
 public class EnrolledCoursesResponse implements SectionItemInterface {
 
+    @SerializedName("audit_access_expires")
     private String auditAccessExpires;
+
+    @SerializedName("created")
     private String created;
+
+    @SerializedName("mode")
     private String mode;
-    private boolean is_active;
+
+    @SerializedName("is_active")
+    private boolean isActive;
+
+    @SerializedName("course")
     private CourseEntry course;
+
     private boolean isDiscussionBlackedOut = false;
-    
+
+    @SerializedName("certificate")
     private CertificateModel certificate;
 
     // derived fields (doesn't come in server response)
@@ -44,12 +57,12 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         this.mode = mode;
     }
 
-    public boolean isIs_active() {
-        return is_active;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     public CourseEntry getCourse() {
@@ -60,7 +73,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         this.course = course;
     }
 
-    public String getCourseId(){
+    public String getCourseId() {
         return course.getId();
     }
 
@@ -95,7 +108,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     }
 
     public String getVideoCountReadable() {
-        return String.format("%d %s", videoCount, (videoCount==1 ? "Video" : "Videos"));
+        return String.format("%d %s", videoCount, (videoCount == 1 ? "Video" : "Videos"));
     }
 
     public String getCertificateURL() {
