@@ -94,6 +94,8 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
 
     @SerializedName("abuse_flagged")
     val isAbuseFlagged = false
+
+    @SerializedName("voted")
     val isVoted = false
 
     @SerializedName("vote_count")
