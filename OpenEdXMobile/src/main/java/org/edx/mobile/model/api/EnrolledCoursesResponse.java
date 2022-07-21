@@ -128,10 +128,8 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
             return null;
         } else {
             for (CourseMode courseMode : courseModes) {
-                String productSku = courseMode.getAndroidSku();
-                if (EnrollmentMode.VERIFIED.name().equalsIgnoreCase(courseMode.getSlug()) &&
-                        !TextUtils.isEmpty(productSku)) {
-                    return productSku;
+                if (EnrollmentMode.VERIFIED.name().equalsIgnoreCase(courseMode.getSlug())) {
+                    return TextUtils.isEmpty(courseMode.getAndroidSku()) ? null : courseMode.getAndroidSku();
                 }
             }
         }
