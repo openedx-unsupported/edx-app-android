@@ -20,7 +20,6 @@ import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.inapppurchases.BillingProcessor
-import org.edx.mobile.inapppurchases.ProductManager
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.Analytics.Values
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
@@ -34,6 +33,7 @@ class CourseModalDialogFragment : DialogFragment() {
     private lateinit var binding: DialogUpgradeFeaturesBinding
     private var screenName: String = ""
     private var courseId: String = ""
+    private var courseSku: String? = null
     private var isSelfPaced: Boolean = false
 
     private var billingProcessor: BillingProcessor? = null
@@ -80,6 +80,7 @@ class CourseModalDialogFragment : DialogFragment() {
         arguments?.let { bundle ->
             screenName = bundle.getString(KEY_SCREEN_NAME, "")
             courseId = bundle.getString(KEY_COURSE_ID, "")
+            courseSku = bundle.getString(KEY_COURSE_SKU)
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
             iapAnalytics.initCourseValues(
                 courseId = courseId,
@@ -107,7 +108,7 @@ class CourseModalDialogFragment : DialogFragment() {
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
-            ProductManager.getProductByCourseId(courseId)?.let {
+            courseSku?.let {
                 iapViewModel.addProductToBasket(it)
             } ?: showUpgradeErrorDialog()
         }
@@ -142,7 +143,7 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private fun initializeProductPrice() {
         iapAnalytics.initPriceTime()
-        ProductManager.getProductByCourseId(courseId)?.let {
+        courseSku?.let {
             billingProcessor?.querySyncDetails(
                 productId = it
             ) { _, skuDetails ->
@@ -319,6 +320,7 @@ class CourseModalDialogFragment : DialogFragment() {
         const val TAG: String = "CourseModalDialogFragment"
         const val KEY_SCREEN_NAME = "screen_name"
         const val KEY_COURSE_ID = "course_id"
+        const val KEY_COURSE_SKU = "course_sku"
         const val KEY_COURSE_NAME = "course_name"
         const val KEY_IS_SELF_PACED = "is_Self_Paced"
 
@@ -326,6 +328,7 @@ class CourseModalDialogFragment : DialogFragment() {
         fun newInstance(
             screenName: String,
             courseId: String,
+            courseSku: String?,
             courseName: String,
             isSelfPaced: Boolean
         ): CourseModalDialogFragment {
@@ -333,6 +336,7 @@ class CourseModalDialogFragment : DialogFragment() {
             val args = Bundle().apply {
                 putString(KEY_SCREEN_NAME, screenName)
                 putString(KEY_COURSE_ID, courseId)
+                putString(KEY_COURSE_SKU, courseSku)
                 putString(KEY_COURSE_NAME, courseName)
                 putBoolean(KEY_IS_SELF_PACED, isSelfPaced)
             }

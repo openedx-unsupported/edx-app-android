@@ -2,7 +2,12 @@ package org.edx.mobile.model.api;
 
 import android.text.TextUtils;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.course.EnrollmentMode;
+
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class EnrolledCoursesResponse implements SectionItemInterface {
@@ -13,8 +18,11 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     private boolean is_active;
     private CourseEntry course;
     private boolean isDiscussionBlackedOut = false;
-    
+
     private CertificateModel certificate;
+
+    @SerializedName("course_modes")
+    private ArrayList<CourseMode> courseModes;
 
     // derived fields (doesn't come in server response)
     public int videoCount;
@@ -60,7 +68,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         this.course = course;
     }
 
-    public String getCourseId(){
+    public String getCourseId() {
         return course.getId();
     }
 
@@ -95,7 +103,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     }
 
     public String getVideoCountReadable() {
-        return String.format("%d %s", videoCount, (videoCount==1 ? "Video" : "Videos"));
+        return String.format("%d %s", videoCount, (videoCount == 1 ? "Video" : "Videos"));
     }
 
     public String getCertificateURL() {
@@ -113,5 +121,18 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
 
     public void setDiscussionBlackedOut(boolean discussionBlackedOut) {
         isDiscussionBlackedOut = discussionBlackedOut;
+    }
+
+    public String getProductSku() {
+        if (courseModes == null || courseModes.size() == 0) {
+            return null;
+        } else {
+            for (CourseMode courseMode : courseModes) {
+                if (EnrollmentMode.VERIFIED.name().equalsIgnoreCase(courseMode.getSlug())) {
+                    return TextUtils.isEmpty(courseMode.getAndroidSku()) ? null : courseMode.getAndroidSku();
+                }
+            }
+        }
+        return null;
     }
 }
