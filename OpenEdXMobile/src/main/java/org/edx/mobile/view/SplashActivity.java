@@ -85,6 +85,7 @@ public class SplashActivity extends ComponentActivity {
                 }
             };
             Branch.sessionBuilder(this).withCallback(branchReferralInitListener)
+                    .withDelay(1000) // wait for 1 sec to complete the Initialization with payload.
                     .withData(getIntent() != null ? getIntent().getData() : null).init();
         }
         finish();
