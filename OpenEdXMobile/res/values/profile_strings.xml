@@ -12,7 +12,7 @@
     <!--  Heading of Wifi Field  -->
     <string name="label_wifi">Wifi</string>
     <!--  Heading of Personal Information  -->
-    <string name="label_personal_information">Personal Information</string>
+    <string name="label_personal_information">Personal information</string>
     <!--  Heading of Help Field  -->
     <string name="label_help">Help</string>
     <!--  Description of Submit feedback Field  -->

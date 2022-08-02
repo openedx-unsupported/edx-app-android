@@ -14,10 +14,9 @@
             android:orientation="vertical">
 
             <TextView
-                style="@style/profile_field_description"
+                style="@style/profile_field_heading"
                 android:layout_marginTop="@dimen/edx_default_margin"
-                android:text="@string/label_video_settings"
-                android:textAllCaps="true" />
+                android:text="@string/label_video_settings" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,9 +120,8 @@
                 tools:visibility="visible">
 
                 <TextView
-                    style="@style/profile_field_description"
-                    android:text="@string/label_personal_information"
-                    android:textAllCaps="true" />
+                    style="@style/profile_field_heading"
+                    android:text="@string/label_personal_information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -202,9 +200,8 @@
                 tools:visibility="visible">
 
                 <TextView
-                    style="@style/profile_field_description"
-                    android:text="@string/label_purchase"
-                    android:textAllCaps="true" />
+                    style="@style/profile_field_heading"
+                    android:text="@string/label_purchase" />
 
                 <TextView
                     style="@style/profile_field_title"
@@ -228,10 +225,9 @@
 
             <TextView
                 android:id="@+id/tv_help"
-                style="@style/profile_field_description"
+                style="@style/profile_field_heading"
                 android:layout_marginTop="@dimen/edx_default_margin"
                 android:text="@string/label_help"
-                android:textAllCaps="true"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -295,8 +291,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_view_button_height"
                     android:layout_marginTop="@dimen/edx_half_margin"
-                    android:text="@string/label_view_faq_btn"
                     android:includeFontPadding="false"
+                    android:text="@string/label_view_faq_btn"
                     app:backgroundTint="@null"
                     app:icon="@drawable/ic_open_in_new"
                     app:iconGravity="textEnd"

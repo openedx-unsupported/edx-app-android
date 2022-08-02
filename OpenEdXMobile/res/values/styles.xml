@@ -32,6 +32,7 @@
         <item name="fontRegular">@font/inter_regular</item>
         <item name="fontSemiBoldItalic">@font/inter_semi_bold_italic</item>
         <item name="fontSemiBold">@font/inter_semi_bold</item>
+        <item name="secondaryFontRegular">@font/roboto_mono_regular</item>
         <item name="android:fontFamily">?attr/fontRegular</item>
     </style>
 

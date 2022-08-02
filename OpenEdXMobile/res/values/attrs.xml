@@ -28,4 +28,5 @@
     <attr name="fontRegular" format="reference" />
     <attr name="fontSemiBold" format="reference" />
     <attr name="fontSemiBoldItalic" format="reference" />
+    <attr name="secondaryFontRegular" format="reference" />
 </resources>
