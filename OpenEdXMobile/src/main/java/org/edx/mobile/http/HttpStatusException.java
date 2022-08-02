@@ -2,7 +2,9 @@ package org.edx.mobile.http;
 
 import androidx.annotation.NonNull;
 
+import okhttp3.MediaType;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Signals an HTTP status error.
@@ -29,6 +31,29 @@ public class HttpStatusException extends Exception {
      */
     public HttpStatusException(@NonNull final retrofit2.Response<?> response) {
         this(response.raw());
+    }
+
+    /**
+     * Constructs a new {@code HttpResponseStatusException}.
+     *
+     * @param code    The Retrofit error response code.
+     * @param content The Retrofit error response message
+     */
+    public HttpStatusException(int code, String content) {
+        this(retrofit2.Response.error(code,
+                ResponseBody.create(content, MediaType.parse("text/plain"))).raw());
+    }
+
+    /**
+     * Constructs a new {@code HttpResponseStatusException}.
+     *
+     * @param code        The Retrofit error response code.
+     * @param content     The Retrofit error response message
+     * @param contentType The Retrofit error response MediaType
+     */
+    public HttpStatusException(int code, String content, String contentType) {
+        this(retrofit2.Response.error(code,
+                ResponseBody.create(content, MediaType.parse(contentType))).raw());
     }
 
     /**

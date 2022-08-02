@@ -27,7 +27,7 @@
     <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
     <string name="error_user_not_authenticated">Your account could not be authenticated. Try signing out and signing back into the app. If this error continues, please contact Support.</string>
     <!--  The course is already upgraded  -->
-    <string name="error_course_already_paid">The course you are looking to upgrade has already been paid for. For additional help, reach out to Support.</string>
+    <string name="error_course_already_paid">The course you are looking to upgrade has already been paid for. To update, we need to quickly refresh your app.</string>
     <!--  Course sku or the payment processor didn't found  -->
     <string name="error_payment_not_processed">Your payment could not be processed at this time. Please try again. For additional help, reach out to Support.</string>
     <!--  The native payment is complete but an error occurred while marking the course verified  -->
@@ -42,4 +42,14 @@
 
     <!-- Label Course Modal Unlock Graded Assignments -->
     <string name="course_modal_unlock_graded_assignment">Unlock graded assignments</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">New experience available</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">An update is available to unlock a purchased course. To update, we need to quickly refresh your app. If you choose not to update now, we’ll try again later.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">Refresh now</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">Continue without update</string>
 </resources>

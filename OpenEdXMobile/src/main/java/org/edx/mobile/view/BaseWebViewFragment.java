@@ -27,10 +27,6 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import javax.inject.Inject;
 
-import okhttp3.MediaType;
-import okhttp3.ResponseBody;
-import retrofit2.Response;
-
 /**
  * An abstract fragment providing basic functionality for URL interception, its follow up action,
  * error handling and show page progress based on page status.
@@ -171,8 +167,7 @@ public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
         public void onPageLoadError(WebView view, int errorCode, String description,
                                     String failingUrl) {
             errorNotification.showError(getContext(),
-                    new HttpStatusException(Response.error(HttpStatus.SERVICE_UNAVAILABLE,
-                            ResponseBody.create(MediaType.parse("text/plain"), description))),
+                    new HttpStatusException(HttpStatus.SERVICE_UNAVAILABLE, description),
                     R.string.lbl_reload, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -189,9 +184,7 @@ public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
                                     boolean isMainRequestFailure) {
             if (isMainRequestFailure) {
                 errorNotification.showError(getContext(),
-                        new HttpStatusException(Response.error(errorResponse.getStatusCode(),
-                                ResponseBody.create(MediaType.parse(errorResponse.getMimeType()),
-                                        errorResponse.getReasonPhrase()))),
+                        new HttpStatusException(errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), errorResponse.getMimeType()),
                         R.string.lbl_reload, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

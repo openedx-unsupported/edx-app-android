@@ -164,6 +164,12 @@ public class LoginPrefs {
     }
 
     @Nullable
+    public Long getUserId() {
+        final ProfileModel profileModel = getCurrentUserProfile();
+        return profileModel != null ? profileModel.id : null;
+    }
+
+    @Nullable
     public String getUsername() {
         final ProfileModel profileModel = getCurrentUserProfile();
         return null == profileModel ? null : profileModel.username;

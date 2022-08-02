@@ -123,7 +123,7 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         isDiscussionBlackedOut = discussionBlackedOut;
     }
 
-    public String getProductSku() {
+    public String getCourseSku() {
         if (courseModes == null || courseModes.size() == 0) {
             return null;
         } else {

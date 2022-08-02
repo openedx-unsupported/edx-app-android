@@ -29,6 +29,9 @@ class InAppPurchasesViewModel @Inject constructor(
     private val _checkoutResponse = MutableLiveData<CheckoutResponse>()
     val checkoutResponse: LiveData<CheckoutResponse> = _checkoutResponse
 
+    private val _executeResponse = MutableLiveData<ExecuteOrderResponse>()
+    val executeResponse: LiveData<ExecuteOrderResponse> = _executeResponse
+
     private val _showFullscreenLoaderDialog = MutableLiveData(false)
     val showFullscreenLoaderDialog: LiveData<Boolean> = _showFullscreenLoaderDialog
 
@@ -37,6 +40,8 @@ class InAppPurchasesViewModel @Inject constructor(
 
     private val _purchaseFlowComplete = MutableLiveData(false)
     val purchaseFlowComplete: LiveData<Boolean> = _purchaseFlowComplete
+
+    var upgradeMode = UpgradeMode.NORMAL
 
     private var _productId: String = ""
     val productId: String
@@ -50,7 +55,7 @@ class InAppPurchasesViewModel @Inject constructor(
     private var purchaseToken: String = ""
 
     fun addProductToBasket(productId: String) {
-        _productId = productId
+        this._productId = productId
         startLoading()
         repository.addToBasket(
             productId = productId,
@@ -75,7 +80,8 @@ class InAppPurchasesViewModel @Inject constructor(
             callback = object : NetworkResponseCallback<CheckoutResponse> {
                 override fun onSuccess(result: Result.Success<CheckoutResponse>) {
                     result.data?.let {
-                        _checkoutResponse.value = it
+                        if (upgradeMode.isSilentMode()) executeOrder()
+                        else _checkoutResponse.value = it
                     } ?: endLoading()
                 }
 
@@ -96,7 +102,8 @@ class InAppPurchasesViewModel @Inject constructor(
                 override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
                     result.data?.let {
                         orderExecuted()
-                        refreshCourseData(true)
+                        if (upgradeMode.isSilentMode()) _executeResponse.postValue(it)
+                        else refreshCourseData(true)
                     }
                     endLoading()
                 }
@@ -141,7 +148,7 @@ class InAppPurchasesViewModel @Inject constructor(
     }
 
     private fun startLoading() {
-        _showLoader.value = true
+        _showLoader.postValue(true)
     }
 
     fun endLoading() {
@@ -162,7 +169,17 @@ class InAppPurchasesViewModel @Inject constructor(
 
     // To refrain the View Model from emitting further observable calls
     fun resetPurchase(complete: Boolean) {
+        upgradeMode = UpgradeMode.NORMAL
         _isVerificationPending = true
         _purchaseFlowComplete.postValue(complete)
+    }
+
+    enum class UpgradeMode {
+        NORMAL,
+        SILENT;
+
+        fun isSilentMode() = this == SILENT
+
+        fun isNormalMode() = this == NORMAL
     }
 }

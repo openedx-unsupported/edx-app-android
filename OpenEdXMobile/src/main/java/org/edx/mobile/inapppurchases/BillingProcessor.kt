@@ -4,7 +4,18 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.android.billingclient.api.*
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesResponseListener
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.SkuDetailsResponseListener
+import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.logger.Logger
 
 /**
@@ -86,8 +97,9 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      *
      * @param activity active activity to launch our billing flow from
      * @param productId SKU (Product ID) to be purchased
+     * @param userId    User Id of the purchaser
      */
-    fun purchaseItem(activity: Activity, productId: String) {
+    fun purchaseItem(activity: Activity, productId: String, userId: Long) {
         if (billingClient.isReady) {
             querySyncDetails(productId,
                 SkuDetailsResponseListener { billingResult, skuDetailsList ->
@@ -96,7 +108,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
                                 " Debug message: " + billingResult.debugMessage
                     )
                     if (skuDetailsList != null) {
-                        launchBillingFlow(activity, skuDetailsList[0])
+                        launchBillingFlow(activity, skuDetailsList[0], userId)
                     }
                 })
         }
@@ -108,10 +120,12 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      *
      * @param activity active activity to launch our billing flow from
      * @param skuDetail SKU (Product) to be purchased
+     * @param userId    User Id of the purchaser
      */
-    private fun launchBillingFlow(activity: Activity, skuDetail: SkuDetails) {
+    private fun launchBillingFlow(activity: Activity, skuDetail: SkuDetails, userId: Long) {
         val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
         billingFlowParamsBuilder.setSkuDetails(skuDetail)
+        billingFlowParamsBuilder.setObfuscatedAccountId(userId.encodeToString())
         billingClient.launchBillingFlow(
             activity, billingFlowParamsBuilder.build()
         )
@@ -172,13 +186,19 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         billingClient.endConnection()
     }
 
+    fun queryPurchase(listener: PurchasesResponseListener) {
+        billingClient.queryPurchasesAsync(
+            BillingClient.SkuType.INAPP, listener
+        )
+    }
+
     interface BillingFlowListeners {
         fun onBillingServiceDisconnected() {}
 
         fun onBillingSetupFinished(billingResult: BillingResult) {}
 
-        fun onPurchaseCancel(responseCode: Int, message: String)
+        fun onPurchaseCancel(responseCode: Int, message: String) {}
 
-        fun onPurchaseComplete(purchase: Purchase)
+        fun onPurchaseComplete(purchase: Purchase) {}
     }
 }
