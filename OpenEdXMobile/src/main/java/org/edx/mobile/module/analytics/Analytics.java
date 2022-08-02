@@ -398,13 +398,6 @@ public interface Analytics {
     void trackBulkDownloadSwitchOff(@NonNull String courseId, int totalDownloadableVideos);
 
     /**
-     * Tracks the pressing of a subject item.
-     *
-     * @param subjectId ID of the subject.
-     */
-    void trackSubjectClicked(@NonNull String subjectId);
-
-    /**
      * Track the parameters relevant to the experiment of Firebase Remote Configs.
      * Ref: https://openedx.atlassian.net/browse/LEARNER-7394
      *
@@ -600,6 +593,21 @@ public interface Analytics {
     void trackEvent(@NonNull String eventName, @NonNull String biValue);
 
     /**
+     * Track OpenInBrowser Alert trigger event
+     *
+     * @param url The about to be open Url
+     */
+    void trackOpenInBrowserAlertTriggerEvent(@NonNull String url);
+
+    /**
+     * Track action taken on OpenInBrowser Alert
+     *
+     * @param url         The about to be open Url
+     * @param actionTaken The action taken on Alert
+     */
+    void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken);
+
+    /**
      * Track the In App Purchases events
      *
      * @param eventName   Name of the event
@@ -695,8 +703,6 @@ public interface Analytics {
         // Bulk download feature keys
         String TOTAL_DOWNLOADABLE_VIDEOS = "total_downloadable_videos";
         String REMAINING_DOWNLOADABLE_VIDEOS = "remaining_downloadable_videos";
-        // Subjects
-        String SUBJECT_ID = "subject_id";
         // Firebase Remote Configs keys for A/A test
         // Ref: https://openedx.atlassian.net/browse/LEARNER-7394
         String EXPERIMENT = "experiment";
@@ -712,6 +718,7 @@ public interface Analytics {
         String VALUE = "value";
         String OLD_VALUE = "old_value";
         String ELAPSED_TIME = "elapsed_time";
+        String ALERT_ACTION = "alert_action";
         String ERROR = "error";
         String ERROR_ACTION = "error_action";
     }
@@ -815,10 +822,7 @@ public interface Analytics {
         // Discovery Courses Search
         String DISCOVERY_COURSES_SEARCH_LANDING = "landing_screen";
         String DISCOVERY_COURSES_SEARCH_TAB = "discovery_tab";
-        // Subjects
-        String SUBJECT_CLICKED = "edx.bi.app.discover.subject.clicked";
         String DISCOVERY = "discovery";
-        String VIEW_ALL_SUBJECTS = "View All Subjects";
         // Settings event values
         String DOWNLOAD_TO_SD_CARD_SWITCH_ON = "edx.bi.app.settings.sdcard.toggle.on";
         String DOWNLOAD_TO_SD_CARD_SWITCH_OFF = "edx.bi.app.settings.sdcard.toggle.off";
@@ -885,6 +889,11 @@ public interface Analytics {
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "edx.bi.app.user.register.opt_in.on";
         String REGISTRATION_OPT_IN_TURNED_OFF = "edx.bi.app.user.register.opt_in.off";
+        // New Discovery Experience
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED = "edx.bi.app.discovery.external_link.opening.alert";
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN = "edx.bi.app.discovery.external_link.opening.alert_action";
+        String ACTION_CANCEL = "cancel";
+        String ACTION_CONTINUE = "continue";
         // In App Purchases Events
         String IN_APP_PURCHASES = "in_app_purchases";
         String ACTION_RELOAD_PRICE = "reload_price";
@@ -921,11 +930,9 @@ public interface Analytics {
         String UNIT_DETAIL = "Unit Detail";
         String CERTIFICATE = "View Certificate";
         String DOWNLOADS = "Downloads";
-        String FIND_COURSES = "Find Courses";
-        String FIND_PROGRAMS = "Find Programs";
-        String FIND_DEGREES = "Find Degrees";
         String MY_COURSES = "My Courses";
         String MY_PROGRAM = "My Programs";
+        String FIND_COURSES = "Find Courses";
         String PROFILE = "Profile";
         String FORUM_VIEW_TOPICS = "Forum: View Topics";
         String FORUM_SEARCH_THREADS = "Forum: Search Threads";
@@ -945,7 +952,6 @@ public interface Analytics {
         String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
         String WHATS_NEW = "WhatsNew: Whats New";
         String VIDEOS_COURSE_VIDEOS = "Videos: Course Videos";
-        String ALL_SUBJECTS = "Discover: All Subjects";
         String PAYMENTS_INFO_SCREEN = "Payments info";
         String COURSE_UNIT_LOCKED = "Course unit locked";
         String PLACE_ORDER_COURSE_UPGRADE = "Place order: course upgrade";
@@ -1011,7 +1017,6 @@ public interface Analytics {
         // Bulk download events
         String BULK_DOWNLOAD_TOGGLE_ON = "Bulk Download Toggle On";
         String BULK_DOWNLOAD_TOGGLE_OFF = "Bulk Download Toggle Off";
-        String SUBJECT_DISCOVERY = "Subject Discovery";
         // Settings events
         String DOWNLOAD_TO_SD_CARD_ON = "Download to sd-card On";
         String DOWNLOAD_TO_SD_CARD_OFF = "Download to sd-card Off";
@@ -1086,6 +1091,9 @@ public interface Analytics {
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "Registration: Opt-in Turned On";
         String REGISTRATION_OPT_IN_TURNED_OFF = "Registration: Opt-in Turned Off";
+        // New Discovery Experience
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED = "Discovery: External Link Opening Alert";
+        String DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN = "Discovery: External Link Opening Alert Action";
     }
 
     /**

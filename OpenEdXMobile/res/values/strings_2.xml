@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--  Use this file to add new general strings and stop adding/editing strings in the older file strings.xml
+      Create a new strings file like strings_3.xml file when the strings count reaches 100  -->
+
+<resources>
+    <!-- Dialog Alert title for Open in browser -->
+    <string name="label_leaving_the_app">Leaving the app</string>
+    <!-- Dialog Alert Message for Open in browser -->
+    <string name="leaving_the_app_message">You are now leaving the {platform_name} app and opening a browser.</string>
+</resources>

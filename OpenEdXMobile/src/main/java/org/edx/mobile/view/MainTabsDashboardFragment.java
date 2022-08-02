@@ -4,16 +4,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.UiUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,6 +30,12 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.viewPager2.setUserInputEnabled(false);
     }
 
     @Override
@@ -82,18 +87,17 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
-
+                            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
                         }
                     }));
         }
 
-        if (ConfigUtil.Companion.isCourseDiscoveryEnabled(environment) ||
-                ConfigUtil.Companion.isProgramDiscoveryEnabled(environment)) {
+        if (environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), R.drawable.ic_search,
-                    getArguments(),
-                    () -> EventBus.getDefault().post(new DiscoveryTabSelectedEvent())
-            ));
+                    getArguments(), () -> {
+                environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+            }));
         }
 
         return items;
@@ -102,7 +106,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
     @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull MoveToDiscoveryTabEvent event) {
-        if (!ConfigUtil.Companion.isCourseDiscoveryEnabled(environment)) {
+        if (!environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
             return;
         }
         if (binding != null) {

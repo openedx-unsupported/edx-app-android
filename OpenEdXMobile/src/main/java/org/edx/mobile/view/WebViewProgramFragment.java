@@ -15,7 +15,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.links.DefaultActionListener;
@@ -143,9 +142,6 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
             // Swipe refresh shouldn't work while the page is refreshing
             getBinding().swipeContainer.setEnabled(false);
             getBinding().authWebview.loadUrl(true, getBinding().authWebview.getWebView().getUrl());
-        }
-        if (isVisible()) {
-            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.MY_PROGRAM);
         }
     }
 

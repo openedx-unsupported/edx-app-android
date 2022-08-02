@@ -129,7 +129,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
             }
             case COURSE: {
                 if (helper.params.containsKey(WebViewLink.Param.PROGRAMS)) {
-                    EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.PROGRAM_DISCOVERY));
+                    EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.DISCOVERY));
                 }
                 break;
             }

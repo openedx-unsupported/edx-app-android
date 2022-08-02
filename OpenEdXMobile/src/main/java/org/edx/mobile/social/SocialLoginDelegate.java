@@ -221,7 +221,9 @@ public class SocialLoginDelegate {
         @Override
         protected void onPostExecute(ProfileModel result) {
             super.onPostExecute(result);
-            callback.onUserLoginSuccess(result);
+            if (result != null) {
+                callback.onUserLoginSuccess(result);
+            }
         }
 
         @Override

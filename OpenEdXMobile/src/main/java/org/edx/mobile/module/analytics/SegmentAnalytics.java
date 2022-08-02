@@ -867,15 +867,6 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackSubjectClicked(@NonNull String subjectId) {
-        final SegmentEvent aEvent = new SegmentEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.SUBJECT_CLICKED);
-        aEvent.properties.putValue(Keys.CATEGORY, Values.DISCOVERY);
-        aEvent.data.putValue(Keys.SUBJECT_ID, subjectId);
-        trackSegmentEvent(Events.SUBJECT_DISCOVERY, aEvent.properties);
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.data.putAll(values);
@@ -1094,6 +1085,25 @@ public class SegmentAnalytics implements Analytics {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
         trackSegmentEvent(eventName, aEvent.properties);
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertTriggerEvent(@NonNull String url) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.DISCOVERY);
+        aEvent.data.putValue(Keys.URL, url);
+        trackSegmentEvent(Events.DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED, aEvent.properties);
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken) {
+        final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN);
+        aEvent.properties.putValue(Keys.CATEGORY, Values.DISCOVERY);
+        aEvent.data.putValue(Keys.URL, url);
+        aEvent.data.putValue(Keys.ALERT_ACTION, actionTaken);
+        trackSegmentEvent(Events.DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN, aEvent.properties);
     }
 
     @Override

@@ -590,14 +590,6 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackSubjectClicked(@NonNull String subjectId) {
-        final FirebaseEvent event = new FirebaseEvent(Events.SUBJECT_DISCOVERY, Values.SUBJECT_CLICKED);
-        event.putString(Keys.SUBJECT_ID, subjectId);
-        event.putString(Keys.CATEGORY, Values.DISCOVERY);
-        logFirebaseEvent(event.getName(), event.getBundle());
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         final FirebaseEvent event = new FirebaseEvent(experimentName);
         event.putMap(values);
@@ -803,6 +795,25 @@ public class FirebaseAnalytics implements Analytics {
     @Override
     public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertTriggerEvent(@NonNull String url) {
+        final FirebaseEvent event = new FirebaseEvent(Events.DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED,
+                Values.DISCOVERY_OPEN_IN_BROWSER_ALERT_TRIGGERED);
+        event.putString(Keys.CATEGORY, Values.DISCOVERY);
+        event.putString(Keys.URL, url);
+        logFirebaseEvent(event.getName(), event.getBundle());
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken) {
+        final FirebaseEvent event = new FirebaseEvent(Events.DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN,
+                Values.DISCOVERY_OPEN_IN_BROWSER_ALERT_ACTION_TAKEN);
+        event.putString(Keys.CATEGORY, Values.DISCOVERY);
+        event.putString(Keys.URL, url);
+        event.putString(Keys.ALERT_ACTION, actionTaken);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 

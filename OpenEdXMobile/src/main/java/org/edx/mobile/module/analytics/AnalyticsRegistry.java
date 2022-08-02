@@ -413,13 +413,6 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackSubjectClicked(@NonNull String subjectId) {
-        for (Analytics service : services) {
-            service.trackSubjectClicked(subjectId);
-        }
-    }
-
-    @Override
     public void trackExperimentParams(String experimentName, Map<String, String> values) {
         for (Analytics service : services) {
             service.trackExperimentParams(experimentName, values);
@@ -574,6 +567,20 @@ public class AnalyticsRegistry implements Analytics {
     public void trackEvent(@NonNull String eventName, @NonNull String biValue) {
         for (Analytics service : services) {
             service.trackEvent(eventName, biValue);
+        }
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertTriggerEvent(@NonNull String url) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserAlertTriggerEvent(url);
+        }
+    }
+
+    @Override
+    public void trackOpenInBrowserAlertActionTaken(@NonNull String url, @NonNull String actionTaken) {
+        for (Analytics service : services) {
+            service.trackOpenInBrowserAlertActionTaken(url, actionTaken);
         }
     }
 

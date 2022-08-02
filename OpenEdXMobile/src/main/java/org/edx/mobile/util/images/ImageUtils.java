@@ -8,15 +8,9 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-
-import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.third_party.crop.CropUtil;
 
@@ -119,12 +113,5 @@ public class ImageUtils {
             return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;
-    }
-
-    public static void setRoundedCornerImage(@NonNull AppCompatImageView imageView,
-                                             @DrawableRes int drawableRes) {
-        final Context context = imageView.getContext();
-        final int cornerRadius = context.getResources().getDimensionPixelSize(R.dimen.subject_item_corner_radius);
-        Glide.with(context).load(drawableRes).transform(new RoundedCorners(cornerRadius)).into(imageView);
     }
 }

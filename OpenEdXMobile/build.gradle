@@ -202,10 +202,12 @@ dependencies {
 
     // Branch SDK
     // Check this link for guide to updating Branch integration:
-    // https://github.com/BranchMetrics/android-branch-deep-linking
-    implementation ('io.branch.sdk.android:library:2.19.2') {
+    // https://help.branch.io/developers-hub/docs/android-basic-integration
+    implementation("io.branch.sdk.android:library:5.2.0") {
         exclude module: 'answers-shim'
     }
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1"
+    implementation "com.android.installreferrer:installreferrer:2.2"
 
     //New Relic Integration
     implementation "com.newrelic.agent.android:android-agent:$newrelic_version"

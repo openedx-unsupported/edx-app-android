@@ -57,7 +57,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Enforce to intercept single scrolling direction
         if (binding != null) {
@@ -110,9 +110,9 @@ public abstract class TabsBaseFragment extends BaseFragment {
      */
     private boolean shouldSelectFragment(@NonNull FragmentItemModel item, @NonNull @ScreenDef String screenName) {
         return (screenName.equals(Screen.PROGRAM) && item.getIconResId() == R.drawable.ic_collections_bookmark) ||
-                (screenName.equals(Screen.COURSE_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
-                (screenName.equals(Screen.PROGRAM_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
-                (screenName.equals(Screen.DEGREE_DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
+                (screenName.equals(Screen.DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
+                (screenName.equals(Screen.DISCOVERY_COURSE_DETAIL) && item.getIconResId() == R.drawable.ic_search) ||
+                (screenName.equals(Screen.DISCOVERY_PROGRAM_DETAIL) && item.getIconResId() == R.drawable.ic_search) ||
                 (screenName.equals(Screen.COURSE_VIDEOS) && item.getIconResId() == R.drawable.ic_videocam) ||
                 (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIconResId() == R.drawable.ic_forum) ||
                 (screenName.equals(Screen.DISCUSSION_POST) && item.getIconResId() == R.drawable.ic_forum) ||

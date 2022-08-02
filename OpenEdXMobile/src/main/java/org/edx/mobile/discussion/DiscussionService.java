@@ -20,6 +20,8 @@ import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.discussion.CommentBody;
@@ -164,6 +166,7 @@ public interface DiscussionService {
     Call<DiscussionComment> createComment(@Body CommentBody commentBody);
 
     final class FlagBody {
+        @SerializedName("abuse_flagged")
         private boolean abuseFlagged;
 
         public FlagBody(boolean abuseFlagged) {
@@ -172,6 +175,7 @@ public interface DiscussionService {
     }
 
     final class VoteBody {
+        @SerializedName("voted")
         private boolean voted;
 
         public VoteBody(boolean voted) {
@@ -180,6 +184,7 @@ public interface DiscussionService {
     }
 
     final class FollowBody {
+        @SerializedName("following")
         private boolean following;
 
         public FollowBody(boolean following) {
@@ -188,6 +193,7 @@ public interface DiscussionService {
     }
 
     final class ReadBody {
+        @SerializedName("read")
         private boolean read;
 
         public ReadBody(boolean read) {

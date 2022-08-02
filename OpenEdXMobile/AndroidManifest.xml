@@ -44,6 +44,10 @@
         </intent>
     </queries>
 
+    <!-- Required by branch.io -->
+    <!-- ref: https://help.branch.io/developers-hub/docs/android-basic-integration#configure-app -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+
     <application
         android:name=".base.RuntimeApplication"
         android:allowBackup="true"
@@ -181,18 +185,13 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name=".view.ViewSubjectsActivity"
-            android:label="@string/browse_by_subject"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name="org.edx.mobile.view.CourseInfoActivity"
-            android:label="@string/label_discover"
+            android:label="@string/label_discovery"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
             android:name="org.edx.mobile.view.ProgramInfoActivity"
-            android:label="@string/label_discover"
+            android:label="@string/label_discovery"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
@@ -208,7 +207,7 @@
 
         <activity
             android:name=".view.DiscoveryActivity"
-            android:label="@string/label_discover"
+            android:label="@string/label_discovery"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
@@ -346,12 +345,6 @@
 
         <!-- Branch -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="${branchKey}" />
-
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
 
         <provider
                 android:name="androidx.core.content.FileProvider"

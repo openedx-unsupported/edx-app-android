@@ -62,13 +62,16 @@ public class SplashActivity extends ComponentActivity {
         PushLinkManager.INSTANCE.checkAndReactIfFCMNotificationReceived(this, getIntent().getExtras());
 
         if (config.getBranchConfig().isEnabled()) {
-            Branch.getInstance().initSession((referringParams, error) -> {
+            // Initialize Branch
+            // ref: https://help.branch.io/developers-hub/docs/android-basic-integration#initialize-branch
+            Branch.BranchReferralInitListener branchReferralInitListener = (linkProperties, error) -> {
+                // do stuff with deep link data (nav to page, display content, etc)
                 if (error == null) {
                     // params are the deep linked params associated with the link that the user
                     // clicked -> was re-directed to this app params will be empty if no data found
-                    if (referringParams.optBoolean(BranchLinkManager.KEY_CLICKED_BRANCH_LINK)) {
+                    if (linkProperties.optBoolean(BranchLinkManager.KEY_CLICKED_BRANCH_LINK)) {
                         try {
-                            BranchLinkManager.INSTANCE.checkAndReactIfReceivedLink(this, referringParams);
+                            BranchLinkManager.INSTANCE.checkAndReactIfReceivedLink(this, linkProperties);
                         } catch (Exception e) {
                             logger.error(e, true);
                         }
@@ -80,7 +83,9 @@ public class SplashActivity extends ComponentActivity {
                                 + error.getMessage()), true);
                     }
                 }
-            }, this.getIntent().getData(), this);
+            };
+            Branch.sessionBuilder(this).withCallback(branchReferralInitListener)
+                    .withData(getIntent() != null ? getIntent().getData() : null).init();
         }
         finish();
     }

@@ -12,13 +12,24 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class EnrolledCoursesResponse implements SectionItemInterface {
 
+    @SerializedName("audit_access_expires")
     private String auditAccessExpires;
+
+    @SerializedName("created")
     private String created;
+
+    @SerializedName("mode")
     private String mode;
-    private boolean is_active;
+
+    @SerializedName("is_active")
+    private boolean isActive;
+
+    @SerializedName("course")
     private CourseEntry course;
+
     private boolean isDiscussionBlackedOut = false;
 
+    @SerializedName("certificate")
     private CertificateModel certificate;
 
     @SerializedName("course_modes")
@@ -52,12 +63,12 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         this.mode = mode;
     }
 
-    public boolean isIs_active() {
-        return is_active;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     public CourseEntry getCourse() {

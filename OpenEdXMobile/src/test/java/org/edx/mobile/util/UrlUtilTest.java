@@ -1,14 +1,14 @@
 package org.edx.mobile.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.logger.Logger;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class UrlUtilTest extends BaseTestCase {
     private final Logger logger = new org.edx.mobile.logger.Logger(getClass().getName());
@@ -49,36 +49,12 @@ public class UrlUtilTest extends BaseTestCase {
     }
 
     @Test
-    public void test_UrlBuilder_WithMulipleQueries() {
-        String baseURL = "http://www.fakex.com/course";
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("search_query", "mobile linux");
-        queryParams.put("subject", "Architecture");
-
-        String expected = "http://www.fakex.com/course?subject=Architecture&search_query=mobile%20linux";
-        String output = UrlUtil.buildUrlWithQueryParams(logger, baseURL, queryParams);
-        assertEquals(expected, output);
-    }
-
-    @Test
     public void test_UrlBuilder_AlreadyHasQuery() {
         String baseURL = "http://www.fakex.com/course?type=mobile";
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("search_query", "mobile linux");
 
         String expected = "http://www.fakex.com/course?type=mobile&search_query=mobile%20linux";
-        String output = UrlUtil.buildUrlWithQueryParams(logger, baseURL, queryParams);
-        assertEquals(expected, output);
-    }
-
-    @Test
-    public void test_UrlBuilder_AlreadyHasQuery_WithMultipleQueries() {
-        String baseURL = "http://www.fakex.com/course?type=mobile";
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("search_query", "mobile linux");
-        queryParams.put("subject", "Architecture");
-
-        String expected = "http://www.fakex.com/course?type=mobile&subject=Architecture&search_query=mobile%20linux";
         String output = UrlUtil.buildUrlWithQueryParams(logger, baseURL, queryParams);
         assertEquals(expected, output);
     }

@@ -14,14 +14,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/toolbar_background_color"
-        android:visibility="gone"
-        app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
-        tools:visibility="visible" />
-
 </com.google.android.material.appbar.AppBarLayout>

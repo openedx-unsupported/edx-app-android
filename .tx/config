@@ -8,6 +8,11 @@ file_filter = OpenEdXMobile/res/values-<lang>/strings.xml
 source_file = OpenEdXMobile/res/values/strings.xml
 source_lang = en
 
+[edx-mobile-apps.android-app-strings-2]
+file_filter = OpenEdXMobile/res/values-<lang>/strings_2.xml
+source_file = OpenEdXMobile/res/values/strings_2.xml
+source_lang = en
+
 [edx-mobile-apps.android-app-errors]
 file_filter = OpenEdXMobile/res/values-<lang>/errors.xml
 source_file = OpenEdXMobile/res/values/errors.xml
@@ -51,11 +56,5 @@ source_lang = en
 [edx-mobile-apps.app-localizable-profiles]
 file_filter = OpenEdXMobile/res/raw-<lang>/profiles.json
 source_file = OpenEdXMobile/res/raw/profiles.json
-source_lang = en
-type = KEYVALUEJSON
-
-[edx-mobile-apps.app-localizable-subjects]
-file_filter = OpenEdXMobile/res/raw-<lang>/subjects.json
-source_file = OpenEdXMobile/res/raw/subjects.json
 source_lang = en
 type = KEYVALUEJSON
