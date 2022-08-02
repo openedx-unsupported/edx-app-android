@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Button text to show user Video Settings screen -->
-    <string name="label_video_settings">AJUSTES DE VIDEO</string>
+    <string name="label_video_settings">Ajustes de video</string>
     <!-- Title of Video Quality Dialog -->
     <string name="video_download_quality_title">Calidad de descarga de vídeo</string>
     <!-- Auto Video Quality option -->

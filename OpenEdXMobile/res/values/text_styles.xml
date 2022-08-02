@@ -250,6 +250,10 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="profile_field_heading" parent="profile_field_description">
+        <item name="android:fontFamily">?attr/secondaryFontRegular</item>
+    </style>
+
     <style name="video_download_label_text_style" parent="regular_primary_base_text">
         <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
