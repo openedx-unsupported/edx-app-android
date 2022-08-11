@@ -12,9 +12,9 @@ jobs:
     name: Automation Tests Suite
     runs-on: ubuntu-20.04
 
-  steps:
-    - name: Git checkout
-      uses: actions/checkout@v2
-    - name: Clone edx-app-test repository
-      run: |
-        git clone https://github.com/openedx/edx-app-test.git
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Clone edx-app-test repository
+        run: |
+          git clone https://github.com/openedx/edx-app-test.git
