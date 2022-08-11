@@ -1,4 +1,4 @@
-name: Android Test Suite
+name: Automation Tests Suite
 
 # The workflow will start for every PR against master branch
 on:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   automation_test_cases:
-    name: Android Automation Tests
+    name: Automation Tests Suite
     runs-on: ubuntu-20.04
 
   steps:
