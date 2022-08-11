@@ -1,0 +1,20 @@
+name: Android Test Suite
+
+# The workflow will start for every PR against master branch
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  automation_test_cases:
+    name: Android Automation Tests
+    runs-on: ubuntu-20.04
+
+  steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Clone edx-app-test repository
+      run: |
+        git clone https://github.com/openedx/edx-app-test.git
