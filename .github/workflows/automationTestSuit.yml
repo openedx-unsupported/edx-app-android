@@ -35,4 +35,4 @@ jobs:
           disable-animations: true
           force-avd-creation: false
           script: |
-            ./gradlew connectedCheck
+            echo "test emulator"
