@@ -36,3 +36,4 @@ jobs:
           force-avd-creation: false
           script: |
             echo "test emulator"
+            ./gradlew connectedCheck
