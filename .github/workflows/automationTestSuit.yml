@@ -19,6 +19,12 @@ jobs:
         run: |
           git clone https://github.com/openedx/edx-app-test.git
 
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
       - name: Run E2E
         uses: reactivecircus/android-emulator-runner@v2
         with:
