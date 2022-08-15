@@ -10,7 +10,7 @@ on:
 jobs:
   automation_test_cases:
     name: Automation Tests Suite
-    runs-on: ubuntu-20.04
+    runs-on: macos-latest
 
     steps:
       - name: Git checkout
