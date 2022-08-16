@@ -36,7 +36,6 @@ jobs:
           force-avd-creation: false
           script: |
             echo "test emulator"
-            ./gradlew connectedCheck
 
       - name: move to edx-app-test
         run: |
