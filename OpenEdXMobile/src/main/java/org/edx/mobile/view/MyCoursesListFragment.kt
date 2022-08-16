@@ -153,7 +153,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun initInAppPurchaseSetup() {
-        if (environment.remoteFeaturePrefs.isValuePropEnabled()) {
+        if (isAdded && environment.remoteFeaturePrefs.isValuePropEnabled()) {
             initFullscreenLoader()
             initObservers()
         }
