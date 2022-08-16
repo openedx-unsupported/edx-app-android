@@ -37,3 +37,8 @@ jobs:
           script: |
             echo "test emulator"
             ./gradlew connectedCheck
+
+      - name: move to edx-app-test
+        run: |
+          cd $GITHUB_WORKSPACE/edx-app-test
+          pip3 install -r requirements.txt
