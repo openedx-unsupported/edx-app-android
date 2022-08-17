@@ -100,6 +100,7 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     }
 
     protected void restore(Bundle savedInstanceState) {
+        blocksApiVersion = config.getApiUrlVersionConfig().getBlocksApiVersion();
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
             courseUpgradeData = savedInstanceState.getParcelable(Router.EXTRA_COURSE_UPGRADE_DATA);
@@ -115,7 +116,6 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
      * Method to force update the course structure from server.
      */
     protected void updateCourseStructure(String courseId, String componentId) {
-        blocksApiVersion = config.getApiUrlVersionConfig().getBlocksApiVersion();
         getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
                 new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification,
