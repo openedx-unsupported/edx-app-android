@@ -47,15 +47,20 @@ public class BrowserUtil {
                 .toString();
         String positiveBtn = activity.getString(R.string.label_continue);
         String negativeBtn = activity.getString(R.string.label_cancel);
-        AlertDialogFragment.newInstance(title, msg,
+        AlertDialogFragment alertDialog = AlertDialogFragment.newInstance(title, msg,
                 positiveBtn, (dialog, which) -> {
                     analyticsRegistry.trackOpenInBrowserAlertActionTaken(url, Analytics.Values.ACTION_CONTINUE);
                     open(activity, url, canTrackEvent);
                 },
                 negativeBtn, (dialog, which) -> {
                     analyticsRegistry.trackOpenInBrowserAlertActionTaken(url, Analytics.Values.ACTION_CANCEL);
-                })
-                .show(activity.getSupportFragmentManager(), "");
+                });
+
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .add(alertDialog, "")
+                .commitAllowingStateLoss();
+
         analyticsRegistry.trackOpenInBrowserAlertTriggerEvent(url);
     }
 
