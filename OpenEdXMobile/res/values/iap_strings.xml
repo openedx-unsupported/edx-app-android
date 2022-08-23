@@ -52,4 +52,9 @@
     <string name="label_refresh_now">Refresh now</string>
     <!-- Label Continue Without Update -->
     <string name="label_continue_without_update">Continue without update</string>
+
+    <!-- Title of the dialog to verify SDN -->
+    <string name="sdn_dialog_title">Lorem ipsum</string>
+    <!-- Message for the dialog to verify SDN -->
+    <string name="sdn_dialog_message">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 </resources>

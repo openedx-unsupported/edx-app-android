@@ -21,7 +21,7 @@ class InAppPurchasesAnalytics @Inject constructor(
     private var refreshContentTime: Long = 0
     private var upgradeCourseTime: Long = 0
     private var errorMsg: String = ""
-    private var errorAction: String = ""
+    private var actionTaken: String = ""
 
     fun initCourseValues(
         courseId: String,
@@ -108,8 +108,13 @@ class InAppPurchasesAnalytics @Inject constructor(
             }
             Analytics.Events.IAP_ERROR_ALERT_ACTION -> {
                 this.errorMsg = errorMsg
-                this.errorAction = actionTaken
+                this.actionTaken = actionTaken
                 trackEvent(eventName, Analytics.Values.IAP_ERROR_ALERT_ACTION)
+            }
+            Analytics.Events.IAP_SDN_PROMPT_ACTION -> {
+                this.actionTaken = actionTaken
+                trackEvent(eventName, Analytics.Values.IAP_SDN_PROMPT_ACTION)
+                upgradeCourseTime = getCurrentTime()
             }
         }
         resetEventValues()
@@ -118,7 +123,7 @@ class InAppPurchasesAnalytics @Inject constructor(
     private fun resetEventValues() {
         elapsedTime = 0
         errorMsg = ""
-        errorAction = ""
+        actionTaken = ""
     }
 
     private fun resetAnalytics() {
@@ -129,7 +134,7 @@ class InAppPurchasesAnalytics @Inject constructor(
         upgradeCourseTime = 0
         elapsedTime = 0
         errorMsg = ""
-        errorAction = ""
+        actionTaken = ""
     }
 
     private fun trackEvent(eventName: String, biValue: String) =
@@ -142,7 +147,7 @@ class InAppPurchasesAnalytics @Inject constructor(
             componentId,
             elapsedTime,
             errorMsg,
-            errorAction,
+            actionTaken,
             screenName
         )
 

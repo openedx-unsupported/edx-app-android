@@ -1110,8 +1110,8 @@ public class SegmentAnalytics implements Analytics {
     public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
                                          @NonNull String courseId, boolean isSelfPaced,
                                          @Nullable String price, @Nullable String componentId,
-                                         long elapsedTime, @Nullable String error, @Nullable String errorAction,
-                                         @NonNull String screenName) {
+                                         long elapsedTime, @Nullable String error,
+                                         @Nullable String actionTaken, @NonNull String screenName) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
         aEvent.properties.putValue(Keys.CATEGORY, Values.IN_APP_PURCHASES);
@@ -1129,8 +1129,12 @@ public class SegmentAnalytics implements Analytics {
         if (!TextUtils.isEmpty(error)) {
             aEvent.data.putValue(Keys.ERROR, error);
         }
-        if (!TextUtils.isEmpty(errorAction)) {
-            aEvent.data.putValue(Keys.ERROR_ACTION, errorAction);
+        if (!TextUtils.isEmpty(actionTaken)) {
+            if (Analytics.Values.IAP_SDN_PROMPT_ACTION.equals(biValue)) {
+                aEvent.data.putValue(Keys.ACTION, actionTaken);
+            } else {
+                aEvent.data.putValue(Keys.ERROR_ACTION, actionTaken);
+            }
         }
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         trackSegmentEvent(eventName, aEvent.properties);

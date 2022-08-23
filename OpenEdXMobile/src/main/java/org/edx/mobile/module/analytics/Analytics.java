@@ -618,13 +618,14 @@ public interface Analytics {
      * @param componentId Component id of course unit
      * @param elapsedTime time in milliseconds that app took to perform the action(price load, refresh course content)
      * @param error       error that app sending in get help email
-     * @param errorAction action taken on the error dialog
+     * @param actionTaken action taken on the error dialog
      * @param screenName  Screen name on which event is triggered
      */
     void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
-                                  @NonNull String courseId, boolean isSelfPaced, @Nullable String price,
-                                  @Nullable String componentId, long elapsedTime, @Nullable String error,
-                                  @Nullable String errorAction, @NonNull String screenName);
+                                  @NonNull String courseId, boolean isSelfPaced,
+                                  @Nullable String price, @Nullable String componentId,
+                                  long elapsedTime, @Nullable String error,
+                                  @Nullable String actionTaken, @NonNull String screenName);
 
 
     interface Keys {
@@ -900,6 +901,7 @@ public interface Analytics {
         String ACTION_REFRESH = "refresh";
         String ACTION_GET_HELP = "get_help";
         String ACTION_CLOSE = "close";
+        String ACTION_ACCEPT = "accept";
         String IAP_UPGRADE_NOW_CLICKED = "edx.bi.app.payments.upgrade_now.clicked";
         String IAP_COURSE_UPGRADE_SUCCESS = "edx.bi.app.payments.course_upgrade_success";
         String IAP_UNLOCK_UPGRADED_CONTENT_TIME = "edx.bi.app.payments.time_to_unlock_upgraded_content";
@@ -910,6 +912,7 @@ public interface Analytics {
         String IAP_COURSE_UPGRADE_ERROR = "edx.bi.app.payments.course_upgrade_error";
         String IAP_PRICE_LOAD_ERROR = "edx.bi.app.payments.price_load_error";
         String IAP_ERROR_ALERT_ACTION = "edx.bi.app.payments.error_alert_action";
+        String IAP_SDN_PROMPT_ACTION = "edx.bi.app.payments.sdn_prompt_action";
     }
 
     interface Screens {
@@ -1044,6 +1047,8 @@ public interface Analytics {
         String IAP_COURSE_UPGRADE_ERROR = "Payments: Course Upgrade Error";
         String IAP_PRICE_LOAD_ERROR = "Payments: Price Load Error";
         String IAP_ERROR_ALERT_ACTION = "Payments: Error Alert Action";
+        String IAP_SDN_PROMPT_ACTION = "Payments: SDN Prompt Action";
+
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
         String COURSE_UNIT_LOCKED_CONTENT = "Value Prop Locked Content Clicked";
