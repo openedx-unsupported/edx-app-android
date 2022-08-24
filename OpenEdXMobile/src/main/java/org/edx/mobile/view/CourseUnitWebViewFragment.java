@@ -27,7 +27,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentAuthenticatedWebviewBinding;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.event.UnitLoadedEvent;
-import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
@@ -301,7 +300,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
         courseDateViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
-                if (errorMessage.getThrowable() instanceof AuthException || errorMessage.getThrowable() instanceof HttpStatusException &&
+                if (errorMessage.getThrowable() instanceof HttpStatusException &&
                         ((HttpStatusException) errorMessage.getThrowable()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                     environment.getRouter().forceLogout(getContextOrThrow(),
                             environment.getAnalyticsRegistry(),

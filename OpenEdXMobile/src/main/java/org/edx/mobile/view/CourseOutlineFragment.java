@@ -47,7 +47,6 @@ import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
-import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.HttpStatus;
@@ -280,7 +279,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         courseDateViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
-                if (errorMessage.getThrowable() instanceof AuthException || errorMessage.getThrowable() instanceof HttpStatusException &&
+                if (errorMessage.getThrowable() instanceof HttpStatusException &&
                         ((HttpStatusException) errorMessage.getThrowable()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
                     environment.getRouter().forceLogout(getContextOrThrow(),
                             environment.getAnalyticsRegistry(),
