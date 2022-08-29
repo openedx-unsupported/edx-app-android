@@ -73,7 +73,9 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     protected Intent getIntent() {
         EnrolledCoursesResponse courseData;
         try {
-            courseData = executeStrict(courseAPI.getEnrolledCourses()).get(0);
+            courseData = executeStrict(courseAPI.getEnrolledCourses())
+                    .getEnrollments()
+                    .get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

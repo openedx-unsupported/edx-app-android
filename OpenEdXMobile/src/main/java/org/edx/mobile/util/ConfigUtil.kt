@@ -10,7 +10,6 @@ import org.edx.mobile.model.CourseDatesCalendarSync
 import org.json.JSONObject
 import java.lang.reflect.InvocationTargetException
 
-
 class ConfigUtil {
     companion object {
         /**
@@ -57,25 +56,6 @@ class ConfigUtil {
                         }
                     }
                     listener.onCourseUpgradeResult(false)
-                }
-            }
-        }
-
-        /**
-         * Utility method to check the status of the value prop.
-         *
-         * @param config   [Config]
-         * @param listener [OnValuePropStatusListener] callback for the status of the value prop.
-         */
-        fun checkValuePropEnabled(config: Config,
-                                  listener: OnValuePropStatusListener) {
-            // Check firebase enabled in config
-            if (config.firebaseConfig.isEnabled) {
-                val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-                firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
-                    val isEnabled: Boolean = firebaseRemoteConfig
-                            .getBoolean(AppConstants.FirebaseConstants.VALUE_PROP_ENABLED)
-                    listener.isValuePropEnabled(isEnabled)
                 }
             }
         }
@@ -143,16 +123,6 @@ class ConfigUtil {
          * Callback to send course upgrade status result.
          */
         fun onCourseUpgradeResult(enabled: Boolean)
-    }
-
-    /**
-     * Interface to provide the callback for the status of the value prop.
-     */
-    interface OnValuePropStatusListener {
-        /**
-         * Callback to send value prop status result.
-         */
-        fun isValuePropEnabled(isEnabled: Boolean)
     }
 
     /**

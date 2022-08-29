@@ -251,14 +251,13 @@ public class PrefManager {
         public static final String LOGIN = "pref_login";
         public static final String WIFI = "pref_wifi";
         public static final String VIDEOS = "pref_videos";
-        public static final String FEATURES = "features";
-        public static final String REMOTE_FEATURES = "remote_features";
+        public static final String APP_FEATURES = "app_features";
         public static final String COURSE_CALENDAR_PREF = "course_calendar_pref";
         public static final String APP_INFO = "pref_app_info";
         public static final String USER_PREF = "pref_user";
 
         public static String[] getAll() {
-            return new String[]{LOGIN, WIFI, VIDEOS, FEATURES, REMOTE_FEATURES, COURSE_CALENDAR_PREF, APP_INFO, USER_PREF};
+            return new String[]{LOGIN, WIFI, VIDEOS, APP_FEATURES, COURSE_CALENDAR_PREF, APP_INFO, USER_PREF};
         }
 
         public static String[] getAllPreferenceFileNames() {
@@ -306,8 +305,8 @@ public class PrefManager {
         public static final String WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION";
         // Preference to keep track of Bulk download switch for a Course ID
         public static final String BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s";
-        // Preference to save value prop status
-        public static final String VALUE_PROP = "VALUE_PROP";
+        // Preference to save app config
+        public static final String APP_CONFIG = "APP_CONFIG";
     }
 
     public static final class Value {

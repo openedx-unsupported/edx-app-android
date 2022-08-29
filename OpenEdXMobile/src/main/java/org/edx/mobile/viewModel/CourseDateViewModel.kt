@@ -17,7 +17,7 @@ import org.edx.mobile.http.model.Result
 import org.edx.mobile.model.course.CourseBannerInfoModel
 import org.edx.mobile.model.course.CourseDates
 import org.edx.mobile.model.course.ResetCourseDates
-import org.edx.mobile.repositorie.CourseDatesRepository
+import org.edx.mobile.repository.CourseDatesRepository
 import org.edx.mobile.util.CalendarUtils
 import java.util.*
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package org.edx.mobile.repositorie
+package org.edx.mobile.repository
 
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.http.HttpStatus

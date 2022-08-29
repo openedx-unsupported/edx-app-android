@@ -34,6 +34,8 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
         final CourseEntry courseData = enrollment.getCourse();
         holder.setCourseTitle(courseData.getName());
         holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
+        holder.setHasUpgradeOption(courseData.isEnded(), enrollment.getMode(), isValuePropEnabled,
+                v -> onValuePropClicked(enrollment));
 
         if (enrollment.getCourse().hasUpdates()) {
             holder.setHasUpdates(courseData, new OnClickListener() {
@@ -44,10 +46,6 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
             });
         } else {
             holder.setDetails(CourseCardUtils.getFormattedDate(getContext(), enrollment));
-        }
-        if (isValuePropEnabled) {
-            holder.setHasUpgradeOption(courseData, enrollment.getMode(),
-                    v -> onValuePropClicked(enrollment));
         }
     }
 

@@ -11,7 +11,7 @@ import org.edx.mobile.http.model.Result
 import org.edx.mobile.model.iap.AddToBasketResponse
 import org.edx.mobile.model.iap.CheckoutResponse
 import org.edx.mobile.model.iap.ExecuteOrderResponse
-import org.edx.mobile.repositorie.InAppPurchasesRepository
+import org.edx.mobile.repository.InAppPurchasesRepository
 import org.edx.mobile.util.InAppPurchasesException
 import javax.inject.Inject
 
