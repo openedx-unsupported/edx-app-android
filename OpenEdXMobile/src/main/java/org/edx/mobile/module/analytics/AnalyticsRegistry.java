@@ -589,10 +589,10 @@ public class AnalyticsRegistry implements Analytics {
                                          @NonNull String courseId, boolean isSelfPaced,
                                          @Nullable String price, @Nullable String componentId,
                                          long elapsedTime, @Nullable String error,
-                                         @Nullable String errorAction, @NonNull String screenName) {
+                                         @Nullable String actionTaken, @NonNull String screenName) {
         for (Analytics service : services) {
             service.trackInAppPurchasesEvent(eventName, biValue, courseId, isSelfPaced, price,
-                    componentId, elapsedTime, error, errorAction, screenName);
+                    componentId, elapsedTime, error, actionTaken, screenName);
         }
     }
 }

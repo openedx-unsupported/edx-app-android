@@ -131,9 +131,11 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             binding.layoutUpgradeBtn.root.setVisibility(true)
             binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
                 iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
-                unit?.courseSku?.let { productId ->
-                    iapViewModel.addProductToBasket(productId)
-                } ?: iapUtils.showUpgradeErrorDialog(this)
+                iapUtils.showSDNDialog(this) { _, _ ->
+                    unit?.courseSku?.let { productId ->
+                        iapViewModel.addProductToBasket(productId)
+                    } ?: iapUtils.showUpgradeErrorDialog(this)
+                }
             }
 
             billingProcessor = BillingProcessor(requireContext(), object : BillingFlowListeners {

@@ -821,8 +821,8 @@ public class FirebaseAnalytics implements Analytics {
     public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
                                          @NonNull String courseId, boolean isSelfPaced,
                                          @Nullable String price, @Nullable String componentId,
-                                         long elapsedTime, @Nullable String error, @Nullable String errorAction,
-                                         @NonNull String screenName) {
+                                         long elapsedTime, @Nullable String error,
+                                         @Nullable String actionTaken, @NonNull String screenName) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
         event.putCourseId(courseId);
         event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
@@ -839,8 +839,13 @@ public class FirebaseAnalytics implements Analytics {
         if (!TextUtils.isEmpty(error)) {
             event.putString(Keys.ERROR, error);
         }
-        if (!TextUtils.isEmpty(errorAction)) {
-            event.putString(Keys.ERROR_ACTION, errorAction);
+        if (!TextUtils.isEmpty(actionTaken)) {
+            if (Analytics.Values.IAP_SDN_PROMPT_ACTION.equalsIgnoreCase(eventName)) {
+                event.putString(Keys.ACTION, actionTaken);
+            } else {
+                event.putString(Keys.ERROR_ACTION, actionTaken);
+
+            }
         }
         event.putString(Keys.SCREEN_NAME, screenName);
         logFirebaseEvent(event.getName(), event.getBundle());
