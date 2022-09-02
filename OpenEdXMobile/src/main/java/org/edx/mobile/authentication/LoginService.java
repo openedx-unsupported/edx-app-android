@@ -83,7 +83,9 @@ public interface LoginService {
     Call<AuthResponse> getAccessToken(@Field("grant_type") String grant_type,
                                       @Field("client_id") String client_id,
                                       @Field("username") String username,
-                                      @Field("password") String password);
+                                      @Field("password") String password,
+                                      @Field("token_type") String tokenType,
+                                      @Field("asymmetric_jwt") boolean isAsymmetricJwt);
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -94,7 +96,9 @@ public interface LoginService {
     @POST(ApiConstants.URL_ACCESS_TOKEN)
     Call<AuthResponse> refreshAccessToken(@Field("grant_type") String grant_type,
                                           @Field("client_id") String client_id,
-                                          @Field("refresh_token") String refresh_token);
+                                          @Field("refresh_token") String refresh_token,
+                                          @Field("token_type") String tokenType,
+                                          @Field("asymmetric_jwt") boolean isAsymmetricJwt);
 
 
     /**
@@ -109,6 +113,8 @@ public interface LoginService {
     @POST(ApiConstants.URL_EXCHANGE_ACCESS_TOKEN)
     Call<AuthResponse> exchangeAccessToken(@Field("access_token") String accessToken,
                                            @Field("client_id") String clientId,
+                                           @Field("token_type") String tokenType,
+                                           @Field("asymmetric_jwt") boolean isAsymmetricJwt,
                                            @Path(ApiConstants.GROUP_ID) String groupId);
 
     /**

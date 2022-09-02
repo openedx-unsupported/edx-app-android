@@ -45,6 +45,13 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     private final static String TOKEN_INVALID_GRANT_ERROR_MESSAGE = "invalid_grant";
     private final static String DISABLED_USER_ERROR_MESSAGE = "user_is_disabled";
 
+    private final static String JWT_TOKEN_EXPIRED = "Token has expired.";
+    private final static String JWT_ERROR_DECODING_TOKEN = "Error decoding token.";
+    private final static String JWT_INVALID_TOKEN = "Invalid token.";
+    private final static String JWT_TOKEN_IS_BLACKLISTED = "Token is blacklisted.";
+    private final static String JWT_MUST_INCLUDE_PREFERRED_CLAIM = "JWT must include a preferred_username or username claim!";
+    private final static String JWT_USER_RETRIEVAL_FAILED = "User retrieval failed.";
+
     Lazy<Config> config;
 
     Lazy<LoginPrefs> loginPrefs;
@@ -68,12 +75,12 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         if (null == currentAuth || null == currentAuth.refresh_token) {
             return null;
         }
-
-        String errorCode = getErrorCode(response.peekBody(200).string());
+        String errorCode = getErrorCode(response.peekBody(200).string(), currentAuth.token_type);
 
         if (errorCode != null) {
             switch (errorCode) {
                 case TOKEN_EXPIRED_ERROR_MESSAGE:
+                case JWT_TOKEN_EXPIRED:
                     final AuthResponse refreshedAuth;
                     try {
                         refreshedAuth = refreshAccessToken(currentAuth);
@@ -85,6 +92,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
                             .build();
                 case TOKEN_NONEXISTENT_ERROR_MESSAGE:
                 case TOKEN_INVALID_GRANT_ERROR_MESSAGE:
+                case JWT_INVALID_TOKEN:
                     // Retry request with the current access_token if the original access_token used in
                     // request does not match the current access_token. This case can occur when
                     // asynchronous calls are made and are attempting to refresh the access_token where
@@ -110,16 +118,21 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         LoginService loginService = this.retrofitProvider.get().getNonOAuthBased().create(LoginService.class);
 
         AuthResponse refreshTokenData = executeStrict(loginService.refreshAccessToken(
-                ApiConstants.TOKEN_TYPE_REFRESH, config.get().getOAuthClientId(), currentAuth.refresh_token));
+                ApiConstants.TOKEN_TYPE_REFRESH, config.get().getOAuthClientId(),
+                currentAuth.refresh_token, ApiConstants.TOKEN_TYPE_JWT, true));
         loginPrefs.get().storeRefreshTokenResponse(refreshTokenData);
         return refreshTokenData;
     }
 
     @Nullable
-    private String getErrorCode(String responseBody) {
+    private String getErrorCode(String responseBody, String tokenType) {
         try {
             JSONObject jsonObj = new JSONObject(responseBody);
-            return jsonObj.getString("error_code");
+            if (tokenType.equalsIgnoreCase(ApiConstants.TOKEN_TYPE_JWT)) {
+                return jsonObj.getString("detail");
+            } else {
+                return jsonObj.getString("error_code");
+            }
         } catch (JSONException ex) {
             logger.warn("Unable to get error_code from 401 response");
             return null;
