@@ -12,6 +12,7 @@ import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter
 import org.edx.mobile.http.serialization.JsonPageDeserializer
 import org.edx.mobile.model.Page
 import org.edx.mobile.model.api.EnrollmentResponse
+import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.model.course.BlockData
 import org.edx.mobile.model.course.BlockList
 import org.edx.mobile.model.course.BlockType
@@ -66,6 +67,7 @@ class Injector(config: Config) {
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapterFactory(ISO8601DateTypeAdapter.FACTORY)
             .registerTypeAdapter(Page::class.java, JsonPageDeserializer())
+            .registerTypeAdapter(AuthResponse::class.java, AuthResponse.Deserializer())
             .registerTypeAdapter(BlockList::class.java, BlockList.Deserializer())
             .registerTypeAdapter(BlockType::class.java, BlockType.Deserializer())
             .registerTypeAdapter(BlockData::class.java, BlockData.Deserializer())
