@@ -36,7 +36,6 @@ import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.constants.ApiConstants;
 import org.edx.mobile.model.api.FormFieldMessageBody;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.analytics.Analytics;
@@ -346,7 +345,7 @@ public class RegisterActivity extends BaseFragmentActivity
                 super.onPostExecute(auth);
                 if (auth != null) {
                     environment.getAnalyticsRegistry().trackRegistrationSuccess(appVersion, provider);
-                    onUserLoginSuccess(auth.profile);
+                    onUserLoginSuccess();
                 }
             }
 
@@ -638,7 +637,7 @@ public class RegisterActivity extends BaseFragmentActivity
     /*
      *  callback if login to edx success using social access_token
      */
-    public void onUserLoginSuccess(ProfileModel profile) {
+    public void onUserLoginSuccess() {
         setResult(RESULT_OK);
         finish();
     }

@@ -16,7 +16,6 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -197,7 +196,7 @@ public class SocialLoginDelegate {
     }
 
 
-    class ProfileTask extends Task<ProfileModel> {
+    class ProfileTask extends Task<AuthResponse> {
 
         private String accessToken;
         private String backend;
@@ -219,15 +218,15 @@ public class SocialLoginDelegate {
         }
 
         @Override
-        protected void onPostExecute(ProfileModel result) {
+        protected void onPostExecute(AuthResponse result) {
             super.onPostExecute(result);
             if (result != null) {
-                callback.onUserLoginSuccess(result);
+                callback.onUserLoginSuccess();
             }
         }
 
         @Override
-        protected ProfileModel doInBackground(Void... voids) {
+        protected AuthResponse doInBackground(Void... voids) {
             final AuthResponse auth;
             try {
                 if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
@@ -251,7 +250,7 @@ public class SocialLoginDelegate {
                 } else {
                     throw new IllegalArgumentException("Unknown backend: " + backend);
                 }
-                return auth.profile;
+                return auth;
             } catch (Exception ex) {
                 handleException(ex);
                 return null;
@@ -341,7 +340,7 @@ public class SocialLoginDelegate {
 
         void onUserLoginFailure(Exception ex, String accessToken, String backend);
 
-        void onUserLoginSuccess(ProfileModel profile);
+        void onUserLoginSuccess();
 
         void showAlertDialog(String header, String message);
     }
