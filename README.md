@@ -22,9 +22,9 @@ This project is meant to be built using Android Studio. It can also be built fro
 
 1. Check out the source code:
 
-        git clone https://github.com/edx/edx-app-android
+        git clone https://github.com/openedx/edx-app-android
 
-2. Setup the Android Studio. The latest tested Android Studio version is v3.3.2, you can download it from [the previous versions archive](https://developer.android.com/studio/archive). (You can find further details to run the project on the said version of Android Studio on this [PR](https://github.com/edx/edx-app-android/pull/1264).
+2. Setup the Android Studio. The latest tested Android Studio version is v3.3.2, you can download it from [the previous versions archive](https://developer.android.com/studio/archive). (You can find further details to run the project on the said version of Android Studio on this [PR](https://github.com/openedx/edx-app-android/pull/1264).
 
 3. Open Android Studio and choose **Open an Existing Android Studio Project**
 
@@ -99,7 +99,7 @@ Now you can build a release build from Android Studio. Or, in the directory of `
 
     ./gradlew assembleProdRelease
 
-**Note:** For release branch naming convention take a look at this PR <https://github.com/edx/edx-app-android/pull/774> that creates the versionCode automatically based on branch name. The output APK will be named with the version.
+**Note:** For release branch naming convention take a look at this PR <https://github.com/openedx/edx-app-android/pull/774> that creates the versionCode automatically based on branch name. The output APK will be named with the version.
 
 
 Customization
@@ -145,9 +145,9 @@ Frequently Asked Questions
 
 **Q:** After I upgraded to Android Studio v2.3, I've been facing alot of issues while compiling/building the project. How do I fix this?
 
-**A:** We recently upgraded our project to support Android Studio v2.3.x and below. After the upgrade changes done in [PR #938](https://github.com/edx/edx-app-android/pull/938), we too faced some issues.
-The fixes for the common issues can be seen in the [Issues section](https://github.com/edx/edx-app-android/issues) of this GitHub project. The most common and helpful issue with the fixes is [Issue #976](https://github.com/edx/edx-app-android/issues/976).
+**A:** We recently upgraded our project to support Android Studio v2.3.x and below. After the upgrade changes done in [PR #938](https://github.com/openedx/edx-app-android/pull/938), we too faced some issues.
+The fixes for the common issues can be seen in the [Issues section](https://github.com/openedx/edx-app-android/issues) of this GitHub project. The most common and helpful issue with the fixes is [Issue #976](https://github.com/openedx/edx-app-android/issues/976).
 
 **Q:** I want to use Firebase in my project, where do I place my [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) file?
 
-**A:** You don’t need to place the [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) into the project, we are generating it through gradle script ([AndroidHelper.gradle](https://github.com/edx/edx-app-android/blob/master/OpenEdXMobile/gradle_scripts/AndroidHelper.gradle#L15)) that picks keys and values required in the [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) file from the [app's configuration file](https://github.com/edx/edx-app-android/blob/master/OpenEdXMobile/default_config/config.yaml). For configuration details [see](https://openedx.atlassian.net/wiki/spaces/LEARNER/pages/48792067/App+Configuration+Flags)
+**A:** You don’t need to place the [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) into the project, we are generating it through gradle script ([AndroidHelper.gradle](https://github.com/openedx/edx-app-android/blob/master/OpenEdXMobile/gradle_scripts/AndroidHelper.gradle#L15)) that picks keys and values required in the [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) file from the [app's configuration file](https://github.com/openedx/edx-app-android/blob/master/OpenEdXMobile/default_config/config.yaml). For configuration details [see](https://openedx.atlassian.net/wiki/spaces/LEARNER/pages/48792067/App+Configuration+Flags)
