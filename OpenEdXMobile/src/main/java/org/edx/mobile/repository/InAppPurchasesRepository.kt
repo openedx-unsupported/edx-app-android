@@ -1,4 +1,4 @@
-package org.edx.mobile.repositorie
+package org.edx.mobile.repository
 
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.toInAppPurchasesResult

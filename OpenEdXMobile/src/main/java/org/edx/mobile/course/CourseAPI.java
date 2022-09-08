@@ -21,6 +21,7 @@ import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.EnrollmentResponse;
 import org.edx.mobile.model.api.IPathNode;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
@@ -103,16 +104,24 @@ public class CourseAPI {
      * @return Enrolled courses of given user.
      */
     @NonNull
-    public Call<List<EnrolledCoursesResponse>> getEnrolledCourses() {
-        return courseService.getEnrolledCourses(null, getUsername(), config.getOrganizationCode());
+    public Call<EnrollmentResponse> getEnrolledCourses() {
+        return courseService.getEnrolledCourses(
+                null,
+                getUsername(),
+                config.getApiUrlVersionConfig().getEnrollmentsApiVersion(),
+                config.getOrganizationCode());
     }
 
     /**
      * @return Enrolled courses of given user without stale response.
      */
     @NonNull
-    public Call<List<EnrolledCoursesResponse>> getEnrolledCoursesWithoutStale() {
-        return courseService.getEnrolledCourses("stale-if-error=0", getUsername(), config.getOrganizationCode());
+    public Call<EnrollmentResponse> getEnrolledCoursesWithoutStale() {
+        return courseService.getEnrolledCourses(
+                "stale-if-error=0",
+                getUsername(),
+                config.getApiUrlVersionConfig().getEnrollmentsApiVersion(),
+                config.getOrganizationCode());
     }
 
     /**
@@ -151,9 +160,11 @@ public class CourseAPI {
      * @return Enrolled courses of given user, only from the cache.
      */
     @NonNull
-    public Call<List<EnrolledCoursesResponse>> getEnrolledCoursesFromCache() {
+    public Call<EnrollmentResponse> getEnrolledCoursesFromCache() {
         return courseService.getEnrolledCoursesFromCache(
-                getUsername(), config.getOrganizationCode());
+                getUsername(),
+                config.getApiUrlVersionConfig().getEnrollmentsApiVersion(),
+                config.getOrganizationCode());
     }
 
     /**
@@ -163,8 +174,8 @@ public class CourseAPI {
      */
     @Nullable
     public EnrolledCoursesResponse getCourseById(@NonNull final String courseId) throws Exception {
-        for (EnrolledCoursesResponse r : executeStrict(getEnrolledCoursesFromCache())) {
-            if (r.getCourse().getId().equals(courseId)) {
+        for (EnrolledCoursesResponse r : executeStrict(getEnrolledCoursesFromCache()).getEnrollments()) {
+            if (courseId.equals(r.getCourse().getId())) {
                 return r;
             }
         }
@@ -187,7 +198,7 @@ public class CourseAPI {
     }
 
     public static abstract class GetCourseByIdCallback extends
-            ErrorHandlingCallback<List<EnrolledCoursesResponse>> {
+            ErrorHandlingCallback<EnrollmentResponse> {
         @NonNull
         private final String courseId;
 
@@ -206,9 +217,10 @@ public class CourseAPI {
 
         @Override
         protected final void onResponse(
-                @NonNull final List<EnrolledCoursesResponse> courseResponses) {
-            for (EnrolledCoursesResponse coursesResponse : courseResponses) {
-                if (coursesResponse.getCourse().getId().equals(courseId)) {
+                @NonNull final EnrollmentResponse courseResponses
+        ) {
+            for (EnrolledCoursesResponse coursesResponse : courseResponses.getEnrollments()) {
+                if (courseId.equals(coursesResponse.getCourse().getId())) {
                     onResponse(coursesResponse);
                     return;
                 }

@@ -13,7 +13,7 @@ import org.edx.mobile.http.provider.RetrofitProvider;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.EnrollmentResponse;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseDates;
 import org.edx.mobile.model.course.CourseDetail;
@@ -25,7 +25,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -103,19 +102,21 @@ public interface CourseService {
     /**
      * @return Enrolled courses of given user.
      */
-    @GET("/api/mobile/v1/users/{username}/course_enrollments")
-    Call<List<EnrolledCoursesResponse>> getEnrolledCourses(
+    @GET("/api/mobile/{api_version}/users/{username}/course_enrollments")
+    Call<EnrollmentResponse> getEnrolledCourses(
             @Header("Cache-Control") String cacheControlHeaderParam,
             @Path("username") final String username,
+            @Path("api_version") String enrollmentsApiVersion,
             @Query("org") final String org);
 
     /**
      * @return Enrolled courses of given user, only from the cache.
      */
     @Headers("Cache-Control: only-if-cached, max-stale")
-    @GET("/api/mobile/v1/users/{username}/course_enrollments")
-    Call<List<EnrolledCoursesResponse>> getEnrolledCoursesFromCache(
+    @GET("/api/mobile/{api_version}/users/{username}/course_enrollments")
+    Call<EnrollmentResponse> getEnrolledCoursesFromCache(
             @Path("username") final String username,
+            @Path("api_version") String enrollmentsApiVersion,
             @Query("org") final String org);
 
     @GET("/api/mobile/v1/users/{username}/course_status_info/{course_id}")

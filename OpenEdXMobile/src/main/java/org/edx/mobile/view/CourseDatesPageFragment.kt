@@ -68,7 +68,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         }
     }
-    private var courseData: EnrolledCoursesResponse = EnrolledCoursesResponse()
+    private lateinit var courseData: EnrolledCoursesResponse
     private var isSelfPaced: Boolean = true
     private var isDeepLinkEnabled: Boolean = false
     private lateinit var calendarTitle: String

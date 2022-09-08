@@ -70,7 +70,8 @@ public class HttpBaseTestCase extends BaseTestCase {
     }
 
     private JsonElement getMockUrlVersion() {
-        final Config.ApiUrlVersionConfig mockUrlVersionConfig = new Config.ApiUrlVersionConfig("v2");
+        final Config.ApiUrlVersionConfig mockUrlVersionConfig = new Config.ApiUrlVersionConfig(
+                "v2", "v2", "v1.5");
         return new Gson().toJsonTree(mockUrlVersionConfig);
     }
 
@@ -233,7 +234,11 @@ public class HttpBaseTestCase extends BaseTestCase {
                     response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v1/users/[^/]+/course_enrollments")) {
                     String baseMockUrl = getBaseMockUrl();
-                    response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_enrollments"), baseMockUrl));
+                    response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_enrollments_v1"), baseMockUrl));
+                    response.setResponseCode(HttpStatus.OK);
+                } else if (urlMatches(path, "/api/mobile/v1.5/users/[^/]+/course_enrollments")) {
+                    String baseMockUrl = getBaseMockUrl();
+                    response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_enrollments_v1.5"), baseMockUrl));
                     response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/course_info/[^/]+/[^/]+/[^/]+/updates")) {
                     response.setBody(MockDataUtil.getMockResponse("get_course_info_updates"));

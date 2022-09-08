@@ -2,6 +2,7 @@ package org.edx.mobile.core
 
 import android.app.DownloadManager
 import android.content.Context
+import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -17,7 +18,11 @@ import org.edx.mobile.course.CourseService
 import org.edx.mobile.discussion.DiscussionService
 import org.edx.mobile.http.provider.OkHttpClientProvider
 import org.edx.mobile.http.provider.RetrofitProvider
+import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter
+import org.edx.mobile.http.serialization.JsonPageDeserializer
 import org.edx.mobile.inapppurchases.InAppPurchasesAPI
+import org.edx.mobile.model.Page
+import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.model.course.BlockData
 import org.edx.mobile.model.course.BlockList
 import org.edx.mobile.model.course.BlockType
@@ -31,8 +36,8 @@ import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.storage.IStorage
 import org.edx.mobile.module.storage.Storage
 import org.edx.mobile.player.TranscriptManager
-import org.edx.mobile.repositorie.CourseDatesRepository
-import org.edx.mobile.repositorie.InAppPurchasesRepository
+import org.edx.mobile.repository.CourseDatesRepository
+import org.edx.mobile.repository.InAppPurchasesRepository
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.services.EdxCookieManager
 import org.edx.mobile.user.UserAPI
@@ -97,11 +102,18 @@ abstract class EdxDefaultModule {
         @Singleton
         @Provides
         fun provideGson(): Gson {
-            return GsonBuilder().registerTypeAdapter(
-                BlockList::class.java,
-                BlockList.Deserializer()
-            ).registerTypeAdapter(BlockType::class.java, BlockType.Deserializer())
+            return GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapterFactory(ISO8601DateTypeAdapter.FACTORY)
+                .registerTypeAdapter(Page::class.java, JsonPageDeserializer())
+                .registerTypeAdapter(BlockList::class.java, BlockList.Deserializer())
+                .registerTypeAdapter(BlockType::class.java, BlockType.Deserializer())
                 .registerTypeAdapter(BlockData::class.java, BlockData.Deserializer())
+                .registerTypeAdapter(
+                    EnrollmentResponse::class.java,
+                    EnrollmentResponse.Deserializer()
+                )
+                .serializeNulls()
                 .create()
         }
 

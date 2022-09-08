@@ -36,11 +36,16 @@ import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.api.EnrolledCoursesResponse
+import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.model.course.EnrollmentMode
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.module.db.DataCallback
-import org.edx.mobile.util.*
+import org.edx.mobile.util.InAppPurchasesException
+import org.edx.mobile.util.InAppPurchasesUtils
+import org.edx.mobile.util.NetworkUtil
+import org.edx.mobile.util.NonNullObserver
+import org.edx.mobile.util.UiUtils
 import org.edx.mobile.view.adapters.MyCoursesAdapter
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
@@ -62,6 +67,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private val logger = Logger(javaClass.simpleName)
     private var refreshOnResume = false
     private var refreshOnPurchase = false
+    private var isObserversInitialized = true
     private var lastClickTime: Long = 0
     private var incompletePurchases: List<Pair<String, String>> = emptyList()
 
@@ -81,7 +87,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     lateinit var iapUtils: InAppPurchasesUtils
 
     private lateinit var errorNotification: FullScreenErrorNotification
-    private lateinit var enrolledCoursesCall: Call<List<EnrolledCoursesResponse>>
+    private lateinit var enrolledCoursesCall: Call<EnrollmentResponse>
     private lateinit var billingProcessor: BillingProcessor
     private var fullscreenLoader: FullscreenLoaderDialogFragment? = null
 
@@ -122,9 +128,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_my_courses_list, container, false)
+        binding = FragmentMyCoursesListBinding.inflate(inflater, container, false)
         errorNotification = FullScreenErrorNotification(binding.myCourseList)
+
         binding.swipeContainer.setOnRefreshListener {
             // Hide the progress bar as swipe layout has its own progress indicator
             binding.loadingIndicator.root.visibility = View.GONE
@@ -132,38 +138,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             loadData(showProgress = false, fromCache = false)
         }
         UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
+
         // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.addHeaderView(View(context), null, false)
-        binding.myCourseList.adapter = adapter.also {
-            it.setValuePropEnabled(environment.remoteFeaturePrefs.isValuePropEnabled())
-        }
+        binding.myCourseList.adapter = adapter
         binding.myCourseList.onItemClickListener = adapter
-        initInAppPurchaseSetup()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ConfigUtil.checkValuePropEnabled(
-            environment.config,
-            object : ConfigUtil.OnValuePropStatusListener {
-                override fun isValuePropEnabled(isEnabled: Boolean) {
-                    if (isEnabled != environment.remoteFeaturePrefs.isValuePropEnabled()) {
-                        environment.remoteFeaturePrefs.setValuePropEnabled(isEnabled)
-                        adapter.setValuePropEnabled(isEnabled)
-                        adapter.notifyDataSetChanged()
-                        initInAppPurchaseSetup()
-                    }
-                }
-            })
         loadData(showProgress = true, fromCache = true)
-    }
-
-    private fun initInAppPurchaseSetup() {
-        if (isAdded && environment.remoteFeaturePrefs.isValuePropEnabled()) {
-            initFullscreenLoader()
-            initObservers()
-        }
     }
 
     private fun initObservers() {
@@ -315,6 +301,16 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         getUserEnrolledCourses(fromCache)
     }
 
+    private fun initInAppPurchaseSetup() {
+        if (isAdded && environment.appFeaturesPrefs.isValuePropEnabled() &&
+            isObserversInitialized
+        ) {
+            initFullscreenLoader()
+            initObservers()
+            isObserversInitialized = false
+        }
+    }
+
     private fun detectUnfulfilledPurchase(verifiedCoursesSku: List<String>?) {
         if (verifiedCoursesSku?.isEmpty() == null) return
 
@@ -367,26 +363,31 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun getUserEnrolledCourses(fromCache: Boolean = false) {
-        enrolledCoursesCall.enqueue(object : Callback<List<EnrolledCoursesResponse>> {
+        enrolledCoursesCall.enqueue(object : Callback<EnrollmentResponse> {
             override fun onResponse(
-                call: Call<List<EnrolledCoursesResponse>>,
-                response: Response<List<EnrolledCoursesResponse>>
+                call: Call<EnrollmentResponse>,
+                response: Response<EnrollmentResponse>
             ) {
-                if (response.isSuccessful && response.code() == HttpStatus.OK) {
-                    populateCourseData(ArrayList(response.body()), isCachedData = fromCache)
-                    // Fetch latest data from server in the background after displaying previously cached data
-                    // Show loader if the cache data is empty
-                    if (fromCache) {
-                        loadData(
-                            showProgress = response.body()?.isEmpty() == true,
-                            fromCache = false
-                        )
-                    } else {
-                        resetPurchase()
-                        if (incompletePurchases.isEmpty()) {
-                            detectUnfulfilledPurchase(getVerifiedCoursesSku(response.body()))
+                if (response.isSuccessful && response.body() != null) {
+                    response.body()?.let {
+                        environment.appFeaturesPrefs.setAppConfig(it.appConfig)
+                        populateCourseData(ArrayList(it.enrollments), isCachedData = fromCache)
+                        initInAppPurchaseSetup()
+
+                        // Fetch latest data from server in the background after displaying previously cached data
+                        // Show loader if the cache data is empty
+                        if (fromCache) {
+                            loadData(
+                                showProgress = it.enrollments.isEmpty(),
+                                fromCache = false
+                            )
+                        } else {
+                            resetPurchase()
+                            if (incompletePurchases.isEmpty()) {
+                                detectUnfulfilledPurchase(getVerifiedCoursesSku(it.enrollments))
+                            }
                         }
-                    }
+                    } ?: addFindCoursesFooter().also { invalidateView() }
                 } else if (fromCache) { // Fetch latest data from server if cache call's response is unSuccessful
                     loadData(showProgress = true, fromCache = false)
                 } else {
@@ -414,7 +415,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 }
             }
 
-            override fun onFailure(call: Call<List<EnrolledCoursesResponse>>, t: Throwable) {
+            override fun onFailure(call: Call<EnrollmentResponse>, t: Throwable) {
                 when {
                     call.isCanceled -> logger.error(t)
                     fromCache -> loadData(showProgress = true, fromCache = false)
@@ -446,9 +447,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         if (isCachedData.not()) {
             updateDatabaseAfterDownload(data)
         }
-        if (data.size > 0) {
+        if (data.isNotEmpty()) {
             adapter.setItems(data)
         }
+        adapter.setValuePropEnabled(environment.appFeaturesPrefs.isValuePropEnabled())
         addFindCoursesFooter()
         adapter.notifyDataSetChanged()
         if (adapter.isEmpty && !environment.config.discoveryConfig.isDiscoveryEnabled) {
@@ -476,10 +478,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     /**
      * To get verified courses SKUs from enrolled courses response.
      */
-    private fun getVerifiedCoursesSku(response: List<EnrolledCoursesResponse>?): List<String>? {
-        return response?.filter {
+    private fun getVerifiedCoursesSku(response: List<EnrolledCoursesResponse>): List<String> {
+        return response.filter {
             EnrollmentMode.VERIFIED.toString().equals(it.mode, true)
-        }?.map { it.courseSku }?.toList()
+        }.mapNotNull { it.courseSku }.toList()
     }
 
     private fun resetPurchase() {
@@ -540,11 +542,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     private fun showError(error: Throwable) {
         context?.let { context ->
-            error.cause?.let { cause ->
-                errorNotification.showError(context, cause, R.string.lbl_reload) {
-                    if (NetworkUtil.isConnected(context)) {
-                        onRefresh()
-                    }
+            errorNotification.showError(context, error, R.string.lbl_reload) {
+                if (NetworkUtil.isConnected(context)) {
+                    onRefresh()
                 }
             }
         }

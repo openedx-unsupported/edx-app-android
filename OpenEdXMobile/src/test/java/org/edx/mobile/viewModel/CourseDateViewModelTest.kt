@@ -3,7 +3,7 @@ package org.edx.mobile.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.edx.mobile.base.http.HttpBaseTestCase
-import org.edx.mobile.repositorie.CourseDatesRepository
+import org.edx.mobile.repository.CourseDatesRepository
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test

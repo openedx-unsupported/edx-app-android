@@ -49,11 +49,6 @@ public enum AppConstants {
         public static final String REV_934_WHITELISTED_RELEASES = "REV_934_Whitelisted_Releases";
 
         /**
-         * Feature flag for value prop
-         */
-        public static final String VALUE_PROP_ENABLED = "VALUE_PROP_ENABLED";
-
-        /**
          * Feature flag for Course Dates Calendar Sync
          */
         public static final String COURSE_DATES_CALENDAR_SYNC = "COURSE_DATES_CALENDAR_SYNC";

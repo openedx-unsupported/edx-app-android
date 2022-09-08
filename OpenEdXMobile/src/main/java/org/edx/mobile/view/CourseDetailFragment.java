@@ -286,7 +286,7 @@ public class CourseDetailFragment extends BaseFragment {
         // This call should already be cached, if not, set button as if not enrolled.
         try {
             List<EnrolledCoursesResponse> enrolledCoursesResponse =
-                    executeStrict(courseApi.getEnrolledCoursesFromCache());
+                    executeStrict(courseApi.getEnrolledCoursesFromCache()).getEnrollments();
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
                     mEnrolled = true;
@@ -374,7 +374,7 @@ public class CourseDetailFragment extends BaseFragment {
     private void openCourseDashboard() {
         try {
             List<EnrolledCoursesResponse> enrolledCoursesResponse =
-                    executeStrict(courseApi.getEnrolledCoursesFromCache());
+                    executeStrict(courseApi.getEnrolledCoursesFromCache()).getEnrollments();
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
                     environment.getRouter().showMainDashboard(getActivity());

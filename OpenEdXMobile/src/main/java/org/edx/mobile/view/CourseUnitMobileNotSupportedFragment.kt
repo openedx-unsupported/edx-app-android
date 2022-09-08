@@ -60,7 +60,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS == unit?.authorizationDenialReason) {
-            if (environment.remoteFeaturePrefs.isValuePropEnabled()) {
+            if (environment.appFeaturesPrefs.isValuePropEnabled()) {
                 showGradedContent()
             } else {
                 showNotAvailableOnMobile(isLockedContent = true)
@@ -309,7 +309,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         super.onResume()
         unit?.let {
             if (it.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS
-                && environment.remoteFeaturePrefs.isValuePropEnabled()
+                && environment.appFeaturesPrefs.isValuePropEnabled()
             ) {
                 environment.analyticsRegistry.trackLockedContentTapped(it.courseId, it.blockId)
             }
