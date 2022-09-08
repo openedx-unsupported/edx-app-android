@@ -1,5 +1,6 @@
 package org.edx.mobile.base
 
+import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.Dispatcher
@@ -7,6 +8,9 @@ import okhttp3.OkHttpClient
 import org.edx.mobile.base.http.SynchronousExecutorService
 import org.edx.mobile.http.interceptor.OnlyIfCachedStrippingInterceptor
 import org.edx.mobile.http.provider.RetrofitProvider
+import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter
+import org.edx.mobile.http.serialization.JsonPageDeserializer
+import org.edx.mobile.model.Page
 import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.model.course.BlockData
 import org.edx.mobile.model.course.BlockList
@@ -59,6 +63,9 @@ class Injector(config: Config) {
 
     fun getGson(): Gson {
         return GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .registerTypeAdapterFactory(ISO8601DateTypeAdapter.FACTORY)
+            .registerTypeAdapter(Page::class.java, JsonPageDeserializer())
             .registerTypeAdapter(BlockList::class.java, BlockList.Deserializer())
             .registerTypeAdapter(BlockType::class.java, BlockType.Deserializer())
             .registerTypeAdapter(BlockData::class.java, BlockData.Deserializer())
@@ -66,6 +73,7 @@ class Injector(config: Config) {
                 EnrollmentResponse::class.java,
                 EnrollmentResponse.Deserializer()
             )
+            .serializeNulls()
             .create()
     }
 }
