@@ -119,7 +119,6 @@ public class HttpBaseTestCase extends BaseTestCase {
         assertNotNull(res.token_type);
         assertNotNull(res.refresh_token);
         print(res.toString());
-        assertNotNull(res.profile);
     }
 
     @Override

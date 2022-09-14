@@ -102,6 +102,7 @@ public interface OkHttpClientProvider extends Provider<OkHttpClient> {
                                 BuildConfig.VERSION_NAME));
                 if (isOAuthBased) {
                     interceptors.add(new OauthHeaderRequestInterceptor(context));
+                    interceptors.add(oauthRefreshTokenAuthenticator);
                 }
                 interceptors.add(new NewVersionBroadcastInterceptor());
                 if (BuildConfig.DEBUG) {

@@ -135,8 +135,9 @@ public class LoginAPI {
 
     private void finishLogIn(@NonNull AuthResponse response, @NonNull LoginPrefs.AuthBackend authBackend, @NonNull String usernameUsedToLogIn) throws Exception {
         loginPrefs.storeAuthTokenResponse(response, authBackend);
+        ProfileModel profile;
         try {
-            response.profile = getProfile();
+            profile = getProfile();
         } catch (Throwable e) {
             // The app doesn't properly handle the scenario that we are logged in but we don't have
             // a cached profile. So if we fail to fetch the profile, let's erase the stored token.
@@ -146,8 +147,8 @@ public class LoginAPI {
         }
         loginPrefs.setLastAuthenticatedEmail(usernameUsedToLogIn);
         analyticsRegistry.identifyUser(
-                response.profile.id.toString(),
-                response.profile.email,
+                profile.id.toString(),
+                profile.email,
                 usernameUsedToLogIn);
         final String backendKey = loginPrefs.getAuthBackendKeyForSegment();
         if (backendKey != null) {

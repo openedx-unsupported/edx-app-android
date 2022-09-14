@@ -39,6 +39,8 @@ public enum AppConstants {
     public static final String COURSE_UPGRADED = "course_upgraded";
     public static final String PRICE = "price";
 
+    public static final String HEADER_KEY_AUTHORIZATION = "Authorization";
+
     /**
      * This class defines all the Firebase constants related to the app.
      */

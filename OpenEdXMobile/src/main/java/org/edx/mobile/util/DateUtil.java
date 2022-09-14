@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.annotation.SuppressLint;
+
 import androidx.annotation.Nullable;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
@@ -10,7 +11,9 @@ import org.edx.mobile.logger.Logger;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
@@ -21,7 +24,7 @@ public class DateUtil {
      * Stamp
      */
     public static Date convertToDate(String date) {
-        if(date==null){
+        if (date == null) {
             return null;
         }
 
@@ -29,7 +32,7 @@ public class DateUtil {
         final ParsePosition parsePosition = new ParsePosition(0);
         try {
             parsedate = ISO8601Utils.parse(date, parsePosition);
-            logger.debug("Parsed Data"+parsedate);
+            logger.debug("Parsed Data" + parsedate);
             return parsedate;
 
         } catch (ParseException e) {
@@ -41,12 +44,12 @@ public class DateUtil {
     /**
      * @return The current date and time in a ISO 8601 compliant format.
      */
-    public static String getCurrentTimeStamp(){
+    public static String getCurrentTimeStamp() {
         return ISO8601Utils.format(new Date(), true); // Find todays date
     }
 
     /**
-     *  This function returns course start date in the MMMM dd, yyyy format
+     * This function returns course start date in the MMMM dd, yyyy format
      */
     public static String formatCourseNotStartedDate(String date) {
         try {
@@ -144,5 +147,9 @@ public class DateUtil {
             logger.error(e);
             return null;
         }
+    }
+
+    public static Long getCurrentTimeInSeconds() {
+        return TimeUnit.MILLISECONDS.toSeconds(Calendar.getInstance().getTimeInMillis());
     }
 }

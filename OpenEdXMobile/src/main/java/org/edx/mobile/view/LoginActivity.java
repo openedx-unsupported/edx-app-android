@@ -25,7 +25,6 @@ import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -288,7 +287,7 @@ public class LoginActivity
                 protected void onPostExecute(AuthResponse result) {
                     super.onPostExecute(result);
                     if (result != null) {
-                        onUserLoginSuccess(result.profile);
+                        onUserLoginSuccess();
                     }
                 }
 
@@ -342,7 +341,7 @@ public class LoginActivity
         task.setProgressDialog(activityLoginBinding.progress.progressIndicator);
     }
 
-    public void onUserLoginSuccess(ProfileModel profile) {
+    public void onUserLoginSuccess() {
         setResult(RESULT_OK);
         finish();
         final DeepLink deepLink = getIntent().getParcelableExtra(Router.EXTRA_DEEP_LINK);
