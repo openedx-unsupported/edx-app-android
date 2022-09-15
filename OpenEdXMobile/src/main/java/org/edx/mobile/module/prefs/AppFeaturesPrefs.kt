@@ -20,4 +20,25 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
     private fun getAppConfig(): AppConfig {
         return Gson().fromJson(pref.getString(PrefManager.Key.APP_CONFIG), AppConfig::class.java)
     }
+
+    private fun getIAPConfig() = getAppConfig().iapConfig
+
+    fun isIAPEnabled() = getIAPConfig().isEnabled
+
+    /**
+     * Method to check if the IAP is enabled for treatment/control group
+     * Any user with odd user Id falls under treatment group and
+     * user with even id falls under control group
+     * The App will allow the user to purchase the course only if [org.edx.mobile.model.api.IAPConfig.isEnabled] is true
+     * If [org.edx.mobile.model.api.IAPConfig.isExperimentEnabled] is true then only treatment group will be able to buy the course.
+     */
+    fun isIAPEnabled(isOddUserId: Boolean): Boolean {
+        if (isIAPEnabled()) {
+            if (getIAPConfig().isExperimentEnabled) {
+                return isOddUserId
+            }
+            return true
+        }
+        return false
+    }
 }

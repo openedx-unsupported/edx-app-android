@@ -169,6 +169,10 @@ public class LoginPrefs {
         return profileModel != null ? profileModel.id : null;
     }
 
+    public boolean isOddUserId() {
+        return (getUserId() != null && getUserId() % 2 == 1);
+    }
+
     @Nullable
     public String getUsername() {
         final ProfileModel profileModel = getCurrentUserProfile();
