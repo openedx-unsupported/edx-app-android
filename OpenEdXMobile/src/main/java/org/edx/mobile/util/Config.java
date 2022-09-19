@@ -436,7 +436,7 @@ public class Config {
         }
 
         public String getEnrollmentsApiVersion() {
-            return enrollmentsApiVersion !=null ?enrollmentsApiVersion : DEFAULT_API_VERSION;
+            return enrollmentsApiVersion != null ? enrollmentsApiVersion : DEFAULT_API_VERSION;
         }
     }
 

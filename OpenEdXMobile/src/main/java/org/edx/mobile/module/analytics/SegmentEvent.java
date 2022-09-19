@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import com.segment.analytics.Properties;
 
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
 
 /**
@@ -28,9 +27,9 @@ public class SegmentEvent {
         this.properties.put(Analytics.Keys.CONTEXT, cxtProps);
 
         // Set User ID in each event if a user is logged-in
-        final ProfileModel profile = new LoginPrefs(MainApplication.instance()).getCurrentUserProfile();
-        if (profile != null) {
-            this.properties.putValue(Analytics.Keys.USER_ID, profile.id);
+        final LoginPrefs loginPrefs = new LoginPrefs(MainApplication.instance());
+        if (loginPrefs.isUserLoggedIn()) {
+            this.properties.putValue(Analytics.Keys.USER_ID, loginPrefs.getUserId());
         }
     }
 

@@ -30,6 +30,6 @@ class UserPrefs @Inject constructor(
             return prefManger.getBoolean(PrefManager.Key.DOWNLOAD_TO_SDCARD, false)
         }
 
-    val profile: ProfileModel?
+    val profile: ProfileModel
         get() = loginPrefs.currentUserProfile
 }

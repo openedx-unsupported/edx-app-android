@@ -422,11 +422,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
                 final String group = firebaseRemoteConfig.getString(Analytics.Keys.AA_EXPERIMENT);
                 final ProfileModel profileModel = environment.getLoginPrefs().getCurrentUserProfile();
-                if (!TextUtils.isEmpty(group) && profileModel != null) {
+                if (!TextUtils.isEmpty(group) && environment.getLoginPrefs().isUserLoggedIn()) {
                     final Map<String, String> values = new HashMap<>();
                     values.put(Analytics.Keys.EXPERIMENT, Analytics.Keys.AA_EXPERIMENT);
                     values.put(Analytics.Keys.GROUP, group);
-                    values.put(Analytics.Keys.USER_ID, profileModel.id.toString());
+                    values.put(Analytics.Keys.USER_ID, Long.toString(profileModel.id));
                     values.put(Analytics.Keys.COURSE_ID, courseData.getCourseId());
                     environment.getAnalyticsRegistry().trackExperimentParams(Analytics.Events.MOBILE_EXPERIMENT_EVALUATED, values);
                 }

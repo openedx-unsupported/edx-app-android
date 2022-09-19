@@ -330,7 +330,7 @@ public class CourseDetailFragment extends BaseFragment {
      * Enroll in a course, Then open the course dashboard of the enrolled course.
      */
     public void enrollInCourse() {
-        if (null == environment.getLoginPrefs().getUsername()) {
+        if (!environment.getLoginPrefs().isUserLoggedIn()) {
             startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
             return;
         }

@@ -44,7 +44,7 @@ public class SplashActivity extends ComponentActivity {
         }
 
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
-        if (environment.getUserPrefs().getProfile() != null) {
+        if (environment.getLoginPrefs().isUserLoggedIn()) {
             environment.getRouter().showMainDashboard(SplashActivity.this);
         } else if (!environment.getConfig().isRegistrationEnabled()) {
             startActivity(environment.getRouter().getLogInIntent());

@@ -103,7 +103,7 @@ public class FileUtil {
         }
 
         final ProfileModel profile = userPref.getProfile();
-        if (downloadDir != null && profile != null) {
+        if (downloadDir != null && environment.getLoginPrefs().isUserLoggedIn()) {
             final File usersVideosDir = getUserVideoDirectory(downloadDir, profile.username);
             usersVideosDir.mkdirs();
             try {

@@ -20,9 +20,9 @@ public class DeepLinkManager {
         // Pass the Config class instance as parameter while manually creating the Router object instated of
         // using injection technique. Otherwise Router unable to initiate the config object in it.
         final Router router = new Router(new Config(activity));
-        final String username = new LoginPrefs(activity).getUsername();
+        final boolean isUserLoggedIn = new LoginPrefs(activity).isUserLoggedIn();
         @ScreenDef final String screenName = deepLink.getScreenName();
-        if (username == null) {
+        if (!isUserLoggedIn) {
             switch (screenName) {
                 case Screen.DISCOVERY:
                 case Screen.DISCOVERY_COURSE_DETAIL:

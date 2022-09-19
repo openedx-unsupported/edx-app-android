@@ -147,7 +147,7 @@ public class LoginAPI {
         }
         loginPrefs.setLastAuthenticatedEmail(usernameUsedToLogIn);
         analyticsRegistry.identifyUser(
-                profile.id.toString(),
+                Long.toString(profile.id),
                 profile.email,
                 usernameUsedToLogIn);
         final String backendKey = loginPrefs.getAuthBackendKeyForSegment();
