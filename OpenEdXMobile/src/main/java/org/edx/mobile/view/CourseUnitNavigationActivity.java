@@ -270,7 +270,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     protected void onLoadData() {
-        selectedUnit = courseManager.getComponentById(blocksApiVersion, courseData.getCourse().getId(), courseComponentId);
+        selectedUnit = courseManager.getComponentById(courseData.getCourseId(), courseComponentId);
         updateDataModel();
     }
 

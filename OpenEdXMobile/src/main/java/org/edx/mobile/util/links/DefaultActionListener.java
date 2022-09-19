@@ -14,7 +14,6 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.course.CourseService;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.http.HttpStatus;
@@ -55,7 +54,6 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
     }
 
     IEdxEnvironment environment;
-    CourseService courseService;
     CourseAPI courseApi;
 
     private FragmentActivity activity;
@@ -70,7 +68,6 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
         this.enrollCallback = enrollCallback;
         EdxDefaultModule.ProviderEntryPoint provider = EntryPointAccessors.fromApplication(activity, EdxDefaultModule.ProviderEntryPoint.class);
         this.environment = provider.getEnvironment();
-        this.courseService = provider.getCourseService();
         this.courseApi = provider.getCourseAPI();
     }
 
@@ -157,8 +154,8 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
             Toast.makeText(activity, activity.getString(R.string.you_are_already_enrolled), Toast.LENGTH_SHORT).show();
             openEnrolledCourseDashboard(courseId);
         } else {
-            courseService.enrollInACourse(new CourseService.EnrollBody(courseId, emailOptIn))
-                    .enqueue(new CourseService.EnrollCallback(
+            courseApi.enrollInACourse(courseId, emailOptIn)
+                    .enqueue(new CourseAPI.EnrollCallback(
                             activity,
                             new TaskProgressCallback.ProgressViewController(progressWheel)) {
                         @Override

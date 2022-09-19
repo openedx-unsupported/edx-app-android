@@ -437,8 +437,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @NonNull
     @Override
     public Loader<AsyncTaskResult<CourseComponent>> onCreateLoader(int id, Bundle args) {
-        final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
-        return new CourseOutlineAsyncLoader(getContext(), blocksApiVersion, courseData.getCourseId());
+        return new CourseOutlineAsyncLoader(getContext(), courseData.getCourseId());
     }
 
     @Override
@@ -467,13 +466,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
         final TaskProgressCallback progressCallback = showProgress ?
                 new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
-        final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
         final String courseId = courseData.getCourseId();
 
         if (forceRefresh) {
-            getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
+            getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
         } else {
-            getHierarchyCall = courseApi.getCourseStructure(blocksApiVersion, courseId);
+            getHierarchyCall = courseApi.getCourseStructure(courseId);
         }
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
                 progressCallback, errorNotification, null, this) {

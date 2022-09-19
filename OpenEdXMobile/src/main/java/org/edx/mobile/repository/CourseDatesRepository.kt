@@ -85,10 +85,10 @@ class CourseDatesRepository(private val courseAPI: CourseAPI) {
      * Reschedule course dates.
      */
     fun resetCourseDates(
-        body: HashMap<String, String>,
+        courseId: String,
         callback: NetworkResponseCallback<ResetCourseDates>
     ) {
-        courseAPI.resetCourseDates(body).enqueue(object : Callback<ResetCourseDates> {
+        courseAPI.resetCourseDates(courseId).enqueue(object : Callback<ResetCourseDates> {
             override fun onResponse(
                 call: Call<ResetCourseDates>,
                 response: Response<ResetCourseDates>

@@ -18,6 +18,8 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -51,7 +53,7 @@ public class CourseUnitDiscussionFragment extends CourseUnitFragment {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState == null) {
             markComponentCompletion(true);
-            courseApi.markBlocksCompletion(unit.getCourseId(), new String[]{unit.getId()}).enqueue(new Callback<JSONObject>() {
+            courseApi.markBlocksCompletion(unit.getCourseId(), List.of(unit.getId())).enqueue(new Callback<>() {
                 @Override
                 protected void onResponse(@NonNull JSONObject responseBody) {
                     // Nothing to do here

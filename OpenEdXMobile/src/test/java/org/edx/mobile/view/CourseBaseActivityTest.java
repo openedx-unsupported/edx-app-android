@@ -1,5 +1,8 @@
 package org.edx.mobile.view;
 
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +17,6 @@ import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
-
-import static org.assertj.android.api.Assertions.assertThat;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
 
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
@@ -58,9 +58,8 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
             CourseStructureV1Model model;
             CourseComponent courseComponent;
             try {
-                model = executeStrict(courseAPI.getCourseStructure(
-                        config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
-                courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
+                model = executeStrict(courseAPI.getCourseStructure(courseId));
+                courseComponent = (CourseComponent) CourseAPI.Companion.normalizeCourseStructure(model, courseId);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

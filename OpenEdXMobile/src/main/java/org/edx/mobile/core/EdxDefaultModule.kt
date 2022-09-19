@@ -14,7 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.course.CourseAPI
-import org.edx.mobile.course.CourseService
 import org.edx.mobile.discussion.DiscussionService
 import org.edx.mobile.http.provider.OkHttpClientProvider
 import org.edx.mobile.http.provider.RetrofitProvider
@@ -157,8 +156,6 @@ abstract class EdxDefaultModule {
         fun getOkHttpClientProvider(): OkHttpClientProvider
 
         fun getDiscussionService(): DiscussionService
-
-        fun getCourseService(): CourseService
 
         fun getCourseAPI(): CourseAPI
 

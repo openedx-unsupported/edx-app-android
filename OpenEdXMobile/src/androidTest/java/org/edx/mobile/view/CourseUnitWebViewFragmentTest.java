@@ -70,7 +70,7 @@ public class CourseUnitWebViewFragmentTest extends UiTest {
         String courseId = courseData.getCourse().getId();
         CourseStructureV1Model model;
         try {
-            model = executeStrict(courseAPI.getCourseStructure(config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
+            model = executeStrict(courseAPI.getCourseStructure(courseId));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
