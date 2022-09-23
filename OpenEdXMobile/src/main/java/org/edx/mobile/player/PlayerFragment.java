@@ -764,12 +764,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         // mark prepared and allow orientation
         isPrepared = true;
 
-        if (getActivity() == null) {
-            return;
-        }
-
-        allowSensorOrientation();
-
         if (!isResumed() || !getUserVisibleHint() || isCastingOnRemoteDevice()) {
             freezePlayer();
             hideProgress();

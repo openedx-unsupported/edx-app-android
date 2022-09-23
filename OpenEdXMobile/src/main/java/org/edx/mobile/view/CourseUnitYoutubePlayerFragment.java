@@ -20,6 +20,7 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.DeviceSettingUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.greenrobot.eventbus.EventBus;
@@ -123,7 +124,9 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
          */
         if (youTubePlayer != null) {
             try {
-                youTubePlayer.setFullscreen(fullscreen);
+                if (DeviceSettingUtil.isDeviceRotationON(getActivity())) {
+                    youTubePlayer.setFullscreen(fullscreen);
+                }
             } catch (IllegalStateException e) {
                 logger.error(e);
                 releaseYoutubePlayer();
@@ -321,13 +324,10 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     private class FullscreenListener implements YouTubePlayer.OnFullscreenListener {
         @Override
         public void onFullscreen(boolean fullScreen) {
-            final int orientation = getResources().getConfiguration().orientation;
             if (getActivity() != null) {
-                if (!fullScreen && orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                } else {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                }
+                getActivity().setRequestedOrientation(fullScreen ?
+                        ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE :
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
             if (videoModel != null) {
                 environment.getAnalyticsRegistry().trackVideoOrientation(videoModel.videoId,
