@@ -35,17 +35,6 @@ class CourseViewModel @Inject constructor(
     private val _handleError = MutableLiveData<Throwable>()
     val handleError: LiveData<Throwable> = _handleError
 
-    private val dataCallback: DataCallback<Int> = object : DataCallback<Int>() {
-        override fun onResult(result: Int) {}
-        override fun onFail(ex: Exception) {
-            logger.error(ex)
-        }
-    }
-
-    init {
-        fetchEnrolledCourses(type = CACHE)
-    }
-
     fun fetchEnrolledCourses(
         type: CoursesRequestType,
         showProgress: Boolean = true
@@ -56,24 +45,36 @@ class CourseViewModel @Inject constructor(
             callback = object : NetworkResponseCallback<EnrollmentResponse> {
 
                 override fun onSuccess(result: Result.Success<EnrollmentResponse>) {
-
                     result.data?.let {
                         _enrolledCourses.postValue(it.enrollments)
                         environment.appFeaturesPrefs.setAppConfig(it.appConfig)
 
-                        if (type != CACHE) updateDatabaseAfterDownload(it.enrollments)
-                        else fetchEnrolledCourses(type = STALE, it.enrollments.isEmpty())
+                        if (type != CACHE) {
+                            updateDatabaseAfterDownload(it.enrollments)
+                        } else {
+                            fetchEnrolledCourses(type = STALE, it.enrollments.isEmpty())
+                        }
                     }
                 }
 
                 override fun onError(error: Result.Error) {
-                    if (type == CACHE) fetchEnrolledCourses(type = STALE)
-                    else _handleError.value = error.throwable
+                    if (type == CACHE) {
+                        fetchEnrolledCourses(type = STALE)
+                    } else {
+                        _handleError.value = error.throwable
+                    }
                 }
             })
     }
 
     private fun updateDatabaseAfterDownload(list: List<EnrolledCoursesResponse>?) {
+        val dataCallback: DataCallback<Int> = object : DataCallback<Int>() {
+            override fun onResult(result: Int) {}
+            override fun onFail(ex: Exception) {
+                logger.error(ex)
+            }
+        }
+
         if (list != null && list.isEmpty()) {
             //update all videos in the DB as Deactivated
             environment.database?.updateAllVideosAsDeactivated(dataCallback)

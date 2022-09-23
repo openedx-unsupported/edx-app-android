@@ -67,13 +67,12 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private var lastClickTime: Long = 0
     private var incompletePurchases: List<Pair<String, String>> = emptyList()
 
-    @Inject
-    lateinit var loginAPI: LoginAPI
-
     private val courseViewModel: CourseViewModel by viewModels()
-
     private val iapViewModel: InAppPurchasesViewModel
             by viewModels(ownerProducer = { requireActivity() })
+
+    @Inject
+    lateinit var loginAPI: LoginAPI
 
     @Inject
     lateinit var iapAnalytics: InAppPurchasesAnalytics
@@ -140,6 +139,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.myCourseList.onItemClickListener = adapter
 
         initCourseObservers()
+        courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.CACHE)
 
         return binding.root
     }
@@ -147,11 +147,12 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private fun initCourseObservers() {
         courseViewModel.showProgress.observe(viewLifecycleOwner, EventObserver {
             binding.loadingIndicator.root.setVisibility(it)
-            if (it) errorNotification.hideError()
+            if (it) {
+                errorNotification.hideError()
+            }
         })
 
-        courseViewModel.enrolledCoursesResponse.observe(viewLifecycleOwner, NonNullObserver
-        {
+        courseViewModel.enrolledCoursesResponse.observe(viewLifecycleOwner, NonNullObserver {
             initInAppPurchaseSetup()
             populateCourseData(data = it)
             resetPurchase()
@@ -160,25 +161,26 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             }
         })
 
-        courseViewModel.handleError.observe(viewLifecycleOwner, NonNullObserver
-        {
+        courseViewModel.handleError.observe(viewLifecycleOwner, NonNullObserver {
             when {
-                it is HttpStatusException -> when (it.statusCode) {
-                    HttpStatus.UNAUTHORIZED -> {
-                        context?.let { context ->
-                            environment.router?.forceLogout(
-                                context,
-                                environment.analyticsRegistry,
-                                environment.notificationDelegate
-                            )
+                (it is HttpStatusException) -> {
+                    when (it.statusCode) {
+                        HttpStatus.UNAUTHORIZED -> {
+                            context?.let { context ->
+                                environment.router?.forceLogout(
+                                    context,
+                                    environment.analyticsRegistry,
+                                    environment.notificationDelegate
+                                )
+                            }
                         }
-                    }
-                    HttpStatus.UPGRADE_REQUIRED -> {
-                        context?.let { context ->
-                            errorNotification.showError(
-                                context,
-                                it
-                            )
+                        HttpStatus.UPGRADE_REQUIRED -> {
+                            context?.let { context ->
+                                errorNotification.showError(
+                                    context,
+                                    it
+                                )
+                            }
                         }
                     }
                 }
@@ -188,7 +190,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         it
                     )
                 }
-                adapter.isEmpty -> {
+                else -> {
                     showError(it)
                 }
             }
