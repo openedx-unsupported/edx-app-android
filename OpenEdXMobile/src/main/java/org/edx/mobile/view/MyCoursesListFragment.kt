@@ -37,7 +37,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.EnrollmentMode
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
-import org.edx.mobile.util.EventObserver
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.InAppPurchasesUtils
 import org.edx.mobile.util.NetworkUtil
@@ -145,7 +144,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun initCourseObservers() {
-        courseViewModel.showProgress.observe(viewLifecycleOwner, EventObserver {
+        courseViewModel.showProgress.observe(viewLifecycleOwner, NonNullObserver {
             binding.loadingIndicator.root.setVisibility(it)
             if (it) {
                 errorNotification.hideError()

@@ -12,8 +12,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.module.db.DataCallback
 import org.edx.mobile.repository.CourseRepository
-import org.edx.mobile.util.Event
-import org.edx.mobile.util.postEvent
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.CACHE
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.STALE
 import javax.inject.Inject
@@ -29,8 +27,8 @@ class CourseViewModel @Inject constructor(
     private val _enrolledCourses = MutableLiveData<List<EnrolledCoursesResponse>>()
     val enrolledCoursesResponse: LiveData<List<EnrolledCoursesResponse>> = _enrolledCourses
 
-    private val _showProgress = MutableLiveData(Event(true))
-    val showProgress: LiveData<Event<Boolean>> = _showProgress
+    private val _showProgress = MutableLiveData(true)
+    val showProgress: LiveData<Boolean> = _showProgress
 
     private val _handleError = MutableLiveData<Throwable>()
     val handleError: LiveData<Throwable> = _handleError
@@ -39,7 +37,7 @@ class CourseViewModel @Inject constructor(
         type: CoursesRequestType,
         showProgress: Boolean = true
     ) {
-        _showProgress.postEvent(showProgress)
+        _showProgress.postValue(showProgress)
         courseRepository.fetchEnrolledCourses(
             type = type,
             callback = object : NetworkResponseCallback<EnrollmentResponse> {
