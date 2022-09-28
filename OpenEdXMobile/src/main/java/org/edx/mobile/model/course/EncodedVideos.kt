@@ -7,53 +7,81 @@ import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.VideoUtil
 import java.io.Serializable
 
-class EncodedVideos : Serializable {
-
-    @JvmField
+data class EncodedVideos(
     @SerializedName("hls")
-    var hls: VideoInfo? = null
+    val hls: VideoInfo?,
 
     @SerializedName("fallback")
-    var fallback: VideoInfo? = null
+    val fallback: VideoInfo?,
 
     @SerializedName("desktop_mp4")
-    var desktopMp4: VideoInfo? = null
+    val desktopMp4: VideoInfo?,
 
-    @JvmField
     @SerializedName("mobile_high")
-    var mobileHigh: VideoInfo? = null
+    val mobileHigh: VideoInfo?,
 
-    @JvmField
     @SerializedName("mobile_low")
-    var mobileLow: VideoInfo? = null
+    val mobileLow: VideoInfo?,
 
-    @JvmField
     @SerializedName("youtube")
-    var youtube: VideoInfo? = null
+    val youtube: VideoInfo?,
+) : Serializable {
+
+    val youtubeVideoInfo: VideoInfo?
+        get() = if (youtube != null && URLUtil.isNetworkUrl(youtube.url)) youtube else null
 
     /**
-     * Extract the Preferred [VideoInfo] for media playback and to store in database.
+     * Extract the Preferred Native [VideoInfo] based on their stream priority for media playback
+     * to store in database model.
      *
-     * @return Preferred [VideoInfo]
+     * @return Preferred Native [VideoInfo] having the minimum value of Stream priority or null
+     */
+    val preferredNativeVideoInfo: VideoInfo?
+        get() = getPreferredVideoInfo(nativeEncodedVideos)
+
+    /**
+     * Extract the Preferred [VideoInfo] based on their stream priority for media playback
+     * including youtube
+     *
+     * @return Preferred [VideoInfo] having the minimum stream priority value
      */
     val preferredVideoInfo: VideoInfo?
         get() {
-            if (isPreferredVideoInfo(hls)) {
-                return hls
+            nativeEncodedVideos.toMutableList().apply {
+                youtubeVideoInfo?.let { this.add(it) }
+                return getPreferredVideoInfo(this)
             }
-            if (isPreferredVideoInfo(mobileLow)) {
-                return mobileLow
-            }
-            if (isPreferredVideoInfo(mobileHigh)) {
-                return mobileHigh
-            }
-            if (isPreferredVideoInfo(desktopMp4)) {
-                return desktopMp4
-            }
-            return if (isPreferredVideoInfo(fallback)) {
-                fallback
-            } else null
         }
+
+    /**
+     * Populate and return a list of all the available Native Encoded Videos
+     */
+    private val nativeEncodedVideos: List<VideoInfo>
+        get() = listOf(hls, mobileLow, mobileHigh, desktopMp4, fallback)
+            .filter { isNativeVideoInfo(it) }
+            .filterNotNull()
+
+    /**
+     * Method to check if the [VideoInfo] is a valid Native VideoInfo or not
+     */
+    private fun isNativeVideoInfo(videoInfo: VideoInfo?): Boolean {
+        return videoInfo != null &&
+                URLUtil.isNetworkUrl(videoInfo.url) &&
+                VideoUtil.isValidVideoUrl(videoInfo.url)
+    }
+
+    /**
+     * Method to filter out the Encoded Video with lowest stream priority
+     *
+     * @param encodedVideos list of [EncodedVideos]
+     * @return [VideoInfo] having the minimum value Stream priority or null
+     */
+    private fun getPreferredVideoInfo(encodedVideos: List<VideoInfo>): VideoInfo? {
+        return encodedVideos
+            .filter { it.streamPriority > VideoInfo.DEFAULT_STREAM_PRIORITY }
+            .minByOrNull { it.streamPriority }
+            ?: nativeEncodedVideos.firstOrNull()
+    }
 
     /**
      * Extract the Preferred [VideoInfo] for media downloading.
@@ -62,62 +90,32 @@ class EncodedVideos : Serializable {
      * @return Preferred [VideoInfo]
      */
     fun getPreferredVideoInfoForDownloading(preferredVideoQuality: VideoQuality): VideoInfo? {
-        var preferredVideoInfo = when (preferredVideoQuality) {
+        val preferredVideoInfo = when (preferredVideoQuality) {
             VideoQuality.OPTION_360P -> mobileLow
             VideoQuality.OPTION_540P -> mobileHigh
             VideoQuality.OPTION_720P -> desktopMp4
             else -> null
         }
-        if (preferredVideoInfo == null) {
-            preferredVideoInfo = getDefaultVideoInfoForDownloading()
-        }
-        return if (isPreferredVideoInfo(preferredVideoInfo)) {
-            preferredVideoInfo
-        } else {
-            null
-        }
+        return if (isNativeVideoInfo(preferredVideoInfo)) preferredVideoInfo
+        else getDefaultVideoInfoForDownloading()
     }
 
     private fun getDefaultVideoInfoForDownloading(): VideoInfo? {
-        if (isPreferredVideoInfo(mobileLow)) {
+        if (isNativeVideoInfo(mobileLow)) {
             return mobileLow
         }
-        if (isPreferredVideoInfo(mobileHigh)) {
+        if (isNativeVideoInfo(mobileHigh)) {
             return mobileHigh
         }
-        if (isPreferredVideoInfo(desktopMp4)) {
+        if (isNativeVideoInfo(desktopMp4)) {
             return desktopMp4
         }
-        fallback?.let {
-            if (isPreferredVideoInfo(it) &&
-                !VideoUtil.videoHasFormat(it.url, AppConstants.VIDEO_FORMAT_M3U8)
-            ) {
-                return fallback
-            }
+        if (fallback != null
+            && URLUtil.isNetworkUrl(fallback.url)
+            && VideoUtil.videoHasFormat(fallback.url, AppConstants.VIDEO_FORMAT_MP4)
+        ) {
+            return fallback
         }
         return null
-    }
-
-    private fun isPreferredVideoInfo(videoInfo: VideoInfo?): Boolean {
-        return videoInfo != null &&
-                URLUtil.isNetworkUrl(videoInfo.url) &&
-                VideoUtil.isValidVideoUrl(videoInfo.url)
-    }
-
-    val youtubeVideoInfo: VideoInfo?
-        get() = if (youtube != null && URLUtil.isNetworkUrl(youtube?.url)) youtube else null
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-
-        if (other == null || javaClass != other.javaClass) return false
-
-        val that = other as EncodedVideos
-
-        if (fallback != that.fallback) return false
-        if (desktopMp4 != that.desktopMp4) return false
-        if (mobileHigh != that.mobileHigh) return false
-
-        return if (mobileLow != that.mobileLow) false else youtube == that.youtube
     }
 }

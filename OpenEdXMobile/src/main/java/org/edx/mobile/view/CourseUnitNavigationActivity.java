@@ -40,6 +40,7 @@ import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtils;
+import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
@@ -116,7 +117,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     private void initAdapter() {
-        pagerAdapter = new CourseUnitPagerAdapter(this, environment.getConfig(),
+        pagerAdapter = new CourseUnitPagerAdapter(this, environment,
                 unitList, courseData, courseUpgradeData, this);
         pager2.setAdapter(pagerAdapter);
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -434,7 +435,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     private void updateUIForOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && CourseUnitPagerAdapter.isCourseUnitVideo(selectedUnit)) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && VideoUtil.isCourseUnitVideo(environment, selectedUnit)) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
@@ -465,7 +466,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (selectedUnit != null && selectedUnit instanceof VideoBlockModel) {
             // Showing casting button only for native video block
             // Currently casting for youtube video isn't available
-            return ((VideoBlockModel) selectedUnit).getData().encodedVideos.getPreferredVideoInfo() != null;
+            return VideoUtil.isCourseUnitVideo(environment, selectedUnit);
         }
         return super.showGoogleCastButton();
     }

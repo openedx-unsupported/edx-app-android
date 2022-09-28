@@ -342,7 +342,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             final DownloadEntry videoData = videoBlockModel.getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
-            } else if (videoBlockModel.getData().encodedVideos.youtube != null) {
+            } else if (videoBlockModel.getData().encodedVideos.getYoutubeVideoInfo() != null) {
                 final boolean isYoutubePlayerEnabled = config.getYoutubePlayerConfig().isYoutubePlayerEnabled();
                 UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
                         isYoutubePlayerEnabled ? R.drawable.ic_youtube_play : R.drawable.ic_laptop, R.dimen.small_icon_size);
@@ -390,7 +390,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     private void updateUIForVideo(@NonNull final ViewHolder viewHolder, @NonNull final DownloadEntry videoData,
                                   @NonNull final VideoBlockModel videoBlockModel) {
-        UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle, R.drawable.ic_videocam,
+        UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
+                VideoUtil.isCourseUnitVideo(environment, videoBlockModel)
+                        ? R.drawable.ic_videocam : R.drawable.ic_youtube_play,
                 R.dimen.small_icon_size);
         viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);

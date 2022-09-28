@@ -1,8 +1,9 @@
 package org.edx.mobile.module.db;
 
 import android.database.Cursor;
-import androidx.annotation.Nullable;
 import android.webkit.URLUtil;
+
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -99,14 +100,14 @@ public class DatabaseModelFactory {
         IBlock root = block.getRoot();
         e.eid = root.getCourseId();
         e.duration = vrm.duration;
-        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfo();
+        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredNativeVideoInfo();
         e.size = preferredVideoInfo.fileSize;
         e.title = block.getDisplayName();
         e.url = preferredVideoInfo.url;
-        e.url_hls = getVideoNetworkUrlOrNull(vrm.encodedVideos.hls);
-        e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileHigh);
-        e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileLow);
-        e.url_youtube = getVideoNetworkUrlOrNull(vrm.encodedVideos.youtube);
+        e.url_hls = getVideoNetworkUrlOrNull(vrm.encodedVideos.getHls());
+        e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.getMobileHigh());
+        e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.getMobileLow());
+        e.url_youtube = getVideoNetworkUrlOrNull(vrm.encodedVideos.getYoutube());
         e.videoId = block.getId();
         e.transcript = vrm.transcripts;
         e.lmsUrl = block.getBlockUrl();

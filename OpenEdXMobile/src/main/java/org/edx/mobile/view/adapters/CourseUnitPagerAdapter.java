@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.AuthorizationDenialReason;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseUnitPagerAdapter extends FragmentStateAdapter {
+    private IEdxEnvironment environment;
     private Config config;
     private List<CourseComponent> unitList;
     private EnrolledCoursesResponse courseData;
@@ -39,13 +41,14 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
     private List<Fragment> fragments = new ArrayList<>();
 
     public CourseUnitPagerAdapter(FragmentActivity fragmentActivity,
-                                  Config config,
+                                  IEdxEnvironment environment,
                                   List<CourseComponent> unitList,
                                   EnrolledCoursesResponse courseData,
                                   CourseUpgradeResponse courseUpgradeData,
                                   CourseUnitFragment.HasComponent callback) {
         super(fragmentActivity);
-        this.config = config;
+        this.environment = environment;
+        this.config = environment.getConfig();
         this.unitList = unitList;
         this.courseData = courseData;
         this.courseUpgradeData = courseUpgradeData;
@@ -58,13 +61,6 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
         if (pos < 0)
             pos = 0;
         return unitList.get(pos);
-    }
-
-    /**
-     * @return True if given unit is a video unit (not an only on YouTube unit)
-     */
-    public static boolean isCourseUnitVideo(CourseComponent unit) {
-        return (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null);
     }
 
     @NotNull
@@ -95,7 +91,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
             }
         }
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
-        else if (isCourseUnitVideo(minifiedUnit)) {
+        else if (VideoUtil.isCourseUnitVideo(environment, minifiedUnit)) {
             final VideoBlockModel videoBlockModel = (VideoBlockModel) minifiedUnit;
             videoBlockModel.setVideoThumbnail(courseData.getCourse().getCourse_image());
             unitFragment = CourseUnitVideoPlayerFragment.newInstance(videoBlockModel, (pos < unitList.size()), (pos > 0));

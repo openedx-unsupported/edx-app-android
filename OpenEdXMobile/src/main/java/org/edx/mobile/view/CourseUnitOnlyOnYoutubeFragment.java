@@ -46,7 +46,7 @@ public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
         }
 
         view.findViewById(R.id.view_on_youtube_button).setOnClickListener(v -> {
-            BrowserUtil.open(getActivity(), ((VideoBlockModel) unit).getData().encodedVideos.youtube.url, true);
+            BrowserUtil.open(getActivity(), ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo().url, true);
         });
 
         return view;
