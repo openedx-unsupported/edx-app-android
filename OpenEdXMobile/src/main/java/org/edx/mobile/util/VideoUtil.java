@@ -1,5 +1,9 @@
 package org.edx.mobile.util;
 
+import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
+import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_MP4;
+import static org.edx.mobile.util.AppConstants.YOUTUBE_PACKAGE_NAME;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.EncodedVideos;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -18,10 +26,6 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 
 import java.io.File;
-
-import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_M3U8;
-import static org.edx.mobile.util.AppConstants.VIDEO_FORMAT_MP4;
-import static org.edx.mobile.util.AppConstants.YOUTUBE_PACKAGE_NAME;
 
 public class VideoUtil {
     public static final String[] SUPPORTED_VIDEO_FORMATS = {
@@ -189,4 +193,27 @@ public class VideoUtil {
             return false;
         }
     }
+
+    /**
+     * Method to check if the EncodedVideo is a Native Video or Not
+     * A unit can have zero, single or multiple EncodedVideos
+     * A downloaded video is prioritized over a recommended Youtube video
+     *
+     * @return True if given unit is a native video unit or downloaded video is available
+     */
+    public static boolean isCourseUnitVideo(IEdxEnvironment environment, CourseComponent unit) {
+        if (unit instanceof VideoBlockModel) {
+            VideoBlockModel videoBlockModel = ((VideoBlockModel) unit);
+            EncodedVideos encodedVideos = videoBlockModel.getData().encodedVideos;
+            DownloadEntry downloadEntry = videoBlockModel.getDownloadEntry(environment.getStorage());
+            if (encodedVideos.getPreferredVideoInfo() != null
+                    && encodedVideos.getPreferredVideoInfo() != encodedVideos.getYoutubeVideoInfo()) {
+                return true;
+            } else {
+                return (downloadEntry != null && downloadEntry.isDownloaded());
+            }
+        }
+        return false;
+    }
+
 }

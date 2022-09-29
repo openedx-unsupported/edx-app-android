@@ -32,7 +32,7 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
 
     @Nullable
     public DownloadEntry getDownloadEntry(IStorage storage) {
-        if (data.encodedVideos.getPreferredVideoInfo() == null) {
+        if (data.encodedVideos.getPreferredNativeVideoInfo() == null) {
             return null;
         }
         if (storage != null) {

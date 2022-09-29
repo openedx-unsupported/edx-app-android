@@ -1,5 +1,13 @@
 package org.edx.mobile.view;
 
+import static org.assertj.android.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.edx.mobile.http.util.CallUtil.executeStrict;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -42,14 +50,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-
-import static org.assertj.android.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.edx.mobile.http.util.CallUtil.executeStrict;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 
 @Ignore("Include this test once we have migrated to the androidX")
 // TODO: To be fixed in LEARNER-7466
@@ -394,7 +394,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         VideoBlockModel encodeVideosModel = Mockito.mock(VideoBlockModel.class);
         VideoData videoData = Mockito.mock(VideoData.class);
         videoData.encodedVideos = Mockito.mock(EncodedVideos.class);
-        when(videoData.encodedVideos.getPreferredVideoInfo())
+        when(videoData.encodedVideos.getPreferredNativeVideoInfo())
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(encodeVideosModel.getData()).thenReturn(videoData);
         unitList.add(encodeVideosModel);
@@ -449,7 +449,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         ActivityController<? extends CourseUnitNavigationActivity> controller =
                 Robolectric.buildActivity(getActivityClass(), getIntent());
 
-        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(controller.get(), config,
+        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(controller.get(), environment,
                 unitList, courseData, null, hasComponent);
 
         for (int size = unitList.size(), i = 0; i < size; i++) {
@@ -475,7 +475,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 VideoBlockModel encodedVideosModel = Mockito.mock(VideoBlockModel.class);
                 VideoData videoData = Mockito.mock(VideoData.class);
                 videoData.encodedVideos = Mockito.mock(EncodedVideos.class);
-                when(videoData.encodedVideos.getPreferredVideoInfo())
+                when(videoData.encodedVideos.getPreferredNativeVideoInfo())
                         .thenReturn(Mockito.mock(VideoInfo.class));
                 when(encodedVideosModel.getData()).thenReturn(videoData);
                 argsList.add(new Object[] {encodedVideosModel, BaseCourseUnitVideoFragment.class, true});
@@ -547,7 +547,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
             CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
             CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(
-                    Robolectric.buildActivity(CourseUnitNavigationActivity.class).get(), config,
+                    Robolectric.buildActivity(CourseUnitNavigationActivity.class).get(), environment,
                     Collections.singletonList(paramCourseComponent), courseData, null, hasComponent);
 
             assertThat(adapter.getItem(0)).isInstanceOf(expectedFragmentClass);
