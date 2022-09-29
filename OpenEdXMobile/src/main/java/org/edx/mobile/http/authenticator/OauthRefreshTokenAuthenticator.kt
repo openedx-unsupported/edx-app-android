@@ -103,7 +103,10 @@ class OauthRefreshTokenAuthenticator @Inject constructor(
                  */
                 EventBus.getDefault().post(LogoutEvent())
             }
-            DISABLED_USER_ERROR_MESSAGE -> EventBus.getDefault().post(LogoutEvent())
+            DISABLED_USER_ERROR_MESSAGE,
+            JWT_DISABLED_USER_ERROR_MESSAGE -> {
+                EventBus.getDefault().post(LogoutEvent())
+            }
         }
 
         /**
@@ -234,6 +237,7 @@ class OauthRefreshTokenAuthenticator @Inject constructor(
         private const val TOKEN_NONEXISTENT_ERROR_MESSAGE = "token_nonexistent"
         private const val TOKEN_INVALID_GRANT_ERROR_MESSAGE = "invalid_grant"
         private const val DISABLED_USER_ERROR_MESSAGE = "user_is_disabled"
+        private const val JWT_DISABLED_USER_ERROR_MESSAGE = "User account is disabled."
         private const val JWT_TOKEN_EXPIRED = "Token has expired."
         private const val JWT_INVALID_TOKEN = "Invalid token."
 
