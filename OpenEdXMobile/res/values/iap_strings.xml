@@ -54,7 +54,7 @@
     <string name="label_continue_without_update">Continue without update</string>
 
     <!-- Title of the dialog to verify SDN -->
-    <string name="sdn_dialog_title">Lorem ipsum</string>
+    <string name="sdn_dialog_title">Sanctions Compliance</string>
     <!-- Message for the dialog to verify SDN -->
-    <string name="sdn_dialog_message">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="sdn_dialog_message">I certify that: \n(i) I (and any 3rd party paying for my course participation) am not on any government sanctions, exclusion, or export-controlled related restricted party list; and, \n(ii) I am not located in, or ordinarily resident in, any country or region that is subject to US, EU, or other applicable jurisdiction\'s laws and regulations preventing {platform_name} from providing me services there.</string>
 </resources>

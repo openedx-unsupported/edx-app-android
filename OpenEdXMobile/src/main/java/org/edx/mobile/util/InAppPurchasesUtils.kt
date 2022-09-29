@@ -197,20 +197,25 @@ class InAppPurchasesUtils @Inject constructor(
     fun showSDNDialog(fragment: Fragment, onPositiveClick: DialogInterface.OnClickListener) {
         AlertDialogFragment.newInstance(
             fragment.getString(R.string.sdn_dialog_title),
-            fragment.getString(R.string.sdn_dialog_message),
-            fragment.getString(R.string.label_accept),
+            ResourceUtil.getFormattedString(
+                fragment.resources,
+                R.string.sdn_dialog_message,
+                AppConstants.PLATFORM_NAME,
+                environment.config.platformName
+            ).toString(),
+            fragment.getString(R.string.label_reject),
+            { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Events.IAP_SDN_PROMPT_ACTION,
+                    actionTaken = Values.ACTION_REJECT
+                )
+            },
+            fragment.getString(R.string.label_confirm),
             { dialog, which ->
                 onPositiveClick.onClick(dialog, which)
                 iapAnalytics.trackIAPEvent(
                     eventName = Events.IAP_SDN_PROMPT_ACTION,
-                    actionTaken = Values.ACTION_ACCEPT
-                )
-            },
-            fragment.getString(R.string.label_cancel),
-            { _, _ ->
-                iapAnalytics.trackIAPEvent(
-                    eventName = Events.IAP_SDN_PROMPT_ACTION,
-                    actionTaken = Values.ACTION_CANCEL
+                    actionTaken = Values.ACTION_CONFIRM
                 )
             },
             false
