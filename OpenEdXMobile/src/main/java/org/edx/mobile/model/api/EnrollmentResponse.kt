@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.logger.Logger
@@ -39,8 +40,12 @@ data class EnrollmentResponse(
                         Gson().fromJson((json as JsonArray), listType)
                     )
                 } else {
+                    val config = (json as JsonObject)
+                        .getAsJsonObject("configs")
+                        .getAsJsonPrimitive("config")
+
                     val appConfig = Gson().fromJson(
-                        (json as JsonObject).get("config"),
+                        JsonParser.parseString(config.asString),
                         AppConfig::class.java
                     )
                     val enrolledCourses = Gson().fromJson<List<EnrolledCoursesResponse>>(

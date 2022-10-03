@@ -10,6 +10,22 @@ import java.io.Serializable
 data class AppConfig(
 
     @SerializedName("value_prop_enabled")
-    val isValuePropEnabled: Boolean = false
+    val isValuePropEnabled: Boolean = false,
+
+    @SerializedName("iap_config")
+    val iapConfig: IAPConfig = IAPConfig()
+
+) : Serializable
+
+/**
+ * Model class that contains the Config related to In App Purchases.
+ */
+data class IAPConfig(
+
+    @SerializedName("enabled")
+    val isEnabled: Boolean = false,
+
+    @SerializedName("experiment_enabled")
+    val isExperimentEnabled: Boolean = false
 
 ) : Serializable
