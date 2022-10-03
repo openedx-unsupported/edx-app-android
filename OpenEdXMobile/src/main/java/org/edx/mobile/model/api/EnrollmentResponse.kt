@@ -39,8 +39,18 @@ data class EnrollmentResponse(
                         Gson().fromJson((json as JsonArray), listType)
                     )
                 } else {
+                    /**
+                     * To remove dependency on the backend, all the data related to Remote Config
+                     * will be received under the `configs` key. The `config` is the key under
+                     * 'configs` which defines the data that is related to the configuration of the
+                     * app.
+                     */
+                    val config = (json as JsonObject)
+                        .getAsJsonObject("configs")
+                        .getAsJsonPrimitive("config")
+
                     val appConfig = Gson().fromJson(
-                        (json as JsonObject).get("config"),
+                        config.asString,
                         AppConfig::class.java
                     )
                     val enrolledCourses = Gson().fromJson<List<EnrolledCoursesResponse>>(
