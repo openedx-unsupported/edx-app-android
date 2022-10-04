@@ -901,7 +901,8 @@ public interface Analytics {
         String ACTION_REFRESH = "refresh";
         String ACTION_GET_HELP = "get_help";
         String ACTION_CLOSE = "close";
-        String ACTION_ACCEPT = "accept";
+        String ACTION_CONFIRM = "confirm";
+        String ACTION_REJECT = "reject";
         String IAP_UPGRADE_NOW_CLICKED = "edx.bi.app.payments.upgrade_now.clicked";
         String IAP_COURSE_UPGRADE_SUCCESS = "edx.bi.app.payments.course_upgrade_success";
         String IAP_UNLOCK_UPGRADED_CONTENT_TIME = "edx.bi.app.payments.time_to_unlock_upgraded_content";
