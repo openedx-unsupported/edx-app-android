@@ -306,7 +306,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                             environment.getAnalyticsRegistry(),
                             environment.getNotificationDelegate());
                 } else {
-                    switch (errorMessage.getErrorCode()) {
+                    switch (errorMessage.getRequestType()) {
                         case ErrorMessage.BANNER_INFO_CODE:
                             initInfoBanner(null);
                             break;

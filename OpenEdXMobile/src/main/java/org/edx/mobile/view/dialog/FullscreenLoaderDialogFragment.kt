@@ -16,12 +16,11 @@ import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogFullscreenLoaderBinding
 import org.edx.mobile.exception.ErrorMessage
-import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.InAppPurchasesUtils
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.wrapper.InAppPurchasesDialog
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -35,7 +34,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
     lateinit var iapAnalytics: InAppPurchasesAnalytics
 
     @Inject
-    lateinit var iapUtils: InAppPurchasesUtils
+    lateinit var iapDialog: InAppPurchasesDialog
 
     private lateinit var binding: DialogFullscreenLoaderBinding
 
@@ -43,7 +42,6 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
             by viewModels(ownerProducer = { requireActivity() })
 
     private var loaderStartTime: Long = 0
-    private val LOADER_START_TIME = "LOADER_START_TIME"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +69,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
         if (iapViewModel.upgradeMode.isSilentMode()) {
             iapViewModel.refreshCourseData(true)
         } else if (iapViewModel.isVerificationPending) {
-            iapViewModel.executeOrder()
+            iapViewModel.executeOrder(requireActivity())
         }
     }
 
@@ -86,39 +84,20 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
 
     private fun initObservers() {
         iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
-            if (errorMsg.throwable is InAppPurchasesException) {
-                when (errorMsg.throwable.httpErrorCode) {
-                    HttpStatus.UNAUTHORIZED -> {
-                        environment.router?.forceLogout(
-                            requireContext(),
-                            environment.analyticsRegistry,
-                            environment.notificationDelegate
-                        )
-                        return@NonNullObserver
+            errorMsg.throwable as InAppPurchasesException
+            iapDialog.handleIAPException(
+                fragment = this@FullscreenLoaderDialogFragment,
+                errorMessage = errorMsg,
+                retryListener = { _, _ ->
+                    if (errorMsg.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
+                        iapViewModel.executeOrder(requireActivity())
+                    } else {
+                        iapViewModel.refreshCourseData(true)
                     }
-                    else -> iapUtils.showPostUpgradeErrorDialog(
-                        context = this,
-                        errorCode = errorMsg.throwable.httpErrorCode,
-                        errorMessage = errorMsg.throwable.errorMessage,
-                        errorType = errorMsg.errorCode,
-                        retryListener = { _, _ -> iapViewModel.executeOrder() },
-                        cancelListener = { _, _ -> resetPurchase() }
-                    )
-                }
-            } else {
-                iapUtils.showPostUpgradeErrorDialog(
-                    context = this,
-                    errorType = errorMsg.errorCode,
-                    retryListener = { _, _ ->
-                        if (errorMsg.errorCode == ErrorMessage.EXECUTE_ORDER_CODE)
-                            iapViewModel.executeOrder()
-                        else
-                            iapViewModel.refreshCourseData(true)
-                    },
-                    cancelListener = { _, _ -> resetPurchase() }
-
-                )
-            }
+                },
+                cancelListener = { _, _ ->
+                    resetPurchase()
+                })
             iapViewModel.errorMessageShown()
         })
     }
@@ -159,6 +138,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG = "FULLSCREEN_LOADER"
+        private const val LOADER_START_TIME = "LOADER_START_TIME"
         const val MINIMUM_DISPLAY_DELAY: Long = 3_000
 
         @JvmStatic

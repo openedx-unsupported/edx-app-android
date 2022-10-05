@@ -28,7 +28,12 @@ import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
-import org.edx.mobile.util.*
+import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.Config
+import org.edx.mobile.util.FileUtil
+import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.UserProfileUtils
 import org.edx.mobile.view.dialog.IDialogCallback
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment

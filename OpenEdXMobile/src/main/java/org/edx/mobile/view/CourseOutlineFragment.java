@@ -285,7 +285,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                             environment.getAnalyticsRegistry(),
                             environment.getNotificationDelegate());
                 } else {
-                    switch (errorMessage.getErrorCode()) {
+                    switch (errorMessage.getRequestType()) {
                         case ErrorMessage.BANNER_INFO_CODE:
                             initDatesBanner(null);
                             break;
@@ -492,7 +492,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
                 } else if (fullscreenLoader != null && fullscreenLoader.isAdded()) {
-                    iapViewModel.setError(ErrorMessage.COURSE_REFRESH_CODE, error);
+                    iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
                 }
                 swipeContainer.setRefreshing(false);
                 // Remove bulk video download if the course has NO downloadable videos

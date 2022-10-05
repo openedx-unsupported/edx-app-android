@@ -476,7 +476,7 @@ public class AnalyticsRegistry implements Analytics {
 
     @Override
     public void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
-                                                  @NonNull String price, boolean isSelfPaced, boolean showMore) {
+                                                  @Nullable String price, boolean isSelfPaced, boolean showMore) {
         for (Analytics service : services) {
             service.trackValuePropShowMoreLessClicked(courseId, componentId, price, isSelfPaced, showMore);
         }

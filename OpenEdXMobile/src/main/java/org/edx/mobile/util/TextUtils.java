@@ -192,20 +192,18 @@ public class TextUtils {
      * Returns a StringBuilder containing the formatted error message.
      * i.e Error: error_endpoint-error_code-error_message
      *
-     * @param errorCode     HTTP or SDK response code
-     * @param errorEndpoint Call endpoint
-     * @param errorMessage  Error message from HTTP call or SDK
+     * @param requestType  Call endpoint
+     * @param errorCode    HTTP or SDK response code
+     * @param errorMessage Error message from HTTP call or SDK
      * @return Formatted error message.
      */
-    public static StringBuilder getFormattedErrorMessage(
-            Integer errorCode,
-            Integer errorEndpoint,
-            String errorMessage) {
+    public static StringBuilder getFormattedErrorMessage(int requestType, int errorCode, String errorMessage) {
         StringBuilder body = new StringBuilder();
-        if (errorEndpoint == null) return body;
-
+        if (requestType == 0) {
+            return body;
+        }
         String endpoint;
-        switch (errorEndpoint) {
+        switch (requestType) {
             case ErrorMessage.ADD_TO_BASKET_CODE:
                 endpoint = "basket";
                 break;
@@ -224,12 +222,13 @@ public class TextUtils {
             default:
                 endpoint = "unhandledError";
         }
-
         body.append(String.format("%s", endpoint));
-        if (errorCode == null) return body;
+        // change the default value to -1 cuz in case of BillingClient return errorCode 0 for price load.
+        if (errorCode == -1) {
+            return body;
+        }
         body.append(String.format(Locale.ENGLISH, "-%d", errorCode));
-
-        if (errorMessage != null && !errorMessage.isEmpty())
+        if (!android.text.TextUtils.isEmpty(errorMessage))
             body.append(String.format("-%s", errorMessage));
         return body;
     }

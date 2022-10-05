@@ -677,11 +677,13 @@ public class FirebaseAnalytics implements Analytics {
 
     @Override
     public void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
-                                                  @NonNull String price, boolean isSelfPaced, boolean showMore) {
+                                                  @Nullable String price, boolean isSelfPaced, boolean showMore) {
         final FirebaseEvent event = new FirebaseEvent(showMore ? Events.VALUE_PROP_SHOW_MORE_CLICKED : Events.VALUE_PROP_SHOW_LESS_CLICKED,
                 showMore ? Values.VALUE_PROP_SHOW_MORE_CLICKED : Values.VALUE_PROP_SHOW_LESS_CLICKED);
         event.putCourseId(courseId);
-        event.putString(Keys.PRICE, price);
+        if (!TextUtils.isEmpty(price)) {
+            event.putString(Keys.PRICE, price);
+        }
         if (!TextUtils.isEmpty(componentId)) {
             event.putString(Keys.COMPONENT_ID, componentId);
         }

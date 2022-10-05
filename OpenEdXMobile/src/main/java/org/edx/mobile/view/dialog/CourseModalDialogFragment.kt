@@ -1,5 +1,6 @@
 package org.edx.mobile.view.dialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
@@ -17,29 +17,21 @@ import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
-import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.InAppPurchasesUtils
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.wrapper.InAppPurchasesDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CourseModalDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogUpgradeFeaturesBinding
-    private var screenName: String = ""
-    private var courseId: String = ""
-    private var courseSku: String? = null
-    private var isSelfPaced: Boolean = false
-    private var isPurchaseEnabled: Boolean = false
-
-    private var billingProcessor: BillingProcessor? = null
 
     private val iapViewModel: InAppPurchasesViewModel
             by viewModels(ownerProducer = { requireActivity() })
@@ -51,7 +43,12 @@ class CourseModalDialogFragment : DialogFragment() {
     lateinit var iapAnalytics: InAppPurchasesAnalytics
 
     @Inject
-    lateinit var iapUtils: InAppPurchasesUtils
+    lateinit var iapDialog: InAppPurchasesDialog
+
+    private var screenName: String = ""
+    private var courseId: String = ""
+    private var courseSku: String? = null
+    private var isSelfPaced: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,12 +73,7 @@ class CourseModalDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isPurchaseEnabled =
-            environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
         initViews()
-        if (isPurchaseEnabled) {
-            initBillingProcessor()
-        }
     }
 
     private fun initViews() {
@@ -99,9 +91,21 @@ class CourseModalDialogFragment : DialogFragment() {
             KEY_COURSE_NAME,
             arguments?.getString(KEY_COURSE_NAME)
         )
+        val isPurchaseEnabled =
+            environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
         binding.layoutUpgradeBtn.root.setVisibility(isPurchaseEnabled)
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
+        }
+        if (isPurchaseEnabled) {
+            initIAPObservers()
+            // Shimmer container taking sometime to get ready and perform the animation, so
+            // by adding the some delay fixed that issue for lower-end devices, and for the
+            // proper animation.
+            binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+                iapViewModel.initializeProductPrice(courseSku)
+            }, 1500)
+            binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
         }
     }
 
@@ -132,171 +136,85 @@ class CourseModalDialogFragment : DialogFragment() {
         )
     }
 
-    private fun initBillingProcessor() {
-        initObserver()
+    private fun initIAPObservers() {
+        iapViewModel.productPrice.observe(viewLifecycleOwner, NonNullObserver { skuDetails ->
+            setUpUpgradeButton(skuDetails)
+        })
 
-        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-            iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
-            courseSku?.let {
-                iapViewModel.addProductToBasket(it)
-            } ?: iapUtils.showUpgradeErrorDialog(this)
-        }
-        billingProcessor =
-            BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {
-                override fun onBillingSetupFinished(billingResult: BillingResult) {
-                    super.onBillingSetupFinished(billingResult)
-                    // Shimmer container taking sometime to get ready and perform the animation, so
-                    // by adding the some delay fixed that issue for lower-end devices, and for the
-                    // proper animation.
-                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        initializeProductPrice()
-                    }, 1500)
-                    binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
-                }
-
-                override fun onPurchaseCancel(responseCode: Int, message: String) {
-                    iapViewModel.endLoading()
-                    iapUtils.showUpgradeErrorDialog(
-                        context = this@CourseModalDialogFragment,
-                        errorResId = R.string.error_payment_not_processed,
-                        errorCode = responseCode,
-                        errorMessage = message,
-                        errorType = ErrorMessage.PAYMENT_SDK_CODE
-                    )
-                }
-
-                override fun onPurchaseComplete(purchase: Purchase) {
-                    onProductPurchased(purchase.purchaseToken)
-                }
-            })
-    }
-
-    private fun initializeProductPrice() {
-        iapAnalytics.initPriceTime()
-        courseSku?.let {
-            billingProcessor?.querySyncDetails(
-                productId = it
-            ) { _, skuDetails ->
-                val skuDetail = skuDetails?.get(0)
-                if (skuDetail?.sku == it) {
-                    binding.layoutUpgradeBtn.btnUpgrade.text =
-                        ResourceUtil.getFormattedString(
-                            resources,
-                            R.string.label_upgrade_course_button,
-                            AppConstants.PRICE,
-                            skuDetail.price
-                        ).toString()
-                    // The app get the sku details instantly, so add some wait to perform
-                    // animation at least one cycle.
-                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
-                        binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
-                    }, 500)
-                    iapAnalytics.setPrice(skuDetail.price)
-                    iapAnalytics.trackIAPEvent(Events.IAP_LOAD_PRICE_TIME)
-                } else {
-                    iapUtils.showUpgradeErrorDialog(
-                        context = this@CourseModalDialogFragment,
-                        errorResId = R.string.error_price_not_fetched,
-                        errorType = ErrorMessage.PRICE_CODE,
-                        listener = { _, _ ->
-                            initializeProductPrice()
-                        })
-                }
-            }
-        } ?: iapUtils.showUpgradeErrorDialog(
-            context = this@CourseModalDialogFragment,
-            errorResId = R.string.error_price_not_fetched,
-            errorType = ErrorMessage.PRICE_CODE,
-            listener = { _, _ ->
-                initializeProductPrice()
-            })
-    }
-
-    private fun initObserver() {
         iapViewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver {
             enableUpgradeButton(!it)
         })
 
-        iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
-            if (it.paymentPageUrl.isNotEmpty()) {
-                iapAnalytics.initPaymentTime()
-                purchaseProduct(iapViewModel.productId)
-            }
-        })
-
-        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
-            if (errorMsg.throwable is InAppPurchasesException) {
-                when (errorMsg.throwable.httpErrorCode) {
-                    HttpStatus.UNAUTHORIZED -> {
-                        environment.router?.forceLogout(
-                            requireContext(),
-                            environment.analyticsRegistry,
-                            environment.notificationDelegate
-                        )
-                        return@NonNullObserver
-                    }
-                    HttpStatus.NOT_ACCEPTABLE -> {
-                        iapUtils.showPostUpgradeErrorDialog(
-                            context = this@CourseModalDialogFragment,
-                            errorResId = errorMsg.errorResId,
-                            errorCode = errorMsg.throwable.httpErrorCode,
-                            errorMessage = errorMsg.throwable.errorMessage,
-                            errorType = errorMsg.errorCode,
-                            retryListener = { _, _ ->
-                                iapViewModel.upgradeMode =
-                                    InAppPurchasesViewModel.UpgradeMode.SILENT
-                                iapViewModel.showFullScreenLoader(true)
-                                dismiss()
-                            },
-                            cancelListener = null
-                        )
-                    }
-                    else -> iapUtils.showUpgradeErrorDialog(
-                        context = this@CourseModalDialogFragment,
-                        errorResId = errorMsg.errorResId,
-                        errorCode = errorMsg.throwable.httpErrorCode,
-                        errorMessage = errorMsg.throwable.errorMessage,
-                        errorType = errorMsg.errorCode
-                    )
-                }
-            } else {
-                iapUtils.showUpgradeErrorDialog(
-                    context = this@CourseModalDialogFragment,
-                    errorResId = errorMsg.errorResId,
-                    errorType = errorMsg.errorCode
-                )
-            }
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMessage ->
+            handleIAPException(errorMessage)
             iapViewModel.errorMessageShown()
         })
+
+        iapViewModel.productPurchased.observe(viewLifecycleOwner, NonNullObserver {
+            lifecycleScope.launch {
+                iapViewModel.showFullScreenLoader(true)
+                dismiss()
+            }
+        })
+    }
+
+    private fun setUpUpgradeButton(skuDetails: SkuDetails) {
+        binding.layoutUpgradeBtn.btnUpgrade.text =
+            ResourceUtil.getFormattedString(
+                resources,
+                R.string.label_upgrade_course_button,
+                AppConstants.PRICE,
+                skuDetails.price
+            ).toString()
+        // The app get the sku details instantly, so add some wait to perform
+        // animation at least one cycle.
+        binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+            binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
+            binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
+        }, 500)
+
+        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
+            environment.loginPrefs.userId?.let { userId ->
+                courseSku?.let {
+                    iapViewModel.addProductToBasket(
+                        activity = requireActivity(),
+                        userId = userId,
+                        productId = it
+                    )
+                } ?: iapDialog.showUpgradeErrorDialog(this)
+            }
+        }
+    }
+
+    private fun handleIAPException(errorMessage: ErrorMessage) {
+        var retryListener: DialogInterface.OnClickListener? = null
+        if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
+            retryListener = DialogInterface.OnClickListener { _, _ ->
+                iapViewModel.upgradeMode = InAppPurchasesViewModel.UpgradeMode.SILENT
+                iapViewModel.showFullScreenLoader(true)
+                dismiss()
+            }
+        } else if (errorMessage.canRetry()) {
+            retryListener = DialogInterface.OnClickListener { _, _ ->
+                when (errorMessage.requestType) {
+                    ErrorMessage.PRICE_CODE -> {
+                        iapViewModel.initializeProductPrice(courseSku)
+                    }
+                }
+            }
+        }
+        iapDialog.handleIAPException(
+            fragment =
+            this@CourseModalDialogFragment,
+            errorMessage = errorMessage,
+            retryListener = retryListener
+        )
     }
 
     private fun enableUpgradeButton(enable: Boolean) {
         binding.layoutUpgradeBtn.btnUpgrade.setVisibility(enable)
         binding.layoutUpgradeBtn.loadingIndicator.setVisibility(!enable)
-    }
-
-    private fun purchaseProduct(productId: String) {
-        activity?.let { context ->
-            environment.loginPrefs.userId?.let { userId ->
-                billingProcessor?.purchaseItem(context, productId, userId)
-            }
-        }
-    }
-
-    private fun onProductPurchased(purchaseToken: String) {
-        lifecycleScope.launch {
-            iapAnalytics.trackIAPEvent(eventName = Events.IAP_PAYMENT_TIME)
-            iapAnalytics.initUnlockContentTime()
-            iapViewModel.setPurchaseToken(purchaseToken)
-            iapViewModel.showFullScreenLoader(true)
-            dismiss()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        billingProcessor?.disconnect()
     }
 
     companion object {
