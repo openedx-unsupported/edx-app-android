@@ -1,0 +1,43 @@
+name: Build
+
+# The workflow will start manually
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+
+# Multiple jobs run in parallel
+jobs:
+  android_Build:
+    name: Android App Building
+    runs-on: ubuntu-20.04
+
+    steps:
+      # Checkouts the current branch for processing
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Setup the Java environment
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      # Cache and restore the Gradle dependencies on multiple runs
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      # Run android assembleProdDebuggable
+      - name: Run Build
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleProdDebuggable
+      # Uploads the folder or file in path to GitHub
+      - name: Upload Apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: DebugApp
+          path: OpenEdXMobile/build/outputs/apk/prod/debuggable
