@@ -52,4 +52,10 @@
     <string name="label_refresh_now">Refresh now</string>
     <!-- Label Continue Without Update -->
     <string name="label_continue_without_update">Continue without update</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">Checking purchases\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">Purchases have been successfully restored</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">All purchases are up to date. If you’re not seeing your purchases restored, please try restarting your app to refresh the experience.</string>
 </resources>

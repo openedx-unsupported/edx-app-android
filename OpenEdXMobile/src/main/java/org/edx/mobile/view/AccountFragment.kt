@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
@@ -28,15 +31,11 @@ import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
-import org.edx.mobile.util.AppConstants
-import org.edx.mobile.util.BrowserUtil
-import org.edx.mobile.util.Config
-import org.edx.mobile.util.FileUtil
-import org.edx.mobile.util.ResourceUtil
-import org.edx.mobile.util.UserProfileUtils
-import org.edx.mobile.view.dialog.IDialogCallback
-import org.edx.mobile.view.dialog.NetworkCheckDialogFragment
-import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment
+import org.edx.mobile.util.*
+import org.edx.mobile.view.dialog.*
+import org.edx.mobile.viewModel.CourseViewModel
+import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.wrapper.InAppPurchasesDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
@@ -59,16 +58,14 @@ class AccountFragment : BaseFragment() {
     @Inject
     lateinit var userService: UserService
 
-    private var getAccountCall: Call<Account>? = null
+    @Inject
+    lateinit var iapDialog: InAppPurchasesDialog
 
-    companion object {
-        @JvmStatic
-        fun newInstance(@Nullable bundle: Bundle?): AccountFragment {
-            val fragment = AccountFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
+    private val courseViewModel: CourseViewModel by viewModels()
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
+
+    private var getAccountCall: Call<Account>? = null
+    private var loaderDialog: AlertDialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +101,23 @@ class AccountFragment : BaseFragment() {
         updateSDCardSwitch()
         initHelpFields()
 
-        binding.containerPurchases.setVisibility(environment.appFeaturesPrefs.isIAPEnabled())
+        val iapEnabled =
+            environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
+        if (iapEnabled) {
+            initRestorePurchasesObservers()
+            binding.containerPurchases.setVisibility(true)
+            binding.btnRestorePurchases.setOnClickListener {
+                showLoader()
+                lifecycleScope.launch {
+                    courseViewModel.fetchEnrolledCourses(
+                        type = CourseViewModel.CoursesRequestType.STALE,
+                        showProgress = false
+                    )
+                }
+            }
+        } else {
+            binding.containerPurchases.setVisibility(false)
+        }
         if (!loginPrefs.username.isNullOrBlank()) {
             binding.btnSignOut.visibility = View.VISIBLE
             binding.btnSignOut.setOnClickListener {
@@ -140,10 +153,74 @@ class AccountFragment : BaseFragment() {
         )
     }
 
+    private fun initRestorePurchasesObservers() {
+        courseViewModel.enrolledCoursesResponse.observe(
+            viewLifecycleOwner,
+            NonNullObserver { enrolledCourses ->
+                environment.loginPrefs.userId?.let { userId ->
+                    iapViewModel.detectUnfulfilledPurchase(
+                        requireActivity(),
+                        userId,
+                        enrolledCourses
+                    )
+                }
+            })
+
+        courseViewModel.handleError.observe(viewLifecycleOwner, NonNullObserver {
+            dismissLoader(false)
+        })
+
+        iapViewModel.purchaseFlowComplete.observe(
+            viewLifecycleOwner,
+            NonNullObserver { isPurchaseCompleted ->
+                if (isPurchaseCompleted) {
+                    dismissLoader(true)
+                }
+            })
+
+        iapViewModel.showFullscreenLoaderDialog.observe(
+            viewLifecycleOwner,
+            NonNullObserver { canShowLoader ->
+                if (canShowLoader) {
+                    val fullscreenLoader = FullscreenLoaderDialogFragment.newInstance()
+                    fullscreenLoader.show(childFragmentManager, FullscreenLoaderDialogFragment.TAG)
+                    iapViewModel.showFullScreenLoader(false)
+                }
+            })
+
+        iapViewModel.completedUnfulfilledPurchase.observe(viewLifecycleOwner) { isCompleted ->
+            if (isCompleted) {
+                dismissLoader(false)
+                iapDialog.showNoUnFulfilledPurchasesDialog(this)
+            }
+        }
+    }
+
+    private fun showLoader() {
+        loaderDialog = AlertDialogFragment.newInstance(
+            R.string.title_checking_purchases,
+            R.layout.alert_dialog_progress
+        )
+        loaderDialog?.isCancelable = false
+        loaderDialog?.showNow(childFragmentManager, null)
+    }
+
+    private fun dismissLoader(processedUnfulfilled: Boolean) {
+        loaderDialog?.dismiss()
+        if (processedUnfulfilled) {
+            iapDialog.showNewExperienceAlertDialog(this, { _, _ ->
+                iapViewModel.showFullScreenLoader(true)
+            }, { _, _ ->
+                dismissLoader(false)
+            })
+        }
+    }
+
     private fun initVideoQuality() {
         binding.containerVideoQuality.setOnClickListener {
             val videoQualityDialog: VideoDownloadQualityDialogFragment =
-                VideoDownloadQualityDialogFragment.getInstance(environment,
+                VideoDownloadQualityDialogFragment.getInstance(
+                    environment,
                     callback = object : VideoDownloadQualityDialogFragment.IListDialogCallback {
                         override fun onItemClicked(videoQuality: VideoQuality) {
                             setVideoQualityDescription(videoQuality)
@@ -377,5 +454,14 @@ class AccountFragment : BaseFragment() {
 
     private fun trackEvent(eventName: String, biValue: String) {
         environment.analyticsRegistry.trackEvent(eventName, biValue)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(@Nullable bundle: Bundle?): AccountFragment {
+            val fragment = AccountFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }

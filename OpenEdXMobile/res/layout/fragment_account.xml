@@ -216,6 +216,14 @@
                     style="@style/profile_field_description"
                     android:text="@string/description_purchase" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_restore_purchases"
+                    style="@style/edX.Widget.ProfileActionBorderedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_view_button_height"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:text="@string/title_purchase" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edx_line"
@@ -258,7 +266,6 @@
                     android:id="@+id/btn_email_support"
                     style="@style/edX.Widget.ProfileActionBorderedButton"
                     android:layout_marginTop="@dimen/edx_half_margin"
-                    android:focusable="true"
                     android:text="@string/label_submit_feedback_btn" />
             </LinearLayout>
 
