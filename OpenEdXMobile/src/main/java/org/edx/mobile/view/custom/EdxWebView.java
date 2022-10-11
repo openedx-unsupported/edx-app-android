@@ -10,6 +10,9 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 
 public class EdxWebView extends WebView {
+    
+    private String userAgent;
+    
     @SuppressLint("SetJavaScriptEnabled")
     public EdxWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -27,5 +30,10 @@ public class EdxWebView extends WebView {
                         BuildConfig.VERSION_NAME
         );
         setLayerType(LAYER_TYPE_HARDWARE, null);
+        userAgent = settings.getUserAgentString();
+    }
+    
+    public String getUserAgent() {
+        return userAgent;
     }
 }
