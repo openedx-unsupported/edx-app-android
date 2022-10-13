@@ -118,7 +118,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun setUpUpgradeButton(isSelfPaced: Boolean) {
-        if (environment.config.isIAPEnabled) {
+        if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
             unit?.let {
                 iapAnalytics.initCourseValues(
                     courseId = it.courseId,

@@ -99,7 +99,7 @@ class AccountFragment : BaseFragment() {
         updateSDCardSwitch()
         initHelpFields()
 
-        binding.containerPurchases.setVisibility(environment.config.isIAPEnabled)
+        binding.containerPurchases.setVisibility(environment.appFeaturesPrefs.isIAPEnabled())
         if (!loginPrefs.username.isNullOrBlank()) {
             binding.btnSignOut.visibility = View.VISIBLE
             binding.btnSignOut.setOnClickListener {

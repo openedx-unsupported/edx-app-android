@@ -79,7 +79,6 @@ public class Config {
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
     private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
-    private static final String IAP_ENABLED = "IAP_ENABLED";
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
     private static final String USING_VIDEO_PIPELINE = "USING_VIDEO_PIPELINE";
     private static final String COURSE_DATES_ENABLED = "COURSE_DATES_ENABLED";
@@ -652,10 +651,6 @@ public class Config {
 
     public boolean isAppReviewsEnabled() {
         return getBoolean(APP_REVIEWS_ENABLED, false);
-    }
-
-    public boolean isIAPEnabled() {
-        return getBoolean(IAP_ENABLED, false);
     }
 
     public boolean areCertificateLinksEnabled() {

@@ -36,6 +36,7 @@ class CourseModalDialogFragment : DialogFragment() {
     private var courseId: String = ""
     private var courseSku: String? = null
     private var isSelfPaced: Boolean = false
+    private var isPurchaseEnabled: Boolean = false
 
     private var billingProcessor: BillingProcessor? = null
 
@@ -74,8 +75,10 @@ class CourseModalDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isPurchaseEnabled =
+            environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
         initViews()
-        if (environment.config.isIAPEnabled) {
+        if (isPurchaseEnabled) {
             initBillingProcessor()
         }
     }
@@ -101,7 +104,7 @@ class CourseModalDialogFragment : DialogFragment() {
             KEY_COURSE_NAME,
             arguments?.getString(KEY_COURSE_NAME)
         )
-        binding.layoutUpgradeBtn.root.setVisibility(environment.config.isIAPEnabled)
+        binding.layoutUpgradeBtn.root.setVisibility(isPurchaseEnabled)
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
