@@ -18,6 +18,7 @@ import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.inapppurchases.BillingProcessor
+import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.AppConstants
@@ -89,13 +90,7 @@ class CourseModalDialogFragment : DialogFragment() {
             courseId = bundle.getString(KEY_COURSE_ID, "")
             courseSku = bundle.getString(KEY_COURSE_SKU)
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
-            iapAnalytics.initCourseValues(
-                courseId = courseId,
-                isSelfPaced = isSelfPaced,
-                screenName = screenName
-            )
-            environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, screenName)
-            environment.analyticsRegistry.trackValuePropModalView(courseId, screenName)
+            trackEvents()
         }
 
         binding.dialogTitle.text = ResourceUtil.getFormattedString(
@@ -108,6 +103,33 @@ class CourseModalDialogFragment : DialogFragment() {
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()
         }
+    }
+
+    private fun trackEvents() {
+        iapAnalytics.initCourseValues(
+            courseId = courseId,
+            isSelfPaced = isSelfPaced,
+            screenName = screenName
+        )
+        environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, screenName)
+        environment.analyticsRegistry.trackScreenView(
+            Events.VALUE_PROP_MODAL_VIEW,
+            courseId,
+            null,
+            mapOf(Pair(KEY_SCREEN_NAME, screenName))
+        )
+        var experimentGroup: String? = null
+        if (environment.appFeaturesPrefs.isIAPExperimentEnabled()) {
+            experimentGroup =
+                if (environment.loginPrefs.isOddUserId) Analytics.Values.TREATMENT else Analytics.Values.CONTROL
+        }
+        environment.analyticsRegistry.trackValuePropMessageViewed(
+            courseId,
+            screenName,
+            (courseSku.isNullOrEmpty().not() && environment.appFeaturesPrefs.isIAPEnabled()),
+            experimentGroup,
+            null
+        )
     }
 
     private fun initBillingProcessor() {

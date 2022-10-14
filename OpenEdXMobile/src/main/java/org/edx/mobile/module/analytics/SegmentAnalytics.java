@@ -921,11 +921,21 @@ public class SegmentAnalytics implements Analytics {
     }
 
     @Override
-    public void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName) {
+    public void trackValuePropMessageViewed(@NonNull String courseId, @NonNull String screenName,
+                                            boolean paymentEnabled, @Nullable String experimentGroup,
+                                            @Nullable String componentId) {
         final SegmentEvent aEvent = new SegmentEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.VALUE_PROP_MESSAGE_VIEWED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
-        trackSegmentEvent(Events.VALUE_PROP_MODAL_VIEW, aEvent.properties);
+        aEvent.data.putValue(Keys.PAYMENT_ENABLED, paymentEnabled);
+        if (!TextUtils.isEmpty(experimentGroup)) {
+            aEvent.data.putValue(Keys.IAP_EXPERIMENT_GROUP, experimentGroup);
+        }
+        if (!TextUtils.isEmpty(componentId)) {
+            aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
+        }
+        trackSegmentEvent(Events.VALUE_PROP_MESSAGE_VIEWED, aEvent.properties);
     }
 
     @Override

@@ -642,13 +642,21 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName) {
-        final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_MODAL_VIEW);
+    public void trackValuePropMessageViewed(@NonNull String courseId, @NonNull String screenName,
+                                            boolean paymentEnabled, @Nullable String experimentGroup,
+                                            @Nullable String componentId) {
+        final FirebaseEvent event = new FirebaseEvent(Events.VALUE_PROP_MESSAGE_VIEWED, Values.VALUE_PROP_MESSAGE_VIEWED);
         event.putCourseId(courseId);
         event.putString(Keys.SCREEN_NAME, screenName);
+        event.putBoolean(Keys.PAYMENT_ENABLED, paymentEnabled);
+        if (!TextUtils.isEmpty(experimentGroup)) {
+            event.putString(Keys.IAP_EXPERIMENT_GROUP, experimentGroup);
+        }
+        if (!TextUtils.isEmpty(componentId)) {
+            event.putString(Keys.COMPONENT_ID, componentId);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
-
 
     @Override
     public void trackValuePropLearnMoreTapped(@NonNull String courseId, @NonNull String screenName) {
