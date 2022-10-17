@@ -452,9 +452,11 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName) {
+    public void trackValuePropMessageViewed(@NonNull String courseId, @NonNull String screenName,
+                                            boolean paymentEnabled, @Nullable String experimentGroup,
+                                            @Nullable String componentId) {
         for (Analytics service : services) {
-            service.trackValuePropModalView(courseId, screenName);
+            service.trackValuePropMessageViewed(courseId, screenName, paymentEnabled, experimentGroup, componentId);
         }
     }
 

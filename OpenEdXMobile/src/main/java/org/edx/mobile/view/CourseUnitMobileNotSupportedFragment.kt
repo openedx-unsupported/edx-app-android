@@ -21,6 +21,7 @@ import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
+import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.Analytics.Screens
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
@@ -75,6 +76,20 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         binding.containerLayoutNotAvailable.setVisibility(false)
         binding.llGradedContentLayout.setVisibility(true)
         setUpUpgradeButton(isSelfPaced)
+        unit?.let {
+            var experimentGroup: String? = null
+            if (environment.appFeaturesPrefs.isIAPExperimentEnabled()) {
+                experimentGroup =
+                    if (environment.loginPrefs.isOddUserId) Analytics.Values.TREATMENT else Analytics.Values.CONTROL
+            }
+            environment.analyticsRegistry.trackValuePropMessageViewed(
+                it.courseId,
+                Screens.COURSE_UNIT,
+                (it.courseSku.isNullOrEmpty().not() && environment.appFeaturesPrefs.isIAPEnabled()),
+                experimentGroup,
+                it.id
+            )
+        }
 
         binding.toggleShow.setOnClickListener {
             val showMore = binding.layoutUpgradeFeature.containerLayout.isNotVisible()

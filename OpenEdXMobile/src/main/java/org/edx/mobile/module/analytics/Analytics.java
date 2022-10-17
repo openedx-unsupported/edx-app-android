@@ -450,12 +450,18 @@ public interface Analytics {
                                   @NonNull String screenName, boolean isSuccess);
 
     /**
-     * Track the Value Prop Modal appearance
+     * Track the Value Prop Message Viewed
      *
-     * @param courseId   course id of the course through which the modal is appeared
-     * @param screenName The screen name through which Modal will appear
+     * @param courseId        course id of the course through which the modal is appeared
+     * @param screenName      The screen name through which Modal will appear
+     * @param paymentEnabled  Whether the {@link org.edx.mobile.model.api.IAPConfig.isEnabled} &&
+     *                        Course has SKU
+     * @param experimentGroup Experiment group based on user id
+     * @param componentId     Component id of course unit
      */
-    void trackValuePropModalView(@NonNull String courseId, @NonNull String screenName);
+    void trackValuePropMessageViewed(@NonNull String courseId, @NonNull String screenName,
+                                     boolean paymentEnabled, @Nullable String experimentGroup,
+                                     @Nullable String componentId);
 
     /**
      * Track the Value Prop Learn more button tapped
@@ -676,6 +682,8 @@ public interface Analytics {
         String BANNER_TYPE = "banner_type";
         String SUCCESS = "success";
         String PRICE = "price";
+        String PAYMENT_ENABLED = "payment_enabled";
+        String IAP_EXPERIMENT_GROUP = "iap_experiment_group";
 
         String CELL_CARRIER = "cell_carrier";
         String CELL_ZERO_RATED = "cell_zero_rated";
@@ -762,6 +770,7 @@ public interface Analytics {
         String USER_COURSE_ENROLL_SUCCESS = "edx.bi.app.course.enroll.success";
         String USER_COURSE_UPGRADE_SUCCESS = "edx.bi.app.course.upgrade.success";
         String VALUE_PROP_LEARN_MORE_CLICKED = "edx.bi.app.value.prop.learn.more.clicked";
+        String VALUE_PROP_MESSAGE_VIEWED = "edx.bi.app.value_prop_message.viewed";
         String LOCKED_CONTENT_CLICKED = "edx.bi.app.course.unit.locked.content.clicked";
         String VALUE_PROP_SHOW_MORE_CLICKED = "edx.bi.app.value_prop.show_more.clicked";
         String VALUE_PROP_SHOW_LESS_CLICKED = "edx.bi.app.value_prop.show_less.clicked";
@@ -901,6 +910,9 @@ public interface Analytics {
         String ACTION_REFRESH = "refresh";
         String ACTION_GET_HELP = "get_help";
         String ACTION_CLOSE = "close";
+        String ACTION_ACCEPT = "accept";
+        String TREATMENT = "treatment";
+        String CONTROL = "control";
         String ACTION_CONFIRM = "confirm";
         String ACTION_REJECT = "reject";
         String IAP_UPGRADE_NOW_CLICKED = "edx.bi.app.payments.upgrade_now.clicked";
@@ -1052,6 +1064,7 @@ public interface Analytics {
 
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";
+        String VALUE_PROP_MESSAGE_VIEWED = "Value Prop Message Viewed";
         String COURSE_UNIT_LOCKED_CONTENT = "Value Prop Locked Content Clicked";
         String VALUE_PROP_SHOW_MORE_CLICKED = "Value Prop Show More Clicked";
         String VALUE_PROP_SHOW_LESS_CLICKED = "Value Prop Show Less Clicked";

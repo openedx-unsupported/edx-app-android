@@ -153,7 +153,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
         courseViewModel.enrolledCoursesResponse.observe(viewLifecycleOwner, NonNullObserver {
             populateCourseData(data = it)
-            if (environment.config.isIAPEnabled) {
+            if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
                 initInAppPurchaseSetup()
                 resetPurchase()
                 if (incompletePurchases.isEmpty()) {

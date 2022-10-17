@@ -25,6 +25,8 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
 
     fun isIAPEnabled() = getIAPConfig().isEnabled
 
+    fun isIAPExperimentEnabled() = isIAPEnabled() && getIAPConfig().isExperimentEnabled
+
     /**
      * Method to check if the IAP is enabled for treatment/control group
      * Any user with odd user Id falls under treatment group and
@@ -34,7 +36,7 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
      */
     fun isIAPEnabled(isOddUserId: Boolean): Boolean {
         if (isIAPEnabled()) {
-            if (getIAPConfig().isExperimentEnabled) {
+            if (isIAPExperimentEnabled()) {
                 return isOddUserId
             }
             return true
