@@ -55,13 +55,6 @@ public interface IStorage {
      */
     int deleteAllUnenrolledVideos();
 
-
-    /**
-     * Returns Download Progress percent of all the Videos
-     * which are currently being downloaded
-     */
-    void getAverageDownloadProgress(DataCallback<Integer> callback);
-
     /**
      * If the courseId is provided returns the download progress percent of all the Videos
      * within a course which are currently being downloaded. Otherwise, returns the download

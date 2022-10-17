@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:background="@color/primaryLightColor">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/collapsed_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/collapsed_toolbar_height"
+                android:background="@color/primaryLightColor"
+                app:layout_collapseMode="pin"
+                tools:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/widget_margin"
+                    android:paddingBottom="@dimen/widget_margin">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/collapsed_toolbar_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/edx_half_margin"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:fontFamily="?attr/fontSemiBold"
+                        android:maxLines="1"
+                        android:textAppearance="@style/CourseDashboardCollapsedToolbarTitle"
+                        tools:text="The Science of Happiness " />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/collapsed_toolbar_dismiss"
+                        android:layout_width="@dimen/widget_margin_double"
+                        android:layout_height="@dimen/widget_margin_double"
+                        android:layout_marginEnd="@dimen/edx_half_margin"
+                        app:srcCompat="@drawable/ic_close"
+                        app:tint="@color/neutralWhiteT" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <LinearLayout
+                android:id="@+id/expanded_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/edx_default_margin"
+                android:paddingTop="@dimen/edx_half_margin"
+                android:paddingEnd="@dimen/edx_default_margin"
+                android:paddingBottom="@dimen/edx_default_margin"
+                app:layout_collapseMode="parallax">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/expanded_toolbar_dismiss"
+                    android:layout_width="@dimen/widget_margin_double"
+                    android:layout_height="@dimen/widget_margin_double"
+                    android:layout_gravity="end"
+                    android:paddingEnd="@dimen/expanded_toolbar_margin_end"
+                    app:srcCompat="@drawable/ic_close"
+                    app:tint="@color/neutralWhiteT"
+                    tools:ignore="RtlSymmetry" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/course_organization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/expanded_toolbar_margin_top"
+                    android:fontFamily="@font/inter_semi_bold"
+                    android:textColor="@color/warningLight"
+                    android:textDirection="locale"
+                    android:textSize="@dimen/edx_x_small"
+                    app:lineHeight="@dimen/widget_margin_double"
+                    tools:text="BerkeleyX" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/course_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/edx_quarter_margin"
+                    android:fontFamily="?attr/fontSemiBold"
+                    android:textAppearance="@style/CourseDashboardExpandedToolbarTitle"
+                    android:textDirection="locale"
+                    tools:text="The Science of Happiness" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/course_expiry_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/edx_quarter_margin"
+                    android:textColor="@color/neutralXLight"
+                    android:textDirection="locale"
+                    android:textSize="@dimen/edx_xx_small"
+                    android:visibility="gone"
+                    app:lineHeight="@dimen/edx_default_margin"
+                    tools:text="Access expires 1/1/2022"
+                    tools:visibility="visible" />
+
+                <include
+                    android:id="@+id/layout_upgrade_btn"
+                    layout="@layout/layout_upgrade_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/edx_default_margin"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+</layout>
