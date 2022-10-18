@@ -323,4 +323,8 @@
     <dimen name="fullscreen_margin_top">36dp</dimen>
     <dimen name="fullscreen_message_line_height">36dp</dimen>
 
+    <!-- Learn Screen -->
+    <dimen name="learn_selection_width">60dp</dimen>
+    <dimen name="learn_drop_down_icon_margin">14dp</dimen>
+
 </resources>

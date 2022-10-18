@@ -87,7 +87,7 @@
   <!--Title of user's course list screen-->
   <string name="label_my_courses">Dersler</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs">Programlar</string>
+  <string name="label_programs">Programlar</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Dersleri Bul</string>
   <!--Title of Find Courses tab on Main Dashboard screen-->

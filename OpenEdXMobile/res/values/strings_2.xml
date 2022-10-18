@@ -11,4 +11,12 @@
     <!-- Message for already registered social user attempting to register again -->
     <string name="social_registration_became_login_message">You already set up an {platform_name} account with your
         {social_provider} account. You have been logged in with that account.</string>
+
+    <!-- Main dashboard screen-->
+    <!-- Title of Learn tab on main dashboard screen -->
+    <string name="label_learn">Learn</string>
+    <!-- Title of user's course list screen -->
+    <string name="label_my_courses">My Courses</string>
+    <!-- Title of user's programs list screen -->
+    <string name="label_my_programs">My Programs</string>
 </resources>
