@@ -79,7 +79,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
         switch (helper.authority) {
             case ENROLLED_PROGRAM_INFO: {
                 environment.getRouter().showProgramWebViewActivity(activity, environment,
-                        helper.params.get(WebViewLink.Param.PATH_ID), activity.getString(R.string.label_my_programs));
+                        helper.params.get(WebViewLink.Param.PATH_ID), activity.getString(R.string.label_programs));
                 break;
             }
             case ENROLLED_COURSE_INFO: {

@@ -190,17 +190,6 @@ public abstract class TabsBaseFragment extends BaseFragment {
         if (fragmentItems.size() - 1 > 1) {
             binding.viewPager2.setOffscreenPageLimit(fragmentItems.size() - 1);
         }
-        /*
-         ViewPager doesn't call the onPageSelected for its first item, so we have to explicitly
-         call it ourselves.
-         Inspiration for this solution: https://stackoverflow.com/a/16074152/1402616
-         */
-        binding.viewPager2.post(new Runnable() {
-            @Override
-            public void run() {
-                pageChangeListener.onPageSelected(binding.viewPager2.getCurrentItem());
-            }
-        });
     }
 
     protected void createTab(@NonNull TabLayout.Tab tab, @NonNull FragmentItemModel fragmentItem) {
