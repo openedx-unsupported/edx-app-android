@@ -13,6 +13,6 @@ public class RegisterFeatureTest extends FeatureTest {
                 .navigateToRegistrationScreen()
                 .observeRegistrationScreen()
                 .createAccount(Credentials.freshCredentials(environment.getConfig()))
-                .observeMyCoursesScreen();
+                .observeLearnScreen();
     }
 }

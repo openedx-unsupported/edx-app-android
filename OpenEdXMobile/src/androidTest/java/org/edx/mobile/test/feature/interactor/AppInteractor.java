@@ -26,8 +26,8 @@ public class AppInteractor {
         }
 
         // Authenticated users should land here
-        public MyCoursesScreenInteractor observeMyCoursesScreen() {
-            return new MyCoursesScreenInteractor().observeMyCoursesScreen();
+        public LearnScreenInteractor observeLearnScreen() {
+            return new LearnScreenInteractor().observeLearnScreen();
         }
 
         // Users with bad auth tokens should land here

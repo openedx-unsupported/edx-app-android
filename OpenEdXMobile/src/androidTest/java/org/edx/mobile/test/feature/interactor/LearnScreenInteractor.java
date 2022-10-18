@@ -9,10 +9,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.edx.mobile.test.feature.matcher.ActionBarMatcher.isInActionBar;
 import static org.hamcrest.CoreMatchers.allOf;
 
-public class MyCoursesScreenInteractor {
-    public MyCoursesScreenInteractor observeMyCoursesScreen() {
-        // Look for "My Courses" title which (we assume) is only present on the landing screen
-        onView(allOf(isInActionBar(), withText(R.string.label_my_courses))).check(matches(isCompletelyDisplayed()));
+public class LearnScreenInteractor {
+    public LearnScreenInteractor observeLearnScreen() {
+        // Look for "Learn" title which (we assume) is only present on the landing screen
+        onView(allOf(isInActionBar(), withText(R.string.label_learn))).check(matches(isCompletelyDisplayed()));
         return this;
     }
 

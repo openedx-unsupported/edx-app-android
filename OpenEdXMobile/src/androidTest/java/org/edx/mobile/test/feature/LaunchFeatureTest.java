@@ -23,7 +23,7 @@ public class LaunchFeatureTest extends FeatureTest {
         loginAPI.logInUsingEmail(TestValues.ACTIVE_USER_CREDENTIALS.email, TestValues.ACTIVE_USER_CREDENTIALS.password);
         new AppInteractor()
                 .launchApp()
-                .observeMyCoursesScreen();
+                .observeLearnScreen();
     }
 
     @Test
