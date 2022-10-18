@@ -33,11 +33,11 @@ public class LogInScreenInteractor {
         return this;
     }
 
-    public MyCoursesScreenInteractor logIn(Credentials credentials) {
+    public LearnScreenInteractor logIn(Credentials credentials) {
         onUsernameView().perform(replaceText(credentials.email));
         onPasswordView().perform(replaceText(credentials.password));
         onLogInButton().perform(click());
-        return new MyCoursesScreenInteractor();
+        return new LearnScreenInteractor();
     }
 
     public LandingScreenInteractor navigateBack() {
