@@ -36,13 +36,13 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     public void onResume() {
         assert getView() != null;
         if (loginPrefs.isUserLoggedIn()) {
-            getView().navigateToMyCourses();
+            getView().navigateToMainDashboard();
         }
     }
 
     public interface ViewInterface {
         void setEnabledButtons(boolean courseDiscoveryEnabled, boolean programDiscoveryEnabled);
 
-        void navigateToMyCourses();
+        void navigateToMainDashboard();
     }
 }
