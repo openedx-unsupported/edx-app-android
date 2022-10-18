@@ -73,7 +73,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
             }
 
             @Override
-            public void navigateToMyCourses() {
+            public void navigateToMainDashboard() {
                 finish();
                 environment.getRouter().showMainDashboard(DiscoveryLaunchActivity.this);
             }

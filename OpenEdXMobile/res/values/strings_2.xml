@@ -8,4 +8,12 @@
     <string name="label_leaving_the_app">Leaving the app</string>
     <!-- Dialog Alert Message for Open in browser -->
     <string name="leaving_the_app_message">You are now leaving the {platform_name} app and opening a browser.</string>
+
+    <!-- Main dashboard screen-->
+    <!-- Title of Learn tab on main dashboard screen -->
+    <string name="label_learn">Learn</string>
+    <!-- Title of user's course list screen -->
+    <string name="label_my_courses">My Courses</string>
+    <!-- Title of user's programs list screen -->
+    <string name="label_my_programs">My Programs</string>
 </resources>

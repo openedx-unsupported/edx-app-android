@@ -99,10 +99,8 @@
     <!-- Navigation Drawer Labels -->
     <!-- Button text to show user current downloads screen -->
     <string name="label_current_downloads">View current downloads</string>
-    <!-- Title of user's course list screen -->
-    <string name="label_my_courses">Courses</string>
     <!-- Title of user's program list screen -->
-    <string name="label_my_programs">Programs</string>
+    <string name="label_programs">Programs</string>
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
