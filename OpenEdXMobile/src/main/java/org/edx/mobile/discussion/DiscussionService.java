@@ -18,6 +18,7 @@ package org.edx.mobile.discussion;
 
 import static org.edx.mobile.http.constants.ApiConstants.PARAM_PAGE_SIZE;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -165,6 +166,7 @@ public interface DiscussionService {
     @POST("/api/discussion/v1/comments/")
     Call<DiscussionComment> createComment(@Body CommentBody commentBody);
 
+    @Keep
     final class FlagBody {
         @SerializedName("abuse_flagged")
         private boolean abuseFlagged;
@@ -174,6 +176,7 @@ public interface DiscussionService {
         }
     }
 
+    @Keep
     final class VoteBody {
         @SerializedName("voted")
         private boolean voted;
@@ -183,6 +186,7 @@ public interface DiscussionService {
         }
     }
 
+    @Keep
     final class FollowBody {
         @SerializedName("following")
         private boolean following;
@@ -192,6 +196,7 @@ public interface DiscussionService {
         }
     }
 
+    @Keep
     final class ReadBody {
         @SerializedName("read")
         private boolean read;
