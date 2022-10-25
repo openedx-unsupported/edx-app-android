@@ -2,6 +2,7 @@ package org.edx.mobile.course;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -157,6 +158,7 @@ public interface CourseService {
     @POST("/api/courseware/celebration/{course_id}")
     Call<Void> updateCoursewareCelebration(@Path("course_id") final String courseId, @Body HashMap<String, Boolean> courseBody);
 
+    @Keep
     final class BlocksCompletionBody {
 
         @NonNull
@@ -179,6 +181,7 @@ public interface CourseService {
         }
     }
 
+    @Keep
     final class EnrollBody {
         @NonNull
         @SerializedName("course_details")
@@ -188,6 +191,7 @@ public interface CourseService {
             courseDetails = new CourseDetails(courseId, emailOptIn);
         }
 
+        @Keep
         private static class CourseDetails {
             @NonNull
             @SerializedName("course_id")
