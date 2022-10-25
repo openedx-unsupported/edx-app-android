@@ -28,7 +28,7 @@ public class DiscussionTopicsAdapter extends BaseListAdapter<DiscussionTopicDept
     @Override
     public void render(BaseViewHolder tag, DiscussionTopicDepth discussionTopic) {
         ViewHolder holder = (ViewHolder) tag;
-        holder.discussionTopicNameTextView.setText(discussionTopic.getDiscussionTopic().getName());
+        holder.discussionTopicNameTextView.setText(discussionTopic.getDiscussionTopic().getTopicTitle(getContext().getResources()));
         ViewCompat.setPaddingRelative(holder.discussionTopicNameTextView, childPadding * (1 + discussionTopic.getDepth()), childPadding, childPadding, childPadding);
     }
 
