@@ -124,7 +124,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             // Either we are coming from a deep link or courseware's inline discussion
             fetchDiscussionTopic();
         } else {
-            requireActivity().setTitle(discussionTopic.getName());
+            requireActivity().setTitle(discussionTopic.getTopicTitle(getResources()));
             trackScreenView();
         }
 
@@ -205,7 +205,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                         discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
                         if (!requireArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
                             // We only need to set the title here when coming from a deep link
-                            activity.setTitle(discussionTopic.getName());
+                            activity.setTitle(discussionTopic.getTopicTitle(getResources()));
                         }
 
                         if (getView() != null) {

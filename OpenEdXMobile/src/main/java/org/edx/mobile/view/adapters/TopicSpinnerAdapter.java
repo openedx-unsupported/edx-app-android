@@ -1,14 +1,15 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.discussion.DiscussionTopic;
@@ -39,7 +40,7 @@ public class TopicSpinnerAdapter extends ArrayAdapter<DiscussionTopicDepth> {
         final DiscussionTopicDepth topic = getItem(position);
         view.setText(ResourceUtil.getFormattedString(getContext().getResources(),
                 R.string.discussion_add_post_topic_selection, "topic",
-                topic.getDiscussionTopic().getName()));
+                topic.getDiscussionTopic().getTopicTitle(getContext().getResources())));
         return view;
     }
 
@@ -55,7 +56,7 @@ public class TopicSpinnerAdapter extends ArrayAdapter<DiscussionTopicDepth> {
         final int extraLeftPadding = topic.getDepth() * extraPaddingPerLevel;
         ViewCompat.setPaddingRelative(view, basePadding + extraLeftPadding, view.getPaddingTop(),
                 basePadding, view.getPaddingBottom());
-        view.setText(topic.getDiscussionTopic().getName());
+        view.setText(topic.getDiscussionTopic().getTopicTitle(getContext().getResources()));
         view.setEnabled(isEnabled(position));
         return view;
     }
