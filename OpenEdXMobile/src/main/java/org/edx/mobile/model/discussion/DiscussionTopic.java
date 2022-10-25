@@ -16,10 +16,15 @@
 
 package org.edx.mobile.model.discussion;
 
+import android.content.res.Resources;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+
+import org.edx.mobile.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,6 +63,10 @@ public class DiscussionTopic implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTopicTitle(Resources resources) {
+        return TextUtils.isEmpty(name) ? resources.getString(R.string.untitled_block) : name;
     }
 
     public String getThreadListUrl() {
