@@ -31,8 +31,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // speed-test is moved behind a flag in the configuration
         if (environment.getConfig().isSpeedTestEnabled()) {
-            ConnectivityManager cm =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             boolean isConnected = activeNetwork != null && activeNetwork.isAvailable();
@@ -51,6 +51,5 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
         NetworkConnectivityChangeEvent event = new NetworkConnectivityChangeEvent();
         EventBus.getDefault().postSticky(event);
-
     }
 }

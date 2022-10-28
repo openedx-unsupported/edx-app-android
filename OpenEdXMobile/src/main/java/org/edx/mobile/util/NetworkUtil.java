@@ -20,8 +20,8 @@ public class NetworkUtil {
      * @return
      */
     public static boolean isConnected(Context context) {
-        ConnectivityManager conMan = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager conMan = (ConnectivityManager) context.getApplicationContext().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo infoWifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (infoWifi != null) {
@@ -69,7 +69,8 @@ public class NetworkUtil {
      */
     @Nullable
     public static NetworkInfo getNetworkInfo(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo();
     }
 
