@@ -299,7 +299,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void initInAppPurchaseSetup() {
-        if (courseData.getMode().equalsIgnoreCase(EnrollmentMode.AUDIT.toString()) && !isVideoMode) {
+        if (courseData.isAuditMode() && !isVideoMode) {
             initFullscreenLoader();
             initInAppPurchaseObserver();
         }

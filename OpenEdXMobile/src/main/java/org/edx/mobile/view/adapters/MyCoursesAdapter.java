@@ -15,15 +15,10 @@ import org.edx.mobile.util.images.CourseCardUtils;
 
 public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
     private long lastClickTime;
-    private boolean isValuePropEnabled = false;
 
     public MyCoursesAdapter(Context context, IEdxEnvironment environment) {
         super(context, CourseCardViewHolder.LAYOUT, environment);
         lastClickTime = 0;
-    }
-
-    public void setValuePropEnabled(boolean isEnabled) {
-        isValuePropEnabled = isEnabled;
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -34,7 +29,8 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
         final CourseEntry courseData = enrollment.getCourse();
         holder.setCourseTitle(courseData.getName());
         holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
-        holder.setHasUpgradeOption(courseData.isEnded(), enrollment.getMode(), isValuePropEnabled,
+        holder.setHasUpgradeOption(courseData.isEnded(), enrollment.isAuditMode(),
+                environment.getAppFeaturesPrefs().isValuePropEnabled(),
                 v -> onValuePropClicked(enrollment));
 
         if (enrollment.getCourse().hasUpdates()) {
