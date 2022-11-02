@@ -137,11 +137,9 @@ class CourseModalDialogFragment : DialogFragment() {
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
-            iapUtils.showSDNDialog(this) { _, _ ->
-                courseSku?.let {
-                    iapViewModel.addProductToBasket(it)
-                } ?: iapUtils.showUpgradeErrorDialog(this)
-            }
+            courseSku?.let {
+                iapViewModel.addProductToBasket(it)
+            } ?: iapUtils.showUpgradeErrorDialog(this)
         }
         billingProcessor =
             BillingProcessor(requireContext(), object : BillingProcessor.BillingFlowListeners {

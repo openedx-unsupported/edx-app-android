@@ -111,11 +111,6 @@ class InAppPurchasesAnalytics @Inject constructor(
                 this.actionTaken = actionTaken
                 trackEvent(eventName, Analytics.Values.IAP_ERROR_ALERT_ACTION)
             }
-            Analytics.Events.IAP_SDN_PROMPT_ACTION -> {
-                this.actionTaken = actionTaken
-                trackEvent(eventName, Analytics.Values.IAP_SDN_PROMPT_ACTION)
-                upgradeCourseTime = getCurrentTime()
-            }
         }
         resetEventValues()
     }

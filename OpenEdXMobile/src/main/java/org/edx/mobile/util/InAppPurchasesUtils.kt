@@ -193,32 +193,4 @@ class InAppPurchasesUtils @Inject constructor(
             actionTaken = Values.ACTION_GET_HELP
         )
     }
-
-    fun showSDNDialog(fragment: Fragment, onPositiveClick: DialogInterface.OnClickListener) {
-        AlertDialogFragment.newInstance(
-            fragment.getString(R.string.sdn_dialog_title),
-            ResourceUtil.getFormattedString(
-                fragment.resources,
-                R.string.sdn_dialog_message,
-                AppConstants.PLATFORM_NAME,
-                environment.config.platformName
-            ).toString(),
-            fragment.getString(R.string.label_reject),
-            { _, _ ->
-                iapAnalytics.trackIAPEvent(
-                    eventName = Events.IAP_SDN_PROMPT_ACTION,
-                    actionTaken = Values.ACTION_REJECT
-                )
-            },
-            fragment.getString(R.string.label_confirm),
-            { dialog, which ->
-                onPositiveClick.onClick(dialog, which)
-                iapAnalytics.trackIAPEvent(
-                    eventName = Events.IAP_SDN_PROMPT_ACTION,
-                    actionTaken = Values.ACTION_CONFIRM
-                )
-            },
-            false
-        ).show(fragment.childFragmentManager, null)
-    }
 }
