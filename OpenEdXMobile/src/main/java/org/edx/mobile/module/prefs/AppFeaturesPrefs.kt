@@ -18,6 +18,8 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
     }
 
     private fun getAppConfig(): AppConfig {
-        return Gson().fromJson(pref.getString(PrefManager.Key.APP_CONFIG), AppConfig::class.java)
+        return pref.getString(PrefManager.Key.APP_CONFIG)?.let {
+            Gson().fromJson(it, AppConfig::class.java)
+        } ?: AppConfig()
     }
 }
