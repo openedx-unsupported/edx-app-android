@@ -633,7 +633,6 @@ public interface Analytics {
                                   long elapsedTime, @Nullable String error,
                                   @Nullable String actionTaken, @NonNull String screenName);
 
-
     interface Keys {
         String NAME = "name";
         String USER_ID = "user_id";
@@ -910,11 +909,8 @@ public interface Analytics {
         String ACTION_REFRESH = "refresh";
         String ACTION_GET_HELP = "get_help";
         String ACTION_CLOSE = "close";
-        String ACTION_ACCEPT = "accept";
         String TREATMENT = "treatment";
         String CONTROL = "control";
-        String ACTION_CONFIRM = "confirm";
-        String ACTION_REJECT = "reject";
         String IAP_UPGRADE_NOW_CLICKED = "edx.bi.app.payments.upgrade_now.clicked";
         String IAP_COURSE_UPGRADE_SUCCESS = "edx.bi.app.payments.course_upgrade_success";
         String IAP_UNLOCK_UPGRADED_CONTENT_TIME = "edx.bi.app.payments.time_to_unlock_upgraded_content";
@@ -925,7 +921,6 @@ public interface Analytics {
         String IAP_COURSE_UPGRADE_ERROR = "edx.bi.app.payments.course_upgrade_error";
         String IAP_PRICE_LOAD_ERROR = "edx.bi.app.payments.price_load_error";
         String IAP_ERROR_ALERT_ACTION = "edx.bi.app.payments.error_alert_action";
-        String IAP_SDN_PROMPT_ACTION = "edx.bi.app.payments.sdn_prompt_action";
     }
 
     interface Screens {
@@ -1060,7 +1055,6 @@ public interface Analytics {
         String IAP_COURSE_UPGRADE_ERROR = "Payments: Course Upgrade Error";
         String IAP_PRICE_LOAD_ERROR = "Payments: Price Load Error";
         String IAP_ERROR_ALERT_ACTION = "Payments: Error Alert Action";
-        String IAP_SDN_PROMPT_ACTION = "Payments: SDN Prompt Action";
 
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";

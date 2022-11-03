@@ -1140,11 +1140,7 @@ public class SegmentAnalytics implements Analytics {
             aEvent.data.putValue(Keys.ERROR, error);
         }
         if (!TextUtils.isEmpty(actionTaken)) {
-            if (Analytics.Values.IAP_SDN_PROMPT_ACTION.equals(biValue)) {
-                aEvent.data.putValue(Keys.ACTION, actionTaken);
-            } else {
-                aEvent.data.putValue(Keys.ERROR_ACTION, actionTaken);
-            }
+            aEvent.data.putValue(Keys.ERROR_ACTION, actionTaken);
         }
         aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
         trackSegmentEvent(eventName, aEvent.properties);

@@ -848,12 +848,7 @@ public class FirebaseAnalytics implements Analytics {
             event.putString(Keys.ERROR, error);
         }
         if (!TextUtils.isEmpty(actionTaken)) {
-            if (Analytics.Values.IAP_SDN_PROMPT_ACTION.equalsIgnoreCase(eventName)) {
-                event.putString(Keys.ACTION, actionTaken);
-            } else {
-                event.putString(Keys.ERROR_ACTION, actionTaken);
-
-            }
+            event.putString(Keys.ERROR_ACTION, actionTaken);
         }
         event.putString(Keys.SCREEN_NAME, screenName);
         logFirebaseEvent(event.getName(), event.getBundle());
