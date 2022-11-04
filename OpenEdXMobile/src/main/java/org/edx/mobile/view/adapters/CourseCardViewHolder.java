@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.CourseEntry;
-import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
@@ -71,11 +70,11 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
 
     public void setHasUpgradeOption(
             boolean isCourseEnded,
-            String mode,
+            boolean isAuditMode,
             boolean isValuePropEnabled,
             View.OnClickListener onValuePropClick
     ) {
-        if (isValuePropEnabled && !isCourseEnded && EnrollmentMode.AUDIT.toString().equalsIgnoreCase(mode)) {
+        if (!isCourseEnded && isAuditMode && isValuePropEnabled) {
             propContainer.setVisibility(View.VISIBLE);
             propContainer.setOnClickListener(onValuePropClick);
         } else {

@@ -32,7 +32,6 @@ import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.DiscussionBlockModel;
-import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -366,8 +365,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
 
         if (isDenialFeatureBasedEnrolments) {
-            if (environment.getAppFeaturesPrefs().isValuePropEnabled() &&
-                    EnrollmentMode.AUDIT.toString().equalsIgnoreCase(courseData.getMode())) {
+            if (environment.getAppFeaturesPrefs().isValuePropEnabled() && courseData.isAuditMode()) {
                 viewHolder.rowSubtitle.setText(org.edx.mobile.util.TextUtils.underline(
                         context,
                         R.string.course_modal_unlock_graded_assignment
@@ -632,19 +630,21 @@ public class CourseOutlineAdapter extends BaseAdapter {
         final View upgradeBtn = view.findViewById(R.id.layout_upgrade_btn);
         final MaterialButton upgradeBtnText = upgradeBtn.findViewById(R.id.btn_upgrade);
 
-        ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
-        upgradeBtn.setVisibility(courseData.getMode().equalsIgnoreCase(EnrollmentMode.AUDIT
-                .toString()) ? View.VISIBLE : View.GONE);
-
-        upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
-                        Analytics.Screens.PLS_COURSE_DASHBOARD,
-                        courseData.getCourseId(),
-                        courseData.getCourseSku(),
-                        courseData.getCourse().getName(),
-                        courseData.getCourse().isSelfPaced())
-                .show(((AppCompatActivity) context).getSupportFragmentManager(),
-                        CourseModalDialogFragment.TAG));
-        upgradeBtnText.setText(R.string.value_prop_course_card_message);
+        if (courseData.isAuditMode() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
+            upgradeBtn.setVisibility(View.VISIBLE);
+            ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
+            upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
+                            Analytics.Screens.PLS_COURSE_DASHBOARD,
+                            courseData.getCourseId(),
+                            courseData.getCourseSku(),
+                            courseData.getCourse().getName(),
+                            courseData.getCourse().isSelfPaced())
+                    .show(((AppCompatActivity) context).getSupportFragmentManager(),
+                            CourseModalDialogFragment.TAG));
+            upgradeBtnText.setText(R.string.value_prop_course_card_message);
+        } else {
+            upgradeBtn.setVisibility(View.GONE);
+        }
 
         // Full course name should appear on the course's dashboard screen.
         courseTextName.setEllipsize(null);

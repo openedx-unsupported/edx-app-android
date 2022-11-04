@@ -41,6 +41,9 @@ data class EnrolledCoursesResponse(
             EnrollmentMode.VERIFIED.name.equals(item.slug, ignoreCase = true)
         }?.androidSku.takeUnless { it.isNullOrEmpty() }
 
+    val isAuditMode: Boolean
+        get() = EnrollmentMode.AUDIT.toString().equals(mode, ignoreCase = true)
+
     override fun isChapter(): Boolean {
         return false
     }

@@ -399,7 +399,6 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     ) {
         if (data.isNotEmpty()) {
             adapter.setItems(data)
-            adapter.setValuePropEnabled(environment.appFeaturesPrefs.isValuePropEnabled())
         }
 
         addFindCoursesFooter()
