@@ -209,15 +209,9 @@
     <dimen name="notification_settings_margin">12dp</dimen>
     <dimen name="fullscreen_message_max_width">240dp</dimen>
 
-    <!-- Horizontal Progress -->
-    <dimen name="progress_bar_height">3dp</dimen>
-    <dimen name="progress_bar_width">5dp</dimen>
-    <dimen name="progress_bar_length">70dp</dimen>
-    <dimen name="progress_bar_rim_width">4dp</dimen>
-
     <!-- Bulk Download View -->
     <dimen name="download_view_min_height">56dp</dimen>
-    <dimen name="bulk_download_progress_height">@dimen/progress_bar_height</dimen>
+    <dimen name="bulk_download_progress_height">3dp</dimen>
     <dimen name="bulk_download_description_top_margin">4dp</dimen>
     <dimen name="download_background_size">30dp</dimen>
 
@@ -327,4 +321,8 @@
     <dimen name="learn_selection_width">60dp</dimen>
     <dimen name="learn_drop_down_icon_margin">14dp</dimen>
 
+    <!-- Course Dashboard Toolbar -->
+    <dimen name="collapsed_toolbar_height">40dp</dimen>
+    <dimen name="expanded_toolbar_margin_top">-6dp</dimen>
+    <dimen name="expanded_toolbar_margin_end">-8dp</dimen>
 </resources>

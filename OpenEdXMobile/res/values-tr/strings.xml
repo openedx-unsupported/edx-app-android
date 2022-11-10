@@ -28,8 +28,6 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Web sayfası gösterilemiyor.</string>
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">Dersinizi paylaşın</string>
   <!--Share course-->
   <string name="share_course_message">{platform_name} üzerinde ders alıyorum! Buna bir bak:</string>
   <!--Certificate Page-->

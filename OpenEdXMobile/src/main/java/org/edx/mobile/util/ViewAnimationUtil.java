@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -17,6 +18,7 @@ public class ViewAnimationUtil {
 
     private static final long DEFAULT_ANIMATION_DURATION_MS = 500L;
     private static final float ANIMATION_DISPLACEMENT = 60f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
 
     // Prohibit instantiation
     private ViewAnimationUtil() {
@@ -106,5 +108,15 @@ public class ViewAnimationUtil {
             }
         });
         return translateAnimation;
+    }
+
+    public static void startAlphaAnimation(View v, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(ALPHA_ANIMATIONS_DURATION);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 }

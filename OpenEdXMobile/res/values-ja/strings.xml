@@ -25,8 +25,6 @@
   <string name="cannot_show_dashboard">ダッシュボードが表示できません。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">講座をシェア</string>
   <!--Share course-->
   <string name="share_course_message">私は {platform_name} の講座を受講中です！こちらを見てください：</string>
   <!--Certificate Page-->
