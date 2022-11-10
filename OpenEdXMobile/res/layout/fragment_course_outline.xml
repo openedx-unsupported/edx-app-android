@@ -35,6 +35,7 @@
             android:choiceMode="singleChoice"
             android:divider="@null"
             android:dividerHeight="0dp"
+            android:nestedScrollingEnabled="true"
             tools:listitem="@layout/row_course_outline_list"
             tools:visibility="visible" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

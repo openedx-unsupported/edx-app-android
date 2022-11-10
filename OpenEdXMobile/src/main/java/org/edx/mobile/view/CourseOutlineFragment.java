@@ -832,10 +832,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        if (!isOnCourseOutline) {
-            // We only need to set the title of Course Outline screen, where we show a subsection's units
-            getActivity().setTitle(courseComponent.getDisplayName());
-        }
         if (!isVideoMode && isOnCourseOutline && canFetchBannerInfo) {
             courseDateViewModel.fetchCourseDates(courseData.getCourseId(), true, !swipeContainer.isRefreshing(), swipeContainer.isRefreshing());
             canFetchBannerInfo = false;
