@@ -44,16 +44,6 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Boolean isAnyVideoDownloading(final DataCallback<Boolean> callback) {
-        DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS, null,
-                DbStructure.Column.USERNAME + "=? AND " + DbStructure.Column.DOWNLOADED + "=?",
-                new String[]{username(), String.valueOf(DownloadedState.DOWNLOADING.ordinal())},
-                null);
-        op.setCallback(callback);
-        return enqueue(op);
-    }
-
-    @Override
     public List<Long> getAllDownloadingVideosDmidList(final DataCallback<List<Long>> callback) {
         DbOperationGetColumn<Long> op = new DbOperationGetColumn<Long>(true,
                 DbStructure.Table.DOWNLOADS, new String[]{DbStructure.Column.DM_ID},
