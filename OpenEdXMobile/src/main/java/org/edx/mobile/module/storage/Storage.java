@@ -278,30 +278,6 @@ public class Storage implements IStorage {
         }
     }
 
-
-    @Override
-    public void getAverageDownloadProgress(final DataCallback<Integer> callback) {
-        IDatabase db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
-        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
-
-            @Override
-            public void onResult(List<VideoModel> result) {
-                long[] dmids = new long[result.size()];
-                for (int i=0; i< result.size(); i++) {
-                    dmids[i] = result.get(i).getDmId();
-                }
-
-                int averageProgress = dm.getAverageProgressForDownloads(dmids);
-                callback.onResult(averageProgress);
-            }
-
-            @Override
-            public void onFail(Exception ex) {
-                callback.onFail(ex);
-            }
-        });
-    }
-
     @Override
     public void getDownloadProgressOfCourseVideos(@Nullable String courseId,
                                                   final DataCallback<NativeDownloadModel> callback) {
