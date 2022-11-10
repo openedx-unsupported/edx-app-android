@@ -13,6 +13,6 @@ public class LogInFeatureTest extends FeatureTest {
                 .observeLandingScreen()
                 .navigateToLogInScreen()
                 .logIn(TestValues.ACTIVE_USER_CREDENTIALS)
-                .observeMyCoursesScreen();
+                .observeLearnScreen();
     }
 }

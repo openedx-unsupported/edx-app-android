@@ -31,7 +31,7 @@ public class RegistrationScreenInteractor {
         return this;
     }
 
-    public MyCoursesScreenInteractor createAccount(Credentials credentials) {
+    public LearnScreenInteractor createAccount(Credentials credentials) {
         onEmailView().perform(typeText(credentials.email), closeSoftKeyboard());
         onNameView().perform(typeText("Test Account"), closeSoftKeyboard());
         onUsernameView().perform(typeText(credentials.username), closeSoftKeyboard());
@@ -39,7 +39,7 @@ public class RegistrationScreenInteractor {
         onCountryView().perform(click());
         onData(allOf(is(instanceOf(String.class)))).atPosition(1).perform(click());
         onCreateAccountButton().perform(click());
-        return new MyCoursesScreenInteractor();
+        return new LearnScreenInteractor();
     }
 
     private ViewInteraction onEmailView() {
