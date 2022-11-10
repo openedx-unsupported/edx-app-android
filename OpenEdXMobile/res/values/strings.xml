@@ -36,9 +36,6 @@
     <string name="cannot_open_url">Unable to open web page.</string>
 
     <!-- Course Sharing -->
-
-    <!-- Description of button that will open the share course menu -->
-    <string name="share_course_button">Share your course</string>
     <!-- Share course -->
     <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
 
@@ -97,8 +94,6 @@
     <string name="dropdown_list_prefix">Dropdown list.</string>
 
     <!-- Navigation Drawer Labels -->
-    <!-- Button text to show user current downloads screen -->
-    <string name="label_current_downloads">View current downloads</string>
     <!-- Title of user's program list screen -->
     <string name="label_programs">Programs</string>
     <!-- Title of native Find Courses Screen -->

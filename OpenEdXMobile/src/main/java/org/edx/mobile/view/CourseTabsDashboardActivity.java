@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.edx.mobile.R;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
@@ -58,5 +59,10 @@ public class CourseTabsDashboardActivity extends OfflineSupportBaseActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().removeStickyEvent(CourseUpgradedEvent.class);
+    }
+
+    @Override
+    protected int getToolbarLayoutId() {
+        return R.layout.course_dashboard_toolbar;
     }
 }

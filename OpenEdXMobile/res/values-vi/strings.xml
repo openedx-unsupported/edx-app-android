@@ -27,8 +27,6 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Không mở được trang web.</string>
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">Chia sẻ khóa học</string>
   <!--Share course-->
   <string name="share_course_message">Tôi đang tham gia khóa học ở {platform_name}! Tham gia cùng tôi ở:</string>
   <!--Certificate Page-->
@@ -81,8 +79,6 @@
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">Danh sách xổ xuống.</string>
   <!--Navigation Drawer Labels-->
-  <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads">Xem các mục đang tải xuống</string>
   <!--Title of user's program list screen-->
   <string name="label_programs">Chương trình</string>
   <!--Title of native Find Courses Screen-->
