@@ -25,15 +25,6 @@ public interface IDatabase {
     void release();
 
     /**
-     * Return true if any Video is marked as Downloading in the database for logged in user
-     * Used to display the top downloading icon
-     *
-     * @return boolean flag if download is in progress
-     */
-    Boolean isAnyVideoDownloading(DataCallback<Boolean> callback);
-
-
-    /**
      * Returns all dmid's which are currently being downloaded for logged in user
      * This method is used for showing progress in the DownloadModule
      *

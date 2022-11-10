@@ -236,8 +236,8 @@
 
     <style name="custom_horizontal_progress" parent="Widget.MaterialComponents.LinearProgressIndicator">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:minHeight">@dimen/progress_bar_height</item>
-        <item name="android:maxHeight">@dimen/progress_bar_height</item>
+        <item name="android:minHeight">@dimen/bulk_download_progress_height</item>
+        <item name="android:maxHeight">@dimen/bulk_download_progress_height</item>
         <item name="trackColor">@color/neutralDark</item>
         <item name="indicatorColor">@color/successBase</item>
         <item name="trackCornerRadius">@dimen/edx_box_radius</item>
@@ -557,6 +557,23 @@
     <style name="DialogSlideUpAndDownAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="CourseDashboardExpandedToolbarTitle">
+        <item name="android:textColor">@color/neutralWhiteT</item>
+        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="background">@color/primaryLightColor</item>
+        <item name="android:gravity">left</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
+    </style>
+
+    <style name="CourseDashboardCollapsedToolbarTitle">
+        <item name="android:textColor">@color/neutralWhiteT</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textDirection">locale</item>
+        <item name="background">@color/primaryLightColor</item>
+        <item name="android:gravity">left</item>
+        <item name="lineHeight">@dimen/widget_margin_double</item>
     </style>
 
 </resources>

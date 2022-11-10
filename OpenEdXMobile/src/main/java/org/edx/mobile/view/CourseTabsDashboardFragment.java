@@ -4,20 +4,24 @@ import static android.widget.FrameLayout.LayoutParams;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_COMPONENT_ID;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
@@ -28,12 +32,12 @@ import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtils;
+import org.edx.mobile.util.ViewAnimationUtil;
+import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.ShareUtils;
-import org.edx.mobile.view.custom.ProgressWheel;
+import org.edx.mobile.view.dialog.CourseModalDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,9 +60,12 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     @Inject
     CourseAPI courseApi;
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private Runnable updateDownloadProgressRunnable;
-    private MenuItem downloadsMenuItem;
+    private View upgradeBtn;
+    private AppCompatImageView expandedToolbarDismiss;
+    private MaterialTextView expandedCourseTitle;
+
+    private boolean isTitleCollapsed = false;
+    private boolean isTitleExpanded = true;
 
     @NonNull
     public static CourseTabsDashboardFragment newInstance(
@@ -78,23 +85,11 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.course_dashboard_menu, menu);
-        if (environment.getConfig().isCourseSharingEnabled()) {
-            menu.findItem(R.id.menu_item_share).setVisible(true);
-        } else {
-            menu.findItem(R.id.menu_item_share).setVisible(false);
-        }
-        handleDownloadProgressMenuItem(menu);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
         if (courseData != null) {
-            // The case where we have valid course data
-            getActivity().setTitle(courseData.getCourse().getName());
+            setupToolbar();
             setHasOptionsMenu(courseData.getCourse().getCoursewareAccess().hasAccess());
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
@@ -125,6 +120,69 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
         }
     }
 
+    public void setupToolbar() {
+        AppBarLayout appbar = getActivity().findViewById(R.id.appbar);
+
+        Toolbar collapsedToolbar = getActivity().findViewById(R.id.collapsed_toolbar_layout);
+        MaterialTextView collapsedToolbarTitle = getActivity().findViewById(R.id.collapsed_toolbar_title);
+        AppCompatImageView collapsedToolbarDismiss = getActivity().findViewById(R.id.collapsed_toolbar_dismiss);
+
+        LinearLayout expandedToolbar = getActivity().findViewById(R.id.expanded_toolbar_layout);
+        expandedToolbarDismiss = getActivity().findViewById(R.id.expanded_toolbar_dismiss);
+        expandedCourseTitle = getActivity().findViewById(R.id.course_title);
+        MaterialTextView courseOrg = getActivity().findViewById(R.id.course_organization);
+        MaterialTextView courseExpiryDate = getActivity().findViewById(R.id.course_expiry_date);
+        upgradeBtn = getActivity().findViewById(R.id.layout_upgrade_btn);
+        MaterialButton upgradeBtnText = upgradeBtn.findViewById(R.id.btn_upgrade);
+
+        collapsedToolbarTitle.setText(courseData.getCourse().getName());
+        courseOrg.setText(courseData.getCourse().getOrg());
+        expandedCourseTitle.setText(courseData.getCourse().getName());
+
+        String expiryDate = CourseCardUtils.getFormattedDate(requireContext(), courseData);
+        if (!TextUtils.isEmpty(expiryDate)) {
+            courseExpiryDate.setVisibility(View.VISIBLE);
+            courseExpiryDate.setText(expiryDate);
+        }
+
+        if (environment.getConfig().isCourseSharingEnabled()) {
+            expandedCourseTitle.setMovementMethod(LinkMovementMethod.getInstance());
+            SpannableString spannableString = org.edx.mobile.util.TextUtils.setIconifiedText(
+                    requireContext(),
+                    courseData.getCourse().getName(),
+                    R.drawable.ic_share,
+                    v -> ShareUtils.showCourseShareMenu(requireActivity(), expandedCourseTitle,
+                            courseData, analyticsRegistry, environment)
+            );
+            expandedCourseTitle.setText(spannableString);
+        }
+
+        collapsedToolbarDismiss.setOnClickListener(v -> getActivity().finish());
+        expandedToolbarDismiss.setOnClickListener(v -> getActivity().finish());
+
+        if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
+            upgradeBtn.setVisibility(View.VISIBLE);
+            ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
+            upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
+                            Analytics.Screens.PLS_COURSE_DASHBOARD,
+                            courseData.getCourseId(),
+                            courseData.getCourseSku(),
+                            courseData.getCourse().getName(),
+                            courseData.getCourse().isSelfPaced())
+                    .show(getChildFragmentManager(), CourseModalDialogFragment.TAG));
+            upgradeBtnText.setText(R.string.value_prop_course_card_message);
+        } else {
+            upgradeBtn.setVisibility(View.GONE);
+        }
+
+        appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            int maxScroll = appBarLayout.getTotalScrollRange();
+            float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+            handleToolbarVisibility(collapsedToolbar, expandedToolbar, percentage);
+        });
+        ViewAnimationUtil.startAlphaAnimation(collapsedToolbar, View.INVISIBLE);
+    }
+
     private void fetchCourseById() {
         final String courseId = getArguments().getString(Router.EXTRA_COURSE_ID);
         courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(getActivity(), courseId, null) {
@@ -145,92 +203,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_share:
-                ShareUtils.showCourseShareMenu(getActivity(), getActivity().findViewById(R.id.menu_item_share),
-                        courseData, analyticsRegistry, environment);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (updateDownloadProgressRunnable != null) {
-            updateDownloadProgressRunnable.run();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (updateDownloadProgressRunnable != null) {
-            handler.removeCallbacks(updateDownloadProgressRunnable);
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (updateDownloadProgressRunnable != null) {
-            handler.removeCallbacks(updateDownloadProgressRunnable);
-            /* Assigning null here so that when this fragment is destroyed (e.g. due to orientation
-             * change) the runnable is recreated and the download progress is updated properly.
-             */
-            updateDownloadProgressRunnable = null;
-        }
-    }
-
-    public void handleDownloadProgressMenuItem(Menu menu) {
-        downloadsMenuItem = menu.findItem(R.id.menu_item_download_progress);
-        final View progressView = downloadsMenuItem.getActionView();
-        final ProgressWheel progressWheel = (ProgressWheel)
-                progressView.findViewById(R.id.progress_wheel);
-        downloadsMenuItem.setVisible(downloadsMenuItem.isVisible());
-        progressWheel.setProgress(progressWheel.getProgress());
-        progressView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showDownloads(getActivity());
-            }
-        });
-        if (updateDownloadProgressRunnable == null) {
-            updateDownloadProgressRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    if (!NetworkUtil.isConnected(getContext()) ||
-                            !environment.getDatabase().isAnyVideoDownloading(null)) {
-                        downloadsMenuItem.setVisible(false);
-                        progressWheel.setProgressPercent(0);
-                    } else {
-                        downloadsMenuItem.setVisible(true);
-                        environment.getStorage().getAverageDownloadProgress(
-                                new DataCallback<Integer>() {
-                                    @Override
-                                    public void onResult(Integer result) {
-                                        int progressPercent = result;
-                                        if (progressPercent >= 0 && progressPercent <= 100) {
-                                            progressWheel.setProgressPercent(progressPercent);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFail(Exception ex) {
-                                        logger.error(ex);
-                                    }
-                                });
-                    }
-                    handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
-                }
-            };
-            updateDownloadProgressRunnable.run();
-        }
     }
 
     @Override
@@ -256,7 +228,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                     public void onFragmentSelected() {
                         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_OUTLINE,
                                 courseData.getCourse().getId(), null);
-                        setDownloadProgressMenuItemVisibility(true);
                     }
                 }));
         // Add videos tab
@@ -269,7 +240,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                         public void onFragmentSelected() {
                             environment.getAnalyticsRegistry().trackScreenView(
                                     Analytics.Screens.VIDEOS_COURSE_VIDEOS, courseData.getCourse().getId(), null);
-                            setDownloadProgressMenuItemVisibility(false);
                         }
                     }));
         }
@@ -284,7 +254,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                         public void onFragmentSelected() {
                             environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
                                     courseData.getCourse().getId(), null, null);
-                            setDownloadProgressMenuItemVisibility(false);
                         }
                     }));
         }
@@ -295,7 +264,6 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                     CourseDatesPageFragment.makeArguments(courseData), () -> {
                 analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
                         courseData.getCourse().getId(), null);
-                setDownloadProgressMenuItemVisibility(false);
             }));
         }
         // Add additional resources tab
@@ -305,22 +273,55 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
                 new FragmentItemModel.FragmentStateListener() {
                     @Override
                     public void onFragmentSelected() {
-                        setDownloadProgressMenuItemVisibility(false);
                     }
                 }));
         return items;
     }
 
-    private void setDownloadProgressMenuItemVisibility(boolean isVisible) {
-        if (updateDownloadProgressRunnable != null) {
-            handler.removeCallbacks(updateDownloadProgressRunnable);
-            if (isVisible) {
-                handler.post(updateDownloadProgressRunnable);
-            } else {
-                if (downloadsMenuItem != null) {
-                    downloadsMenuItem.setVisible(false);
-                }
+    /**
+     * It will handle the toolbar's collapse or expand state based on the scroll position. It will
+     * also disable the clickable views of the toolbar because the alpha attribute has been used to
+     * handle the toolbar's transition from one state to another.
+     * <p>
+     * Inspiration: http://www.devexchanges.info/2016/03/android-tip-custom-coordinatorlayout.html
+     *
+     * @param collapsedToolbar Parent view for Toolbar design in collapsed state
+     * @param expandedToolbar  Parent view for Toolbar design in expanded state
+     * @param percentage       Percentage of Toolbar's current scroll over max scroll
+     */
+    private void handleToolbarVisibility(View collapsedToolbar, View expandedToolbar,
+                                         float percentage) {
+        final float PERCENTAGE_TO_SHOW_COLLAPSED_TOOLBAR = 0.9f;
+        final float PERCENTAGE_TO_HIDE_EXPANDED_TOOLBAR = 0.8f;
+
+        if (percentage >= PERCENTAGE_TO_SHOW_COLLAPSED_TOOLBAR) {
+            if (!isTitleCollapsed) {
+                ViewAnimationUtil.startAlphaAnimation(collapsedToolbar, View.VISIBLE);
+                isTitleCollapsed = true;
             }
+        } else {
+            if (isTitleCollapsed) {
+                ViewAnimationUtil.startAlphaAnimation(collapsedToolbar, View.INVISIBLE);
+                isTitleCollapsed = false;
+            }
+        }
+
+        if (percentage >= PERCENTAGE_TO_HIDE_EXPANDED_TOOLBAR) {
+            if (isTitleExpanded) {
+                ViewAnimationUtil.startAlphaAnimation(expandedToolbar, View.INVISIBLE);
+                isTitleExpanded = false;
+            }
+            expandedCourseTitle.setEnabled(false);
+            expandedToolbarDismiss.setEnabled(false);
+            upgradeBtn.setEnabled(false);
+        } else {
+            if (!isTitleExpanded) {
+                ViewAnimationUtil.startAlphaAnimation(expandedToolbar, View.VISIBLE);
+                isTitleExpanded = true;
+            }
+            expandedCourseTitle.setEnabled(true);
+            expandedToolbarDismiss.setEnabled(true);
+            upgradeBtn.setEnabled(true);
         }
     }
 }

@@ -12,16 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
-import com.bumptech.glide.Glide;
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -36,7 +31,6 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -49,9 +43,6 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.TimeZoneUtils;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
-import org.edx.mobile.util.images.CourseCardUtils;
-import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
-import org.edx.mobile.view.dialog.CourseModalDialogFragment;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
@@ -100,8 +91,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
         if (isOnCourseOutline && !isVideoMode) {
-            // Add course card item
-            adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
             // Add certificate item
             if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
                 adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
@@ -171,13 +160,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_section_header, parent, false);
                     break;
                 }
-                case SectionRow.COURSE_CARD: {
-                    convertView = inflater.inflate(R.layout.row_course_card, parent, false);
-                    break;
-                }
-                case SectionRow.COURSE_CERTIFICATE:
+                case SectionRow.COURSE_CERTIFICATE: {
                     convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
                     break;
+                }
                 case SectionRow.RESUME_COURSE_ITEM: {
                     convertView = inflater.inflate(R.layout.row_resume_course, parent, false);
                     break;
@@ -196,11 +182,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
             case SectionRow.SECTION: {
                 return getHeaderView(position, convertView);
             }
-            case SectionRow.COURSE_CARD: {
-                return getCardView(convertView);
-            }
-            case SectionRow.COURSE_CERTIFICATE:
+            case SectionRow.COURSE_CERTIFICATE: {
                 return getCertificateView(position, convertView);
+            }
             case SectionRow.RESUME_COURSE_ITEM: {
                 return getResumeCourseView(position, convertView);
             }
@@ -623,46 +607,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public View getCardView(View view) {
-        final MaterialTextView courseTextName = view.findViewById(R.id.course_detail_name);
-        final MaterialTextView courseTextDetails = view.findViewById(R.id.course_detail_extras);
-        final AppCompatImageView headerImageView = view.findViewById(R.id.header_image_view);
-        final View upgradeBtn = view.findViewById(R.id.layout_upgrade_btn);
-        final MaterialButton upgradeBtnText = upgradeBtn.findViewById(R.id.btn_upgrade);
-
-        if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
-            upgradeBtn.setVisibility(View.VISIBLE);
-            ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
-            upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
-                            Analytics.Screens.PLS_COURSE_DASHBOARD,
-                            courseData.getCourseId(),
-                            courseData.getCourseSku(),
-                            courseData.getCourse().getName(),
-                            courseData.getCourse().isSelfPaced())
-                    .show(((AppCompatActivity) context).getSupportFragmentManager(),
-                            CourseModalDialogFragment.TAG));
-            upgradeBtnText.setText(R.string.value_prop_course_card_message);
-        } else {
-            upgradeBtn.setVisibility(View.GONE);
-        }
-
-        // Full course name should appear on the course's dashboard screen.
-        courseTextName.setEllipsize(null);
-        courseTextName.setSingleLine(false);
-
-        final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig().getApiHostURL());
-        Glide.with(context)
-                .load(headerImageUrl)
-                .placeholder(R.drawable.placeholder_course_card_image)
-                .transform(new TopAnchorFillWidthTransformation())
-                .into(headerImageView);
-
-        courseTextName.setText(courseData.getCourse().getName());
-        courseTextDetails.setText(CourseCardUtils.getFormattedDate(context, courseData));
-
-        return view;
-    }
-
     private View getCertificateView(int position, View convertView) {
         final SectionRow sectionRow = getItem(position);
         convertView.setOnClickListener(sectionRow.clickListener);
@@ -699,7 +643,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
      * @return List index (non-negative number) for a {@link SectionRow#RESUME_COURSE_ITEM}.
      */
     public int getResumeCourseItemPlace() {
-        return isNonCourseWareItemExist(SectionRow.COURSE_CERTIFICATE) ? 2 : 1;
+        return isNonCourseWareItemExist(SectionRow.COURSE_CERTIFICATE) ? 1 : 0;
     }
 
     /**
@@ -794,14 +738,13 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     public static class SectionRow {
-        public static final int COURSE_CARD = 0;
-        public static final int COURSE_CERTIFICATE = 1;
-        public static final int RESUME_COURSE_ITEM = 2;
-        public static final int SECTION = 3;
-        public static final int ITEM = 4;
+        public static final int COURSE_CERTIFICATE = 0;
+        public static final int RESUME_COURSE_ITEM = 1;
+        public static final int SECTION = 2;
+        public static final int ITEM = 3;
 
         // Update this count according to the section types mentioned above
-        public static final int NUM_OF_SECTION_ROWS = 6;
+        public static final int NUM_OF_SECTION_ROWS = 4;
 
         public final int type;
         public final boolean topComponent;

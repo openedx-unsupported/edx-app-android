@@ -159,48 +159,6 @@ public class DbTests extends BaseTestCase {
     }
 
     @Test
-    public void testisAnyVideoDownloading() throws Exception {
-        db.clearDataByUser(username);
-        db.isAnyVideoDownloading(new DataCallback<Boolean>() {
-
-            @Override
-            public void onResult(Boolean result) {
-                assertNotNull(result);
-                assertFalse("something is downloading", result);
-                print( "result for Video AnyVideoDownloading is:" + result);
-                unlock();
-            }
-
-            @Override
-            public void onFail(Exception ex) {
-                fail(ex.getMessage());
-            }
-        });
-        lock();
-
-        DownloadEntry de = getDummyVideoModel();
-        // avoid duplicate videoId
-        de.downloaded = DownloadedState.DOWNLOADING;
-        db.addVideoData(de, null);
-
-        db.isAnyVideoDownloading(new DataCallback<Boolean>() {
-
-            @Override
-            public void onResult(Boolean result) {
-                assertNotNull(result);
-                assertTrue("Result for Any Video Downloading  is:" +result.toString(), result);
-                unlock();
-            }
-
-            @Override
-            public void onFail(Exception ex) {
-                fail(ex.getMessage());
-            }
-        });
-
-        lock();
-    }
-    @Test
     public void testgetAllDownloadingVideosDmidList() throws Exception {
         db.clearDataByUser(username);
         db.getAllDownloadingVideosDmidList(new DataCallback<List<Long>>() {
