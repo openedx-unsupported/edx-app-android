@@ -20,4 +20,10 @@
     <string name="label_my_courses">My Courses</string>
     <!-- Title of user's programs list screen -->
     <string name="label_my_programs">My Programs</string>
+
+    <!-- Course dashboard screen-->
+    <!-- Title of Home tab on course dashboard screen -->
+    <string name="label_home">Home</string>
+    <!-- Title of Dates tab on course dashboard screen -->
+    <string name="label_dates">Dates</string>
 </resources>

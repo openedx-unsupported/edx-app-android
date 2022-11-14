@@ -201,18 +201,8 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseHandoutActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name=".view.DiscoveryActivity"
             android:label="@string/label_discovery"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
-            android:name=".view.CourseAnnouncementsActivity"
-            android:label="@string/announcement_title"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity

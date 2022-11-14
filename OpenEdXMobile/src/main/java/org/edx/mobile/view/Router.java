@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -198,33 +197,6 @@ public class Router {
         );
     }
 
-    /**
-     * FIXME - it will bring to different view in the future
-     *
-     * @param activity
-     * @param model
-     */
-    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model) {
-        final Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
-        final Intent courseDetail = new Intent(activity, CourseAnnouncementsActivity.class);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
-    }
-
-    public void showCourseAnnouncementFromNotification(@NonNull Context context, @NonNull String courseId) {
-        final Bundle courseBundle = new Bundle();
-        courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
-        courseBundle.putString(Router.EXTRA_COURSE_ID, courseId);
-        final Intent courseDetail = new Intent(context, CourseAnnouncementsActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
-        // TODO: It's not essential, but we may want additional activities on the back-stack
-        TaskStackBuilder.create(context)
-                .addNextIntent(courseDetail)
-                .startActivities();
-    }
-
     public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse courseData,
                                            CourseUpgradeResponse courseUpgradeData,
                                            String courseComponentId) {
@@ -404,13 +376,6 @@ public class Router {
         loginAPI.logOut();
         forceLogout(context, analyticsRegistry, delegate);
         SecurityUtil.clearUserData(context);
-    }
-
-    public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
-        Intent handoutIntent = new Intent(activity, CourseHandoutActivity.class);
-        handoutIntent.putExtra(EXTRA_COURSE_DATA, courseData);
-        handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(handoutIntent);
     }
 
     public void showUserProfile(@NonNull Context context, @NonNull String username) {
