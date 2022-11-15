@@ -15,8 +15,13 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsParams
 import com.android.billingclient.api.SkuDetailsResponseListener
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.logger.Logger
+import javax.inject.Inject
 
 /**
  * The BillingProcessor implements all billing functionality for application.
@@ -27,18 +32,17 @@ import org.edx.mobile.logger.Logger
  *
  * Inspiration: [https://github.com/android/play-billing-samples/blob/master/TrivialDriveKotlin/app/src/main/java/com/sample/android/trivialdrivesample/billing/BillingDataSource.kt]
  * */
-class BillingProcessor(val context: Context, val listener: BillingFlowListeners?) :
-    PurchasesUpdatedListener,
-    BillingClientStateListener {
+@Module
+@InstallIn(ActivityComponent::class)
+class BillingProcessor @Inject constructor(@ApplicationContext val context: Context) :
+    PurchasesUpdatedListener, BillingClientStateListener {
 
-    private val TAG = BillingProcessor::class.java.simpleName
     private val logger = Logger(TAG)
-
-    private var RECONNECT_TIMER_START_MILLISECONDS = 1L * 1000L
-    private val RECONNECT_MAX_COUNT = 3 // retry connection max count
 
     private val handler = Handler(Looper.getMainLooper())
     private var connectionTryCount = 0
+
+    private lateinit var listener: BillingFlowListeners
 
     // Billing client, connection, cached data
     private val billingClient: BillingClient = BillingClient.newBuilder(context)
@@ -46,8 +50,14 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
         .enablePendingPurchases()
         .build()
 
-    init {
-        billingClient.startConnection(this)
+    fun setUpBillingFlowListeners(listener: BillingFlowListeners) {
+        this.listener = listener
+    }
+
+    fun startConnection() {
+        if (!isConnected()) {
+            billingClient.startConnection(this)
+        }
     }
 
     override fun onBillingSetupFinished(billingResult: BillingResult) {
@@ -55,7 +65,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
             "BillingSetupFinished -> Response code: " + billingResult.responseCode.toString() +
                     " Debug message: " + billingResult.debugMessage
         )
-        listener?.onBillingSetupFinished(billingResult)
+        listener.onBillingSetupFinished(billingResult)
     }
 
     /**
@@ -67,28 +77,28 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
             connectionTryCount++
             retryBillingServiceConnectionWithExponentialBackoff()
         } else {
-            listener?.onBillingServiceDisconnected()
+            listener.onBillingServiceDisconnected()
         }
     }
 
     /**
      * Called by the BillingLibrary when new purchases are detected; typically in response to a
-     * launchBillingFlow.
+     * launch billing flow.
      * @param billingResult result of the purchase flow.
-     * @param list of new purchases.
+     * @param purchases list of new purchases.
      */
     override fun onPurchasesUpdated(
         billingResult: BillingResult,
         purchases: MutableList<Purchase>?
     ) {
-        if (purchases != null) {
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             if (!purchases[0].isAcknowledged) {
                 acknowledgePurchase(purchases[0])
             } else {
-                listener?.onPurchaseComplete(purchases[0])
+                listener.onPurchaseComplete(purchases[0])
             }
         } else {
-            listener?.onPurchaseCancel(billingResult.responseCode, billingResult.debugMessage)
+            listener.onPurchaseCancel(billingResult.responseCode, billingResult.debugMessage)
         }
     }
 
@@ -100,17 +110,17 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      * @param userId    User Id of the purchaser
      */
     fun purchaseItem(activity: Activity, productId: String, userId: Long) {
+        startConnection()
         if (billingClient.isReady) {
-            querySyncDetails(productId,
-                SkuDetailsResponseListener { billingResult, skuDetailsList ->
-                    logger.debug(
-                        "Getting Purchases -> Response code: " + billingResult.responseCode.toString() +
-                                " Debug message: " + billingResult.debugMessage
-                    )
-                    if (skuDetailsList != null) {
-                        launchBillingFlow(activity, skuDetailsList[0], userId)
-                    }
-                })
+            querySyncDetails(productId) { billingResult, skuDetailsList ->
+                logger.debug(
+                    "Getting Purchases -> Response code: " + billingResult.responseCode.toString() +
+                            " Debug message: " + billingResult.debugMessage
+                )
+                if (skuDetailsList != null) {
+                    launchBillingFlow(activity, skuDetailsList[0], userId)
+                }
+            }
         }
     }
 
@@ -136,6 +146,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      * @param purchase new purchase
      */
     private fun acknowledgePurchase(purchase: Purchase) {
+        startConnection()
         billingClient.acknowledgePurchase(
             AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
@@ -147,7 +158,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
                             "Response code: " + billingResult.responseCode.toString() +
                             " Debug message: " + billingResult.debugMessage
                 )
-                listener?.onPurchaseComplete(purchase)
+                listener.onPurchaseComplete(purchase)
             }
         }
     }
@@ -163,7 +174,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
     }
 
     /**
-     * Calls the billing client functions to query sku details for inapp SKUs. SKU details are
+     * Calls the billing client functions to query sku details for in-app SKUs. SKU details are
      * useful for displaying item names and price lists to the user, and are required to make a
      * purchase.
      *
@@ -171,6 +182,7 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
      * @param listener [SkuDetailsResponseListener]
      * */
     fun querySyncDetails(productId: String, listener: SkuDetailsResponseListener) {
+        startConnection()
         billingClient.querySkuDetailsAsync(
             SkuDetailsParams.newBuilder()
                 .setType(BillingClient.SkuType.INAPP)
@@ -180,16 +192,33 @@ class BillingProcessor(val context: Context, val listener: BillingFlowListeners?
     }
 
     /**
+     * Method to query the Purchases async and returns purchases details for currently owned items
+     * bought within the app.
+     *
+     * @param listener callback interface to get the Purchases.
+     * */
+    fun queryPurchase(listener: PurchasesResponseListener) {
+        startConnection()
+        billingClient.queryPurchasesAsync(
+            BillingClient.SkuType.INAPP, listener
+        )
+    }
+
+    fun isConnected(): Boolean {
+        return billingClient.isReady
+    }
+
+    /**
      * Closes the connection and releases all held resources such as service connections.
      */
     fun disconnect() {
         billingClient.endConnection()
     }
 
-    fun queryPurchase(listener: PurchasesResponseListener) {
-        billingClient.queryPurchasesAsync(
-            BillingClient.SkuType.INAPP, listener
-        )
+    companion object {
+        private val TAG = BillingProcessor::class.java.simpleName
+        private const val RECONNECT_TIMER_START_MILLISECONDS = 1L * 1000L
+        private const val RECONNECT_MAX_COUNT = 3 // retry connection max count
     }
 
     interface BillingFlowListeners {

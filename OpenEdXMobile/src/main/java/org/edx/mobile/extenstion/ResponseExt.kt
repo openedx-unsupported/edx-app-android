@@ -9,7 +9,7 @@ import retrofit2.Response
 /**
  * Transforms [Response] to [Result] object for In-App Purchases success or error scenarios
  */
-fun <T> Response<T>.toInAppPurchasesResult(callback: NetworkResponseCallback<T>, apiCode: Int) {
+fun <T> Response<T>.toInAppPurchasesResult(callback: NetworkResponseCallback<T>) {
     when (isSuccessful && body() != null) {
         true -> callback.onSuccess(
             Result.Success(
@@ -22,7 +22,6 @@ fun <T> Response<T>.toInAppPurchasesResult(callback: NetworkResponseCallback<T>,
         false -> callback.onError(
             Result.Error(
                 InAppPurchasesException(
-                    errorCode = apiCode,
                     httpErrorCode = code(),
                     errorMessage = getMessage(),
                 )

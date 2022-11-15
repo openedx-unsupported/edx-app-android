@@ -231,7 +231,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                             )
                     }
                 } else {
-                    when (errorMsg.errorCode) {
+                    when (errorMsg.requestType) {
                         ErrorMessage.COURSE_DATES_CODE ->
                             errorNotification.showError(
                                 contextOrThrow,

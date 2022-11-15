@@ -489,7 +489,7 @@ public interface Analytics {
      * @param showMore    True when user tapped on show more otherwise false
      */
     void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
-                                           @NonNull String price, boolean isSelfPaced, boolean showMore);
+                                           @Nullable String price, boolean isSelfPaced, boolean showMore);
 
     /**
      * Tracks explore all courses tapped on landing screen.

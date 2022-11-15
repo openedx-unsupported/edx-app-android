@@ -1,14 +1,10 @@
 package org.edx.mobile.model.api
 
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.logger.Logger
+import org.edx.mobile.model.course.EnrollmentMode
 import java.io.Serializable
 import java.lang.reflect.Type
 
@@ -66,4 +62,14 @@ data class EnrollmentResponse(
             }
         }
     }
+}
+
+/**
+ * Method to filter the audit course Skus from the given enrolled course list.
+ *
+ * @return the list of all audit courses SKUs.
+ */
+fun List<EnrolledCoursesResponse>.getAuditCoursesSku(): List<String> {
+    return this.filter { EnrollmentMode.AUDIT.toString().equals(it.mode, true) }
+        .mapNotNull { it.courseSku }.toList()
 }

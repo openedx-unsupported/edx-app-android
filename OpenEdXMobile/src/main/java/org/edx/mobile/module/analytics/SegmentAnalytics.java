@@ -958,11 +958,13 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackValuePropShowMoreLessClicked(@NonNull String courseId, @Nullable String componentId,
-                                                  @NonNull String price, boolean isSelfPaced, boolean showMore) {
+                                                  @Nullable String price, boolean isSelfPaced, boolean showMore) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, showMore ? Values.VALUE_PROP_SHOW_MORE_CLICKED : Values.VALUE_PROP_SHOW_LESS_CLICKED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        aEvent.data.putValue(Keys.PRICE, price);
+        if (!TextUtils.isEmpty(price)) {
+            aEvent.data.putValue(Keys.PRICE, price);
+        }
         if (!TextUtils.isEmpty(componentId)) {
             aEvent.data.putValue(Keys.COMPONENT_ID, componentId);
         }

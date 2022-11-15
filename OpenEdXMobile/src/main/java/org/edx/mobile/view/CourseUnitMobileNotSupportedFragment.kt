@@ -1,13 +1,13 @@
 package org.edx.mobile.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.edx.mobile.R
@@ -17,30 +17,21 @@ import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
-import org.edx.mobile.inapppurchases.BillingProcessor
-import org.edx.mobile.inapppurchases.BillingProcessor.BillingFlowListeners
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.Analytics.Screens
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
-import org.edx.mobile.util.AppConstants
-import org.edx.mobile.util.BrowserUtil
-import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.InAppPurchasesUtils
-import org.edx.mobile.util.NonNullObserver
-import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.*
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.wrapper.InAppPurchasesDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private lateinit var binding: FragmentCourseUnitGradeBinding
-    private var billingProcessor: BillingProcessor? = null
-    private var price: String = ""
-
     private val iapViewModel: InAppPurchasesViewModel
             by viewModels(ownerProducer = { requireActivity() })
 
@@ -48,7 +39,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     lateinit var iapAnalytics: InAppPurchasesAnalytics
 
     @Inject
-    lateinit var iapUtils: InAppPurchasesUtils
+    lateinit var iapDialog: InAppPurchasesDialog
+
+    private var price: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,35 +65,57 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun showGradedContent() {
-        val isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, false)
-        binding.containerLayoutNotAvailable.setVisibility(false)
-        binding.llGradedContentLayout.setVisibility(true)
-        setUpUpgradeButton(isSelfPaced)
-        unit?.let {
+        unit?.let { unit ->
+            val isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, false)
+            binding.containerLayoutNotAvailable.setVisibility(false)
+            binding.llGradedContentLayout.setVisibility(true)
             var experimentGroup: String? = null
             if (environment.appFeaturesPrefs.isIAPExperimentEnabled()) {
-                experimentGroup =
-                    if (environment.loginPrefs.isOddUserId) Analytics.Values.TREATMENT else Analytics.Values.CONTROL
+                experimentGroup = if (environment.loginPrefs.isOddUserId) {
+                    Analytics.Values.TREATMENT
+                } else {
+                    Analytics.Values.CONTROL
+                }
             }
             environment.analyticsRegistry.trackValuePropMessageViewed(
-                it.courseId,
+                unit.courseId,
                 Screens.COURSE_UNIT,
-                (it.courseSku.isNullOrEmpty().not() && environment.appFeaturesPrefs.isIAPEnabled()),
+                (unit.courseSku.isNullOrEmpty()
+                    .not() && environment.appFeaturesPrefs.isIAPEnabled()),
                 experimentGroup,
-                it.id
+                unit.id
             )
-        }
+            if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
+                iapAnalytics.initCourseValues(
+                    courseId = unit.courseId,
+                    isSelfPaced = isSelfPaced,
+                    screenName = Screens.COURSE_COMPONENT,
+                    componentId = unit.id
+                )
+                initIAPObserver()
+                // Shimmer container taking sometime to get ready and perform the animation, so
+                // by adding the some delay fixed that issue for lower-end devices, and for the
+                // proper animation.
+                binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+                    iapViewModel.initializeProductPrice(unit.courseSku)
+                }, 1500)
+                binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
+            } else {
+                binding.layoutUpgradeBtn.root.setVisibility(false)
+            }
 
-        binding.toggleShow.setOnClickListener {
-            val showMore = binding.layoutUpgradeFeature.containerLayout.isNotVisible()
-            binding.layoutUpgradeFeature.containerLayout.setVisibility(showMore)
-            binding.toggleShow.text = getText(
-                if (showMore) R.string.course_modal_graded_assignment_show_less
-                else R.string.course_modal_graded_assignment_show_more
-            )
-            unit?.let {
+            binding.toggleShow.setOnClickListener {
+                val showMore = binding.layoutUpgradeFeature.containerLayout.isNotVisible()
+                binding.layoutUpgradeFeature.containerLayout.setVisibility(showMore)
+                binding.toggleShow.text = getText(
+                    if (showMore) {
+                        R.string.course_modal_graded_assignment_show_less
+                    } else {
+                        R.string.course_modal_graded_assignment_show_more
+                    }
+                )
                 environment.analyticsRegistry.trackValuePropShowMoreLessClicked(
-                    it.courseId, it.id, price, isSelfPaced, showMore
+                    unit.courseId, unit.id, price, isSelfPaced, showMore
                 )
             }
         }
@@ -132,111 +147,12 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         }
     }
 
-    private fun setUpUpgradeButton(isSelfPaced: Boolean) {
-        if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
-            unit?.let {
-                iapAnalytics.initCourseValues(
-                    courseId = it.courseId,
-                    isSelfPaced = isSelfPaced,
-                    screenName = Screens.COURSE_COMPONENT,
-                    componentId = it.id
-                )
-            }
-            initObserver()
-            binding.layoutUpgradeBtn.root.setVisibility(true)
-            binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
-                iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
-                unit?.courseSku?.let { productId ->
-                    iapViewModel.addProductToBasket(productId)
-                } ?: iapUtils.showUpgradeErrorDialog(this)
-            }
-
-            billingProcessor = BillingProcessor(requireContext(), object : BillingFlowListeners {
-
-                override fun onBillingSetupFinished(billingResult: BillingResult) {
-                    super.onBillingSetupFinished(billingResult)
-                    // Shimmer container taking sometime to get ready and perform the animation, so
-                    // by adding the some delay fixed that issue for lower-end devices, and for the
-                    // proper animation.
-                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        unit?.let { initializeProductPrice() }
-                    }, 1500)
-                    binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
-                }
-
-                override fun onPurchaseCancel(responseCode: Int, message: String) {
-                    iapViewModel.endLoading()
-                    iapUtils.showUpgradeErrorDialog(
-                        context = this@CourseUnitMobileNotSupportedFragment,
-                        errorResId = R.string.error_payment_not_processed,
-                        errorCode = responseCode,
-                        errorMessage = message,
-                        errorType = ErrorMessage.PAYMENT_SDK_CODE
-                    )
-                }
-
-                override fun onPurchaseComplete(purchase: Purchase) {
-                    onProductPurchased(purchase.purchaseToken)
-                }
-            })
-        } else {
-            binding.layoutUpgradeBtn.root.setVisibility(false)
-        }
-    }
-
-    private fun initializeProductPrice() {
-        iapAnalytics.initPriceTime()
-        unit?.courseSku?.let { productId ->
-            billingProcessor?.querySyncDetails(
-                productId = productId
-            ) { _, skuDetails ->
-                val skuDetail = skuDetails?.get(0)
-                if (skuDetail?.sku == productId) {
-                    binding.layoutUpgradeBtn.btnUpgrade.text =
-                        ResourceUtil.getFormattedString(
-                            resources,
-                            R.string.label_upgrade_course_button,
-                            AppConstants.PRICE,
-                            skuDetail.price
-                        ).toString()
-                    price = skuDetail.price
-                    // The app get the sku details instantly, so add some wait to perform
-                    // animation at least one cycle.
-                    binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                        binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
-                        binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
-                    }, 500)
-                    iapAnalytics.setPrice(price)
-                    iapAnalytics.trackIAPEvent(Events.IAP_LOAD_PRICE_TIME)
-                } else {
-                    iapUtils.showUpgradeErrorDialog(
-                        context = this,
-                        errorResId = R.string.error_price_not_fetched,
-                        errorType = ErrorMessage.PRICE_CODE,
-                        listener = { _, _ ->
-                            unit?.let { initializeProductPrice() }
-                        })
-                }
-            }
-        } ?: iapUtils.showUpgradeErrorDialog(
-            context = this,
-            errorResId = R.string.error_price_not_fetched,
-            errorType = ErrorMessage.PRICE_CODE,
-            listener = { _, _ ->
-                unit?.let { initializeProductPrice() }
-            })
-    }
-
-    private fun initObserver() {
+    private fun initIAPObserver() {
+        iapViewModel.productPrice.observe(viewLifecycleOwner, NonNullObserver { skuDetails ->
+            setUpUpgradeButton(skuDetails)
+        })
         iapViewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver {
             enableUpgradeButton(!it)
-        })
-
-        iapViewModel.checkoutResponse.observe(viewLifecycleOwner, NonNullObserver {
-            if (it.paymentPageUrl.isNotEmpty()) {
-                iapAnalytics.initPaymentTime()
-                purchaseProduct(iapViewModel.productId)
-            }
         })
 
         iapViewModel.refreshCourseData.observe(viewLifecycleOwner) { refreshCourse: Boolean ->
@@ -246,76 +162,83 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             }
         }
 
-        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMessage ->
             // Error message observer should not observe EXECUTE or REFRESH error cases as they
             // will be observed by FullscreenLoaderDialogFragment's observer.
-            if (listOf(ErrorMessage.EXECUTE_ORDER_CODE, ErrorMessage.COURSE_REFRESH_CODE)
-                    .contains(errorMsg.errorCode)
-            ) return@NonNullObserver
-
-            if (errorMsg.throwable is InAppPurchasesException) {
-                when (errorMsg.throwable.httpErrorCode) {
-                    HttpStatus.UNAUTHORIZED -> {
-                        environment.router?.forceLogout(
-                            requireContext(),
-                            environment.analyticsRegistry,
-                            environment.notificationDelegate
-                        )
-                        return@NonNullObserver
-                    }
-                    HttpStatus.NOT_ACCEPTABLE -> {
-                        iapUtils.showPostUpgradeErrorDialog(
-                            context = this,
-                            errorResId = errorMsg.errorResId,
-                            errorCode = errorMsg.throwable.httpErrorCode,
-                            errorMessage = errorMsg.throwable.errorMessage,
-                            errorType = errorMsg.errorCode,
-                            retryListener = { _, _ ->
-                                iapViewModel.upgradeMode =
-                                    InAppPurchasesViewModel.UpgradeMode.SILENT
-                                iapViewModel.showFullScreenLoader(true)
-                            },
-                            cancelListener = null
-                        )
-                    }
-                    else -> iapUtils.showUpgradeErrorDialog(
-                        context = this,
-                        errorResId = errorMsg.errorResId,
-                        errorCode = errorMsg.throwable.httpErrorCode,
-                        errorMessage = errorMsg.throwable.errorMessage,
-                        errorType = errorMsg.errorCode
-                    )
-                }
-            } else {
-                iapUtils.showUpgradeErrorDialog(
-                    context = this, errorResId = errorMsg.errorResId, errorType = errorMsg.errorCode
-                )
+            if (InAppPurchasesUtils.postPurchasedRequests.contains(errorMessage.requestType)) {
+                return@NonNullObserver
             }
+            handleIAPException(errorMessage)
             iapViewModel.errorMessageShown()
         })
+
+        iapViewModel.productPurchased.observe(viewLifecycleOwner, NonNullObserver {
+            lifecycleScope.launch {
+                initializeBaseObserver()
+                iapViewModel.showFullScreenLoader(true)
+            }
+        })
+    }
+
+    private fun handleIAPException(errorMessage: ErrorMessage) {
+        var retryListener: DialogInterface.OnClickListener? = null
+        if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
+            retryListener = DialogInterface.OnClickListener { _, _ ->
+                iapViewModel.upgradeMode =
+                    InAppPurchasesViewModel.UpgradeMode.SILENT
+                iapViewModel.showFullScreenLoader(true)
+            }
+        } else if (errorMessage.canRetry()) {
+            retryListener = DialogInterface.OnClickListener { _, _ ->
+                when (errorMessage.requestType) {
+                    ErrorMessage.PRICE_CODE -> {
+                        iapViewModel.initializeProductPrice(unit?.courseSku)
+                    }
+                }
+            }
+        }
+        iapDialog.handleIAPException(
+            fragment = this@CourseUnitMobileNotSupportedFragment,
+            errorMessage = errorMessage,
+            retryListener = retryListener
+        )
+    }
+
+    private fun setUpUpgradeButton(skuDetail: SkuDetails) {
+        price = skuDetail.price
+        binding.layoutUpgradeBtn.root.setVisibility(true)
+
+        binding.layoutUpgradeBtn.btnUpgrade.text =
+            ResourceUtil.getFormattedString(
+                resources,
+                R.string.label_upgrade_course_button,
+                AppConstants.PRICE,
+                skuDetail.price
+            ).toString()
+        // The app get the sku details instantly, so add some wait to perform
+        // animation at least one cycle.
+        binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
+            binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
+            binding.layoutUpgradeBtn.btnUpgrade.isEnabled = true
+        }, 500)
+
+        binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
+            iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
+            environment.loginPrefs.userId?.let { userId ->
+                unit?.courseSku?.let { productId ->
+                    iapViewModel.addProductToBasket(
+                        requireActivity(),
+                        userId,
+                        productId
+                    )
+                } ?: iapDialog.showUpgradeErrorDialog(this)
+            }
+        }
     }
 
     private fun enableUpgradeButton(enable: Boolean) {
         binding.layoutUpgradeBtn.btnUpgrade.setVisibility(enable)
         binding.layoutUpgradeBtn.loadingIndicator.setVisibility(!enable)
-    }
-
-    private fun purchaseProduct(productId: String) {
-        activity?.let { context ->
-            environment.loginPrefs.userId?.let { userId ->
-                billingProcessor?.purchaseItem(context, productId, userId)
-            }
-        }
-    }
-
-    private fun onProductPurchased(purchaseToken: String) {
-        lifecycleScope.launch {
-            iapAnalytics.trackIAPEvent(Events.IAP_PAYMENT_TIME)
-            iapAnalytics.initUnlockContentTime()
-            initializeBaseObserver()
-            iapViewModel.setPurchaseToken(purchaseToken)
-            iapViewModel.showFullScreenLoader(true)
-        }
     }
 
     override fun onResume() {
@@ -327,11 +250,6 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 environment.analyticsRegistry.trackLockedContentTapped(it.courseId, it.blockId)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        billingProcessor?.disconnect()
     }
 
     companion object {
