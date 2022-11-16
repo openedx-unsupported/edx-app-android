@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
 
 import com.appboy.Appboy;
-import com.appboy.AppboyLifecycleCallbackListener;
 import com.appboy.configuration.AppboyConfig;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
@@ -154,7 +153,6 @@ public abstract class MainApplication extends MultiDexApplication {
                     .setHandlePushDeepLinksAutomatically(true)
                     .build();
             Appboy.configure(this, appboyConfig);
-            registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener(true, true));
         }
     }
 
