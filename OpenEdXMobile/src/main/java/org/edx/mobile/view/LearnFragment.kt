@@ -36,8 +36,8 @@ class LearnFragment : OfflineSupportBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val savedArguments = arguments
-        savedInstanceState?.let {
-            savedArguments?.putAll(it)
+        savedInstanceState?.getInt(SELECTED_POSITION)?.let {
+            savedArguments?.putInt(SELECTED_POSITION, it)
         }
         initViews(savedArguments)
         EventBus.getDefault().register(this)
@@ -59,9 +59,7 @@ class LearnFragment : OfflineSupportBaseFragment() {
         } else {
             binding.llLearnSelection.setVisibility(false)
         }
-        arguments?.let {
-            selectedItemPosition = it.getInt(SELECTED_POSITION, items.first().ordinal)
-        }
+        selectedItemPosition = arguments?.getInt(SELECTED_POSITION) ?: items.first().ordinal
         // no need to track event cuz handle event through event bus on tab selection.
         updateScreen(items[selectedItemPosition], false)
     }
