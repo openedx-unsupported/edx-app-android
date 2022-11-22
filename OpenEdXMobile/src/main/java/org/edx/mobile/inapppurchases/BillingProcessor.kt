@@ -15,13 +15,11 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsParams
 import com.android.billingclient.api.SkuDetailsResponseListener
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.logger.Logger
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * The BillingProcessor implements all billing functionality for application.
@@ -32,8 +30,7 @@ import javax.inject.Inject
  *
  * Inspiration: [https://github.com/android/play-billing-samples/blob/master/TrivialDriveKotlin/app/src/main/java/com/sample/android/trivialdrivesample/billing/BillingDataSource.kt]
  * */
-@Module
-@InstallIn(ActivityComponent::class)
+@Singleton
 class BillingProcessor @Inject constructor(@ApplicationContext val context: Context) :
     PurchasesUpdatedListener, BillingClientStateListener {
 
@@ -206,13 +203,6 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
 
     fun isConnected(): Boolean {
         return billingClient.isReady
-    }
-
-    /**
-     * Closes the connection and releases all held resources such as service connections.
-     */
-    fun disconnect() {
-        billingClient.endConnection()
     }
 
     companion object {

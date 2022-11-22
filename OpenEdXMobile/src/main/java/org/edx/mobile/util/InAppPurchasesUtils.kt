@@ -2,11 +2,9 @@ package org.edx.mobile.util
 
 import org.edx.mobile.R
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.http.HttpStatus
 
 object InAppPurchasesUtils {
-
-    val postPurchasedRequests =
-        listOf(ErrorMessage.EXECUTE_ORDER_CODE, ErrorMessage.COURSE_REFRESH_CODE)
 
     /**
      * Method to filter the incomplete purchases for the given enrolled audit course and already paid
@@ -29,17 +27,17 @@ object InAppPurchasesUtils {
      * */
     fun getErrorMessage(requestType: Int, httpErrorCode: Int) =
         when (httpErrorCode) {
-            400 -> when (requestType) {
+            HttpStatus.BAD_REQUEST -> when (requestType) {
                 ErrorMessage.ADD_TO_BASKET_CODE -> R.string.error_course_not_found
                 ErrorMessage.CHECKOUT_CODE -> R.string.error_payment_not_processed
                 ErrorMessage.EXECUTE_ORDER_CODE -> R.string.error_course_not_fullfilled
                 else -> R.string.general_error_message
             }
-            403 -> when (requestType) {
+            HttpStatus.FORBIDDEN -> when (requestType) {
                 ErrorMessage.EXECUTE_ORDER_CODE -> R.string.error_course_not_fullfilled
                 else -> R.string.error_user_not_authenticated
             }
-            406 -> R.string.error_course_already_paid
+            HttpStatus.NOT_ACCEPTABLE -> R.string.error_course_already_paid
             else -> when (requestType) {
                 ErrorMessage.PAYMENT_SDK_CODE -> R.string.error_payment_not_processed
                 ErrorMessage.PRICE_CODE -> R.string.error_price_not_fetched

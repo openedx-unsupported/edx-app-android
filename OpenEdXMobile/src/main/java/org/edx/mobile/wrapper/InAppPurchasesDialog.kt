@@ -30,29 +30,25 @@ class InAppPurchasesDialog @Inject constructor(
         cancelListener: DialogInterface.OnClickListener? = null
     ) {
         errorMessage.throwable as InAppPurchasesException
-        when (errorMessage.throwable.httpErrorCode) {
-            HttpStatus.UNAUTHORIZED -> {
-                environment.router?.forceLogout(
-                    fragment.requireContext(),
-                    environment.analyticsRegistry,
-                    environment.notificationDelegate
-                )
-                return
-            }
-            else -> {
-                cancelListener?.let {
-                    showPostUpgradeErrorDialog(
-                        context = fragment,
-                        errorMessage = errorMessage,
-                        retryListener = retryListener,
-                        cancelListener = cancelListener
-                    )
-                } ?: showUpgradeErrorDialog(
-                    context = fragment,
-                    errorMessage = errorMessage,
-                    retryListener = retryListener
-                )
-            }
+        if (errorMessage.throwable.httpErrorCode == HttpStatus.UNAUTHORIZED) {
+            environment.router?.forceLogout(
+                fragment.requireContext(),
+                environment.analyticsRegistry,
+                environment.notificationDelegate
+            )
+        } else if (errorMessage.isPostUpgradeErrorType()) {
+            showPostUpgradeErrorDialog(
+                context = fragment,
+                errorMessage = errorMessage,
+                retryListener = retryListener,
+                cancelListener = cancelListener
+            )
+        } else {
+            showPreUpgradeErrorDialog(
+                context = fragment,
+                errorMessage = errorMessage,
+                retryListener = retryListener
+            )
         }
     }
 
@@ -71,7 +67,7 @@ class InAppPurchasesDialog @Inject constructor(
      * @param errorMessage API error response for feedback message
      * @param retryListener Retry listener to fetch the course price again
      */
-    fun showUpgradeErrorDialog(
+    fun showPreUpgradeErrorDialog(
         context: Fragment,
         errorMessage: ErrorMessage = ErrorMessage(0, InAppPurchasesException()),
         retryListener: DialogInterface.OnClickListener? = null,
@@ -126,12 +122,14 @@ class InAppPurchasesDialog @Inject constructor(
             context.getString(errorResId),
             context.getString(positiveBtnResId),
             { dialog, which ->
-                retryListener?.onClick(dialog, which).also {
-                    iapAnalytics.trackIAPEvent(
-                        eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
-                        errorMsg = feedbackErrorMessage,
-                        actionTaken = actionTaken
-                    )
+                retryListener?.let {
+                    it.onClick(dialog, which).also {
+                        iapAnalytics.trackIAPEvent(
+                            eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
+                            errorMsg = feedbackErrorMessage,
+                            actionTaken = actionTaken
+                        )
+                    }
                 } ?: run { trackAlertCloseEvent(feedbackErrorMessage) }
             },
             context.getString(if (retryListener != null) R.string.label_cancel else R.string.label_get_help),

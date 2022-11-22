@@ -12,6 +12,8 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.module.db.DataCallback
 import org.edx.mobile.repository.CourseRepository
+import org.edx.mobile.util.observer.Event
+import org.edx.mobile.util.observer.postEvent
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.CACHE
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.STALE
 import javax.inject.Inject
@@ -24,8 +26,8 @@ class CourseViewModel @Inject constructor(
 
     private val logger: Logger = Logger(CourseViewModel::class.java.simpleName)
 
-    private val _enrolledCourses = MutableLiveData<List<EnrolledCoursesResponse>>()
-    val enrolledCoursesResponse: LiveData<List<EnrolledCoursesResponse>> = _enrolledCourses
+    private val _enrolledCourses = MutableLiveData<Event<List<EnrolledCoursesResponse>>>()
+    val enrolledCoursesResponse: LiveData<Event<List<EnrolledCoursesResponse>>> = _enrolledCourses
 
     private val _showProgress = MutableLiveData(true)
     val showProgress: LiveData<Boolean> = _showProgress
@@ -44,7 +46,7 @@ class CourseViewModel @Inject constructor(
 
                 override fun onSuccess(result: Result.Success<EnrollmentResponse>) {
                     result.data?.let {
-                        _enrolledCourses.postValue(it.enrollments)
+                        _enrolledCourses.postEvent(it.enrollments)
                         environment.appFeaturesPrefs.setAppConfig(it.appConfig)
 
                         if (type != CACHE) {
