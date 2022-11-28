@@ -500,6 +500,11 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+            if (firebaseEnabled ?: false) {
+                firebaseCrashlytics {
+                    mappingFileUploadEnabled true
+                }
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // Only apply release signing configurations if keystore.properties is available
             if (project.file('signing/keystore.properties').exists()) {
