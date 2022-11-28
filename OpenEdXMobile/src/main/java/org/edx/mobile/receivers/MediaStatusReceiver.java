@@ -11,7 +11,6 @@ import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.util.VideoUtil;
@@ -34,9 +33,6 @@ public class MediaStatusReceiver extends BroadcastReceiver {
     IDatabase db;
 
     @Inject
-    LoginPrefs loginPrefs;
-
-    @Inject
     protected IEdxEnvironment environment;
 
     public MediaStatusReceiver() {
@@ -44,8 +40,8 @@ public class MediaStatusReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        final String username = loginPrefs.getUsername();
-        final String hashedUsername = (username != null) ? Sha1Util.SHA1(username) : null;
+        String hashedUsername = environment.getLoginPrefs().isUserLoggedIn() ?
+                Sha1Util.SHA1(environment.getLoginPrefs().getUsername()) : null;
 
         final String sdCardPath = intent.getDataString().replace("file://", "");
         final String action = intent.getAction();

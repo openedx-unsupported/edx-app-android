@@ -28,7 +28,14 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseBannerInfoModel
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
-import org.edx.mobile.util.*
+import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.CalendarUtils
+import org.edx.mobile.util.ConfigUtil
+import org.edx.mobile.util.CourseDateUtil
+import org.edx.mobile.util.PermissionsUtil
+import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.UiUtils
 import org.edx.mobile.view.adapters.CourseDatesAdapter
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
@@ -137,7 +144,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             binding.loadingIndicator.loadingIndicator.visibility = View.GONE
             errorNotification.hideError()
             viewModel.fetchCourseDates(
-                courseID = courseData.courseId,
+                courseId = courseData.courseId,
                 forceRefresh = true,
                 showLoader = false,
                 isSwipeRefresh = true
@@ -150,7 +157,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     override fun onResume() {
         super.onResume()
         viewModel.fetchCourseDates(
-            courseID = courseData.courseId,
+            courseId = courseData.courseId,
             forceRefresh = false,
             showLoader = true,
             isSwipeRefresh = false
@@ -321,7 +328,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             screenName = Analytics.Screens.PLS_COURSE_DATES,
             analyticsRegistry = environment.analyticsRegistry,
             courseBannerInfoModel = courseBannerInfo,
-            clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseID = courseData.courseId) })
+            clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
 
     }
 

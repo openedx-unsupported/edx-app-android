@@ -21,7 +21,6 @@ import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.util.MockDataUtil;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
@@ -60,7 +59,6 @@ public class HttpBaseTestCase extends BaseTestCase {
     protected LoginAPI loginAPI;
     protected LoginService loginService;
     protected CourseAPI courseAPI;
-    protected CourseService courseService;
 
     /**
      * Returns the base url used by the mock server
@@ -97,12 +95,10 @@ public class HttpBaseTestCase extends BaseTestCase {
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
         LoginPrefs loginPref = new LoginPrefs(context);
-        UserPrefs userPrefs = new UserPrefs(context, loginPref);
         loginService = injector.getInstance(LoginService.class);
         loginAPI = new LoginAPI(loginService, config, loginPref,
                 new AnalyticsRegistry(), new DummyNotificationDelegate(), injector.getGson());
-        courseService = injector.getInstance(CourseService.class);
-        courseAPI = new CourseAPI(config, courseService, userPrefs);
+        courseAPI = new CourseAPI(config, injector.getInstance(CourseService.class), loginPref);
     }
 
     /**

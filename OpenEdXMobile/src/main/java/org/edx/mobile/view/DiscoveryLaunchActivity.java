@@ -51,7 +51,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                             // Empty the SearchView upon submit
                             binding.svSearchCourses.setQuery("", false);
 
-                            final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
+                            final boolean isLoggedIn = environment.getLoginPrefs().isUserLoggedIn();
                             environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
                             return true;
                         }

@@ -37,7 +37,7 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
         this.userService = userService;
         this.username = username;
         final ProfileModel model = userPrefs.getProfile();
-        viewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
+        viewingOwnProfile = model.username.equalsIgnoreCase(username);
     }
 
     @Override

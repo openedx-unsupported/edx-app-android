@@ -68,7 +68,7 @@ public class CourseAnnouncementsActivity extends BaseSingleFragmentActivity {
                 try {
                     bundle.remove(Router.EXTRA_COURSE_ID);
                     courseData = api.getCourseById(courseId);
-                    if (courseData != null && courseData.getCourse() != null) {
+                    if (courseData != null) {
                         bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
                         activityTitle = courseData.getCourse().getName();
                         return true;

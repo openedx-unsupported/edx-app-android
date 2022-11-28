@@ -129,7 +129,7 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
 
     private void fetchCourseById() {
         final String courseId = getArguments().getString(Router.EXTRA_COURSE_ID);
-        courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(getActivity(), courseId) {
+        courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(getActivity(), courseId, null) {
             @Override
             protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                 if (getActivity() != null) {

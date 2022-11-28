@@ -40,8 +40,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Nullable
     private String username() {
-        final String username = loginPrefs.getUsername();
-        return (username != null) ? Sha1Util.SHA1(username) : null;
+        return loginPrefs.isUserLoggedIn() ? Sha1Util.SHA1(loginPrefs.getUsername()) : null;
     }
 
     @Override

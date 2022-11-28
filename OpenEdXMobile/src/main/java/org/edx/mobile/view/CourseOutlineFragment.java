@@ -422,11 +422,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
                 final String group = firebaseRemoteConfig.getString(Analytics.Keys.AA_EXPERIMENT);
                 final ProfileModel profileModel = environment.getLoginPrefs().getCurrentUserProfile();
-                if (!TextUtils.isEmpty(group) && profileModel != null) {
+                if (!TextUtils.isEmpty(group) && environment.getLoginPrefs().isUserLoggedIn()) {
                     final Map<String, String> values = new HashMap<>();
                     values.put(Analytics.Keys.EXPERIMENT, Analytics.Keys.AA_EXPERIMENT);
                     values.put(Analytics.Keys.GROUP, group);
-                    values.put(Analytics.Keys.USER_ID, profileModel.id.toString());
+                    values.put(Analytics.Keys.USER_ID, Long.toString(profileModel.id));
                     values.put(Analytics.Keys.COURSE_ID, courseData.getCourseId());
                     environment.getAnalyticsRegistry().trackExperimentParams(Analytics.Events.MOBILE_EXPERIMENT_EVALUATED, values);
                 }
@@ -437,8 +437,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @NonNull
     @Override
     public Loader<AsyncTaskResult<CourseComponent>> onCreateLoader(int id, Bundle args) {
-        final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
-        return new CourseOutlineAsyncLoader(getContext(), blocksApiVersion, courseData.getCourseId());
+        return new CourseOutlineAsyncLoader(getContext(), courseData.getCourseId());
     }
 
     @Override
@@ -467,13 +466,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
         final TaskProgressCallback progressCallback = showProgress ?
                 new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
-        final String blocksApiVersion = environment.getConfig().getApiUrlVersionConfig().getBlocksApiVersion();
         final String courseId = courseData.getCourseId();
 
         if (forceRefresh) {
-            getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
+            getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
         } else {
-            getHierarchyCall = courseApi.getCourseStructure(blocksApiVersion, courseId);
+            getHierarchyCall = courseApi.getCourseStructure(courseId);
         }
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
                 progressCallback, errorNotification, null, this) {

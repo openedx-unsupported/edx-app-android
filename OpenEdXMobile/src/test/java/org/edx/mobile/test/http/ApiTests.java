@@ -15,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.edx.mobile.base.http.HttpBaseTestCase;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.course.CourseService;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AppConfig;
@@ -175,7 +174,7 @@ public class ApiTests extends HttpBaseTestCase {
                 .getEnrollments()
                 .get(0);
         String courseId = e.getCourse().getId();
-        executeStrict(courseService.enrollInACourse(new CourseService.EnrollBody(courseId, true)));
+        executeStrict(courseAPI.enrollInACourse(courseId, true));
         print("success");
         print("test: finished: reset password");
     }
@@ -222,9 +221,8 @@ public class ApiTests extends HttpBaseTestCase {
                 .getEnrollments()
                 .get(0);
         final String courseId = e.getCourse().getId();
-        final CourseStructureV1Model model = executeStrict(courseAPI.getCourseStructure(
-                config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
-        final CourseComponent courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
+        final CourseStructureV1Model model = executeStrict(courseAPI.getCourseStructure(courseId));
+        final CourseComponent courseComponent = (CourseComponent) CourseAPI.Companion.normalizeCourseStructure(model, courseId);
         assertNotNull(courseComponent);
         assertNotNull(courseComponent.getRoot());
         assertEquals(courseId, courseComponent.getCourseId());

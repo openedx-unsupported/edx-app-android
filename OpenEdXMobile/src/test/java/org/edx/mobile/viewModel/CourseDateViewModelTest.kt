@@ -29,7 +29,7 @@ class CourseDateViewModelTest : HttpBaseTestCase() {
     @Test
     fun startViewModel() {
         courseDateViewModel.fetchCourseDates(
-            courseID = "",
+            courseId = "",
             isSwipeRefresh = false,
             forceRefresh = false,
             showLoader = false

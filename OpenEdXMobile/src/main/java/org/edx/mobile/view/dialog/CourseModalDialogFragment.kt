@@ -175,15 +175,13 @@ class CourseModalDialogFragment : DialogFragment() {
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
-            environment.loginPrefs.userId?.let { userId ->
-                courseSku?.let {
-                    iapViewModel.addProductToBasket(
-                        activity = requireActivity(),
-                        userId = userId,
-                        productId = it
-                    )
-                } ?: iapDialog.showUpgradeErrorDialog(this)
-            }
+            courseSku?.let {
+                iapViewModel.addProductToBasket(
+                    activity = requireActivity(),
+                    userId = environment.loginPrefs.userId,
+                    productId = it
+                )
+            } ?: iapDialog.showUpgradeErrorDialog(this)
         }
     }
 

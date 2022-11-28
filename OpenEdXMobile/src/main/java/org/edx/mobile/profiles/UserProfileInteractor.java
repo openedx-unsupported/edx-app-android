@@ -53,7 +53,7 @@ public class UserProfileInteractor implements RefreshListener {
         this.userService = userService;
 
         final ProfileModel model = userPrefs.getProfile();
-        viewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
+        viewingOwnProfile = model.username.equalsIgnoreCase(username);
 
         eventBus.register(this);
         onRefresh();

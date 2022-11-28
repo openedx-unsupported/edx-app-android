@@ -67,7 +67,7 @@ public abstract class BaseCourseUnitVideoFragmentTest extends UiTest {
         final CourseStructureV1Model model;
         final CourseComponent courseComponent;
         try {
-            model = executeStrict(courseAPI.getCourseStructure(config.getApiUrlVersionConfig().getBlocksApiVersion(), courseId));
+            model = executeStrict(courseAPI.getCourseStructure(courseId));
             courseComponent = (CourseComponent) CourseAPI.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);

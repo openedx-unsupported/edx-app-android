@@ -23,7 +23,12 @@ import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.Analytics.Screens
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
-import org.edx.mobile.util.*
+import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.InAppPurchasesException
+import org.edx.mobile.util.InAppPurchasesUtils
+import org.edx.mobile.util.NonNullObserver
+import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
 import javax.inject.Inject
@@ -224,15 +229,13 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
-            environment.loginPrefs.userId?.let { userId ->
-                unit?.courseSku?.let { productId ->
-                    iapViewModel.addProductToBasket(
-                        requireActivity(),
-                        userId,
-                        productId
-                    )
-                } ?: iapDialog.showUpgradeErrorDialog(this)
-            }
+            unit?.courseSku?.let { productId ->
+                iapViewModel.addProductToBasket(
+                    requireActivity(),
+                    environment.loginPrefs.userId,
+                    productId
+                )
+            } ?: iapDialog.showUpgradeErrorDialog(this)
         }
     }
 

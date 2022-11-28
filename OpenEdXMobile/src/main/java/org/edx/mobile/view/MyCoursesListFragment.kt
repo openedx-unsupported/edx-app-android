@@ -147,13 +147,11 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
                     initInAppPurchaseSetup()
                     resetPurchase()
-                    environment.loginPrefs.userId?.let { userId ->
-                        iapViewModel.detectUnfulfilledPurchase(
-                            requireActivity(),
-                            userId,
-                            enrolledCourses
-                        )
-                    }
+                    iapViewModel.detectUnfulfilledPurchase(
+                        requireActivity(),
+                        environment.loginPrefs.userId,
+                        enrolledCourses
+                    )
                 }
             })
 

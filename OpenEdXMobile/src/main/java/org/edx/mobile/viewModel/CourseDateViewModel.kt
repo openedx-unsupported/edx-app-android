@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatusException
-import org.edx.mobile.http.constants.ApiConstants
 import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
 import org.edx.mobile.model.course.CourseBannerInfoModel
@@ -102,7 +101,7 @@ class CourseDateViewModel @Inject constructor(
     }
 
     fun fetchCourseDates(
-        courseID: String,
+        courseId: String,
         forceRefresh: Boolean,
         showLoader: Boolean = false,
         isSwipeRefresh: Boolean = false
@@ -111,7 +110,7 @@ class CourseDateViewModel @Inject constructor(
         _swipeRefresh.value = isSwipeRefresh
         _showLoader.value = showLoader
         repository.getCourseDates(
-            courseId = courseID,
+            courseId = courseId,
             forceRefresh = forceRefresh,
             callback = object : NetworkResponseCallback<CourseDates> {
                 override fun onSuccess(result: Result.Success<CourseDates>) {
@@ -119,7 +118,7 @@ class CourseDateViewModel @Inject constructor(
                         result.data.let {
                             _courseDates.postValue(it)
                         }
-                        fetchCourseDatesBannerInfo(courseID, true)
+                        fetchCourseDatesBannerInfo(courseId, true)
                     } else {
                         setError(ErrorMessage.COURSE_DATES_CODE, result.code, result.message)
                     }
@@ -141,11 +140,11 @@ class CourseDateViewModel @Inject constructor(
         )
     }
 
-    fun fetchCourseDatesBannerInfo(courseID: String, showLoader: Boolean = false) {
+    fun fetchCourseDatesBannerInfo(courseId: String, showLoader: Boolean = false) {
         _errorMessage.value = null
         _showLoader.value = showLoader
         repository.getCourseBannerInfo(
-            courseId = courseID,
+            courseId = courseId,
             callback = object : NetworkResponseCallback<CourseBannerInfoModel> {
                 override fun onSuccess(result: Result.Success<CourseBannerInfoModel>) {
                     if (result.isSuccessful && result.data != null) {
@@ -171,19 +170,17 @@ class CourseDateViewModel @Inject constructor(
         )
     }
 
-    fun resetCourseDatesBanner(courseID: String) {
+    fun resetCourseDatesBanner(courseId: String) {
         _errorMessage.value = null
         _showLoader.value = true
-        val courseBody = HashMap<String, String>()
-        courseBody[ApiConstants.COURSE_KEY] = courseID
         repository.resetCourseDates(
-            body = courseBody,
+            courseId = courseId,
             callback = object : NetworkResponseCallback<ResetCourseDates> {
                 override fun onSuccess(result: Result.Success<ResetCourseDates>) {
                     if (result.isSuccessful && result.data != null) {
                         _resetCourseDates.postValue(result.data)
                         fetchCourseDates(
-                            courseID,
+                            courseId,
                             forceRefresh = true,
                             showLoader = false,
                             isSwipeRefresh = false

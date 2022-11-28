@@ -4,20 +4,17 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
-import androidx.annotation.Nullable;
 import android.telephony.TelephonyManager;
+
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.PrefManager;
 
 import java.util.List;
 
 public class NetworkUtil {
-
-    private static final Logger logger = new Logger(NetworkUtil.class.getName());
-    private static final String TAG = NetworkUtil.class.getSimpleName();
 
     /**
      * Returns true if device is connected to wifi or mobile network, false
@@ -34,7 +31,6 @@ public class NetworkUtil {
         if (infoWifi != null) {
             State wifi = infoWifi.getState();
             if (wifi == NetworkInfo.State.CONNECTED) {
-                logger.debug("Wifi is connected");
                 return true;
             }
         }
@@ -42,13 +38,8 @@ public class NetworkUtil {
         NetworkInfo infoMobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         if (infoMobile != null) {
             State mobile = infoMobile.getState();
-            if (mobile == NetworkInfo.State.CONNECTED) {
-                logger.debug("Mobile data is connected");
-                return true;
-            }
+            return mobile == State.CONNECTED;
         }
-
-        logger.debug("Network not available");
         return false;
     }
 
@@ -98,18 +89,14 @@ public class NetworkUtil {
             TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String carrierId = manager.getNetworkOperator();
 
-            logger.debug(String.format("Carrier id: %s", carrierId));
-
             List<String> zeroRatedCarriers = config.getZeroRatingConfig().getCarriers();
 
             for (String carrier : zeroRatedCarriers) {
                 if (carrier.equalsIgnoreCase(carrierId)) {
-                    logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
                     return true;
                 }
             }
         }
-
         return false;
     }
 

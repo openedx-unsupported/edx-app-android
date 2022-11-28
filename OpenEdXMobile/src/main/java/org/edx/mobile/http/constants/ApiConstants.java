@@ -11,12 +11,16 @@ import java.lang.annotation.RetentionPolicy;
 
 public class ApiConstants {
     public static final String API_VERSION = "apiVersion";
+
     public static final String COURSE_ID = "courseId";
+
     public static final String USER_NAME = "username";
+
     public static final String GROUP_ID = "groupId";
+
     public static final String ORG_CODE = "org";
 
-    public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
+    public static final String URL_MY_USER_INFO = "/api/mobile/v0.5/my_user_info";
 
     public static final String URL_ACCESS_TOKEN = "/oauth2/access_token/";
 
@@ -28,7 +32,7 @@ public class ApiConstants {
 
     public static final String URL_LOGIN = "/oauth2/login/";
 
-    public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
+    public static final String URL_LAST_ACCESS_FOR_COURSE = "/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 
     public static final String URL_REGISTRATION = "/user_api/{" + API_VERSION + "}/account/registration/";
 
@@ -51,13 +55,19 @@ public class ApiConstants {
     public static final String VALIDATION_DECISIONS = "validation_decisions";
 
     public static final String COURSE_KEY = "course_key";
+
     public static final String FIRST_SECTION_KEY = "first_section";
 
     public static final String PAYMENT_PROCESSOR = "android-iap";
 
+    public static final String COURSE_STRUCTURE_REQUIRED_PATH = "depth=all&" +
+            "requested_fields=contains_gated_content,show_gated_sections,special_exam_info,graded,format,student_view_multi_device,due,completion&" +
+            "student_view_data=video,discussion&block_counts=video&nav_depth=3";
+
     @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TokenType {}
+    public @interface TokenType {
+    }
 
     public static final int STANDARD_PAGE_SIZE = 20;
 

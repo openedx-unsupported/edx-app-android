@@ -12,7 +12,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -485,9 +484,7 @@ public class Storage implements IStorage {
                 @Override
                 public void run() {
                     try {
-                        ProfileModel profile = loginPrefs.getCurrentUserProfile();
-                        if (profile == null) {
-                            // user no logged in
+                        if (!loginPrefs.isUserLoggedIn()) {
                             return;
                         }
 

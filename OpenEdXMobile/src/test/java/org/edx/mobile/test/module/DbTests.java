@@ -39,9 +39,7 @@ public class DbTests extends BaseTestCase {
                 ApplicationProvider.getApplicationContext());
 
         // Our database makes use of the authenticated user's username, so we must mock it.
-        final ProfileModel profileModel = new ProfileModel();
-        profileModel.username = username;
-
+        final ProfileModel profileModel = new ProfileModel(0, username, "", null);
         loginPrefs.storeUserProfile(profileModel);
     }
 

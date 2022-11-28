@@ -154,29 +154,39 @@ public class LoginPrefs {
         return gson.fromJson(json, AuthResponse.class);
     }
 
-    @Nullable
+    public boolean isUserLoggedIn() {
+        return pref.getString(PrefManager.Key.PROFILE_JSON) != null;
+    }
+
+    /**
+     * For an active session, the user profile is always non null but for verification purpose this
+     * method should always be called after [isUserLoggedIn] method.
+     *
+     * @return Active User Session Profile Data
+     */
+    @NonNull
     public ProfileModel getCurrentUserProfile() {
         final String json = pref.getString(PrefManager.Key.PROFILE_JSON);
-        if (json == null) {
-            return null;
-        }
         return gson.fromJson(json, ProfileModel.class);
     }
 
-    @Nullable
+    @NonNull
     public Long getUserId() {
-        final ProfileModel profileModel = getCurrentUserProfile();
-        return profileModel != null ? profileModel.id : null;
+        return getCurrentUserProfile().id;
     }
 
     public boolean isOddUserId() {
-        return (getUserId() != null && getUserId() % 2 == 1);
+        return getUserId() % 2 == 1;
+    }
+
+    @NonNull
+    public String getUsername() {
+        return getCurrentUserProfile().username;
     }
 
     @Nullable
-    public String getUsername() {
-        final ProfileModel profileModel = getCurrentUserProfile();
-        return null == profileModel ? null : profileModel.username;
+    public String getUserEmail() {
+        return getCurrentUserProfile().email;
     }
 
     @Nullable

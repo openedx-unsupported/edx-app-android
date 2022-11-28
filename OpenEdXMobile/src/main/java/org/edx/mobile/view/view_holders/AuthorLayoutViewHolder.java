@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.discussion.IAuthorData;
 import org.edx.mobile.model.user.ProfileImage;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -57,15 +56,14 @@ public class AuthorLayoutViewHolder {
             if (provider.getProfileImage() != null && provider.getProfileImage().hasImage()) {
                 profileImage = provider.getProfileImage();
             } else {
-                /**
-                 * Background: Currently the POST & PATCH APIs aren't configured to return a user's
-                 * {@link ProfileImage} in their response. Since, the currently logged-in user is
-                 * the only one that can POST using the app, so, we use the locally stored
-                 * {@link ProfileImage} in {@link LoginPrefs} instead.
-                 * Incase of PATCH we just use the image that we got in the initial GET call.
+                /*
+                  Background: Currently the POST & PATCH APIs aren't configured to return a user's
+                  {@link ProfileImage} in their response. Since, the currently logged-in user is
+                  the only one that can POST using the app, so, we use the locally stored
+                  {@link ProfileImage} in {@link LoginPrefs} instead.
+                  In case of PATCH we just use the image that we got in the initial GET call.
                  */
-                ProfileModel profileModel = loginPrefs.getCurrentUserProfile();
-                if (profileModel != null && authorData.getAuthor().equals(profileModel.username)) {
+                if (loginPrefs.getUsername().equals(authorData.getAuthor())) {
                     profileImage = loginPrefs.getProfileImage();
                 } else {
                     profileImage = null;

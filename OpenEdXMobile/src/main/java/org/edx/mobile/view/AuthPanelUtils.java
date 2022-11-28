@@ -1,7 +1,8 @@
 package org.edx.mobile.view;
 
-import androidx.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -25,7 +26,7 @@ public class AuthPanelUtils {
     }
 
     public static boolean shouldAuthPanelBeVisible(@NonNull final IEdxEnvironment environment) {
-        return null == environment.getLoginPrefs().getUsername()
+        return !environment.getLoginPrefs().isUserLoggedIn()
                 && environment.getConfig().isNewLogistrationEnabled();
     }
 

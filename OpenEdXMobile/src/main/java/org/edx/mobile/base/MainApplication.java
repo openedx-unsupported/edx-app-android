@@ -169,7 +169,7 @@ public abstract class MainApplication extends MultiDexApplication {
             @Override
             public void onResponse(@NonNull Call<UnacknowledgedNoticeResponse> call,
                                    @NonNull Response<UnacknowledgedNoticeResponse> response) {
-                if (getEnvironment(getApplicationContext()).getLoginPrefs().getUsername() != null
+                if (getEnvironment(getApplicationContext()).getLoginPrefs().isUserLoggedIn()
                         && response.isSuccessful() && response.code() == HttpStatus.OK) {
                     if (response.body() != null && !response.body().getResults().isEmpty()) {
                         getEnvironment(getApplicationContext()).getRouter().showAuthenticatedWebViewActivity(

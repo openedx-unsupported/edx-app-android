@@ -17,7 +17,6 @@ import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.services.CourseManager;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
@@ -42,13 +41,9 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     @Inject
     CourseManager courseManager;
 
-    @Inject
-    Config config;
-
     protected EnrolledCoursesResponse courseData;
     protected CourseUpgradeResponse courseUpgradeData;
     protected String courseComponentId;
-    protected String blocksApiVersion;
 
     private Call<CourseStructureV1Model> getHierarchyCall;
 
@@ -100,7 +95,6 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     }
 
     protected void restore(Bundle savedInstanceState) {
-        blocksApiVersion = config.getApiUrlVersionConfig().getBlocksApiVersion();
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
             courseUpgradeData = savedInstanceState.getParcelable(Router.EXTRA_COURSE_UPGRADE_DATA);
@@ -116,7 +110,7 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
      * Method to force update the course structure from server.
      */
     protected void updateCourseStructure(String courseId, String componentId) {
-        getHierarchyCall = courseApi.getCourseStructureWithoutStale(blocksApiVersion, courseId);
+        getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
                 new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification,
                 null, this) {
@@ -211,7 +205,7 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
 
     protected boolean isOnCourseOutline() {
         if (courseComponentId == null) return true;
-        CourseComponent outlineComp = courseManager.getComponentById(blocksApiVersion,
+        CourseComponent outlineComp = courseManager.getComponentById(
                 courseData.getCourse().getId(), courseComponentId);
         BlockPath outlinePath = outlineComp.getPath();
         int outlinePathSize = outlinePath.getPath().size();
