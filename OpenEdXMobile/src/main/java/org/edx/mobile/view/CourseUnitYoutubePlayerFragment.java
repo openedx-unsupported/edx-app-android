@@ -208,6 +208,9 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     private void releaseYoutubePlayer() {
         if (youTubePlayer != null) {
             saveCurrentPlaybackPosition(youTubePlayer.getCurrentTimeMillis());
+            youTubePlayer.setPlayerStateChangeListener(null);
+            youTubePlayer.setPlaybackEventListener(null);
+            youTubePlayer.setOnFullscreenListener(null);
             youTubePlayer.release();
             youTubePlayer = null;
         }
@@ -291,18 +294,22 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
         @Override
         public void onPlaying() {
             updateTranscriptCallbackStatus(true);
-            environment.getAnalyticsRegistry().trackVideoPlaying(videoModel.videoId,
-                    youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
-                    videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
+            if (videoModel != null) {
+                environment.getAnalyticsRegistry().trackVideoPlaying(videoModel.videoId,
+                        youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
+                        videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
+            }
         }
 
         @Override
         public void onPaused() {
             saveCurrentPlaybackPosition(getPlayerCurrentPosition());
             updateTranscriptCallbackStatus(false);
-            environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
-                    youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
-                    videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
+            if (videoModel != null) {
+                environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
+                        youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
+                        videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
+            }
         }
 
         @Override
