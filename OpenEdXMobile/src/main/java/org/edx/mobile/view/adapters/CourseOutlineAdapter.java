@@ -570,23 +570,19 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 row.bulkDownloadLoading.setVisibility(View.VISIBLE);
                 row.bulkDownloadLoading.setTag(DownloadEntry.DownloadedState.DOWNLOADING);
                 row.bulkDownload.setVisibility(View.GONE);
-                row.downloadBackground.setVisibility(View.GONE);
                 row.bulkDownloadLoading.setContentDescription(state.toString());
                 break;
             case DOWNLOADED:
                 row.bulkDownloadLoading.setVisibility(View.GONE);
-                row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setVisibility(View.VISIBLE);
-                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
-                        R.drawable.ic_download_done, R.dimen.edx_large));
+                row.bulkDownload.setImageResource(R.drawable.download_done_selector);
                 row.bulkDownload.setTag(R.drawable.ic_download_done);
                 break;
             case ONLINE:
                 row.bulkDownloadLoading.setVisibility(View.GONE);
                 row.bulkDownload.setVisibility(View.VISIBLE);
-                row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
-                        R.drawable.ic_download, R.dimen.edx_large));
+                        R.drawable.ic_download));
                 row.bulkDownload.setTag(R.drawable.ic_download);
                 break;
         }
@@ -708,9 +704,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.bulk_download);
         holder.bulkDownloadLoading = (CircularProgressIndicator) convertView
                 .findViewById(R.id.loading_indicator);
-        holder.downloadBackground = (View) convertView
-                .findViewById(R.id.download_background);
-        holder.bulkDownload.setColorFilter(R.color.primaryXLightColor);
         holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel = convertView.findViewById(R.id.row_subtitle_panel);
@@ -731,7 +724,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         AppCompatImageView rowSubtitleIcon;
         AppCompatImageView bulkDownload;
         CircularProgressIndicator bulkDownloadLoading;
-        View downloadBackground;
         AppCompatImageView lockedContent;
         TextView noOfVideos;
         LinearLayout numOfVideoAndDownloadArea;
