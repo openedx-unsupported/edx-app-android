@@ -5,7 +5,7 @@ project.ext {
     BUILD_TOOLS_VERSION = "30.0.2"
     COMPILE_SDK_VERSION = 30
     // API Level that the application will target
-    TARGET_SDK_VERSION = 30
+    TARGET_SDK_VERSION = 31
     // Minimum API Level required for the application to run
     MIN_SDK_VERSION = 21
 
