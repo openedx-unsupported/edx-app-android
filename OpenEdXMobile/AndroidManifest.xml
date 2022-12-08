@@ -296,7 +296,7 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
@@ -305,8 +305,10 @@
         </receiver>
 
         <!-- Media status update receiver required for the SD Card storage feature -->
-        <receiver android:name=".receivers.MediaStatusReceiver" android:enabled="${sdCardEnabled}"
-            android:exported="false">
+        <receiver
+            android:name=".receivers.MediaStatusReceiver"
+            android:enabled="${sdCardEnabled}"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
                 <action android:name="android.intent.action.MEDIA_REMOVED" />
@@ -317,7 +319,7 @@
 
         <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
         <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="org.edx.mobile.END_EMMA" />
             </intent-filter>
@@ -371,7 +373,7 @@
         <service
             android:name="org.edx.mobile.notifications.services.NotificationService"
             android:enabled="${fcmEnabled}"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
