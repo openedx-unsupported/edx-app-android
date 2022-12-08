@@ -63,7 +63,8 @@
             android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoDisplayTheme">
+            android:theme="@style/AppTheme.NoDisplayTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -103,7 +104,8 @@
 
         <!--Intent filter to capture System Browser or Authenticator calling back to our app after sign-in-->
         <activity
-            android:name="com.microsoft.identity.client.BrowserTabActivity">
+            android:name="com.microsoft.identity.client.BrowserTabActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -258,6 +260,7 @@
         <activity
             android:name=".view.dialog.WebViewActivity"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -281,7 +284,8 @@
             android:name="org.edx.mobile.googlecast.ExpandedControlsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.CastVideosTheme">
+            android:theme="@style/Theme.CastVideosTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -291,7 +295,8 @@
             android:name="org.edx.mobile.view.AuthenticatedWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
-        <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
+        <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
@@ -300,7 +305,8 @@
         </receiver>
 
         <!-- Media status update receiver required for the SD Card storage feature -->
-        <receiver android:name=".receivers.MediaStatusReceiver" android:enabled="${sdCardEnabled}">
+        <receiver android:name=".receivers.MediaStatusReceiver" android:enabled="${sdCardEnabled}"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
                 <action android:name="android.intent.action.MEDIA_REMOVED" />
@@ -310,7 +316,8 @@
         </receiver>
 
         <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
-        <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast">
+        <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast"
+            android:exported="false">
             <intent-filter>
                 <action android:name="org.edx.mobile.END_EMMA" />
             </intent-filter>
@@ -363,7 +370,8 @@
             android:value="${fcmEnabled}" />
         <service
             android:name="org.edx.mobile.notifications.services.NotificationService"
-            android:enabled="${fcmEnabled}">
+            android:enabled="${fcmEnabled}"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
