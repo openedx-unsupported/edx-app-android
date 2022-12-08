@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.databinding.BottomSheetVideoMoreOptionsBinding
@@ -25,16 +23,6 @@ class VideoMoreOptionsBottomSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = BottomSheetVideoMoreOptionsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (dialog as BottomSheetDialog).behavior.apply {
-            // To expand the modal in landscape mode
-            maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
-            state = BottomSheetBehavior.STATE_EXPANDED
-        }
 
         binding.deleteOption.setOnClickListener {
             videoViewModel.deleteVideosAtPosition(
@@ -42,6 +30,8 @@ class VideoMoreOptionsBottomSheet : BottomSheetDialogFragment() {
             )
             dismiss()
         }
+
+        return binding.root
     }
 
     override fun onDismiss(dialog: DialogInterface) {
