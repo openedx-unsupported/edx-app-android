@@ -200,7 +200,7 @@
     <!-- Label shown when no important dates are available for a course -->
     <string name="no_course_dates_to_display">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title">Delete Videos</string>
+    <string name="delete_videos_title">Delete videos</string>
     <!-- Label for a course item's due date for same day -->
     <string name="due_date_today">due today at {due_date}</string>
     <!-- Label for a course item's due date -->

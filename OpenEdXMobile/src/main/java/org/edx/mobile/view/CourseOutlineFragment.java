@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,8 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -87,6 +82,7 @@ import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
+import org.edx.mobile.view.adapters.CourseOutlineAdapter.SectionRow;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
@@ -94,6 +90,7 @@ import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.CourseViewModel;
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType;
 import org.edx.mobile.viewModel.InAppPurchasesViewModel;
+import org.edx.mobile.viewModel.VideoViewModel;
 import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -130,7 +127,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private boolean isOnCourseOutline;
     // Flag to differentiate between single or multiple video download
     private boolean isSingleVideoDownload;
-    private ActionMode deleteMode;
     private DownloadEntry downloadEntry;
     private List<? extends HasDownloadEntry> downloadEntries;
     private SwipeRefreshLayout swipeContainer;
@@ -149,6 +145,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private CourseViewModel courseViewModel;
     private CourseDateViewModel courseDateViewModel;
     private InAppPurchasesViewModel iapViewModel;
+    private VideoViewModel videoViewModel;
 
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
@@ -215,6 +212,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         accountName = CalendarUtils.getUserAccountForSync(environment);
         loaderDialog = AlertDialogFragment.newInstance(R.string.title_syncing_calendar, R.layout.alert_dialog_progress);
         initListView(view);
+        initVideoObserver();
 
         if (isOnCourseOutline) {
             initCourseDateObserver();
@@ -233,6 +231,25 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         super.onViewCreated(view, savedInstanceState);
         permissionListener = this;
         updateRowSelection(getArguments().getString(Router.EXTRA_LAST_ACCESSED_ID));
+    }
+
+    private void initVideoObserver() {
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+
+        videoViewModel.getSelectedVideosPosition().observe(getViewLifecycleOwner(), new EventObserver<>(position -> {
+            if (position != ListView.INVALID_POSITION && position == listView.getCheckedItemPosition()) {
+                deleteDownloadedVideosAtPosition(position);
+            }
+            return null;
+        }));
+
+        videoViewModel.getClearChoices().observe(getViewLifecycleOwner(), new EventObserver<>(shouldClear -> {
+            if (shouldClear) {
+                listView.clearChoices();
+                listView.requestLayout();
+            }
+            return null;
+        }));
     }
 
     private void initCourseDateObserver() {
@@ -503,16 +520,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     else
                         position -= 1;
                 }
-                if (deleteMode != null) {
-                    deleteMode.finish();
-                }
                 listView.clearChoices();
                 final CourseComponent component = adapter.getItem(position).component;
                 if (component.isContainer()) {
                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, component.getId(), null, isVideoMode);
                 } else {
-                    if (adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM) {
+                    if (adapter.getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM) {
                         environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
                     }
                     environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
@@ -521,22 +535,19 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // Checking if the onItemLongClick action performed on course dates banner
-                if (!isVideoMode && isBannerVisible && position == 0) {
-                    return false;
-                }
-                final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) view.findViewById(R.id.bulk_download);
-                if (bulkDownloadIcon != null && bulkDownloadIcon.getTag() != null &&
-                        (Integer) bulkDownloadIcon.getTag() == R.drawable.ic_download_done) {
-                    ((AppCompatActivity) getActivity()).startSupportActionMode(deleteModelCallback);
-                    listView.setItemChecked(position, true);
-                    return true;
-                }
+        listView.setOnItemLongClickListener((parent, itemView, position, id) -> {
+            // Checking if the onItemLongClick action performed on course dates banner
+            if (!isVideoMode && isBannerVisible && position == 0) {
                 return false;
             }
+            final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) itemView.findViewById(R.id.bulk_download);
+            if (bulkDownloadIcon != null && bulkDownloadIcon.getTag() != null &&
+                    (Integer) bulkDownloadIcon.getTag() == R.drawable.ic_download_done) {
+                VideoMoreOptionsBottomSheet.newInstance(position).show(getChildFragmentManager(), null);
+                listView.setItemChecked(position, true);
+                return true;
+            }
+            return false;
         });
     }
 
@@ -648,123 +659,85 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }
     }
 
-    /**
-     * Callback to handle the deletion of videos using the Contextual Action Bar.
-     */
-    private ActionMode.Callback deleteModelCallback = new ActionMode.Callback() {
-        // Called when the action mode is created; startActionMode/startSupportActionMode was called
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            // Inflate a menu resource providing context menu items
-            final MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.delete_contextual_menu, menu);
-            menu.findItem(R.id.item_delete).setIcon(
-                    UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_delete, R.dimen.action_bar_icon_size)
-            );
-            mode.setTitle(R.string.delete_videos_title);
-            return true;
+    private void deleteDownloadedVideosAtPosition(int checkedItemPosition) {
+        // Change the icon to download icon immediately
+        final View rowView = listView.getChildAt(checkedItemPosition - listView.getFirstVisiblePosition());
+        if (rowView != null) {
+            // rowView will be null, if the user scrolls away from the checked item
+            final AppCompatImageView bulkDownloadIcon = rowView.findViewById(R.id.bulk_download);
+            bulkDownloadIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_download));
+            bulkDownloadIcon.setTag(R.drawable.ic_download);
         }
 
-        // Called each time the action mode is shown. Always called after onCreateActionMode, but
-        // may be called multiple times if the mode is invalidated.
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            deleteMode = mode;
-            return false;
+        final SectionRow rowItem = adapter.getItem(checkedItemPosition);
+        final List<CourseComponent> videos = rowItem.component.getVideos(true);
+
+        if (isOnCourseOutline) {
+            environment.getAnalyticsRegistry().trackSubsectionVideosDelete(courseData.getCourseId(),
+                    rowItem.component.getId());
+        } else {
+            environment.getAnalyticsRegistry().trackUnitVideoDelete(courseData.getCourseId(),
+                    rowItem.component.getId());
         }
 
-        // Called when the user selects a contextual menu item
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.item_delete:
-                    final int checkedItemPosition = listView.getCheckedItemPosition();
-                    // Change the icon to download icon immediately
-                    final View rowView = listView.getChildAt(checkedItemPosition - listView.getFirstVisiblePosition());
-                    if (rowView != null) {
-                        // rowView will be null, if the user scrolls away from the checked item
-                        final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) rowView.findViewById(R.id.bulk_download);
-                        bulkDownloadIcon.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_download));
-                        bulkDownloadIcon.setTag(R.drawable.ic_download);
+        showVideosDeletedSnackBar(rowItem, videos);
+    }
+
+    private void showVideosDeletedSnackBar(SectionRow rowItem, List<CourseComponent> videos) {
+        /*
+          The android docs have NOT been updated yet, but if you jump into the source code you'll
+          notice that the parameter to the method setDuration(int duration) can either be one of
+          LENGTH_SHORT, LENGTH_LONG, LENGTH_INDEFINITE or a custom duration in milliseconds.
+
+          https://stackoverflow.com/a/30552666
+          https://github.com/material-components/material-components-android/commit/2cb77c9331cc3c6a5034aace0238b96508acf47d
+         */
+        @SuppressLint("WrongConstant") final Snackbar snackbar = Snackbar.make(
+                listView,
+                getResources().getQuantityString(
+                        R.plurals.delete_video_snackbar_msg,
+                        videos.size(),
+                        videos.size()
+                ),
+                SNACKBAR_SHOWTIME_MS
+        );
+
+        snackbar.setAction(R.string.label_undo, view -> {
+            // No need of implementation as we'll handle the action in SnackBar's
+            // onDismissed callback.
+        });
+        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<>() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                // SnackBar is being dismissed by any action other than its action button's press
+                if (event != DISMISS_EVENT_ACTION) {
+                    final IStorage storage = environment.getStorage();
+                    for (CourseComponent video : videos) {
+                        final VideoBlockModel videoBlockModel = (VideoBlockModel) video;
+                        final DownloadEntry downloadEntry = videoBlockModel.getDownloadEntry(storage);
+                        if (downloadEntry != null && downloadEntry.isDownloaded()) {
+                            // This check is necessary because, this callback gets called multiple
+                            // times when SnackBar is about to dismiss and the activity finishes
+                            storage.removeDownload(downloadEntry);
+                        } else {
+                            return;
+                        }
                     }
-
-                    final CourseOutlineAdapter.SectionRow rowItem = adapter.getItem(checkedItemPosition);
-                    final List<CourseComponent> videos = rowItem.component.getVideos(true);
-                    final int totalVideos = videos.size();
-
+                } else {
                     if (isOnCourseOutline) {
-                        environment.getAnalyticsRegistry().trackSubsectionVideosDelete(
+                        environment.getAnalyticsRegistry().trackUndoingSubsectionVideosDelete(
                                 courseData.getCourseId(), rowItem.component.getId());
                     } else {
-                        environment.getAnalyticsRegistry().trackUnitVideoDelete(
+                        environment.getAnalyticsRegistry().trackUndoingUnitVideoDelete(
                                 courseData.getCourseId(), rowItem.component.getId());
                     }
-
-                    /*
-                    The android docs have NOT been updated yet, but if you jump into the source code
-                    you'll notice that the parameter to the method setDuration(int duration) can
-                    either be one of LENGTH_SHORT, LENGTH_LONG, LENGTH_INDEFINITE or a custom
-                    duration in milliseconds.
-                    https://stackoverflow.com/a/30552666
-                    https://github.com/material-components/material-components-android/commit/2cb77c9331cc3c6a5034aace0238b96508acf47d
-                     */
-                    @SuppressLint("WrongConstant") final Snackbar snackbar = Snackbar.make(listView,
-                            getResources().getQuantityString(R.plurals.delete_video_snackbar_msg, totalVideos, totalVideos),
-                            SNACKBAR_SHOWTIME_MS);
-                    snackbar.setAction(R.string.label_undo, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // No need of implementation as we'll handle the action in SnackBar's
-                            // onDismissed callback.
-                        }
-                    });
-                    snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                        @Override
-                        public void onDismissed(Snackbar transientBottomBar, int event) {
-                            super.onDismissed(transientBottomBar, event);
-                            // SnackBar is being dismissed by any action other than its action button's press
-                            if (event != DISMISS_EVENT_ACTION) {
-                                final IStorage storage = environment.getStorage();
-                                for (CourseComponent video : videos) {
-                                    final VideoBlockModel videoBlockModel = (VideoBlockModel) video;
-                                    final DownloadEntry downloadEntry = videoBlockModel.getDownloadEntry(storage);
-                                    if (downloadEntry.isDownloaded()) {
-                                        // This check is necessary because, this callback gets
-                                        // called multiple times when SnackBar is about to dismiss
-                                        // and the activity finishes
-                                        storage.removeDownload(downloadEntry);
-                                    } else {
-                                        return;
-                                    }
-                                }
-                            } else {
-                                if (isOnCourseOutline) {
-                                    environment.getAnalyticsRegistry().trackUndoingSubsectionVideosDelete(
-                                            courseData.getCourseId(), rowItem.component.getId());
-                                } else {
-                                    environment.getAnalyticsRegistry().trackUndoingUnitVideoDelete(
-                                            courseData.getCourseId(), rowItem.component.getId());
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-                    snackbar.show();
-                    mode.finish();
-                    return true;
-                default:
-                    return false;
+                }
+                adapter.notifyDataSetChanged();
             }
-        }
-
-        // Called when the user exits the action mode
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            deleteMode = null;
-            listView.clearChoices();
-            listView.requestLayout();
-        }
-    };
+        });
+        snackbar.show();
+    }
 
     /**
      * Load data to the adapter
