@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/content_error_root"
@@ -12,11 +13,17 @@
         android:paddingEnd="@dimen/common_course_display_margin_side"
         android:paddingBottom="@dimen/common_course_display_margin_top">
 
-        <org.edx.mobile.view.custom.EdxWebView
-            android:id="@+id/webview"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none" />
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <org.edx.mobile.view.custom.EdxWebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
+        </androidx.core.widget.NestedScrollView>
 
         <include layout="@layout/loading_indicator" />
 
