@@ -20,13 +20,13 @@ import org.greenrobot.eventbus.EventBus
 class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListener,
     RefreshListener {
 
-    private lateinit var snackbarErrorNotification: SnackbarErrorNotification
+    private lateinit var snackBarErrorNotification: SnackbarErrorNotification
     private var isFullScreenErrorVisible = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_tabs_dashboard)
-        snackbarErrorNotification =
+        snackBarErrorNotification =
             SnackbarErrorNotification(findViewById(R.id.fragment_container_view))
 
         if (savedInstanceState == null) {
@@ -48,15 +48,15 @@ class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListen
     }
 
     override fun hideSnackBar() {
-        snackbarErrorNotification.hideError()
+        snackBarErrorNotification.hideError()
     }
 
     override fun onRestart() {
         super.onRestart()
         if (NetworkUtil.isConnected(this)) {
-            snackbarErrorNotification.hideError()
+            snackBarErrorNotification.hideError()
         } else if (!isFullScreenErrorVisible) {
-            snackbarErrorNotification.showOfflineError(this)
+            snackBarErrorNotification.showOfflineError(this)
         }
     }
 
@@ -64,9 +64,9 @@ class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListen
         isFullScreenErrorVisible = fullScreenErrorVisibility
         val isNetworkConnected = NetworkUtil.isConnected(this)
         if (fullScreenErrorVisibility || isNetworkConnected) {
-            snackbarErrorNotification.hideError()
+            snackBarErrorNotification.hideError()
         } else {
-            snackbarErrorNotification.showOfflineError(this)
+            snackBarErrorNotification.showOfflineError(this)
         }
     }
 

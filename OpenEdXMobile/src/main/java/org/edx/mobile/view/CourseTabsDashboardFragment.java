@@ -57,9 +57,6 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     private static final String ARG_COURSE_NOT_FOUND = "ARG_COURSE_NOT_FOUND";
     protected final Logger logger = new Logger(getClass().getName());
 
-    @Nullable
-    private FragmentDashboardErrorLayoutBinding errorLayoutBinding;
-
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -101,14 +98,14 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         courseData = (EnrolledCoursesResponse) requireArguments().getSerializable(Router.EXTRA_COURSE_DATA);
 
+        FragmentDashboardErrorLayoutBinding errorLayoutBinding;
         if (courseData != null) {
             setHasOptionsMenu(courseData.getCourse().getCoursewareAccess().hasAccess());
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
 
             if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
-                final boolean auditAccessExpired = courseData.getAuditAccessExpires() != null &&
-                        new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
+                final boolean auditAccessExpired = new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
                 errorLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard_error_layout, container, false);
                 errorLayoutBinding.errorMsg.setText(auditAccessExpired ? R.string.course_access_expired : R.string.course_not_started);
                 return errorLayoutBinding.getRoot();
@@ -132,7 +129,6 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             return frameLayout;
         }
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -300,64 +296,48 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         items.add(new FragmentItemModel(CourseOutlineFragment.class,
                 getResources().getString(R.string.label_home),
                 CourseOutlineFragment.makeArguments(courseData, getArguments().getString(EXTRA_COURSE_COMPONENT_ID),
-                        false, screenName),
-                new FragmentItemModel.FragmentStateListener() {
-                    @Override
-                    public void onFragmentSelected() {
-                        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_OUTLINE,
-                                courseData.getCourse().getId(), null);
-                    }
-                }));
+                        false, screenName), () ->
+                environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_OUTLINE,
+                        courseData.getCourse().getId(), null)
+        ));
         // Add videos tab
         if (environment.getConfig().isCourseVideosEnabled()) {
             items.add(new FragmentItemModel(CourseOutlineFragment.class,
                     getResources().getString(R.string.videos_title)
                     , CourseOutlineFragment.makeArguments(courseData, null, true, null),
-                    new FragmentItemModel.FragmentStateListener() {
-                        @Override
-                        public void onFragmentSelected() {
-                            environment.getAnalyticsRegistry().trackScreenView(
-                                    Analytics.Screens.VIDEOS_COURSE_VIDEOS, courseData.getCourse().getId(), null);
-                        }
-                    }));
+                    () -> environment.getAnalyticsRegistry().trackScreenView(
+                            Analytics.Screens.VIDEOS_COURSE_VIDEOS, courseData.getCourse().getId(), null)
+            ));
         }
         // Add discussion tab
         if (environment.getConfig().isDiscussionsEnabled() &&
                 !TextUtils.isEmpty(courseData.getCourse().getDiscussionUrl())) {
             items.add(new FragmentItemModel(CourseDiscussionTopicsFragment.class,
                     getResources().getString(R.string.discussion_title),
-                    getArguments(),
-                    new FragmentItemModel.FragmentStateListener() {
-                        @Override
-                        public void onFragmentSelected() {
-                            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
-                                    courseData.getCourse().getId(), null, null);
-                        }
-                    }));
+                    getArguments(), () -> environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPICS,
+                    courseData.getCourse().getId(), null, null)
+            ));
         }
         // Add important dates tab
         if (environment.getConfig().isCourseDatesEnabled()) {
             items.add(new FragmentItemModel(CourseDatesPageFragment.class,
                     getResources().getString(R.string.label_dates),
-                    CourseDatesPageFragment.makeArguments(courseData), () -> {
-                analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
-                        courseData.getCourse().getId(), null);
-            }));
+                    CourseDatesPageFragment.makeArguments(courseData), () -> analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_DATES,
+                    courseData.getCourse().getId(), null)
+            ));
         }
         // Add handouts tab
         items.add(new FragmentItemModel(CourseHandoutFragment.class,
                 getResources().getString(R.string.handouts_title),
-                CourseHandoutFragment.makeArguments(courseData), () -> {
-            analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_HANDOUTS,
-                    courseData.getCourse().getId(), null);
-        }));
+                CourseHandoutFragment.makeArguments(courseData), () -> analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_HANDOUTS,
+                courseData.getCourse().getId(), null)
+        ));
         // Add announcements tab
         items.add(new FragmentItemModel(CourseAnnouncementsFragment.class,
                 getResources().getString(R.string.announcement_title),
-                CourseAnnouncementsFragment.makeArguments(courseData), () -> {
-            analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_ANNOUNCEMENTS,
-                    courseData.getCourse().getId(), null);
-        }));
+                CourseAnnouncementsFragment.makeArguments(courseData), () -> analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_ANNOUNCEMENTS,
+                courseData.getCourse().getId(), null)
+        ));
         return items;
     }
 
@@ -374,6 +354,8 @@ public class CourseTabsDashboardFragment extends BaseFragment {
      */
     private void handleToolbarVisibility(View collapsedToolbar, View expandedToolbar,
                                          float percentage) {
+        if (binding == null) return;
+
         final float PERCENTAGE_TO_SHOW_COLLAPSED_TOOLBAR = 0.9f;
         final float PERCENTAGE_TO_HIDE_EXPANDED_TOOLBAR = 0.8f;
 
