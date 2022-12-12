@@ -154,13 +154,15 @@ public abstract class ErrorHandlingOkCallback<T> implements Callback {
      *                              that only sets one callback explicitly).
      * @param responseBodyTypeToken The response body type token.
      * @param errorNotification     The notification display to invoke upon encountering an error.
+     * @param refreshListener       The listener to invoke when user wants to refresh the content being viewed.
      */
     public ErrorHandlingOkCallback(@NonNull final Context context,
                                    @NonNull final TypeToken<T> responseBodyTypeToken,
-                                   @Nullable final ErrorNotification errorNotification) {
+                                   @Nullable final ErrorNotification errorNotification,
+                                   @Nullable final RefreshListener refreshListener) {
         this(context, responseBodyTypeToken.getType(),
                 context instanceof TaskProgressCallback ? (TaskProgressCallback) context : null,
-                errorNotification, null, null);
+                errorNotification, null, refreshListener);
     }
 
     /**
@@ -175,17 +177,15 @@ public abstract class ErrorHandlingOkCallback<T> implements Callback {
      *                                  that only sets one callback explicitly).
      * @param responseBodyClass         The response body class.
      * @param errorNotification         The notification display to invoke upon encountering an error.
-     * @param snackbarErrorNotification The notification display to invoke when user is viewing cached content.
      * @param refreshListener           The listener to invoke when user wants to refresh the content being viewed.
      */
     public ErrorHandlingOkCallback(@NonNull final Context context,
                                    @NonNull final Class<T> responseBodyClass,
                                    @Nullable final ErrorNotification errorNotification,
-                                   @Nullable final SnackbarErrorNotification snackbarErrorNotification,
                                    @Nullable final RefreshListener refreshListener) {
         this(context, responseBodyClass,
                 context instanceof TaskProgressCallback ? (TaskProgressCallback) context : null,
-                errorNotification, snackbarErrorNotification, refreshListener);
+                errorNotification, null, refreshListener);
     }
 
     /**
