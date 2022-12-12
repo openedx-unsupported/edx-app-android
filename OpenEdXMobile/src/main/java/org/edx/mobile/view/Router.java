@@ -386,13 +386,6 @@ public class Router {
         SecurityUtil.clearUserData(context);
     }
 
-    public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
-        Intent handoutIntent = new Intent(activity, CourseHandoutActivity.class);
-        handoutIntent.putExtra(EXTRA_COURSE_DATA, courseData);
-        handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(handoutIntent);
-    }
-
     public void showUserProfile(@NonNull Context context, @NonNull String username) {
         context.startActivity(UserProfileActivity.newIntent(context, username));
     }
