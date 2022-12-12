@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/delete_option"
+    style="?attr/bottomSheetStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/widget_margin_double"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    tools:context=".view.VideoMoreOptionsBottomSheet">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/label_delete"
+        app:srcCompat="@drawable/ic_delete" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/widget_margin_x_double"
+        android:paddingEnd="@dimen/edx_default_margin"
+        android:text="@string/delete_videos_title"
+        android:textColor="@color/neutralBlackT"
+        android:textSize="@dimen/edx_base"
+        app:lineHeight="@dimen/widget_margin_double" />
+
+</LinearLayout>
