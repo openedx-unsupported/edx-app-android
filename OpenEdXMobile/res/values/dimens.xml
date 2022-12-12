@@ -47,18 +47,6 @@
     <dimen name="course_card_detail_padding_top">8dp</dimen>
     <dimen name="course_card_detail_padding_bottom">8dp</dimen>
 
-    <!-- Course Dashboard-->
-    <dimen name="dashboard_nav_element_height">85dp</dimen>
-    <dimen name="dashboard_nav_element_left_margin">30dp</dimen>
-    <dimen name="dashboard_nav_element_right_margin">30dp</dimen>
-    <!--NOTE: This margin needs to be 75dp as per design doc
-        But, since we are using a LinearLayout in the base layout {@link layout/row_course_dashboard_list}
-        so we deduct the element's left margin i.e. {@link dashboard_nav_element_left_margin} and icon
-        width i.e. {@link #fa_xx_large} from 75dp.
-        in short: 75 - 30 - 24 = 21dp
-    -->
-    <dimen name="dashboard_nav_element_text_left_margin">21dp</dimen>
-
     <!-- Course Outline -->
     <dimen name="course_item_vertical_padding">8dp</dimen>
     <dimen name="course_item_horizontal_padding">9dp</dimen>

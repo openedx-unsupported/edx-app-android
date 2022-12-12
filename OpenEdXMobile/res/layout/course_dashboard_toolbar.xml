@@ -8,12 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:background="@color/primaryLightColor">
+        android:background="@color/toolbar_background_color">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/primaryLightColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.appcompat.widget.Toolbar
@@ -122,5 +123,22 @@
 
             </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edx_button_height"
+            android:background="@drawable/course_tabs_background"
+            app:tabGravity="start"
+            app:tabIndicatorColor="@color/primaryBaseColor"
+            app:tabIndicatorHeight="@dimen/edx_x_quarter_margin"
+            app:tabMode="scrollable"
+            app:tabPaddingBottom="@dimen/widget_margin"
+            app:tabPaddingEnd="@dimen/widget_margin"
+            app:tabPaddingStart="@dimen/widget_margin"
+            app:tabPaddingTop="@dimen/edx_half_margin"
+            app:tabTextAppearance="@style/CourseTabItem"
+            app:tabTextColor="@color/neutralXXDark" />
+
     </com.google.android.material.appbar.AppBarLayout>
 </layout>
