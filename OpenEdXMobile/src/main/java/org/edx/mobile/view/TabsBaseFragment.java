@@ -112,14 +112,7 @@ public abstract class TabsBaseFragment extends BaseFragment {
         return (screenName.equals(Screen.PROGRAM) && item.getIconResId() == R.drawable.ic_collections_bookmark) ||
                 (screenName.equals(Screen.DISCOVERY) && item.getIconResId() == R.drawable.ic_search) ||
                 (screenName.equals(Screen.DISCOVERY_COURSE_DETAIL) && item.getIconResId() == R.drawable.ic_search) ||
-                (screenName.equals(Screen.DISCOVERY_PROGRAM_DETAIL) && item.getIconResId() == R.drawable.ic_search) ||
-                (screenName.equals(Screen.COURSE_VIDEOS) && item.getIconResId() == R.drawable.ic_videocam) ||
-                (screenName.equals(Screen.COURSE_DISCUSSION) && item.getIconResId() == R.drawable.ic_forum) ||
-                (screenName.equals(Screen.DISCUSSION_POST) && item.getIconResId() == R.drawable.ic_forum) ||
-                (screenName.equals(Screen.DISCUSSION_TOPIC) && item.getIconResId() == R.drawable.ic_forum) ||
-                (screenName.equals(Screen.COURSE_DATES) && item.getIconResId() == R.drawable.ic_event) ||
-                (screenName.equals(Screen.COURSE_HANDOUT) && item.getIconResId() == R.drawable.ic_more_horiz) ||
-                (screenName.equals(Screen.COURSE_ANNOUNCEMENT) && item.getIconResId() == R.drawable.ic_more_horiz);
+                (screenName.equals(Screen.DISCOVERY_PROGRAM_DETAIL) && item.getIconResId() == R.drawable.ic_search);
     }
 
     private void initializeTabs() {
@@ -208,13 +201,8 @@ public abstract class TabsBaseFragment extends BaseFragment {
         } else {
             size = requireContext().getResources().getDimensionPixelSize(R.dimen.edx_x_large);
             // set tab view ids for the course dash board screen for the automation.
-            int id;
-            if (fragmentItem.getIconResId() == R.drawable.ic_class) {
-                id = R.id.course_outline;
-            } else {
-                String resourceString = fragmentItem.getTitle().toString().toLowerCase().replace(" ", "_");
-                id = getResources().getIdentifier(resourceString, "id", BuildConfig.APPLICATION_ID);
-            }
+            String resourceString = fragmentItem.getTitle().toString().toLowerCase().replace(" ", "_");
+            int id = getResources().getIdentifier(resourceString, "id", BuildConfig.APPLICATION_ID);
             tabItem.setId(id);
         }
         icon.getLayoutParams().height = size;
