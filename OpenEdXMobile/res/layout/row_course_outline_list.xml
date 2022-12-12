@@ -54,6 +54,7 @@
                 android:paddingEnd="@dimen/widget_margin_half"
                 android:textDirection="locale"
                 android:textSize="@dimen/edx_base"
+                tools:ignore="RtlSymmetry"
                 tools:text="Title" />
 
             <LinearLayout
@@ -125,27 +126,18 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:paddingEnd="@dimen/widget_margin_half"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:ignore="RtlSymmetry">
 
             <FrameLayout
                 android:layout_width="@dimen/download_background_size"
                 android:layout_height="@dimen/download_background_size">
 
-                <View
-                    android:id="@+id/download_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_holo_background"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/bulk_download"
-                    android:layout_width="@dimen/ic_large"
-                    android:layout_height="@dimen/ic_large"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:minWidth="@dimen/small_icon_size"
-                    android:minHeight="@dimen/small_icon_size"
                     app:srcCompat="@drawable/ic_download" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
