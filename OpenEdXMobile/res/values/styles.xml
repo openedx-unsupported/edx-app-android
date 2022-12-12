@@ -561,7 +561,6 @@
 
     <style name="CourseTabItem">
         <item name="android:textSize">@dimen/edx_small</item>
-        <item name="lineHeight">@dimen/widget_margin_double</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
