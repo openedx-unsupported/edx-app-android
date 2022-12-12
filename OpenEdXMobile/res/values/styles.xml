@@ -559,6 +559,12 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <style name="CourseTabItem">
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+    </style>
+
     <style name="CourseDashboardExpandedToolbarTitle">
         <item name="android:textColor">@color/neutralWhiteT</item>
         <item name="android:textSize">@dimen/edx_large</item>

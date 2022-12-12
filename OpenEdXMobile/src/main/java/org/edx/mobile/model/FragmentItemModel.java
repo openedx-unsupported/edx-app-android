@@ -30,9 +30,9 @@ public class FragmentItemModel {
         this(fragmentClass, title, 0, null, null);
     }
 
-    public FragmentItemModel(@NonNull Class<? extends Fragment> fragmentClass,
-                             @NonNull CharSequence title, @DrawableRes int iconResId, FragmentStateListener listener) {
-        this(fragmentClass, title, iconResId, null, listener);
+    public FragmentItemModel(@NonNull Class<? extends Fragment> fragmentClass, @NonNull CharSequence title,
+                             Bundle args, FragmentStateListener listener) {
+        this(fragmentClass, title, 0, args, listener);
     }
 
     public FragmentItemModel(@NonNull Class<? extends Fragment> fragmentClass, @NonNull CharSequence title,
