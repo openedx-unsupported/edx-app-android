@@ -75,6 +75,10 @@ public class CourseEntry implements Serializable {
         return dynamic_upgrade_deadline;
     }
 
+    public boolean isUpgradeDeadlinePassed() {
+        return dynamic_upgrade_deadline == null || CourseCardUtils.isDatePassed(new Date(), dynamic_upgrade_deadline);
+    }
+
     public String getEnd() {
         return end;
     }

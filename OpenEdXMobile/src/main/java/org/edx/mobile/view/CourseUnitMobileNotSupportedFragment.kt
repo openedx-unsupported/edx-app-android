@@ -18,6 +18,7 @@ import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.model.api.AuthorizationDenialReason
+import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
@@ -58,8 +59,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val isUpgradeable = getBooleanArgument(Router.EXTRA_IS_UPGRADEABLE, true)
         if (AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS == unit?.authorizationDenialReason) {
-            if (environment.appFeaturesPrefs.isValuePropEnabled()) {
+            if (environment.appFeaturesPrefs.isValuePropEnabled() && isUpgradeable) {
                 showGradedContent()
             } else {
                 showNotAvailableOnMobile(isLockedContent = true)
@@ -247,8 +249,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     override fun onResume() {
         super.onResume()
         unit?.let {
+            val isUpgradeable = getBooleanArgument(Router.EXTRA_IS_UPGRADEABLE, true)
             if (it.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS
-                && environment.appFeaturesPrefs.isValuePropEnabled()
+                && environment.appFeaturesPrefs.isValuePropEnabled() && isUpgradeable
             ) {
                 environment.analyticsRegistry.trackLockedContentTapped(it.courseId, it.blockId)
             }
@@ -259,12 +262,13 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         @JvmStatic
         fun newInstance(
             unit: CourseComponent,
-            isSelfPaced: Boolean,
+            courseData: EnrolledCoursesResponse,
         ): CourseUnitMobileNotSupportedFragment {
             val fragment = CourseUnitMobileNotSupportedFragment()
             val args = Bundle()
             args.putSerializable(Router.EXTRA_COURSE_UNIT, unit)
-            args.putBoolean(Router.EXTRA_IS_SELF_PACED, isSelfPaced)
+            args.putBoolean(Router.EXTRA_IS_SELF_PACED, courseData.course.isSelfPaced)
+            args.putBoolean(Router.EXTRA_IS_UPGRADEABLE, courseData.isUpgradeable)
             fragment.arguments = args
             return fragment
         }
