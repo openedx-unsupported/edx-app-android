@@ -1,5 +1,6 @@
 package org.edx.mobile.view
 
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,9 +22,14 @@ import org.edx.mobile.databinding.FragmentAccountBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.AccountDataLoadedEvent
+import org.edx.mobile.event.IAPFlowEvent
+import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
+import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.model.user.Account
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
@@ -31,8 +37,20 @@ import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
-import org.edx.mobile.util.*
-import org.edx.mobile.view.dialog.*
+import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
+import org.edx.mobile.util.Config
+import org.edx.mobile.util.FileUtil
+import org.edx.mobile.util.InAppPurchasesException
+import org.edx.mobile.util.NonNullObserver
+import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.UserProfileUtils
+import org.edx.mobile.util.observer.EventObserver
+import org.edx.mobile.view.dialog.AlertDialogFragment
+import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
+import org.edx.mobile.view.dialog.IDialogCallback
+import org.edx.mobile.view.dialog.NetworkCheckDialogFragment
+import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment
 import org.edx.mobile.viewModel.CourseViewModel
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
@@ -155,42 +173,69 @@ class AccountFragment : BaseFragment() {
     private fun initRestorePurchasesObservers() {
         courseViewModel.enrolledCoursesResponse.observe(
             viewLifecycleOwner,
-            NonNullObserver { enrolledCourses ->
-                iapViewModel.detectUnfulfilledPurchase(
-                    requireActivity(),
-                    loginPrefs.userId,
-                    enrolledCourses
-                )
+            EventObserver { enrolledCourses ->
+                iapViewModel.detectUnfulfilledPurchase(loginPrefs.userId, enrolledCourses)
             })
 
         courseViewModel.handleError.observe(viewLifecycleOwner, NonNullObserver {
-            dismissLoader(false)
+            loaderDialog?.dismiss()
         })
 
-        iapViewModel.purchaseFlowComplete.observe(
+        iapViewModel.refreshCourseData.observe(viewLifecycleOwner, EventObserver {
+            iapDialog.showNewExperienceAlertDialog(this, { _, _ ->
+                loaderDialog?.dismiss()
+                showFullScreenLoader()
+            }, { _, _ ->
+                loaderDialog?.dismiss()
+            })
+        })
+
+        iapViewModel.fakeUnfulfilledCompletion.observe(
             viewLifecycleOwner,
-            NonNullObserver { isPurchaseCompleted ->
-                if (isPurchaseCompleted) {
-                    dismissLoader(true)
+            EventObserver { isCompleted ->
+                if (isCompleted) {
+                    loaderDialog?.dismiss()
+                    iapDialog.showNoUnFulfilledPurchasesDialog(this)
                 }
             })
 
-        iapViewModel.showFullscreenLoaderDialog.observe(
-            viewLifecycleOwner,
-            NonNullObserver { canShowLoader ->
-                if (canShowLoader) {
-                    val fullscreenLoader = FullscreenLoaderDialogFragment.newInstance()
-                    fullscreenLoader.show(childFragmentManager, FullscreenLoaderDialogFragment.TAG)
-                    iapViewModel.showFullScreenLoader(false)
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, EventObserver { errorMessage ->
+            loaderDialog?.dismiss()
+            var retryListener: DialogInterface.OnClickListener? = null
+            if (errorMessage.canRetry()) {
+                retryListener = DialogInterface.OnClickListener { _, _ ->
+                    if (errorMessage.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
+                        iapViewModel.executeOrder()
+                    } else if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
+                        showFullScreenLoader()
+                    }
                 }
-            })
-
-        iapViewModel.completedUnfulfilledPurchase.observe(viewLifecycleOwner) { isCompleted ->
-            if (isCompleted) {
-                dismissLoader(false)
-                iapDialog.showNoUnFulfilledPurchasesDialog(this)
             }
+
+            var cancelListener: DialogInterface.OnClickListener? = null
+            if (errorMessage.isPostUpgradeErrorType()) {
+                cancelListener =
+                    DialogInterface.OnClickListener { _, _ -> iapViewModel.iapFlowData.clear() }
+            }
+
+            iapDialog.handleIAPException(
+                fragment = this@AccountFragment,
+                errorMessage = errorMessage,
+                retryListener = retryListener,
+                cancelListener = cancelListener
+            )
+        })
+    }
+
+    private fun showFullScreenLoader() {
+        // To proceed with the same instance of dialog fragment in case of orientation change
+        var fullScreenLoader =
+            FullscreenLoaderDialogFragment.getRetainedInstance(fragmentManager = childFragmentManager)
+        if (fullScreenLoader == null) {
+            fullScreenLoader =
+                FullscreenLoaderDialogFragment.newInstance(iapData = iapViewModel.iapFlowData)
         }
+        fullScreenLoader.show(childFragmentManager, FullscreenLoaderDialogFragment.TAG)
     }
 
     private fun showLoader() {
@@ -200,17 +245,6 @@ class AccountFragment : BaseFragment() {
         )
         loaderDialog?.isCancelable = false
         loaderDialog?.showNow(childFragmentManager, null)
-    }
-
-    private fun dismissLoader(processedUnfulfilled: Boolean) {
-        loaderDialog?.dismiss()
-        if (processedUnfulfilled) {
-            iapDialog.showNewExperienceAlertDialog(this, { _, _ ->
-                iapViewModel.showFullScreenLoader(true)
-            }, { _, _ ->
-                dismissLoader(false)
-            })
-        }
     }
 
     private fun initVideoQuality() {
@@ -418,6 +452,15 @@ class AccountFragment : BaseFragment() {
         }
     }
 
+    @Subscribe
+    @SuppressWarnings("unused")
+    fun onEventMainThread(event: IAPFlowEvent) {
+        if (this.isResumed && event.flowAction == IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE) {
+            EventBus.getDefault().post(MainDashboardRefreshEvent())
+            requireActivity().finish()
+        }
+    }
+
     @Subscribe(sticky = true)
     @SuppressWarnings("unused")
     fun onEventMainThread(event: MediaStatusChangeEvent) {
@@ -425,7 +468,7 @@ class AccountFragment : BaseFragment() {
     }
 
     @Subscribe(sticky = true)
-    @SuppressWarnings("unused")
+    @Suppress("UNUSED_PARAMETER")
     fun onEventMainThread(@NonNull event: AccountDataLoadedEvent) {
         if (!environment.config.isUserProfilesEnabled) {
             return

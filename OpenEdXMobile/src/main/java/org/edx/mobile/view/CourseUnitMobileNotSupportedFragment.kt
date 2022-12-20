@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentCourseUnitGradeBinding
+import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setImageDrawable
@@ -19,6 +18,7 @@ import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.course.CourseComponent
+import org.edx.mobile.model.iap.IAPFlowData.IAPAction
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.Analytics.Screens
@@ -26,11 +26,12 @@ import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.InAppPurchasesUtils
-import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -153,35 +154,30 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun initIAPObserver() {
-        iapViewModel.productPrice.observe(viewLifecycleOwner, NonNullObserver { skuDetails ->
+        initializeBaseObserver()
+
+        iapViewModel.productPrice.observe(viewLifecycleOwner, EventObserver { skuDetails ->
             setUpUpgradeButton(skuDetails)
         })
-        iapViewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver {
+
+        iapViewModel.launchPurchaseFlow.observe(viewLifecycleOwner, EventObserver {
+            iapViewModel.purchaseItem(
+                requireActivity(),
+                environment.loginPrefs.userId,
+                unit?.courseSku
+            )
+        })
+
+        iapViewModel.productPurchased.observe(viewLifecycleOwner, EventObserver {
+            EventBus.getDefault().post(IAPFlowEvent(IAPAction.SHOW_FULL_SCREEN_LOADER, it))
+        })
+
+        iapViewModel.showLoader.observe(viewLifecycleOwner, EventObserver {
             enableUpgradeButton(!it)
         })
 
-        iapViewModel.refreshCourseData.observe(viewLifecycleOwner) { refreshCourse: Boolean ->
-            if (refreshCourse) {
-                iapViewModel.refreshCourseData(false)
-                unit?.let { updateCourseUnit(it.courseId, it.id) }
-            }
-        }
-
-        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMessage ->
-            // Error message observer should not observe EXECUTE or REFRESH error cases as they
-            // will be observed by FullscreenLoaderDialogFragment's observer.
-            if (InAppPurchasesUtils.postPurchasedRequests.contains(errorMessage.requestType)) {
-                return@NonNullObserver
-            }
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, EventObserver { errorMessage ->
             handleIAPException(errorMessage)
-            iapViewModel.errorMessageShown()
-        })
-
-        iapViewModel.productPurchased.observe(viewLifecycleOwner, NonNullObserver {
-            lifecycleScope.launch {
-                initializeBaseObserver()
-                iapViewModel.showFullScreenLoader(true)
-            }
         })
     }
 
@@ -189,9 +185,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         var retryListener: DialogInterface.OnClickListener? = null
         if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
             retryListener = DialogInterface.OnClickListener { _, _ ->
-                iapViewModel.upgradeMode =
-                    InAppPurchasesViewModel.UpgradeMode.SILENT
-                iapViewModel.showFullScreenLoader(true)
+                EventBus.getDefault().post(
+                    IAPFlowEvent(IAPAction.SHOW_FULL_SCREEN_LOADER, iapViewModel.iapFlowData)
+                )
             }
         } else if (errorMessage.canRetry()) {
             retryListener = DialogInterface.OnClickListener { _, _ ->
@@ -230,12 +226,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
             unit?.courseSku?.let { productId ->
-                iapViewModel.addProductToBasket(
-                    requireActivity(),
-                    environment.loginPrefs.userId,
-                    productId
-                )
-            } ?: iapDialog.showUpgradeErrorDialog(this)
+                iapViewModel.startPurchaseFlow(productId)
+            } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }
     }
 
@@ -246,12 +238,25 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     override fun onResume() {
         super.onResume()
+        EventBus.getDefault().register(this)
         unit?.let {
             if (it.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS
                 && environment.appFeaturesPrefs.isValuePropEnabled()
             ) {
                 environment.analyticsRegistry.trackLockedContentTapped(it.courseId, it.blockId)
             }
+        }
+    }
+
+    override fun onPause() {
+        EventBus.getDefault().unregister(this)
+        super.onPause()
+    }
+
+    @Subscribe
+    fun onEventMainThread(event: IAPFlowEvent) {
+        if (isResumed && event.flowAction == IAPAction.PURCHASE_FLOW_COMPLETE) {
+            unit?.let { updateCourseUnit(it.courseId, it.id) }
         }
     }
 

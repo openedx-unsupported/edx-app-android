@@ -4,7 +4,6 @@ import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.logger.Logger
-import org.edx.mobile.model.course.EnrollmentMode
 import java.io.Serializable
 import java.lang.reflect.Type
 
@@ -70,6 +69,8 @@ data class EnrollmentResponse(
  * @return the list of all audit courses SKUs.
  */
 fun List<EnrolledCoursesResponse>.getAuditCoursesSku(): List<String> {
-    return this.filter { EnrollmentMode.AUDIT.toString().equals(it.mode, true) }
-        .mapNotNull { it.courseSku }.toList()
+    return this
+        .filter { it.isAuditMode }
+        .mapNotNull { it.courseSku }
+        .toList()
 }

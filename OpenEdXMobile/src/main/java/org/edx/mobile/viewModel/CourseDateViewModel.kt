@@ -18,7 +18,7 @@ import org.edx.mobile.model.course.CourseDates
 import org.edx.mobile.model.course.ResetCourseDates
 import org.edx.mobile.repository.CourseDatesRepository
 import org.edx.mobile.util.CalendarUtils
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel

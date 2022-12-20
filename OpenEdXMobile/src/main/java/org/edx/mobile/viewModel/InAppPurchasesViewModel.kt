@@ -4,11 +4,9 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.decodeToLong
 import org.edx.mobile.http.model.NetworkResponseCallback
@@ -19,11 +17,14 @@ import org.edx.mobile.model.api.getAuditCoursesSku
 import org.edx.mobile.model.iap.AddToBasketResponse
 import org.edx.mobile.model.iap.CheckoutResponse
 import org.edx.mobile.model.iap.ExecuteOrderResponse
+import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.repository.InAppPurchasesRepository
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.InAppPurchasesUtils
+import org.edx.mobile.util.observer.Event
+import org.edx.mobile.util.observer.postEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,47 +34,29 @@ class InAppPurchasesViewModel @Inject constructor(
     private val iapAnalytics: InAppPurchasesAnalytics
 ) : ViewModel() {
 
-    private val _productPrice = MutableLiveData<SkuDetails>()
-    val productPrice: LiveData<SkuDetails> = _productPrice
+    private val _productPrice = MutableLiveData<Event<SkuDetails>>()
+    val productPrice: LiveData<Event<SkuDetails>> = _productPrice
 
-    private val _productPurchased = MutableLiveData<Purchase>()
-    val productPurchased: LiveData<Purchase> = _productPurchased
+    private val _launchPurchaseFlow = MutableLiveData<Event<Boolean>>()
+    val launchPurchaseFlow: LiveData<Event<Boolean>> = _launchPurchaseFlow
 
-    private val _executeResponse = MutableLiveData<ExecuteOrderResponse>()
-    val executeResponse: LiveData<ExecuteOrderResponse> = _executeResponse
+    private val _productPurchased = MutableLiveData<Event<IAPFlowData>>()
+    val productPurchased: LiveData<Event<IAPFlowData>> = _productPurchased
 
-    private val _showFullscreenLoaderDialog = MutableLiveData(false)
-    val showFullscreenLoaderDialog: LiveData<Boolean> = _showFullscreenLoaderDialog
+    private val _refreshCourseData = MutableLiveData<Event<IAPFlowData>>()
+    val refreshCourseData: LiveData<Event<IAPFlowData>> = _refreshCourseData
 
-    private val _purchaseFlowComplete = MutableLiveData(false)
-    val purchaseFlowComplete: LiveData<Boolean> = _purchaseFlowComplete
+    private val _fakeUnfulfilledCompletion = MutableLiveData<Event<Boolean>>()
+    val fakeUnfulfilledCompletion: LiveData<Event<Boolean>> = _fakeUnfulfilledCompletion
 
-    private val _refreshCourseData = MutableLiveData(false)
-    val refreshCourseData: LiveData<Boolean> = _refreshCourseData
+    private val _showLoader = MutableLiveData<Event<Boolean>>()
+    val showLoader: LiveData<Event<Boolean>> = _showLoader
 
-    private val _completedUnfulfilledPurchase = MutableLiveData<Boolean>()
-    val completedUnfulfilledPurchase: LiveData<Boolean> = _completedUnfulfilledPurchase
+    private val _errorMessage = MutableLiveData<Event<ErrorMessage>>()
+    val errorMessage: LiveData<Event<ErrorMessage>> = _errorMessage
 
-    private val _showLoader = MutableLiveData(false)
-    val showLoader: LiveData<Boolean> = _showLoader
-
-    private val _errorMessage = MutableLiveData<ErrorMessage?>()
-    val errorMessage: LiveData<ErrorMessage?> = _errorMessage
-
-    var upgradeMode = UpgradeMode.NORMAL
-
-    private var _productId: String = ""
-    val productId: String
-        get() = _productId
-
-    private var _isVerificationPending = true
-    val isVerificationPending: Boolean
-        get() = _isVerificationPending
-
-    private var basketId: Long = 0
-    private var purchaseToken: String = ""
+    var iapFlowData = IAPFlowData()
     private var incompletePurchases: MutableList<Pair<String, String>> = arrayListOf()
-    private var userId: Long = 0
 
     private val listener = object : BillingProcessor.BillingFlowListeners {
         override fun onPurchaseCancel(responseCode: Int, message: String) {
@@ -87,8 +70,8 @@ class InAppPurchasesViewModel @Inject constructor(
 
         override fun onPurchaseComplete(purchase: Purchase) {
             super.onPurchaseComplete(purchase)
-            purchaseToken = purchase.purchaseToken
-            _productPurchased.postValue(purchase)
+            iapFlowData.purchaseToken = purchase.purchaseToken
+            _productPurchased.postEvent(iapFlowData)
             iapAnalytics.trackIAPEvent(eventName = Analytics.Events.IAP_PAYMENT_TIME)
             iapAnalytics.initUnlockContentTime()
         }
@@ -108,7 +91,7 @@ class InAppPurchasesViewModel @Inject constructor(
                 val skuDetail = skuDetails?.get(0)
                 skuDetail?.let {
                     if (it.sku == courseSku) {
-                        _productPrice.postValue(it)
+                        _productPrice.postEvent(it)
                         iapAnalytics.setPrice(skuDetail.price)
                         iapAnalytics.trackIAPEvent(Analytics.Events.IAP_LOAD_PRICE_TIME)
                     }
@@ -123,16 +106,22 @@ class InAppPurchasesViewModel @Inject constructor(
         } ?: dispatchError(requestType = ErrorMessage.PRICE_CODE)
     }
 
-    fun addProductToBasket(activity: Activity, userId: Long, productId: String) {
-        this._productId = productId
-        this.userId = userId
+    fun startPurchaseFlow(productId: String) {
+        iapFlowData.productId = productId
+        iapFlowData.upgradeMode = IAPFlowData.UpgradeMode.NORMAL
+        iapFlowData.isVerificationPending = true
+        addProductToBasket()
+    }
+
+    private fun addProductToBasket() {
         startLoading()
         repository.addToBasket(
-            productId = productId,
+            productId = iapFlowData.productId,
             callback = object : NetworkResponseCallback<AddToBasketResponse> {
                 override fun onSuccess(result: Result.Success<AddToBasketResponse>) {
                     result.data?.let {
-                        proceedCheckout(activity, it.basketId)
+                        iapFlowData.basketId = it.basketId
+                        proceedCheckout()
                     } ?: endLoading()
                 }
 
@@ -146,18 +135,17 @@ class InAppPurchasesViewModel @Inject constructor(
             })
     }
 
-    fun proceedCheckout(activity: Activity, basketId: Long) {
-        this.basketId = basketId
+    fun proceedCheckout() {
         repository.proceedCheckout(
-            basketId = basketId,
+            basketId = iapFlowData.basketId,
             callback = object : NetworkResponseCallback<CheckoutResponse> {
                 override fun onSuccess(result: Result.Success<CheckoutResponse>) {
                     result.data?.let {
-                        if (upgradeMode.isSilentMode()) {
-                            executeOrder(activity)
+                        if (iapFlowData.upgradeMode.isSilentMode()) {
+                            executeOrder(iapFlowData)
                         } else {
                             iapAnalytics.initPaymentTime()
-                            billingProcessor.purchaseItem(activity, productId, userId)
+                            _launchPurchaseFlow.postEvent(true)
                         }
                     } ?: endLoading()
                 }
@@ -172,49 +160,58 @@ class InAppPurchasesViewModel @Inject constructor(
             })
     }
 
-    fun executeOrder(activity: Activity) {
-        _isVerificationPending = false
-        repository.executeOrder(
-            basketId = basketId,
-            productId = productId,
-            purchaseToken = purchaseToken,
-            callback = object : NetworkResponseCallback<ExecuteOrderResponse> {
-                override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
-                    result.data?.let {
-                        orderExecuted()
-                        if (upgradeMode.isSilentMode()) {
-                            markPurchaseComplete(activity)
-                            _executeResponse.postValue(it)
-                        } else {
-                            refreshCourseData(true)
-                        }
-                    }
-                    endLoading()
-                }
-
-                override fun onError(error: Result.Error) {
-                    dispatchError(
-                        requestType = ErrorMessage.EXECUTE_ORDER_CODE,
-                        throwable = error.throwable
-                    )
-                    endLoading()
-                }
-            })
+    fun purchaseItem(activity: Activity, userId: Long, courseSku: String?) {
+        courseSku?.let {
+            billingProcessor.purchaseItem(activity, courseSku, userId)
+        }
     }
 
-    fun detectUnfulfilledPurchase(
-        activity: Activity,
-        userId: Long,
-        enrolledCourses: List<EnrolledCoursesResponse>
-    ) {
+    fun executeOrder(iapFlowData: IAPFlowData? = this.iapFlowData) {
+        iapFlowData?.let { iapData ->
+            iapData.isVerificationPending = false
+            this.iapFlowData = iapData
+            repository.executeOrder(
+                basketId = iapData.basketId,
+                productId = iapData.productId,
+                purchaseToken = iapData.purchaseToken,
+                callback = object : NetworkResponseCallback<ExecuteOrderResponse> {
+                    override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
+                        result.data?.let {
+                            if (iapFlowData.upgradeMode.isSilentMode()) {
+                                markPurchaseComplete(iapData)
+                            } else {
+                                _refreshCourseData.postEvent(iapData)
+                            }
+                        }
+                        endLoading()
+                    }
+
+                    override fun onError(error: Result.Error) {
+                        dispatchError(
+                            requestType = ErrorMessage.EXECUTE_ORDER_CODE,
+                            throwable = error.throwable
+                        )
+                        endLoading()
+                    }
+                })
+        }
+    }
+
+    /**
+     * To detect and handle courses which are purchased but still not Verified
+     *
+     * @param userId: id of the user to detect un full filled purchases and process.
+     * @return enrolledCourses user enrolled courses in the platform.
+     */
+    fun detectUnfulfilledPurchase(userId: Long, enrolledCourses: List<EnrolledCoursesResponse>) {
         val auditCoursesSku = enrolledCourses.getAuditCoursesSku()
         if (auditCoursesSku.isEmpty()) {
-            _completedUnfulfilledPurchase.postValue(true)
+            _fakeUnfulfilledCompletion.postEvent(true)
             return
         }
-        this.userId = userId
         billingProcessor.queryPurchase { _, purchases ->
             if (purchases.isEmpty()) {
+                _fakeUnfulfilledCompletion.postEvent(true)
                 return@queryPurchase
             }
             val purchasesList =
@@ -226,34 +223,36 @@ class InAppPurchasesViewModel @Inject constructor(
                     auditCoursesSku,
                     purchasesList
                 )
-                completePurchasesFlow(activity)
+                if (incompletePurchases.isEmpty()) {
+                    _fakeUnfulfilledCompletion.postEvent(true)
+                } else {
+                    startUnfulfilledVerification()
+                }
             } else {
-                _completedUnfulfilledPurchase.postValue(true)
+                _fakeUnfulfilledCompletion.postEvent(true)
             }
         }
     }
 
     /**
-     * To detect and handle courses which are purchased but still not Verified
-     *
-     * @param activity: context of the activity trigger to handle the incomplete purchases flow.
-     * @return incompletePurchases after dropout the verified one.
+     * Method to start the process to verify the un full filled courses skus
      */
-    private fun completePurchasesFlow(activity: Activity) {
-        if (incompletePurchases.isNotEmpty()) {
-            viewModelScope.launch {
-                upgradeMode = UpgradeMode.SILENT
-                purchaseToken = incompletePurchases[0].second
-                addProductToBasket(activity, userId, incompletePurchases[0].first)
-            }
-        } else {
-            _completedUnfulfilledPurchase.postValue(true)
-        }
+    private fun startUnfulfilledVerification() {
+        iapFlowData.upgradeMode = IAPFlowData.UpgradeMode.SILENT
+        iapFlowData.productId = incompletePurchases[0].first
+        iapFlowData.purchaseToken = incompletePurchases[0].second
+        // will perform verification as part of unfulfilled flow
+        iapFlowData.isVerificationPending = false
+        addProductToBasket()
     }
 
-    private fun markPurchaseComplete(activity: Activity) {
+    private fun markPurchaseComplete(iapFlowData: IAPFlowData) {
         incompletePurchases = incompletePurchases.drop(1).toMutableList()
-        completePurchasesFlow(activity)
+        if (incompletePurchases.isEmpty()) {
+            _refreshCourseData.postEvent(iapFlowData)
+        } else {
+            startUnfulfilledVerification()
+        }
     }
 
     fun dispatchError(
@@ -268,9 +267,9 @@ class InAppPurchasesViewModel @Inject constructor(
             }
         }
         if (throwable != null && throwable is InAppPurchasesException) {
-            _errorMessage.postValue(ErrorMessage(requestType = requestType, throwable = throwable))
+            _errorMessage.postEvent(ErrorMessage(requestType = requestType, throwable = throwable))
         } else {
-            _errorMessage.postValue(
+            _errorMessage.postEvent(
                 ErrorMessage(
                     requestType = requestType,
                     throwable = InAppPurchasesException(errorMessage = actualErrorMessage)
@@ -279,50 +278,11 @@ class InAppPurchasesViewModel @Inject constructor(
         }
     }
 
-    private fun orderExecuted() {
-        _productId = ""
-        basketId = 0
-        userId = 0
-    }
-
-    fun errorMessageShown() {
-        _errorMessage.value = null
-    }
-
     private fun startLoading() {
-        _showLoader.postValue(true)
+        _showLoader.postEvent(true)
     }
 
     fun endLoading() {
-        _showLoader.postValue(false)
-    }
-
-    fun showFullScreenLoader(show: Boolean) {
-        _showFullscreenLoaderDialog.value = show
-    }
-
-    fun refreshCourseData(refresh: Boolean) {
-        _refreshCourseData.postValue(refresh)
-    }
-
-    // To refrain the View Model from emitting further observable calls
-    fun resetPurchase(complete: Boolean) {
-        upgradeMode = UpgradeMode.NORMAL
-        _isVerificationPending = true
-        _purchaseFlowComplete.postValue(complete)
-    }
-
-    override fun onCleared() {
-        billingProcessor.disconnect()
-        super.onCleared()
-    }
-
-    enum class UpgradeMode {
-        NORMAL,
-        SILENT;
-
-        fun isSilentMode() = this == SILENT
-
-        fun isNormalMode() = this == NORMAL
+        _showLoader.postEvent(false)
     }
 }

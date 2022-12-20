@@ -26,6 +26,8 @@ import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
+import org.edx.mobile.event.IAPFlowEvent;
+import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
 import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -35,6 +37,7 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.util.AppConstants;
@@ -42,11 +45,13 @@ import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.ShareUtils;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.viewModel.InAppPurchasesViewModel;
+import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +60,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -81,13 +84,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     @Inject
     InAppPurchasesAnalytics iapAnalytics;
 
+    @Inject
+    InAppPurchasesDialog iapDialogs;
+
     private PreLoadingListener.State viewPagerState = PreLoadingListener.State.DEFAULT;
 
     private boolean isFirstSection = false;
     private boolean isVideoMode = false;
     private boolean refreshCourse = false;
-
-    private final FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.newInstance();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -249,34 +253,44 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     @Override
     public void initializeIAPObserver() {
         iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
-        iapViewModel.getShowFullscreenLoaderDialog().observe(this, canShowLoader -> {
-            if (canShowLoader) {
-                fullScreenLoader.show(getSupportFragmentManager(), FullscreenLoaderDialogFragment.TAG);
-                iapViewModel.showFullScreenLoader(false);
-            }
-        });
 
-        iapViewModel.getPurchaseFlowComplete().observe(this, isPurchaseCompleted -> {
-            if (isPurchaseCompleted) {
-                fullScreenLoader.dismiss();
-                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_COURSE_UPGRADE_SUCCESS, "", "");
-                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_TIME, "", "");
-                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME, "", "");
-                showPurchaseSuccessSnackbar();
-                iapViewModel.resetPurchase(false);
+        iapViewModel.getErrorMessage().observe(this, new EventObserver<>(errorMessage -> {
+            if (errorMessage.getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
+                FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getSupportFragmentManager());
+                if (fullScreenLoader == null) {
+                    return null;
+                }
+                iapDialogs.handleIAPException(
+                        fullScreenLoader,
+                        errorMessage,
+                        (dialogInterface, i) -> updateCourseStructure(courseData.getCourseId(), courseComponentId),
+                        (dialogInterface, i) -> {
+                            iapViewModel.getIapFlowData().clear();
+                            fullScreenLoader.dismiss();
+                        }
+                );
             }
-        });
+            return null;
+        }));
     }
 
     @Override
     protected void onLoadData() {
         selectedUnit = courseManager.getComponentById(courseData.getCourseId(), courseComponentId);
         updateDataModel();
+        FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment
+                .getRetainedInstance(getSupportFragmentManager());
+        if (fullScreenLoader != null && fullScreenLoader.isResumed()) {
+            new SnackbarErrorNotification(pager2).showError(R.string.purchase_success_message);
+            fullScreenLoader.closeLoader();
+        }
     }
 
     @Override
     protected void onCourseRefreshError(Throwable error) {
-        if (fullScreenLoader != null && fullScreenLoader.isAdded()) {
+        FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment
+                .getRetainedInstance(getSupportFragmentManager());
+        if (fullScreenLoader != null && fullScreenLoader.isResumed()) {
             iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
         }
     }
@@ -375,7 +389,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
         if (refreshCourse) {
             initAdapter();
-            resetPurchase();
         }
 
         if (index >= 0) {
@@ -399,23 +412,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             refreshCourse = false;
         }
         super.onBackPressed();
-    }
-
-    private void resetPurchase() {
-        if (fullScreenLoader.isAdded()) {
-            // Persist Fullscreen loader for at least 3 seconds
-            // for a better UX instead of a glitch
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    iapViewModel.resetPurchase(true);
-                }
-            }, fullScreenLoader.getRemainingVisibleTime());
-        }
-    }
-
-    private void showPurchaseSuccessSnackbar() {
-        new SnackbarErrorNotification(pager2).showError(R.string.purchase_success_message);
     }
 
     @Override
@@ -469,6 +465,33 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             return VideoUtil.isCourseUnitVideo(environment, selectedUnit);
         }
         return super.showGoogleCastButton();
+    }
+
+    private void showFullscreenLoader(IAPFlowData iapFlowData) {
+        // To proceed with the same instance of dialog fragment in case of orientation change
+        FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment
+                .getRetainedInstance(getSupportFragmentManager());
+        if (fullScreenLoader == null) {
+            fullScreenLoader = FullscreenLoaderDialogFragment.newInstance(iapFlowData);
+        }
+        fullScreenLoader.show(getSupportFragmentManager(), FullscreenLoaderDialogFragment.TAG);
+    }
+
+    @Subscribe
+    public void onEventMainThread(IAPFlowEvent event) {
+        if (!isInForeground()) {
+            return;
+        }
+        switch (event.getFlowAction()) {
+            case SHOW_FULL_SCREEN_LOADER: {
+                showFullscreenLoader(event.getIapFlowData());
+                break;
+            }
+            case PURCHASE_FLOW_COMPLETE: {
+                EventBus.getDefault().post(new MainDashboardRefreshEvent());
+                break;
+            }
+        }
     }
 
     @Subscribe

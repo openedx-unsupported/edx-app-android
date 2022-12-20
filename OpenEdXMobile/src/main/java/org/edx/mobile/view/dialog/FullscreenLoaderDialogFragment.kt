@@ -10,22 +10,32 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogFullscreenLoaderBinding
+import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.model.iap.IAPFlowData
+import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.NonNullObserver
+import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
+import org.greenrobot.eventbus.EventBus
 import java.util.Calendar
+import java.util.Timer
+import java.util.TimerTask
 import javax.inject.Inject
+import kotlin.concurrent.schedule
 
 @AndroidEntryPoint
 class FullscreenLoaderDialogFragment : DialogFragment() {
+
+    private var dismissTimer: TimerTask? = null
 
     @Inject
     lateinit var environment: IEdxEnvironment
@@ -38,9 +48,9 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFullscreenLoaderBinding
 
-    private val iapViewModel: InAppPurchasesViewModel
-            by viewModels(ownerProducer = { requireActivity() })
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
+    private var iapFlowData: IAPFlowData? = null
     private var loaderStartTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,20 +72,22 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, args: Bundle?) {
         super.onViewCreated(view, args)
-        loaderStartTime = args?.getLong(LOADER_START_TIME, Calendar.getInstance().timeInMillis)
+        iapFlowData = arguments?.getSerializable(KEY_IAP_DATA) as IAPFlowData?
+        loaderStartTime = arguments?.getLong(LOADER_START_TIME, Calendar.getInstance().timeInMillis)
             ?: Calendar.getInstance().timeInMillis
         intiViews()
         initObservers()
-        if (iapViewModel.upgradeMode.isSilentMode()) {
-            iapViewModel.refreshCourseData(true)
-        } else if (iapViewModel.isVerificationPending) {
-            iapViewModel.executeOrder(requireActivity())
+        if (iapFlowData?.isVerificationPending == true) {
+            iapViewModel.executeOrder(iapFlowData)
+        } else if (iapFlowData?.upgradeMode?.isSilentMode() == true) {
+            purchaseFlowComplete()
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(LOADER_START_TIME, loaderStartTime)
+        outState.putSerializable(KEY_IAP_DATA, iapFlowData)
     }
 
     private fun intiViews() {
@@ -83,23 +95,44 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
     }
 
     private fun initObservers() {
-        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
-            errorMsg.throwable as InAppPurchasesException
-            iapDialog.handleIAPException(
-                fragment = this@FullscreenLoaderDialogFragment,
-                errorMessage = errorMsg,
-                retryListener = { _, _ ->
-                    if (errorMsg.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
-                        iapViewModel.executeOrder(requireActivity())
-                    } else {
-                        iapViewModel.refreshCourseData(true)
-                    }
-                },
-                cancelListener = { _, _ ->
-                    resetPurchase()
-                })
-            iapViewModel.errorMessageShown()
+        iapViewModel.refreshCourseData.observe(viewLifecycleOwner, EventObserver {
+            purchaseFlowComplete()
         })
+
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, EventObserver { errorMessage ->
+            if (errorMessage.isPostUpgradeErrorType()) {
+                errorMessage.throwable as InAppPurchasesException
+                iapDialog.handleIAPException(
+                    fragment = this@FullscreenLoaderDialogFragment,
+                    errorMessage = errorMessage,
+                    retryListener = { _, _ ->
+                        if (errorMessage.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
+                            iapViewModel.executeOrder(iapFlowData)
+                        } else {
+                            purchaseFlowComplete()
+                        }
+                    },
+                    cancelListener = { _, _ ->
+                        dismiss()
+                    })
+            }
+        })
+    }
+
+    private fun purchaseFlowComplete() {
+        EventBus.getDefault().post(IAPFlowEvent(IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE))
+    }
+
+    fun closeLoader() {
+        if (dismissTimer == null) {
+            dismissTimer = Timer("", false).schedule(getRemainingVisibleTime()) {
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_COURSE_UPGRADE_SUCCESS)
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_TIME)
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME)
+                iapFlowData?.clear()
+                dismiss()
+            }
+        }
     }
 
     private fun getTitle(): SpannableStringBuilder {
@@ -123,7 +156,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
      * Method to get the remaining visible time for the loader
      * As per requirements the loader needs to be visible for at least 3 seconds
      */
-    fun getRemainingVisibleTime(): Long {
+    private fun getRemainingVisibleTime(): Long {
         val totalVisibleTime = Calendar.getInstance().timeInMillis - loaderStartTime
         return if (totalVisibleTime < MINIMUM_DISPLAY_DELAY)
             MINIMUM_DISPLAY_DELAY - totalVisibleTime
@@ -131,19 +164,22 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
             0
     }
 
-    private fun resetPurchase() {
-        iapViewModel.resetPurchase(false)
-        dismiss()
-    }
-
     companion object {
         const val TAG = "FULLSCREEN_LOADER"
         private const val LOADER_START_TIME = "LOADER_START_TIME"
-        const val MINIMUM_DISPLAY_DELAY: Long = 3_000
+        private const val KEY_IAP_DATA = "iap_flow_data"
+        private const val MINIMUM_DISPLAY_DELAY = 3_000L
 
         @JvmStatic
-        fun newInstance(): FullscreenLoaderDialogFragment {
-            return FullscreenLoaderDialogFragment()
-        }
+        fun newInstance(iapData: IAPFlowData): FullscreenLoaderDialogFragment =
+            FullscreenLoaderDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(KEY_IAP_DATA, iapData)
+                }
+            }
+
+        @JvmStatic
+        fun getRetainedInstance(fragmentManager: FragmentManager?): FullscreenLoaderDialogFragment? =
+            fragmentManager?.findFragmentByTag(TAG) as FullscreenLoaderDialogFragment?
     }
 }

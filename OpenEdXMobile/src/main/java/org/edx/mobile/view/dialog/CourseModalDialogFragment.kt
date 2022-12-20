@@ -7,25 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
+import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.InAppPurchasesException
-import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,8 +34,7 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogUpgradeFeaturesBinding
 
-    private val iapViewModel: InAppPurchasesViewModel
-            by viewModels(ownerProducer = { requireActivity() })
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
     @Inject
     lateinit var environment: IEdxEnvironment
@@ -137,24 +137,27 @@ class CourseModalDialogFragment : DialogFragment() {
     }
 
     private fun initIAPObservers() {
-        iapViewModel.productPrice.observe(viewLifecycleOwner, NonNullObserver { skuDetails ->
+        iapViewModel.productPrice.observe(viewLifecycleOwner, EventObserver { skuDetails ->
             setUpUpgradeButton(skuDetails)
         })
 
-        iapViewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver {
+        iapViewModel.launchPurchaseFlow.observe(viewLifecycleOwner, EventObserver {
+            iapViewModel.purchaseItem(requireActivity(), environment.loginPrefs.userId, courseSku)
+        })
+
+        iapViewModel.showLoader.observe(viewLifecycleOwner, EventObserver {
             enableUpgradeButton(!it)
         })
 
-        iapViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMessage ->
+        iapViewModel.errorMessage.observe(viewLifecycleOwner, EventObserver { errorMessage ->
             handleIAPException(errorMessage)
-            iapViewModel.errorMessageShown()
         })
 
-        iapViewModel.productPurchased.observe(viewLifecycleOwner, NonNullObserver {
-            lifecycleScope.launch {
-                iapViewModel.showFullScreenLoader(true)
-                dismiss()
-            }
+        iapViewModel.productPurchased.observe(viewLifecycleOwner, EventObserver {
+            EventBus.getDefault().post(
+                IAPFlowEvent(IAPFlowData.IAPAction.SHOW_FULL_SCREEN_LOADER, it)
+            )
+            dismiss()
         })
     }
 
@@ -176,12 +179,8 @@ class CourseModalDialogFragment : DialogFragment() {
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
             courseSku?.let {
-                iapViewModel.addProductToBasket(
-                    activity = requireActivity(),
-                    userId = environment.loginPrefs.userId,
-                    productId = it
-                )
-            } ?: iapDialog.showUpgradeErrorDialog(this)
+                iapViewModel.startPurchaseFlow(it)
+            } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }
     }
 
@@ -189,8 +188,16 @@ class CourseModalDialogFragment : DialogFragment() {
         var retryListener: DialogInterface.OnClickListener? = null
         if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
             retryListener = DialogInterface.OnClickListener { _, _ ->
-                iapViewModel.upgradeMode = InAppPurchasesViewModel.UpgradeMode.SILENT
-                iapViewModel.showFullScreenLoader(true)
+                // already purchased course.
+                iapViewModel.iapFlowData.isVerificationPending = false
+                iapViewModel.iapFlowData.upgradeMode = IAPFlowData.UpgradeMode.SILENT
+                EventBus.getDefault()
+                    .post(
+                        IAPFlowEvent(
+                            IAPFlowData.IAPAction.SHOW_FULL_SCREEN_LOADER,
+                            iapFlowData = iapViewModel.iapFlowData
+                        )
+                    )
                 dismiss()
             }
         } else if (errorMessage.canRetry()) {
