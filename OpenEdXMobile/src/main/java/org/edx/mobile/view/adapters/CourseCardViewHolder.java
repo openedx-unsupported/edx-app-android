@@ -69,12 +69,11 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     }
 
     public void setHasUpgradeOption(
-            boolean isCourseEnded,
-            boolean isAuditMode,
+            boolean isUpgradeable,
             boolean isValuePropEnabled,
             View.OnClickListener onValuePropClick
     ) {
-        if (!isCourseEnded && isAuditMode && isValuePropEnabled) {
+        if (isUpgradeable && isValuePropEnabled) {
             propContainer.setVisibility(View.VISIBLE);
             propContainer.setOnClickListener(onValuePropClick);
         } else {

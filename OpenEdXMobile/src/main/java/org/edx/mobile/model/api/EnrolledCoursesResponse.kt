@@ -44,6 +44,14 @@ data class EnrolledCoursesResponse(
     val isAuditMode: Boolean
         get() = EnrollmentMode.AUDIT.toString().equals(mode, ignoreCase = true)
 
+    val isUpgradeable: Boolean
+        get() = isAuditMode &&
+                course.isStarted &&
+                course.isUpgradeDeadlinePassed.not() &&
+                courseModes?.find {
+                    EnrollmentMode.VERIFIED.toString().equals(it.slug, ignoreCase = true)
+                } != null
+
     override fun isChapter(): Boolean {
         return false
     }

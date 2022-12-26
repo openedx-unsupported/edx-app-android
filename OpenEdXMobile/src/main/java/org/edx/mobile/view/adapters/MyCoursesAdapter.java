@@ -29,8 +29,7 @@ public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesRe
         final CourseEntry courseData = enrollment.getCourse();
         holder.setCourseTitle(courseData.getName());
         holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
-        holder.setHasUpgradeOption(courseData.isEnded(), enrollment.isAuditMode(),
-                environment.getAppFeaturesPrefs().isValuePropEnabled(),
+        holder.setHasUpgradeOption(enrollment.isUpgradeable(), environment.getAppFeaturesPrefs().isValuePropEnabled(),
                 v -> onValuePropClicked(enrollment));
 
         if (enrollment.getCourse().hasUpdates()) {
