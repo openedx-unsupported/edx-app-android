@@ -829,14 +829,20 @@ public class FirebaseAnalytics implements Analytics {
 
     @Override
     public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
-                                         @NonNull String courseId, boolean isSelfPaced,
-                                         @Nullable String price, @Nullable String componentId,
-                                         long elapsedTime, @Nullable String error,
-                                         @Nullable String actionTaken, @NonNull String screenName) {
+                                         @Nullable String courseId, boolean isSelfPaced,
+                                         @Nullable String flowType, @Nullable String price,
+                                         @Nullable String componentId, long elapsedTime,
+                                         @Nullable String error, @Nullable String actionTaken,
+                                         @Nullable String screenName) {
         final FirebaseEvent event = new FirebaseEvent(eventName, biValue);
-        event.putCourseId(courseId);
-        event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
         event.putString(Keys.CATEGORY, Values.IN_APP_PURCHASES);
+        if (!TextUtils.isEmpty(courseId)) {
+            event.putCourseId(courseId);
+            event.putString(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        }
+        if (!TextUtils.isEmpty(flowType)) {
+            event.putString(Keys.IAP_FLOW_TYPE, flowType);
+        }
         if (!TextUtils.isEmpty(price)) {
             event.putString(Keys.PRICE, price);
         }
@@ -850,9 +856,12 @@ public class FirebaseAnalytics implements Analytics {
             event.putString(Keys.ERROR, error);
         }
         if (!TextUtils.isEmpty(actionTaken)) {
-            event.putString(Keys.ERROR_ACTION, actionTaken);
+            boolean isErrorAlert = biValue.equalsIgnoreCase(Values.IAP_ERROR_ALERT_ACTION);
+            event.putString(isErrorAlert ? Keys.ERROR_ACTION : Keys.ACTION, actionTaken);
         }
-        event.putString(Keys.SCREEN_NAME, screenName);
+        if (!TextUtils.isEmpty(screenName)) {
+            event.putString(Keys.SCREEN_NAME, screenName);
+        }
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 }

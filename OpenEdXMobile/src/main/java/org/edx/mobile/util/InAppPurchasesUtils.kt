@@ -1,8 +1,10 @@
 package org.edx.mobile.util
 
+import com.android.billingclient.api.Purchase
 import org.edx.mobile.R
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.model.iap.IAPFlowData
 
 object InAppPurchasesUtils {
 
@@ -11,10 +13,21 @@ object InAppPurchasesUtils {
      * through google play store.
      * */
     fun getInCompletePurchases(
-        auditCoursesSku: List<String>,
-        purchases: List<Pair<String, String>>
-    ): MutableList<Pair<String, String>> {
-        return purchases.filter { it.first in auditCoursesSku }.toMutableList()
+        auditCourses: List<IAPFlowData>,
+        purchases: List<Purchase>,
+        flowType: IAPFlowData.IAPFlowType,
+        screenName: String
+    ): MutableList<IAPFlowData> {
+        purchases.forEach { purchase ->
+            auditCourses.find { course ->
+                purchase.skus[0].equals(course.productId)
+            }?.apply {
+                this.purchaseToken = purchase.purchaseToken
+                this.flowType = flowType
+                this.screenName = screenName
+            }
+        }
+        return auditCourses.filter { it.purchaseToken.isNotBlank() }.toMutableList()
     }
 
     /**

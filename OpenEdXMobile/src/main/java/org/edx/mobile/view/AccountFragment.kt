@@ -33,6 +33,7 @@ import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.model.user.Account
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
@@ -79,6 +80,9 @@ class AccountFragment : BaseFragment() {
     @Inject
     lateinit var iapDialog: InAppPurchasesDialog
 
+    @Inject
+    lateinit var iapAnalytics: InAppPurchasesAnalytics
+
     private val courseViewModel: CourseViewModel by viewModels()
     private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
@@ -124,6 +128,8 @@ class AccountFragment : BaseFragment() {
             initRestorePurchasesObservers()
             binding.containerPurchases.setVisibility(true)
             binding.btnRestorePurchases.setOnClickListener {
+                iapAnalytics.reset()
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_RESTORE_PURCHASE_CLICKED)
                 showLoader()
                 lifecycleScope.launch {
                     courseViewModel.fetchEnrolledCourses(
@@ -174,7 +180,12 @@ class AccountFragment : BaseFragment() {
         courseViewModel.enrolledCoursesResponse.observe(
             viewLifecycleOwner,
             EventObserver { enrolledCourses ->
-                iapViewModel.detectUnfulfilledPurchase(loginPrefs.userId, enrolledCourses)
+                iapViewModel.detectUnfulfilledPurchase(
+                    loginPrefs.userId,
+                    enrolledCourses,
+                    IAPFlowData.IAPFlowType.RESTORE,
+                    Analytics.Screens.PROFILE
+                )
             })
 
         courseViewModel.handleError.observe(viewLifecycleOwner, NonNullObserver {
@@ -183,9 +194,18 @@ class AccountFragment : BaseFragment() {
 
         iapViewModel.refreshCourseData.observe(viewLifecycleOwner, EventObserver {
             iapDialog.showNewExperienceAlertDialog(this, { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Analytics.Events.IAP_NEW_EXPERIENCE_ALERT_ACTION,
+                    actionTaken = Analytics.Values.ACTION_REFRESH
+                )
                 loaderDialog?.dismiss()
+                iapAnalytics.initUnlockContentTime()
                 showFullScreenLoader()
             }, { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Analytics.Events.IAP_NEW_EXPERIENCE_ALERT_ACTION,
+                    actionTaken = Analytics.Values.ACTION_CONTINUE_WITHOUT_UPDATE
+                )
                 loaderDialog?.dismiss()
             })
         })

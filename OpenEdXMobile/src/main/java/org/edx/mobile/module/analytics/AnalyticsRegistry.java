@@ -588,12 +588,13 @@ public class AnalyticsRegistry implements Analytics {
 
     @Override
     public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
-                                         @NonNull String courseId, boolean isSelfPaced,
-                                         @Nullable String price, @Nullable String componentId,
-                                         long elapsedTime, @Nullable String error,
-                                         @Nullable String actionTaken, @NonNull String screenName) {
+                                         @Nullable String courseId, boolean isSelfPaced,
+                                         @Nullable String flowType, @Nullable String price,
+                                         @Nullable String componentId, long elapsedTime,
+                                         @Nullable String error, @Nullable String actionTaken,
+                                         @Nullable String screenName) {
         for (Analytics service : services) {
-            service.trackInAppPurchasesEvent(eventName, biValue, courseId, isSelfPaced, price,
+            service.trackInAppPurchasesEvent(eventName, biValue, courseId, isSelfPaced, flowType, price,
                     componentId, elapsedTime, error, actionTaken, screenName);
         }
     }
