@@ -1120,15 +1120,21 @@ public class SegmentAnalytics implements Analytics {
 
     @Override
     public void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
-                                         @NonNull String courseId, boolean isSelfPaced,
-                                         @Nullable String price, @Nullable String componentId,
-                                         long elapsedTime, @Nullable String error,
-                                         @Nullable String actionTaken, @NonNull String screenName) {
+                                         @Nullable String courseId, boolean isSelfPaced,
+                                         @Nullable String flowType, @Nullable String price,
+                                         @Nullable String componentId, long elapsedTime,
+                                         @Nullable String error, @Nullable String actionTaken,
+                                         @Nullable String screenName) {
         final SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, biValue);
         aEvent.properties.putValue(Keys.CATEGORY, Values.IN_APP_PURCHASES);
-        aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        if (!TextUtils.isEmpty(courseId)) {
+            aEvent.data.putValue(Keys.COURSE_ID, courseId);
+            aEvent.data.putValue(Keys.PACING, isSelfPaced ? Keys.SELF : Keys.INSTRUCTOR);
+        }
+        if (!TextUtils.isEmpty(flowType)) {
+            aEvent.data.putValue(Keys.IAP_FLOW_TYPE, flowType);
+        }
         if (!TextUtils.isEmpty(price)) {
             aEvent.data.putValue(Keys.PRICE, price);
         }
@@ -1142,9 +1148,12 @@ public class SegmentAnalytics implements Analytics {
             aEvent.data.putValue(Keys.ERROR, error);
         }
         if (!TextUtils.isEmpty(actionTaken)) {
-            aEvent.data.putValue(Keys.ERROR_ACTION, actionTaken);
+            boolean isErrorAlert = biValue.equalsIgnoreCase(Values.IAP_ERROR_ALERT_ACTION);
+            aEvent.data.putValue(isErrorAlert ? Keys.ERROR_ACTION : Keys.ACTION, actionTaken);
         }
-        aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        if (!TextUtils.isEmpty(screenName)) {
+            aEvent.data.putValue(Keys.SCREEN_NAME, screenName);
+        }
         trackSegmentEvent(eventName, aEvent.properties);
     }
 }

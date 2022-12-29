@@ -4,6 +4,7 @@ import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.logger.Logger
+import org.edx.mobile.model.iap.IAPFlowData
 import java.io.Serializable
 import java.lang.reflect.Type
 
@@ -64,13 +65,20 @@ data class EnrollmentResponse(
 }
 
 /**
- * Method to filter the audit course Skus from the given enrolled course list.
+ * Method to filter the audit courses from the given enrolled course list.
  *
- * @return the list of all audit courses SKUs.
+ * @return the list of all audit courses with non-null Skus.
  */
-fun List<EnrolledCoursesResponse>.getAuditCoursesSku(): List<String> {
-    return this
-        .filter { it.isAuditMode }
-        .mapNotNull { it.courseSku }
-        .toList()
+fun List<EnrolledCoursesResponse>.getAuditCourses(): List<IAPFlowData> {
+    return this.filter {
+        it.isAuditMode && it.courseSku.isNullOrBlank().not()
+    }.mapNotNull { course ->
+        course.courseSku?.let { sku ->
+            IAPFlowData(
+                courseId = course.courseId,
+                productId = sku,
+                isCourseSelfPaced = course.course.isSelfPaced
+            )
+        }
+    }.toList()
 }

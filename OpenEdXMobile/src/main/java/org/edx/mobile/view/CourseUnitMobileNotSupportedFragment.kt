@@ -19,6 +19,7 @@ import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
+import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.model.iap.IAPFlowData.IAPAction
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
@@ -97,6 +98,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 iapAnalytics.initCourseValues(
                     courseId = unit.courseId,
                     isSelfPaced = isSelfPaced,
+                    flowType = IAPFlowData.IAPFlowType.USER_INITIATED.value(),
                     screenName = Screens.COURSE_COMPONENT,
                     componentId = unit.id
                 )

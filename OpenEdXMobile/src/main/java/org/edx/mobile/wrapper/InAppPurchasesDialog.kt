@@ -258,17 +258,27 @@ class InAppPurchasesDialog @Inject constructor(
      * @param fragment context of the screen dialog is display for
      * */
     fun showNoUnFulfilledPurchasesDialog(fragment: Fragment) {
+        iapAnalytics.reset()
         AlertDialogFragment.newInstance(
             fragment.getString(R.string.title_purchases_restored),
             fragment.getString(R.string.message_purchases_restored),
             fragment.getString(R.string.label_close),
-            null,
+            { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Analytics.Events.IAP_RESTORE_SUCCESS_ALERT_ACTION,
+                    actionTaken = Analytics.Values.ACTION_CLOSE
+                )
+            },
             fragment.getString(R.string.label_get_help),
-        ) { _, _ ->
-            environment.router?.showFeedbackScreen(
-                fragment.requireActivity(),
-                fragment.getString(R.string.email_subject_upgrade_error)
-            )
-        }.show(fragment.childFragmentManager, null)
+            { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Analytics.Events.IAP_RESTORE_SUCCESS_ALERT_ACTION,
+                    actionTaken = Analytics.Values.ACTION_GET_HELP
+                )
+                environment.router?.showFeedbackScreen(
+                    fragment.requireActivity(),
+                    fragment.getString(R.string.email_subject_upgrade_error)
+                )
+            }).show(fragment.childFragmentManager, null)
     }
 }

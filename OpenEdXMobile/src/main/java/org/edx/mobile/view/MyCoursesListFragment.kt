@@ -191,8 +191,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private fun initIAPObservers() {
         iapViewModel.refreshCourseData.observe(viewLifecycleOwner, EventObserver { iapFlowData ->
             iapDialog.showNewExperienceAlertDialog(this, { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Analytics.Events.IAP_NEW_EXPERIENCE_ALERT_ACTION,
+                    actionTaken = Analytics.Values.ACTION_REFRESH
+                )
+                iapAnalytics.initUnlockContentTime()
                 showFullscreenLoader(iapFlowData)
-            }, { _, _ -> })
+            }, { _, _ ->
+                iapAnalytics.trackIAPEvent(
+                    eventName = Analytics.Events.IAP_NEW_EXPERIENCE_ALERT_ACTION,
+                    actionTaken = Analytics.Values.ACTION_CONTINUE_WITHOUT_UPDATE
+                )
+            })
         })
 
         iapViewModel.errorMessage.observe(viewLifecycleOwner, EventObserver { errorMessage ->
@@ -225,7 +235,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             )
         })
     }
-    
+
     /**
      * Method to detect Unfulfilled Purchases if full screen loader is not visible.
      *
@@ -239,9 +249,12 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
             fullscreenLoader.closeLoader()
         } else {
+            iapAnalytics.reset()
             iapViewModel.detectUnfulfilledPurchase(
                 environment.loginPrefs.userId,
-                enrolledCourses
+                enrolledCourses,
+                IAPFlowData.IAPFlowType.SILENT,
+                Analytics.Screens.COURSE_ENROLLMENT
             )
         }
     }

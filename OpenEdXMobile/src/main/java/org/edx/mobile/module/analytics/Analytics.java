@@ -624,14 +624,15 @@ public interface Analytics {
      * @param componentId Component id of course unit
      * @param elapsedTime time in milliseconds that app took to perform the action(price load, refresh course content)
      * @param error       error that app sending in get help email
-     * @param actionTaken action taken on the error dialog
+     * @param actionTaken action taken on the dialog
      * @param screenName  Screen name on which event is triggered
      */
     void trackInAppPurchasesEvent(@NonNull String eventName, @NonNull String biValue,
-                                  @NonNull String courseId, boolean isSelfPaced,
-                                  @Nullable String price, @Nullable String componentId,
-                                  long elapsedTime, @Nullable String error,
-                                  @Nullable String actionTaken, @NonNull String screenName);
+                                  @Nullable String courseId, boolean isSelfPaced,
+                                  @Nullable String flowType, @Nullable String price,
+                                  @Nullable String componentId, long elapsedTime,
+                                  @Nullable String error, @Nullable String actionTaken,
+                                  @Nullable String screenName);
 
     interface Keys {
         String NAME = "name";
@@ -683,6 +684,7 @@ public interface Analytics {
         String PRICE = "price";
         String PAYMENT_ENABLED = "payment_enabled";
         String IAP_EXPERIMENT_GROUP = "iap_experiment_group";
+        String IAP_FLOW_TYPE = "flow_type";
 
         String CELL_CARRIER = "cell_carrier";
         String CELL_ZERO_RATED = "cell_zero_rated";
@@ -909,6 +911,7 @@ public interface Analytics {
         String ACTION_REFRESH = "refresh";
         String ACTION_GET_HELP = "get_help";
         String ACTION_CLOSE = "close";
+        String ACTION_CONTINUE_WITHOUT_UPDATE = "continue_without_update";
         String TREATMENT = "treatment";
         String CONTROL = "control";
         String IAP_UPGRADE_NOW_CLICKED = "edx.bi.app.payments.upgrade_now.clicked";
@@ -921,6 +924,10 @@ public interface Analytics {
         String IAP_COURSE_UPGRADE_ERROR = "edx.bi.app.payments.course_upgrade_error";
         String IAP_PRICE_LOAD_ERROR = "edx.bi.app.payments.price_load_error";
         String IAP_ERROR_ALERT_ACTION = "edx.bi.app.payments.error_alert_action";
+        String IAP_UNFULFILLED_PURCHASE_INITIATED = "edx.bi.app.payments.unfulfilled_purchase.initiated";
+        String IAP_NEW_EXPERIENCE_ALERT_ACTION = "edx.bi.app.payments.new_experience.alert_action";
+        String IAP_RESTORE_PURCHASE_CLICKED = "edx.bi.app.payments.restore_purchases.clicked";
+        String IAP_RESTORE_SUCCESS_ALERT_ACTION = "edx.bi.app.payments.purchases_successfully_restored.alert_action";
     }
 
     interface Screens {
@@ -1055,6 +1062,10 @@ public interface Analytics {
         String IAP_COURSE_UPGRADE_ERROR = "Payments: Course Upgrade Error";
         String IAP_PRICE_LOAD_ERROR = "Payments: Price Load Error";
         String IAP_ERROR_ALERT_ACTION = "Payments: Error Alert Action";
+        String IAP_UNFULFILLED_PURCHASE_INITIATED = "Payments: Unfulfilled Purchase Initiated";
+        String IAP_NEW_EXPERIENCE_ALERT_ACTION = "Payments: New Experience Alert Action";
+        String IAP_RESTORE_PURCHASE_CLICKED = "Payments: Restore Purchases Clicked";
+        String IAP_RESTORE_SUCCESS_ALERT_ACTION = "Payments: Purchases successfully Restored Alert Action";
 
         String VALUE_PROP_LEARN_MORE_CLICKED = "Value Prop Learn More Clicked";
         String VALUE_PROP_MODAL_VIEW = "Value Prop Modal View";

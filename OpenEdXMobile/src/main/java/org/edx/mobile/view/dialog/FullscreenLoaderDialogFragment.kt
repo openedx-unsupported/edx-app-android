@@ -79,7 +79,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
         initObservers()
         if (iapFlowData?.isVerificationPending == true) {
             iapViewModel.executeOrder(iapFlowData)
-        } else if (iapFlowData?.upgradeMode?.isSilentMode() == true) {
+        } else if (iapFlowData?.flowType?.isSilentMode() == true) {
             purchaseFlowComplete()
         }
     }

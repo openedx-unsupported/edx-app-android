@@ -13,7 +13,7 @@ import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
 import org.edx.mobile.inapppurchases.BillingProcessor
 import org.edx.mobile.model.api.EnrolledCoursesResponse
-import org.edx.mobile.model.api.getAuditCoursesSku
+import org.edx.mobile.model.api.getAuditCourses
 import org.edx.mobile.model.iap.AddToBasketResponse
 import org.edx.mobile.model.iap.CheckoutResponse
 import org.edx.mobile.model.iap.ExecuteOrderResponse
@@ -56,7 +56,7 @@ class InAppPurchasesViewModel @Inject constructor(
     val errorMessage: LiveData<Event<ErrorMessage>> = _errorMessage
 
     var iapFlowData = IAPFlowData()
-    private var incompletePurchases: MutableList<Pair<String, String>> = arrayListOf()
+    private var incompletePurchases: MutableList<IAPFlowData> = arrayListOf()
 
     private val listener = object : BillingProcessor.BillingFlowListeners {
         override fun onPurchaseCancel(responseCode: Int, message: String) {
@@ -108,7 +108,7 @@ class InAppPurchasesViewModel @Inject constructor(
 
     fun startPurchaseFlow(productId: String) {
         iapFlowData.productId = productId
-        iapFlowData.upgradeMode = IAPFlowData.UpgradeMode.NORMAL
+        iapFlowData.flowType = IAPFlowData.IAPFlowType.USER_INITIATED
         iapFlowData.isVerificationPending = true
         addProductToBasket()
     }
@@ -141,7 +141,7 @@ class InAppPurchasesViewModel @Inject constructor(
             callback = object : NetworkResponseCallback<CheckoutResponse> {
                 override fun onSuccess(result: Result.Success<CheckoutResponse>) {
                     result.data?.let {
-                        if (iapFlowData.upgradeMode.isSilentMode()) {
+                        if (iapFlowData.flowType.isSilentMode()) {
                             executeOrder(iapFlowData)
                         } else {
                             iapAnalytics.initPaymentTime()
@@ -177,7 +177,8 @@ class InAppPurchasesViewModel @Inject constructor(
                 callback = object : NetworkResponseCallback<ExecuteOrderResponse> {
                     override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
                         result.data?.let {
-                            if (iapFlowData.upgradeMode.isSilentMode()) {
+                            iapData.isVerificationPending = false
+                            if (iapFlowData.flowType.isSilentMode()) {
                                 markPurchaseComplete(iapData)
                             } else {
                                 _refreshCourseData.postEvent(iapData)
@@ -200,12 +201,19 @@ class InAppPurchasesViewModel @Inject constructor(
     /**
      * To detect and handle courses which are purchased but still not Verified
      *
-     * @param userId: id of the user to detect un full filled purchases and process.
-     * @return enrolledCourses user enrolled courses in the platform.
+     * @param userId          id of the user to detect un full filled purchases and process.
+     * @param enrolledCourses user enrolled courses in the platform.
+     * @param flowType        [IAPFlowData.IAPFlowType] of payment
+     * @param screenName      name of the screen from where the flow is initiated
      */
-    fun detectUnfulfilledPurchase(userId: Long, enrolledCourses: List<EnrolledCoursesResponse>) {
-        val auditCoursesSku = enrolledCourses.getAuditCoursesSku()
-        if (auditCoursesSku.isEmpty()) {
+    fun detectUnfulfilledPurchase(
+        userId: Long,
+        enrolledCourses: List<EnrolledCoursesResponse>,
+        flowType: IAPFlowData.IAPFlowType,
+        screenName: String
+    ) {
+        val auditCourses = enrolledCourses.getAuditCourses()
+        if (auditCourses.isEmpty()) {
             _fakeUnfulfilledCompletion.postEvent(true)
             return
         }
@@ -214,15 +222,17 @@ class InAppPurchasesViewModel @Inject constructor(
                 _fakeUnfulfilledCompletion.postEvent(true)
                 return@queryPurchase
             }
-            val purchasesList =
-                purchases.filter { it.accountIdentifiers?.obfuscatedAccountId?.decodeToLong() == userId }
-                    .associate { it.skus[0] to it.purchaseToken }
-                    .toList()
-            if (purchasesList.isNotEmpty()) {
-                incompletePurchases = InAppPurchasesUtils.getInCompletePurchases(
-                    auditCoursesSku,
-                    purchasesList
-                )
+            val userPurchases = purchases.filter {
+                it.accountIdentifiers?.obfuscatedAccountId?.decodeToLong() == userId
+            }
+            if (userPurchases.isNotEmpty()) {
+                incompletePurchases =
+                    InAppPurchasesUtils.getInCompletePurchases(
+                        auditCourses,
+                        userPurchases,
+                        flowType,
+                        screenName
+                    )
                 if (incompletePurchases.isEmpty()) {
                     _fakeUnfulfilledCompletion.postEvent(true)
                 } else {
@@ -238,11 +248,17 @@ class InAppPurchasesViewModel @Inject constructor(
      * Method to start the process to verify the un full filled courses skus
      */
     private fun startUnfulfilledVerification() {
-        iapFlowData.upgradeMode = IAPFlowData.UpgradeMode.SILENT
-        iapFlowData.productId = incompletePurchases[0].first
-        iapFlowData.purchaseToken = incompletePurchases[0].second
+        iapFlowData.clear()
+        iapFlowData = incompletePurchases[0]
         // will perform verification as part of unfulfilled flow
         iapFlowData.isVerificationPending = false
+        iapAnalytics.initCourseValues(
+            courseId = iapFlowData.courseId,
+            isSelfPaced = iapFlowData.isCourseSelfPaced,
+            flowType = iapFlowData.flowType.value(),
+            screenName = iapFlowData.screenName
+        )
+        iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNFULFILLED_PURCHASE_INITIATED)
         addProductToBasket()
     }
 

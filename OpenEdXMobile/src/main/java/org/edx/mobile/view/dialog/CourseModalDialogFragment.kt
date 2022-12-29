@@ -113,6 +113,7 @@ class CourseModalDialogFragment : DialogFragment() {
         iapAnalytics.initCourseValues(
             courseId = courseId,
             isSelfPaced = isSelfPaced,
+            flowType = IAPFlowData.IAPFlowType.USER_INITIATED.value(),
             screenName = screenName
         )
         environment.analyticsRegistry.trackValuePropLearnMoreTapped(courseId, screenName)
@@ -190,7 +191,7 @@ class CourseModalDialogFragment : DialogFragment() {
             retryListener = DialogInterface.OnClickListener { _, _ ->
                 // already purchased course.
                 iapViewModel.iapFlowData.isVerificationPending = false
-                iapViewModel.iapFlowData.upgradeMode = IAPFlowData.UpgradeMode.SILENT
+                iapViewModel.iapFlowData.flowType = IAPFlowData.IAPFlowType.USER_INITIATED
                 EventBus.getDefault()
                     .post(
                         IAPFlowEvent(
