@@ -9,6 +9,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.core.IEdxEnvironment;
@@ -50,8 +51,8 @@ public class WebViewProgramFragment extends AuthenticatedWebViewFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         if (!isSystemUpdatingWebView()) {
             getBinding().authWebview.getWebViewClient().setActionListener(new DefaultActionListener(requireActivity(),
                     getBinding().authWebview.getProgressWheel(), new DefaultActionListener.EnrollCallback() {

@@ -61,7 +61,6 @@ class PaymentsBannerFragment : BaseFragment() {
                 newInstance(courseData, courseUnit, courseUpgradeData, showInfoButton)
             // This activity will only ever hold this lone fragment, so we
             // can afford to retain the instance during activity recreation
-            fragment.retainInstance = true
             val fragmentTransaction: FragmentTransaction = childFragmentManager.beginTransaction()
             if (animate) {
                 fragmentTransaction.setCustomAnimations(R.anim.slide_up, android.R.anim.fade_out)

@@ -22,7 +22,6 @@ buildscript {
 apply plugin: 'edxapp'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt' //To enable data binding with kotlin
 apply plugin: 'com.dicedmelon.gradle.jacoco-android'
 edx {
     platform = ANDROID
@@ -32,6 +31,7 @@ apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: file('gradle_scripts/AndroidHelper.gradle')
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'kotlin-kapt' //To enable data binding with kotlin
 jacoco {
     toolVersion = "0.8.8"
 }

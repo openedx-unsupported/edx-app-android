@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
@@ -23,6 +24,7 @@ import org.edx.mobile.R
 import org.edx.mobile.base.MainApplication
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.view.custom.SingleScrollDirectionEnforcer
+
 
 object UiUtils {
     private val TAG = UiUtils::class.java.canonicalName
@@ -85,8 +87,12 @@ object UiUtils {
         return if (resSize != 0) setDrawableSize(context, drawable, resSize) else drawable
     }
 
-    private fun setDrawableColor(context: Context, drawable: Drawable, colorRes: Int) = drawable
-            .setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
+    private fun setDrawableColor(context: Context, drawable: Drawable, colorRes: Int) {
+        drawable.colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(context, colorRes),
+            PorterDuff.Mode.SRC_IN
+        )
+    }
 
     fun setImageViewColor(context: Context, imageView: AppCompatImageView, colorRes: Int) {
         imageView.setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)

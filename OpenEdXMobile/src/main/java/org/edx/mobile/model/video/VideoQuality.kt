@@ -8,5 +8,5 @@ enum class VideoQuality(val titleResId: Int) {
     OPTION_540P(R.string.video_quality_p540),
     OPTION_720P(R.string.video_quality_p720);
 
-    val value: String = this.name.replace("OPTION_", "").toLowerCase()
+    val value: String = this.name.replace("OPTION_", "").lowercase()
 }

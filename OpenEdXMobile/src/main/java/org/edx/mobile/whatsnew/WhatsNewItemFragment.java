@@ -11,7 +11,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -35,7 +34,7 @@ public class WhatsNewItemFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_whats_new_item, container, false);
+        binding = FragmentWhatsNewItemBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

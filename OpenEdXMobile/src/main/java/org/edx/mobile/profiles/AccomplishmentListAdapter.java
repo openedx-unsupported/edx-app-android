@@ -1,13 +1,13 @@
 package org.edx.mobile.profiles;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
@@ -126,7 +126,7 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
 
         public ItemViewHolder(@NonNull ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.accomplishment_item, parent, false));
-            binding = DataBindingUtil.bind(itemView);
+            binding = AccomplishmentItemBinding.bind(itemView);
         }
 
         public void setContent(@NonNull final BadgeAssertion badgeAssertion, final boolean sharingEnabled) {

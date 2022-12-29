@@ -96,7 +96,7 @@ public class UserProfileFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return DataBindingUtil.inflate(inflater, R.layout.fragment_user_profile, container, false).getRoot();
+        return FragmentUserProfileBinding.inflate(inflater, container, false).getRoot();
     }
 
     @Override

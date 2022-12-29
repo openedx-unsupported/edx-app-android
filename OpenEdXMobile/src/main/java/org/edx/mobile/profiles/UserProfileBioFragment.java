@@ -32,7 +32,7 @@ public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPres
     private boolean prefersScrollingHeader = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return DataBindingUtil.inflate(inflater, R.layout.fragment_user_profile_bio, container, false).getRoot();
+        return FragmentUserProfileBioBinding.inflate(inflater, container, false).getRoot();
     }
 
     public static UserProfileBioFragment newInstance() {

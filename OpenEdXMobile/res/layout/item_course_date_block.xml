@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:binding="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -48,19 +47,20 @@
 
         <View
             android:id="@+id/bullet"
+            bulletBackground="@{dateBlock.dateBlockBadge}"
+            isDatePast="@{dateBlock.isDatePassed()}"
+            isViewVisible="@{!dateBlock.isToday()}"
             android:layout_width="@dimen/normal_bullet_size"
             android:layout_height="@dimen/normal_bullet_size"
             app:layout_constraintBottom_toBottomOf="@id/bullet_today"
             app:layout_constraintEnd_toEndOf="@id/bullet_today"
             app:layout_constraintStart_toStartOf="@+id/bullet_today"
             app:layout_constraintTop_toTopOf="@id/bullet_today"
-            binding:bulletBackground="@{dateBlock.dateBlockBadge}"
-            binding:isDatePast="@{dateBlock.isDatePassed()}"
-            binding:isVisible="@{!dateBlock.isToday()}"
             tools:ignore="ContentDescription" />
 
         <View
             android:id="@+id/bullet_today"
+            isViewVisible="@{dateBlock.isToday()}"
             android:layout_width="@dimen/today_bullet_size"
             android:layout_height="@dimen/today_bullet_size"
             android:layout_marginStart="@dimen/edx_half_margin"
@@ -70,12 +70,13 @@
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            binding:isVisible="@{dateBlock.isToday()}"
             tools:ignore="ContentDescription"
             tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/date_info_container"
+            addView="@{dateBlockList}"
+            clickListener="@{dateItemListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -83,21 +84,19 @@
             android:paddingBottom="@dimen/edx_double_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/bullet"
-            app:layout_constraintTop_toTopOf="parent"
-            binding:addView="@{dateBlockList}"
-            binding:clickListener="@{dateItemListener}">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/date"
+                badge="@{dateBlock}"
+                dateBlockItems="@{dateBlockList}"
+                spanText="@{dateBlock.getFormattedDate()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="?attr/fontSemiBold"
                 android:lineSpacingMultiplier="@dimen/course_date_title_line_spacing"
                 android:textColor="@color/switch_text_color"
                 android:textSize="@dimen/edx_large"
-                binding:badge="@{dateBlock}"
-                binding:dateBlockItems="@{dateBlockList}"
-                binding:spanText="@{dateBlock.getFormattedDate()}"
                 tools:text="Wed, Aug 12, 2020" />
         </LinearLayout>
 

@@ -17,8 +17,7 @@ class CourseDatesAdapter(private val data: LinkedHashMap<String, ArrayList<Cours
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseDatesAdapter.CourseDateHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val inflatedBinding = DataBindingUtil.inflate<ItemCourseDateBlockBinding>(
-                inflater, R.layout.item_course_date_block, parent, false)
+        val inflatedBinding = ItemCourseDateBlockBinding.inflate(inflater, parent, false)
         return CourseDateHolder(inflatedBinding, onDateItemClick)
     }
 

@@ -36,12 +36,19 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        OfflineSupportUtils.setUserVisibleHint(activity, isVisibleToUser,
-                isShowingFullScreenError())
+        OfflineSupportUtils.setUserVisibleHint(
+            activity, isVisibleToUser,
+            isShowingFullScreenError()
+        )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onNetworkConnectivityChangeEvent(event: NetworkConnectivityChangeEvent?) {
-        OfflineSupportUtils.onNetworkConnectivityChangeEvent(activity, userVisibleHint, isShowingFullScreenError())
+        OfflineSupportUtils.onNetworkConnectivityChangeEvent(
+            activity,
+            isResumed,
+            isShowingFullScreenError()
+        )
     }
 
     override fun onRevisit() {

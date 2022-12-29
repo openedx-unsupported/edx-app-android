@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
@@ -609,7 +608,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
      */
     private void initDatesBanner(CourseBannerInfoModel courseBannerInfo) {
         if (bannerViewBinding == null)
-            bannerViewBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_course_dates_banner, listView, false);
+            bannerViewBinding = LayoutCourseDatesBannerBinding.inflate(getLayoutInflater(), listView, false);
 
         if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
             CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
