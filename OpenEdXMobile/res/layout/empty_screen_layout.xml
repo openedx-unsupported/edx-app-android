@@ -65,6 +65,7 @@
             app:backgroundTint="@color/secondaryBaseColor"
             app:icon="@drawable/ic_search"
             app:iconGravity="textStart"
+            app:iconPadding="@dimen/container_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

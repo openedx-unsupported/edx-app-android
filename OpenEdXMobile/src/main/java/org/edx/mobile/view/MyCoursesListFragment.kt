@@ -332,6 +332,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 R.drawable.ic_error, 0, null
             )
             binding.myCourseList.setVisibility(false)
+        } else {
+            binding.emptyScreenLayout.root.setVisibility(false)
+            binding.myCourseList.setVisibility(true)
         }
         invalidateView()
     }

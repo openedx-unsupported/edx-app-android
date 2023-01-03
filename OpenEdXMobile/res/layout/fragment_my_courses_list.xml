@@ -6,7 +6,7 @@
         android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/neutralLight">
+        android:background="@color/neutralWhite">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"
