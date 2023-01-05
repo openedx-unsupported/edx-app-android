@@ -141,6 +141,7 @@ public abstract class MainApplication extends MultiDexApplication {
             // we are generating the meta data through gradle script due to which it is necessary
             // to manually initialize the sdk here.
             FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
+            FacebookSdk.setClientToken(config.getFacebookConfig().getFacebookClientToken());
             FacebookSdk.sdkInitialize(getApplicationContext());
         }
 

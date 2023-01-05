@@ -204,6 +204,9 @@ public class Config {
         @SerializedName("FACEBOOK_APP_ID")
         private String mFacebookAppId;
 
+        @SerializedName("CLIENT_TOKEN")
+        private String mFacebookClientToken;
+
         public FacebookConfig(boolean mEnabled, String mFacebookAppId) {
             this.mEnabled = mEnabled;
             this.mFacebookAppId = mFacebookAppId;
@@ -218,6 +221,10 @@ public class Config {
 
         public String getFacebookAppId() {
             return mFacebookAppId;
+        }
+
+        public String getFacebookClientToken() {
+            return mFacebookClientToken;
         }
     }
 
