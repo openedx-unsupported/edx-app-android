@@ -10,8 +10,8 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
 
-import com.appboy.Appboy;
-import com.appboy.configuration.AppboyConfig;
+import com.braze.Braze;
+import com.braze.configuration.BrazeConfig;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -146,13 +146,14 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // Braze SDK Initialization
         if (config.getBrazeConfig().isEnabled() && config.getFirebaseConfig().isEnabled()) {
-            AppboyConfig appboyConfig = new AppboyConfig.Builder()
+            BrazeConfig brazeConfig = new BrazeConfig.Builder()
                     .setIsFirebaseCloudMessagingRegistrationEnabled(config.areFirebasePushNotificationsEnabled()
                             && config.getBrazeConfig().isPushNotificationsEnabled())
                     .setFirebaseCloudMessagingSenderIdKey(config.getFirebaseConfig().getProjectNumber())
                     .setHandlePushDeepLinksAutomatically(true)
+                    .setIsFirebaseMessagingServiceOnNewTokenRegistrationEnabled(true)
                     .build();
-            Appboy.configure(this, appboyConfig);
+            Braze.configure(this, brazeConfig);
         }
     }
 
