@@ -12,7 +12,6 @@ import androidx.multidex.MultiDexApplication;
 
 import com.braze.Braze;
 import com.braze.configuration.BrazeConfig;
-import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.newrelic.agent.android.NewRelic;
@@ -33,7 +32,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.NotificationUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -132,17 +130,6 @@ public abstract class MainApplication extends MultiDexApplication {
         // Init Branch
         if (config.getBranchConfig().isEnabled()) {
             Branch.getAutoInstance(this);
-        }
-
-        // Initialize Facebook SDK
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
-        if (!isOnZeroRatedNetwork && config.getFacebookConfig().isEnabled()) {
-            // Facebook sdk should be initialized through AndroidManifest meta data declaration but
-            // we are generating the meta data through gradle script due to which it is necessary
-            // to manually initialize the sdk here.
-            FacebookSdk.setApplicationId(config.getFacebookConfig().getFacebookAppId());
-            FacebookSdk.setClientToken(config.getFacebookConfig().getFacebookClientToken());
-            FacebookSdk.sdkInitialize(getApplicationContext());
         }
 
         // Braze SDK Initialization

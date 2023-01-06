@@ -30,6 +30,8 @@
     <!-- Required by app to to perform in app purchases -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+
     <!-- Setup for Code Coverage -->
     <instrumentation
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
@@ -326,6 +328,10 @@
         </receiver>
 
         <!-- Setup Facebook -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="${facebookAppId}"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="${fbClientToken}"/>
+        <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="false"/>
+        <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="false"/>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"

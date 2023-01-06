@@ -80,7 +80,7 @@ def getVersionName = { ->
     catch (e) {
         logger.error("Could not determine version name", e)
     }
-    return description.substring(description.indexOf("/") + 1).split("-")[0].trim()
+    return "3.2.2"
 }
 
 /**
@@ -147,7 +147,7 @@ dependencies {
     implementation "androidx.mediarouter:mediarouter:$androidXVersion"
     implementation 'com.google.android.gms:play-services-cast-framework:16.2.0'
 
-    implementation 'com.facebook.android:facebook-login:latest.release'
+    implementation 'com.facebook.android:facebook-login:15.2.0'
     implementation 'com.microsoft.identity.client:msal:0.3+'
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'com.google.code.gson:gson:2.9.0'
@@ -399,12 +399,15 @@ android {
 
         def fbLoginProtocolScheme = ""
         def facebook = config.get('FACEBOOK')
+        def facebookAppId = ""
+        def fbClientToken = ""
         if (facebook?.get('ENABLED')) {
-            def facebookAppId = facebook.get('FACEBOOK_APP_ID')
-            if (null == facebookAppId) {
-                throw new GradleException("You must set FACEBOOK_APP_ID if FACEBOOK is enabled")
+            facebookAppId = facebook.get('FACEBOOK_APP_ID')
+            fbClientToken = facebook.get('CLIENT_TOKEN')
+            if (null == facebookAppId || null == fbClientToken) {
+                throw new GradleException("You must set FACEBOOK_APP_ID and CLIENT_TOKEN if FACEBOOK is enabled")
             }
-            fbLoginProtocolScheme = "fb"+facebookAppId
+            fbLoginProtocolScheme = "fb" + facebookAppId
         }
 
         manifestPlaceholders = [supportsRtl          : "true",
@@ -412,6 +415,8 @@ android {
                                 fcmEnabled           : fcmEnabled,
                                 branchKey            : branchKey,
                                 microsoftSignature   : microsoftSignature,
+                                facebookAppId        : facebookAppId,
+                                fbClientToken        : fbClientToken,
                                 fbLoginProtocolScheme: fbLoginProtocolScheme,
                                 sdCardEnabled        : config.get('DOWNLOAD_TO_SD_CARD_ENABLED') ?: true]
 
