@@ -23,10 +23,12 @@ import org.edx.mobile.model.discussion.DiscussionComment;
 import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.model.discussion.IAuthorData;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.view.custom.EdxWebView;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class DiscussionTextUtils {
 
@@ -158,6 +160,16 @@ public abstract class DiscussionTextUtils {
         }
     }
 
+    /**
+     * Method to check if the text only contains the paragraph tags<p></p> or not
+     */
+    public static boolean isPlainHtml(@NonNull String text) {
+        String HTML_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
+        Pattern pattern = Pattern.compile(HTML_PATTERN);
+        String plainText = text.replace("<p>", "").replace("</p>", "");
+        return !pattern.matcher(plainText).find();
+    }
+
     public static Spanned parseHtml(@NonNull String html) {
         // If the HTML contains a paragraph at the end, there will be blank lines following the text
         // Therefore, we need to trim the resulting CharSequence to remove those extra lines
@@ -203,8 +215,9 @@ public abstract class DiscussionTextUtils {
      * @param textView The {@link TextView} which will render the given HTML.
      * @param html     The HTML to render.
      */
+
     public static void renderHtml(@NonNull TextView textView, @NonNull String html) {
-        Spanned spannedHtml = DiscussionTextUtils.parseHtml(html);
+        Spanned spannedHtml = parseHtml(html);
         URLSpan[] urlSpans = spannedHtml.getSpans(0, spannedHtml.length(), URLSpan.class);
         textView.setAutoLinkMask(Linkify.ALL);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -216,6 +229,21 @@ public abstract class DiscussionTextUtils {
             final int end = spannedHtml.getSpanEnd(spanObj);
             final int flags = spannedHtml.getSpanFlags(spanObj);
             viewText.setSpan(spanObj, start, end, flags);
+        }
+    }
+
+    /**
+     * Utility method to render the body based on <p> for html rendering
+     */
+    public static void loadRenderBody(@NonNull TextView textView, @NonNull EdxWebView webView, @NonNull String body) {
+        if (isPlainHtml(body)) {
+            textView.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
+            renderHtml(textView, body);
+        } else {
+            textView.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+            webView.loadDataWithBaseURL(null, body, "text/html", "utf-8", null);
         }
     }
 }

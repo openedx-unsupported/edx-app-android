@@ -2,11 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/edX.Widget.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/discussion_responses_standard_margin"
     android:layout_marginEnd="@dimen/discussion_responses_standard_margin"
-    style="@style/edX.Widget.CardView"
     app:cardElevation="1dp"
     app:cardMaxElevation="1dp">
 
@@ -21,10 +21,16 @@
         <include layout="@layout/row_discussion_user_profile" />
 
         <TextView
-            android:id="@+id/discussion_comment_body"
+            android:id="@+id/tv_discussion_comment_body"
             style="@style/discussion_regular_text"
+            android:visibility="gone"
             tools:text="This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment." />
 
+        <org.edx.mobile.view.custom.EdxWebView
+            android:id="@+id/wv_discussion_comment_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
         <!-- This container layout is only defined to add bottom padding to the parent view, when
              the enclosed TextView's visibility is set to GONE. -->
         <FrameLayout

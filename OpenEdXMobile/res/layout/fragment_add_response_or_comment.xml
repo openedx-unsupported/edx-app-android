@@ -38,7 +38,14 @@
                 <TextView
                     android:id="@+id/tvResponse"
                     style="@style/discussion_regular_text"
+                    android:visibility="gone"
                     tools:text="Post body" />
+
+                <org.edx.mobile.view.custom.EdxWebView
+                    android:id="@+id/webViewResponse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

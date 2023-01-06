@@ -27,7 +27,14 @@
                 android:id="@+id/discussion_responses_comment_body_text_view"
                 style="@style/discussion_regular_text"
                 android:layout_marginBottom="5dp"
+                android:visibility="gone"
                 tools:text="This is a response" />
+
+            <org.edx.mobile.view.custom.EdxWebView
+                android:id="@+id/discussion_responses_comment_body_web_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/discussion_responses_answer_author_text_view"

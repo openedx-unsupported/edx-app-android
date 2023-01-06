@@ -97,8 +97,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         binding.tvTitle.setVisibility(View.VISIBLE);
         binding.tvTitle.setText(discussionThread.getTitle());
 
-        DiscussionTextUtils.renderHtml(binding.tvResponse, discussionThread.getRenderedBody());
-
+        DiscussionTextUtils.loadRenderBody(binding.tvResponse, binding.webViewResponse, discussionThread.getRenderedBody());
         AuthorLayoutViewHolder authorLayoutViewHolder =
                 new AuthorLayoutViewHolder(binding.rowDiscussionUserProfile.discussionUserProfileRow);
         authorLayoutViewHolder.populateViewHolder(config, discussionThread, discussionThread,
