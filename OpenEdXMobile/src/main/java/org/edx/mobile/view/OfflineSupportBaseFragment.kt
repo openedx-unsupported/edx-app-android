@@ -34,12 +34,14 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
      */
     protected abstract fun isShowingFullScreenError(): Boolean
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        OfflineSupportUtils.setUserVisibleHint(
-            activity, isVisibleToUser,
-            isShowingFullScreenError()
-        )
+    override fun onResume() {
+        super.onResume()
+        OfflineSupportUtils.setUserVisibleHint(activity, true, isShowingFullScreenError())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        OfflineSupportUtils.setUserVisibleHint(activity, false, isShowingFullScreenError())
     }
 
     @Suppress("UNUSED_PARAMETER")

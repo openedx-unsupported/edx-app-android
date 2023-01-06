@@ -25,9 +25,7 @@ import org.edx.mobile.base.MainApplication
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.view.custom.SingleScrollDirectionEnforcer
 
-
 object UiUtils {
-    private val TAG = UiUtils::class.java.canonicalName
     private val logger = Logger(UiUtils::class.java)
 
     /**

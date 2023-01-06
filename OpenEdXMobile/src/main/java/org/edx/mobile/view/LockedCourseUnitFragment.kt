@@ -40,7 +40,7 @@ class LockedCourseUnitFragment : CourseUnitFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentLockedCourseUnitBinding.inflate(inflater, container, false)
         return binding.root
     }

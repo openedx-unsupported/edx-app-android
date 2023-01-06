@@ -19,9 +19,6 @@ import org.edx.mobile.databinding.SubItemCourseDateBlockBinding
 import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.course.CourseDateBlock
 import org.edx.mobile.model.course.CourseDateType
-import org.edx.mobile.util.DataBindingHelperUtils.createBadge
-import org.edx.mobile.util.DataBindingHelperUtils.hasSameDateTypes
-import org.edx.mobile.util.DataBindingHelperUtils.isViewAccessible
 
 /**
  * DataBindingHelperUtils allows you to specify the method called to set a value,
@@ -29,119 +26,126 @@ import org.edx.mobile.util.DataBindingHelperUtils.isViewAccessible
  * Ref: https://developer.android.com/topic/libraries/data-binding/binding-adapters
  */
 
-@BindingAdapter("spanText")
-fun setSpanText(textView: TextView, text: String?) {
-    if (text.isNullOrBlank().not()) {
-        // set text as SPANNABLE so can add more SPANNABLE text e.g `addDateBadge`
-        textView.setText(SpannableStringBuilder(text), TextView.BufferType.SPANNABLE)
-        textView.visibility = View.VISIBLE
-    } else {
-        textView.visibility = View.GONE
+object DataBindingHelperUtils {
+
+    @JvmStatic
+    @BindingAdapter("spanText")
+    fun setSpanText(textView: TextView, text: String?) {
+        if (text.isNullOrBlank().not()) {
+            // set text as SPANNABLE so can add more SPANNABLE text e.g `addDateBadge`
+            textView.setText(SpannableStringBuilder(text), TextView.BufferType.SPANNABLE)
+            textView.visibility = View.VISIBLE
+        } else {
+            textView.visibility = View.GONE
+        }
     }
-}
 
-@BindingAdapter("isViewVisible")
-fun isViewVisible(view: View, isVisible: Boolean) {
-    view.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
-}
+    @JvmStatic
+    @BindingAdapter("isViewVisible")
+    fun isViewVisible(view: View, isVisible: Boolean) {
+        view.visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
+    }
 
-@BindingAdapter("addView", "clickListener", requireAll = true)
-fun addView(
-    linearLayout: LinearLayout,
-    list: ArrayList<CourseDateBlock>,
-    clickListener: OnDateBlockListener
-) {
-    val inflater: LayoutInflater =
-        linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    if (linearLayout.childCount < 2) {
-        // if all the item has the same date type so it means badge is already added in parent view
-        val parentBadgeAdded = hasSameDateTypes(list)
-        list.forEach { item ->
-            val childView = SubItemCourseDateBlockBinding.inflate(inflater)
+    @JvmStatic
+    @BindingAdapter("addView", "clickListener", requireAll = true)
+    fun addView(
+        linearLayout: LinearLayout,
+        list: ArrayList<CourseDateBlock>,
+        clickListener: OnDateBlockListener
+    ) {
+        val inflater: LayoutInflater =
+            linearLayout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        if (linearLayout.childCount < 2) {
+            // if all the item has the same date type so it means badge is already added in parent view
+            val parentBadgeAdded = hasSameDateTypes(list)
+            list.forEach { item ->
+                val childView = SubItemCourseDateBlockBinding.inflate(inflater)
 
-            var labelType = ""
-            val title = SpannableStringBuilder(item.title)
+                var labelType = ""
+                val title = SpannableStringBuilder(item.title)
 
-            if (item.assignmentType.isNullOrBlank().not()) {
-                labelType = "${item.assignmentType}: "
-            }
+                if (item.assignmentType.isNullOrBlank().not()) {
+                    labelType = "${item.assignmentType}: "
+                }
 
-            if (item.showLink()) {
-                title.setSpan(UnderlineSpan(), 0, title.length, 0)
-            }
-
-            if (item.title.isNotBlank()) childView.title.visibility = View.VISIBLE
-            childView.title.setText(
-                TextUtils.concat(labelType, title),
-                TextView.BufferType.SPANNABLE
-            )
-            isViewAccessible(childView.title, item.dateBlockBadge)
-
-            setSpanText(childView.description, item.description)
-            isViewAccessible(childView.description, item.dateBlockBadge)
-
-            childView.root.setOnClickListener {
                 if (item.showLink()) {
-                    clickListener.onClick(item.link, item.blockId)
+                    title.setSpan(UnderlineSpan(), 0, title.length, 0)
+                }
+
+                if (item.title.isNotBlank()) childView.title.visibility = View.VISIBLE
+                childView.title.setText(
+                    TextUtils.concat(labelType, title),
+                    TextView.BufferType.SPANNABLE
+                )
+                isViewAccessible(childView.title, item.dateBlockBadge)
+
+                setSpanText(childView.description, item.description)
+                isViewAccessible(childView.description, item.dateBlockBadge)
+
+                childView.root.setOnClickListener {
+                    if (item.showLink()) {
+                        clickListener.onClick(item.link, item.blockId)
+                    }
+                }
+                if (!parentBadgeAdded) {
+                    // Set update badge with sub date items
+                    setBadge(childView.title, item, null, true)
+                }
+                linearLayout.addView(childView.root)
+            }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bulletBackground", "isDatePast", requireAll = true)
+    fun setBulletBackground(bulletView: View, type: CourseDateType, isDatePast: Boolean) {
+        bulletView.bringToFront()
+        when (type) {
+            CourseDateType.PAST_DUE -> {
+                bulletView.background = ContextCompat.getDrawable(
+                    bulletView.context,
+                    R.drawable.black_border_gray_circle
+                )
+            }
+            CourseDateType.BLANK,
+            CourseDateType.COMPLETED,
+            CourseDateType.DUE_NEXT,
+            CourseDateType.NOT_YET_RELEASED,
+            CourseDateType.COURSE_EXPIRED_DATE,
+            CourseDateType.VERIFIED_ONLY -> {
+                if (isDatePast && (type == CourseDateType.VERIFIED_ONLY).not()) {
+                    bulletView.background = ContextCompat.getDrawable(
+                        bulletView.context, R.drawable.black_border_white_circle
+                    )
+                } else {
+                    bulletView.background =
+                        ContextCompat.getDrawable(bulletView.context, R.drawable.black_circle)
                 }
             }
-            if (!parentBadgeAdded) {
-                // Set update badge with sub date items
-                setBadge(childView.title, item, null, true)
-            }
-            linearLayout.addView(childView.root)
+            else -> {}
         }
     }
-}
 
-@BindingAdapter("bulletBackground", "isDatePast", requireAll = true)
-fun setBulletBackground(bulletView: View, type: CourseDateType, isDatePast: Boolean) {
-    bulletView.bringToFront()
-    when (type) {
-        CourseDateType.PAST_DUE -> {
-            bulletView.background = ContextCompat.getDrawable(
-                bulletView.context,
-                R.drawable.black_border_gray_circle
-            )
+    @JvmStatic
+    @BindingAdapter("badge", "dateBlockItems", "badgeAdded", requireAll = false)
+    fun setBadge(
+        textView: TextView,
+        dateBlock: CourseDateBlock,
+        dateBlockItems: ArrayList<CourseDateBlock>?,
+        parentBadgeAdded: Boolean = false
+    ) {
+        // Check Today's badge is already added or not
+        if (dateBlock.isToday() && !parentBadgeAdded) {
+            createBadge(textView, CourseDateType.TODAY)
         }
-        CourseDateType.BLANK,
-        CourseDateType.COMPLETED,
-        CourseDateType.DUE_NEXT,
-        CourseDateType.NOT_YET_RELEASED,
-        CourseDateType.COURSE_EXPIRED_DATE,
-        CourseDateType.VERIFIED_ONLY -> {
-            if (isDatePast && (type == CourseDateType.VERIFIED_ONLY).not()) {
-                bulletView.background = ContextCompat.getDrawable(
-                    bulletView.context, R.drawable.black_border_white_circle
-                )
-            } else {
-                bulletView.background =
-                    ContextCompat.getDrawable(bulletView.context, R.drawable.black_circle)
-            }
+        // add date badge at second position OR sub date item other then Today's badge
+        if (hasSameDateTypes(dateBlockItems) && !dateBlock.isDateTypeToday()) {
+            createBadge(textView, dateBlock.dateBlockBadge)
         }
-        else -> {}
     }
-}
 
-@BindingAdapter("badge", "dateBlockItems", "badgeAdded", requireAll = false)
-fun setBadge(
-    textView: TextView,
-    dateBlock: CourseDateBlock,
-    dateBlockItems: ArrayList<CourseDateBlock>?,
-    parentBadgeAdded: Boolean = false
-) {
-    // Check Today's badge is already added or not
-    if (dateBlock.isToday() && !parentBadgeAdded) {
-        createBadge(textView, CourseDateType.TODAY)
-    }
-    // add date badge at second position OR sub date item other then Today's badge
-    if (hasSameDateTypes(dateBlockItems) && !dateBlock.isDateTypeToday()) {
-        createBadge(textView, dateBlock.dateBlockBadge)
-    }
-}
 
-object DataBindingHelperUtils {
-    fun isViewAccessible(view: View, type: CourseDateType) {
+    private fun isViewAccessible(view: View, type: CourseDateType) {
         when (type) {
             CourseDateType.VERIFIED_ONLY,
             CourseDateType.NOT_YET_RELEASED ->
@@ -154,7 +158,7 @@ object DataBindingHelperUtils {
     /**
      * Method to create the Date badge as per given DateType
      */
-    fun createBadge(textView: TextView, courseDateType: CourseDateType) {
+    private fun createBadge(textView: TextView, courseDateType: CourseDateType) {
         val badgeBackground: Int
         val textAppearance: Int
         var badgeStrokeColor: Int = -1
@@ -210,7 +214,7 @@ object DataBindingHelperUtils {
      *
      * @return true if all the date items have update badge status else false
      * */
-    fun hasSameDateTypes(dateBlockItems: ArrayList<CourseDateBlock>?): Boolean {
+    private fun hasSameDateTypes(dateBlockItems: ArrayList<CourseDateBlock>?): Boolean {
         if (dateBlockItems != null && dateBlockItems.isNotEmpty() && dateBlockItems.size > 1) {
             val dateType = dateBlockItems.first().dateBlockBadge
             for (i in 1 until dateBlockItems.size) {
