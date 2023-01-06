@@ -207,9 +207,10 @@ public class Config {
         @SerializedName("CLIENT_TOKEN")
         private String mFacebookClientToken;
 
-        public FacebookConfig(boolean mEnabled, String mFacebookAppId) {
+        public FacebookConfig(boolean mEnabled, String mFacebookAppId, String mFacebookClientToken) {
             this.mEnabled = mEnabled;
             this.mFacebookAppId = mFacebookAppId;
+            this.mFacebookClientToken = mFacebookClientToken;
         }
 
         public FacebookConfig() {
