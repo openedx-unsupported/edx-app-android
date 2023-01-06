@@ -3,7 +3,7 @@ project.ext {
     KOTLIN_VERSION = "1.6.10"
     GRADLE_PLUGIN_VERSION = "7.0.3"
     BUILD_TOOLS_VERSION = "30.0.2"
-    COMPILE_SDK_VERSION = 30
+    COMPILE_SDK_VERSION = 31
     // API Level that the application will target
     TARGET_SDK_VERSION = 31
     // Minimum API Level required for the application to run

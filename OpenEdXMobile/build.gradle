@@ -220,7 +220,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0-alpha02'
 
     // Braze SDK Integration
-    implementation 'com.appboy:appboy-segment-integration:7.0.0'
+    implementation 'com.appboy:appboy-segment-integration:14.0.0'
 
     // test project configuration
     testImplementation 'junit:junit:4.12'
@@ -540,6 +540,12 @@ android {
     }
 
     kotlinOptions {
+        /**
+         * Braze may cause a compiler warning about "Inheritance from an interface with
+         * '@JvmDefault' members" without this flag.
+         * Ref: https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#important-2
+         */
+        freeCompilerArgs = ['-Xjvm-default=all']
         jvmTarget = "11"
     }
 }
