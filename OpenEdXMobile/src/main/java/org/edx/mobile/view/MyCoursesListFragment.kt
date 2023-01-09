@@ -6,7 +6,6 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
@@ -374,9 +373,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         }
         if (environment.config.discoveryConfig.isDiscoveryEnabled) {
             // Add 'Find a Course' list item as a footer.
-            val footer: PanelFindCourseBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(activity),
-                R.layout.panel_find_course, binding.myCourseList, false
+            val footer: PanelFindCourseBinding = PanelFindCourseBinding.inflate(
+                LayoutInflater.from(activity), binding.myCourseList, false
             )
             binding.myCourseList.addFooterView(footer.root, null, false)
             footer.courseBtn.setOnClickListener {

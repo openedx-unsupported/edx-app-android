@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.edx.mobile.R;
@@ -38,11 +37,14 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
     @Inject
     UserPrefs userPrefs;
 
+    FragmentUserProfileAccomplishmentsBinding binding;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return DataBindingUtil.inflate(inflater, R.layout.fragment_user_profile_accomplishments, container, false).getRoot();
+        binding = FragmentUserProfileAccomplishmentsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @NonNull
@@ -56,7 +58,6 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
     @NonNull
     @Override
     protected UserProfileAccomplishmentsPresenter.ViewInterface createView() {
-        final FragmentUserProfileAccomplishmentsBinding binding = DataBindingUtil.getBinding(getView());
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.list.setLayoutManager(linearLayoutManager);
         binding.list.addOnScrollListener(new InfiniteScrollUtils.RecyclerViewOnScrollListener(linearLayoutManager, new Runnable() {

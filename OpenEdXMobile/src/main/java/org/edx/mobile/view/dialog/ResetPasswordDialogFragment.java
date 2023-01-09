@@ -5,13 +5,13 @@ import static android.app.Activity.RESULT_OK;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import org.edx.mobile.R;
@@ -56,8 +56,8 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(),
-                R.layout.reset_password_dialog, null, false);
+        binding = ResetPasswordDialogBinding.inflate(LayoutInflater.from(getActivity()),
+                null, false);
         binding.emailEditText.setText(getArguments().getString(ARG_LOGIN_EMAIL));
 
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext())

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentLockedCourseUnitBinding
@@ -41,14 +40,8 @@ class LockedCourseUnitFragment : CourseUnitFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding: FragmentLockedCourseUnitBinding =
-            DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_locked_course_unit,
-                container,
-                false
-            )
+    ): View {
+        val binding = FragmentLockedCourseUnitBinding.inflate(inflater, container, false)
         return binding.root
     }
 

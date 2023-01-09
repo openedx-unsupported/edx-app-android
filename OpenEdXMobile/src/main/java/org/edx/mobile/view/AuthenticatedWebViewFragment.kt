@@ -69,6 +69,29 @@ open class AuthenticatedWebViewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (!isSystemUpdatingWebView) {
+            arguments?.run {
+                val url = getString(ARG_URL)
+                val javascript = getString(ARG_JAVASCRIPT)
+                val isManuallyReloadable = getBoolean(ARG_IS_MANUALLY_RELOADABLE)
+                authWebViewBinding?.authWebview?.initWebView(
+                    requireActivity(),
+                    false,
+                    isManuallyReloadable,
+                    false,
+                    null
+                ) { canDismiss, screenName ->
+                    handleScreenNavigation(screenName)
+                    if (canDismiss) {
+                        activity?.finish()
+                    }
+                }
+                url?.let {
+                    authWebViewBinding?.authWebview?.loadUrlWithJavascript(
+                        true,
+                        it, javascript
+                    )
+                }
+            }
             // Disable the SwipeRefreshLayout by-default to allow the subclasses to provide a proper implementation for it
             authWebViewBinding?.swipeContainer?.isEnabled = false
         } else {
@@ -82,39 +105,7 @@ open class AuthenticatedWebViewFragment : BaseFragment() {
                 contentErrorAction.visibility = View.VISIBLE
                 contentErrorAction.setText(R.string.lbl_reload)
                 contentErrorAction.setOnClickListener {
-                    UiUtils.restartFragment(
-                        this@AuthenticatedWebViewFragment
-                    )
-                }
-            }
-        }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (!isSystemUpdatingWebView) {
-            arguments?.run {
-                val url = getString(ARG_URL)
-                val javascript = getString(ARG_JAVASCRIPT)
-                val isManuallyReloadable = getBoolean(ARG_IS_MANUALLY_RELOADABLE)
-                authWebViewBinding?.authWebview?.initWebView(
-                    requireActivity(),
-                    false,
-                    isManuallyReloadable,
-                    false,
-                    null,
-                    { canDismiss, screenName ->
-                        handleScreenNavigation(screenName)
-                        if (canDismiss) {
-                            activity?.finish()
-                        }
-                    }
-                )
-                url?.let {
-                    authWebViewBinding?.authWebview?.loadUrlWithJavascript(
-                        true,
-                        it, javascript
-                    )
+                    UiUtils.restartFragment(this@AuthenticatedWebViewFragment)
                 }
             }
         }

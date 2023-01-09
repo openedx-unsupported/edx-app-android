@@ -18,7 +18,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.course.CourseAPI;
@@ -48,9 +47,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class CourseTabsDashboardFragment extends TabsBaseFragment {
     private static final String ARG_COURSE_NOT_FOUND = "ARG_COURSE_NOT_FOUND";
     protected final Logger logger = new Logger(getClass().getName());
-
-    @Nullable
-    private FragmentDashboardErrorLayoutBinding errorLayoutBinding;
 
     private EnrolledCoursesResponse courseData;
 
@@ -106,7 +102,8 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
                 final boolean auditAccessExpired = courseData.getAuditAccessExpires() != null &&
                         new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
-                errorLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard_error_layout, container, false);
+                FragmentDashboardErrorLayoutBinding errorLayoutBinding =
+                        FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
                 errorLayoutBinding.errorMsg.setText(auditAccessExpired ? R.string.course_access_expired : R.string.course_not_started);
                 return errorLayoutBinding.getRoot();
             } else {
@@ -114,7 +111,8 @@ public class CourseTabsDashboardFragment extends TabsBaseFragment {
             }
         } else if (getArguments().getBoolean(ARG_COURSE_NOT_FOUND)) {
             // The case where we have invalid course data
-            errorLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard_error_layout, container, false);
+            FragmentDashboardErrorLayoutBinding errorLayoutBinding =
+                    FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
             errorLayoutBinding.errorMsg.setText(R.string.cannot_show_dashboard);
             return errorLayoutBinding.getRoot();
         } else {

@@ -10,9 +10,7 @@ import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 
-import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentWebviewBinding;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.WebViewStatusListener;
@@ -30,7 +28,7 @@ public class WebViewProgramInfoFragment extends BaseWebViewFragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_webview, container, false);
+        binding = FragmentWebviewBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

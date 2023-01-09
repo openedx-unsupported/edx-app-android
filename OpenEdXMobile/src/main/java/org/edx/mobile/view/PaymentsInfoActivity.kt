@@ -48,6 +48,7 @@ class PaymentsInfoActivity : BaseSingleFragmentActivity() {
     }
 
     @Subscribe
+    @Suppress("UNUSED_PARAMETER")
     fun onEvent(event: CourseUpgradedEvent) {
         finish()
     }

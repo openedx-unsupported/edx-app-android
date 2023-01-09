@@ -11,7 +11,7 @@ object BranchLinkManager {
     fun checkAndReactIfReceivedLink(activity: Activity, paramsJson: JSONObject) {
         logger.debug("DeepLink received. JSON Details:\n$paramsJson")
         val screenName = paramsJson.optString(DeepLink.Keys.SCREEN_NAME)
-        if (screenName != null && screenName.isNotEmpty()) {
+        if (screenName.isNotEmpty()) {
             DeepLinkManager.onDeepLinkReceived(activity, DeepLink(screenName, paramsJson))
         }
     }

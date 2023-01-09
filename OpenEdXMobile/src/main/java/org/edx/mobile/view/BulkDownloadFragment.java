@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
-import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
@@ -141,7 +140,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.row_bulk_download, container, false);
+        binding = RowBulkDownloadBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

@@ -9,7 +9,6 @@ import android.widget.RatingBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -65,8 +64,7 @@ public class RatingDialogFragment extends DialogFragment implements AlertDialog.
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(),
-                R.layout.fragment_dialog_rating, null, false);
+        binding = FragmentDialogRatingBinding.inflate(getActivity().getLayoutInflater(), null, false);
         binding.ratingBar.setOnRatingBarChangeListener(this);
         binding.tvDescription.setText(R.string.rating_dialog_message);
         mAlertDialog = new AlertDialog.Builder(getContext())
