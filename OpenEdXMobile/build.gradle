@@ -399,10 +399,9 @@ android {
 
         def fbLoginProtocolScheme = ""
         def facebook = config.get('FACEBOOK')
-        def facebookAppId = ""
         def fbClientToken = ""
         if (facebook?.get('ENABLED')) {
-            facebookAppId = facebook.get('FACEBOOK_APP_ID')
+            def facebookAppId = facebook.get('FACEBOOK_APP_ID')
             fbClientToken = facebook.get('CLIENT_TOKEN')
             if (null == facebookAppId || null == fbClientToken) {
                 throw new GradleException("You must set FACEBOOK_APP_ID and CLIENT_TOKEN if FACEBOOK is enabled")
@@ -415,7 +414,6 @@ android {
                                 fcmEnabled           : fcmEnabled,
                                 branchKey            : branchKey,
                                 microsoftSignature   : microsoftSignature,
-                                facebookAppId        : facebookAppId,
                                 fbClientToken        : fbClientToken,
                                 fbLoginProtocolScheme: fbLoginProtocolScheme,
                                 sdCardEnabled        : config.get('DOWNLOAD_TO_SD_CARD_ENABLED') ?: true]
