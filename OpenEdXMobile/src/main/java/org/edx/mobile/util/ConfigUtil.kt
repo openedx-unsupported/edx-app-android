@@ -100,7 +100,7 @@ class ConfigUtil {
             urlType: AgreementUrlType
         ): String? {
             if (config == null || TextUtils.isEmpty(config.getAgreementUrl(urlType))) {
-                return context.resources.getString(urlType.getStringResId())
+                return urlType.getStringResId()?.let { context.resources.getString(it) }
             }
             if (config.supportedLanguages != null && config.supportedLanguages.isNotEmpty()) {
                 val currentLocal = LocaleUtils.getCurrentDeviceLanguage(context)
