@@ -429,8 +429,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Tìm kiếm thử thách mới?</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">Tìm khóa học</string>
   <!--Message between sign in button and social login buttons-->
   <string name="or_sign_in_with">Hoặc đăng nhập với</string>
   <!--Facebook login method-->

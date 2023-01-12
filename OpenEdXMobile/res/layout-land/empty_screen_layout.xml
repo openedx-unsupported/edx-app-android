@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/empty_screen_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/white_roundedbg"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/edx_default_margin"
+    android:background="@drawable/white_rounded_borders"
     android:elevation="@dimen/edx_quarter_margin"
     android:fillViewport="true">
 
@@ -22,7 +23,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/content_error_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/widget_margin_quadruple"
@@ -38,23 +38,14 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/content_error_text"
+            style="@style/empty_state_text"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/widget_margin_x_double"
-            android:layout_marginTop="@dimen/widget_margin_x_double"
-            android:layout_marginEnd="@dimen/widget_margin_x_double"
             android:layout_marginBottom="@dimen/container_padding"
-            android:fontFamily="?attr/fontSemiBold"
-            android:text="@string/find_course_text"
-            android:textAlignment="center"
-            android:textColor="@color/neutralBlackT"
-            android:textSize="@dimen/edx_xxx_large"
             app:layout_constraintBottom_toTopOf="@+id/horizontal_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/vertical_guideline"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:lineHeight="@dimen/edx_default_margin_double" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontal_guideline"
@@ -65,25 +56,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/content_error_action"
-            style="@style/edX.Widget.ActionBrandPillButton"
+            style="@style/EmptyStateButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/upgrade_now_button_height"
-            android:layout_marginStart="@dimen/widget_margin_x_double"
-            android:layout_marginTop="@dimen/container_padding"
-            android:layout_marginEnd="@dimen/widget_margin_x_double"
-            android:layout_marginBottom="@dimen/widget_margin_x_double"
-            android:text="@string/find_course_btn_text"
-            android:textSize="@dimen/edx_large"
-            app:backgroundTint="@color/secondaryBaseColor"
-            app:icon="@drawable/ic_search"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/container_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/vertical_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/horizontal_guideline"
-            app:layout_constraintVertical_bias="0.0"
-            app:lineHeight="@dimen/widget_margin_x_double" />
+            app:layout_constraintTop_toBottomOf="@id/content_error_text"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

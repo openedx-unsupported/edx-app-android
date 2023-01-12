@@ -251,6 +251,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     override fun onStart() {
         super.onStart()
+        // To force the SwipeRefreshLayout to use the scroll only when the underlying view has
+        // scrolled up to its top.
         binding.swipeContainer.viewTreeObserver.addOnScrollChangedListener(
             OnScrollChangedListener {
                 binding.swipeContainer.isEnabled = binding.emptyScreenLayout.root.scrollY == 0
