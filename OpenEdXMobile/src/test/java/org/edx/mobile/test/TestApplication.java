@@ -33,6 +33,7 @@ public class TestApplication extends MainApplication {
         // to manually initialize the sdk here.
         // Initialize to a Fake Application ID as it will not connect to the actual API
         FacebookSdk.setApplicationId("1234567812345678");
+        FacebookSdk.setClientToken("1234567812345678");
         FacebookSdk.sdkInitialize(getApplicationContext());
     }
 }

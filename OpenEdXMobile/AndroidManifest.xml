@@ -326,8 +326,10 @@
         </receiver>
 
         <!-- Setup Facebook -->
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="${facebookAppId}"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="${fbLoginProtocolScheme}"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="${fbClientToken}"/>
+        <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="false"/>
+        <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="false"/>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
