@@ -42,18 +42,10 @@
             android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
             tools:text="Thread title" />
 
-        <TextView
-            android:id="@+id/discussion_responses_thread_row_body_text_view"
+        <org.edx.mobile.view.custom.EdxDiscussionBody
+            android:id="@+id/discussion_render_body"
             style="@style/discussion_regular_text"
-            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
-            android:visibility="gone"
-            tools:text="Thread body" />
-
-        <org.edx.mobile.view.custom.EdxWebView
-            android:id="@+id/discussion_responses_thread_row_body_web_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_marginBottom="@dimen/discussion_responses_standard_margin" />
 
         <TextView
             android:id="@+id/discussion_responses_thread_row_visibility_text_view"

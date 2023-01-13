@@ -14,7 +14,6 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.databinding.FragmentAddResponseOrCommentBinding;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
-import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.logger.Logger;
@@ -97,7 +96,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         binding.tvTitle.setVisibility(View.VISIBLE);
         binding.tvTitle.setText(discussionThread.getTitle());
 
-        DiscussionTextUtils.loadRenderBody(binding.tvResponse, binding.webViewResponse, discussionThread.getRenderedBody());
+        binding.discussionRenderBody.setBody(discussionThread.getRenderedBody());
         AuthorLayoutViewHolder authorLayoutViewHolder =
                 new AuthorLayoutViewHolder(binding.rowDiscussionUserProfile.discussionUserProfileRow);
         authorLayoutViewHolder.populateViewHolder(config, discussionThread, discussionThread,

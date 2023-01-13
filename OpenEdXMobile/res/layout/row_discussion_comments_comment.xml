@@ -20,17 +20,10 @@
 
         <include layout="@layout/row_discussion_user_profile" />
 
-        <TextView
-            android:id="@+id/tv_discussion_comment_body"
-            style="@style/discussion_regular_text"
-            android:visibility="gone"
-            tools:text="This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment." />
+        <org.edx.mobile.view.custom.EdxDiscussionBody
+            android:id="@+id/discussion_render_body"
+            style="@style/discussion_regular_text" />
 
-        <org.edx.mobile.view.custom.EdxWebView
-            android:id="@+id/wv_discussion_comment_body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
         <!-- This container layout is only defined to add bottom padding to the parent view, when
              the enclosed TextView's visibility is set to GONE. -->
         <FrameLayout

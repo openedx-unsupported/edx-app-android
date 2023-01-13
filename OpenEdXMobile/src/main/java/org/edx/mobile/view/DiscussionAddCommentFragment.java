@@ -91,8 +91,7 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DiscussionTextUtils.loadRenderBody(binding.tvResponse, binding.webViewResponse,
-                discussionResponse.getRenderedBody());
+        binding.discussionRenderBody.setBody(discussionResponse.getRenderedBody());
 
         AuthorLayoutViewHolder authorLayoutViewHolder =
                 new AuthorLayoutViewHolder(binding.rowDiscussionUserProfile.discussionUserProfileRow);

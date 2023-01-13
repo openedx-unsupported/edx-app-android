@@ -2,16 +2,12 @@ package org.edx.mobile.discussion;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,12 +19,10 @@ import org.edx.mobile.model.discussion.DiscussionComment;
 import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.model.discussion.IAuthorData;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.custom.EdxWebView;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public abstract class DiscussionTextUtils {
 
@@ -160,36 +154,6 @@ public abstract class DiscussionTextUtils {
         }
     }
 
-    /**
-     * Method to check if the text only contains the paragraph tags<p></p> or not
-     */
-    public static boolean isPlainHtml(@NonNull String text) {
-        String HTML_PATTERN = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
-        Pattern pattern = Pattern.compile(HTML_PATTERN);
-        String plainText = text.replace("<p>", "").replace("</p>", "");
-        return !pattern.matcher(plainText).find();
-    }
-
-    public static Spanned parseHtml(@NonNull String html) {
-        // If the HTML contains a paragraph at the end, there will be blank lines following the text
-        // Therefore, we need to trim the resulting CharSequence to remove those extra lines
-        return (Spanned) trim(Html.fromHtml(html));
-    }
-
-    public static CharSequence trim(CharSequence s) {
-        int start = 0, end = s.length();
-
-        while (start < end && Character.isWhitespace(s.charAt(start))) {
-            start++;
-        }
-
-        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
-            end--;
-        }
-
-        return s.subSequence(start, end);
-    }
-
     public static void setEndorsedState(@NonNull TextView target,
                                         @NonNull DiscussionThread thread,
                                         @NonNull DiscussionComment response) {
@@ -206,44 +170,5 @@ public abstract class DiscussionTextUtils {
             target.setVisibility(View.VISIBLE);
         }
 
-    }
-
-    /**
-     * Renders various HTML elements and plain hyperlinks in the given HTML to clickable items
-     * while applying it on the given {@link TextView}.
-     *
-     * @param textView The {@link TextView} which will render the given HTML.
-     * @param html     The HTML to render.
-     */
-
-    public static void renderHtml(@NonNull TextView textView, @NonNull String html) {
-        Spanned spannedHtml = parseHtml(html);
-        URLSpan[] urlSpans = spannedHtml.getSpans(0, spannedHtml.length(), URLSpan.class);
-        textView.setAutoLinkMask(Linkify.ALL);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setText(spannedHtml);
-
-        SpannableString viewText = (SpannableString) textView.getText();
-        for (final URLSpan spanObj : urlSpans) {
-            final int start = spannedHtml.getSpanStart(spanObj);
-            final int end = spannedHtml.getSpanEnd(spanObj);
-            final int flags = spannedHtml.getSpanFlags(spanObj);
-            viewText.setSpan(spanObj, start, end, flags);
-        }
-    }
-
-    /**
-     * Utility method to render the body based on <p> for html rendering
-     */
-    public static void loadRenderBody(@NonNull TextView textView, @NonNull EdxWebView webView, @NonNull String body) {
-        if (isPlainHtml(body)) {
-            textView.setVisibility(View.VISIBLE);
-            webView.setVisibility(View.GONE);
-            renderHtml(textView, body);
-        } else {
-            textView.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
-            webView.loadDataWithBaseURL(null, body, "text/html", "utf-8", null);
-        }
     }
 }
