@@ -884,13 +884,16 @@ public interface Analytics {
         // Profile Page Screen Events
         String SCREEN_NAVIGATION = "edx.bi.app.navigation.screen";
         String PERSONAL_INFORMATION_CLICKED = "edx.bi.app.profile.personal_info.clicked";
-        String FAQ_CLICKED = "eedx.bi.app.profile.faq.clicked";
+        String FAQ_CLICKED = "edx.bi.app.profile.faq.clicked";
         String WIFI_ON = "edx.bi.app.profile.wifi.switch.on";
         String WIFI_OFF = "edx.bi.app.profile.wifi.switch.off";
         String WIFI_ALLOW = "edx.bi.app.profile.wifi.allow";
         String WIFI_DONT_ALLOW = "edx.bi.app.profile.wifi.dont_allow";
         String EMAIL_SUPPORT_CLICKED = "edx.bi.app.profile.email_support.clicked";
         String DELETE_ACCOUNT_CLICKED = "edx.bi.app.profile.delete_account.clicked";
+        String PRIVACY_POLICY_CLICKED = "edx.bi.app.profile.privacy_policy.clicked";
+        String COOKIE_POLICY_CLICKED = "edx.bi.app.profile.cookie_policy.clicked";
+        String DO_NOT_SELL_DATA_CLICKED = "edx.bi.app.profile.do_not_sell_data.clicked";
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
@@ -1097,6 +1100,9 @@ public interface Analytics {
         String WIFI_DONT_ALLOW = "Wifi Dont Allow";
         String EMAIL_SUPPORT_CLICKED = "Email Support Clicked";
         String DELETE_ACCOUNT_CLICKED = "Profile: Delete Account Clicked";
+        String PRIVACY_POLICY_CLICKED = "Privacy Policy Clicked";
+        String COOKIE_POLICY_CLICKED = "Cookie Policy Clicked";
+        String DO_NOT_SELL_DATA_CLICKED = "Do Not Sell Data Clicked";
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";

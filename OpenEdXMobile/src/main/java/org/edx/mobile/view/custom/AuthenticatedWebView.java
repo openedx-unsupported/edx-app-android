@@ -197,6 +197,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
                 } else {
                     hideLoadingProgress();
                 }
+                EdxCookieManager.getSharedInstance(getContext()).retainSessionCookies();
                 super.onPageFinished(view, url);
             }
         };

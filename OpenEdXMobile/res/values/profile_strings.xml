@@ -35,7 +35,14 @@
     <string name="description_delete_account">Follow the instructions on the next screen to delete your account and all related data.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Version</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Privacy</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">Privacy policy</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Cookie policy</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">Do not sell my personal data</string>
     <!-- Logout button label -->
     <string name="logout">Logout</string>
     <!-- Profile screen version -->

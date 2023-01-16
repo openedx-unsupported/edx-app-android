@@ -38,6 +38,10 @@ public class EdxCookieManager {
      * The cookie to set for the course upsell revenue workflow to work on mobile end.
      */
     private static final String REV_934_COOKIE = "REV_934=mobile; expires=Tue, 31 Dec 2021 12:00:20 GMT; domain=.edx.org;";
+    /**
+     * The cookie is set to retain its value after session refresh.
+     */
+    private static final String DATA_CONSENT_COOKIE = "edx_do_not_sell=true; domain=.edx.org;";
 
     private long authSessionCookieExpiration = -1;
 
@@ -64,19 +68,31 @@ public class EdxCookieManager {
         return instance;
     }
 
-    public void clearWebWiewCookie() {
-        CookieManager.getInstance().removeAllCookie();
+    public void clearAllCookies() {
+        CookieManager.getInstance().removeAllCookies(null);
         authSessionCookieExpiration = -1;
+    }
+
+    /**
+     * Clears all session cookies but retain the required cookies if available
+     */
+    public void clearAndRetainCookies() {
+        String cookie = CookieManager.getInstance().getCookie(config.getApiHostURL());
+        clearAllCookies();
+        // The `edx_do_not_sell` cookie relates to the Data Sell Consent Policy and we should retain
+        // it if we are only refreshing the session cookies
+        if (cookie != null && cookie.contains("edx_do_not_sell"))
+            setDataConsentCookie();
     }
 
     public synchronized void tryToRefreshSessionCookie() {
         if (loginCall == null || loginCall.isCanceled()) {
             loginCall = loginService.login();
-            loginCall.enqueue(new Callback<RequestBody>() {
+            loginCall.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull final Call<RequestBody> call,
                                        @NonNull final Response<RequestBody> response) {
-                    clearWebWiewCookie();
+                    clearAndRetainCookies();
                     final CookieManager cookieManager = CookieManager.getInstance();
                     for (Cookie cookie : Cookie.parseAll(
                             call.request().url(), response.headers())) {
@@ -102,10 +118,23 @@ public class EdxCookieManager {
     }
 
     /**
+     * Ensures all cookies currently accessible through the getCookie API are written to persistent
+     * storage. The flush() call will block the caller until it is done and may perform I/O.
+     */
+    public void retainSessionCookies() {
+        CookieManager.getInstance().flush();
+    }
+
+    /**
      * Set a special cookie so that the server knows that the request for the course upsell
      * revenue workflow is coming from mobile end.
      */
     public void setMobileCookie() {
         CookieManager.getInstance().setCookie(config.getApiHostURL(), REV_934_COOKIE);
+    }
+
+    private void setDataConsentCookie() {
+        CookieManager.getInstance().setCookie(config.getApiHostURL(), DATA_CONSENT_COOKIE);
+        retainSessionCookies();
     }
 }
