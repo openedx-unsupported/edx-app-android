@@ -26,6 +26,7 @@ import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.isVisible
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.model.iap.IAPFlowData
@@ -37,9 +38,11 @@ import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.PrefManager
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
+import org.edx.mobile.util.AgreementUrlType
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.Config
+import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.FileUtil
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NonNullObserver
@@ -120,6 +123,7 @@ class AccountFragment : BaseFragment() {
         updateWifiSwitch()
         updateSDCardSwitch()
         initHelpFields()
+        initPrivacyFields()
 
         val iapEnabled =
             environment.appFeaturesPrefs.isIAPEnabled(loginPrefs.isOddUserId)
@@ -376,6 +380,72 @@ class AccountFragment : BaseFragment() {
             environment.router.showUserProfile(requireActivity(), loginPrefs.username)
             setVideoQualityDescription(loginPrefs.videoQuality)
         }
+    }
+
+    private fun initPrivacyFields() {
+        ConfigUtil.getAgreementUrl(
+            this.requireContext(),
+            config.agreementUrlsConfig,
+            AgreementUrlType.PRIVACY_POLICY
+        )?.let { privacyPolicyUrl ->
+            binding.tvPrivacyPolicy.setVisibility(true)
+            binding.tvPrivacyPolicy.setOnClickListener {
+                environment.router.showAuthenticatedWebViewActivity(
+                    this.requireContext(),
+                    privacyPolicyUrl,
+                    getString(R.string.label_privacy_policy),
+                    false
+                )
+                trackEvent(
+                    Analytics.Events.PRIVACY_POLICY_CLICKED,
+                    Analytics.Values.PRIVACY_POLICY_CLICKED
+                )
+            }
+        }
+
+        ConfigUtil.getAgreementUrl(
+            this.requireContext(),
+            config.agreementUrlsConfig,
+            AgreementUrlType.COOKIE_POLICY
+        )?.let { cookiePolicyUrl ->
+            binding.tvCookiePolicy.setVisibility(true)
+            binding.tvCookiePolicy.setOnClickListener {
+                environment.router.showAuthenticatedWebViewActivity(
+                    this.requireContext(),
+                    cookiePolicyUrl,
+                    getString(R.string.label_cookie_policy),
+                    false
+                )
+                trackEvent(
+                    Analytics.Events.COOKIE_POLICY_CLICKED,
+                    Analytics.Values.COOKIE_POLICY_CLICKED
+                )
+            }
+        }
+
+        ConfigUtil.getAgreementUrl(
+            this.requireContext(),
+            config.agreementUrlsConfig,
+            AgreementUrlType.DATA_CONSENT
+        )?.let { dataConsentUrl ->
+            binding.tvDataConsentPolicy.setVisibility(true)
+            binding.tvDataConsentPolicy.setOnClickListener {
+                environment.router.showAuthenticatedWebViewActivity(
+                    this.requireContext(),
+                    dataConsentUrl,
+                    getString(R.string.label_do_not_sell_my_personal_data),
+                    false
+                )
+                trackEvent(
+                    Analytics.Events.DO_NOT_SELL_DATA_CLICKED,
+                    Analytics.Values.DO_NOT_SELL_DATA_CLICKED
+                )
+            }
+        }
+
+        val isContainerVisible = binding.tvPrivacyPolicy.isVisible()
+                || binding.tvCookiePolicy.isVisible() || binding.tvDataConsentPolicy.isVisible()
+        binding.containerPrivacy.setVisibility(isContainerVisible)
     }
 
     private fun updateWifiSwitch() {

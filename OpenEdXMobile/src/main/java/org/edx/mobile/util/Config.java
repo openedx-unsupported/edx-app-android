@@ -458,6 +458,12 @@ public class Config {
         @SerializedName("PRIVACY_POLICY_URL")
         private String privacyPolicyUrl;
 
+        @SerializedName("COOKIE_POLICY_URL")
+        private String cookiePolicyUrl;
+
+        @SerializedName("DATA_SELL_CONSENT_URL")
+        private String dataConsentUrl;
+
         @SerializedName("SUPPORTED_LANGUAGES")
         private ArrayList<String> supportedLanguages;
 
@@ -469,6 +475,10 @@ public class Config {
                     return eulaUrl;
                 case PRIVACY_POLICY:
                     return privacyPolicyUrl;
+                case COOKIE_POLICY:
+                    return cookiePolicyUrl;
+                case DATA_CONSENT:
+                    return dataConsentUrl;
                 default:
                     return null;
             }
