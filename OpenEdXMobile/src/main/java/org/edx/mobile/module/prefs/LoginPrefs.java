@@ -70,7 +70,7 @@ public class LoginPrefs {
         pref.put(PrefManager.Key.AUTH_JSON, null);
         pref.put(PrefManager.Key.VIDEO_QUALITY, VideoQuality.AUTO.ordinal());
         pref.put(PrefManager.Key.PROFILE_IMAGE, null);
-        EdxCookieManager.getSharedInstance(MainApplication.instance()).clearAllCookie();
+        EdxCookieManager.getSharedInstance(MainApplication.instance()).clearAllCookies();
     }
 
     public void saveSocialLoginToken(@NonNull String accessToken, @NonNull String backend) {
