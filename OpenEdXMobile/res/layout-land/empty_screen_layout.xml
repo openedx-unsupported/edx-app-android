@@ -14,27 +14,22 @@
         android:layout_height="wrap_content">
 
         <FrameLayout
+            android:id="@+id/content_error_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/neutralXLight"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/vertical_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/widget_margin_quadruple"
+                android:scaleType="centerInside"
                 app:srcCompat="@drawable/ic_creative_process" />
         </FrameLayout>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/vertical_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/content_error_text"
@@ -43,7 +38,7 @@
             android:layout_marginBottom="@dimen/container_padding"
             app:layout_constraintBottom_toTopOf="@+id/horizontal_guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/vertical_guideline"
+            app:layout_constraintStart_toEndOf="@id/content_error_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
@@ -60,7 +55,7 @@
             android:layout_width="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/vertical_guideline"
+            app:layout_constraintStart_toEndOf="@id/content_error_icon"
             app:layout_constraintTop_toBottomOf="@id/content_error_text"
             app:layout_constraintVertical_bias="0.0" />
 
