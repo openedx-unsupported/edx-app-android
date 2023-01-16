@@ -68,15 +68,17 @@ public class EdxCookieManager {
         return instance;
     }
 
-    public void clearWebViewCookie(Boolean forceClear) {
-        String cookie = CookieManager.getInstance().getCookie(config.getApiHostURL());
-
+    public void clearAllCookie() {
         CookieManager.getInstance().removeAllCookies(null);
         authSessionCookieExpiration = -1;
+    }
 
+    public void clearAndRetainCookie() {
+        String cookie = CookieManager.getInstance().getCookie(config.getApiHostURL());
+        clearAllCookie();
         // The `edx_do_not_sell` cookie relates to the Data Sell Consent Policy and we should retain
         // it if we are only refreshing the session cookies
-        if (!forceClear && cookie != null && cookie.contains("edx_do_not_sell"))
+        if (cookie != null && cookie.contains("edx_do_not_sell"))
             setDataConsentCookie();
     }
 
@@ -87,7 +89,7 @@ public class EdxCookieManager {
                 @Override
                 public void onResponse(@NonNull final Call<RequestBody> call,
                                        @NonNull final Response<RequestBody> response) {
-                    clearWebViewCookie(false);
+                    clearAndRetainCookie();
                     final CookieManager cookieManager = CookieManager.getInstance();
                     for (Cookie cookie : Cookie.parseAll(
                             call.request().url(), response.headers())) {
