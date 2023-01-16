@@ -35,10 +35,9 @@
                     tools:text="Post Title"
                     tools:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/tvResponse"
-                    style="@style/discussion_regular_text"
-                    tools:text="Post body" />
+                <org.edx.mobile.view.custom.EdxDiscussionBody
+                    android:id="@+id/discussion_render_body"
+                    style="@style/discussion_regular_text" />
 
             </LinearLayout>
 

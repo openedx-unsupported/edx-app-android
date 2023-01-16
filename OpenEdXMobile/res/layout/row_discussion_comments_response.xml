@@ -18,10 +18,9 @@
 
         <include layout="@layout/row_discussion_user_profile" />
 
-        <TextView
-            android:id="@+id/discussion_comment_body"
-            style="@style/discussion_regular_text"
-            tools:text="This is the text of a response." />
+        <org.edx.mobile.view.custom.EdxDiscussionBody
+            android:id="@+id/discussion_render_body"
+            style="@style/discussion_regular_text" />
 
         <TextView
             android:id="@+id/discussion_comment_count_report_text_view"

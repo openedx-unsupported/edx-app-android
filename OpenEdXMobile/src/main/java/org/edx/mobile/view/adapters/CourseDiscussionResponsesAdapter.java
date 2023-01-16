@@ -30,6 +30,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
+import org.edx.mobile.view.custom.EdxDiscussionBody;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
@@ -173,7 +174,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
-        DiscussionTextUtils.renderHtml(holder.threadBodyTextView, discussionThread.getRenderedBody());
+        holder.discussionBody.setBody(discussionThread.getRenderedBody());
 
         String groupName = discussionThread.getGroupName();
         if (groupName == null) {
@@ -324,7 +325,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             holder.responseAnswerAuthorTextView.setVisibility(View.GONE);
         }
 
-        DiscussionTextUtils.renderHtml(holder.responseCommentBodyTextView, comment.getRenderedBody());
+        holder.discussionBody.setBody(comment.getRenderedBody());
 
         if (discussionThread.isClosed() && comment.getChildCount() == 0) {
             holder.addCommentLayout.setEnabled(false);
@@ -502,7 +503,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
         View actionsBar;
         TextView threadTitleTextView;
-        TextView threadBodyTextView;
+        EdxDiscussionBody discussionBody;
         TextView threadVisibilityTextView;
 
         AuthorLayoutViewHolder authorLayoutViewHolder;
@@ -516,8 +517,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             actionsBar = itemView.findViewById(R.id.discussion_actions_bar);
             threadTitleTextView = (TextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_title_text_view);
-            threadBodyTextView = (TextView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_body_text_view);
+            discussionBody = (EdxDiscussionBody) itemView.findViewById(R.id.discussion_render_body);
             threadVisibilityTextView = (TextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_visibility_text_view);
 
@@ -531,7 +531,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
         View actionsBar;
         RelativeLayout addCommentLayout;
-        TextView responseCommentBodyTextView;
+        EdxDiscussionBody discussionBody;
         TextView responseAnswerAuthorTextView;
 
         AuthorLayoutViewHolder authorLayoutViewHolder;
@@ -544,7 +544,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
             actionsBar = itemView.findViewById(R.id.discussion_actions_bar);
             addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
-            responseCommentBodyTextView = (TextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
+            discussionBody = (EdxDiscussionBody) itemView.findViewById(R.id.discussion_render_body);
             responseAnswerAuthorTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_author_text_view);
 
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView.findViewById(R.id.discussion_user_profile_row));

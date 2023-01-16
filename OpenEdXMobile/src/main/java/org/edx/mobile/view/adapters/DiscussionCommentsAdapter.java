@@ -21,6 +21,7 @@ import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.UiUtils;
+import org.edx.mobile.view.custom.EdxDiscussionBody;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
 import java.util.ArrayList;
@@ -165,7 +166,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 holder.discussionCommentCountReportTextView, iconDrawable, null, null, null);
 
-        DiscussionTextUtils.renderHtml(holder.discussionCommentBody, discussionComment.getRenderedBody());
+        holder.discussionBody.setBody(discussionComment.getRenderedBody());
     }
 
     @Override
@@ -207,14 +208,14 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
 
     private static class ResponseOrCommentViewHolder extends RecyclerView.ViewHolder {
         public final View discussionCommentRow;
-        public final TextView discussionCommentBody;
+        public final EdxDiscussionBody discussionBody;
         public final TextView discussionCommentCountReportTextView;
         public final AuthorLayoutViewHolder authorLayoutViewHolder;
 
         public ResponseOrCommentViewHolder(View itemView) {
             super(itemView);
             discussionCommentRow = itemView.findViewById(R.id.row_discussion_comment_layout);
-            discussionCommentBody = (TextView) itemView.findViewById(R.id.discussion_comment_body);
+            discussionBody = itemView.findViewById(R.id.discussion_render_body);
             discussionCommentCountReportTextView = (TextView) itemView.findViewById(R.id.discussion_comment_count_report_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView.findViewById(R.id.discussion_user_profile_row));
         }
