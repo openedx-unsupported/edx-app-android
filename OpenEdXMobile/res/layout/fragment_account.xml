@@ -243,17 +243,19 @@
 
                 <TextView
                     style="@style/profile_field_heading"
+                    android:paddingBottom="@dimen/edx_quarter_margin"
                     android:text="@string/label_privacy" />
 
                 <TextView
                     android:id="@+id/tv_privacy_policy"
                     style="@style/profile_field_title"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/edx_half_margin"
                     android:background="@drawable/selectable_rounded_box_overlay"
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/edx_default_margin"
+                    android:paddingTop="@dimen/edx_quarter_margin"
                     android:paddingEnd="@dimen/edx_default_margin"
+                    android:paddingBottom="@dimen/edx_quarter_margin"
                     android:text="@string/label_privacy_policy"
                     android:visibility="gone"
                     app:drawableEndCompat="@drawable/ic_chevron_right"
@@ -264,11 +266,12 @@
                     android:id="@+id/tv_cookie_policy"
                     style="@style/profile_field_title"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/edx_half_margin"
                     android:background="@drawable/selectable_rounded_box_overlay"
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/edx_default_margin"
+                    android:paddingTop="@dimen/edx_quarter_margin"
                     android:paddingEnd="@dimen/edx_default_margin"
+                    android:paddingBottom="@dimen/edx_quarter_margin"
                     android:text="@string/label_cookie_policy"
                     android:visibility="gone"
                     app:drawableEndCompat="@drawable/ic_chevron_right"
@@ -279,11 +282,12 @@
                     android:id="@+id/tv_data_consent_policy"
                     style="@style/profile_field_title"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/edx_half_margin"
                     android:background="@drawable/selectable_rounded_box_overlay"
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/edx_default_margin"
+                    android:paddingTop="@dimen/edx_quarter_margin"
                     android:paddingEnd="@dimen/edx_default_margin"
+                    android:paddingBottom="@dimen/edx_quarter_margin"
                     android:text="@string/label_do_not_sell_my_personal_data"
                     android:visibility="gone"
                     app:drawableEndCompat="@drawable/ic_chevron_right"
@@ -293,7 +297,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edx_line"
-                    android:layout_marginTop="@dimen/edx_default_margin"
+                    android:layout_marginTop="@dimen/widget_margin"
                     android:background="@color/neutralXLight" />
 
             </LinearLayout>
@@ -392,8 +396,8 @@
                 style="@style/profile_field_description"
                 android:layout_marginTop="@dimen/edx_default_margin"
                 android:layout_marginBottom="@dimen/edx_default_margin"
-                android:lineHeight="@dimen/edx_margin"
                 android:textSize="@dimen/edx_xx_small"
+                app:lineHeight="@dimen/edx_margin"
                 tools:text="Version X.X.X" />
 
             <LinearLayout
