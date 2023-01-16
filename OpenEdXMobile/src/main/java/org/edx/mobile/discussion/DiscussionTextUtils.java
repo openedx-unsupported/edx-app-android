@@ -169,6 +169,5 @@ public abstract class DiscussionTextUtils {
             }
             target.setVisibility(View.VISIBLE);
         }
-
     }
 }

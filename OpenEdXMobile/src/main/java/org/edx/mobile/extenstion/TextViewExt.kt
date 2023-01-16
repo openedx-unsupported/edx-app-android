@@ -9,20 +9,21 @@ import android.text.util.Linkify
 import android.widget.TextView
 
 fun TextView.renderHtml(body: String) {
-    val spannedHtml = parseHtml(body)
-    val urlSpans = spannedHtml!!.getSpans(
-        0, spannedHtml.length,
-        URLSpan::class.java
-    )
-    this.autoLinkMask = Linkify.ALL
-    this.movementMethod = LinkMovementMethod.getInstance()
-    this.text = spannedHtml
-    val viewText = this.text as SpannableString
-    for (spanObj in urlSpans) {
-        val start = spannedHtml.getSpanStart(spanObj)
-        val end = spannedHtml.getSpanEnd(spanObj)
-        val flags = spannedHtml.getSpanFlags(spanObj)
-        viewText.setSpan(spanObj, start, end, flags)
+    parseHtml(body)?.let { spannedHtml ->
+        val urlSpans = spannedHtml.getSpans(
+            0, spannedHtml.length,
+            URLSpan::class.java
+        )
+        this.autoLinkMask = Linkify.ALL
+        this.movementMethod = LinkMovementMethod.getInstance()
+        this.text = spannedHtml
+        val viewText = this.text as SpannableString
+        for (spanObj in urlSpans) {
+            val start = spannedHtml.getSpanStart(spanObj)
+            val end = spannedHtml.getSpanEnd(spanObj)
+            val flags = spannedHtml.getSpanFlags(spanObj)
+            viewText.setSpan(spanObj, start, end, flags)
+        }
     }
 }
 
