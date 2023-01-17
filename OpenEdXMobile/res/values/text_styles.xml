@@ -116,7 +116,7 @@
         <item name="android:gravity">center</item>
         <item name="lineHeight">@dimen/fullscreen_message_line_height</item>
     </style>
-    
+
     <style name="account_option" parent="@style/regular_white_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_drawer_menu</item>
@@ -260,5 +260,18 @@
 
     <style name="video_download_description_text_style" parent="regular_primary_x_light_text">
         <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="empty_state_text" parent="Widget.MaterialComponents.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/widget_margin_x_double</item>
+        <item name="android:layout_marginTop">@dimen/widget_margin_x_double</item>
+        <item name="android:layout_marginEnd">@dimen/widget_margin_x_double</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="android:text">@string/find_course_text</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/neutralBlackT</item>
+        <item name="android:textSize">@dimen/edx_xxx_large</item>
+        <item name="lineHeight">@dimen/edx_default_margin_double</item>
     </style>
 </resources>
