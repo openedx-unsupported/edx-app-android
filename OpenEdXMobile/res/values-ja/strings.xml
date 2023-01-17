@@ -384,8 +384,6 @@
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">新しいチャレンジを探していますか？</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">講座を探す</string>
   <!--Message between sign in button and social login buttons-->
   <string name="or_sign_in_with">またはサインイン</string>
   <!--Facebook login method-->
