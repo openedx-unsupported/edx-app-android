@@ -457,8 +457,6 @@
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">هل تبحثُ عن تحدٍ جديد؟</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">ابحث عن مساق</string>
   <!--Message between sign in button and social login buttons-->
   <string name="or_sign_in_with">أو سجل الدخول باستخدم</string>
   <!--Facebook login method-->

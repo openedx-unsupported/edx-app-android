@@ -438,8 +438,6 @@
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">寻找新的挑战？</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">发现课程</string>
   <!--Message between sign in button and social login buttons-->
   <string name="or_sign_in_with">或者通过以下方式登录</string>
   <!--Facebook login method-->

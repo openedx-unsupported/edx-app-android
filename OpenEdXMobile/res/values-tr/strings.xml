@@ -442,8 +442,6 @@
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Yeni bir maceraya hazır mısın?</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">Bir Ders Bul</string>
   <!--Message between sign in button and social login buttons-->
   <string name="or_sign_in_with">Ya da şununla giriş yap </string>
   <!--Facebook login method-->

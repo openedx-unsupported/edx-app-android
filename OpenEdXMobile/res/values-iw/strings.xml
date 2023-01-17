@@ -444,8 +444,6 @@
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">מחפש אתגרים חדשים?</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">מצא קורס</string>
   <!--Message between sign in button and social login buttons-->
   <string name="or_sign_in_with">או היכנס באמצעות</string>
   <!--Facebook login method-->
