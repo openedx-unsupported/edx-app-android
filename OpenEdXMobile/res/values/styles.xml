@@ -582,4 +582,16 @@
         <item name="lineHeight">@dimen/widget_margin_double</item>
     </style>
 
+    <style name="EmptyStateButton" parent="edX.Widget.ActionBrandPillButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/widget_margin_x_double</item>
+        <item name="android:text">@string/find_course_btn_text</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
+        <item name="backgroundTint">@color/secondaryBaseColor</item>
+        <item name="icon">@drawable/ic_search</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/container_padding</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
+    </style>
+
 </resources>
