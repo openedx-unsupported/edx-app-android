@@ -7,7 +7,7 @@
     android:layout_margin="@dimen/edx_default_margin"
     android:background="@drawable/white_rounded_borders"
     android:elevation="@dimen/edx_quarter_margin"
-    android:fillViewport="true">
+    android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +17,8 @@
             android:id="@+id/content_error_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/neutralXLight"
+            android:background="@drawable/white_left_rounded_borders"
+            android:backgroundTint="@color/neutralXLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +54,6 @@
             android:id="@+id/content_error_action"
             style="@style/EmptyStateButton"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/content_error_icon"
             app:layout_constraintTop_toBottomOf="@id/content_error_text"
