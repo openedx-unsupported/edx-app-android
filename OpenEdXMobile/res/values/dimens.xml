@@ -243,6 +243,7 @@
     <dimen name="container_padding">12dp</dimen>
     <dimen name="radio_tab_height">32dp</dimen>
     <dimen name="edx_default_margin">16dp</dimen>
+    <dimen name="edx_default_margin_double">32dp</dimen>
     <dimen name="profile_view_button_height">36dp</dimen>
 
     <!-- Social platforms -->
