@@ -1,9 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,7 +11,6 @@ import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.util.UiUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -29,7 +25,6 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
     }
 
@@ -37,29 +32,6 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.viewPager2.setUserInputEnabled(false);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.learn_screen_menu, menu);
-        menu.findItem(R.id.menu_item_account).setVisible(true);
-        menu.findItem(R.id.menu_item_account).setIcon(
-                UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_settings,
-                        R.dimen.action_bar_icon_size));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_account: {
-                environment.getRouter().showAccountActivity(getActivity());
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
-        }
     }
 
     @Override

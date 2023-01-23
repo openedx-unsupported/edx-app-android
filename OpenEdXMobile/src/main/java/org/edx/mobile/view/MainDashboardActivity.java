@@ -121,7 +121,6 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
         return fragment;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -162,7 +161,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
             bar.setIcon(android.R.color.transparent);
         }
     }
-
+    
     @Override
     public void setTitle(int titleId) {
         setTitle(getResources().getString(titleId));
