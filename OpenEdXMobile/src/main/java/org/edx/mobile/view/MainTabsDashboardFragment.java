@@ -76,7 +76,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                 () -> EventBus.getDefault().post(new FragmentSelectionEvent())));
         if (environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
-                    getResources().getString(R.string.label_discovery),
+                    getResources().getString(R.string.label_discover),
                     R.drawable.ic_search, getArguments(),
                     () -> environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES)));
         }
