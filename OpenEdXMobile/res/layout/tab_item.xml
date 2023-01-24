@@ -2,20 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="@dimen/container_padding"
-    android:paddingBottom="@dimen/edx_half_margin">
+    android:padding="@dimen/edx_half_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/edx_default_margin"
-        android:layout_height="@dimen/edx_default_margin"
-        android:scaleType="fitCenter"
+        android:layout_width="@dimen/ic_xx_large"
+        android:layout_height="@dimen/ic_xx_large"
         android:tint="@color/tab_selector"
-        tools:src="@drawable/ic_dashboard" />
+        tools:src="@drawable/ic_menu_book" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"

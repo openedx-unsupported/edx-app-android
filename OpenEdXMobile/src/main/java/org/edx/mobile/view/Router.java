@@ -427,14 +427,6 @@ public class Router {
         activity.startActivity(WhatsNewActivity.newIntent(activity));
     }
 
-    public void showAccountActivity(@NonNull Activity activity) {
-        activity.startActivity(AccountActivity.newIntent(activity, null));
-    }
-
-    public void showAccountActivity(@NonNull Activity activity, @Nullable @ScreenDef String screenName) {
-        activity.startActivity(AccountActivity.newIntent(activity, screenName));
-    }
-
     public void showPaymentsInfoActivity(@NonNull Context context, @NonNull EnrolledCoursesResponse courseDate,
                                          @NonNull CourseUpgradeResponse courseUpgrade) {
         context.startActivity(PaymentsInfoActivity.Companion.newIntent(context, courseDate, courseUpgrade));

@@ -85,17 +85,19 @@ abstract class TabsBaseFragment : BaseFragment() {
      * Determines if a tab fragment needs to be selected based on screen name.
      *
      * @param item       [FragmentItemModel] assigned to a tab.
-     * @param screenName screen name param coming from [org.edx.mobile.deeplink.DeepLinkManager]
-     * @return `true` if the specified tab fragment needs to be selected, `false` otherwise
+     * @param screenName Screen name param coming from [org.edx.mobile.deeplink.DeepLinkManager]
+     * @return           True if the specified tab needs to be selected, False otherwise
      */
     private fun shouldSelectFragment(
         item: FragmentItemModel,
         @ScreenDef screenName: String
-    ): Boolean {
-        return screenName == Screen.PROGRAM && item.iconResId == R.drawable.ic_collections_bookmark ||
-                screenName == Screen.DISCOVERY && item.iconResId == R.drawable.ic_search ||
-                screenName == Screen.DISCOVERY_COURSE_DETAIL && item.iconResId == R.drawable.ic_search ||
-                screenName == Screen.DISCOVERY_PROGRAM_DETAIL && item.iconResId == R.drawable.ic_search
+    ) = when {
+        screenName == Screen.PROGRAM && item.iconResId == R.drawable.ic_menu_book -> true
+        screenName == Screen.PROFILE && item.iconResId == R.drawable.ic_person -> true
+        screenName == Screen.DISCOVERY && item.iconResId == R.drawable.ic_search -> true
+        screenName == Screen.DISCOVERY_COURSE_DETAIL && item.iconResId == R.drawable.ic_search -> true
+        screenName == Screen.DISCOVERY_PROGRAM_DETAIL && item.iconResId == R.drawable.ic_search -> true
+        else -> false
     }
 
     private fun initializeTabs() {

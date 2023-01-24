@@ -123,12 +123,6 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.AccountActivity"
-            android:label="@string/profile_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
             android:name="org.edx.mobile.view.PaymentsInfoActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />

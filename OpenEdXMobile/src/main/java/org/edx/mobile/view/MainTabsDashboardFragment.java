@@ -46,11 +46,11 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
         items.add(new FragmentItemModel(LearnFragment.class,
                 getResources().getString(R.string.label_learn),
-                R.drawable.ic_bookmark_border, getArguments(),
+                R.drawable.ic_menu_book, getArguments(),
                 () -> EventBus.getDefault().post(new FragmentSelectionEvent())));
         items.add(new FragmentItemModel(AccountFragment.class,
                 getResources().getString(R.string.profile_title),
-                R.drawable.ic_settings, getArguments(),
+                R.drawable.ic_person, getArguments(),
                 () -> environment.getAnalyticsRegistry().trackScreenViewEvent(
                         Analytics.Events.PROFILE_PAGE_VIEWED,
                         Analytics.Screens.PROFILE
