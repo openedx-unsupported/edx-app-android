@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/container_padding"
+    android:paddingBottom="@dimen/edx_half_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@null"
+        android:layout_width="@dimen/edx_default_margin"
+        android:layout_height="@dimen/edx_default_margin"
+        android:scaleType="fitCenter"
+        android:tint="@color/tab_selector"
         tools:src="@drawable/ic_dashboard" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="@dimen/widget_margin_half"
         android:textAlignment="center"
-        android:textColor="@color/primaryBaseColor"
-        android:textSize="@dimen/edx_small"
+        android:textColor="@color/tab_selector"
+        android:textSize="@dimen/edx_x_small"
+        app:lineHeight="@dimen/edx_default_margin"
         tools:text="Title" />
 </LinearLayout>

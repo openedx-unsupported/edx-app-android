@@ -34,24 +34,27 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         binding.viewPager2.setUserInputEnabled(false);
     }
 
-    @Override
-    protected boolean showTitleInTabs() {
-        return true;
-    }
-
+    @NonNull
     @Override
     public List<FragmentItemModel> getFragmentItems() {
         ArrayList<FragmentItemModel> items = new ArrayList<>();
-        items.add(new FragmentItemModel(LearnFragment.class,
-                getResources().getString(R.string.label_learn),
-                R.drawable.ic_bookmark_border, getArguments(),
-                () -> EventBus.getDefault().post(new FragmentSelectionEvent())));
         if (environment.getConfig().getDiscoveryConfig().isDiscoveryEnabled()) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discover),
                     R.drawable.ic_search, getArguments(),
                     () -> environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES)));
         }
+        items.add(new FragmentItemModel(LearnFragment.class,
+                getResources().getString(R.string.label_learn),
+                R.drawable.ic_bookmark_border, getArguments(),
+                () -> EventBus.getDefault().post(new FragmentSelectionEvent())));
+        items.add(new FragmentItemModel(AccountFragment.class,
+                getResources().getString(R.string.profile_title),
+                R.drawable.ic_settings, getArguments(),
+                () -> environment.getAnalyticsRegistry().trackScreenViewEvent(
+                        Analytics.Events.PROFILE_PAGE_VIEWED,
+                        Analytics.Screens.PROFILE
+                )));
         return items;
     }
 
@@ -62,7 +65,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
             return;
         }
         if (binding != null) {
-            binding.viewPager2.setCurrentItem(binding.viewPager2.getAdapter().getItemCount() - 1);
+            binding.viewPager2.setCurrentItem(0);
             if (event.getScreenName() != null) {
                 EventBus.getDefault().post(ScreenArgumentsEvent.Companion.getNewInstance(event.getScreenName()));
             }
