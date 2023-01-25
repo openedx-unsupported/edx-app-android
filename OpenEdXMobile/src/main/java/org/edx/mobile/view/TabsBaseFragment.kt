@@ -28,6 +28,8 @@ import javax.inject.Inject
 
 abstract class TabsBaseFragment : BaseFragment() {
 
+    private var selectedTabPosition = -1
+
     @Inject
     protected lateinit var environment: IEdxEnvironment
 
@@ -38,7 +40,11 @@ abstract class TabsBaseFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTabsBaseBinding.inflate(inflater, container, false)
-        initializeTabs()
+        val savedArguments = arguments
+        savedInstanceState?.getInt(SELECTED_POSITION)?.let {
+            savedArguments?.putInt(SELECTED_POSITION, it)
+        }
+        initializeTabs(savedArguments)
         return binding.root
     }
 
@@ -46,6 +52,11 @@ abstract class TabsBaseFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         enforceSingleScrollDirection(binding.viewPager2)
         handleTabSelection(arguments)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(SELECTED_POSITION, selectedTabPosition)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -100,18 +111,19 @@ abstract class TabsBaseFragment : BaseFragment() {
         else -> false
     }
 
-    private fun initializeTabs() {
+    private fun initializeTabs(arguments: Bundle?) {
         val tabLayout = activity?.findViewById<TabLayout>(R.id.tabs) ?: return
 
         tabLayout.setVisibility(fragmentItems.size > 1)
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+        val tabChangeListener = object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab) {
                 binding.viewPager2.currentItem = tab.position
+                selectedTabPosition = tab.position
             }
 
             override fun onTabUnselected(tab: Tab) {}
             override fun onTabReselected(tab: Tab) {}
-        })
+        }
 
         val adapter = FragmentItemPagerAdapter(requireActivity(), fragmentItems)
         binding.viewPager2.adapter = adapter
@@ -135,7 +147,12 @@ abstract class TabsBaseFragment : BaseFragment() {
             createTab(tab, fragmentItems[position])
         }.attach()
 
-
+        val defaultTabPosition = if (environment.config.discoveryConfig.isDiscoveryEnabled) 1 else 0
+        selectedTabPosition = arguments?.getInt(
+            SELECTED_POSITION, defaultTabPosition
+        ) ?: defaultTabPosition
+        tabLayout.selectTab(tabLayout.getTabAt(selectedTabPosition))
+        tabLayout.addOnTabSelectedListener(tabChangeListener)
     }
 
     private fun createTab(tab: Tab, fragmentItem: FragmentItemModel) {
@@ -155,4 +172,8 @@ abstract class TabsBaseFragment : BaseFragment() {
      * @return List of [FragmentItemModel].
      */
     protected abstract val fragmentItems: List<FragmentItemModel>
+
+    companion object {
+        private const val SELECTED_POSITION = "selected_position"
+    }
 }
