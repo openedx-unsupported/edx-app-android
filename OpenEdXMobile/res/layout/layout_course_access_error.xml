@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/edx_default_margin">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/heading"
+        style="@style/CourseDashboardHeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/course_access_expired" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/description"
+        style="@style/CourseDashboardDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/edx_default_margin"
+        android:text="@string/message_no_new_session" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/primary_button"
+        style="@style/edX.Widget.PrimaryActionButton"
+        android:text="@string/label_find_a_course" />
+</LinearLayout>

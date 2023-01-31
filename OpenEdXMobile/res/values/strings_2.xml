@@ -22,4 +22,14 @@
     <string name="label_home">Home</string>
     <!-- Title of Dates tab on course dashboard screen -->
     <string name="label_dates">Dates</string>
+
+    <!-- Message of no new session -->
+    <string name="message_no_new_session">No new sessions are available at this time.</string>
+    <!-- Title of find courses button -->
+    <string name="label_find_a_course">Find a new course</string>
+    <!-- Title of find courses button -->
+    <string name="label_go_to_my_course">Go to my courses</string>
+    <!-- Message if error occurred on course dashboard -->
+    <string name="message_an_error_occurred">An error occurred while loading your course</string>
+
 </resources>

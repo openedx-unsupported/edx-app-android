@@ -29,6 +29,8 @@ import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
 import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
+import org.edx.mobile.event.MoveToDiscoveryTabEvent;
+import org.edx.mobile.http.notifications.EdxErrorState;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -41,6 +43,7 @@ import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 import org.edx.mobile.view.dialog.CourseModalDialogFragment;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,30 +98,37 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         courseData = (EnrolledCoursesResponse) requireArguments().getSerializable(Router.EXTRA_COURSE_DATA);
+        binding = FragmentCourseTabsDashboardBinding.inflate(inflater, container, false);
 
         if (courseData != null) {
             setHasOptionsMenu(courseData.getCourse().getCoursewareAccess().hasAccess());
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
-
             if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
                 final boolean auditAccessExpired = new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
-                FragmentDashboardErrorLayoutBinding errorLayoutBinding =
-                        FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
-                errorLayoutBinding.errorMsg.setText(auditAccessExpired ? R.string.course_access_expired : R.string.course_not_started);
-                return errorLayoutBinding.getRoot();
+                if (auditAccessExpired) {
+                    setupToolbar();
+                    binding.toolbar.tabs.setVisibility(View.GONE);
+                    binding.accessError.getRoot().setVisibility(View.VISIBLE);
+                    binding.accessError.primaryButton.setOnClickListener(onFindCourseClick());
+                } else {
+                    FragmentDashboardErrorLayoutBinding errorLayoutBinding = FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
+                    errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
+                    return errorLayoutBinding.getRoot();
+                }
             } else {
-                binding = FragmentCourseTabsDashboardBinding.inflate(inflater, container, false);
                 setupToolbar();
                 setViewPager();
-                return binding.getRoot();
             }
+            return binding.getRoot();
         } else if (getArguments().getBoolean(ARG_COURSE_NOT_FOUND)) {
             // The case where we have invalid course data
-            FragmentDashboardErrorLayoutBinding errorLayoutBinding =
-                    FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
-            errorLayoutBinding.errorMsg.setText(R.string.cannot_show_dashboard);
-            return errorLayoutBinding.getRoot();
+            binding.loadingError.getRoot().setVisibility(View.VISIBLE);
+            binding.loadingError.dismiss.setVisibility(View.VISIBLE);
+            binding.loadingError.dismiss.setOnClickListener(onCloseClick());
+            binding.loadingError.state.setState(EdxErrorState.State.LOAD_ERROR);
+            binding.loadingError.state.setActionListener(onCloseClick());
+            return binding.getRoot();
         } else {
             // The case where we need to fetch course's data based on its courseId
             fetchCourseById();
@@ -127,6 +137,18 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             frameLayout.addView(inflater.inflate(R.layout.loading_indicator, container, false));
             return frameLayout;
         }
+    }
+
+    private View.OnClickListener onCloseClick() {
+        return v -> requireActivity().finish();
+    }
+
+    private View.OnClickListener onFindCourseClick() {
+        return v -> {
+            environment.getAnalyticsRegistry().trackUserFindsCourses();
+            EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.DISCOVERY));
+            requireActivity().finish();
+        };
     }
 
     @Override
@@ -177,6 +199,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     }
 
     public void setViewPager() {
+        binding.pager.setVisibility(View.VISIBLE);
         UiUtils.INSTANCE.enforceSingleScrollDirection(binding.pager);
         fragmentItemModels = getFragmentItems();
         binding.toolbar.tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -218,6 +241,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     }
 
     public void setupToolbar() {
+        binding.toolbar.getRoot().setVisibility(View.VISIBLE);
         binding.toolbar.collapsedToolbarTitle.setText(courseData.getCourse().getName());
         binding.toolbar.courseOrganization.setText(courseData.getCourse().getOrg());
         binding.toolbar.courseTitle.setText(courseData.getCourse().getName());
