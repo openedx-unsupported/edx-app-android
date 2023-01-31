@@ -6,6 +6,14 @@
         <attr name="popupSpinnerStyle" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="StateLayout">
+        <attr name="state" format="enum">
+            <enum name="NETWORK" value="0"/>
+            <enum name="EMPTY" value="1"/>
+            <enum name="LOAD_ERROR" value="2"/>
+        </attr>
+    </declare-styleable>
+
     <!--  Font attributes for the app  -->
     <attr name="fontItalic" format="reference" />
     <attr name="fontRegular" format="reference" />

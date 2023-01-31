@@ -55,7 +55,7 @@
         <!--  Ref: https://medium.com/androiddevelopers/migrating-to-material-components-for-android-ec6757795351  -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shift_dates"
-            style="@style/edX.Widget.PrimaryActionButton"
+            style="@style/edX.Widget.BannerActionButton"
             android:padding="@dimen/edx_half_margin"
             android:textSize="@dimen/edx_x_small"
             android:visibility="gone"
