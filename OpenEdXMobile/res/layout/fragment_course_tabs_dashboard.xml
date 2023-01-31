@@ -6,13 +6,30 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/course_dashboard_toolbar" />
+        layout="@layout/course_dashboard_toolbar"
+        android:visibility="gone"/>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/access_error"
+            layout="@layout/layout_course_access_error"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/loading_error"
+            layout="@layout/layout_error_state"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
