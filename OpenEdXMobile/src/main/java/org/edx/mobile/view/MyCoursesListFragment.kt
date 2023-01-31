@@ -25,6 +25,7 @@ import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
+import org.edx.mobile.http.notifications.EdxErrorState
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.interfaces.RefreshListener
@@ -115,7 +116,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
         binding.swipeContainer.setOnRefreshListener {
             errorNotification.hideError()
-            binding.emptyScreenLayout.root.setVisibility(false)
+            binding.stateLayout.root.setVisibility(false)
             courseViewModel.fetchEnrolledCourses(
                 type = CoursesRequestType.STALE,
                 showProgress = false
@@ -139,7 +140,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             binding.loadingIndicator.root.setVisibility(it)
             if (it) {
                 errorNotification.hideError()
-                binding.emptyScreenLayout.root.setVisibility(false)
+                binding.stateLayout.root.setVisibility(false)
             }
         })
 
@@ -271,7 +272,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         // scrolled up to its top.
         binding.swipeContainer.viewTreeObserver.addOnScrollChangedListener(
             OnScrollChangedListener {
-                binding.swipeContainer.isEnabled = binding.emptyScreenLayout.root.scrollY == 0
+                binding.swipeContainer.isEnabled = binding.stateLayout.root.scrollY == 0
             }.also {
                 onScrollChangedListener = it
             })
@@ -338,11 +339,12 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         adapter.notifyDataSetChanged()
 
         if (adapter.isEmpty && environment.config.discoveryConfig.isDiscoveryEnabled) {
-            binding.emptyScreenLayout.contentErrorAction.setOnClickListener {
+            binding.stateLayout.state.setState(EdxErrorState.State.EMPTY)
+            binding.stateLayout.state.setActionListener {
                 environment.analyticsRegistry?.trackUserFindsCourses()
                 EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
             }
-            binding.emptyScreenLayout.root.setVisibility(true)
+            binding.stateLayout.root.setVisibility(true)
             binding.myCourseList.setVisibility(false)
         } else if (adapter.isEmpty && !environment.config.discoveryConfig.isDiscoveryEnabled) {
             errorNotification.showError(
@@ -351,7 +353,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             )
             binding.myCourseList.setVisibility(false)
         } else {
-            binding.emptyScreenLayout.root.setVisibility(false)
+            binding.stateLayout.root.setVisibility(false)
             binding.myCourseList.setVisibility(true)
         }
         invalidateView()
