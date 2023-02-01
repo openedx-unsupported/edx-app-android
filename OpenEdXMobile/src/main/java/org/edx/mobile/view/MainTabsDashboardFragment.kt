@@ -6,52 +6,65 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
-import org.edx.mobile.databinding.FragmentTabsBaseBinding
+import org.edx.mobile.databinding.FragmentMainTabsDashboardBinding
 import org.edx.mobile.databinding.TabItemBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
+import org.edx.mobile.event.FragmentSelectionEvent
+import org.edx.mobile.event.MoveToDiscoveryTabEvent
 import org.edx.mobile.event.ScreenArgumentsEvent
+import org.edx.mobile.event.ScreenArgumentsEvent.Companion.getNewInstance
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.model.FragmentItemModel
+import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.UiUtils.enforceSingleScrollDirection
 import org.edx.mobile.util.UiUtils.getDrawable
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
 
-abstract class TabsBaseFragment : BaseFragment() {
-
-    private var selectedTabPosition = -1
+@AndroidEntryPoint
+class MainTabsDashboardFragment : BaseFragment() {
 
     @Inject
-    protected lateinit var environment: IEdxEnvironment
+    lateinit var environment: IEdxEnvironment
 
-    protected lateinit var binding: FragmentTabsBaseBinding
+    lateinit var binding: FragmentMainTabsDashboardBinding
+
+    lateinit var fragmentItems: List<FragmentItemModel>
+
+    private var selectedTabPosition = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTabsBaseBinding.inflate(inflater, container, false)
+        binding = FragmentMainTabsDashboardBinding.inflate(inflater, container, false)
         val savedArguments = arguments
         savedInstanceState?.getInt(SELECTED_POSITION)?.let {
             savedArguments?.putInt(SELECTED_POSITION, it)
         }
+        fragmentItems = getTabItems()
         initializeTabs(savedArguments)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        enforceSingleScrollDirection(binding.viewPager2)
+        EventBus.getDefault().register(this)
+
+        enforceSingleScrollDirection(binding.viewPager)
         handleTabSelection(arguments)
+
+        binding.viewPager.isUserInputEnabled = false
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -81,7 +94,7 @@ abstract class TabsBaseFragment : BaseFragment() {
 
                 fragmentItems.forEachIndexed { index, item ->
                     if (shouldSelectFragment(item, screenName)) {
-                        binding.viewPager2.currentItem = index
+                        binding.viewPager.currentItem = index
                         return@forEachIndexed
                     }
                 }
@@ -112,12 +125,12 @@ abstract class TabsBaseFragment : BaseFragment() {
     }
 
     private fun initializeTabs(arguments: Bundle?) {
-        val tabLayout = activity?.findViewById<TabLayout>(R.id.tabs) ?: return
+        val tabLayout = binding.tabs
 
         tabLayout.setVisibility(fragmentItems.size > 1)
         val tabChangeListener = object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab) {
-                binding.viewPager2.currentItem = tab.position
+                binding.viewPager.currentItem = tab.position
                 selectedTabPosition = tab.position
             }
 
@@ -126,8 +139,8 @@ abstract class TabsBaseFragment : BaseFragment() {
         }
 
         val adapter = FragmentItemPagerAdapter(requireActivity(), fragmentItems)
-        binding.viewPager2.adapter = adapter
-        binding.viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+        binding.viewPager.adapter = adapter
+        binding.viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val item = fragmentItems[position]
@@ -136,13 +149,13 @@ abstract class TabsBaseFragment : BaseFragment() {
             }
         })
         if (fragmentItems.size - 1 > 1) {
-            binding.viewPager2.offscreenPageLimit = fragmentItems.size - 1
+            binding.viewPager.offscreenPageLimit = fragmentItems.size - 1
         }
 
         // Attach TabLayout with ViewPager
         TabLayoutMediator(
             tabLayout,
-            binding.viewPager2
+            binding.viewPager
         ) { tab: Tab, position: Int ->
             createTab(tab, fragmentItems[position])
         }.attach()
@@ -153,6 +166,40 @@ abstract class TabsBaseFragment : BaseFragment() {
         ) ?: defaultTabPosition
         tabLayout.selectTab(tabLayout.getTabAt(selectedTabPosition))
         tabLayout.addOnTabSelectedListener(tabChangeListener)
+    }
+
+    private fun getTabItems(): List<FragmentItemModel> {
+        val items = mutableListOf<FragmentItemModel>()
+
+        if (environment.config.discoveryConfig.isDiscoveryEnabled) {
+            items.add(FragmentItemModel(
+                MainDiscoveryFragment::class.java,
+                resources.getString(R.string.label_discover),
+                R.drawable.ic_search, arguments
+            ) {
+                environment.analyticsRegistry
+                    .trackScreenView(Analytics.Screens.FIND_COURSES)
+            })
+        }
+        items.add(FragmentItemModel(
+            LearnFragment::class.java,
+            resources.getString(R.string.label_learn),
+            R.drawable.ic_menu_book, arguments
+        ) {
+            EventBus.getDefault().post(FragmentSelectionEvent())
+        })
+        items.add(FragmentItemModel(
+            AccountFragment::class.java,
+            resources.getString(R.string.profile_title),
+            R.drawable.ic_person, arguments
+        ) {
+            environment.analyticsRegistry.trackScreenViewEvent(
+                Analytics.Events.PROFILE_PAGE_VIEWED,
+                Analytics.Screens.PROFILE
+            )
+        })
+
+        return items
     }
 
     private fun createTab(tab: Tab, fragmentItem: FragmentItemModel) {
@@ -166,12 +213,21 @@ abstract class TabsBaseFragment : BaseFragment() {
         tab.contentDescription = fragmentItem.title
     }
 
-    /**
-     * Defines the [FragmentItemModel] that we need to assign to each tab.
-     *
-     * @return List of [FragmentItemModel].
-     */
-    protected abstract val fragmentItems: List<FragmentItemModel>
+    @Subscribe
+    fun onEventMainThread(event: MoveToDiscoveryTabEvent) {
+        if (!environment.config.discoveryConfig.isDiscoveryEnabled) {
+            return
+        }
+        binding.viewPager.currentItem = 0
+        if (event.screenName != null) {
+            EventBus.getDefault().post(getNewInstance(event.screenName))
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
 
     companion object {
         private const val SELECTED_POSITION = "selected_position"

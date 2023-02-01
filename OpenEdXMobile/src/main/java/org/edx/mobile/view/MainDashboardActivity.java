@@ -11,14 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.databinding.ActivityCourseTabsDashboardBinding;
 import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
-import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -36,10 +39,15 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainDashboardActivity extends OfflineSupportBaseActivity {
+public class MainDashboardActivity extends BaseFragmentActivity {
+
+    @Inject
+    IEdxEnvironment environment;
 
     @Inject
     NotificationDelegate notificationDelegate;
+
+    ActivityCourseTabsDashboardBinding binding;
 
     public static Intent newIntent(@Nullable @ScreenDef String screenName, @Nullable String pathId) {
         // These flags will make it so we only have a single instance of this activity,
@@ -59,12 +67,17 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initWhatsNew();
-    }
+        binding = ActivityCourseTabsDashboardBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-    @Override
-    public Object getRefreshEvent() {
-        return new MainDashboardRefreshEvent();
+        if (savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container_view, getMainTabsDashboardFragment(), null);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
+        }
+
+        initWhatsNew();
     }
 
     private void initWhatsNew() {
@@ -113,8 +126,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
         }
     }
 
-    @Override
-    public Fragment getFirstFragment() {
+    public Fragment getMainTabsDashboardFragment() {
         final Fragment fragment = new MainTabsDashboardFragment();
         final Bundle bundle = getIntent().getExtras();
         fragment.setArguments(bundle);
@@ -135,7 +147,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
     @Subscribe
     public void onEvent(@NonNull final NewVersionAvailableEvent newVersionAvailableEvent) {
         if (!newVersionAvailableEvent.isConsumed()) {
-            final Snackbar snackbar = Snackbar.make(getBinding().coordinatorLayout,
+            final Snackbar snackbar = Snackbar.make(binding.getRoot(),
                     newVersionAvailableEvent.getNotificationString(this),
                     Snackbar.LENGTH_INDEFINITE);
             if (AppStoreUtils.canUpdate(this)) {
@@ -161,7 +173,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
             bar.setIcon(android.R.color.transparent);
         }
     }
-    
+
     @Override
     public void setTitle(int titleId) {
         setTitle(getResources().getString(titleId));
