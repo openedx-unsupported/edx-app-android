@@ -126,7 +126,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             binding.loadingError.getRoot().setVisibility(View.VISIBLE);
             binding.loadingError.dismiss.setVisibility(View.VISIBLE);
             binding.loadingError.dismiss.setOnClickListener(onCloseClick());
-            binding.loadingError.state.setState(EdxErrorState.State.LOAD_ERROR);
+            binding.loadingError.state.setState(EdxErrorState.State.LOAD_ERROR, Screen.COURSE_DASHBOARD);
             binding.loadingError.state.setActionListener(onCloseClick());
             return binding.getRoot();
         } else {
