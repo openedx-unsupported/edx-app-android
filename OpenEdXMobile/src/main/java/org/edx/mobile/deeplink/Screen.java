@@ -5,6 +5,7 @@ package org.edx.mobile.deeplink;
  * deep links.
  */
 public class Screen {
+    public static final String MY_COURSES = "my_courses";
     public static final String COURSE_DASHBOARD = "course_dashboard";
     public static final String COURSE_VIDEOS = "course_videos";
     public static final String COURSE_DISCUSSION = "course_discussion";

@@ -189,6 +189,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                                 )
                             }
                         }
+                        else -> {
+                            showError()
+                        }
                     }
                 }
                 (FullscreenLoaderDialogFragment
@@ -199,7 +202,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     )
                 }
                 else -> {
-                    showError(it)
+                    showError()
                 }
             }
             invalidateView()
@@ -342,7 +345,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         adapter.notifyDataSetChanged()
 
         if (adapter.isEmpty && environment.config.discoveryConfig.isDiscoveryEnabled) {
-            binding.stateLayout.state.setState(EdxErrorState.State.EMPTY)
+            binding.stateLayout.state.setState(EdxErrorState.State.EMPTY, Screen.MY_COURSES)
             binding.stateLayout.state.setActionListener {
                 environment.analyticsRegistry?.trackUserFindsCourses()
                 EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
@@ -389,14 +392,11 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.loadingIndicator.root.visibility = View.GONE
     }
 
-    private fun showError(error: Throwable) {
-        context?.let { context ->
-            errorNotification.showError(context, error, R.string.lbl_reload) {
-                if (NetworkUtil.isConnected(context)) {
-                    onRefresh()
-                }
-            }
-        }
+    private fun showError() {
+        binding.myCourseList.setVisibility(false)
+        binding.stateLayout.root.setVisibility(true)
+        binding.stateLayout.state.setState(EdxErrorState.State.NETWORK, Screen.MY_COURSES)
+        binding.stateLayout.state.setActionListener { onRefresh() }
     }
 
     override fun onRefresh() {
