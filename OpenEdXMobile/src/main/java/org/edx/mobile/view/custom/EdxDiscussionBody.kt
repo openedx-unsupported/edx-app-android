@@ -2,15 +2,17 @@ package org.edx.mobile.view.custom
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.TextView
+import org.edx.mobile.R
 import org.edx.mobile.extenstion.renderHtml
 import java.util.regex.Pattern
 
 class EdxDiscussionBody @JvmOverloads constructor(
     context: Context,
-    private val attrs: AttributeSet? = null,
-    private val defStyleAttr: Int = 0
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     /**
@@ -20,11 +22,12 @@ class EdxDiscussionBody @JvmOverloads constructor(
     fun setBody(body: String?) {
         body?.let {
             if (isPlainHtml(body)) {
-                this.addView(TextView(context, attrs, defStyleAttr).also {
+                this.addView(TextView(context, null, 0, R.style.discussion_regular_text).also {
                     it.renderHtml(body)
                 })
             } else {
-                this.addView(EdxWebView(context, attrs).also {
+                this.addView(EdxWebView(context, null).also {
+                    it.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
                     it.loadDataWithBaseURL(null, body, "text/html", "utf-8", null)
                 })
             }
