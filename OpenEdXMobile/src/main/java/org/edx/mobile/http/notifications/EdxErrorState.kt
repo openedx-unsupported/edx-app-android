@@ -8,6 +8,9 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import org.edx.mobile.R
 import org.edx.mobile.databinding.EdxErrorStateBinding
+import org.edx.mobile.deeplink.Screen
+import org.edx.mobile.deeplink.ScreenDef
+import org.edx.mobile.extenstion.setImageDrawable
 
 class EdxErrorState @JvmOverloads constructor(
     context: Context,
@@ -27,28 +30,23 @@ class EdxErrorState @JvmOverloads constructor(
         }
     }
 
-    fun setState(state: State) {
+    fun setState(state: State, @ScreenDef screen: String? = null) {
         when (state) {
             State.NETWORK,
             State.LOAD_ERROR -> {
-                layout.icon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        context,
-                        R.drawable.ic_error_card
-                    )
-                )
-                layout.errorText.text = context.getText(R.string.message_an_error_occurred)
+                layout.icon.setImageDrawable(R.drawable.ic_error_card)
+                layout.errorText.text = when (screen) {
+                    Screen.MY_COURSES ->
+                        context.getText(R.string.message_an_error_occurred_courses)
+                    else ->
+                        context.getText(R.string.message_an_error_occurred)
+                }
                 layout.action.text = context.getText(
                     if (state == State.NETWORK) R.string.try_again else R.string.label_go_to_my_course
                 )
             }
             State.EMPTY -> {
-                layout.icon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        context,
-                        R.drawable.ic_creative_process
-                    )
-                )
+                layout.icon.setImageDrawable(R.drawable.ic_creative_process)
                 layout.errorText.text = context.getText(R.string.find_course_text)
                 layout.action.text = context.getText(R.string.find_course_btn_text)
                 layout.action.icon = ContextCompat.getDrawable(context, R.drawable.ic_search)
