@@ -22,7 +22,9 @@
 
         <org.edx.mobile.view.custom.EdxDiscussionBody
             android:id="@+id/discussion_render_body"
-            style="@style/discussion_regular_text" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bodyStyle="@style/discussion_regular_text" />
 
         <!-- This container layout is only defined to add bottom padding to the parent view, when
              the enclosed TextView's visibility is set to GONE. -->

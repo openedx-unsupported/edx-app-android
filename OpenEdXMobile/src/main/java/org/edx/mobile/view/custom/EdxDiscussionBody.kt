@@ -15,6 +15,22 @@ class EdxDiscussionBody @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val bodyStyle: Int
+
+    init {
+        context.theme.obtainStyledAttributes(
+            attrs, R.styleable.EdxDiscussionBody, 0, 0
+        ).apply {
+            try {
+                bodyStyle = getResourceId(
+                    R.styleable.EdxDiscussionBody_bodyStyle, 0
+                )
+            } finally {
+                recycle()
+            }
+        }
+    }
+
     /**
      * Method to render the [body] based on HTML paragraph tag
      * @param body  rendered body of the discussion
@@ -22,7 +38,8 @@ class EdxDiscussionBody @JvmOverloads constructor(
     fun setBody(body: String?) {
         body?.let {
             if (isPlainHtml(body)) {
-                this.addView(TextView(context, null, 0, R.style.discussion_regular_text).also {
+                this.addView(TextView(context).also {
+                    it.setTextAppearance(bodyStyle)
                     it.renderHtml(body)
                 })
             } else {

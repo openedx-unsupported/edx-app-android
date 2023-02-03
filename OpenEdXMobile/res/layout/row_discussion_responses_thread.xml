@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -43,8 +44,10 @@
 
         <org.edx.mobile.view.custom.EdxDiscussionBody
             android:id="@+id/discussion_render_body"
-            style="@style/discussion_regular_text"
-            android:layout_marginBottom="@dimen/discussion_responses_standard_margin" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
+            app:bodyStyle="@style/discussion_regular_text" />
 
         <TextView
             android:id="@+id/discussion_responses_thread_row_visibility_text_view"
