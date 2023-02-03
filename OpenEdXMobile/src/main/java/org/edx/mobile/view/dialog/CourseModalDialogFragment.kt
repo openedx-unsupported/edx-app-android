@@ -187,7 +187,7 @@ class CourseModalDialogFragment : DialogFragment() {
             retryListener = DialogInterface.OnClickListener { _, _ ->
                 // already purchased course.
                 iapViewModel.iapFlowData.isVerificationPending = false
-                iapViewModel.iapFlowData.flowType = IAPFlowData.IAPFlowType.USER_INITIATED
+                iapViewModel.iapFlowData.flowType = IAPFlowData.IAPFlowType.SILENT
                 EventBus.getDefault()
                     .post(
                         IAPFlowEvent(

@@ -596,4 +596,14 @@
         <item name="lineHeight">@dimen/widget_margin_x_double</item>
     </style>
 
+    <style name="edX.Widget.SecondaryBorderedButton" parent="edX.Widget.Button">
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:textColor">@color/secondaryBaseColor</item>
+        <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+    </style>
+
 </resources>

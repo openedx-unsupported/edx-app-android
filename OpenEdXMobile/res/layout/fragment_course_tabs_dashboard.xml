@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/course_dashboard_toolbar"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -21,10 +22,12 @@
             android:orientation="horizontal"
             android:visibility="gone" />
 
-        <include
+        <org.edx.mobile.http.notifications.EdxCourseAccessErrorState
             android:id="@+id/access_error"
-            layout="@layout/layout_course_access_error"
-            android:visibility="gone" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/loading_error"

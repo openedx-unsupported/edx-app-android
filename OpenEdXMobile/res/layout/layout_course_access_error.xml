@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/edx_default_margin">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/heading"
-        style="@style/CourseDashboardHeadline"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/course_access_expired" />
+        android:orientation="vertical"
+        android:padding="@dimen/edx_default_margin">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/description"
-        style="@style/CourseDashboardDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/edx_default_margin"
-        android:text="@string/message_no_new_session" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/heading"
+            style="@style/CourseDashboardHeadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/course_access_expired" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/primary_button"
-        style="@style/edX.Widget.PrimaryActionButton"
-        android:text="@string/label_find_a_course" />
-</LinearLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/description"
+            style="@style/CourseDashboardDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_default_margin"
+            android:text="@string/message_no_new_session" />
+
+        <include
+            android:id="@+id/layout_upgrade_features"
+            layout="@layout/layout_upgrade_features"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_default_margin"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/primary_button"
+            layout="@layout/layout_upgrade_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/widget_margin_x_double" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/secondary_button"
+            style="@style/edX.Widget.SecondaryBorderedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/container_padding"
+            android:text="@string/label_find_a_course" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

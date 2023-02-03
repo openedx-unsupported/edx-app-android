@@ -490,7 +490,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                         .getRetainedInstance(getChildFragmentManager());
                 if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
                     new SnackbarErrorNotification(listView).showError(R.string.purchase_success_message);
-                    fullscreenLoader.closeLoader();
+                    fullscreenLoader.closeLoader(null);
                 }
             }
 

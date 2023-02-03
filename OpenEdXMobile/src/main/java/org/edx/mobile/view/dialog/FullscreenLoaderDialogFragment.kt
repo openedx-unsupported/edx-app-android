@@ -123,7 +123,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
         EventBus.getDefault().post(IAPFlowEvent(IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE))
     }
 
-    fun closeLoader() {
+    fun closeLoader(listener: OnCloseListener? = null) {
         if (dismissTimer == null) {
             dismissTimer = Timer("", false).schedule(getRemainingVisibleTime()) {
                 iapAnalytics.trackIAPEvent(Analytics.Events.IAP_COURSE_UPGRADE_SUCCESS)
@@ -131,6 +131,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
                 iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNLOCK_UPGRADED_CONTENT_REFRESH_TIME)
                 iapFlowData?.clear()
                 dismiss()
+                listener?.onClose()
             }
         }
     }
@@ -181,5 +182,9 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
         @JvmStatic
         fun getRetainedInstance(fragmentManager: FragmentManager?): FullscreenLoaderDialogFragment? =
             fragmentManager?.findFragmentByTag(TAG) as FullscreenLoaderDialogFragment?
+    }
+
+    interface OnCloseListener {
+        fun onClose()
     }
 }

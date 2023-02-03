@@ -282,7 +282,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 .getRetainedInstance(getSupportFragmentManager());
         if (fullScreenLoader != null && fullScreenLoader.isResumed()) {
             new SnackbarErrorNotification(pager2).showError(R.string.purchase_success_message);
-            fullScreenLoader.closeLoader();
+            fullScreenLoader.closeLoader(null);
         }
     }
 
