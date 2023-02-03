@@ -14,5 +14,5 @@ fun View.setVisibility(isVisible: Boolean) {
 }
 
 fun AppCompatImageView.setImageDrawable(@DrawableRes drawableId: Int) {
-    ContextCompat.getDrawable(context, drawableId)
+    this.setImageDrawable(ContextCompat.getDrawable(context, drawableId))
 }
