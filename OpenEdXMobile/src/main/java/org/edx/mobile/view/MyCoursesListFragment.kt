@@ -37,6 +37,7 @@ import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
+import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.adapters.MyCoursesAdapter
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
@@ -168,15 +169,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                             }
                         }
                         HttpStatus.UPGRADE_REQUIRED -> {
-                            context?.let { context ->
-                                errorNotification.showError(
-                                    context,
-                                    it
-                                )
-                            }
+                            showError(EdxErrorState.State.UPDATE_APP)
                         }
                         else -> {
-                            showError()
+                            showError(EdxErrorState.State.NETWORK)
                         }
                     }
                 }
@@ -188,7 +184,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     )
                 }
                 else -> {
-                    showError()
+                    showError(EdxErrorState.State.NETWORK)
                 }
             }
             invalidateView()
@@ -386,11 +382,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.loadingIndicator.root.visibility = View.GONE
     }
 
-    private fun showError() {
+    private fun showError(state: EdxErrorState.State) {
         binding.myCourseList.setVisibility(false)
         binding.stateLayout.root.setVisibility(true)
-        binding.stateLayout.state.setState(EdxErrorState.State.NETWORK, Screen.MY_COURSES)
-        binding.stateLayout.state.setActionListener { onRefresh() }
+        binding.stateLayout.state.setState(state, Screen.MY_COURSES)
+        binding.stateLayout.state.setActionListener {
+            when (state) {
+                EdxErrorState.State.UPDATE_APP ->
+                    AppStoreUtils.openAppInAppStore(requireContext())
+                EdxErrorState.State.NETWORK ->
+                    onRefresh()
+            }
+        }
     }
 
     override fun onRefresh() {
