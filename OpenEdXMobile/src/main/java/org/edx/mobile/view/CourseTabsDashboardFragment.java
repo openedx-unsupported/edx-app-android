@@ -99,6 +99,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         courseData = (EnrolledCoursesResponse) requireArguments().getSerializable(Router.EXTRA_COURSE_DATA);
         binding = FragmentCourseTabsDashboardBinding.inflate(inflater, container, false);
+        fragmentItemModels = getFragmentItems();
 
         if (courseData != null) {
             setHasOptionsMenu(courseData.getCourse().getCoursewareAccess().hasAccess());
@@ -201,7 +202,6 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     public void setViewPager() {
         binding.pager.setVisibility(View.VISIBLE);
         UiUtils.INSTANCE.enforceSingleScrollDirection(binding.pager);
-        fragmentItemModels = getFragmentItems();
         binding.toolbar.tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

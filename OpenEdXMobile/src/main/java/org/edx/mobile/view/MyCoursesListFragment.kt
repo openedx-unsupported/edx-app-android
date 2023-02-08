@@ -80,13 +80,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         adapter = object : MyCoursesListAdapter(environment) {
             override fun onItemClicked(model: EnrolledCoursesResponse) {
                 activity?.let { activity ->
-                    environment.router.showCourseDashboardTabs(activity, model, false)
+                    environment.router.showCourseDashboardTabs(activity, model)
                 }
             }
 
             override fun onAnnouncementClicked(model: EnrolledCoursesResponse) {
                 activity?.let { activity ->
-                    environment.router.showCourseDashboardTabs(activity, model, true)
+                    environment.router.showCourseDashboardTabs(
+                        activity,
+                        model,
+                        Screen.COURSE_ANNOUNCEMENT
+                    )
                 }
             }
 
