@@ -38,11 +38,11 @@
     <!--  Heading of Privacy Fields  -->
     <string name="label_privacy">Privacy</string>
     <!--  Label of Privacy Policy Button  -->
-    <string name="label_privacy_policy">Privacy policy</string>
+    <string name="label_privacy_policy">Privacy Policy</string>
     <!--  Label of Cookie Policy Button  -->
-    <string name="label_cookie_policy">Cookie policy</string>
+    <string name="label_cookie_policy">Cookie Policy</string>
     <!--  Label of Data Consent Button  -->
-    <string name="label_do_not_sell_my_personal_data">Do not sell my personal data</string>
+    <string name="label_do_not_sell_my_personal_data">Do Not Sell My Personal Information</string>
     <!-- Logout button label -->
     <string name="logout">Logout</string>
     <!-- Profile screen version -->
