@@ -18,6 +18,8 @@ import org.edx.mobile.model.course.CourseDates
 import org.edx.mobile.model.course.ResetCourseDates
 import org.edx.mobile.repository.CourseDatesRepository
 import org.edx.mobile.util.CalendarUtils
+import org.edx.mobile.util.observer.Event
+import org.edx.mobile.util.observer.postEvent
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -26,8 +28,8 @@ class CourseDateViewModel @Inject constructor(
     private val repository: CourseDatesRepository
 ) : ViewModel() {
 
-    private val _syncLoader = MutableLiveData<Boolean>()
-    val syncLoader: LiveData<Boolean>
+    private val _syncLoader = MutableLiveData<Event<Boolean>>()
+    val syncLoader: LiveData<Event<Boolean>>
         get() = _syncLoader
 
     private val _showLoader = MutableLiveData<Boolean>()
@@ -73,7 +75,7 @@ class CourseDateViewModel @Inject constructor(
         resetSyncingCalendarTime()
         val syncingCalendarStartTime: Long = Calendar.getInstance().timeInMillis
         areEventsUpdated = updatedEvent
-        _syncLoader.value = true
+        _syncLoader.postEvent(true)
 
         viewModelScope.launch(Dispatchers.IO) {
             courseDates.value?.let { courseDates ->
@@ -96,7 +98,7 @@ class CourseDateViewModel @Inject constructor(
                     SystemClock.sleep(1000 - syncingCalendarTime)
                 }
             } ?: run { syncingCalendarTime = 0 }
-            _syncLoader.postValue(false)
+            _syncLoader.postEvent(false)
         }
     }
 

@@ -42,6 +42,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.CourseDateUtil;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
@@ -260,7 +261,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private void initObserver() {
         courseDateViewModel = new ViewModelProvider(this).get(CourseDateViewModel.class);
 
-        courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), showLoader -> {
+        courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), new EventObserver<>(showLoader -> {
             if (showLoader) {
                 loaderDialog.setCancelable(false);
                 loaderDialog.showNow(getChildFragmentManager(), null);
@@ -269,7 +270,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                 showCalendarUpdatedSnackbar();
                 trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
             }
-        });
+            return null;
+        }));
 
         courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {

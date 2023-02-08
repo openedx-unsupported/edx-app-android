@@ -35,6 +35,7 @@ import org.edx.mobile.util.CourseDateUtil
 import org.edx.mobile.util.PermissionsUtil
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.UiUtils
+import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.adapters.CourseDatesAdapter
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
@@ -172,7 +173,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             initDatesBanner(it)
         })
 
-        viewModel.syncLoader.observe(viewLifecycleOwner, Observer { syncLoader ->
+        viewModel.syncLoader.observe(viewLifecycleOwner, EventObserver { syncLoader ->
             if (syncLoader) {
                 loaderDialog.isCancelable = false
                 loaderDialog.showNow(childFragmentManager, null)
@@ -537,7 +538,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 }).show(childFragmentManager, null)
         }
     }
-
 
     private fun showAddCalendarSuccessSnackbar() {
         val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
