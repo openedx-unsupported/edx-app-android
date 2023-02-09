@@ -37,6 +37,7 @@ class EdxDiscussionBody @JvmOverloads constructor(
      */
     fun setBody(body: String?) {
         body?.let {
+            this.removeAllViews()
             if (isPlainHtml(body)) {
                 this.addView(TextView(context).also {
                     it.setTextAppearance(bodyStyle)
