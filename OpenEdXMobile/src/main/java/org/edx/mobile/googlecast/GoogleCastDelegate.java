@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import android.view.MenuItem;
 
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaLoadOptions;
@@ -29,6 +29,8 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.AppConstants;
+
+import java.util.concurrent.Executors;
 
 public class GoogleCastDelegate extends RemoteMediaClient.Callback implements
         SessionManagerListener<CastSession> {
@@ -70,69 +72,71 @@ public class GoogleCastDelegate extends RemoteMediaClient.Callback implements
     }
 
     private void init() {
-        // TODO: Replace the try-catch block with more appropriate logic so Travis-ci build get passed.
-        // Can't get CastContext instance while executing test cases of "CourseUnitNavigationActivityTest"
-        // and throw exception.
-        try {
-            castContext = CastContext.getSharedInstance(this.context);
-            castSession = castContext.getSessionManager().getCurrentCastSession();
-            castContext.getSessionManager().addSessionManagerListener(this,
-                    CastSession.class);
-            registerRemoteCallback();
-        } catch (Exception ignore) {
-        }
+        CastContext.getSharedInstance(this.context, Executors.newSingleThreadExecutor())
+                .addOnSuccessListener(it -> {
+                    castContext = it;
+                    castSession = it.getSessionManager().getCurrentCastSession();
+                    it.getSessionManager().addSessionManagerListener(this,
+                            CastSession.class);
+                    registerRemoteCallback();
+                })
+                .addOnFailureListener(it -> {
+                });
     }
 
     private void registerRemoteCallback() {
-        if (castContext.getCastState() == CastState.CONNECTED) {
-            castSession.getRemoteMediaClient().registerCallback(this);
+        if (castContext != null && CastState.CONNECTED == castContext.getCastState()) {
+            RemoteMediaClient client = castSession.getRemoteMediaClient();
+            if (client != null) {
+                client.registerCallback(this);
+            }
         }
     }
 
     @Override
-    public void onSessionEnded(CastSession session, int error) {
+    public void onSessionEnded(@NonNull CastSession session, int error) {
         onApplicationDisconnected(session);
     }
 
     @Override
-    public void onSessionResumed(CastSession session, boolean wasSuspended) {
+    public void onSessionResumed(@NonNull CastSession session, boolean wasSuspended) {
         onApplicationConnected(session);
     }
 
     @Override
-    public void onSessionResumeFailed(CastSession session, int error) {
+    public void onSessionResumeFailed(@NonNull CastSession session, int error) {
         onApplicationDisconnected(session);
     }
 
     @Override
-    public void onSessionStarted(CastSession session, String sessionId) {
+    public void onSessionStarted(@NonNull CastSession session, @NonNull String sessionId) {
         onApplicationConnected(session);
         analyticsRegistry.trackCastDeviceConnectionChanged(Analytics.Events.CAST_CONNECTED,
                 Analytics.Values.CAST_CONNECTED, Analytics.Values.GOOGLE_CAST);
     }
 
     @Override
-    public void onSessionStartFailed(CastSession session, int error) {
+    public void onSessionStartFailed(@NonNull CastSession session, int error) {
         onApplicationDisconnected(session);
     }
 
     @Override
-    public void onSessionStarting(CastSession session) {
+    public void onSessionStarting(@NonNull CastSession session) {
     }
 
     @Override
-    public void onSessionEnding(CastSession session) {
+    public void onSessionEnding(@NonNull CastSession session) {
         onApplicationDisconnected(session);
         analyticsRegistry.trackCastDeviceConnectionChanged(Analytics.Events.CAST_DISCONNECTED,
                 Analytics.Values.CAST_DISCONNECTED, Analytics.Values.GOOGLE_CAST);
     }
 
     @Override
-    public void onSessionResuming(CastSession session, String sessionId) {
+    public void onSessionResuming(@NonNull CastSession session, @NonNull String sessionId) {
     }
 
     @Override
-    public void onSessionSuspended(CastSession session, int reason) {
+    public void onSessionSuspended(@NonNull CastSession session, int reason) {
         onApplicationDisconnected(session);
     }
 
@@ -214,7 +218,7 @@ public class GoogleCastDelegate extends RemoteMediaClient.Callback implements
     }
 
     public void showIntroductoryOverlay(@NonNull Activity activity, @Nullable final MenuItem mediaRouteMenuItem) {
-        if (castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE) {
+        if (castContext != null && castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE) {
             if (introductoryOverlay != null) {
                 introductoryOverlay.remove();
             }

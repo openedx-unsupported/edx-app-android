@@ -25,8 +25,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class CastOptionsProvider implements OptionsProvider {
 
+    @NonNull
     @Override
-    public CastOptions getCastOptions(Context context) {
+    public CastOptions getCastOptions(@NonNull Context context) {
         final NotificationOptions notificationOptions = new NotificationOptions.Builder()
                 .setTargetActivityClassName(ExpandedControlsActivity.class.getName())
                 .build();
@@ -42,7 +43,7 @@ public class CastOptionsProvider implements OptionsProvider {
     }
 
     @Override
-    public List<SessionProvider> getAdditionalSessionProviders(Context context) {
+    public List<SessionProvider> getAdditionalSessionProviders(@NonNull Context context) {
         return null;
     }
 
