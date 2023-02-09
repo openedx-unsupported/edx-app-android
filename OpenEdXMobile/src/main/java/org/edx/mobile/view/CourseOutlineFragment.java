@@ -481,6 +481,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 super.onFailure(error);
+                if (!isAdded()) return;
+
                 FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
                         .getRetainedInstance(getChildFragmentManager());
                 if (error instanceof CourseContentNotValidException) {
