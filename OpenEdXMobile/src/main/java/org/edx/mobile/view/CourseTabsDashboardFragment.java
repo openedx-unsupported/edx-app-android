@@ -55,6 +55,7 @@ import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.ShareUtils;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 import org.edx.mobile.view.custom.error.EdxCourseAccessErrorState;
 import org.edx.mobile.view.custom.error.EdxErrorState;
@@ -192,38 +193,31 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     }
 
     private void initIAPObservers() {
-        iapViewModel.getProductPrice().observe(this, skuDetailsEvent -> {
-            SkuDetails skuDetails = skuDetailsEvent.getContentIfNotConsumed();
-            if (skuDetails != null) {
-                setUpUpgradeButton(skuDetails);
-            }
-        });
+        iapViewModel.getProductPrice().observe(getViewLifecycleOwner(), new EventObserver<>(skuDetails -> {
+            setUpUpgradeButton(skuDetails);
+            return null;
+        }));
 
-        iapViewModel.getLaunchPurchaseFlow().observe(this, booleanEvent ->
-                iapViewModel.purchaseItem(requireActivity(), environment.getLoginPrefs().getUserId(),
-                        courseData.getCourseSku())
-        );
+        iapViewModel.getLaunchPurchaseFlow().observe(getViewLifecycleOwner(), new EventObserver<>(launchPurchaseFlow -> {
+            iapViewModel.purchaseItem(requireActivity(), environment.getLoginPrefs().getUserId(),
+                    courseData.getCourseSku());
+            return null;
+        }));
 
-        iapViewModel.getShowLoader().observe(this, showLoaderEvent -> {
-            Boolean showLoader = showLoaderEvent.getContentIfNotConsumed();
-            if (showLoader != null) {
-                binding.accessError.enableUpgradeButton(showLoader);
-            }
-        });
+        iapViewModel.getShowLoader().observe(getViewLifecycleOwner(), new EventObserver<>(showLoader -> {
+            binding.accessError.enableUpgradeButton(showLoader);
+            return null;
+        }));
 
-        iapViewModel.getErrorMessage().observe(this, errorMessageEvent -> {
-            ErrorMessage errorMessage = errorMessageEvent.getContentIfNotConsumed();
-            if (errorMessage != null) {
-                handleIAPException(errorMessage);
-            }
-        });
+        iapViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new EventObserver<>(errorMessage -> {
+            handleIAPException(errorMessage);
+            return null;
+        }));
 
-        iapViewModel.getProductPurchased().observe(this, iapFlowDataEvent -> {
-            IAPFlowData iapFlowData = iapFlowDataEvent.getContentIfNotConsumed();
-            if (iapFlowData != null) {
-                showFullscreenLoader(iapFlowData);
-            }
-        });
+        iapViewModel.getProductPurchased().observe(getViewLifecycleOwner(), new EventObserver<>(iapFlowData -> {
+            showFullscreenLoader(iapFlowData);
+            return null;
+        }));
     }
 
     private void setUpUpgradeButton(SkuDetails skuDetails) {
