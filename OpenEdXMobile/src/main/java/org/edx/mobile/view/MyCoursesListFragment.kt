@@ -143,7 +143,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             viewLifecycleOwner,
             EventObserver { enrolledCourses ->
                 populateCourseData(data = enrolledCourses)
-                if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
+                // Checking if the user is logged-in as we need userId to enable IAP
+                if (environment.loginPrefs.isUserLoggedIn &&
+                    environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
+                ) {
                     initInAppPurchaseSetup()
                     detectUnfulfilledPurchase(enrolledCourses)
                 }

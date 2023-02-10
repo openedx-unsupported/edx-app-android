@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.edx.mobile.core.IEdxEnvironment
+import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
 import org.edx.mobile.logger.Logger
@@ -39,6 +41,10 @@ class CourseViewModel @Inject constructor(
         type: CoursesRequestType,
         showProgress: Boolean = true
     ) {
+        if (environment.loginPrefs.isUserLoggedIn.not()) {
+            _handleError.value = HttpStatusException(HttpStatus.UNAUTHORIZED, "")
+            return
+        }
         _showProgress.postValue(showProgress)
         courseRepository.fetchEnrolledCourses(
             type = type,

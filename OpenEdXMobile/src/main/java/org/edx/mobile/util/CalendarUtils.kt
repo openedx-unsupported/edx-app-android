@@ -420,7 +420,7 @@ object CalendarUtils {
      */
     @JvmStatic
     fun getUserAccountForSync(environment: IEdxEnvironment): String {
-        return environment.loginPrefs.currentUserProfile.email ?: LOCAL_USER
+        return environment.loginPrefs.userEmail ?: LOCAL_USER
     }
 
     /**
