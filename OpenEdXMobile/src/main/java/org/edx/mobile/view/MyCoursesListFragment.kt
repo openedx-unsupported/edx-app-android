@@ -27,7 +27,7 @@ import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
-import org.edx.mobile.http.notifications.EdxErrorState
+import org.edx.mobile.view.custom.error.EdxErrorState
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.interfaces.RefreshListener

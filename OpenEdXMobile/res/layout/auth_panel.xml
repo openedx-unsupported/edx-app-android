@@ -12,7 +12,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sign_up"
-            style="@style/edX.Widget.ActionBrandPillButton"
+            style="@style/edX.Widget.PrimaryActionButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/auth_panel_btn_height"
             android:layout_weight="1"

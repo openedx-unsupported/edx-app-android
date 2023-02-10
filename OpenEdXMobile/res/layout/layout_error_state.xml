@@ -22,11 +22,11 @@
             app:tint="@color/primaryBaseColor"
             tools:visibility="visible" />
 
-        <org.edx.mobile.http.notifications.EdxErrorState
+        <org.edx.mobile.view.custom.error.EdxErrorState
             android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:state="LOAD_ERROR" />
+            app:error_state="LOAD_ERROR" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

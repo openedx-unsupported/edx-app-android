@@ -1,4 +1,4 @@
-package org.edx.mobile.http.notifications
+package org.edx.mobile.view.custom.error
 
 import android.content.Context
 import android.util.AttributeSet
@@ -24,8 +24,8 @@ class EdxErrorState @JvmOverloads constructor(
     init {
         this.addView(layout.root)
         attrs?.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.StateLayout)
-            val state = State.values()[typedArray.getInt(R.styleable.StateLayout_state, 0)]
+            val typedArray = context.obtainStyledAttributes(it, R.styleable.ErrorState)
+            val state = State.values()[typedArray.getInt(R.styleable.ErrorState_error_state, 0)]
             setState(state)
         }
     }

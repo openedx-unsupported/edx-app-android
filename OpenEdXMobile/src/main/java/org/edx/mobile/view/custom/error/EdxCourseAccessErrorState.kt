@@ -1,4 +1,4 @@
-package org.edx.mobile.http.notifications
+package org.edx.mobile.view.custom.error
 
 import android.content.Context
 import android.util.AttributeSet
@@ -19,8 +19,9 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
     init {
         this.addView(layout.root)
         attrs?.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.StateLayout)
-            val state = State.values()[typedArray.getInt(R.styleable.StateLayout_state, 0)]
+            val typedArray =
+                context.theme.obtainStyledAttributes(it, R.styleable.AccessErrorState, 0, 0)
+            val state = State.values()[typedArray.getInt(R.styleable.AccessErrorState_state, 0)]
             setState(state)
         }
     }
@@ -34,7 +35,7 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                 layout.primaryButton.shimmerViewContainer.hideShimmer()
                 layout.primaryButton.btnUpgrade.text = context.getText(R.string.label_find_a_course)
                 layout.primaryButton.btnUpgrade.icon = null
-                layout.secondaryButton.setVisibility(false)
+                layout.secondaryButton.root.setVisibility(false)
             }
             State.IS_UPGRADEABLE -> {
                 layout.heading.text = context.getString(R.string.course_access_expired)
@@ -44,8 +45,8 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                     layout.primaryButton.btnUpgrade.isEnabled = false
                     layout.primaryButton.shimmerViewContainer.startShimmer()
                 }, 250)
-                layout.secondaryButton.setVisibility(true)
-                layout.secondaryButton.text = context.getText(R.string.label_find_a_course)
+                layout.secondaryButton.root.setVisibility(true)
+                layout.secondaryButton.root.text = context.getText(R.string.label_find_a_course)
             }
         }
     }
@@ -65,12 +66,12 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
     }
 
     fun setSecondaryButtonListener(onClickListener: OnClickListener) {
-        layout.secondaryButton.setOnClickListener(onClickListener)
+        layout.secondaryButton.root.setOnClickListener(onClickListener)
     }
 
     fun enableUpgradeButton(enable: Boolean) {
-        layout.primaryButton.btnUpgrade.setVisibility(enable)
-        layout.primaryButton.loadingIndicator.setVisibility(!enable)
+        layout.primaryButton.btnUpgrade.setVisibility(!enable)
+        layout.primaryButton.loadingIndicator.setVisibility(enable)
     }
 
     enum class State {

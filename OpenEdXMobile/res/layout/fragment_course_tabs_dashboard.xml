@@ -22,7 +22,7 @@
             android:orientation="horizontal"
             android:visibility="gone" />
 
-        <org.edx.mobile.http.notifications.EdxCourseAccessErrorState
+        <org.edx.mobile.view.custom.error.EdxCourseAccessErrorState
             android:id="@+id/access_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
