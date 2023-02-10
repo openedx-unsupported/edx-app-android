@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ActivityCourseBaseBinding;
+import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
@@ -19,6 +20,7 @@ import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -110,6 +112,10 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
      * Method to force update the course structure from server.
      */
     protected void updateCourseStructure(String courseId, String componentId) {
+        if (!environment.getLoginPrefs().isUserLoggedIn()) {
+            EventBus.getDefault().post(new LogoutEvent());
+            return;
+        }
         getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
         getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
                 new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification,
@@ -143,7 +149,7 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
         super.onPostCreate(savedInstanceState);
         // If the data is available then trigger the callback
         // after basic initialization
-        if (courseComponentId != null) {
+        if (courseComponentId != null && environment.getLoginPrefs().isUserLoggedIn()) {
             onLoadData();
         }
     }
@@ -216,6 +222,10 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     @Override
     public void onRefresh() {
         errorNotification.hideError();
+        if (!environment.getLoginPrefs().isUserLoggedIn()) {
+            EventBus.getDefault().post(new LogoutEvent());
+            return;
+        }
         if (isOnCourseOutline()) {
             if (getIntent() != null) {
                 restore(getIntent().getBundleExtra(Router.EXTRA_BUNDLE));

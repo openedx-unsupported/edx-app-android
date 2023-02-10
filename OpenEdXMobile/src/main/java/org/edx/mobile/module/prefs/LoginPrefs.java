@@ -186,7 +186,7 @@ public class LoginPrefs {
 
     @Nullable
     public String getUserEmail() {
-        return getCurrentUserProfile().email;
+        return isUserLoggedIn() ? getCurrentUserProfile().email : null;
     }
 
     @Nullable

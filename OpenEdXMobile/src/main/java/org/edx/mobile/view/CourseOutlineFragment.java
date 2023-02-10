@@ -44,6 +44,7 @@ import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
+import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -412,7 +413,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         // Check if course data is available in persistable cache
         loadingIndicator.setVisibility(View.VISIBLE);
         // Prepare the loader. Either re-connect with an existing one or start a new one.
-        getLoaderManager().initLoader(0, null, this);
+        if (environment.getLoginPrefs().isUserLoggedIn()) {
+            getLoaderManager().initLoader(0, null, this);
+        } else {
+            EventBus.getDefault().post(new LogoutEvent());
+        }
     }
 
     private void trackAATestCourseOutline() {
@@ -461,6 +466,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     public void getCourseComponentFromServer(boolean showProgress, boolean forceRefresh) {
+        if (!environment.getLoginPrefs().isUserLoggedIn()) {
+            EventBus.getDefault().post(new LogoutEvent());
+            return;
+        }
         if (loadingIndicator.getVisibility() == View.VISIBLE) {
             showProgress = true;
         }
@@ -486,6 +495,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 super.onFailure(error);
+                if (!isAdded()) {
+                    return;
+                }
                 if (error instanceof CourseContentNotValidException) {
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
@@ -992,7 +1004,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     public void fetchLastAccessed() {
-        if (isOnCourseOutline && !isVideoMode) {
+        if (isOnCourseOutline && !isVideoMode && environment.getLoginPrefs().isUserLoggedIn()) {
             courseApi.getCourseStatusInfo(courseData.getCourseId()).enqueue(
                     new ErrorHandlingCallback<CourseComponentStatusResponse>(
                             getContextOrThrow()) {
