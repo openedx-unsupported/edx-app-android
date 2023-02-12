@@ -183,7 +183,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         })
 
-        viewModel.courseDates.observe(viewLifecycleOwner, Observer { dates ->
+        viewModel.courseDates.observe(viewLifecycleOwner, EventObserver { dates ->
             if (dates.courseDateBlocks.isNullOrEmpty()) {
                 viewModel.setError(
                     ErrorMessage.COURSE_DATES_CODE,

@@ -249,7 +249,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             return null;
         }));
 
-        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
+        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), new EventObserver<>(courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
                 long outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
@@ -258,7 +258,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     showCalendarOutOfDateDialog(outdatedCalenderId);
                 }
             }
-        });
+            return null;
+        }));
 
         courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initDatesBanner);
 
@@ -481,7 +482,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 super.onFailure(error);
-                if (!isAdded()) return;
+                if (!isAdded()) {
+                    return;
+                }
 
                 FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
                         .getRetainedInstance(getChildFragmentManager());

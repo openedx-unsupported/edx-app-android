@@ -273,7 +273,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             return null;
         }));
 
-        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
+        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), new EventObserver<>(courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
                 long outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
@@ -282,7 +282,8 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                     showCalendarOutOfDateDialog(outdatedCalenderId);
                 }
             }
-        });
+            return null;
+        }));
 
         courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initInfoBanner);
 

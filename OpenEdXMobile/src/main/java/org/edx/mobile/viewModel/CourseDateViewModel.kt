@@ -40,8 +40,8 @@ class CourseDateViewModel @Inject constructor(
     val swipeRefresh: LiveData<Boolean>
         get() = _swipeRefresh
 
-    private val _courseDates = MutableLiveData<CourseDates>()
-    val courseDates: LiveData<CourseDates>
+    private val _courseDates = MutableLiveData<Event<CourseDates>>()
+    val courseDates: LiveData<Event<CourseDates>>
         get() = _courseDates
 
     private val _bannerInfo = MutableLiveData<CourseBannerInfoModel?>()
@@ -78,7 +78,7 @@ class CourseDateViewModel @Inject constructor(
         _syncLoader.postEvent(true)
 
         viewModelScope.launch(Dispatchers.IO) {
-            courseDates.value?.let { courseDates ->
+            courseDates.value?.peekContent()?.let { courseDates ->
                 courseDates.courseDateBlocks?.forEach { courseDateBlock ->
                     CalendarUtils.addEventsIntoCalendar(
                         context = context,
@@ -118,7 +118,7 @@ class CourseDateViewModel @Inject constructor(
                 override fun onSuccess(result: Result.Success<CourseDates>) {
                     if (result.isSuccessful && result.data != null) {
                         result.data.let {
-                            _courseDates.postValue(it)
+                            _courseDates.postEvent(it)
                         }
                         fetchCourseDatesBannerInfo(courseId, true)
                     } else {
