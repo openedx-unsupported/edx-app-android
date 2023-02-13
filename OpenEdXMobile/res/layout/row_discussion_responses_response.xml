@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                app:bodyStyle="@style/discussion_regular_text" />
+                app:bodyTextAppearance="@style/discussion_regular_text" />
 
             <TextView
                 android:id="@+id/discussion_responses_answer_author_text_view"

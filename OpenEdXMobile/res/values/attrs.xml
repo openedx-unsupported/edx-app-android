@@ -24,7 +24,7 @@
     </declare-styleable>
 
     <declare-styleable name="EdxDiscussionBody">
-        <attr name="bodyStyle" format="reference" />
+        <attr name="bodyTextAppearance" format="reference" />
     </declare-styleable>
 
     <!--  Font attributes for the app  -->

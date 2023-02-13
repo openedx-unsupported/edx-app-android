@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
-            app:bodyStyle="@style/discussion_regular_text" />
+            app:bodyTextAppearance="@style/discussion_regular_text" />
 
         <TextView
             android:id="@+id/discussion_responses_thread_row_visibility_text_view"

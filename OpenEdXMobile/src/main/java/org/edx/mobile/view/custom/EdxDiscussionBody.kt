@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.widget.TextViewCompat
 import org.edx.mobile.R
 import org.edx.mobile.extenstion.renderHtml
 import java.util.regex.Pattern
@@ -15,15 +16,15 @@ class EdxDiscussionBody @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val bodyStyle: Int
+    private val bodyTextAppearance: Int
 
     init {
         context.theme.obtainStyledAttributes(
             attrs, R.styleable.EdxDiscussionBody, 0, 0
         ).apply {
             try {
-                bodyStyle = getResourceId(
-                    R.styleable.EdxDiscussionBody_bodyStyle, 0
+                bodyTextAppearance = getResourceId(
+                    R.styleable.EdxDiscussionBody_bodyTextAppearance, 0
                 )
             } finally {
                 recycle()
@@ -40,7 +41,7 @@ class EdxDiscussionBody @JvmOverloads constructor(
             this.removeAllViews()
             if (isPlainHtml(body)) {
                 this.addView(TextView(context).also {
-                    it.setTextAppearance(bodyStyle)
+                    TextViewCompat.setTextAppearance(it, bodyTextAppearance)
                     it.renderHtml(body)
                 })
             } else {

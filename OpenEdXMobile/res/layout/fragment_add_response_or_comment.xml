@@ -40,7 +40,7 @@
                     android:id="@+id/discussion_render_body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:bodyStyle="@style/discussion_regular_text" />
+                    app:bodyTextAppearance="@style/discussion_regular_text" />
 
             </LinearLayout>
 
