@@ -117,6 +117,7 @@ class AccountFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initTitle()
         initPersonalInfo()
         handleIntentBundle(arguments)
         initVideoQuality()
@@ -177,6 +178,14 @@ class AccountFragment : BaseFragment() {
             Analytics.Events.PROFILE_PAGE_VIEWED,
             Analytics.Screens.PROFILE
         )
+    }
+
+    private fun initTitle() {
+        arguments?.getString(Router.EXTRA_SCREEN_TITLE)?.let {
+            binding.toolbar.collapsingToolbar.title = it
+        } ?: run {
+            binding.toolbar.root.setVisibility(false)
+        }
     }
 
     private fun initRestorePurchasesObservers() {

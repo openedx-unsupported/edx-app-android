@@ -231,6 +231,7 @@
     <dimen name="widget_margin">10dp</dimen>
     <dimen name="widget_margin_double">20dp</dimen>
     <dimen name="widget_margin_x_double">24dp</dimen>
+    <dimen name="widget_margin_xx_double">28dp</dimen>
     <dimen name="widget_margin_quadruple">40dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>

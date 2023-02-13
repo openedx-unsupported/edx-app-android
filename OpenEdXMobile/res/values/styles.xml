@@ -554,8 +554,26 @@
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:textDirection">locale</item>
         <item name="background">@color/primaryLightColor</item>
-        <item name="android:gravity">left</item>
+        <item name="android:gravity">start</item>
         <item name="lineHeight">@dimen/widget_margin_double</item>
+    </style>
+
+    <style name="MainDashboardExpandedToolbarTitle">
+        <item name="android:textColor">@color/primaryBaseColor</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
+        <item name="android:fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textDirection">locale</item>
+        <item name="android:gravity">left</item>
+        <item name="lineHeight">@dimen/widget_margin_xx_double</item>
+    </style>
+
+    <style name="MainDashboardCollapsedToolbarTitle">
+        <item name="android:textColor">@color/primaryBaseColor</item>
+        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="android:fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textDirection">locale</item>
+        <item name="android:gravity">left</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
     </style>
 
     <style name="edX.Widget.PrimaryActionButton" parent="@style/edX.Widget.Button">
