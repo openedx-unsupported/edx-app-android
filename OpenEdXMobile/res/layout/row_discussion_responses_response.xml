@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/edX.Widget.CardView"
     android:layout_width="match_parent"
@@ -25,8 +26,10 @@
 
             <org.edx.mobile.view.custom.EdxDiscussionBody
                 android:id="@+id/discussion_render_body"
-                style="@style/discussion_regular_text"
-                android:layout_marginBottom="5dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                app:bodyTextAppearance="@style/discussion_regular_text" />
 
             <TextView
                 android:id="@+id/discussion_responses_answer_author_text_view"

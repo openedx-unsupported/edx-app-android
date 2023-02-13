@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -37,7 +38,9 @@
 
                 <org.edx.mobile.view.custom.EdxDiscussionBody
                     android:id="@+id/discussion_render_body"
-                    style="@style/discussion_regular_text" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:bodyTextAppearance="@style/discussion_regular_text" />
 
             </LinearLayout>
 
