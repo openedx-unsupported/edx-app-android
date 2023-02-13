@@ -18,6 +18,8 @@ import org.edx.mobile.model.course.CourseDates
 import org.edx.mobile.model.course.ResetCourseDates
 import org.edx.mobile.repository.CourseDatesRepository
 import org.edx.mobile.util.CalendarUtils
+import org.edx.mobile.util.observer.Event
+import org.edx.mobile.util.observer.postEvent
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -26,8 +28,8 @@ class CourseDateViewModel @Inject constructor(
     private val repository: CourseDatesRepository
 ) : ViewModel() {
 
-    private val _syncLoader = MutableLiveData<Boolean>()
-    val syncLoader: LiveData<Boolean>
+    private val _syncLoader = MutableLiveData<Event<Boolean>>()
+    val syncLoader: LiveData<Event<Boolean>>
         get() = _syncLoader
 
     private val _showLoader = MutableLiveData<Boolean>()
@@ -38,8 +40,8 @@ class CourseDateViewModel @Inject constructor(
     val swipeRefresh: LiveData<Boolean>
         get() = _swipeRefresh
 
-    private val _courseDates = MutableLiveData<CourseDates>()
-    val courseDates: LiveData<CourseDates>
+    private val _courseDates = MutableLiveData<Event<CourseDates>>()
+    val courseDates: LiveData<Event<CourseDates>>
         get() = _courseDates
 
     private val _bannerInfo = MutableLiveData<CourseBannerInfoModel?>()
@@ -73,10 +75,10 @@ class CourseDateViewModel @Inject constructor(
         resetSyncingCalendarTime()
         val syncingCalendarStartTime: Long = Calendar.getInstance().timeInMillis
         areEventsUpdated = updatedEvent
-        _syncLoader.value = true
+        _syncLoader.postEvent(true)
 
         viewModelScope.launch(Dispatchers.IO) {
-            courseDates.value?.let { courseDates ->
+            courseDates.value?.peekContent()?.let { courseDates ->
                 courseDates.courseDateBlocks?.forEach { courseDateBlock ->
                     CalendarUtils.addEventsIntoCalendar(
                         context = context,
@@ -96,7 +98,7 @@ class CourseDateViewModel @Inject constructor(
                     SystemClock.sleep(1000 - syncingCalendarTime)
                 }
             } ?: run { syncingCalendarTime = 0 }
-            _syncLoader.postValue(false)
+            _syncLoader.postEvent(false)
         }
     }
 
@@ -116,7 +118,7 @@ class CourseDateViewModel @Inject constructor(
                 override fun onSuccess(result: Result.Success<CourseDates>) {
                     if (result.isSuccessful && result.data != null) {
                         result.data.let {
-                            _courseDates.postValue(it)
+                            _courseDates.postEvent(it)
                         }
                         fetchCourseDatesBannerInfo(courseId, true)
                     } else {

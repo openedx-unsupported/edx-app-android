@@ -238,7 +238,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private void initCourseDateObserver() {
         courseDateViewModel = new ViewModelProvider(this).get(CourseDateViewModel.class);
 
-        courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), showLoader -> {
+        courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), new EventObserver<>(showLoader -> {
             if (showLoader) {
                 loaderDialog.setCancelable(false);
                 loaderDialog.showNow(getChildFragmentManager(), null);
@@ -247,9 +247,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 showCalendarUpdatedSnackbar();
                 trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
             }
-        });
+            return null;
+        }));
 
-        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), courseDates -> {
+        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), new EventObserver<>(courseDates -> {
             if (courseDates.getCourseDateBlocks() != null) {
                 courseDates.organiseCourseDates();
                 long outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
@@ -258,7 +259,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     showCalendarOutOfDateDialog(outdatedCalenderId);
                 }
             }
-        });
+            return null;
+        }));
 
         courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initDatesBanner);
 
@@ -489,6 +491,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 super.onFailure(error);
+                if (!isAdded()) {
+                    return;
+                }
+
                 FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
                         .getRetainedInstance(getChildFragmentManager());
                 if (error instanceof CourseContentNotValidException) {

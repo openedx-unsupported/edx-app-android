@@ -32,7 +32,6 @@ public class DateUtil {
         final ParsePosition parsePosition = new ParsePosition(0);
         try {
             parsedate = ISO8601Utils.parse(date, parsePosition);
-            logger.debug("Parsed Data" + parsedate);
             return parsedate;
 
         } catch (ParseException e) {
