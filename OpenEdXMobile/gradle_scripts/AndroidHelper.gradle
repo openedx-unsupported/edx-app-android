@@ -118,6 +118,8 @@ class AndroidHelper {
                 "client_id" "$clientId"
                 "authorization_user_agent" "DEFAULT"
                 "redirect_uri" "msauth://" + project.APPLICATION_ID + "/" + URLEncoder.encode(signatureHash, "UTF-8")
+                "broker_redirect_uri_registered" false
+                "account_mode" "MULTIPLE"
                 authorities([{
                                  "type" "AAD"
                                  audience {

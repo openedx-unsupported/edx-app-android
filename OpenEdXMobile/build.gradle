@@ -148,7 +148,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-cast-framework:21.2.0'
 
     implementation 'com.facebook.android:facebook-login:15.2.0'
-    implementation 'com.microsoft.identity.client:msal:0.3+'
+    implementation 'com.microsoft.identity.client:msal:4.2.0'
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation "org.greenrobot:eventbus:3.3.1"
