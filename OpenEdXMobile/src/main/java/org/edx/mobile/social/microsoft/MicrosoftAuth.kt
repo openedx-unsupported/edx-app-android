@@ -68,6 +68,6 @@ class MicrosoftAuth(activity: Activity?) : ISocialImpl(activity) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {}
 
     companion object {
-        private val SCOPES = mutableListOf("User.Read")
+        private val SCOPES = listOf("User.Read")
     }
 }
