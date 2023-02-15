@@ -2,7 +2,6 @@ package org.edx.mobile.view.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -10,32 +9,16 @@ import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.RowCourseListBinding
 import org.edx.mobile.extenstion.setVisibility
-import org.edx.mobile.model.api.CourseEntry
+import org.edx.mobile.model.api.EnrolledCoursesComparator
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.util.images.CourseCardUtils
 import org.edx.mobile.util.images.ImageUtils
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation
 
-private val itemDiffCallback = object : DiffUtil.ItemCallback<EnrolledCoursesResponse>() {
-    override fun areItemsTheSame(
-        oldItem: EnrolledCoursesResponse,
-        newItem: EnrolledCoursesResponse,
-    ): Boolean {
-        return oldItem.courseId == newItem.courseId
-    }
-
-    override fun areContentsTheSame(
-        oldItem: EnrolledCoursesResponse,
-        newItem: EnrolledCoursesResponse,
-    ): Boolean {
-        return oldItem == newItem
-    }
-}
-
 abstract class MyCoursesListAdapter(
     private val environment: IEdxEnvironment
 ) : ListAdapter<EnrolledCoursesResponse, MyCoursesListAdapter.CourseCardViewHolder>
-    (itemDiffCallback) {
+    (EnrolledCoursesComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseCardViewHolder {
         return CourseCardViewHolder(
@@ -50,40 +33,43 @@ abstract class MyCoursesListAdapter(
     override fun onBindViewHolder(holder: CourseCardViewHolder, position: Int) {
         val courseData = getItem(position)
         holder.bind(courseData)
-        holder.binding.apply {
-            root.setOnClickListener {
-                onItemClicked(courseData)
-            }
-            courseCard.newCourseContentLayout.setOnClickListener {
-                onAnnouncementClicked(courseData)
-            }
-            courseCard.llGradedContentLayout.setOnClickListener {
-                onValuePropClicked(courseData)
-            }
-        }
     }
-
-    abstract fun onItemClicked(model: EnrolledCoursesResponse)
-    abstract fun onAnnouncementClicked(model: EnrolledCoursesResponse)
-    abstract fun onValuePropClicked(model: EnrolledCoursesResponse)
 
     inner class CourseCardViewHolder(
         val binding: RowCourseListBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(courseData: EnrolledCoursesResponse) {
+            initCourseCardContent(courseData)
+            initValuePropModel(courseData)
+        }
+
+        private fun initCourseCardContent(courseData: EnrolledCoursesResponse) {
             binding.courseCard.courseName.text = courseData.course.name
             courseData.course.getCourse_image(environment.config.apiHostURL)?.let {
                 setCourseImage(it)
             }
-            binding.courseCard.llGradedContentLayout.setVisibility(
-                courseData.isUpgradeable && environment.appFeaturesPrefs.isValuePropEnabled()
-            )
             if (courseData.course.hasUpdates()) {
-                setHasUpdates(courseData.course)
+                setHasUpdates(courseData)
             } else {
                 CourseCardUtils.getFormattedDate(binding.root.context, courseData)?.let {
                     setDetails(it)
+                }
+            }
+            binding.root.setOnClickListener {
+                onItemClicked(courseData)
+            }
+        }
+
+        private fun initValuePropModel(courseData: EnrolledCoursesResponse) {
+            binding.courseCard.llGradedContentLayout.apply {
+                if (courseData.isUpgradeable && environment.appFeaturesPrefs.isValuePropEnabled()) {
+                    setVisibility(true)
+                    setOnClickListener {
+                        onValuePropClicked(courseData)
+                    }
+                } else {
+                    setVisibility(false)
                 }
             }
         }
@@ -99,10 +85,13 @@ abstract class MyCoursesListAdapter(
             }
         }
 
-        private fun setHasUpdates(courseData: CourseEntry) {
+        private fun setHasUpdates(courseData: EnrolledCoursesResponse) {
             binding.courseCard.courseDetails.setVisibility(false)
             binding.courseCard.newCourseContentLayout.setVisibility(true)
-            binding.courseCard.newCourseContentLayout.tag = courseData
+            binding.courseCard.newCourseContentLayout.tag = courseData.course
+            binding.courseCard.newCourseContentLayout.setOnClickListener {
+                onAnnouncementClicked(courseData)
+            }
         }
 
         private fun setDetails(date: String) {
@@ -111,4 +100,8 @@ abstract class MyCoursesListAdapter(
             binding.courseCard.courseDetails.text = date
         }
     }
+
+    abstract fun onItemClicked(model: EnrolledCoursesResponse)
+    abstract fun onAnnouncementClicked(model: EnrolledCoursesResponse)
+    abstract fun onValuePropClicked(model: EnrolledCoursesResponse)
 }

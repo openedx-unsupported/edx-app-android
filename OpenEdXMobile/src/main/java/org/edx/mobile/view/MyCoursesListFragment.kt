@@ -38,7 +38,7 @@ import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.observer.EventObserver
-import org.edx.mobile.view.adapters.BaseListAdapter.MIN_CLICK_INTERVAL
+import org.edx.mobile.view.adapters.BaseListAdapter
 import org.edx.mobile.view.adapters.MyCoursesListAdapter
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
@@ -97,7 +97,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             override fun onValuePropClicked(model: EnrolledCoursesResponse) {
                 //This time is checked to avoid taps in quick succession
                 val currentTime = SystemClock.elapsedRealtime()
-                if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
+                if (currentTime - lastClickTime > BaseListAdapter.MIN_CLICK_INTERVAL) {
                     lastClickTime = currentTime
                     CourseModalDialogFragment.newInstance(
                         Analytics.Screens.COURSE_ENROLLMENT,
