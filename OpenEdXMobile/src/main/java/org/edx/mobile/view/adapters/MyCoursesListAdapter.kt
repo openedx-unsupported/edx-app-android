@@ -31,8 +31,7 @@ abstract class MyCoursesListAdapter(
     }
 
     override fun onBindViewHolder(holder: CourseCardViewHolder, position: Int) {
-        val courseData = getItem(position)
-        holder.bind(courseData)
+        holder.bind(getItem(position))
     }
 
     inner class CourseCardViewHolder(

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnScrollChangedListener
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.authentication.LoginAPI
@@ -129,9 +131,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         }
         UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
 
-        // Add empty view to cause divider to render at the top of the list.
         binding.myCourseList.adapter = adapter
-
+        binding.myCourseList.addItemDecoration(
+            DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+                setDrawable(
+                    UiUtils.getDrawable(
+                        requireContext(),
+                        R.drawable.my_course_list_recycler_view_divider
+                    )
+                )
+            }
+        )
         initCourseObservers()
         courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.CACHE)
 
