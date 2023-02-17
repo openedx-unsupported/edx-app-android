@@ -165,6 +165,11 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
             0
     }
 
+    fun closeTimer() {
+        dismissTimer?.cancel()
+        dismiss()
+    }
+
     companion object {
         const val TAG = "FULLSCREEN_LOADER"
         private const val LOADER_START_TIME = "LOADER_START_TIME"

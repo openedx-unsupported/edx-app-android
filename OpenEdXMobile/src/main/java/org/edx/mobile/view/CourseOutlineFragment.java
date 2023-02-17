@@ -88,7 +88,6 @@ import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
-import org.edx.mobile.viewModel.InAppPurchasesViewModel;
 import org.edx.mobile.viewModel.VideoViewModel;
 import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
@@ -145,7 +144,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     InAppPurchasesDialog iapDialogs;
 
     private CourseDateViewModel courseDateViewModel;
-    private InAppPurchasesViewModel iapViewModel;
     private VideoViewModel videoViewModel;
 
     private View loadingIndicator;
@@ -215,7 +213,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         if (isOnCourseOutline) {
             initCourseDateObserver();
-            initInAppPurchaseSetup();
         }
 
         fetchCourseComponent();
@@ -313,12 +310,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         });
     }
 
-    private void initInAppPurchaseSetup() {
-        if (courseData.isAuditMode() && !isVideoMode) {
-            initInAppPurchaseObserver();
-        }
-    }
-
     private void showFullscreenLoader(@NonNull IAPFlowData iapFlowData) {
         // To proceed with the same instance of dialog fragment in case of orientation change
         FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
@@ -327,28 +318,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             fullscreenLoader = FullscreenLoaderDialogFragment.newInstance(iapFlowData);
         }
         fullscreenLoader.show(getChildFragmentManager(), FullscreenLoaderDialogFragment.TAG);
-    }
-
-    private void initInAppPurchaseObserver() {
-        iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
-
-        iapViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new EventObserver<>(errorMessage -> {
-            if (errorMessage.getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
-                iapDialogs.handleIAPException(
-                        CourseOutlineFragment.this,
-                        errorMessage,
-                        (dialogInterface, i) -> getCourseComponentFromServer(false, true),
-                        (dialogInterface, i) -> {
-                            iapViewModel.getIapFlowData().clear();
-                            FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
-                            if (fullScreenLoader != null) {
-                                fullScreenLoader.dismiss();
-                            }
-                        }
-                );
-            }
-            return null;
-        }));
     }
 
     private void showCalendarOutOfDateDialog(Long calendarId) {
@@ -486,24 +455,14 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
                 loadData(validateCourseComponent(courseComponent));
                 swipeContainer.setRefreshing(false);
-                FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                        .getRetainedInstance(getChildFragmentManager());
-                if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    new SnackbarErrorNotification(listView).showError(R.string.purchase_success_message);
-                    fullscreenLoader.closeLoader(null);
-                }
             }
 
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 super.onFailure(error);
-                FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                        .getRetainedInstance(getChildFragmentManager());
                 if (error instanceof CourseContentNotValidException) {
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
-                } else if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
                 }
                 swipeContainer.setRefreshing(false);
                 // Remove bulk video download if the course has NO downloadable videos

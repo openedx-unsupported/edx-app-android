@@ -13,16 +13,19 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val layout: LayoutCourseAccessErrorBinding =
+    private val layout: LayoutCourseAccessErrorBinding by lazy {
         LayoutCourseAccessErrorBinding.inflate(LayoutInflater.from(context))
+    }
 
     init {
         this.addView(layout.root)
-        attrs?.let {
-            val typedArray =
-                context.theme.obtainStyledAttributes(it, R.styleable.AccessErrorState, 0, 0)
-            val state = State.values()[typedArray.getInt(R.styleable.AccessErrorState_state, 0)]
-            setState(state)
+        context.theme.obtainStyledAttributes(attrs, R.styleable.AccessErrorState, 0, 0).apply {
+            try {
+                val state = State.values()[getInt(R.styleable.AccessErrorState_state, 0)]
+                setState(state)
+            } finally {
+                recycle()
+            }
         }
     }
 
@@ -41,12 +44,16 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                 layout.heading.text = context.getString(R.string.course_access_expired)
                 layout.description.text = context.getString(R.string.message_to_upgrade_course)
                 layout.layoutUpgradeFeatures.root.setVisibility(true)
-                layout.primaryButton.shimmerViewContainer.postDelayed({
-                    layout.primaryButton.btnUpgrade.isEnabled = false
-                    layout.primaryButton.shimmerViewContainer.startShimmer()
-                }, 250)
+                layout.primaryButton.btnUpgrade.isEnabled = false
+                layout.primaryButton.shimmerViewContainer.startShimmer()
                 layout.secondaryButton.root.setVisibility(true)
                 layout.secondaryButton.root.text = context.getText(R.string.label_find_a_course)
+            }
+            else -> {
+                layout.heading.text = context.getString(R.string.course_access_expired)
+                layout.layoutUpgradeFeatures.root.setVisibility(false)
+                layout.primaryButton.shimmerViewContainer.hideShimmer()
+                layout.primaryButton.btnUpgrade.text = context.getText(R.string.label_find_a_course)
             }
         }
     }
@@ -75,6 +82,8 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
     }
 
     enum class State {
-        NONE, AUDIT_ACCESS_EXPIRED, IS_UPGRADEABLE
+        NONE, // User don't have the course access of un-known error
+        AUDIT_ACCESS_EXPIRED, // User's audit access expired, can't upgrade the course for access.
+        IS_UPGRADEABLE // User's audit access expired, can upgrade the course for access.
     }
 }

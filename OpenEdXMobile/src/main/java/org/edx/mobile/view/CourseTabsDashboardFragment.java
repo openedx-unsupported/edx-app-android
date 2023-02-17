@@ -292,6 +292,11 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
+        // TODO: block of code can be removed once `fetchCourseById` retrofit call replaced with MVVM approach.
+        FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
+        if (fullscreenLoader != null) {
+            fullscreenLoader.closeTimer();
+        }
     }
 
     /**

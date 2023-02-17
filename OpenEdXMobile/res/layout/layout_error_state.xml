@@ -26,7 +26,7 @@
             android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:error_state="LOAD_ERROR" />
+            app:error_state="load_error" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

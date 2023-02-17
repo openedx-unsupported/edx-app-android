@@ -14,8 +14,8 @@ import org.edx.mobile.extenstion.setImageDrawable
 
 class EdxErrorState @JvmOverloads constructor(
     context: Context,
-    private val attrs: AttributeSet? = null,
-    private val defStyleAttr: Int = 0
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val layout: EdxErrorStateBinding =
@@ -23,10 +23,13 @@ class EdxErrorState @JvmOverloads constructor(
 
     init {
         this.addView(layout.root)
-        attrs?.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.ErrorState)
-            val state = State.values()[typedArray.getInt(R.styleable.ErrorState_error_state, 0)]
-            setState(state)
+        context.theme.obtainStyledAttributes(attrs, R.styleable.ErrorState, 0, 0).apply {
+            try {
+                val state = State.values()[getInt(R.styleable.ErrorState_error_state, 0)]
+                setState(state)
+            } finally {
+                recycle()
+            }
         }
     }
 
