@@ -33,11 +33,11 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
+import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
-import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.adapters.MyCoursesAdapter
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
