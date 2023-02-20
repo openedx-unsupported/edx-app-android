@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnScrollChangedListener
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.authentication.LoginAPI
@@ -40,7 +42,8 @@ import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.observer.EventObserver
-import org.edx.mobile.view.adapters.MyCoursesAdapter
+import org.edx.mobile.view.adapters.BaseListAdapter
+import org.edx.mobile.view.adapters.MyCoursesListAdapter
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
 import org.edx.mobile.viewModel.CourseViewModel
@@ -54,7 +57,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
-    private lateinit var adapter: MyCoursesAdapter
+    private lateinit var adapter: MyCoursesListAdapter
     private lateinit var binding: FragmentMyCoursesListBinding
 
     private val courseViewModel: CourseViewModel by viewModels()
@@ -78,23 +81,27 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = object : MyCoursesAdapter(activity, environment) {
+        adapter = object : MyCoursesListAdapter(environment) {
             override fun onItemClicked(model: EnrolledCoursesResponse) {
                 activity?.let { activity ->
-                    environment.router.showCourseDashboardTabs(activity, model, false)
+                    environment.router.showCourseDashboardTabs(activity, model)
                 }
             }
 
             override fun onAnnouncementClicked(model: EnrolledCoursesResponse) {
                 activity?.let { activity ->
-                    environment.router.showCourseDashboardTabs(activity, model, true)
+                    environment.router.showCourseDashboardTabs(
+                        activity,
+                        model,
+                        Screen.COURSE_ANNOUNCEMENT
+                    )
                 }
             }
 
             override fun onValuePropClicked(model: EnrolledCoursesResponse) {
                 //This time is checked to avoid taps in quick succession
                 val currentTime = SystemClock.elapsedRealtime()
-                if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
+                if (currentTime - lastClickTime > BaseListAdapter.MIN_CLICK_INTERVAL) {
                     lastClickTime = currentTime
                     CourseModalDialogFragment.newInstance(
                         Analytics.Screens.COURSE_ENROLLMENT,
@@ -126,11 +133,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         }
         UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
 
-        // Add empty view to cause divider to render at the top of the list.
-        binding.myCourseList.addHeaderView(View(context), null, false)
         binding.myCourseList.adapter = adapter
-        binding.myCourseList.onItemClickListener = adapter
-
+        binding.myCourseList.addItemDecoration(
+            DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+                setDrawable(
+                    UiUtils.getDrawable(
+                        requireContext(),
+                        R.drawable.my_course_list_recycler_view_divider
+                    )
+                )
+            }
+        )
         initCourseObservers()
         courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.PERSISTABLE_CACHE)
 
@@ -344,18 +357,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private fun populateCourseData(
         data: List<EnrolledCoursesResponse>
     ) {
-        adapter.setItems(data)
+        adapter.submitList(data)
         adapter.notifyDataSetChanged()
 
-        if (adapter.isEmpty && environment.config.discoveryConfig.isDiscoveryEnabled) {
+        if (adapter.itemCount == 0 && environment.config.discoveryConfig.isDiscoveryEnabled) {
             binding.stateLayout.state.setState(EdxErrorState.State.EMPTY, Screen.MY_COURSES)
             binding.stateLayout.state.setActionListener {
-                environment.analyticsRegistry?.trackUserFindsCourses(adapter.count)
+                environment.analyticsRegistry?.trackUserFindsCourses(adapter.itemCount)
                 EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
             }
             binding.stateLayout.root.setVisibility(true)
             binding.myCourseList.setVisibility(false)
-        } else if (adapter.isEmpty && !environment.config.discoveryConfig.isDiscoveryEnabled) {
+        } else if (adapter.itemCount == 0 && !environment.config.discoveryConfig.isDiscoveryEnabled) {
             errorNotification.showError(
                 R.string.no_courses_to_display,
                 R.drawable.ic_error, 0, null

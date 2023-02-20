@@ -82,7 +82,7 @@ class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListen
             courseId: String?,
             componentId: String?,
             topicId: String?,
-            threadId: String?, announcements: Boolean,
+            threadId: String?,
             @ScreenDef screenName: String?
         ): Intent {
             return Intent(activity, CourseTabsDashboardActivity::class.java).apply {
@@ -91,7 +91,6 @@ class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListen
                 putExtra(Router.EXTRA_COURSE_COMPONENT_ID, componentId)
                 putExtra(Router.EXTRA_DISCUSSION_TOPIC_ID, topicId)
                 putExtra(Router.EXTRA_DISCUSSION_THREAD_ID, threadId)
-                putExtra(Router.EXTRA_ANNOUNCEMENTS, announcements)
                 putExtra(Router.EXTRA_SCREEN_NAME, screenName)
                 addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             }
