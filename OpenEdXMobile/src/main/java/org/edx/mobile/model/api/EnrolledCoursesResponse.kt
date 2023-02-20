@@ -1,5 +1,6 @@
 package org.edx.mobile.model.api
 
+import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName
 import org.edx.mobile.interfaces.SectionItemInterface
 import org.edx.mobile.model.course.EnrollmentMode
@@ -74,5 +75,31 @@ data class EnrolledCoursesResponse(
 
     override fun isDownload(): Boolean {
         return false
+    }
+}
+
+/**
+ * The callback for calculating the difference between two non-null items in a list.
+ */
+object EnrolledCoursesComparator : DiffUtil.ItemCallback<EnrolledCoursesResponse>() {
+    /**
+     * To check whether two objects represent the same item
+     */
+    override fun areItemsTheSame(
+        oldItem: EnrolledCoursesResponse,
+        newItem: EnrolledCoursesResponse,
+    ): Boolean {
+        return oldItem.courseId == newItem.courseId
+    }
+
+    /**
+     * To check whether two items have the same data. With a RecyclerView.Adapter, we should return
+     * whether the items' visual representations are the same.
+     */
+    override fun areContentsTheSame(
+        oldItem: EnrolledCoursesResponse,
+        newItem: EnrolledCoursesResponse,
+    ): Boolean {
+        return oldItem == newItem
     }
 }
