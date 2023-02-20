@@ -2,7 +2,6 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -12,7 +11,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.util.images.ImageUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
@@ -24,7 +22,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     private final AppCompatImageView courseImage;
     private final TextView courseTitle;
     private final TextView courseDetails;
-    private final LinearLayout propContainer;
     private final View newCourseContent;
 
     public CourseCardViewHolder(View convertView) {
@@ -36,8 +33,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
                 .findViewById(R.id.course_image);
         this.newCourseContent = convertView
                 .findViewById(R.id.new_course_content_layout);
-        this.propContainer = (LinearLayout) convertView
-                .findViewById(R.id.ll_graded_content_layout);
     }
 
     public void setCourseTitle(@NonNull String title) {
@@ -55,29 +50,9 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
         }
     }
 
-    public void setHasUpdates(@NonNull CourseEntry courseData, @NonNull View.OnClickListener listener) {
-        courseDetails.setVisibility(View.GONE);
-        newCourseContent.setVisibility(View.VISIBLE);
-        newCourseContent.setTag(courseData);
-        newCourseContent.setOnClickListener(listener);
-    }
-
     public void setDetails(@NonNull String date) {
         newCourseContent.setVisibility(View.GONE);
         courseDetails.setVisibility(View.VISIBLE);
         courseDetails.setText(date);
-    }
-
-    public void setHasUpgradeOption(
-            boolean isUpgradeable,
-            boolean isValuePropEnabled,
-            View.OnClickListener onValuePropClick
-    ) {
-        if (isUpgradeable && isValuePropEnabled) {
-            propContainer.setVisibility(View.VISIBLE);
-            propContainer.setOnClickListener(onValuePropClick);
-        } else {
-            propContainer.setVisibility(View.GONE);
-        }
     }
 }

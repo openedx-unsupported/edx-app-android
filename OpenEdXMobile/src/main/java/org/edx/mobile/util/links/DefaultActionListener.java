@@ -89,7 +89,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
                                 new TaskProgressCallback.ProgressViewController(progressWheel)) {
                             @Override
                             protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
-                                environment.getRouter().showCourseDashboardTabs(activity, course, false);
+                                environment.getRouter().showCourseDashboardTabs(activity, course);
                             }
 
                             @Override
@@ -206,7 +206,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
                     protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                         enrollCallback.onResponse(course);
                         environment.getRouter().showMainDashboard(activity);
-                        environment.getRouter().showCourseDashboardTabs(activity, course, false);
+                        environment.getRouter().showCourseDashboardTabs(activity, course);
                     }
 
                     @Override
