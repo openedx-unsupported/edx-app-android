@@ -16,7 +16,7 @@ public class DeepLinkManager {
     protected static final Logger logger = new Logger(DeepLinkManager.class);
 
     public static void onDeepLinkReceived(@NonNull Activity activity, @NonNull final DeepLink deepLink) {
-        logger.debug("DeepLinkManager received DeepLink with data:\n" + deepLink.toString());
+        logger.debug("DeepLinkManager received DeepLink with data:\n" + deepLink);
         // Pass the Config class instance as parameter while manually creating the Router object instated of
         // using injection technique. Otherwise Router unable to initiate the config object in it.
         final Router router = new Router(new Config(activity));
@@ -52,7 +52,7 @@ public class DeepLinkManager {
             case Screen.DISCUSSION_TOPIC:
             case Screen.COURSE_COMPONENT: {
                 router.showCourseDashboardTabs(activity, null, deepLink.getCourseId(), deepLink.getComponentId(),
-                        deepLink.getTopicId(), deepLink.getThreadId(), false, screenName);
+                        deepLink.getTopicId(), deepLink.getThreadId(), screenName);
                 break;
             }
             case Screen.PROGRAM:
