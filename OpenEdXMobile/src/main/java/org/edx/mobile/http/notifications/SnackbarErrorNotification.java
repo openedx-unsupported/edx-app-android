@@ -116,7 +116,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
      * @param errorResId The resource ID of the error message.
      */
     public void showError(int errorResId) {
-        showError(errorResId, 0, 0, Snackbar.LENGTH_SHORT, null);
+        showError(errorResId, 0, 0, Snackbar.LENGTH_LONG, null);
     }
 
     /**
