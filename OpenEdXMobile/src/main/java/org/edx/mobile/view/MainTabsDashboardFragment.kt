@@ -80,50 +80,6 @@ class MainTabsDashboardFragment : BaseFragment() {
         }
     }
 
-    /**
-     * To handle the tab-selection of the ViewPager based on screen name [Screen] which may be
-     * sent through a deep link.
-     *
-     * @param bundle arguments
-     */
-    private fun handleTabSelection(bundle: Bundle?) {
-        bundle?.apply {
-            @ScreenDef val screenName = getString(Router.EXTRA_SCREEN_NAME)
-            if (screenName != null && !getBoolean(Router.EXTRA_SCREEN_SELECTED, false)) {
-                val fragmentItems = fragmentItems
-
-                fragmentItems.forEachIndexed { index, item ->
-                    if (shouldSelectFragment(item, screenName)) {
-                        binding.viewPager.currentItem = index
-                        return@forEachIndexed
-                    }
-                }
-                // Setting `EXTRA_SCREEN_SELECTED` to true, so that upon recreation of the fragment
-                // the tab defined in the deep link is not auto-selected again.
-                putBoolean(Router.EXTRA_SCREEN_SELECTED, true)
-            }
-        }
-    }
-
-    /**
-     * Determines if a tab fragment needs to be selected based on screen name.
-     *
-     * @param item       [FragmentItemModel] assigned to a tab.
-     * @param screenName Screen name param coming from [org.edx.mobile.deeplink.DeepLinkManager]
-     * @return           True if the specified tab needs to be selected, False otherwise
-     */
-    private fun shouldSelectFragment(
-        item: FragmentItemModel,
-        @ScreenDef screenName: String
-    ) = when {
-        screenName == Screen.PROGRAM && item.iconResId == R.drawable.ic_menu_book -> true
-        screenName == Screen.PROFILE && item.iconResId == R.drawable.ic_person -> true
-        screenName == Screen.DISCOVERY && item.iconResId == R.drawable.ic_search -> true
-        screenName == Screen.DISCOVERY_COURSE_DETAIL && item.iconResId == R.drawable.ic_search -> true
-        screenName == Screen.DISCOVERY_PROGRAM_DETAIL && item.iconResId == R.drawable.ic_search -> true
-        else -> false
-    }
-
     private fun initializeTabs(arguments: Bundle?) {
         val tabLayout = binding.tabs
 
@@ -168,19 +124,32 @@ class MainTabsDashboardFragment : BaseFragment() {
         tabLayout.addOnTabSelectedListener(tabChangeListener)
     }
 
+    private fun createTab(tab: Tab, fragmentItem: FragmentItemModel) {
+        val iconDrawable = getDrawable(requireContext(), fragmentItem.iconResId)
+
+        val tabItemBinding = TabItemBinding.inflate(layoutInflater)
+        tabItemBinding.title.text = fragmentItem.title
+        tabItemBinding.icon.setImageDrawable(iconDrawable)
+
+        tab.customView = tabItemBinding.root
+        tab.contentDescription = fragmentItem.title
+    }
+
     private fun getTabItems(): List<FragmentItemModel> {
         val items = mutableListOf<FragmentItemModel>()
 
+        // Add Discover screen
         if (environment.config.discoveryConfig.isDiscoveryEnabled) {
             items.add(FragmentItemModel(
                 MainDiscoveryFragment::class.java,
                 resources.getString(R.string.label_discover),
                 R.drawable.ic_search, arguments
             ) {
-                environment.analyticsRegistry
-                    .trackScreenView(Analytics.Screens.FIND_COURSES)
+                environment.analyticsRegistry.trackScreenView(Analytics.Screens.FIND_COURSES)
             })
         }
+
+        // Add Learn screen
         items.add(FragmentItemModel(
             LearnFragment::class.java,
             resources.getString(R.string.label_learn),
@@ -188,6 +157,8 @@ class MainTabsDashboardFragment : BaseFragment() {
         ) {
             EventBus.getDefault().post(FragmentSelectionEvent())
         })
+
+        // Add Prodile screen
         items.add(FragmentItemModel(
             AccountFragment::class.java,
             resources.getString(R.string.profile_title),
@@ -202,15 +173,48 @@ class MainTabsDashboardFragment : BaseFragment() {
         return items
     }
 
-    private fun createTab(tab: Tab, fragmentItem: FragmentItemModel) {
-        val iconDrawable = getDrawable(requireContext(), fragmentItem.iconResId)
+    /**
+     * To handle the tab-selection of the ViewPager based on screen name [Screen] which may be
+     * sent through a deep link.
+     *
+     * @param bundle arguments
+     */
+    private fun handleTabSelection(bundle: Bundle?) {
+        bundle?.apply {
+            @ScreenDef val screenName = getString(Router.EXTRA_SCREEN_NAME)
+            if (screenName != null && !getBoolean(Router.EXTRA_SCREEN_SELECTED, false)) {
+                val fragmentItems = fragmentItems
 
-        val tabItemBinding = TabItemBinding.inflate(layoutInflater)
-        tabItemBinding.title.text = fragmentItem.title
-        tabItemBinding.icon.setImageDrawable(iconDrawable)
+                fragmentItems.forEachIndexed { index, item ->
+                    if (shouldSelectFragment(item, screenName)) {
+                        binding.viewPager.currentItem = index
+                        return@forEachIndexed
+                    }
+                }
+                // Setting `EXTRA_SCREEN_SELECTED` to true, so that upon recreation of the fragment
+                // the tab defined in the deep link is not auto-selected again.
+                putBoolean(Router.EXTRA_SCREEN_SELECTED, true)
+            }
+        }
+    }
 
-        tab.customView = tabItemBinding.root
-        tab.contentDescription = fragmentItem.title
+    /**
+     * Determines if a tab fragment needs to be selected based on screen name.
+     *
+     * @param item       [FragmentItemModel] assigned to a tab.
+     * @param screenName Screen name param coming from [org.edx.mobile.deeplink.DeepLinkManager]
+     * @return           True if the specified tab needs to be selected, False otherwise
+     */
+    private fun shouldSelectFragment(
+        item: FragmentItemModel,
+        @ScreenDef screenName: String
+    ) = when {
+        screenName == Screen.PROGRAM && item.iconResId == R.drawable.ic_menu_book -> true
+        screenName == Screen.PROFILE && item.iconResId == R.drawable.ic_person -> true
+        screenName == Screen.DISCOVERY && item.iconResId == R.drawable.ic_search -> true
+        screenName == Screen.DISCOVERY_COURSE_DETAIL && item.iconResId == R.drawable.ic_search -> true
+        screenName == Screen.DISCOVERY_PROGRAM_DETAIL && item.iconResId == R.drawable.ic_search -> true
+        else -> false
     }
 
     @Subscribe
