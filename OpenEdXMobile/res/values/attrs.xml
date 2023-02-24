@@ -19,7 +19,6 @@
         <attr name="state" format="enum">
             <enum name="audit_access_expired" value="0" />
             <enum name="is_upgradeable" value="1" />
-            <enum name="none" value="2" />
         </attr>
     </declare-styleable>
 

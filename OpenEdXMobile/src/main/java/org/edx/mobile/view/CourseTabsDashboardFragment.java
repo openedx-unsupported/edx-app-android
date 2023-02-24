@@ -179,15 +179,17 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         binding.toolbar.tabs.setVisibility(View.GONE);
         setupToolbar(true);
 
-        iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
         boolean isPurchaseEnabled = environment.getAppFeaturesPrefs().isIAPEnabled(environment.getLoginPrefs().isOddUserId());
         if (isPurchaseEnabled) {
+            iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
             initIAPObservers();
             // Shimmer container taking sometime to get ready and perform the animation, so
             // by adding the some delay fixed that issue for lower-end devices, and for the
             // proper animation.
             binding.accessError.postDelayed(
                     () -> iapViewModel.initializeProductPrice(courseData.getCourseSku()), 1500);
+        } else {
+            binding.accessError.hidePrimaryButton();
         }
         binding.accessError.setSecondaryButtonListener(onFindCourseClick());
     }
@@ -443,8 +445,8 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                             .getRetainedInstance(getChildFragmentManager());
                     if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
                         new SnackbarErrorNotification(binding.getRoot()).showError(R.string.purchase_success_message);
-                        // Add close listener cuz on fullscreenLoader released by the parent fragment
-                        // while restarting and app leads to crash.
+                        // Passing the listener to fullscreenLoader() is necessary to prevent the app
+                        // from crashing when the parent fragment releases the dialog during a restart.
                         fullscreenLoader.closeLoader(() -> getActivity().runOnUiThread(() ->
                                 UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this))
                         );

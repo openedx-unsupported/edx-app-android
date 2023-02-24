@@ -18,8 +18,9 @@ class EdxErrorState @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val layout: EdxErrorStateBinding =
+    private val layout: EdxErrorStateBinding by lazy {
         EdxErrorStateBinding.inflate(LayoutInflater.from(context))
+    }
 
     init {
         this.addView(layout.root)

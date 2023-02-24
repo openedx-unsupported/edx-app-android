@@ -589,8 +589,6 @@
     <style name="edX.Widget.SecondaryBorderedButton" parent="edX.Widget.PrimaryActionButton">
         <item name="android:textColor">@color/secondaryBaseColor</item>
         <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
-        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
     </style>
 
 </resources>

@@ -45,15 +45,9 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                 layout.description.text = context.getString(R.string.message_to_upgrade_course)
                 layout.layoutUpgradeFeatures.root.setVisibility(true)
                 layout.primaryButton.btnUpgrade.isEnabled = false
-                layout.primaryButton.shimmerViewContainer.startShimmer()
+                layout.primaryButton.shimmerViewContainer.showShimmer(true)
                 layout.secondaryButton.root.setVisibility(true)
                 layout.secondaryButton.root.text = context.getText(R.string.label_find_a_course)
-            }
-            else -> {
-                layout.heading.text = context.getString(R.string.course_access_expired)
-                layout.layoutUpgradeFeatures.root.setVisibility(false)
-                layout.primaryButton.shimmerViewContainer.hideShimmer()
-                layout.primaryButton.btnUpgrade.text = context.getText(R.string.label_find_a_course)
             }
         }
     }
@@ -66,6 +60,10 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
             layout.primaryButton.shimmerViewContainer.hideShimmer()
             layout.primaryButton.btnUpgrade.isEnabled = true
         }, 500)
+    }
+
+    fun hidePrimaryButton() {
+        layout.primaryButton.root.setVisibility(false)
     }
 
     fun setPrimaryButtonListener(onClickListener: OnClickListener) {
@@ -82,8 +80,16 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
     }
 
     enum class State {
-        NONE, // User don't have the course access of un-known error
-        AUDIT_ACCESS_EXPIRED, // User's audit access expired, can't upgrade the course for access.
-        IS_UPGRADEABLE // User's audit access expired, can upgrade the course for access.
+        /**
+         * The learner's audit access for this course has expired, and they are currently unable to
+         * upgrade and gain further access
+         */
+        AUDIT_ACCESS_EXPIRED,
+
+        /**
+         * The learner's audit access for this course has expired, but they are able to upgrade
+         * the course to gain further access
+         */
+        IS_UPGRADEABLE,
     }
 }

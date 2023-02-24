@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/edx_default_margin"
-            android:text="@string/message_no_new_session" />
+            tools:text="@string/message_no_new_session" />
 
         <include
             android:id="@+id/layout_upgrade_features"
