@@ -46,29 +46,49 @@ object CourseDateUtil {
             title.visibility = View.VISIBLE
             containerLayout.setBackgroundColor(Color.TRANSPARENT)
         }
-        when (bannerType) {
-            CourseBannerType.UPGRADE_TO_GRADED -> {
-                bannerMessage.text = context.getText(if (isCourseDatePage) R.string.course_dates_banner_upgrade_to_graded else R.string.course_dashboard_banner_upgrade_to_graded)
-                biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_PARTICIPATE
-                bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_PARTICIPATE
+
+        if (isCourseDatePage) {
+            when (bannerType) {
+                CourseBannerType.UPGRADE_TO_GRADED -> {
+                    bannerMessage.text = context.getText(R.string.course_dates_banner_upgrade_to_graded)
+                    biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_PARTICIPATE
+                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_PARTICIPATE
+                }
+                CourseBannerType.UPGRADE_TO_RESET -> {
+                    bannerMessage.text = context.getText(R.string.course_dates_banner_upgrade_to_reset)
+                    biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_SHIFT
+                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_SHIFT
+                }
+                CourseBannerType.RESET_DATES -> {
+                    bannerMessage.text = context.getText(R.string.course_dates_banner_reset_date)
+                    buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
+                    biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
+                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
+                }
+                CourseBannerType.INFO_BANNER -> {
+                    bannerMessage.text = context.getText(R.string.course_dates_info_banner)
+                    biValue = Analytics.Values.COURSE_DATES_BANNER_INFO
+                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_INFO
+                }
+                CourseBannerType.BLANK -> view.visibility = View.GONE
             }
-            CourseBannerType.UPGRADE_TO_RESET -> {
-                bannerMessage.text = context.getText(if (isCourseDatePage) R.string.course_dates_banner_upgrade_to_reset else R.string.course_dashboard_banner_upgrade_to_reset)
-                biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_SHIFT
-                bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_SHIFT
+        }
+        else {
+            when (bannerType) {
+                CourseBannerType.RESET_DATES -> {
+                    bannerMessage.text = context.getText(R.string.course_dashboard_banner_reset_date)
+                    buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
+                    biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
+                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
+                }
+                CourseBannerType.INFO_BANNER -> {
+                    bannerMessage.text = context.getText(R.string.course_dashboard_info_banner)
+                    biValue = Analytics.Values.COURSE_DATES_BANNER_INFO
+                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_INFO
+                }
+                CourseBannerType.BLANK -> view.visibility = View.GONE
+                else -> view.visibility = View.GONE
             }
-            CourseBannerType.RESET_DATES -> {
-                bannerMessage.text = context.getText(if (isCourseDatePage) R.string.course_dates_banner_reset_date else R.string.course_dashboard_banner_reset_date)
-                buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
-                biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
-                bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
-            }
-            CourseBannerType.INFO_BANNER -> {
-                bannerMessage.text = context.getText(if (isCourseDatePage) R.string.course_dates_info_banner else R.string.course_dashboard_info_banner)
-                biValue = Analytics.Values.COURSE_DATES_BANNER_INFO
-                bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_INFO
-            }
-            CourseBannerType.BLANK -> view.visibility = View.GONE
         }
 
         if (!TextUtils.isEmpty(bannerMessage.text) && (isSelfPaced || (isSelfPaced.not() && bannerType == CourseBannerType.UPGRADE_TO_GRADED))) {
