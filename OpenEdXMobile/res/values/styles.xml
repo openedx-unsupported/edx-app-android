@@ -435,16 +435,6 @@
         <item name="android:text">@string/enroll_now_button_text</item>
     </style>
 
-    <style name="edX.Widget.ActionBorderedButton" parent="edX.Widget.Button">
-        <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/secondaryBaseColor</item>
-        <item name="android:background">@drawable/edx_neutral_dark_bordered_button</item>
-        <item name="android:textSize">@dimen/edx_small</item>
-        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
-        <item name="android:fontFamily">?attr/fontSemiBold</item>
-    </style>
-
     <style name="edX.Widget.ProfileActionBorderedButton" parent="edX.Widget.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/profile_view_button_height</item>
@@ -459,10 +449,6 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
         <item name="android:ellipsize">end</item>
         <item name="android:focusable">true</item>
-    </style>
-
-    <style name="edX.Widget.BaseSizeButton" parent="edX.Widget.ActionBorderedButton">
-        <item name="android:textSize">@dimen/edx_base</item>
     </style>
 
     <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
@@ -586,7 +572,7 @@
         <item name="android:textColor">@color/edx_brand_button_text</item>
     </style>
 
-    <style name="edX.Widget.SecondaryBorderedButton" parent="edX.Widget.PrimaryActionButton">
+    <style name="edX.Widget.SecondaryActionButton" parent="edX.Widget.PrimaryActionButton">
         <item name="android:textColor">@color/secondaryBaseColor</item>
         <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
     </style>

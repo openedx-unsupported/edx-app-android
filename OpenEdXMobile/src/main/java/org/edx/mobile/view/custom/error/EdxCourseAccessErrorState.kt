@@ -62,8 +62,12 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
         }, 500)
     }
 
-    fun hidePrimaryButton() {
-        layout.primaryButton.root.setVisibility(false)
+    fun replacePrimaryWithSecondaryButton() {
+        layout.primaryButton.shimmerViewContainer.hideShimmer()
+        layout.primaryButton.btnUpgrade.text = context.getText(R.string.label_find_a_course)
+        layout.primaryButton.btnUpgrade.icon = null
+        layout.primaryButton.btnUpgrade.isEnabled = true
+        layout.secondaryButton.root.setVisibility(false)
     }
 
     fun setPrimaryButtonListener(onClickListener: OnClickListener) {

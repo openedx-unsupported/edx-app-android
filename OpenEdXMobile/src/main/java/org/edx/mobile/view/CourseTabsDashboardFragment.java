@@ -188,10 +188,11 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             // proper animation.
             binding.accessError.postDelayed(
                     () -> iapViewModel.initializeProductPrice(courseData.getCourseSku()), 1500);
+            binding.accessError.setSecondaryButtonListener(onFindCourseClick());
         } else {
-            binding.accessError.hidePrimaryButton();
+            binding.accessError.replacePrimaryWithSecondaryButton();
+            binding.accessError.setPrimaryButtonListener(onFindCourseClick());
         }
-        binding.accessError.setSecondaryButtonListener(onFindCourseClick());
     }
 
     private void initIAPObservers() {
@@ -259,7 +260,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
 
     private void showFullscreenLoader(IAPFlowData iapFlowData) {
         // To proceed with the same instance of dialog fragment in case of orientation change
-        FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
+        FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
         if (fullscreenLoader == null) {
             fullscreenLoader = FullscreenLoaderDialogFragment.newInstance(iapFlowData);
         }
@@ -295,7 +296,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         super.onPause();
         EventBus.getDefault().unregister(this);
         // TODO: block of code can be removed once `fetchCourseById` retrofit call replaced with MVVM approach.
-        FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
+        FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
         if (fullscreenLoader != null) {
             fullscreenLoader.closeTimer();
         }
@@ -441,8 +442,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                 if (getActivity() != null) {
                     getArguments().putSerializable(Router.EXTRA_COURSE_DATA, course);
-                    FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                            .getRetainedInstance(getChildFragmentManager());
+                    FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
                     if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
                         new SnackbarErrorNotification(binding.getRoot()).showError(R.string.purchase_success_message);
                         // Passing the listener to fullscreenLoader() is necessary to prevent the app
@@ -457,8 +457,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             @Override
             protected void onFailure(@NonNull final Throwable error) {
                 if (getActivity() != null) {
-                    FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                            .getRetainedInstance(getChildFragmentManager());
+                    FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
                     if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
                         iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
                     } else {
@@ -525,6 +524,11 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                 courseData.getCourse().getId(), null)
         ));
         return items;
+    }
+
+    @Nullable
+    private FullscreenLoaderDialogFragment getFullscreenLoader() {
+        return FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
     }
 
     /**

@@ -401,10 +401,15 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.stateLayout.state.setState(state, Screen.MY_COURSES)
         binding.stateLayout.state.setActionListener {
             when (state) {
-                EdxErrorState.State.UPDATE_APP ->
+                EdxErrorState.State.UPDATE_APP -> {
                     AppStoreUtils.openAppInAppStore(requireContext())
-                EdxErrorState.State.NETWORK ->
+                }
+                EdxErrorState.State.NETWORK -> {
                     onRefresh()
+                }
+                else -> {
+
+                }
             }
         }
     }
