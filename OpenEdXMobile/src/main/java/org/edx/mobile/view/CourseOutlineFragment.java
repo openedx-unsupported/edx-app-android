@@ -634,7 +634,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;
-            } else if (EnrollmentMode.VERIFIED.toString().equalsIgnoreCase(courseData.getMode())) {
+            } else if (EnrollmentMode.VERIFIED.toString().equalsIgnoreCase(courseData.getMode()) ||
+                    bannerViewBinding.getRoot().getVisibility() != View.VISIBLE) {
                 listView.removeHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = false;
             }

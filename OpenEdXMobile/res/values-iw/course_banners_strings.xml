@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Info Banner -->
-    <string name="course_dashboard_info_banner"><b>בנינו לוח זמנים מוצע כדי לעזור לך להישאר על המסלול.</b>
-       אבל אל דאגה - זה עדיין גמיש כך שתוכל ללמוד בקצב שלך. אם במקרה תיקלע לפיגור בתאריכים המוצעים שלנו,
-תוכל להתאים אותם כדי לשמור על עצמך על המסלול. </string>
-    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
-    <string name="course_dates_banner_upgrade_to_graded_button">שדרג עכשיו</string>
     <!-- Message Course Dashboard Banner Reset Date -->
     <string name="course_dashboard_banner_reset_date"><b>נראה שהחמצת כמה מועדים חשובים בהתבסס על לוח הזמנים המוצע שלנו.</b>
         כדי לשמור על עצמכם על המסלול, תוכלו לעדכן את לוח הזמנים הזה ולהעביר את ההקצאות שהוגשו לעתיד. אל דאגה - לא תאבד שום התקדמות שהשגת כאשר תשנה את תאריכי היעד שלך.</string>

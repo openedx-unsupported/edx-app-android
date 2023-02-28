@@ -34,6 +34,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
     private Snackbar snackbar = null;
 
     public static int COURSE_DATE_MESSAGE_DURATION = 5000;
+    public static int COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION = 3000;
 
     /**
      * Construct a new instance of the notification.
@@ -116,7 +117,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
      * @param errorResId The resource ID of the error message.
      */
     public void showError(int errorResId) {
-        showError(errorResId, 0, 0, Snackbar.LENGTH_LONG, null);
+        showError(errorResId, 0, 0, COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION, null);
     }
 
     /**

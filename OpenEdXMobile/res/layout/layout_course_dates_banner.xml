@@ -46,9 +46,9 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="?attr/fontRegular"
                 android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
-                android:text="@string/course_dates_info_banner"
                 android:textColor="@color/neutralXDark"
-                android:textSize="@dimen/edx_x_small" />
+                android:textSize="@dimen/edx_x_small"
+                tools:text="@string/course_dates_info_banner" />
         </LinearLayout>
 
         <!--  Use legacy text field instated of material-components-->
