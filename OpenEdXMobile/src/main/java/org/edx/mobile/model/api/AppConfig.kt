@@ -26,6 +26,9 @@ data class IAPConfig(
     val isEnabled: Boolean = false,
 
     @SerializedName("experiment_enabled")
-    val isExperimentEnabled: Boolean = false
+    val isExperimentEnabled: Boolean = false,
+
+    @SerializedName("android_disabled_versions")
+    val disableVersions: ArrayList<String> = arrayListOf()
 
 ) : Serializable
