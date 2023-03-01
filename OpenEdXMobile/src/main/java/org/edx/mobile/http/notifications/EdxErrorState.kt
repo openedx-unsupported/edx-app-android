@@ -54,6 +54,11 @@ class EdxErrorState @JvmOverloads constructor(
                 layout.action.iconPadding =
                     context.resources.getDimension(R.dimen.container_padding).toInt()
             }
+            State.UPDATE_APP -> {
+                layout.icon.setImageDrawable(R.drawable.ic_update_app)
+                layout.errorText.text = context.getText(R.string.app_version_unsupported)
+                layout.action.text = context.getText(R.string.label_update_now)
+            }
         }
     }
 
@@ -65,5 +70,6 @@ class EdxErrorState @JvmOverloads constructor(
         NETWORK,
         EMPTY,
         LOAD_ERROR,
+        UPDATE_APP,
     }
 }
