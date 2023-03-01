@@ -36,7 +36,7 @@ object CourseDateUtil {
         val bannerMessage = view.findViewById(R.id.banner_info) as TextView
         val imgView = view.findViewById(R.id.iv_calender) as ImageView
         val button = view.findViewById(R.id.btn_shift_dates) as Button
-        var description = ""
+        var description: CharSequence = ""
         var buttonText = ""
         var bannerTypeValue = ""
         var biValue = ""
@@ -48,23 +48,23 @@ object CourseDateUtil {
 
             when (bannerType) {
                 CourseBannerType.UPGRADE_TO_GRADED -> {
-                    description = context.getString(R.string.course_dates_banner_upgrade_to_graded)
+                    description = context.getText(R.string.course_dates_banner_upgrade_to_graded)
                     biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_PARTICIPATE
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_PARTICIPATE
                 }
                 CourseBannerType.UPGRADE_TO_RESET -> {
-                    description = context.getString(R.string.course_dates_banner_upgrade_to_reset)
+                    description = context.getText(R.string.course_dates_banner_upgrade_to_reset)
                     biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_SHIFT
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_SHIFT
                 }
                 CourseBannerType.RESET_DATES -> {
-                    description = context.getString(R.string.course_dates_banner_reset_date)
+                    description = context.getText(R.string.course_dates_banner_reset_date)
                     buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
                     biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
                 }
                 CourseBannerType.INFO_BANNER -> {
-                    description = context.getString(R.string.course_dates_info_banner)
+                    description = context.getText(R.string.course_dates_info_banner)
                     biValue = Analytics.Values.COURSE_DATES_BANNER_INFO
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_INFO
                 }
@@ -73,7 +73,7 @@ object CourseDateUtil {
         } else {
             when (bannerType) {
                 CourseBannerType.RESET_DATES -> {
-                    description = context.getString(R.string.course_dashboard_banner_reset_date)
+                    description = context.getText(R.string.course_dashboard_banner_reset_date)
                     buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
                     biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
