@@ -269,7 +269,7 @@
         <item name="android:layout_marginEnd">@dimen/widget_margin_x_double</item>
         <item name="android:fontFamily">?attr/fontSemiBold</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/neutralBlackT</item>
+        <item name="android:textColor">@color/primaryDarkColor</item>
         <item name="android:textSize">@dimen/edx_xxx_large</item>
         <item name="lineHeight">@dimen/edx_default_margin_double</item>
     </style>
