@@ -248,7 +248,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             fragmentManager = childFragmentManager
         )
         if (fullscreenLoader != null) {
-            SnackbarErrorNotification(binding.root).showError(R.string.purchase_success_message)
+            SnackbarErrorNotification(binding.root).showUpgradeSuccessSnackbar(R.string.purchase_success_message)
             fullscreenLoader.closeLoader()
         } else {
             iapAnalytics.reset()

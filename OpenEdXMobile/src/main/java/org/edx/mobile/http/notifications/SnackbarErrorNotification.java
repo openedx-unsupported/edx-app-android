@@ -112,12 +112,12 @@ public class SnackbarErrorNotification extends ErrorNotification {
     }
 
     /**
-     * Show the error notification as a persistent Snackbar, according to the provided details.
+     * Show the notification as a persistent Snackbar, according to the provided details.
      *
-     * @param errorResId The resource ID of the error message.
+     * @param stringResId The string resource ID of the message.
      */
-    public void showError(int errorResId) {
-        showError(errorResId, 0, 0, COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION, null);
+    public void showUpgradeSuccessSnackbar(int stringResId) {
+        showError(stringResId, 0, 0, COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION, null);
     }
 
     /**

@@ -281,7 +281,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment
                 .getRetainedInstance(getSupportFragmentManager());
         if (fullScreenLoader != null && fullScreenLoader.isResumed()) {
-            new SnackbarErrorNotification(pager2).showError(R.string.purchase_success_message);
+            new SnackbarErrorNotification(pager2).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
             fullScreenLoader.closeLoader();
         }
     }

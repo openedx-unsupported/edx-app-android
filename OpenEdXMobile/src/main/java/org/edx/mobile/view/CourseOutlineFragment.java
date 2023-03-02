@@ -50,6 +50,7 @@ import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.exception.ErrorMessage;
+import org.edx.mobile.extenstion.ViewExtKt;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -483,7 +484,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
                         .getRetainedInstance(getChildFragmentManager());
                 if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    new SnackbarErrorNotification(listView).showError(R.string.purchase_success_message);
+                    new SnackbarErrorNotification(listView).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
                     fullscreenLoader.closeLoader();
                 }
             }
@@ -634,8 +635,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;
-            } else if (EnrollmentMode.VERIFIED.toString().equalsIgnoreCase(courseData.getMode()) ||
-                    bannerViewBinding.getRoot().getVisibility() != View.VISIBLE) {
+            } else if (courseData.isVerifiedMode() || !ViewExtKt.isVisible(bannerViewBinding.getRoot())) {
                 listView.removeHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = false;
             }
