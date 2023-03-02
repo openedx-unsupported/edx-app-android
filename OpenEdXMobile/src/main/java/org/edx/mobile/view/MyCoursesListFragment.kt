@@ -407,9 +407,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 EdxErrorState.State.NETWORK -> {
                     onRefresh()
                 }
-                else -> {
-
-                }
+                else -> {}
             }
         }
     }

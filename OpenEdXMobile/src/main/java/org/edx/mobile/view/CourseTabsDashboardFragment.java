@@ -37,6 +37,7 @@ import org.edx.mobile.event.IAPFlowEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.exception.ErrorMessage;
+import org.edx.mobile.extenstion.ViewExtKt;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
@@ -139,10 +140,9 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                     if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
                         setupIAPLayout();
                     } else {
-                        setupToolbar(true);
+                        setupToolbar(false);
                         binding.accessError.setVisibility(View.VISIBLE);
                         binding.accessError.setState(EdxCourseAccessErrorState.State.AUDIT_ACCESS_EXPIRED);
-                        binding.toolbar.tabs.setVisibility(View.GONE);
                         binding.accessError.setPrimaryButtonListener(onFindCourseClick());
                     }
                 } else {
@@ -151,7 +151,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                     return errorLayoutBinding.getRoot();
                 }
             } else {
-                setupToolbar(false);
+                setupToolbar(true);
                 setViewPager();
             }
             return binding.getRoot();
@@ -176,8 +176,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     private void setupIAPLayout() {
         binding.accessError.setVisibility(View.VISIBLE);
         binding.accessError.setState(EdxCourseAccessErrorState.State.IS_UPGRADEABLE);
-        binding.toolbar.tabs.setVisibility(View.GONE);
-        setupToolbar(true);
+        setupToolbar(false);
 
         boolean isPurchaseEnabled = environment.getAppFeaturesPrefs().isIAPEnabled(environment.getLoginPrefs().isOddUserId());
         if (isPurchaseEnabled) {
@@ -385,11 +384,12 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         }
     }
 
-    public void setupToolbar(boolean isErrorCase) {
+    public void setupToolbar(boolean hasAccess) {
         binding.toolbar.getRoot().setVisibility(View.VISIBLE);
         binding.toolbar.collapsedToolbarTitle.setText(courseData.getCourse().getName());
         binding.toolbar.courseOrganization.setText(courseData.getCourse().getOrg());
         binding.toolbar.courseTitle.setText(courseData.getCourse().getName());
+        ViewExtKt.setVisibility(binding.toolbar.tabs, hasAccess);
 
         String expiryDate = CourseCardUtils.getFormattedDate(requireContext(), courseData);
         if (!TextUtils.isEmpty(expiryDate)) {
@@ -412,7 +412,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         binding.toolbar.collapsedToolbarDismiss.setOnClickListener(v -> requireActivity().finish());
         binding.toolbar.expandedToolbarDismiss.setOnClickListener(v -> requireActivity().finish());
 
-        if (!isErrorCase && courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
+        if (hasAccess && courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
             binding.toolbar.layoutUpgradeBtn.getRoot().setVisibility(View.VISIBLE);
             ((ShimmerFrameLayout) binding.toolbar.layoutUpgradeBtn.getRoot()).hideShimmer();
             binding.toolbar.layoutUpgradeBtn.btnUpgrade.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
