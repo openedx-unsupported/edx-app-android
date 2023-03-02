@@ -26,8 +26,8 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
 
     private fun getIAPConfig() = getAppConfig().iapConfig
 
-    fun isIAPEnabled() = getIAPConfig().isEnabled
-            && getIAPConfig().disableVersions.contains(BuildConfig.VERSION_NAME).not()
+    fun isIAPEnabled() = getIAPConfig().isEnabled &&
+            getIAPConfig().disableVersions.contains(BuildConfig.VERSION_NAME).not()
 
     fun isIAPExperimentEnabled() = isIAPEnabled() && getIAPConfig().isExperimentEnabled
 

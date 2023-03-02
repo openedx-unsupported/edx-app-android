@@ -29,6 +29,6 @@ data class IAPConfig(
     val isExperimentEnabled: Boolean = false,
 
     @SerializedName("android_disabled_versions")
-    val disableVersions: ArrayList<String> = arrayListOf()
+    val disableVersions: List<String> = listOf()
 
 ) : Serializable
