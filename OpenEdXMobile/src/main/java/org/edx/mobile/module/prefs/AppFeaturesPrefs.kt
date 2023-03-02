@@ -3,6 +3,7 @@ package org.edx.mobile.module.prefs
 import android.content.Context
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.edx.mobile.BuildConfig
 import org.edx.mobile.model.api.AppConfig
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,7 +26,8 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
 
     private fun getIAPConfig() = getAppConfig().iapConfig
 
-    fun isIAPEnabled() = getIAPConfig().isEnabled
+    fun isIAPEnabled() = getIAPConfig().isEnabled &&
+            getIAPConfig().disableVersions.contains(BuildConfig.VERSION_NAME).not()
 
     fun isIAPExperimentEnabled() = isIAPEnabled() && getIAPConfig().isExperimentEnabled
 

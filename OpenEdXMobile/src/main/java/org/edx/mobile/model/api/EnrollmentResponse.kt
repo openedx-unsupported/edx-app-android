@@ -1,6 +1,10 @@
 package org.edx.mobile.model.api
 
-import com.google.gson.*
+import com.google.gson.Gson
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.logger.Logger
@@ -26,22 +30,27 @@ data class EnrollmentResponse(
         ): EnrollmentResponse {
             if (json == null) return EnrollmentResponse(AppConfig(), emptyList())
 
+            var enrolledCourses: List<EnrolledCoursesResponse> = emptyList()
             return try {
                 if (json.isJsonArray) {
-                    val listType = object : TypeToken<List<EnrolledCoursesResponse>>() {}.type
-
-                    EnrollmentResponse(
-                        AppConfig(),
-                        Gson().fromJson((json as JsonArray), listType)
+                    enrolledCourses = Gson().fromJson(
+                        json,
+                        object : TypeToken<List<EnrolledCoursesResponse>>() {}.type
                     )
+                    EnrollmentResponse(AppConfig(), enrolledCourses)
                 } else {
+                    enrolledCourses = Gson().fromJson(
+                        (json as JsonObject).get("enrollments"),
+                        object : TypeToken<List<EnrolledCoursesResponse>>() {}.type
+                    )
+
                     /**
                      * To remove dependency on the backend, all the data related to Remote Config
                      * will be received under the `configs` key. The `config` is the key under
                      * 'configs` which defines the data that is related to the configuration of the
                      * app.
                      */
-                    val config = (json as JsonObject)
+                    val config = json
                         .getAsJsonObject("configs")
                         .getAsJsonPrimitive("config")
 
@@ -49,16 +58,12 @@ data class EnrollmentResponse(
                         config.asString,
                         AppConfig::class.java
                     )
-                    val enrolledCourses = Gson().fromJson<List<EnrolledCoursesResponse>>(
-                        json.get("enrollments"),
-                        object : TypeToken<List<EnrolledCoursesResponse>>() {}.type
-                    )
 
                     EnrollmentResponse(appConfig, enrolledCourses)
                 }
             } catch (ex: Exception) {
                 logger.error(ex, true)
-                EnrollmentResponse(AppConfig(), emptyList())
+                EnrollmentResponse(AppConfig(), enrolledCourses)
             }
         }
     }
