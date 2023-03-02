@@ -19,17 +19,35 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry
  */
 object CourseDateUtil {
 
-    fun setupCourseDatesBanner(view: View, courseId: String, enrollmentMode: String, isSelfPaced: Boolean,
-                               screenName: String, analyticsRegistry: AnalyticsRegistry,
-                               courseBannerInfoModel: CourseBannerInfoModel, clickListener: View.OnClickListener) {
-        setupCourseDatesBanner(view = view, isCourseDatePage = false, courseId = courseId, enrollmentMode = enrollmentMode,
-                isSelfPaced = isSelfPaced, screenName = screenName, analyticsRegistry = analyticsRegistry,
-                courseBannerInfoModel = courseBannerInfoModel, clickListener = clickListener)
+    fun setupCourseDatesBanner(
+        view: View, courseId: String, enrollmentMode: String, isSelfPaced: Boolean,
+        screenName: String, analyticsRegistry: AnalyticsRegistry,
+        courseBannerInfoModel: CourseBannerInfoModel, clickListener: View.OnClickListener
+    ) {
+        setupCourseDatesBanner(
+            view = view,
+            isCourseDatePage = false,
+            courseId = courseId,
+            enrollmentMode = enrollmentMode,
+            isSelfPaced = isSelfPaced,
+            screenName = screenName,
+            analyticsRegistry = analyticsRegistry,
+            courseBannerInfoModel = courseBannerInfoModel,
+            clickListener = clickListener
+        )
     }
 
-    fun setupCourseDatesBanner(view: View, isCourseDatePage: Boolean, courseId: String, enrollmentMode: String, isSelfPaced: Boolean,
-                               screenName: String, analyticsRegistry: AnalyticsRegistry,
-                               courseBannerInfoModel: CourseBannerInfoModel, clickListener: View.OnClickListener) {
+    fun setupCourseDatesBanner(
+        view: View,
+        isCourseDatePage: Boolean,
+        courseId: String,
+        enrollmentMode: String,
+        isSelfPaced: Boolean,
+        screenName: String,
+        analyticsRegistry: AnalyticsRegistry,
+        courseBannerInfoModel: CourseBannerInfoModel,
+        clickListener: View.OnClickListener
+    ) {
         val context = view.context as Context
         val containerLayout = view as LinearLayout
         val title = view.findViewById(R.id.banner_title) as TextView
@@ -40,7 +58,7 @@ object CourseDateUtil {
         var buttonText = ""
         var bannerTypeValue = ""
         var biValue = ""
-        val bannerType: CourseBannerType = courseBannerInfoModel.datesBannerInfo.getCourseBannerType()
+        val bannerType = courseBannerInfoModel.datesBannerInfo.getCourseBannerType()
 
         if (isCourseDatePage) {
             title.visibility = View.VISIBLE
@@ -70,16 +88,11 @@ object CourseDateUtil {
                 }
                 CourseBannerType.BLANK -> description = ""
             }
-        } else {
-            when (bannerType) {
-                CourseBannerType.RESET_DATES -> {
-                    description = context.getText(R.string.course_dashboard_banner_reset_date)
-                    buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
-                    biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
-                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
-                }
-                else -> description = ""
-            }
+        } else if (bannerType == CourseBannerType.RESET_DATES) {
+            description = context.getText(R.string.course_dashboard_banner_reset_date)
+            buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
+            biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
+            bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
         }
 
         if (description.isNotBlank() && (isSelfPaced || (isSelfPaced.not() && bannerType == CourseBannerType.UPGRADE_TO_GRADED))) {
@@ -90,14 +103,24 @@ object CourseDateUtil {
                 imgView.visibility = if (isCourseDatePage) View.GONE else View.VISIBLE
                 button.setOnClickListener { v ->
                     clickListener.onClick(v)
-                    analyticsRegistry.trackPLSShiftButtonTapped(courseId, enrollmentMode, screenName)
+                    analyticsRegistry.trackPLSShiftButtonTapped(
+                        courseId,
+                        enrollmentMode,
+                        screenName
+                    )
                 }
             } else {
                 button.visibility = View.GONE
                 imgView.visibility = View.GONE
             }
             view.visibility = View.VISIBLE
-            analyticsRegistry.trackPLSCourseDatesBanner(biValue, courseId, enrollmentMode, screenName, bannerTypeValue)
+            analyticsRegistry.trackPLSCourseDatesBanner(
+                biValue,
+                courseId,
+                enrollmentMode,
+                screenName,
+                bannerTypeValue
+            )
         } else {
             view.visibility = View.GONE
         }
