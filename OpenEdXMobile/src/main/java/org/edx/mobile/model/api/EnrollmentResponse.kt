@@ -1,7 +1,6 @@
 package org.edx.mobile.model.api
 
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -34,8 +33,10 @@ data class EnrollmentResponse(
             var enrolledCourses: List<EnrolledCoursesResponse> = emptyList()
             return try {
                 if (json.isJsonArray) {
-                    val listType = object : TypeToken<List<EnrolledCoursesResponse>>() {}.type
-                    enrolledCourses = Gson().fromJson((json as JsonArray), listType)
+                    enrolledCourses = Gson().fromJson(
+                        json,
+                        object : TypeToken<List<EnrolledCoursesResponse>>() {}.type
+                    )
                     EnrollmentResponse(AppConfig(), enrolledCourses)
                 } else {
                     enrolledCourses = Gson().fromJson(
@@ -49,7 +50,7 @@ data class EnrollmentResponse(
                      * 'configs` which defines the data that is related to the configuration of the
                      * app.
                      */
-                    val config = (json)
+                    val config = json
                         .getAsJsonObject("configs")
                         .getAsJsonPrimitive("config")
 
