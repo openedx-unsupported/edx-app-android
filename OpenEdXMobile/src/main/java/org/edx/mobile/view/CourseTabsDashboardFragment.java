@@ -29,6 +29,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.FragmentCourseTabsDashboardBinding;
+import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
 import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
@@ -144,11 +145,16 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                         binding.accessError.setState(EdxCourseAccessErrorState.State.AUDIT_ACCESS_EXPIRED, null);
                         binding.accessError.setPrimaryButtonListener(onFindCourseClick());
                     }
-                } else {
+                } else if (!courseData.getCourse().isStarted()) {
                     binding.accessError.setVisibility(View.VISIBLE);
                     binding.accessError.setState(EdxCourseAccessErrorState.State.NOT_STARTED,
                             DateUtil.formatCourseNotStartedDate(courseData.getCourse().getStart()));
-                    binding.accessError.setPrimaryButtonListener(onExploreCoursesClick());
+                    binding.accessError.setPrimaryButtonListener(onFindCourseClick());
+                } else {
+                    //Todo Remove when Next Session Enrollment feature is added
+                    FragmentDashboardErrorLayoutBinding errorLayoutBinding = FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
+                    errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
+                    return errorLayoutBinding.getRoot();
                 }
             } else {
                 setupToolbar(true);
@@ -267,13 +273,6 @@ public class CourseTabsDashboardFragment extends BaseFragment {
 
     private View.OnClickListener onCloseClick() {
         return v -> requireActivity().finish();
-    }
-
-    private View.OnClickListener onExploreCoursesClick() {
-        return v -> {
-            EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.DISCOVERY));
-            requireActivity().finish();
-        };
     }
 
     private View.OnClickListener onFindCourseClick() {
