@@ -6,12 +6,19 @@
         <attr name="popupSpinnerStyle" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="StateLayout">
+    <declare-styleable name="ErrorState">
+        <attr name="error_state" format="enum">
+            <enum name="network" value="0" />
+            <enum name="empty" value="1" />
+            <enum name="load_error" value="2" />
+            <enum name="update_app" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="AccessErrorState">
         <attr name="state" format="enum">
-            <enum name="NETWORK" value="0"/>
-            <enum name="EMPTY" value="1"/>
-            <enum name="LOAD_ERROR" value="2"/>
-            <enum name="UPDATE_APP" value="3"/>
+            <enum name="audit_access_expired" value="0" />
+            <enum name="is_upgradeable" value="1" />
         </attr>
     </declare-styleable>
 

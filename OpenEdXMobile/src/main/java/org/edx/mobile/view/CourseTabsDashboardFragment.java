@@ -1,8 +1,9 @@
 package org.edx.mobile.view;
 
-import static android.widget.FrameLayout.LayoutParams;
+import static org.edx.mobile.model.iap.IAPFlowData.IAPFlowType;
 import static org.edx.mobile.view.Router.EXTRA_COURSE_COMPONENT_ID;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -11,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.billingclient.api.SkuDetails;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -29,21 +33,39 @@ import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
 import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
+import org.edx.mobile.event.IAPFlowEvent;
+import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
-import org.edx.mobile.http.notifications.EdxErrorState;
+import org.edx.mobile.exception.ErrorMessage;
+import org.edx.mobile.extenstion.ViewExtKt;
+import org.edx.mobile.http.HttpStatus;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.EnrollmentMode;
+import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.InAppPurchasesException;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.ShareUtils;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
+import org.edx.mobile.view.custom.error.EdxCourseAccessErrorState;
+import org.edx.mobile.view.custom.error.EdxErrorState;
 import org.edx.mobile.view.dialog.CourseModalDialogFragment;
+import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
+import org.edx.mobile.viewModel.InAppPurchasesViewModel;
+import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,6 +90,14 @@ public class CourseTabsDashboardFragment extends BaseFragment {
 
     @Inject
     CourseAPI courseApi;
+
+    @Inject
+    InAppPurchasesAnalytics iapAnalytics;
+
+    @Inject
+    InAppPurchasesDialog iapDialog;
+
+    private InAppPurchasesViewModel iapViewModel;
 
     private boolean isTitleCollapsed = false;
     private boolean isTitleExpanded = true;
@@ -107,17 +137,21 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
                 final boolean auditAccessExpired = new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
                 if (auditAccessExpired) {
-                    setupToolbar();
-                    binding.toolbar.tabs.setVisibility(View.GONE);
-                    binding.accessError.getRoot().setVisibility(View.VISIBLE);
-                    binding.accessError.primaryButton.setOnClickListener(onFindCourseClick());
+                    if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
+                        setupIAPLayout();
+                    } else {
+                        setupToolbar(false);
+                        binding.accessError.setVisibility(View.VISIBLE);
+                        binding.accessError.setState(EdxCourseAccessErrorState.State.AUDIT_ACCESS_EXPIRED);
+                        binding.accessError.setPrimaryButtonListener(onFindCourseClick());
+                    }
                 } else {
                     FragmentDashboardErrorLayoutBinding errorLayoutBinding = FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
                     errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
                     return errorLayoutBinding.getRoot();
                 }
             } else {
-                setupToolbar();
+                setupToolbar(true);
                 setViewPager();
             }
             return binding.getRoot();
@@ -139,6 +173,99 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         }
     }
 
+    private void setupIAPLayout() {
+        binding.accessError.setVisibility(View.VISIBLE);
+        binding.accessError.setState(EdxCourseAccessErrorState.State.IS_UPGRADEABLE);
+        setupToolbar(false);
+
+        boolean isPurchaseEnabled = environment.getAppFeaturesPrefs().isIAPEnabled(environment.getLoginPrefs().isOddUserId());
+        if (isPurchaseEnabled) {
+            iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
+            initIAPObservers();
+            // Shimmer container taking sometime to get ready and perform the animation, so
+            // by adding the some delay fixed that issue for lower-end devices, and for the
+            // proper animation.
+            binding.accessError.postDelayed(
+                    () -> iapViewModel.initializeProductPrice(courseData.getCourseSku()), 1500);
+            binding.accessError.setSecondaryButtonListener(onFindCourseClick());
+        } else {
+            binding.accessError.replacePrimaryWithSecondaryButton();
+            binding.accessError.setPrimaryButtonListener(onFindCourseClick());
+        }
+    }
+
+    private void initIAPObservers() {
+        iapViewModel.getProductPrice().observe(getViewLifecycleOwner(), new EventObserver<>(skuDetails -> {
+            setUpUpgradeButton(skuDetails);
+            return null;
+        }));
+
+        iapViewModel.getLaunchPurchaseFlow().observe(getViewLifecycleOwner(), new EventObserver<>(launchPurchaseFlow -> {
+            iapViewModel.purchaseItem(requireActivity(), environment.getLoginPrefs().getUserId(),
+                    courseData.getCourseSku());
+            return null;
+        }));
+
+        iapViewModel.getShowLoader().observe(getViewLifecycleOwner(), new EventObserver<>(showLoader -> {
+            binding.accessError.enableUpgradeButton(showLoader);
+            return null;
+        }));
+
+        iapViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new EventObserver<>(errorMessage -> {
+            handleIAPException(errorMessage);
+            return null;
+        }));
+
+        iapViewModel.getProductPurchased().observe(getViewLifecycleOwner(), new EventObserver<>(iapFlowData -> {
+            showFullscreenLoader(iapFlowData);
+            return null;
+        }));
+    }
+
+    private void setUpUpgradeButton(SkuDetails skuDetails) {
+        // The app get the sku details instantly, so add some wait to perform
+        // animation at least one cycle.
+        binding.accessError.setPrimaryButtonText(ResourceUtil.getFormattedString(
+                getResources(),
+                R.string.label_upgrade_course_button,
+                AppConstants.PRICE,
+                skuDetails.getPrice()
+        ).toString());
+
+        binding.accessError.setPrimaryButtonListener(view -> {
+            iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UPGRADE_NOW_CLICKED, "", "");
+            iapViewModel.startPurchaseFlow(skuDetails.getSku());
+        });
+    }
+
+    private void handleIAPException(final ErrorMessage errorMessage) {
+        DialogInterface.OnClickListener retryListener = null;
+        if (HttpStatus.NOT_ACCEPTABLE == ((InAppPurchasesException) errorMessage.getThrowable()).getHttpErrorCode()) {
+            retryListener = (dialogInterface, i) -> {
+                // already purchased course.
+                iapViewModel.getIapFlowData().setVerificationPending(false);
+                iapViewModel.getIapFlowData().setFlowType(IAPFlowType.SILENT);
+                showFullscreenLoader(iapViewModel.getIapFlowData());
+            };
+        } else if (errorMessage.canRetry()) {
+            retryListener = (dialogInterface, i) -> {
+                if (errorMessage.getRequestType() == ErrorMessage.PRICE_CODE) {
+                    iapViewModel.initializeProductPrice(courseData.getCourseSku());
+                }
+            };
+        }
+        iapDialog.handleIAPException(this, errorMessage, retryListener, null);
+    }
+
+    private void showFullscreenLoader(IAPFlowData iapFlowData) {
+        // To proceed with the same instance of dialog fragment in case of orientation change
+        FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
+        if (fullscreenLoader == null) {
+            fullscreenLoader = FullscreenLoaderDialogFragment.newInstance(iapFlowData);
+        }
+        fullscreenLoader.show(getChildFragmentManager(), FullscreenLoaderDialogFragment.TAG);
+    }
+
     private View.OnClickListener onCloseClick() {
         return v -> requireActivity().finish();
     }
@@ -155,6 +282,23 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         handleTabSelection(requireArguments());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+        // TODO: block of code can be removed once `fetchCourseById` retrofit call replaced with MVVM approach.
+        FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
+        if (fullscreenLoader != null) {
+            fullscreenLoader.closeTimer();
+        }
     }
 
     /**
@@ -240,11 +384,12 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         }
     }
 
-    public void setupToolbar() {
+    public void setupToolbar(boolean hasAccess) {
         binding.toolbar.getRoot().setVisibility(View.VISIBLE);
         binding.toolbar.collapsedToolbarTitle.setText(courseData.getCourse().getName());
         binding.toolbar.courseOrganization.setText(courseData.getCourse().getOrg());
         binding.toolbar.courseTitle.setText(courseData.getCourse().getName());
+        ViewExtKt.setVisibility(binding.toolbar.tabs, hasAccess);
 
         String expiryDate = CourseCardUtils.getFormattedDate(requireContext(), courseData);
         if (!TextUtils.isEmpty(expiryDate)) {
@@ -267,7 +412,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         binding.toolbar.collapsedToolbarDismiss.setOnClickListener(v -> requireActivity().finish());
         binding.toolbar.expandedToolbarDismiss.setOnClickListener(v -> requireActivity().finish());
 
-        if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
+        if (hasAccess && courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
             binding.toolbar.layoutUpgradeBtn.getRoot().setVisibility(View.VISIBLE);
             ((ShimmerFrameLayout) binding.toolbar.layoutUpgradeBtn.getRoot()).hideShimmer();
             binding.toolbar.layoutUpgradeBtn.btnUpgrade.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
@@ -297,16 +442,29 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                 if (getActivity() != null) {
                     getArguments().putSerializable(Router.EXTRA_COURSE_DATA, course);
-                    UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this);
+                    FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
+                    if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
+                        new SnackbarErrorNotification(binding.getRoot()).showError(R.string.purchase_success_message);
+                        // Passing the listener to fullscreenLoader() is necessary to prevent the app
+                        // from crashing when the parent fragment releases the dialog during a restart.
+                        fullscreenLoader.closeLoader(() -> getActivity().runOnUiThread(() ->
+                                UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this))
+                        );
+                    }
                 }
             }
 
             @Override
             protected void onFailure(@NonNull final Throwable error) {
                 if (getActivity() != null) {
-                    getArguments().putBoolean(ARG_COURSE_NOT_FOUND, true);
-                    UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this);
-                    logger.error(new Exception("Invalid Course ID provided via deeplink: " + courseId), true);
+                    FullscreenLoaderDialogFragment fullscreenLoader = getFullscreenLoader();
+                    if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
+                        iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
+                    } else {
+                        getArguments().putBoolean(ARG_COURSE_NOT_FOUND, true);
+                        UiUtils.INSTANCE.restartFragment(CourseTabsDashboardFragment.this);
+                        logger.error(new Exception("Invalid Course ID provided via deeplink: " + courseId), true);
+                    }
                 }
             }
         });
@@ -368,6 +526,11 @@ public class CourseTabsDashboardFragment extends BaseFragment {
         return items;
     }
 
+    @Nullable
+    private FullscreenLoaderDialogFragment getFullscreenLoader() {
+        return FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
+    }
+
     /**
      * It will handle the toolbar's collapse or expand state based on the scroll position. It will
      * also disable the clickable views of the toolbar because the alpha attribute has been used to
@@ -414,6 +577,19 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             binding.toolbar.courseTitle.setEnabled(true);
             binding.toolbar.expandedToolbarDismiss.setEnabled(true);
             binding.toolbar.layoutUpgradeBtn.getRoot().setEnabled(true);
+        }
+    }
+
+    @Subscribe
+    public void onEventMainThread(IAPFlowEvent event) {
+        if (!this.isResumed()) {
+            return;
+        }
+        if (event.getFlowAction() == IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE) {
+            courseData.setMode(EnrollmentMode.VERIFIED.toString());
+            getArguments().putString(Router.EXTRA_COURSE_ID, courseData.getCourseId());
+            fetchCourseById();
+            EventBus.getDefault().post(new MainDashboardRefreshEvent());
         }
     }
 }
