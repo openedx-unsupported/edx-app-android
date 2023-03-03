@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import org.edx.mobile.R
 import org.edx.mobile.databinding.LayoutCourseAccessErrorBinding
@@ -35,10 +36,7 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                 layout.heading.text = context.getString(R.string.course_access_expired)
                 layout.description.text = context.getString(R.string.message_no_new_session)
                 layout.layoutUpgradeFeatures.root.setVisibility(false)
-                layout.primaryButton.shimmerViewContainer.hideShimmer()
-                layout.primaryButton.btnUpgrade.text = context.getText(R.string.label_find_a_course)
-                layout.primaryButton.btnUpgrade.icon = null
-                layout.secondaryButton.root.setVisibility(false)
+                replacePrimaryWithSecondaryButton(R.string.find_course_btn_text)
             }
             State.IS_UPGRADEABLE -> {
                 layout.heading.text = context.getString(R.string.course_access_expired)
@@ -54,11 +52,7 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                 layout.description.text =
                     context.getString(R.string.message_course_not_started, date)
                 layout.layoutUpgradeFeatures.root.setVisibility(false)
-                layout.primaryButton.shimmerViewContainer.hideShimmer()
-                layout.primaryButton.btnUpgrade.text =
-                    context.getText(R.string.find_course_btn_text)
-                layout.primaryButton.btnUpgrade.icon = null
-                layout.secondaryButton.root.setVisibility(false)
+                replacePrimaryWithSecondaryButton(R.string.find_course_btn_text)
             }
         }
     }
@@ -73,9 +67,9 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
         }, 500)
     }
 
-    fun replacePrimaryWithSecondaryButton() {
+    fun replacePrimaryWithSecondaryButton(@StringRes resId: Int) {
         layout.primaryButton.shimmerViewContainer.hideShimmer()
-        layout.primaryButton.btnUpgrade.text = context.getText(R.string.label_find_a_course)
+        layout.primaryButton.btnUpgrade.text = context.getText(resId)
         layout.primaryButton.btnUpgrade.icon = null
         layout.primaryButton.btnUpgrade.isEnabled = true
         layout.secondaryButton.root.setVisibility(false)

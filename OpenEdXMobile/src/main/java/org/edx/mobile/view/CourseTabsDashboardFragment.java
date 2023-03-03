@@ -194,7 +194,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                     () -> iapViewModel.initializeProductPrice(courseData.getCourseSku()), 1500);
             binding.accessError.setSecondaryButtonListener(onFindCourseClick());
         } else {
-            binding.accessError.replacePrimaryWithSecondaryButton();
+            binding.accessError.replacePrimaryWithSecondaryButton(R.string.label_find_a_course);
             binding.accessError.setPrimaryButtonListener(onFindCourseClick());
         }
     }
