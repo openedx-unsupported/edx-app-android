@@ -12,16 +12,14 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sign_up"
-            style="@style/edX.Widget.ActionBrandPillButton"
+            style="@style/edX.Widget.PrimaryActionButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/auth_panel_btn_height"
             android:layout_weight="1"
             android:focusable="true"
             android:paddingStart="@dimen/auth_panel_login_btn_horizontal_padding"
             android:paddingEnd="@dimen/auth_panel_login_btn_horizontal_padding"
-            android:text="@string/launch_register"
-            android:textColor="@color/white"
-            android:textSize="@dimen/edx_base" />
+            android:text="@string/launch_register" />
 
         <View
             android:id="@+id/view_divider"
@@ -30,14 +28,12 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/log_in"
-            style="@style/edX.Widget.ActionBorderedButton"
+            style="@style/edX.Widget.SecondaryActionButton"
             android:layout_width="@dimen/auth_panel_login_btn_width"
             android:layout_height="@dimen/auth_panel_btn_height"
             android:focusable="true"
             android:paddingStart="@dimen/auth_panel_login_btn_horizontal_padding"
             android:paddingEnd="@dimen/auth_panel_login_btn_horizontal_padding"
-            android:text="@string/launch_login"
-            android:textColor="@color/secondaryBaseColor"
-            android:textSize="@dimen/edx_base" />
+            android:text="@string/launch_login" />
     </LinearLayout>
 </layout>

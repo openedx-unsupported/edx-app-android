@@ -45,9 +45,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action"
                 style="@style/edX.Widget.PrimaryActionButton"
-                android:layout_marginStart="@dimen/widget_margin_x_double"
-                android:layout_marginEnd="@dimen/widget_margin_x_double"
-                android:layout_marginBottom="@dimen/widget_margin_x_double"
+                android:layout_margin="@dimen/widget_margin_x_double"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

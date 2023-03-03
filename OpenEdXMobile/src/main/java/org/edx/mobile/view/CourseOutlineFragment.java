@@ -38,7 +38,6 @@ import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
-import org.edx.mobile.event.IAPFlowEvent;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
@@ -68,7 +67,6 @@ import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
@@ -88,12 +86,9 @@ import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter.SectionRow;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
-import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
-import org.edx.mobile.viewModel.InAppPurchasesViewModel;
 import org.edx.mobile.viewModel.VideoViewModel;
-import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -144,11 +139,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Inject
     VideoDownloadHelper downloadManager;
 
-    @Inject
-    InAppPurchasesDialog iapDialogs;
-
     private CourseDateViewModel courseDateViewModel;
-    private InAppPurchasesViewModel iapViewModel;
     private VideoViewModel videoViewModel;
 
     private View loadingIndicator;
@@ -218,7 +209,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
 
         if (isOnCourseOutline) {
             initCourseDateObserver();
-            initInAppPurchaseSetup();
         }
 
         fetchCourseComponent();
@@ -316,44 +306,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 }
             }
         });
-    }
-
-    private void initInAppPurchaseSetup() {
-        if (courseData.isAuditMode() && !isVideoMode) {
-            initInAppPurchaseObserver();
-        }
-    }
-
-    private void showFullscreenLoader(@NonNull IAPFlowData iapFlowData) {
-        // To proceed with the same instance of dialog fragment in case of orientation change
-        FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                .getRetainedInstance(getChildFragmentManager());
-        if (fullscreenLoader == null) {
-            fullscreenLoader = FullscreenLoaderDialogFragment.newInstance(iapFlowData);
-        }
-        fullscreenLoader.show(getChildFragmentManager(), FullscreenLoaderDialogFragment.TAG);
-    }
-
-    private void initInAppPurchaseObserver() {
-        iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
-
-        iapViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new EventObserver<>(errorMessage -> {
-            if (errorMessage.getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
-                iapDialogs.handleIAPException(
-                        CourseOutlineFragment.this,
-                        errorMessage,
-                        (dialogInterface, i) -> getCourseComponentFromServer(false, true),
-                        (dialogInterface, i) -> {
-                            iapViewModel.getIapFlowData().clear();
-                            FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
-                            if (fullScreenLoader != null) {
-                                fullScreenLoader.dismiss();
-                            }
-                        }
-                );
-            }
-            return null;
-        }));
     }
 
     private void showCalendarOutOfDateDialog(Long calendarId) {
@@ -499,12 +451,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
                 loadData(validateCourseComponent(courseComponent));
                 swipeContainer.setRefreshing(false);
-                FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                        .getRetainedInstance(getChildFragmentManager());
-                if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    new SnackbarErrorNotification(listView).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
-                    fullscreenLoader.closeLoader();
-                }
             }
 
             @Override
@@ -514,13 +460,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     return;
                 }
 
-                FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                        .getRetainedInstance(getChildFragmentManager());
                 if (error instanceof CourseContentNotValidException) {
                     errorNotification.showError(getContext(), error);
                     logger.error(error, true);
-                } else if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
                 }
                 swipeContainer.setRefreshing(false);
                 // Remove bulk video download if the course has NO downloadable videos
@@ -1091,26 +1033,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         // Hide payments banner
         updatePaymentsBannerVisibility(View.GONE);
         getCourseComponentFromServer(true, true);
-    }
-
-    @Subscribe
-    public void onEventMainThread(@NonNull IAPFlowEvent event) {
-        // upgrade now button is only available on course outline
-        if (!this.isResumed() || !isOnCourseOutline || isVideoMode) {
-            return;
-        }
-        switch (event.getFlowAction()) {
-            case SHOW_FULL_SCREEN_LOADER: {
-                showFullscreenLoader(event.getIapFlowData());
-                break;
-            }
-            case PURCHASE_FLOW_COMPLETE: {
-                courseData.setMode(EnrollmentMode.VERIFIED.toString());
-                getCourseComponentFromServer(false, true);
-                EventBus.getDefault().post(new MainDashboardRefreshEvent());
-                break;
-            }
-        }
     }
 
     public void showResumeCourseView(CourseComponentStatusResponse response) {

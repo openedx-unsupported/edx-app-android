@@ -31,7 +31,8 @@
     <string name="label_go_to_my_course">Go to my courses</string>
     <!-- Message if error occurred on course dashboard -->
     <string name="message_an_error_occurred">An error occurred while loading your course</string>
+    <!-- Message for access expire and can upgrade -->
+    <string name="message_to_upgrade_course">Upgrade to get full access to this course and pursue a certificate.</string>
     <!-- Message if error occurred on my courses -->
     <string name="message_an_error_occurred_courses">An error occurred while loading your courses</string>
-
 </resources>
