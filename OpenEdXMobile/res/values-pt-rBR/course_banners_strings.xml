@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Info Banner -->
-    <string name="course_dashboard_info_banner"><b>Criamos uma programação como sugestão para ajudar você a se manter no caminho certo.</b>
-        Mas não se preocupe: ela é flexível, possibilitando que você aprenda no seu próprio ritmo. Se não conseguir se manter em dia com as datas sugeridas,
-        você poderá ajustá-las da forma que for melhor para você.</string>
-    <!-- Message Course Dashboard Banner Upgrade to Complete Graded -->
-    <string name="course_dashboard_banner_upgrade_to_graded"><b>Você está participando deste curso,</b>
-o que significa que você não pode participar em avaliações. Para completar avaliações como uma parte deste curso, faça o upgrade hoje.</string>
-    <!-- Label Course Dashboard Banner Upgrade to Complete Graded Button -->
-    <string name="course_dates_banner_upgrade_to_graded_button">Fazer o upgrade agora</string>
-    <!-- Message Course Dashboard Banner Upgrade to Reset -->
-    <string name="course_dashboard_banner_upgrade_to_reset"><b>Você está participando deste curso,</b>
-o que significa que você não pode participar em avaliações. Para completar avaliações como uma parte deste curso, faça o upgrade hoje. Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida. Para completar avaliações como parte deste curso e adiar tarefas já atrasadas, faça o upgrade hoje.</string>
     <!-- Message Course Dashboard Banner Reset Date -->
     <string name="course_dashboard_banner_reset_date"><b>Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida.</b>
 Para se ficar em dia, você pode atualizar esta programação e adiar as tarefas já atrasadas. Não se preocupe – você não perderá o progresso já feito.</string>

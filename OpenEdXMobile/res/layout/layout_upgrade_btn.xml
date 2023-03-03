@@ -28,7 +28,7 @@
                 app:icon="@drawable/ic_lock"
                 app:iconGravity="textStart"
                 app:iconTint="@color/edx_brand_button_text"
-                tools:text="@string/course_dates_banner_upgrade_to_graded_button" />
+                tools:text="@string/label_upgrade_course_button" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/loading_indicator"

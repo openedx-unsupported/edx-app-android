@@ -50,6 +50,7 @@ import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.exception.ErrorMessage;
+import org.edx.mobile.extenstion.ViewExtKt;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -65,6 +66,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
+import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.EnrollmentMode;
@@ -483,7 +485,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
                         .getRetainedInstance(getChildFragmentManager());
                 if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    new SnackbarErrorNotification(listView).showError(R.string.purchase_success_message);
+                    new SnackbarErrorNotification(listView).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
                     fullscreenLoader.closeLoader();
                 }
             }
@@ -625,18 +627,17 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         if (bannerViewBinding == null)
             bannerViewBinding = LayoutCourseDatesBannerBinding.inflate(getLayoutInflater(), listView, false);
 
-        if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded()) {
+        if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded() &&
+                courseBannerInfo.getDatesBannerInfo().getCourseBannerType() == CourseBannerType.RESET_DATES) {
+
             CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
                     courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
                     Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
                     v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourseId()));
 
-            if (listView.getHeaderViewsCount() == 0 && bannerViewBinding.getRoot().getVisibility() == View.VISIBLE) {
+            if (listView.getHeaderViewsCount() == 0 && ViewExtKt.isVisible(bannerViewBinding.getRoot())) {
                 listView.addHeaderView(bannerViewBinding.getRoot());
                 isBannerVisible = true;
-            } else if (EnrollmentMode.VERIFIED.toString().equalsIgnoreCase(courseData.getMode())) {
-                listView.removeHeaderView(bannerViewBinding.getRoot());
-                isBannerVisible = false;
             }
         } else {
             listView.removeHeaderView(bannerViewBinding.getRoot());
