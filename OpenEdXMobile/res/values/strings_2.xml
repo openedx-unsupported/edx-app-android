@@ -35,7 +35,6 @@
     <string name="message_to_upgrade_course">Upgrade to get full access to this course and pursue a certificate.</string>
     <!-- Message if error occurred on my courses -->
     <string name="message_an_error_occurred_courses">An error occurred while loading your courses</string>
-    <!-- Message for course hasn’t started yet -->
+    <!-- Message for course has not started yet -->
     <string name="message_course_not_started">Come back %s to see all your course content here.</string>
-
 </resources>

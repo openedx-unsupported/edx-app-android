@@ -55,10 +55,10 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
                     context.getString(R.string.message_course_not_started, date)
                 layout.layoutUpgradeFeatures.root.setVisibility(false)
                 layout.primaryButton.shimmerViewContainer.hideShimmer()
-                layout.primaryButton.btnUpgrade.icon = null
-                layout.secondaryButton.root.setVisibility(false)
                 layout.primaryButton.btnUpgrade.text =
                     context.getText(R.string.find_course_btn_text)
+                layout.primaryButton.btnUpgrade.icon = null
+                layout.secondaryButton.root.setVisibility(false)
             }
         }
     }
@@ -106,6 +106,10 @@ class EdxCourseAccessErrorState @JvmOverloads constructor(
          * the course to gain further access
          */
         IS_UPGRADEABLE,
+
+        /**
+         * The course cannot be accessed yet because it hasn't started
+         */
         NOT_STARTED,
     }
 }

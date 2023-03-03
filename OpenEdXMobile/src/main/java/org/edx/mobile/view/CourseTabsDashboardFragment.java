@@ -29,7 +29,6 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.FragmentCourseTabsDashboardBinding;
-import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding;
 import org.edx.mobile.deeplink.DeepLinkManager;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
@@ -135,28 +134,21 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
             if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
+                setupToolbar(false);
                 final boolean auditAccessExpired = new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
                 if (auditAccessExpired) {
                     if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
                         setupIAPLayout();
                     } else {
-                        setupToolbar(false);
                         binding.accessError.setVisibility(View.VISIBLE);
                         binding.accessError.setState(EdxCourseAccessErrorState.State.AUDIT_ACCESS_EXPIRED, null);
                         binding.accessError.setPrimaryButtonListener(onFindCourseClick());
                     }
-                } else if (!courseData.getCourse().isStarted()) {
-                    binding.toolbar.getRoot().setVisibility(View.VISIBLE);
-                    setupToolbar(false);
+                } else {
                     binding.accessError.setVisibility(View.VISIBLE);
                     binding.accessError.setState(EdxCourseAccessErrorState.State.NOT_STARTED,
                             DateUtil.formatCourseNotStartedDate(courseData.getCourse().getStart()));
-                    binding.accessError.setPrimaryButtonListener(v ->
-                            EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.DISCOVERY)));
-                } else {
-                    FragmentDashboardErrorLayoutBinding errorLayoutBinding = FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
-                    errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
-                    return errorLayoutBinding.getRoot();
+                    binding.accessError.setPrimaryButtonListener(onExploreCoursesClick());
                 }
             } else {
                 setupToolbar(true);
@@ -184,7 +176,6 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     private void setupIAPLayout() {
         binding.accessError.setVisibility(View.VISIBLE);
         binding.accessError.setState(EdxCourseAccessErrorState.State.IS_UPGRADEABLE, null);
-        setupToolbar(false);
 
         boolean isPurchaseEnabled = environment.getAppFeaturesPrefs().isIAPEnabled(environment.getLoginPrefs().isOddUserId());
         if (isPurchaseEnabled) {
@@ -276,6 +267,13 @@ public class CourseTabsDashboardFragment extends BaseFragment {
 
     private View.OnClickListener onCloseClick() {
         return v -> requireActivity().finish();
+    }
+
+    private View.OnClickListener onExploreCoursesClick() {
+        return v -> {
+            EventBus.getDefault().post(new MoveToDiscoveryTabEvent(Screen.DISCOVERY));
+            requireActivity().finish();
+        };
     }
 
     private View.OnClickListener onFindCourseClick() {
