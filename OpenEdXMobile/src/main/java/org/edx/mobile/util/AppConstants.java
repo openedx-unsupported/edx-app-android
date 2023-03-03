@@ -40,7 +40,7 @@ public enum AppConstants {
     public static final String PRICE = "price";
 
     public static final String HEADER_KEY_AUTHORIZATION = "Authorization";
-
+    public static final String QUERY_PARAM_EXTERNAL_LINK = "external_link";
     /**
      * This class defines all the Firebase constants related to the app.
      */

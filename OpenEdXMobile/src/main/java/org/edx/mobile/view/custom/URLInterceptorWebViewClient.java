@@ -21,6 +21,7 @@ import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.AjaxCallData;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
@@ -310,8 +311,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @return
      */
     private boolean isExternalLink(String strUrl) {
-        return hostForThisPage != null && strUrl != null &&
-                !hostForThisPage.equals(Uri.parse(strUrl).getHost());
+        if (strUrl != null) {
+            Uri uri = Uri.parse(strUrl);
+            return Boolean.parseBoolean(uri.getQueryParameter(AppConstants.QUERY_PARAM_EXTERNAL_LINK)) ||
+                    (hostForThisPage != null && !hostForThisPage.equals(uri.getHost()));
+        }
+        return false;
     }
 
     /**
@@ -332,7 +337,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             return false;
         }
         final WebViewLink helperObj = WebViewLink.parse(strUrl);
-        if (null == helperObj) {
+        if (null == helperObj || Boolean.parseBoolean(helperObj.params.get(AppConstants.QUERY_PARAM_EXTERNAL_LINK))) {
             return false;
         }
         actionListener.onLinkRecognized(helperObj);
