@@ -23,7 +23,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/content_error_action"
-            style="@style/edX.Widget.BaseSizeButton"
+            style="@style/edX.Widget.SecondaryActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"

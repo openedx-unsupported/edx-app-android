@@ -19,7 +19,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_upgrade"
-                style="@style/edX.Widget.ActionBrandPillButton"
+                style="@style/edX.Widget.PrimaryActionButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
