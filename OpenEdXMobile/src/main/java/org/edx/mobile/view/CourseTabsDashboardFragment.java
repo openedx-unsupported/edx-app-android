@@ -135,17 +135,23 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             environment.getAnalyticsRegistry().trackScreenView(
                     Analytics.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
             if (!courseData.getCourse().getCoursewareAccess().hasAccess()) {
+                setupToolbar(false);
                 final boolean auditAccessExpired = new Date().after(DateUtil.convertToDate(courseData.getAuditAccessExpires()));
                 if (auditAccessExpired) {
                     if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
                         setupIAPLayout();
                     } else {
-                        setupToolbar(false);
                         binding.accessError.setVisibility(View.VISIBLE);
-                        binding.accessError.setState(EdxCourseAccessErrorState.State.AUDIT_ACCESS_EXPIRED);
+                        binding.accessError.setState(EdxCourseAccessErrorState.State.AUDIT_ACCESS_EXPIRED, null);
                         binding.accessError.setPrimaryButtonListener(onFindCourseClick());
                     }
+                } else if (!courseData.getCourse().isStarted()) {
+                    binding.accessError.setVisibility(View.VISIBLE);
+                    binding.accessError.setState(EdxCourseAccessErrorState.State.NOT_STARTED,
+                            DateUtil.formatCourseNotStartedDate(courseData.getCourse().getStart()));
+                    binding.accessError.setPrimaryButtonListener(onFindCourseClick());
                 } else {
+                    //Todo Remove when Next Session Enrollment feature is added
                     FragmentDashboardErrorLayoutBinding errorLayoutBinding = FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false);
                     errorLayoutBinding.errorMsg.setText(R.string.course_not_started);
                     return errorLayoutBinding.getRoot();
@@ -175,8 +181,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
 
     private void setupIAPLayout() {
         binding.accessError.setVisibility(View.VISIBLE);
-        binding.accessError.setState(EdxCourseAccessErrorState.State.IS_UPGRADEABLE);
-        setupToolbar(false);
+        binding.accessError.setState(EdxCourseAccessErrorState.State.IS_UPGRADEABLE, null);
 
         boolean isPurchaseEnabled = environment.getAppFeaturesPrefs().isIAPEnabled(environment.getLoginPrefs().isOddUserId());
         if (isPurchaseEnabled) {
@@ -189,7 +194,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
                     () -> iapViewModel.initializeProductPrice(courseData.getCourseSku()), 1500);
             binding.accessError.setSecondaryButtonListener(onFindCourseClick());
         } else {
-            binding.accessError.replacePrimaryWithSecondaryButton();
+            binding.accessError.replacePrimaryWithSecondaryButton(R.string.label_find_a_course);
             binding.accessError.setPrimaryButtonListener(onFindCourseClick());
         }
     }
