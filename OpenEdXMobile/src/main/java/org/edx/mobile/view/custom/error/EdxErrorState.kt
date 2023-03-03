@@ -1,4 +1,4 @@
-package org.edx.mobile.http.notifications
+package org.edx.mobile.view.custom.error
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,19 +14,23 @@ import org.edx.mobile.extenstion.setImageDrawable
 
 class EdxErrorState @JvmOverloads constructor(
     context: Context,
-    private val attrs: AttributeSet? = null,
-    private val defStyleAttr: Int = 0
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val layout: EdxErrorStateBinding =
+    private val layout: EdxErrorStateBinding by lazy {
         EdxErrorStateBinding.inflate(LayoutInflater.from(context))
+    }
 
     init {
         this.addView(layout.root)
-        attrs?.let {
-            val typedArray = context.obtainStyledAttributes(it, R.styleable.StateLayout)
-            val state = State.values()[typedArray.getInt(R.styleable.StateLayout_state, 0)]
-            setState(state)
+        context.theme.obtainStyledAttributes(attrs, R.styleable.ErrorState, 0, 0).apply {
+            try {
+                val state = State.values()[getInt(R.styleable.ErrorState_error_state, 0)]
+                setState(state)
+            } finally {
+                recycle()
+            }
         }
     }
 

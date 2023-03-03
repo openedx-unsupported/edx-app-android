@@ -122,7 +122,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/view_on_web_button"
-                    style="@style/edX.Widget.BaseSizeButton"
+                    style="@style/edX.Widget.SecondaryActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/widget_margin_double"
