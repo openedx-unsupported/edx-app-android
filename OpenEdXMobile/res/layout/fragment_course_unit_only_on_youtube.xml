@@ -30,7 +30,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/view_on_youtube_button"
-        style="@style/edX.Widget.BaseSizeButton"
+        style="@style/edX.Widget.SecondaryActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/edx_margin"
@@ -38,7 +38,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/update_youtube_button"
-        style="@style/edX.Widget.BaseSizeButton"
+        style="@style/edX.Widget.SecondaryActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/edx_margin"

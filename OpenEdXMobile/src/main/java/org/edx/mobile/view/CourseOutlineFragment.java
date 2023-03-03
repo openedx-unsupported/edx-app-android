@@ -145,7 +145,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private CourseViewModel courseViewModel;
     private CourseDateViewModel courseDateViewModel;
     private InAppPurchasesViewModel iapViewModel;
-    private VideoViewModel videoViewModel;
 
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
@@ -216,7 +215,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
 
         if (isOnCourseOutline) {
             initCourseDateObserver();
-            initInAppPurchaseSetup();
         }
         initCourseObservers();
         fetchCourseComponent();
@@ -234,7 +232,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     }
 
     private void initVideoObserver() {
-        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+        VideoViewModel videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
 
         videoViewModel.getSelectedVideosPosition().observe(getViewLifecycleOwner(), new EventObserver<>(position -> {
             if (position != ListView.INVALID_POSITION && position == listView.getCheckedItemPosition()) {
@@ -425,7 +423,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     .getRetainedInstance(getChildFragmentManager());
             if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
                 new SnackbarErrorNotification(listView).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
-                fullscreenLoader.closeLoader();
+                fullscreenLoader.closeLoader(null);
             }
             return null;
         }));

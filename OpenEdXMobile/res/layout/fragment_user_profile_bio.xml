@@ -45,7 +45,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/incomplete_edit_profile_button"
-                    style="@style/edX.Widget.ActionBorderedButton"
+                    style="@style/edX.Widget.SecondaryActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/edx_margin"

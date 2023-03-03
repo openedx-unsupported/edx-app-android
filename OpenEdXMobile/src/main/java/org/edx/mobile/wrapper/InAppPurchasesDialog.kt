@@ -13,6 +13,7 @@ import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.InAppPurchasesUtils
 import org.edx.mobile.util.TextUtils
+import org.edx.mobile.view.CourseTabsDashboardFragment
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -136,7 +137,11 @@ class InAppPurchasesDialog @Inject constructor(
             { _, _ ->
                 if (retryListener != null) {
                     trackAlertCloseEvent(feedbackErrorMessage)
-                    if (context is DialogFragment) context.dismiss()
+                    if (context is DialogFragment) {
+                        context.dismiss()
+                    } else if (context is CourseTabsDashboardFragment) {
+                        context.activity?.finish()
+                    }
                 } else {
                     showFeedbackScreen(context, feedbackErrorMessage)
                 }
