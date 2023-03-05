@@ -337,7 +337,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             return false;
         }
         final WebViewLink helperObj = WebViewLink.parse(strUrl);
-        if (null == helperObj || Boolean.parseBoolean(helperObj.params.get(AppConstants.QUERY_PARAM_EXTERNAL_LINK))) {
+        if (null == helperObj) {
             return false;
         }
         actionListener.onLinkRecognized(helperObj);
