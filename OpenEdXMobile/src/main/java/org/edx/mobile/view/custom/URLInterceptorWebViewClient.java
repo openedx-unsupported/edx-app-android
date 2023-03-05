@@ -313,8 +313,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     private boolean isExternalLink(String strUrl) {
         if (strUrl != null) {
             Uri uri = Uri.parse(strUrl);
-            return Boolean.parseBoolean(uri.getQueryParameter(AppConstants.QUERY_PARAM_EXTERNAL_LINK)) ||
-                    (hostForThisPage != null && !hostForThisPage.equals(uri.getHost()));
+            String externalLinkValue = uri.getQueryParameter(AppConstants.QUERY_PARAM_EXTERNAL_LINK);
+            
+            return (hostForThisPage != null && !hostForThisPage.equals(uri.getHost())) ||
+                    Boolean.parseBoolean(externalLinkValue);
         }
         return false;
     }
