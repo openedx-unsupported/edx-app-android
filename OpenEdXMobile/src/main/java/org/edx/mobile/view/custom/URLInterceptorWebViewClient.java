@@ -21,6 +21,7 @@ import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.AjaxCallData;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
@@ -310,8 +311,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @return
      */
     private boolean isExternalLink(String strUrl) {
-        return hostForThisPage != null && strUrl != null &&
-                !hostForThisPage.equals(Uri.parse(strUrl).getHost());
+        if (strUrl != null) {
+            Uri uri = Uri.parse(strUrl);
+            String externalLinkValue = uri.getQueryParameter(AppConstants.QUERY_PARAM_EXTERNAL_LINK);
+
+            return (hostForThisPage != null && !hostForThisPage.equals(uri.getHost())) ||
+                    Boolean.parseBoolean(externalLinkValue);
+        }
+        return false;
     }
 
     /**
