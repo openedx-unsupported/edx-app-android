@@ -11,5 +11,5 @@ def download():
     # Download all the translation assets from transifex via transifex client
     language_codes = get_language_codes()
     log.log_line(f"Downloading translations for {language_codes}")
-    os.system("tx pull -f -l " + language_codes)
+    os.system("tx pull -f -t -l " + language_codes)
     log.log_line("Translations downloading finished.")
