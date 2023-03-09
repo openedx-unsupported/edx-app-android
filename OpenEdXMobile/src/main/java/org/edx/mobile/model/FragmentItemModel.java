@@ -10,8 +10,9 @@ import androidx.fragment.app.Fragment;
 import org.edx.mobile.view.Router;
 
 /**
- * A class containing all data required for {@link androidx.core.view.PagerAdapter PagerAdapter}
- * and {@link com.google.android.material.tabs.TabLayout TabLayout} to initialize a fragment/tab.
+ * A class containing all data required for {@link androidx.viewpager2.adapter.FragmentStateAdapter
+ * FragmentStateAdapter} and {@link com.google.android.material.tabs.TabLayout TabLayout} to
+ * initialize a fragment/tab.
  */
 public class FragmentItemModel {
     private static String ERROR_MSG_INSTANTIATION = "Unable to instantiate fragment %s: make " +
@@ -45,7 +46,7 @@ public class FragmentItemModel {
         this.fragmentClass = fragmentClass;
         this.title = title;
         this.iconResId = iconResId;
-        this.args = new Bundle(args);
+        this.args = args != null ? new Bundle(args) : new Bundle();
         this.listener = listener;
 
         this.args.putString(Router.EXTRA_SCREEN_TITLE, title.toString());

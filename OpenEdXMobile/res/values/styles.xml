@@ -541,6 +541,17 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
+    <style name="TabItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="maxLines">1</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/tab_selector</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="lineHeight">@dimen/edx_default_margin</item>
+    </style>
+
     <style name="CourseDashboardExpandedToolbarTitle">
         <item name="android:textColor">@color/neutralWhiteT</item>
         <item name="android:textSize">@dimen/edx_large</item>
@@ -563,7 +574,7 @@
         <item name="android:textSize">@dimen/edx_x_large</item>
         <item name="android:fontFamily">@font/inter_semi_bold</item>
         <item name="android:textDirection">locale</item>
-        <item name="android:gravity">left</item>
+        <item name="android:gravity">start</item>
         <item name="lineHeight">@dimen/widget_margin_xx_double</item>
     </style>
 
@@ -572,7 +583,7 @@
         <item name="android:textSize">@dimen/edx_large</item>
         <item name="android:fontFamily">@font/inter_semi_bold</item>
         <item name="android:textDirection">locale</item>
-        <item name="android:gravity">left</item>
+        <item name="android:gravity">start</item>
         <item name="lineHeight">@dimen/widget_margin_x_double</item>
     </style>
 

@@ -5,40 +5,29 @@ import android.content.Intent
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
-import org.edx.mobile.base.BaseFragmentActivity
+import org.edx.mobile.databinding.ActivityCourseTabsDashboardBinding
 import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.CourseDashboardRefreshEvent
 import org.edx.mobile.event.CourseUpgradedEvent
-import org.edx.mobile.http.notifications.SnackbarErrorNotification
-import org.edx.mobile.interfaces.RefreshListener
-import org.edx.mobile.interfaces.SnackbarStatusListener
 import org.edx.mobile.model.api.EnrolledCoursesResponse
-import org.edx.mobile.util.NetworkUtil
 import org.greenrobot.eventbus.EventBus
 
 @AndroidEntryPoint
-class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListener,
-    RefreshListener {
-
-    private lateinit var snackBarErrorNotification: SnackbarErrorNotification
-    private var isFullScreenErrorVisible = true
+class CourseTabsDashboardActivity :
+    OfflineSupportBaseActivity<ActivityCourseTabsDashboardBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_course_tabs_dashboard)
-        snackBarErrorNotification =
-            SnackbarErrorNotification(findViewById(R.id.fragment_container_view))
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().apply {
-                add(
-                    R.id.fragment_container_view,
-                    CourseTabsDashboardFragment.newInstance(intent.extras),
-                    null
-                )
-                disallowAddToBackStack()
-                commit()
-            }
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.add(
+                R.id.fragment_container_view,
+                CourseTabsDashboardFragment.newInstance(intent.extras),
+                null
+            )
+            fragmentTransaction.disallowAddToBackStack()
+            fragmentTransaction.commit()
         }
     }
 
@@ -47,31 +36,8 @@ class CourseTabsDashboardActivity : BaseFragmentActivity(), SnackbarStatusListen
         EventBus.getDefault().removeStickyEvent(CourseUpgradedEvent::class.java)
     }
 
-    override fun hideSnackBar() {
-        snackBarErrorNotification.hideError()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        if (NetworkUtil.isConnected(this)) {
-            snackBarErrorNotification.hideError()
-        } else if (!isFullScreenErrorVisible) {
-            snackBarErrorNotification.showOfflineError(this)
-        }
-    }
-
-    override fun resetSnackbarVisibility(fullScreenErrorVisibility: Boolean) {
-        isFullScreenErrorVisible = fullScreenErrorVisibility
-        val isNetworkConnected = NetworkUtil.isConnected(this)
-        if (fullScreenErrorVisibility || isNetworkConnected) {
-            snackBarErrorNotification.hideError()
-        } else {
-            snackBarErrorNotification.showOfflineError(this)
-        }
-    }
-
-    override fun onRefresh() {
-        EventBus.getDefault().post(CourseDashboardRefreshEvent())
+    override fun getRefreshEvent(): Any {
+        return CourseDashboardRefreshEvent()
     }
 
     companion object {

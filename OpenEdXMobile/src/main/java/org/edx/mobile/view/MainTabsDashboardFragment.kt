@@ -29,6 +29,7 @@ import org.edx.mobile.util.UiUtils.getDrawable
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.Stack
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,6 +43,8 @@ class MainTabsDashboardFragment : BaseFragment() {
     lateinit var fragmentItems: List<FragmentItemModel>
 
     private var selectedTabPosition = -1
+
+    private val tabBackStack: Stack<Int> = Stack()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -102,6 +105,8 @@ class MainTabsDashboardFragment : BaseFragment() {
                 val item = fragmentItems[position]
                 activity?.let { it.title = item.title }
                 item.listener?.onFragmentSelected()
+
+                tabBackStack.push(position)
             }
         })
         if (fragmentItems.size - 1 > 1) {
@@ -158,7 +163,7 @@ class MainTabsDashboardFragment : BaseFragment() {
             EventBus.getDefault().post(FragmentSelectionEvent())
         })
 
-        // Add Prodile screen
+        // Add Profile screen
         items.add(FragmentItemModel(
             AccountFragment::class.java,
             resources.getString(R.string.profile_title),
@@ -231,6 +236,17 @@ class MainTabsDashboardFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+    }
+
+    fun onBackPressed(): Boolean {
+        if (tabBackStack.size > 1) {
+            // Pop the current tab first
+            tabBackStack.pop()
+            val previousTab = tabBackStack.pop()
+            binding.viewPager.setCurrentItem(previousTab, true)
+            return true
+        }
+        return false
     }
 
     companion object {

@@ -151,6 +151,8 @@
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
     <dimen name="course_unit_message_icon_size">140dp</dimen>
 
+    <dimen name="tab_height">56dp</dimen>
+    <dimen name="tab_indicator_height">2dp</dimen>
     <dimen name="tab_indicator_unselected_height">1.5dp</dimen>
     <dimen name="tab_indicator_selected_height">6dp</dimen>
 
@@ -158,7 +160,7 @@
     <dimen name="edx_xxxx_large">32sp</dimen>
     <dimen name="edx_xxx_large">28sp</dimen>
     <dimen name="edx_xx_large">24sp</dimen>
-    <dimen name="edx_x_large">22sp</dimen>
+    <dimen name="edx_x_large">21sp</dimen>
     <dimen name="edx_large">18sp</dimen>
     <dimen name="edx_base">16sp</dimen>
     <dimen name="edx_medium">15sp</dimen>
@@ -308,7 +310,7 @@
     <dimen name="fullscreen_message_line_height">36dp</dimen>
 
     <!-- Learn Screen -->
-    <dimen name="learn_selection_width">60dp</dimen>
+    <dimen name="learn_selection_height">60dp</dimen>
     <dimen name="learn_drop_down_icon_margin">14dp</dimen>
 
     <!-- Course Dashboard Toolbar -->

@@ -13,9 +13,9 @@
     <!-- Title of Learn tab on main dashboard screen -->
     <string name="label_learn">Learn</string>
     <!-- Title of user's course list screen -->
-    <string name="label_my_courses">My Courses</string>
+    <string name="label_my_courses">My courses</string>
     <!-- Title of user's programs list screen -->
-    <string name="label_my_programs">My Programs</string>
+    <string name="label_my_programs">My programs</string>
 
     <!-- Course dashboard screen-->
     <!-- Title of Home tab on course dashboard screen -->

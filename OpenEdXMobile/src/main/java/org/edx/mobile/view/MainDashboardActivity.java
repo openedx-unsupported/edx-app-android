@@ -17,11 +17,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.databinding.ActivityCourseTabsDashboardBinding;
+import org.edx.mobile.databinding.ActivityMainDashboardBinding;
 import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
+import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -39,15 +38,10 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainDashboardActivity extends BaseFragmentActivity {
-
-    @Inject
-    IEdxEnvironment environment;
+public class MainDashboardActivity extends OfflineSupportBaseActivity<ActivityMainDashboardBinding> {
 
     @Inject
     NotificationDelegate notificationDelegate;
-
-    ActivityCourseTabsDashboardBinding binding;
 
     public static Intent newIntent(@Nullable @ScreenDef String screenName, @Nullable String pathId) {
         // These flags will make it so we only have a single instance of this activity,
@@ -67,8 +61,6 @@ public class MainDashboardActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCourseTabsDashboardBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -78,6 +70,10 @@ public class MainDashboardActivity extends BaseFragmentActivity {
         }
 
         initWhatsNew();
+    }
+
+    public Object getRefreshEvent() {
+        return new MainDashboardRefreshEvent();
     }
 
     private void initWhatsNew() {
@@ -172,6 +168,16 @@ public class MainDashboardActivity extends BaseFragmentActivity {
             bar.setDisplayHomeAsUpEnabled(false);
             bar.setIcon(android.R.color.transparent);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
+        if (fragment instanceof MainTabsDashboardFragment &&
+                ((MainTabsDashboardFragment) fragment).onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

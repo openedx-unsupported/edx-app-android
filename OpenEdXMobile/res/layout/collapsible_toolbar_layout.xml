@@ -22,7 +22,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="@dimen/edx_button_height"
+            android:layout_height="@dimen/collapsed_toolbar_height"
             android:background="@color/neutralWhite"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/container_padding"
