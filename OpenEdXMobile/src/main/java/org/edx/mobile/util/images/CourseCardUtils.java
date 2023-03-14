@@ -77,17 +77,17 @@ public enum CourseCardUtils {
                                 .label_expired_on, "date", DateUtil.formatDateWithNoYear(expiryDate.getTime()));
                     } else {
                         final CharSequence timeSpan = DateUtils.getRelativeTimeSpanString(expiryDate.getTime(), today.getTime(),
-                                DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString().toLowerCase();
+                                DateUtils.SECOND_IN_MILLIS).toString().toLowerCase();
                         formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
                                 .label_expired, "date", timeSpan);
                     }
                 } else {
                     if (dayDifferenceInMillies > SEVEN_DAYS_IN_MILLIS) {
                         formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_expires_on, "date", DateUtil.formatDateWithNoYear(expiryDate.getTime()));
+                                .label_expires, "date", DateUtil.formatDateWithNoYear(expiryDate.getTime()));
                     } else {
                         final CharSequence timeSpan = DateUtils.getRelativeTimeSpanString(expiryDate.getTime(), today.getTime(),
-                                DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString().toLowerCase();
+                                DateUtils.SECOND_IN_MILLIS).toString().toLowerCase();
                         formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
                                 .label_expires, "date", timeSpan);
                     }

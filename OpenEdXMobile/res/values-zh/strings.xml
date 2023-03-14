@@ -150,20 +150,6 @@
   <string name="course_name">课程名称</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">新的课程内容</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">即将于{date}开始</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">{date}已结束</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">将于{date}结束</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">课程截止日期 {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">课程截止日期 {date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">课程截止日期 {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">课程截止日期 {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">课程内容</string>
