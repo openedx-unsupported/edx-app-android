@@ -145,20 +145,6 @@
   <string name="course_name">اسم المساق</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">محتويات المساق الجديد</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">يبدأ في {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">انتهى في {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">ينتهي في {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">ستنتهي صلاحية الوصول إلى الدورة التدريبية {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">ستنتهي صلاحية الوصول إلى الدورة التدريبية في {date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">انتهت صلاحية الوصول إلى الدورة التدريبية {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">انتهت صلاحية الوصول إلى الدورة التدريبية في {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">محتوى المساق</string>

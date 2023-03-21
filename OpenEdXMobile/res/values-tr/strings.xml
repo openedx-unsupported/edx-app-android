@@ -146,20 +146,6 @@
   <string name="course_name">Ders Adı</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Yeni Ders İçeriği</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">Başlangıç {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">Bitti {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">Bitiyor {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">Derse erişim {date} tarihinde sona eriyor</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">Derse erişim {date} tarihinde sona eriyor</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">Derse erişim {date} tarihinde sona erdi</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">Derse erişim {date} tarihinde sona erdi</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Ders İçeriği</string>

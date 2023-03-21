@@ -145,20 +145,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="course_name">Tên khóa học</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nội dung khóa học mới</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">Bắt đầu {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">Đã kết thúc {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">Kết thúc {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">Khóa học hết hạn tham gia {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">Ngày hết hạn tham gia khóa học {date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">Khóa học đã hết hạn tham gia {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">Ngày đã hết hạn tham gia khóa học {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Nội dung khóa học</string>
