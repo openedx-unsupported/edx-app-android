@@ -87,8 +87,9 @@ class CourseModalDialogFragment : DialogFragment() {
             KEY_COURSE_NAME,
             arguments?.getString(KEY_COURSE_NAME)
         )
-        val isPurchaseEnabled =
-            environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
+        val isPurchaseEnabled = courseSku.isNullOrEmpty().not() &&
+                environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
+
         binding.layoutUpgradeBtn.root.setVisibility(isPurchaseEnabled)
         binding.dialogDismiss.setOnClickListener {
             dialog?.dismiss()

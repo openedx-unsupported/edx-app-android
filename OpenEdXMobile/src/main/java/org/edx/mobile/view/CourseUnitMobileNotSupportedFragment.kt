@@ -76,6 +76,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     private fun showGradedContent() {
         unit?.let { unit ->
             val isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, false)
+            val isPurchaseEnabled = unit.courseSku.isNullOrEmpty().not() &&
+                    environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
+
             binding.containerLayoutNotAvailable.setVisibility(false)
             binding.llGradedContentLayout.setVisibility(true)
             var experimentGroup: String? = null
@@ -94,7 +97,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 experimentGroup,
                 unit.id
             )
-            if (environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)) {
+            if (isPurchaseEnabled) {
                 iapAnalytics.initCourseValues(
                     courseId = unit.courseId,
                     isSelfPaced = isSelfPaced,
