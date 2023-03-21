@@ -150,20 +150,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="course_name">Nombre del curso</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nuevo contenido del curso</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">Comenzando el {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">Terminado el {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">Terminando el {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">El acceso a los cursos caduca en {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">El acceso a los cursos caduca el {date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">El acceso a los cursos caducó hace {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">El acceso a los cursos caducó el {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Contenido del curso</string>
