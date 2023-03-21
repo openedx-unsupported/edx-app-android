@@ -40,4 +40,18 @@
     <string name="message_an_error_occurred_courses">An error occurred while loading your courses</string>
     <!-- Message for course has not started yet -->
     <string name="message_course_not_started">Come back %s to see all your course content here.</string>
+
+    <!-- Labels for Course Access Dates -->
+    <!-- Label for date when course starts -->
+    <string name="label_starts">Starts {date}</string>
+    <!-- Label for course that has ended -->
+    <string name="label_ended_on">Ended on {date}</string>
+    <!-- Label for date when course is ending -->
+    <string name="label_ends">Ends {date}</string>
+    <!-- Label for date when course is expiring on a specific date like on December 5 or in a specific time frame like in 2 days -->
+    <string name="label_access_expires">Access expires {date}</string>
+    <!-- Label for date when course expired in last 7 days like 2 days ago or 4 hours ago -->
+    <string name="label_access_expired">Access expired {date}</string>
+    <!-- Label for date when course expired on a specific date like on November 5 -->
+    <string name="label_expired_on">Expired on {date}</string>
 </resources>

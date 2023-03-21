@@ -77,19 +77,19 @@ public enum CourseCardUtils {
                                 .label_expired_on, "date", DateUtil.formatDateWithNoYear(expiryDate.getTime()));
                     } else {
                         final CharSequence timeSpan = DateUtils.getRelativeTimeSpanString(expiryDate.getTime(), today.getTime(),
-                                DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString().toLowerCase();
+                                DateUtils.SECOND_IN_MILLIS).toString().toLowerCase();
                         formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_expired, "date", timeSpan);
+                                .label_access_expired, "date", timeSpan);
                     }
                 } else {
                     if (dayDifferenceInMillies > SEVEN_DAYS_IN_MILLIS) {
                         formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_expires_on, "date", DateUtil.formatDateWithNoYear(expiryDate.getTime()));
+                                .label_access_expires, "date", DateUtil.formatDateWithNoYear(expiryDate.getTime()));
                     } else {
                         final CharSequence timeSpan = DateUtils.getRelativeTimeSpanString(expiryDate.getTime(), today.getTime(),
-                                DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString().toLowerCase();
+                                DateUtils.SECOND_IN_MILLIS).toString().toLowerCase();
                         formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_expires, "date", timeSpan);
+                                .label_access_expires, "date", timeSpan);
                     }
                 }
             } else {
@@ -99,24 +99,24 @@ public enum CourseCardUtils {
                 } else if (isDatePassed(today, end)) {
                     // if "end" date has passed
                     formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                            .label_ended, "date", DateUtil.formatDateWithNoYear(endDate.getTime()));
+                            .label_ended_on, "date", DateUtil.formatDateWithNoYear(endDate.getTime()));
                 } else {
                     formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                            .label_ending, "date", DateUtil.formatDateWithNoYear(endDate.getTime()));
+                            .label_ends, "date", DateUtil.formatDateWithNoYear(endDate.getTime()));
                 }
             }
         } else {
             if (start_type == StartType.TIMESTAMP && !TextUtils.isEmpty(start)) {
                 final Date startDate = DateUtil.convertToDate(start);
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", DateUtil.formatDateWithNoYear(startDate.getTime()));
+                        .label_starts, "date", DateUtil.formatDateWithNoYear(startDate.getTime()));
             } else if (start_type == StartType.STRING && !TextUtils.isEmpty(start_display)) {
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", start_display);
+                        .label_starts, "date", start_display);
 
             } else {
                 formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", context.getString(R.string.assessment_soon));
+                        .label_starts, "date", context.getString(R.string.assessment_soon));
             }
         }
 
