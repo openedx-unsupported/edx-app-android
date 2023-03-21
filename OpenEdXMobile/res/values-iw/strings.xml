@@ -149,20 +149,6 @@
   <string name="course_name">שם קורס</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">תוכן קורס חדש</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">התחלה {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">סיום {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">סיום {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">תוקף הגישה לקורס יפוג {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">תוקף הגישה לקורס יפוג ב{date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">תוקף הכניסה לקורס פג {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">תוקף הכניסה לקורס פג ב{date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">תוכן הקורס</string>
