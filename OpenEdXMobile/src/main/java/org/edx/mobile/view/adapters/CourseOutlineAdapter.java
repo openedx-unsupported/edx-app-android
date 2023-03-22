@@ -90,18 +90,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         this.isVideoMode = isVideoMode;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
-        if (isOnCourseOutline && !isVideoMode) {
-            // Add certificate item
-            if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
-                adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                environment.getRouter().showCertificate(context, courseData);
-                            }
-                        }));
-            }
-        }
     }
 
     @Override
@@ -160,10 +148,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_section_header, parent, false);
                     break;
                 }
-                case SectionRow.COURSE_CERTIFICATE: {
-                    convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
-                    break;
-                }
                 case SectionRow.RESUME_COURSE_ITEM: {
                     convertView = inflater.inflate(R.layout.row_resume_course, parent, false);
                     break;
@@ -181,9 +165,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
             }
             case SectionRow.SECTION: {
                 return getHeaderView(position, convertView);
-            }
-            case SectionRow.COURSE_CERTIFICATE: {
-                return getCertificateView(position, convertView);
             }
             case SectionRow.RESUME_COURSE_ITEM: {
                 return getResumeCourseView(position, convertView);
@@ -603,12 +584,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View getCertificateView(int position, View convertView) {
-        final SectionRow sectionRow = getItem(position);
-        convertView.setOnClickListener(sectionRow.clickListener);
-        return convertView;
-    }
-
     private View getResumeCourseView(int position, View convertView) {
         final SectionRow sectionRow = getItem(position);
         final TextView tvResumeCourseComponentTitle = (TextView) convertView.findViewById(R.id.resume_course_text);
@@ -628,18 +603,9 @@ public class CourseOutlineAdapter extends BaseAdapter {
             adapterData.set(resumeCourseItemPlace, new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
         } else {
             // Add it otherwise
-            adapterData.add(getResumeCourseItemPlace(), new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
+            adapterData.add(0, new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
         }
         notifyDataSetChanged();
-    }
-
-    /**
-     * Tells the appropriate place for a {@link SectionRow#RESUME_COURSE_ITEM} to put in the adapter's list.
-     *
-     * @return List index (non-negative number) for a {@link SectionRow#RESUME_COURSE_ITEM}.
-     */
-    public int getResumeCourseItemPlace() {
-        return isNonCourseWareItemExist(SectionRow.COURSE_CERTIFICATE) ? 1 : 0;
     }
 
     /**
@@ -730,13 +696,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     public static class SectionRow {
-        public static final int COURSE_CERTIFICATE = 0;
-        public static final int RESUME_COURSE_ITEM = 1;
-        public static final int SECTION = 2;
-        public static final int ITEM = 3;
+        public static final int RESUME_COURSE_ITEM = 0;
+        public static final int SECTION = 1;
+        public static final int ITEM = 2;
 
         // Update this count according to the section types mentioned above
-        public static final int NUM_OF_SECTION_ROWS = 4;
+        public static final int NUM_OF_SECTION_ROWS = 3;
 
         public final int type;
         public final boolean topComponent;

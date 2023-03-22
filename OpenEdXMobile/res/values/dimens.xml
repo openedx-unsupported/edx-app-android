@@ -158,7 +158,7 @@
     <dimen name="edx_xxxx_large">32sp</dimen>
     <dimen name="edx_xxx_large">28sp</dimen>
     <dimen name="edx_xx_large">24sp</dimen>
-    <dimen name="edx_x_large">21sp</dimen>
+    <dimen name="edx_x_large">22sp</dimen>
     <dimen name="edx_large">18sp</dimen>
     <dimen name="edx_base">16sp</dimen>
     <dimen name="edx_medium">15sp</dimen>
@@ -314,4 +314,9 @@
     <dimen name="collapsed_toolbar_height">40dp</dimen>
     <dimen name="expanded_toolbar_margin_top">-6dp</dimen>
     <dimen name="expanded_toolbar_margin_end">-8dp</dimen>
+
+    <!-- Course Certificate Block -->
+    <dimen name="course_certificate_logo_height">100dp</dimen>
+    <dimen name="course_certificate_logo_width">140dp</dimen>
+
 </resources>
