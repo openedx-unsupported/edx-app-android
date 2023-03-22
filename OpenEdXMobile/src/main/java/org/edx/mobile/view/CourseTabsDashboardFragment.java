@@ -445,7 +445,7 @@ public class CourseTabsDashboardFragment extends BaseFragment {
     private void showCertificate() {
         if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
             binding.toolbar.certificate.getRoot().setVisibility(View.VISIBLE);
-            binding.toolbar.certificate.getRoot().setOnClickListener(view -> environment.getRouter().showCertificate(requireContext(), courseData));
+            binding.toolbar.certificate.viewCertificate.setOnClickListener(view -> environment.getRouter().showCertificate(requireContext(), courseData));
         } else {
             binding.toolbar.certificate.getRoot().setVisibility(View.GONE);
         }

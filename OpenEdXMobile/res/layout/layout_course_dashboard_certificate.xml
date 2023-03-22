@@ -33,6 +33,7 @@
         android:textSize="@dimen/edx_small" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/view_certificate"
         style="@style/edX.Widget.PrimaryActionButton"
         android:text="@string/course_details_view_cert_button" />
 
