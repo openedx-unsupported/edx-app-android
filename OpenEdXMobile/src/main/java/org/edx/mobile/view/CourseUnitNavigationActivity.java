@@ -218,6 +218,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public void navigatePreviousComponent() {
+        if (pagerAdapter.getItemCount() == 0) {
+            return;
+        }
         int index = pager2.getCurrentItem();
         if (index > 0) {
             pager2.setCurrentItem(index - 1);
@@ -226,6 +229,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Override
     public void navigateNextComponent() {
+        if (pagerAdapter.getItemCount() == 0) {
+            return;
+        }
         int index = pager2.getCurrentItem();
         if (index < pagerAdapter.getItemCount() - 1) {
             pager2.setCurrentItem(index + 1);
@@ -316,6 +322,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     private void tryToUpdateForEndOfSequential() {
+        if (pagerAdapter.getItemCount() == 0) {
+            return;
+        }
+
         int curIndex = pager2.getCurrentItem();
         setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
@@ -390,15 +400,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (refreshCourse) {
             initAdapter();
         }
+        if (pagerAdapter != null)
+            pagerAdapter.notifyDataSetChanged();
 
         if (index >= 0) {
             pager2.setCurrentItem(index, false);
             tryToUpdateForEndOfSequential();
         }
-
-        if (pagerAdapter != null)
-            pagerAdapter.notifyDataSetChanged();
-
     }
 
     @Override
