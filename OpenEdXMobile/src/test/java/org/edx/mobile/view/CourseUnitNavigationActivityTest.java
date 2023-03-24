@@ -83,7 +83,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         CourseStructureV1Model model;
         CourseComponent courseComponent;
         try {
-            model = executeStrict(courseAPI.getCourseStructure(courseId));
+            model = executeStrict(courseAPI.getCourseStructureWithStale(courseId));
             courseComponent = (CourseComponent) CourseAPI.Companion.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -156,7 +156,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         CourseStructureV1Model model;
         CourseComponent courseComponent;
         try {
-            model = executeStrict(courseAPI.getCourseStructure(courseId));
+            model = executeStrict(courseAPI.getCourseStructureWithStale(courseId));
             courseComponent = (CourseComponent) CourseAPI.Companion.normalizeCourseStructure(model, courseId);
         } catch (Exception e) {
             throw new RuntimeException(e);

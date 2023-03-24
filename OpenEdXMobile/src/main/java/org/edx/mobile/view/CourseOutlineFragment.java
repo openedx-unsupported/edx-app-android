@@ -25,8 +25,6 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -57,8 +55,6 @@ import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
-import org.edx.mobile.loader.AsyncTaskResult;
-import org.edx.mobile.loader.CourseOutlineAsyncLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
@@ -68,7 +64,6 @@ import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -90,11 +85,11 @@ import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
-import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
+import org.edx.mobile.viewModel.CourseViewModel;
 import org.edx.mobile.viewModel.InAppPurchasesViewModel;
 import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
@@ -113,9 +108,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @AndroidEntryPoint
-public class CourseOutlineFragment extends OfflineSupportBaseFragment
-        implements RefreshListener, VideoDownloadHelper.DownloadManagerCallback,
-        LoaderManager.LoaderCallbacks<AsyncTaskResult<CourseComponent>>, BaseFragment.PermissionListener {
+public class CourseOutlineFragment extends OfflineSupportBaseFragment implements RefreshListener,
+        VideoDownloadHelper.DownloadManagerCallback, BaseFragment.PermissionListener {
     private final Logger logger = new Logger(getClass().getName());
     private static final int AUTOSCROLL_DELAY_MS = 500;
     private static final int SNACKBAR_SHOWTIME_MS = 5000;
@@ -138,8 +132,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     private List<? extends HasDownloadEntry> downloadEntries;
     private SwipeRefreshLayout swipeContainer;
 
-    private Call<CourseStructureV1Model> getHierarchyCall;
-
     private FullScreenErrorNotification errorNotification;
 
     @Inject
@@ -151,6 +143,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     @Inject
     InAppPurchasesDialog iapDialogs;
 
+    private CourseViewModel courseViewModel;
     private CourseDateViewModel courseDateViewModel;
     private InAppPurchasesViewModel iapViewModel;
 
@@ -208,7 +201,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 loadingIndicator.setVisibility(View.GONE);
                 errorNotification.hideError();
                 canFetchBannerInfo = true;
-                getCourseComponentFromServer(false, true);
+                courseViewModel.getCourseData(courseData.getCourseId(), null, false, true,
+                        CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
             }
         });
         UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
@@ -325,7 +319,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 iapDialogs.handleIAPException(
                         CourseOutlineFragment.this,
                         errorMessage,
-                        (dialogInterface, i) -> getCourseComponentFromServer(false, true),
+                        (dialogInterface, i) -> courseViewModel
+                                .getCourseData(courseData.getCourseId(), null, false, false,
+                                        CourseViewModel.CoursesRequestType.LIVE.INSTANCE),
                         (dialogInterface, i) -> {
                             iapViewModel.getIapFlowData().clear();
                             FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
@@ -387,30 +383,59 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void fetchCourseComponent() {
-        final String courseId = courseData.getCourseId();
-        if (courseComponentId != null && TextUtils.isEmpty(screenName)) {
-            final CourseComponent courseComponent = courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId);
-            if (courseComponent != null) {
-                // Course data exist in app session cache
-                loadData(courseComponent);
-                return;
-            }
-        }
-        // Check if course data is available in app session cache
-        final CourseComponent courseComponent = courseManager.getCourseDataFromAppLevelCache(courseId);
-        if (courseComponent != null) {
-            // Course data exist in app session cache
-            loadData(courseComponent);
-            return;
-        }
-        // Check if course data is available in persistable cache
-        loadingIndicator.setVisibility(View.VISIBLE);
+        initCourseObservers();
         // Prepare the loader. Either re-connect with an existing one or start a new one.
         if (environment.getLoginPrefs().isUserLoggedIn()) {
-            getLoaderManager().initLoader(0, null, this);
+            final String courseId = courseData.getCourseId();
+            courseViewModel.getCourseData(courseId, courseComponentId, true, false,
+                    CourseViewModel.CoursesRequestType.CACHE.INSTANCE);
         } else {
             EventBus.getDefault().post(new LogoutEvent());
         }
+    }
+
+    private void initCourseObservers() {
+        courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+        courseViewModel.getCourseComponent().observe(getViewLifecycleOwner(), new EventObserver<>(courseComponent -> {
+            loadData(validateCourseComponent(courseComponent));
+            FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
+                    .getRetainedInstance(getChildFragmentManager());
+            if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
+                new SnackbarErrorNotification(listView).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
+                fullscreenLoader.closeLoader();
+            }
+            return null;
+        }));
+
+        courseViewModel.getShowProgress().observe(getViewLifecycleOwner(), showProgress -> {
+            loadingIndicator.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+        });
+
+        courseViewModel.getSwipeRefresh().observe(getViewLifecycleOwner(), swipeRefresh -> {
+            swipeContainer.setRefreshing(swipeRefresh);
+        });
+
+        courseViewModel.getHandleError().observe(getViewLifecycleOwner(), throwable -> {
+            if (isAdded()) {
+                if (throwable instanceof HttpStatusException &&
+                        ((HttpStatusException) throwable).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                    environment.getRouter().forceLogout(getContextOrThrow(),
+                            environment.getAnalyticsRegistry(),
+                            environment.getNotificationDelegate());
+                } else {
+                    FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
+                            .getRetainedInstance(getChildFragmentManager());
+                    if (throwable instanceof CourseContentNotValidException) {
+                        errorNotification.showError(requireContext(), throwable);
+                        logger.error(throwable, true);
+                    } else if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
+                        iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, throwable);
+                    }
+                    // Remove bulk video download if the course has NO downloadable videos
+                    UiUtils.INSTANCE.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
+                }
+            }
+        });
     }
 
     private void trackAATestCourseOutline() {
@@ -430,94 +455,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                 }
             });
         }
-    }
-
-    @NonNull
-    @Override
-    public Loader<AsyncTaskResult<CourseComponent>> onCreateLoader(int id, Bundle args) {
-        return new CourseOutlineAsyncLoader(getContext(), courseData.getCourseId());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<AsyncTaskResult<CourseComponent>> loader, AsyncTaskResult<CourseComponent> result) {
-        final CourseComponent courseComponent = result.getResult();
-        if (courseComponent != null) {
-            // Course data exist in persistable cache
-            loadData(validateCourseComponent(courseComponent));
-            loadingIndicator.setVisibility(View.GONE);
-            // Send a server call in background for refreshed data
-            getCourseComponentFromServer(false, false);
-        } else {
-            // Course data is neither available in app session cache nor available in persistable cache
-            getCourseComponentFromServer(true, true);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<AsyncTaskResult<CourseComponent>> loader) {
-        loadingIndicator.setVisibility(View.VISIBLE);
-    }
-
-    public void getCourseComponentFromServer(boolean showProgress, boolean forceRefresh) {
-        if (!environment.getLoginPrefs().isUserLoggedIn()) {
-            EventBus.getDefault().post(new LogoutEvent());
-            return;
-        }
-        if (loadingIndicator.getVisibility() == View.VISIBLE) {
-            showProgress = true;
-        }
-        final TaskProgressCallback progressCallback = showProgress ?
-                new TaskProgressCallback.ProgressViewController(loadingIndicator) : null;
-        final String courseId = courseData.getCourseId();
-
-        if (forceRefresh) {
-            getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
-        } else {
-            getHierarchyCall = courseApi.getCourseStructure(courseId);
-        }
-        getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(getActivity(), courseId,
-                progressCallback, errorNotification, null, this) {
-            @Override
-            protected void onResponse(@NonNull final CourseComponent courseComponent) {
-                courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
-                loadData(validateCourseComponent(courseComponent));
-                swipeContainer.setRefreshing(false);
-                FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                        .getRetainedInstance(getChildFragmentManager());
-                if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    new SnackbarErrorNotification(listView).showUpgradeSuccessSnackbar(R.string.purchase_success_message);
-                    fullscreenLoader.closeLoader();
-                }
-            }
-
-            @Override
-            protected void onFailure(@NonNull Throwable error) {
-                super.onFailure(error);
-                if (!isAdded()) {
-                    return;
-                }
-
-                FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                        .getRetainedInstance(getChildFragmentManager());
-                if (error instanceof CourseContentNotValidException) {
-                    errorNotification.showError(getContext(), error);
-                    logger.error(error, true);
-                } else if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                    iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error);
-                }
-                swipeContainer.setRefreshing(false);
-                // Remove bulk video download if the course has NO downloadable videos
-                UiUtils.INSTANCE.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
-            }
-
-            @Override
-            protected void onFinish() {
-                if (!EventBus.getDefault().isRegistered(CourseOutlineFragment.this)) {
-                    EventBus.getDefault().register(CourseOutlineFragment.this);
-                }
-                swipeContainer.setRefreshing(false);
-            }
-        });
     }
 
     /**
@@ -1121,7 +1058,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
         }
         // Hide payments banner
         updatePaymentsBannerVisibility(View.GONE);
-        getCourseComponentFromServer(true, true);
+        courseViewModel.getCourseData(courseData.getCourseId(), null, true, false,
+                CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
     }
 
     @Subscribe
@@ -1137,7 +1075,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             }
             case PURCHASE_FLOW_COMPLETE: {
                 courseData.setMode(EnrollmentMode.VERIFIED.toString());
-                getCourseComponentFromServer(false, true);
+                courseViewModel.getCourseData(courseData.getCourseId(), null, false, false,
+                        CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
                 EventBus.getDefault().post(new MyCoursesRefreshEvent());
                 break;
             }
@@ -1219,10 +1158,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if (getHierarchyCall != null) {
-            getHierarchyCall.cancel();
-            getHierarchyCall = null;
-        }
         if (getCourseUpgradeStatus != null) {
             getCourseUpgradeStatus.cancel();
             getCourseUpgradeStatus = null;
