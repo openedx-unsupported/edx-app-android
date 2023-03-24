@@ -74,6 +74,12 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restore(savedInstanceState);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
