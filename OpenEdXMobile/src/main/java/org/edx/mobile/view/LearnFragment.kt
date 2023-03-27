@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentLearnBinding
 import org.edx.mobile.event.FragmentSelectionEvent
+import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.view.adapters.LearnDropDownAdapter
@@ -55,6 +56,7 @@ class LearnFragment : OfflineSupportBaseFragment() {
             binding.llLearnSelection.setVisibility(true)
             binding.llLearnSelection.setOnClickListener {
                 showLearnPopupMenu(binding.tvSelectedItem, items)
+                binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_up)
             }
         } else {
             binding.llLearnSelection.setVisibility(false)
@@ -81,6 +83,10 @@ class LearnFragment : OfflineSupportBaseFragment() {
         adapter.select(selectedItemPosition)
         adapter.notifyDataSetChanged()
         listPopupWindow.listView?.setSelector(android.R.color.transparent)
+
+        listPopupWindow.setOnDismissListener {
+            binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_down)
+        }
     }
 
     private fun updateScreen(item: LearnScreenItem, trackEvent: Boolean = true) {

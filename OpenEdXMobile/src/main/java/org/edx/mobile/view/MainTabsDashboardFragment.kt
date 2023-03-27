@@ -21,15 +21,14 @@ import org.edx.mobile.event.FragmentSelectionEvent
 import org.edx.mobile.event.MoveToDiscoveryTabEvent
 import org.edx.mobile.event.ScreenArgumentsEvent
 import org.edx.mobile.event.ScreenArgumentsEvent.Companion.getNewInstance
+import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.model.FragmentItemModel
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.UiUtils.enforceSingleScrollDirection
-import org.edx.mobile.util.UiUtils.getDrawable
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import java.util.Stack
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,8 +42,6 @@ class MainTabsDashboardFragment : BaseFragment() {
     lateinit var fragmentItems: List<FragmentItemModel>
 
     private var selectedTabPosition = -1
-
-    private val tabBackStack: Stack<Int> = Stack()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,11 +65,6 @@ class MainTabsDashboardFragment : BaseFragment() {
         handleTabSelection(arguments)
 
         binding.viewPager.isUserInputEnabled = false
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(SELECTED_POSITION, selectedTabPosition)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -105,8 +97,6 @@ class MainTabsDashboardFragment : BaseFragment() {
                 val item = fragmentItems[position]
                 activity?.let { it.title = item.title }
                 item.listener?.onFragmentSelected()
-
-                tabBackStack.push(position)
             }
         })
         if (fragmentItems.size - 1 > 1) {
@@ -130,11 +120,9 @@ class MainTabsDashboardFragment : BaseFragment() {
     }
 
     private fun createTab(tab: Tab, fragmentItem: FragmentItemModel) {
-        val iconDrawable = getDrawable(requireContext(), fragmentItem.iconResId)
-
         val tabItemBinding = TabItemBinding.inflate(layoutInflater)
         tabItemBinding.title.text = fragmentItem.title
-        tabItemBinding.icon.setImageDrawable(iconDrawable)
+        tabItemBinding.icon.setImageDrawable(fragmentItem.iconResId)
 
         tab.customView = tabItemBinding.root
         tab.contentDescription = fragmentItem.title
@@ -239,11 +227,9 @@ class MainTabsDashboardFragment : BaseFragment() {
     }
 
     fun onBackPressed(): Boolean {
-        if (tabBackStack.size > 1) {
-            // Pop the current tab first
-            tabBackStack.pop()
-            val previousTab = tabBackStack.pop()
-            binding.viewPager.setCurrentItem(previousTab, true)
+        val learnTabPosition = if (environment.config.discoveryConfig.isDiscoveryEnabled) 1 else 0
+        if (selectedTabPosition != learnTabPosition) {
+            binding.viewPager.currentItem = learnTabPosition
             return true
         }
         return false

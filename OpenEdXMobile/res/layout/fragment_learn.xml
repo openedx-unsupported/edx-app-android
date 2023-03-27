@@ -22,7 +22,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edx_button_height"
-                android:layout_gravity="start"
+                android:layout_gravity="center"
                 android:background="@color/neutralWhite"
                 android:paddingStart="@dimen/container_padding"
                 android:paddingEnd="@dimen/container_padding"
@@ -33,12 +33,11 @@
                 <LinearLayout
                     android:id="@+id/ll_learn_selection"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/learn_selection_height"
+                    android:layout_height="@dimen/edx_button_height"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    tools:ignore="UseCompoundDrawables">
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_selected_item"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -49,11 +48,12 @@
                         android:textSize="@dimen/edx_large"
                         tools:ignore="RtlSymmetry" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_selector_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_drop_down"
+                        app:srcCompat="@drawable/ic_drop_down"
                         tools:ignore="ContentDescription" />
 
                 </LinearLayout>

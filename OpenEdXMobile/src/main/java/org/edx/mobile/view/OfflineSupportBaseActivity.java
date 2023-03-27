@@ -2,10 +2,10 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 
+import androidx.annotation.LayoutRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
@@ -33,7 +33,7 @@ public abstract class OfflineSupportBaseActivity<VB extends ViewDataBinding> ext
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main_dashboard);
+        binding = DataBindingUtil.setContentView(this, getViewResourceId());
         snackbarErrorNotification = new SnackbarErrorNotification(binding.getRoot());
     }
 
@@ -75,4 +75,12 @@ public abstract class OfflineSupportBaseActivity<VB extends ViewDataBinding> ext
      * @return The event object.
      */
     public abstract Object getRefreshEvent();
+
+    /**
+     * Provides the layout resource id of the layout to be used by inherited activity.
+     *
+     * @return The event object.
+     */
+    public abstract @LayoutRes
+    int getViewResourceId();
 }

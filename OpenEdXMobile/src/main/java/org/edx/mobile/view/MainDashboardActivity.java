@@ -72,6 +72,10 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity<ActivityMa
         initWhatsNew();
     }
 
+    public int getViewResourceId() {
+        return R.layout.activity_main_dashboard;
+    }
+
     public Object getRefreshEvent() {
         return new MainDashboardRefreshEvent();
     }

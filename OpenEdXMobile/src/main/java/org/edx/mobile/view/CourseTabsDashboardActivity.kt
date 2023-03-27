@@ -36,6 +36,10 @@ class CourseTabsDashboardActivity :
         EventBus.getDefault().removeStickyEvent(CourseUpgradedEvent::class.java)
     }
 
+    override fun getViewResourceId(): Int {
+        return R.layout.activity_course_tabs_dashboard
+    }
+
     override fun getRefreshEvent(): Any {
         return CourseDashboardRefreshEvent()
     }
