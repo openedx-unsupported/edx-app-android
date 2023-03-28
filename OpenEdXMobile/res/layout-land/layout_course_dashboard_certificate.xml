@@ -19,16 +19,15 @@
         android:layout_marginStart="@dimen/edx_default_margin"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_semi_bold"
+            android:fontFamily="?attr/fontSemiBold"
             android:text="@string/course_details_congratulations"
-            android:textAllCaps="true"
             android:textColor="@color/primaryDarkColor"
             android:textSize="@dimen/edx_x_large" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/course_details_earned_cert"
@@ -43,7 +42,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/view_certificate"
             style="@style/edX.Widget.PrimaryActionButton"
-            android:text="@string/course_details_view_cert_button" />
+            android:text="@string/label_certificate_view_button" />
 
     </LinearLayout>
 

@@ -53,5 +53,5 @@
     <string name="label_expired_on">Expired on {date}</string>
 
     <!-- Button that opens a full view of an earned certificate -->
-    <string name="course_details_view_cert_button">View certificate</string>
+    <string name="label_certificate_view_button">View certificate</string>
 </resources>

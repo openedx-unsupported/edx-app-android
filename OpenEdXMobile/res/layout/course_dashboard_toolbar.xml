@@ -87,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/expanded_toolbar_margin_top"
-                        android:fontFamily="@font/inter_semi_bold"
+                        android:fontFamily="?attr/fontSemiBold"
                         android:textColor="@color/warningLight"
                         android:textDirection="locale"
                         android:textSize="@dimen/edx_x_small"

@@ -317,6 +317,6 @@
 
     <!-- Course Certificate Block -->
     <dimen name="course_certificate_logo_height">100dp</dimen>
-    <dimen name="course_certificate_logo_width">140dp</dimen>
+    <dimen name="course_certificate_logo_width">138dp</dimen>
 
 </resources>

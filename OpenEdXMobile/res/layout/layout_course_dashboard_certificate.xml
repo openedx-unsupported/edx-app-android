@@ -15,16 +15,15 @@
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_new_cert" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_semi_bold"
+        android:fontFamily="?attr/fontSemiBold"
         android:text="@string/course_details_congratulations"
-        android:textAllCaps="true"
         android:textColor="@color/primaryDarkColor"
         android:textSize="@dimen/edx_x_large" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/container_padding"
@@ -35,6 +34,6 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/view_certificate"
         style="@style/edX.Widget.PrimaryActionButton"
-        android:text="@string/course_details_view_cert_button" />
+        android:text="@string/label_certificate_view_button" />
 
 </LinearLayout>
