@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/neutralWhite"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/edx_default_margin">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="@dimen/course_certificate_logo_width"
+        android:layout_height="@dimen/course_certificate_logo_height"
+        android:layout_marginBottom="@dimen/edx_default_margin"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_new_cert" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="?attr/fontSemiBold"
+        android:text="@string/course_details_congratulations"
+        android:textColor="@color/primaryDarkColor"
+        android:textSize="@dimen/edx_x_large" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/container_padding"
+        android:text="@string/course_details_earned_cert"
+        android:textColor="@color/neutralXDark"
+        android:textSize="@dimen/edx_small" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/view_certificate"
+        style="@style/edX.Widget.PrimaryActionButton"
+        android:text="@string/label_certificate_view_button" />
+
+</LinearLayout>
