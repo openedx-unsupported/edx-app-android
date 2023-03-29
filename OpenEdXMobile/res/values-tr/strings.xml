@@ -73,7 +73,7 @@
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name} Son Kullanıcı Lisans Anlaşması</string>
   <!--Label for Terms of Service and Honor Code-->
-  <string name="tos_and_honor_code">{platform_name} Hizmet Şartları ve Etik Şartlar</string>
+  <string name="tos_and_honor_code">{platform_name} Hizmet Şartları ve Etik Kuralları</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">Gizlilik Politikası</string>
   <string name="login_title">Giriş</string>
@@ -204,7 +204,7 @@
   <!--Mobile Payments-->
   <string name="payments_info_header">Onaylanmış Bir Sertifika Edinin!</string>
   <string name="payments_info_details">Doğrulanmış bir sertifika ile yeni bilgi ve becerilerinizi vurgulayın. \n\nİş fırsatlarınızı geliştirmek ve kariyerinizi geliştirmek için bu değerli sertifikayı kullanın veya okul başvurularınızda sertifikanızı vurgulayın.</string>
-  <string name="audit_access_expires_on">Gözetmen erişimi {date} tarihinde sona eriyor</string>
+  <string name="audit_access_expires_on">Gözlemci erişimi {date} tarihinde sona eriyor</string>
   <string name="audit_access_expires_details">{date} tarihinde ilerlemeniz dahil tüm ders erişiminizi kaybedeceksiniz.</string>
   <string name="upgrade_deadline_details">{date} tarihine dek üyeliğinizi yükselterek bu eğitime yayında kaldığı sürece sınırsız erişime kavuşun.</string>
   <string name="locked_content_header">Kimliği doğrulanmış öğrencilere açık!</string>
@@ -237,9 +237,9 @@
   <!--Discussion posts sort by most votes-->
   <string name="discussion_posts_sort_most_votes">En Çok Oylanan</string>
   <!--Label for the visibility of a discussion post that is only visible to cohort-->
-  <string name="discussion_post_visibility_cohort">Bu gönderi sadece {cohort} topluluğuna açık.</string>
+  <string name="discussion_post_visibility_cohort">Bu gönderi sadece {cohort} kohortuna görünür.</string>
   <!--Label for the visibility of a discussion post that is visible to everyone-->
-  <string name="discussion_post_visibility_everyone">Bu gönderi herkese açık.</string>
+  <string name="discussion_post_visibility_everyone">Bu gönderi herkese görünür.</string>
   <!--Used while constructing the author attribution text for a discussion post e.g. "3 days ago by Brian (Staff)"-->
   <string name="discussion_post_author_attribution">{author} tarafından</string>
   <!--Used while constructing the author attribution text for an answer response e.g. "Marked as answer 2 days ago by Khalid (Community TA)"-->
@@ -347,9 +347,9 @@
   <!--Error message showing only when youtube in-app player produce error-->
   <string name="assessment_unable_to_play_video_message">Bu video oynatılamıyor. YouTube uygulamasında görüntüleyebilir veya daha sonra tekrar deneyebilirsiniz.</string>
   <!--Label showing only youtube is available-->
-  <string name="assessment_only_on_youtube">Bu video sadece Youtube\'da izlenebilir.</string>
+  <string name="assessment_only_on_youtube">Bu video sadece YouTube\'da izlenebilir.</string>
   <!--Label for button to open on youtube-->
-  <string name="assessment_open_on_youtube">Videoyu Youtube\'da izle</string>
+  <string name="assessment_open_on_youtube">Videoyu YouTube\'da izle</string>
   <!--Label showing that you need to update youtube app in order to watch the video-->
   <string name="assessment_needed_updating_youtube">Bu videoyu izlemek için YouTube uygulamasını güncellemelisiniz.</string>
   <!--Label for button to update youtube app-->
@@ -377,7 +377,7 @@
   <!--Error shown when video download fails-->
   <string name="msg_video_not_available">Bu videoya şu an ulaşılamıyor.\n Daha sonra tekrar deneyiniz.</string>
   <!--Error shown when video has flag to indicate it is not available for mobile app-->
-  <string name="video_only_on_web_label">Bu video yalnızca web\'te çalışır. Web\'te görüntülemek için tıklayınız.</string>
+  <string name="video_only_on_web_label">Bu video yalnızca web\'de çalışır. Web\'de görüntülemek için tıklayınız.</string>
   <!--Message to indicate the it is not available for mobile app-->
   <string name="video_only_on_web_short">Bu video henüz mobilde ulaşılabilir değil.</string>
   <!--Alert dialog title when login fails-->
@@ -425,7 +425,7 @@
   <!--Accessibility Label for Video Player-->
   <string name="video_player">Video Oynatıcı</string>
   <!--Accessibility Label for View on Web button on Video Player top bar-->
-  <string name="video_player_view_on_web">Web\'te görüntüle</string>
+  <string name="video_player_view_on_web">Web\'de görüntüle</string>
   <!--Accessibility Label for Play button of Video Player-->
   <string name="video_player_play">Oynat</string>
   <!--Accessibility Label for Pause button of Video Player-->
@@ -480,13 +480,13 @@
   <!--Button leading user to log in screen-->
   <string name="launch_login">Oturum aç</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text">Dünya\'nın en iyi üniversitelerinden kurslar cebinizde.</string>
+  <string name="launch_text">Dünya\'nın en iyi üniversitelerinden dersler cebinizde.</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
-  <string name="launch_text_courses_and_program">Dünya\'nın en iyi üniversitelerinden kurslar ve programlar cebinizde.</string>
+  <string name="launch_text_courses_and_program">Dünya\'nın en iyi üniversitelerinden dersler ve programlar cebinizde.</string>
   <!--Search View title on the launch screen-->
   <string name="launch_search_title">Ne öğrenmek istiyorsun?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
-  <string name="launch_search_courses">3000+ kursumuzda arama yapın</string>
+  <string name="launch_search_courses">3000+ dersimizde arama yapın</string>
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>Tüm dersleri keşfedin</u></string>
   <!--Registration Screen-->
@@ -584,6 +584,7 @@
   <!--Button title appears on Celebration Modal to continue-->
   <string name="keep_going_text">Devam et</string>
   <!--Sharing message when user wants to share the celebration-->
+  <string name="celebration_share_message">@{platform_name} platformunda çevrimiçi {course_name} dersini tamamlamak üzereyim. Sen zamanını ne öğrenerek harcıyorsun? #my{platform_name}journey</string>
   <!--accessibility label for section completion-->
   <string name="course_outline_completion_description">Tamamlandı</string>
 </resources>

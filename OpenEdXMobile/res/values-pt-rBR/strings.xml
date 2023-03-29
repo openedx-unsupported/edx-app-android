@@ -261,11 +261,13 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label for number of discussion responses-->
   <plurals name="number_responses_or_comments_responses_label">
     <item quantity="one">%s resposta</item>
+    <item quantity="many">%s respostas</item>
     <item quantity="other">%s respostas</item>
   </plurals>
   <!--Label for number of discussion comments-->
   <plurals name="number_responses_or_comments_comments_label">
     <item quantity="one">%s comentário</item>
+    <item quantity="many">%s comentários</item>
     <item quantity="other">%s comentários</item>
   </plurals>
   <!--Label for adding a new comment-->
@@ -283,6 +285,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label to indicate number of votes-->
   <plurals name="discussion_responses_action_bar_vote_text">
     <item quantity="one">{quantity} voto</item>
+    <item quantity="many">{quantity} votos</item>
     <item quantity="other">{quantity} votos</item>
   </plurals>
   <!--Label to indicate discussion response is not marked as inappropriate-->
@@ -392,6 +395,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="one">{total_videos_count} vídeo, total de {total_videos_size}</item>
+    <item quantity="many">{total_videos_count} vídeos, total de {total_videos_size}</item>
     <item quantity="other">{total_videos_count} vídeos, total de {total_videos_size}</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->

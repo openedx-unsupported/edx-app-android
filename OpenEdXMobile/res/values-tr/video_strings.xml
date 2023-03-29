@@ -16,7 +16,7 @@
     <string name="video_download_quality_message">Bu ayar {platform_name} uygulamasındaki tüm video indirme işlemleri içindir.</string>
 
     <!-- Label for the Download to sd-card setting -->
-    <string name="settings_download_to_sdcard_title">Videoyu SD Kart\'a İndir</string>
+    <string name="settings_download_to_sdcard_title">Videoları SD Kart\'a İndir</string>
     <!-- Label explaining the download location setting in detail -->
     <string name="settings_download_to_sdcard_subtitle">Eğer mevcutsa videolar SD Kart\'a indirilecek</string>
     <!-- Label indicating that the only course content visible in the app is videos -->
@@ -33,7 +33,7 @@
     <string name="file_size_exceeded">İndirme boyutu cihazda kalan depolama alanını aşıyor.</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="download_exceed_message">Seçtiğiniz videolar 1 GB\'dan büyük.
-       Bu videoları indirmek istiyor musunuz?</string>
+        Bu videoları indirmek istiyor musunuz?</string>
 
     <!-- Message shown when user attempts to download a video over cellular data,
     but has chosen to only allow video downloads over wifi -->
@@ -42,7 +42,7 @@
 
     <!-- Google Cast -->
     <!-- Description of a button that will cast/un-cast the app to a remote device -->
-    <string name="media_route_menu_title">Oynat…</string>
+    <string name="media_route_menu_title">Oynat&#8230;</string>
     <!-- Google cast Introduction title -->
     <string name="introducing_cast_text">Cast\'i Sunuyoruz</string>
     <!-- Text to describe that video is casting on the remote device -->

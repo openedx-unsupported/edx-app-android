@@ -22,6 +22,7 @@
   <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
   <string name="you_are_now_enrolled">כעת אתם רשומים בקורס זה.</string>
   <!--Floating overlay text shown to user when user already enrolled in a course-->
+  <string name="you_are_already_enrolled" tools:ignore="MissingTranslation">כבר נרשמת לקורס הזה.</string>
   <!--Error message shown when dashboard cannot be shown from course detail view-->
   <string name="cannot_show_dashboard">לא ניתן להציג את לוח הבקרה.</string>
   <!--Error message shown when browser cannot handle request for given web url-->
@@ -199,7 +200,10 @@
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">ביצוע הזמנה</string>
   <!--label for resume course section. Will be followed by course name-->
+  <string name="label_resume">להמשיך את</string>
   <!--Mobile Payments-->
+  <string name="upgrade_deadline_details">כדאי לשדרג עד {date} כדי לקבל גישה בלי מוגבלת לקורס כל עוד הוא קיים באתר.</string>
+  <string name="locked_content_header">זמין ללומדים מאומתים!</string>
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
   <string name="discussion_topics_title">נושאי דיון</string>
@@ -435,7 +439,9 @@
   <!--Accessibility Label for Pause button of Video Player-->
   <string name="video_player_pause">עצור</string>
   <!--Accessibility Label for Rewind button on Video Player-->
+  <string name="video_player_rewind_button">10 שניות אחורה</string>
   <!--Accessibility Label for Forward button on Video Player-->
+  <string name="video_player_forward_button">15 שניות קדימה</string>
   <!--Accessibility Label for Rewind button on Video Player bottom bar-->
   <string name="video_player_rewind">חזור 30 שניות אחורה</string>
   <!--Accessibility Label for Settings button on Video Player bottom bar-->
@@ -457,6 +463,7 @@
   <!--Google login method-->
   <string name="google_text">גוגל</string>
   <!--Microsoft login method-->
+  <string name="microsoft_text" tools:ignore="MissingTranslation">Microsoft</string>
   <!--Prompt allowing user to choose email program-->
   <string name="email_chooser_header">שלח דוא\"ל בעזרת...</string>
   <!--Error shown when user attempts to send email, but has no email app-->
@@ -471,12 +478,19 @@
   <string name="or_register_with_email">או הירשמו באמצעות אימייל</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
+  <string name="launch_register">הרשמה</string>
   <!--Button leading user to log in screen-->
+  <string name="launch_login">כניסה</string>
   <!--Introduction text on the launch screen-->
+  <string name="launch_text">קורסים של האוניברסיטאות המובילות בעולם הישר בכף ידך.</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
+  <string name="launch_text_courses_and_program">קורסים ותוכניות של האוניברסיטאות המובילות בעולם הישר בכף ידך.</string>
   <!--Search View title on the launch screen-->
+  <string name="launch_search_title">מה מעניין אותך ללמוד?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
+  <string name="launch_search_courses">חיפוש בלמעלה מ־3000 הקורסים שלנו</string>
   <!--Label Explore all courses on the launch screen-->
+  <string name="label_explore_all_courses"><u>דפדוף בין כל הקורסים</u></string>
   <!--Registration Screen-->
   <!--Button text allowing user to show hidden optional registration fields-->
   <string name="show_optional_text">הצג שדות רשות</string>
@@ -493,6 +507,7 @@
   <!--Text for successful registration with social token-->
   <string name="sign_up_with_facebook_ok">נכנסתם בהצלחה באמצעות פייסבוק</string>
   <string name="sign_up_with_google_ok">נכנסתם בהצלחה באמצעות גוגל</string>
+  <string name="sign_up_with_microsoft_ok" tools:ignore="MissingTranslation">נכנסת עם Microsoft בהצלחה.</string>
   <string name="sign_up_with_social_ok">אנחנו רק צריכים עוד קצת מידע לפני שתתחילו ללמוד באמצעות {platform_name}.</string>
   <!--Continue registration after social login-->
   <string name="complete_registration">השלימו את ההרשמה שלכם</string>
@@ -512,6 +527,7 @@
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">משוב לקוח</string>
   <!--Email subject line when user account is disabled to submit feedback about the app-->
+  <string name="email_subject_account_disabled">חשבון הושבת</string>
   <!--Email subject line when a user attempts to submit a review using the app review workflow-->
   <string name="review_email_subject">ביקורת לקוחות</string>
   <!--Submit Feedback app version text-->
@@ -558,9 +574,13 @@
   <!--accessibility label for rating selection on rating bar-->
   <string name="rating_bar_selection">{rating} מתוך {num_of_stars}</string>
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
+  <string name="whats_new_title">מה חדש</string>
   <!--Title of the selector while the choosing file-->
+  <string name="choose_file_title">בחירה בקבצים</string>
   <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
+  <string name="celebratory_modal_title">ברכותינו!</string>
   <!--Completion message for Celebration Modal-->
+  <string name="celebratory_modal_message">השלמת את החלק הראשון בקורס שלך.</string>
   <!--Celebration message for Celebration Modal-->
   <!--Button title appears on Celebration Modal to continue-->
   <!--Sharing message when user wants to share the celebration-->

@@ -6,4 +6,56 @@
     <string name="title_purchase">Khôi phục mua</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Đăng nhập vào Play Store để khôi phục quyền truy cập các khóa học mà trước đó bạn đã trả tiền để nâng cấp</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">Cảm ơn bạn đã mua khóa học. Hãy tận hưởng toàn quyền truy cập vào khóa học của bạn!</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">Đã xảy ra lỗi</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">Có vẻ như đã xảy ra lỗi khi nâng cấp khóa học của bạn. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">Lỗi nâng cấp khóa học trong ứng dụng</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">Nhận trợ giúp</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">Làm mới để thử lại</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">Không tìm thấy khóa học bạn muốn nâng cấp. Vui lòng thử nâng cấp lại. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">Tài khoản của bạn không thể xác thực. Hãy thử đăng xuất và đăng nhập lại vào ứng dụng. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">Khóa học bạn muốn nâng cấp đã được thanh toán. Để cập nhật, chúng tôi cần nhanh chóng làm mới ứng dụng của bạn.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">Thanh toán của bạn không thể được xử lý vào lúc này. Vui lòng thử lại. Để được trợ giúp thêm, vui lòng liên hệ Hỗ trợ.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">Đã xảy ra sự cố khi chúng tôi cố gắng cập nhật trải nghiệm khóa học của bạn. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ để được trợ giúp.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">Yêu cầu của bạn không thể được hoàn thành tại thời điểm này. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ.</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">Đang mở khóa</string>
+    <string name="fullscreen_loader_full_access">toàn quyền truy cập</string>
+    <string name="fullscreen_loader_to_your_course">vào khóa học của bạn</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">Mở khóa bài tập đã chấm điểm</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">Trải nghiệm mới có sẵn</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">Đã có bản cập nhật để mở khóa khóa học đã mua. Để cập nhật, chúng tôi cần nhanh chóng làm mới ứng dụng của bạn. Nếu bạn chọn không cập nhật ngay bây giờ, chúng tôi sẽ thử lại sau.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">Làm mới ngay</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">Tiếp tục mà không cập nhật</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">Đang kiểm tra giao dịch mua khóa học\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">Các giao dịch mua đã được khôi phục thành công</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">Tất cả các giao dịch mua đều được cập nhật. Nếu bạn không thấy giao dịch mua của mình được khôi phục, vui lòng thử khởi động lại ứng dụng để làm mới trải nghiệm.</string>
 </resources>

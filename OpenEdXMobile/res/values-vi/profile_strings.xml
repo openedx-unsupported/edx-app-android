@@ -35,7 +35,14 @@
     <string name="description_delete_account">Làm theo hướng dẫn trên màn hình tiếp theo để xóa tài khoản của bạn và tất cả dữ liệu liên quan.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Phiên bản</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Quyền riêng tư</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">Chính sách Bảo mật</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Chính sách cookie</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">Không bán thông tin cá nhân của tôi</string>
     <!-- Logout button label -->
     <string name="logout">Đăng xuất</string>
     <!-- Profile screen version -->

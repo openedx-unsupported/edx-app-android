@@ -35,7 +35,14 @@
     <string name="description_delete_account">按照下一屏幕上的说明删除您的帐户和所有相关数据。</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">版本</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">隐私</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">隐私政策</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Cookie 政策</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">请勿出售我的个人信息</string>
     <!-- Logout button label -->
     <string name="logout">退出</string>
     <!-- Profile screen version -->

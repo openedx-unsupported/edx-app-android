@@ -69,7 +69,7 @@
   <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
   <string name="by_creating_account">Al crear una cuenta, aceptas la {license} y las {tos_and_honor_code}, y permites que {platform_name} y cada miembro procesen tus datos personales de conformidad con la {privacy_policy}.</string>
   <!--Sign In agreement. Followed by list of agreement names like "End User License Agreement"-->
-  <string name="by_signing_in">Al registrarte en esta aplicación, aceptas la {license} y las {tos_and_honor_code}, y permites que {platform_name} y cada miembro procesen tus datos personales de conformidad con la {privacy_policy}.</string>
+  <string name="by_signing_in">Al iniciar sesión en esta aplicación, acepta {license} y {tos_and_honor_code} y reconoce que {platform_name} y cada miembro procesan sus datos personales de acuerdo con {privacy_policy}.</string>
   <!--Label for End User License Agreement-->
   <string name="licensing_agreement">{platform_name} Acuerdo de Licencia de Usuario Final</string>
   <!--Label for Terms of Service and Honor Code-->
@@ -200,7 +200,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Hacer pedido</string>
   <!--label for resume course section. Will be followed by course name-->
-  <string name="label_resume">Curriculum vitae.</string>
+  <string name="label_resume">Curriculum vitae</string>
   <!--Mobile Payments-->
   <string name="payments_info_header">¡Obtenga un certificado verificado!</string>
   <string name="payments_info_details">Resalte el nuevo conocimiento y nuevas habilidades con un certificado verificado.\n\nUse esta valiosa credencial para mejorar sus perspectivas laborales y avanzar en su carrera, o resaltar su certificado en las solicitudes escolares.</string>
@@ -261,11 +261,13 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label for number of discussion responses-->
   <plurals name="number_responses_or_comments_responses_label">
     <item quantity="one">%s respuesta</item>
+    <item quantity="many">%s respuestas</item>
     <item quantity="other">%s respuestas</item>
   </plurals>
   <!--Label for number of discussion comments-->
   <plurals name="number_responses_or_comments_comments_label">
     <item quantity="one">%s comentario</item>
+    <item quantity="many">%s comentarios</item>
     <item quantity="other">%s comentarios</item>
   </plurals>
   <!--Label for adding a new comment-->
@@ -283,6 +285,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label to indicate number of votes-->
   <plurals name="discussion_responses_action_bar_vote_text">
     <item quantity="one">{quantity} voto</item>
+    <item quantity="many">{quantity} Votos</item>
     <item quantity="other">{quantity} Votos</item>
   </plurals>
   <!--Label to indicate discussion response is not marked as inappropriate-->
@@ -392,6 +395,7 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="one">{total_videos_count} Video, {total_videos_size} en total</item>
+    <item quantity="many">{total_videos_count} Videos, {total_videos_size} en total</item>
     <item quantity="other">{total_videos_count} Videos, {total_videos_size} en total</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
@@ -480,9 +484,9 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Button leading user to log in screen-->
   <string name="launch_login">Iniciar sesión</string>
   <!--Introduction text on the launch screen-->
-  <string name="launch_text">Cursos de las mejores universidades del mundo a tu alcance.</string>
+  <string name="launch_text">Cursos de las mejores universidades del mundo a su alcance.</string>
   <!--Introduction text on the launch screen when courses and program enabled-->
-  <string name="launch_text_courses_and_program">Cursos y programas de las mejores universidades del mundo a tu alcance.</string>
+  <string name="launch_text_courses_and_program">Cursos y programas de las mejores universidades del mundo a su alcance.</string>
   <!--Search View title on the launch screen-->
   <string name="launch_search_title">¿Qué quieres aprender?</string>
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->

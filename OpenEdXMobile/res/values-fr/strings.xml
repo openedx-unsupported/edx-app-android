@@ -261,11 +261,13 @@
   <!--Label for number of discussion responses-->
   <plurals name="number_responses_or_comments_responses_label">
     <item quantity="one">%s reponse</item>
+    <item quantity="many">%s réponses</item>
     <item quantity="other">%s réponses</item>
   </plurals>
   <!--Label for number of discussion comments-->
   <plurals name="number_responses_or_comments_comments_label">
     <item quantity="one">%s commentaire</item>
+    <item quantity="many">%s commentaires</item>
     <item quantity="other">%s commentaires</item>
   </plurals>
   <!--Label for adding a new comment-->
@@ -283,6 +285,7 @@
   <!--Label to indicate number of votes-->
   <plurals name="discussion_responses_action_bar_vote_text">
     <item quantity="one">{quantity} vote</item>
+    <item quantity="many">{quantity} votes</item>
     <item quantity="other">{quantity} votes</item>
   </plurals>
   <!--Label to indicate discussion response is not marked as inappropriate-->
@@ -392,6 +395,7 @@
   <!--Subtitle for bulk videos download view when in new or partial videos' download state-->
   <plurals name="download_total">
     <item quantity="one">{total_videos_count} vidéo, {total_videos_size} au total</item>
+    <item quantity="many">{total_videos_count} vidéos, {total_videos_size} au total</item>
     <item quantity="other">{total_videos_count} vidéos, {total_videos_size} au total</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
@@ -574,6 +578,7 @@
   <!--Title of the Whats New screen e.g. Version 2.8.1 New Features-->
   <string name="whats_new_title">Les nouveautés</string>
   <!--Title of the selector while the choosing file-->
+  <string name="choose_file_title">Choisissez les fichiers</string>
   <!--Title of the dialog appears on course first Section completion(Celebration Modal)-->
   <string name="celebratory_modal_title">Félicitations !</string>
   <!--Completion message for Celebration Modal-->
@@ -583,6 +588,7 @@
   <!--Button title appears on Celebration Modal to continue-->
   <string name="keep_going_text">Continuer</string>
   <!--Sharing message when user wants to share the celebration-->
+  <string name="celebration_share_message">Je suis sur le point de terminer le cours en ligne {course_name} avec @{platform_name}. A quoi passez-vous votre temps à apprendre ? #monAventure{platform_name}</string>
   <!--accessibility label for section completion-->
   <string name="course_outline_completion_description">Terminé</string>
 </resources>

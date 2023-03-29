@@ -3,19 +3,19 @@
     <!-- Label My Courses Graded content Button -->
     <string name="course_value_prop_button">Daha fazlası</string>
     <!-- Label Course Modal heading -->
-    <string name="course_modal_heading">{course_name} kursunu yükseltin</string>
+    <string name="course_modal_heading">{course_name} dersini yükseltin</string>
     <!-- Label Course Modal features -->
     <string name="course_modal_earn_certificate">Özgeçmişinizde sergileyebileceğiniz, doğrulanmış bir tamamlama sertifikası kazanın</string>
-    <string name="course_modal_unlock_access">Notlu ödevler dahil olmak üzere tüm kurs aktivitelerine erişimin kilidini açın</string>
-    <string name="course_modal_full_access_course">Kurs bittikten sonra dahi kurs içeriklerine ve kurs materyaline tam erişim</string>
+    <string name="course_modal_unlock_access">Notlandırılan ödevler dahil olmak üzere tüm ders etkinliklerine erişim kilidini açın</string>
+    <string name="course_modal_full_access_course">Ders bittikten sonra dahi ders içeriklerine ve materyaline tam erişim</string>
     <!-- Label Course Upgrade button  -->
     <string name="label_upgrade_course_button">{price} karşılığında hemen yükseltin</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">Kilitli özellikler hakkında daha fazlasını öğrenin</string>
     <!-- Label Course Modal Graded Assignments Locked -->
-    <string name="course_modal_graded_assignment_locked">Notlu ödevler kilitli</string>
+    <string name="course_modal_graded_assignment_locked">Notlandırılan ödevler kilitlendi</string>
     <!-- Label Course Modal Graded Assignments Locked description -->
-    <string name="course_modal_graded_assignment_locked_description">Bunun gibi kilitli özelliklere erişim kazanmak ve kursunuzdan en iyi verimi almak için yükseltme yapın</string>
+    <string name="course_modal_graded_assignment_locked_description">Bunun gibi kilitli özelliklere erişim kazanmak ve dersinizden en iyi verimi almak için yükseltme yapın</string>
     <!-- Label Course Modal Graded Assignments show more -->
     <string name="course_modal_graded_assignment_show_more"><u>Daha fazlasını göster</u></string>
     <!-- Label Course Modal Graded Assignments show less -->

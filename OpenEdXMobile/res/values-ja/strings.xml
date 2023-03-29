@@ -79,8 +79,6 @@
   <!--Title of user's program list screen-->
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">講座を探す</string>
-  <!--Title of webview based Find Courses Screen-->
-  <!--Title of Degrees tab on Discovery screen-->
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">フィードバックを送る</string>
@@ -132,6 +130,7 @@
   <string name="announcement_title">お知らせ</string>
   <!--Title text for the important dates section on the course dashboard-->
   <!--Title text for the additional resources section on the tabular course dashboard-->
+  <string name="resources_title">教材</string>
   <!--Row of announcement on dashboard screen-->
   <!--NOTE: TODO - not final one-->
   <string name="announcement_subtitle">最新ニュースを見る</string>
@@ -400,9 +399,6 @@
   <string name="email_chooser_header">...を利用してメールを送る</string>
   <!--Error shown when user attempts to send email, but has no email app-->
   <string name="email_client_not_present">電子メールソフトがインストールされていません</string>
-  <!--Search for a course prompt-->
-  <!--Search for a program prompt-->
-  <!--Search for a degree prompt-->
   <!--Landing Activity text-->
   <!--Prompt leading user to sign in screen-->
   <string name="already_have_an_account">アカウントをお持ちですか？サインインしてください。</string>

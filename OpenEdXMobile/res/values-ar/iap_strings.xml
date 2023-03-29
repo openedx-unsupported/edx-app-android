@@ -6,4 +6,56 @@
     <string name="title_purchase">استعادة المشتريات</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">سجّل الدخول إلى متجر Play لاستعادة الوصول إلى الدورات التدريبية التي دفعتها سابقًا للترقية</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">شكراً لشرائك. استمتع بالوصول لدورتك التدريبية كاملةً</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">لقد حدثت مشكلة</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">يبدو أنه قد حصلت مشكلة ما أثناء ترقية دورتك. إذا استمرت هذه المشكلة، يرجى التواصل مع الدعم.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">حدث خطأ خلال ترقية الدورة التدريبية في التطبيق</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">الحصول على المساعدة</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">التحديث وإعادة المحاولة</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">يتعذر العثور على الدورة التدريبية التي تحاول ترقيتها. يرجى محاولة الترقية مرة أخرى. إذا استمر هذا الخطأ في الظهور، فاتصل بالدعم.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">تعذرت مصادقة حسابك. حاول تسجيل الخروج وإعادة تسجيل الدخول إلى التطبيق. إذا استمر هذا الخطأ في الظهور، فيرجى الاتصال بالدعم.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">تم دفع ثمن الدورة التدريبية التي تحاول ترقيتها بالفعل. إذا أردت التحديث، يلزمنا تحديث تطبيقك سريعًا.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">يتعذر معالجة الدفع الخاص بك في هذا الوقت؛ حاول مرة أخرى. للحصول على مساعدة إضافية، يُرجى التواصل مع فريق الدعم.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">حدث خطأ ما عند محاولتنا تحديث تجربة الدورة التدريبية الخاصة بك. إذا استمر هذا الخطأ في الظهور، فاتصل بالدعم للحصول على المساعدة.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">تعذر إكمال طلبك في الوقت الحالي. إذا استمر هذا الخطأ في الظهور، فيرجى التواصل مع الدعم.</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">إتاحة</string>
+    <string name="fullscreen_loader_full_access">صلاحية الوصول الكاملة</string>
+    <string name="fullscreen_loader_to_your_course">للدورة التدريبية الخاصة بك</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">إتاحة الاختبارات المقدرة</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">تجربة جديدة متاحة</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">يتوفر تحديث لإتاحة دورة تدريبية تم شراؤها. للتحديث، يلزمنا تحديث تطبيقك سريعًا. إذا اخترت عدم التحديث الآن، فسنحاول مرة أخرى لاحقًا.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">التحديث الآن</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">استمر دون تحديث</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">فحص المشتريات/././.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">تم استرجاع المشتريات بنجاح</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">جميع المشتريات محدثة. إذا كنت لا ترى مشترياتك المُسترجعة، فيرجى محاولة إعادة تشغيل التطبيق لتحديث التجربة.</string>
 </resources>

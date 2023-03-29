@@ -6,4 +6,56 @@
     <string name="title_purchase">Einkäufe wiederherstellen</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Melden Sie sich im Play Store an, um den Zugriff auf Kurse wiederherzustellen, für die Sie zuvor ein Upgrade bezahlt haben</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">Danke für Ihren Einkauf. Genießen Sie vollen Zugriff auf Ihren Kurs!</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">Es ist ein Fehler aufgetreten</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">Anscheinend ist beim Upgrade Ihres Kurses etwas schief gelaufen. Wenn dieser Fehler weiterhin besteht, wenden Sie sich bitte an den Support.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">Fehler beim Aktualisieren des Kurses in der App</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">Hilfe bekommen</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">Aktualisieren, um es erneut zu versuchen</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">Der Kurs, den Sie aktualisieren möchten, konnte nicht gefunden werden. Bitte versuchen Sie Ihr Upgrade erneut. Wenn dieser Fehler weiterhin besteht, wenden Sie sich an den Support.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">Ihr Konto konnte nicht authentifiziert werden. Versuchen Sie, sich von der App abzumelden und wieder anzumelden. Wenn dieser Fehler weiterhin besteht, wenden Sie sich bitte an den Support.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">Der Kurs, für den Sie ein Upgrade durchführen möchten, wurde bereits bezahlt. Zum Aktualisieren müssen wir Ihre App schnell aktualisieren.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">Ihre Zahlung konnte derzeit nicht verarbeitet werden. Bitte versuchen Sie es erneut. Wenden Sie sich für weitere Hilfe an den Support.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">Beim Versuch, Ihre Kurserfahrung zu aktualisieren, ist etwas schiefgelaufen. Wenn dieser Fehler weiterhin auftritt, wenden Sie sich an den Support, um Hilfe zu erhalten.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">Ihre Anfrage konnte derzeit nicht abgeschlossen werden. Wenn dieser Fehler weiterhin auftritt, wenden Sie sich bitte an den Support.</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">Entsperren</string>
+    <string name="fullscreen_loader_full_access">voller Zugriff</string>
+    <string name="fullscreen_loader_to_your_course">auf Ihren Kurs</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">Schalten Sie benotete Aufgaben frei</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">Neue Erfahrung verfügbar</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">Es ist ein Update verfügbar, um einen gekauften Kurs freizuschalten. Zum Aktualisieren müssen wir Ihre App schnell aktualisieren. Wenn Sie sich jetzt gegen eine Aktualisierung entscheiden, versuchen wir es später erneut.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">Jetzt aktualisieren</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">Weiter ohne Update</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">Einkäufe prüfen\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">Käufe wurden erfolgreich wiederhergestellt</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">Alle Käufe sind aktuell. Wenn Ihre Einkäufe nicht wiederhergestellt werden, versuchen Sie bitte, Ihre App neu zu starten, um die Erfahrung zu aktualisieren.</string>
 </resources>

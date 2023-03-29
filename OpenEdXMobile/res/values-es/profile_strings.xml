@@ -2,11 +2,11 @@
 <resources>
     <!-- Profile Page -->
     <!-- Label for wifi only switch -->
-    <string name="settings_wifi_top">Descarga solo posible mediante WiFi</string>
+    <string name="settings_wifi_top">Descargar solo posible mediante WiFi</string>
     <!-- Label explaining what wifi only means in detail -->
-    <string name="settings_wifi_bottom">Sólo descargar contenido cuando el Wifi está encendido</string>
+    <string name="settings_wifi_bottom">Solo descargue contenido cuando el wifi esté activado</string>
     <!-- Text to clarify that around what is visible -->
-    <string name="profile_visibility_off_message">La información de tu perfil solo es visible para ti. Solo tu nombre de usuario es visible para los demás en {platform_name}.</string>
+    <string name="profile_visibility_off_message">La información de su perfil solo es visible para usted. Solo su nombre de usuario es visible para los demás en {platform_name}.</string>
 
     <!--  String for Profile Screen  -->
     <!--  Heading of Wifi Field  -->
@@ -16,26 +16,33 @@
     <!--  Heading of Help Field  -->
     <string name="label_help">Ayuda</string>
     <!--  Description of Submit feedback Field  -->
-    <string name="description_submit_feedback">¿Quieres ayudarnos a mejorar la plataforma o la aplicación?</string>
+    <string name="description_submit_feedback">¿Desea realizar una solicitud de función o darnos algún comentario sobre nuestra aplicación?</string>
     <!--  Label of Submit feedback Button  -->
     <string name="label_submit_feedback_btn">Contactar al equipo de soporte</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">Obtener ayuda</string>
     <!--  Description of Get Support Field  -->
-    <string name="description_get_support">Si necesitas más ayuda y quieres aprender cómo usar la aplicación móvil de {platform_name}, visita nuestras preguntas frecuentes.</string>
+    <string name="description_get_support">Si necesita más ayuda y quieres aprender cómo usar la aplicación móvil de {platform_name}, visita nuestras preguntas frecuentes.</string>
     <!--  Label of Get Support Button  -->
     <string name="label_view_faq_btn">Ver preguntas frecuentes</string>
     <!--  Label of Sign out Button  -->
     <string name="label_sign_out_btn">Salir</string>
     <!-- Delete my account screen Title -->
-    <string name="title_delete_my_account">Borrar tu cuenta</string>
+    <string name="title_delete_my_account">Borrar la cuenta</string>
     <!--  Label of Delete Account Button  -->
     <string name="label_delete_account_btn">Borrar cuenta</string>
     <!--  Description of Delete Account  -->
-    <string name="description_delete_account">Sigue las instrucciones en la siguiente pantalla para borrar tu cuenta y todos los datos relacionados.</string>
+    <string name="description_delete_account">Siga las instrucciones en la siguiente pantalla para eliminar su cuenta y todos los datos relacionados.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Versión</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Privacidad</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">Política de Privacidad</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Política de cookies</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">No vender mi información personal</string>
     <!-- Logout button label -->
     <string name="logout">Salir</string>
     <!-- Profile screen version -->
@@ -57,7 +64,7 @@
     <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
     <string name="profile_toolbar_edit_button">Editar</string>
     <!-- Shown when viewing your own profile and you are not sharing a full profile -->
-    <string name="profile_sharing_limited_by_you">Actualmente compartes un perfil limitado.</string>
+    <string name="profile_sharing_limited_by_you">Actualmente está compartiendo una versión limitada de su perfil</string>
     <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
     <string name="profile_sharing_limited_by_other_user">Este usuario está compartiendo un perfil limitado</string>
     <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->

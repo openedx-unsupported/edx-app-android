@@ -6,4 +6,56 @@
     <string name="title_purchase">恢复购买</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">登录Play Store以恢复您以前已付费的课程的访问权限</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">感谢您的购买！现在您可以享受全部功能了！</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">出现了一个错误</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">看起来您在升级您的课程时遇到了错误，如果这个错误始终无法被解决，请联系我们的技术支持。</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">在手机App中的课程升级操作遇到了错误。</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">联系客服获得帮助</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">刷新重试</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">找不到您希望升级的课程。请再次尝试。如果仍然发生错误，请联系支持人员。</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">您的账户当前无法被我们核验，请尝试登出后再重新登入手机APP。如果这个错误还是无法被解决，请联系我们的技术支持。</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">您希望升级的课程已完成付费。我们需要刷新您的应用来更新。</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">您的支付当前无法处理。请再次尝试。如需其他帮助，请联系支持人员。</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">尝试升级您的课程体验时，发生错误。如果仍然发生错误，请联系支持人员。</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">当前无法完成您的申请。如果仍然发生错误，请联系支持人员。</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">正在解锁</string>
+    <string name="fullscreen_loader_full_access">所有权限</string>
+    <string name="fullscreen_loader_to_your_course">访问您的课程</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">解锁已评定的作业</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">全新体验已上线</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">有一项升级可用于解锁一门已购课程。我们需要刷新您的应用来更新。如您当前不选择升级，我们将于稍后再试。</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">立刻刷新</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">不升级</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">正在检查订单\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">订单已成功恢复</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">已更新全部订单。如无法查看已恢复的订单，请重启应用来刷新。</string>
 </resources>

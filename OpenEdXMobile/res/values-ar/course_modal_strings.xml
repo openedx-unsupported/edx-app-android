@@ -8,8 +8,6 @@
     <string name="course_modal_earn_certificate">احصل على شهادة إتمام موثقة لعرضها في سيرتك الذاتية</string>
     <string name="course_modal_unlock_access">افتح الوصول إلى جميع أنشطة المقرر الدراسي ، بما في ذلك الواجبات المقدرة</string>
     <string name="course_modal_full_access_course">الوصول الكامل إلى محتوى الدورة ومواد الدورة التدريبية حتى بعد انتهاء الدورة</string>
-    <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">قم بالتحديث  الآن مقابل {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">تعرف على المزيد حول الميزات المقفلة</string>
     <!-- Label Course Modal Graded Assignments Locked -->

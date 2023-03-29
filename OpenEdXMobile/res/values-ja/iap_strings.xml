@@ -6,4 +6,56 @@
     <string name="title_purchase">購入内容を復元</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Playストアにサインインして、過去に有料でアップグレードしたコースへのアクセスを復元します</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">ご購入ありがとうございました。コースへのフルアクセスをお楽しみください！</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">エラーが発生しました</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">コースをアップグレードする際に、何か問題が発生したようです。このエラーが続く場合は、サポートまでご連絡ください。</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">アプリのコースアップグレードのエラー</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">ヘルプを表示する</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">更新して再試行</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">アップグレードしようとしているコースが見つかりませんでした。もう一度アップグレードをお試しください。このエラーが続く場合は、サポートまでご連絡ください。</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">お客様のアカウントが認証されませんでした。一度サインアウトして、再度アプリにサインインしてみてください。このエラーが続く場合は、サポートまでご連絡ください。</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">アップグレードしようとしているコースは、すでに支払い済みです。更新するには、アプリを素早く更新する必要があります。</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">お客様のお支払いは、現在処理できませんでした。もう一度やり直してください。その他のヘルプについては、サポートにお問い合わせください。</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">お客様のコース体験を更新しようとしたときに、何かが起こりました。このエラーが続く場合は、サポートまでご連絡ください。</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">お客様のリクエストは、現時点では完了できませんでした。このエラーが続く場合は、サポートまでご連絡ください。</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">コースへの</string>
+    <string name="fullscreen_loader_full_access">フルアクセスを</string>
+    <string name="fullscreen_loader_to_your_course">解除する</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">採点対象課題のロック解除</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">新しい体験を利用できます</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">購入したコースのロックを解除するためのアップデートが可能です。アップデートを行うには、アプリを素早く更新する必要があります。今アップデートしないことを選択した場合、後ほど再度試みます。</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">今すぐ更新</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">アップデートせずに続ける</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">購入履歴を確認中\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">購入履歴が正常に復元されました</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">すべての購入履歴が最新になります。購入履歴が復元されていない場合は、アプリを再起動して体験の更新をお試しください。</string>
 </resources>

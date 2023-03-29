@@ -28,7 +28,7 @@
 
     <!-- Download error messages -->
     <!-- Label shown on video list item whose download failed -->
-    <string name="error_download_failed">Descarga fallida.</string>
+    <string name="error_download_failed">Descarga fallida</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">El tamaño de la descarga excede el espacio disponible en el dispositivo.</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
@@ -42,7 +42,7 @@
 
     <!-- Google Cast -->
     <!-- Description of a button that will cast/un-cast the app to a remote device -->
-    <string name="media_route_menu_title">Reproducir en...</string>
+    <string name="media_route_menu_title">Reproducir en &#8230;</string>
     <!-- Google cast Introduction title -->
     <string name="introducing_cast_text">Presentamos Google Cast</string>
     <!-- Text to describe that video is casting on the remote device -->
@@ -53,17 +53,20 @@
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s video borrado</item>
+        <item quantity="many">%s videos borrados</item>
         <item quantity="other">%s videos borrados</item>
     </plurals>
 
     <!-- Subtitle labels for video durations in hours-->
     <plurals name="video_duration_hour">
         <item quantity="one">%d hora </item>
+        <item quantity="many">%d horas</item>
         <item quantity="other">%d horas</item>
     </plurals>
     <!-- Subtitle labels for video durations in minutes-->
     <plurals name="video_duration_minutes">
         <item quantity="one">%d</item>
+        <item quantity="many">%dminutos.</item>
         <item quantity="other">%dminutos.</item>
     </plurals>
 </resources>
