@@ -438,6 +438,17 @@ public class CourseTabsDashboardFragment extends BaseFragment {
             handleToolbarVisibility(binding.toolbar.collapsedToolbarLayout, binding.toolbar.expandedToolbarLayout, percentage);
         });
         ViewAnimationUtil.startAlphaAnimation(binding.toolbar.collapsedToolbarLayout, View.INVISIBLE);
+
+        showCertificate();
+    }
+
+    private void showCertificate() {
+        if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
+            binding.toolbar.certificate.getRoot().setVisibility(View.VISIBLE);
+            binding.toolbar.certificate.viewCertificate.setOnClickListener(view -> environment.getRouter().showCertificate(requireContext(), courseData));
+        } else {
+            binding.toolbar.certificate.getRoot().setVisibility(View.GONE);
+        }
     }
 
     private void fetchCourseById() {

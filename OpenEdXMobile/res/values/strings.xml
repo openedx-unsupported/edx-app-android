@@ -10,8 +10,6 @@
     <string name="course_details_congratulations">Congratulations!</string>
     <!-- Message for user who has successfully completed a certificate course -->
     <string name="course_details_earned_cert">You’ve passed the course.</string>
-    <!-- Button that opens a full view of an earned certificate -->
-    <string name="course_details_view_cert_button">View Certificate</string>
 
     <!-- Course Discovery -->
 
