@@ -36,7 +36,6 @@
                 android:background="@drawable/selectable_box_overlay"
                 android:contentDescription="@string/label_close"
                 android:padding="@dimen/widget_margin"
-                android:textSize="@dimen/edx_x_large"
                 app:srcCompat="@drawable/ic_close"
                 app:tint="@color/white" />
         </FrameLayout>

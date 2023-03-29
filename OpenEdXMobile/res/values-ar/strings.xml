@@ -5,8 +5,6 @@
   <string name="course_details_congratulations">تهانينا!</string>
   <!--Message for user who has successfully completed a certificate course-->
   <string name="course_details_earned_cert">لقد اجتزت المساق.</string>
-  <!--Button that opens a full view of an earned certificate-->
-  <string name="course_details_view_cert_button">عرض الشهادة</string>
   <!--Course Discovery-->
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">سجّل الآن</string>
