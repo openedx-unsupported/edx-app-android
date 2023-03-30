@@ -1,6 +1,7 @@
 package org.edx.mobile.view
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ class LearnFragment : OfflineSupportBaseFragment() {
     private lateinit var binding: FragmentLearnBinding
     private var items: ArrayList<LearnScreenItem> = arrayListOf()
     private var selectedItemPosition = -1
+    private var lastPopupWindowDismissTime = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,8 +57,13 @@ class LearnFragment : OfflineSupportBaseFragment() {
             items.add(LearnScreenItem.MY_PROGRAMS)
             binding.llLearnSelection.setVisibility(true)
             binding.llLearnSelection.setOnClickListener {
-                showLearnPopupMenu(binding.tvSelectedItem, items)
-                binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_up)
+                // To prevent the reopening of a PopupWindow upon dismissal by clicking on an
+                // already open window
+                val currentTime = SystemClock.elapsedRealtime()
+                if (currentTime - lastPopupWindowDismissTime > MIN_CLICK_INTERVAL) {
+                    showLearnPopupMenu(binding.tvSelectedItem, items)
+                    binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_up)
+                }
             }
         } else {
             binding.llLearnSelection.setVisibility(false)
@@ -86,6 +93,7 @@ class LearnFragment : OfflineSupportBaseFragment() {
 
         listPopupWindow.setOnDismissListener {
             binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_down)
+            lastPopupWindowDismissTime = SystemClock.elapsedRealtime()
         }
     }
 
@@ -131,6 +139,7 @@ class LearnFragment : OfflineSupportBaseFragment() {
 
     companion object {
         private const val SELECTED_POSITION = "selected_position"
+        private const val MIN_CLICK_INTERVAL = 500L
     }
 
     enum class LearnScreenItem(val labelRes: Int) {
