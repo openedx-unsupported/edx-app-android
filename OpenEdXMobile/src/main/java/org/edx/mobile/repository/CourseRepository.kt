@@ -99,6 +99,8 @@ class CourseRepository @Inject constructor(
                     courseManager.addCourseDataInAppLevelCache(courseId, it)
                 }
             }
+        } else {
+            throw HttpStatusException(courseDataResponse.raw())
         }
         courseComponent
     }

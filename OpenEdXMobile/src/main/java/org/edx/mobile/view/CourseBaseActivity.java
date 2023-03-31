@@ -5,9 +5,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ActivityCourseBaseBinding;
@@ -19,6 +19,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -114,7 +115,7 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
         }
 
         CourseViewModel courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
-        courseViewModel.getCourseComponent().observe(binding.getLifecycleOwner(), new EventObserver<>(courseComponent -> {
+        courseViewModel.getCourseComponent().observe(this, new EventObserver<>(courseComponent -> {
             // Check if the Course structure is updated from a specific component
             // so need to set the courseComponentId to that specific component
             // as after update app needs to show the updated content for that component.
@@ -128,11 +129,15 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
             return null;
         }));
 
-        courseViewModel.getHandleError().observe(binding.getLifecycleOwner(), new Observer<Throwable>() {
-            @Override
-            public void onChanged(Throwable throwable) {
-                onCourseRefreshError(throwable);
+        courseViewModel.getHandleError().observe(this, throwable -> {
+            if (errorNotification != null) {
+                errorNotification.showError(CourseBaseActivity.this, throwable, R.string.lbl_reload, v -> {
+                    if (NetworkUtil.isConnected(CourseBaseActivity.this)) {
+                        onRefresh();
+                    }
+                });
             }
+            onCourseRefreshError(throwable);
         });
 
         courseViewModel.getCourseData(courseId, null, false, false,

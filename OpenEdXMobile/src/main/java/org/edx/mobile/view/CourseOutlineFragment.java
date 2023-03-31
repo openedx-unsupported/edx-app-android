@@ -81,6 +81,7 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.CourseDateUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.observer.EventObserver;
@@ -397,6 +398,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private void initCourseObservers() {
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         courseViewModel.getCourseComponent().observe(getViewLifecycleOwner(), new EventObserver<>(courseComponent -> {
+            if (!isAdded()) {
+                return null;
+            }
             loadData(validateCourseComponent(courseComponent));
             FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
                     .getRetainedInstance(getChildFragmentManager());
@@ -430,6 +434,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                         logger.error(throwable, true);
                     } else if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
                         iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, throwable);
+                    } else {
+                        errorNotification.showError(requireContext(), throwable, R.string.lbl_reload, v -> {
+                            if (NetworkUtil.isConnected(requireContext())) {
+                                onRefresh();
+                            }
+                        });
                     }
                     // Remove bulk video download if the course has NO downloadable videos
                     UiUtils.INSTANCE.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
@@ -1045,8 +1055,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     public void onEvent(CourseDashboardRefreshEvent e) {
         errorNotification.hideError();
         final Bundle arguments = getArguments();
-        if (isOnCourseOutline() && arguments != null) {
-            restore(arguments);
+        if (isOnCourseOutline()) {
+            if (arguments != null) {
+                restore(arguments);
+            }
+            courseViewModel.getCourseData(courseData.getCourseId(), courseComponentId, false,
+                    false, CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
+            return;
         }
         fetchCourseComponent();
     }

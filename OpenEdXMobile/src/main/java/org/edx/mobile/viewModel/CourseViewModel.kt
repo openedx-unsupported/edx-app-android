@@ -147,7 +147,7 @@ class CourseViewModel @Inject constructor(
                     }
                 }
                 else -> {
-                    throw java.lang.Exception("Unknown Request Type: $coursesRequestType")
+                    throw Exception("Unknown Request Type: $coursesRequestType")
                 }
             }
             courseComponentData.onSuccess { courseComponent ->
