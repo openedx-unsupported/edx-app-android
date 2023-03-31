@@ -37,6 +37,12 @@ class CourseViewModel @Inject constructor(
     private val _handleError = MutableLiveData<Throwable>()
     val handleError: LiveData<Throwable> = _handleError
 
+    var courseRequestType: CoursesRequestType
+
+    init {
+        courseRequestType = CoursesRequestType.NONE
+    }
+
     fun fetchEnrolledCourses(
         type: CoursesRequestType,
         showProgress: Boolean = true
@@ -52,6 +58,7 @@ class CourseViewModel @Inject constructor(
 
                 override fun onSuccess(result: Result.Success<EnrollmentResponse>) {
                     result.data?.let {
+                        courseRequestType = type
                         _enrolledCourses.postEvent(it.enrollments)
                         environment.appFeaturesPrefs.setAppConfig(it.appConfig)
 
@@ -98,9 +105,15 @@ class CourseViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        courseRequestType = CoursesRequestType.NONE
+    }
+
     sealed class CoursesRequestType {
         object LIVE : CoursesRequestType()
         object STALE : CoursesRequestType()
         object CACHE : CoursesRequestType()
+        object NONE : CoursesRequestType()
     }
 }

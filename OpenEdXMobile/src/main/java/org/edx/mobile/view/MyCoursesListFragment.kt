@@ -148,7 +148,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     environment.appFeaturesPrefs.isIAPEnabled(environment.loginPrefs.isOddUserId)
                 ) {
                     initInAppPurchaseSetup()
-                    detectUnfulfilledPurchase(enrolledCourses)
+                    val fullscreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(
+                        fragmentManager = childFragmentManager
+                    )
+                    if (fullscreenLoader != null) {
+                        SnackbarErrorNotification(binding.root).showUpgradeSuccessSnackbar(R.string.purchase_success_message)
+                        fullscreenLoader.closeLoader()
+                    } else if (environment.appFeaturesPrefs.canAutoCheckUnfulfilledPurchase() &&
+                        courseViewModel.courseRequestType != CoursesRequestType.CACHE
+                    ) {
+                        detectUnfulfilledPurchase(enrolledCourses)
+                    }
                 }
             })
 
@@ -239,26 +249,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     /**
-     * Method to detect Unfulfilled Purchases if full screen loader is not visible.
+     * Method to detect Unfulfilled Purchases.
      *
      * @param enrolledCourses User enrolled courses.
      * */
     private fun detectUnfulfilledPurchase(enrolledCourses: List<EnrolledCoursesResponse>) {
-        val fullscreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(
-            fragmentManager = childFragmentManager
+        iapAnalytics.reset()
+        iapViewModel.detectUnfulfilledPurchase(
+            environment.loginPrefs.userId,
+            enrolledCourses,
+            IAPFlowData.IAPFlowType.SILENT,
+            Analytics.Screens.COURSE_ENROLLMENT
         )
-        if (fullscreenLoader != null) {
-            SnackbarErrorNotification(binding.root).showUpgradeSuccessSnackbar(R.string.purchase_success_message)
-            fullscreenLoader.closeLoader()
-        } else {
-            iapAnalytics.reset()
-            iapViewModel.detectUnfulfilledPurchase(
-                environment.loginPrefs.userId,
-                enrolledCourses,
-                IAPFlowData.IAPFlowType.SILENT,
-                Analytics.Screens.COURSE_ENROLLMENT
-            )
-        }
     }
 
     override fun onResume() {
@@ -298,7 +300,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 }
             }
             IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE -> {
-                onRefresh()
+                courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.LIVE)
             }
         }
     }

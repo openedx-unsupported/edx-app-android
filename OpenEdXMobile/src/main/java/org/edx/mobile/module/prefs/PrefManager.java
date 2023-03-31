@@ -307,6 +307,7 @@ public class PrefManager {
         public static final String BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s";
         // Preference to save app config
         public static final String APP_CONFIG = "APP_CONFIG";
+        public static final String CHECK_UNFULFILLED_PURCHASE = "CHECK_UNFULFILLED_PURCHASE";
     }
 
     public static final class Value {
