@@ -260,6 +260,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     public void initializeIAPObserver() {
         iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
 
+        // The shared observer is used to monitor and handle any errors that may occur during the
+        // ‘refreshCourseData’ method, which is called as part of the refresh flow. This observer
+        // invokes the ‘updateCourseStructure’ method within the ‘CourseBaseActivity’.
         iapViewModel.getErrorMessage().observe(this, new NonNullObserver<>(errorMessageEvent -> {
             if (errorMessageEvent.peekContent().getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
                 ErrorMessage errorMessage = errorMessageEvent.getContentIfNotConsumed();
