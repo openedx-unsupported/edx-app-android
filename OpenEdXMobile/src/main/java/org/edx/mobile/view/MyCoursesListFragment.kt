@@ -20,6 +20,7 @@ import org.edx.mobile.event.EnrolledInCourseEvent
 import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MoveToDiscoveryTabEvent
+import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
@@ -398,6 +399,12 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     @Subscribe(sticky = true)
     @Suppress("UNUSED_PARAMETER")
     fun onEvent(event: MainDashboardRefreshEvent) {
+        courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.LIVE)
+    }
+
+    @Subscribe(sticky = true)
+    @Suppress("UNUSED_PARAMETER")
+    fun onEvent(event: MyCoursesRefreshEvent) {
         courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.LIVE)
     }
 
