@@ -42,10 +42,10 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
+import org.edx.mobile.util.NonNullObserver;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.util.images.ShareUtils;
-import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.custom.PreLoadingListener;
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment;
@@ -260,10 +260,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     public void initializeIAPObserver() {
         iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
 
-        iapViewModel.getErrorMessage().observe(this, new EventObserver<>(errorMessage -> {
-            if (errorMessage.getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
+        // The shared observer is used to monitor and handle any errors that may occur during the
+        // ‘refreshCourseData’ method, which is called as part of the refresh flow. This observer
+        // invokes the ‘updateCourseStructure’ method within the ‘CourseBaseActivity’.
+        iapViewModel.getErrorMessage().observe(this, new NonNullObserver<>(errorMessageEvent -> {
+            if (errorMessageEvent.peekContent().getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
+                ErrorMessage errorMessage = errorMessageEvent.getContentIfNotConsumed();
                 FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getSupportFragmentManager());
-                if (fullScreenLoader == null) {
+                if (fullScreenLoader == null || errorMessage == null) {
                     return null;
                 }
                 iapDialogs.handleIAPException(
