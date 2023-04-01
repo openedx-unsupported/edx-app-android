@@ -51,6 +51,10 @@ object InAppPurchasesUtils {
                 else -> R.string.error_user_not_authenticated
             }
             HttpStatus.NOT_ACCEPTABLE -> R.string.error_course_already_paid
+            HttpStatus.CONFLICT -> when (requestType) {
+                ErrorMessage.EXECUTE_ORDER_CODE -> R.string.error_course_paid_and_verified
+                else -> R.string.general_error_message
+            }
             else -> when (requestType) {
                 ErrorMessage.PAYMENT_SDK_CODE -> R.string.error_payment_not_processed
                 ErrorMessage.PRICE_CODE -> R.string.error_price_not_fetched

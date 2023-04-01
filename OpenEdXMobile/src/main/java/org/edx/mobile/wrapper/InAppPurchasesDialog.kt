@@ -179,40 +179,62 @@ class InAppPurchasesDialog @Inject constructor(
             eventName = Analytics.Events.IAP_COURSE_UPGRADE_ERROR,
             errorMsg = feedbackErrorMessage
         )
-        AlertDialogFragment.newInstance(
-            context.getString(R.string.title_upgrade_error),
-            context.getString(R.string.error_course_not_fullfilled),
-            context.getString(
-                if (HttpStatus.NOT_ACCEPTABLE == errorMessage.getHttpErrorCode()) R.string.label_refresh_now
-                else R.string.label_refresh_to_retry
-            ),
-            { dialog, which ->
-                retryListener?.onClick(dialog, which).also {
-                    if (HttpStatus.NOT_ACCEPTABLE == errorMessage.getHttpErrorCode()) {
-                        // Add Analytics for refresh course on unfulfilled payments
-                    } else {
-                        iapAnalytics.initRefreshContentTime()
-                        iapAnalytics.trackIAPEvent(
-                            eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
-                            errorMsg = feedbackErrorMessage,
-                            actionTaken = Analytics.Values.ACTION_REFRESH
-                        )
+
+        // Todo: Find a better solution to handle this case, course already paid and verified, on
+        // Execute API
+        if (errorMessage.getHttpErrorCode() == HttpStatus.CONFLICT) {
+            AlertDialogFragment.newInstance(
+                context.getString(R.string.title_upgrade_error),
+                context.getString(R.string.error_course_paid_and_verified),
+                context.getString(R.string.label_get_help),
+                { dialog, which ->
+                    cancelListener?.onClick(dialog, which).also {
+                        showFeedbackScreen(context, feedbackErrorMessage)
                     }
-                }
-            },
-            context.getString(R.string.label_get_help),
-            { dialog, which ->
-                cancelListener?.onClick(dialog, which).also {
-                    showFeedbackScreen(context, feedbackErrorMessage)
-                }
-            },
-            context.getString(R.string.label_cancel),
-            { dialog, which ->
-                cancelListener?.onClick(dialog, which).also {
-                    trackAlertCloseEvent(feedbackErrorMessage)
-                }
-            }, false
-        ).show(context.childFragmentManager, null)
+                },
+                context.getString(R.string.label_close),
+                { dialog, which ->
+                    cancelListener?.onClick(dialog, which).also {
+                        trackAlertCloseEvent(feedbackErrorMessage)
+                    }
+                }, false
+            ).show(context.childFragmentManager, null)
+        } else {
+            AlertDialogFragment.newInstance(
+                context.getString(R.string.title_upgrade_error),
+                context.getString(R.string.error_course_not_fullfilled),
+                context.getString(
+                    if (HttpStatus.NOT_ACCEPTABLE == errorMessage.getHttpErrorCode()) R.string.label_refresh_now
+                    else R.string.label_refresh_to_retry
+                ),
+                { dialog, which ->
+                    retryListener?.onClick(dialog, which).also {
+                        if (HttpStatus.NOT_ACCEPTABLE == errorMessage.getHttpErrorCode()) {
+                            // Add Analytics for refresh course on unfulfilled payments
+                        } else {
+                            iapAnalytics.initRefreshContentTime()
+                            iapAnalytics.trackIAPEvent(
+                                eventName = Analytics.Events.IAP_ERROR_ALERT_ACTION,
+                                errorMsg = feedbackErrorMessage,
+                                actionTaken = Analytics.Values.ACTION_REFRESH
+                            )
+                        }
+                    }
+                },
+                context.getString(R.string.label_get_help),
+                { dialog, which ->
+                    cancelListener?.onClick(dialog, which).also {
+                        showFeedbackScreen(context, feedbackErrorMessage)
+                    }
+                },
+                context.getString(R.string.label_cancel),
+                { dialog, which ->
+                    cancelListener?.onClick(dialog, which).also {
+                        trackAlertCloseEvent(feedbackErrorMessage)
+                    }
+                }, false
+            ).show(context.childFragmentManager, null)
+        }
     }
 
     private fun trackAlertCloseEvent(feedbackErrorMessage: String) {
