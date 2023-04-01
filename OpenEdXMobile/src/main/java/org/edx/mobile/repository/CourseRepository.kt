@@ -24,6 +24,7 @@ class CourseRepository @Inject constructor(
             CoursesRequestType.STALE -> courseAPI.enrolledCourses
             CoursesRequestType.CACHE -> courseAPI.enrolledCoursesFromCache
             CoursesRequestType.LIVE -> courseAPI.enrolledCoursesWithoutStale
+            else -> throw java.lang.Exception("Unknown Request Type: $type")
         }
 
         call.enqueue(object : Callback<EnrollmentResponse> {

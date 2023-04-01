@@ -22,8 +22,8 @@ import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.AccountDataLoadedEvent
 import org.edx.mobile.event.IAPFlowEvent
-import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MediaStatusChangeEvent
+import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.isVisible
@@ -545,7 +545,7 @@ class AccountFragment : BaseFragment() {
     @SuppressWarnings("unused")
     fun onEventMainThread(event: IAPFlowEvent) {
         if (this.isResumed && event.flowAction == IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE) {
-            EventBus.getDefault().post(MainDashboardRefreshEvent())
+            EventBus.getDefault().post(MyCoursesRefreshEvent())
             requireActivity().finish()
         }
     }

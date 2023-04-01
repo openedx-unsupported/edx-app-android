@@ -27,7 +27,7 @@ import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.event.IAPFlowEvent;
-import org.edx.mobile.event.MainDashboardRefreshEvent;
+import org.edx.mobile.event.MyCoursesRefreshEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
 import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -500,7 +500,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 break;
             }
             case PURCHASE_FLOW_COMPLETE: {
-                EventBus.getDefault().post(new MainDashboardRefreshEvent());
+                EventBus.getDefault().post(new MyCoursesRefreshEvent());
                 break;
             }
         }
