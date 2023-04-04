@@ -40,6 +40,7 @@
   <!--Alert dialog Update now button-->
   <string name="label_update_now">עדכן כעת</string>
   <!--Alert dialog Remove button-->
+  <string name="label_remove">הסרה</string>
   <!--Done button label-->
   <string name="label_done">בוצע</string>
   <!--Undo button label-->

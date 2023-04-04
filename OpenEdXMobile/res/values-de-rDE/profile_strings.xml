@@ -12,7 +12,7 @@
     <!--  Heading of Wifi Field  -->
     <string name="label_wifi">WLAN</string>
     <!--  Heading of Personal Information  -->
-    <string name="label_personal_information">Persönliche informationen</string>
+    <string name="label_personal_information">Persönliche Daten</string>
     <!--  Heading of Help Field  -->
     <string name="label_help">Hilfe</string>
     <!--  Description of Submit feedback Field  -->
@@ -35,7 +35,14 @@
     <string name="description_delete_account">Befolgen Sie die Anweisungen auf dem nächsten Bildschirm, um Ihr Konto und alle zugehörigen Daten zu löschen.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Version</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Datenschutz</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">Datenschutzbestimmungen</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Cookie-Richtlinie</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">Verkaufen Sie meine persönlichen Daten nicht</string>
     <!-- Logout button label -->
     <string name="logout">Abmelden</string>
     <!-- Profile screen version -->

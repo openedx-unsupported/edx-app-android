@@ -32,7 +32,7 @@
   <!--Alert dialog rate the app button-->
   <string name="label_rate_the_app">Uygulamayı Oyla</string>
   <!--Alert dialog and snackbar button for opening an app store to update the app to the latest version-->
-  <string name="label_update">Güncelleştir</string>
+  <string name="label_update">Güncelle</string>
   <!--Alert dialog Don't allow button-->
   <string name="label_do_not_allow">İzin verme</string>
   <!--Alert dialog View Event button-->
@@ -40,6 +40,7 @@
   <!--Alert dialog Update now button-->
   <string name="label_update_now">Şimdi Güncelle</string>
   <!--Alert dialog Remove button-->
+  <string name="label_remove">Kaldır</string>
   <!--Done button label-->
   <string name="label_done">Tamam</string>
   <!--Undo button label-->

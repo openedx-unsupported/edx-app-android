@@ -20,7 +20,7 @@
     <string name="course_dates_banner_reset_date">Parece que no has cumplido con algunos plazos importantes según nuestro calendario sugerido.
         Para mantenerte en el camino adecuado, puedes actualizar este calendario y mover las tareas vencidas hacia el futuro. No te preocupes, no perderás nada de lo que hayas avanzado cuando cambies las fechas de entrega.</string>
     <!-- Label Course Card Graded Message -->
-    <string name="value_prop_course_card_message">Obtener todos los beneficios</string>
+    <string name="value_prop_course_card_message">Actualizar para acceder a más funciones</string>
 
     <!-- Open in browser message -->
     <string name="open_in_browser_message">Esta parte del curso puede funcionar mejor en un navegador web.</string>

@@ -6,4 +6,56 @@
     <string name="title_purchase">Restaurar compras</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">Inicia sesión en la Play Store para restablecer el acceso a los cursos por los que has pagado previamente </string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">Gracias por su compra. ¡Disfrute de acceso completo al curso!</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">Ocurrió un error</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">Parece que algo salió mal al actualizar su curso. Si este error continúa, comuníquese con Soporte.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">Error al actualizar el curso en la aplicación</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">Conseguir ayuda</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">Actualizar para volver a intentarlo</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">No se pudo encontrar el curso que desea actualizar. Por favor, intente actualizarlo nuevamente. Si este error continúa, comuníquese con Soporte.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">Su cuenta no pudo ser autenticada. Intente cerrar sesión y volver a iniciar sesión en la aplicación. Si este error continúa, comuníquese con Soporte.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">El curso que desea actualizar ya ha sido pagado. Para actualizar, necesitamos actualizar rápidamente su aplicación.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">Su pago no pudo ser procesado en este momento. Inténtalo de nuevo. Para obtener ayuda adicional, comuníquese con Soporte.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">Algo sucedió cuando intentamos actualizar su experiencia en el curso. Si este error continúa, comuníquese con Soporte para obtener ayuda.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">Su solicitud no se pudo completar en este momento. Si este error continúa, comuníquese con Soporte.</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">Desbloqueo</string>
+    <string name="fullscreen_loader_full_access">Acceso completo</string>
+    <string name="fullscreen_loader_to_your_course">a tu curso</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">Desbloquear tareas calificadas</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">Nueva experiencia disponible</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">Hay una actualización disponible para desbloquear un curso comprado. Para actualizar, necesitamos actualizar rápidamente su aplicación. Si elige no actualizar ahora, lo intentaremos de nuevo más tarde.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">Refrescar ahora</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">Continuar sin actualizar</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">Consultar compras\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">Las compras se han restaurado con éxito.</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">Todas las compras están al día. Si no ve sus compras restauradas, intente reiniciar su aplicación para actualizar la experiencia.</string>
 </resources>

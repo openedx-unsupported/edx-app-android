@@ -53,17 +53,20 @@
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s vidéo supprimée</item>
+        <item quantity="many">%s vidéos supprimées</item>
         <item quantity="other">%s vidéos supprimées</item>
     </plurals>
 
     <!-- Subtitle labels for video durations in hours-->
     <plurals name="video_duration_hour">
         <item quantity="one">%d heure</item>
+        <item quantity="many">%d heures</item>
         <item quantity="other">%d heures</item>
     </plurals>
     <!-- Subtitle labels for video durations in minutes-->
     <plurals name="video_duration_minutes">
         <item quantity="one">%d min</item>
+        <item quantity="many">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
 </resources>

@@ -35,7 +35,14 @@
     <string name="description_delete_account">Siga as instruções da próxima tela para excluir sua conta e todos os dados relacionados.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Versão</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Privacidade</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">Política de Privacidade</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Política de cookies</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">Não venda minhas informações pessoais</string>
     <!-- Logout button label -->
     <string name="logout">Sair</string>
     <!-- Profile screen version -->

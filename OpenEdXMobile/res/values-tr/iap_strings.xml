@@ -1,9 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  Heading of Purchases Field  -->
-    <string name="label_purchase">Satın Alımlar</string>
+    <string name="label_purchase">Satın Almalar</string>
     <!--  Title of Purchases Field  -->
-    <string name="title_purchase">Satın alımları geri yükleyin</string>
+    <string name="title_purchase">Satın almaları geri yükleyin</string>
     <!--  Description of Purchases Field  -->
-    <string name="description_purchase">Daha önce yükseltmek için ödeme yaptığınız kurslara erişimi geri yüklemek için Play Store\'da oturum açın</string>
+    <string name="description_purchase">Daha önce yükseltmek için ödeme yaptığınız derslere erişimi geri yüklemek için Play Store\'da oturum açın</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">Satın aldığınız için teşekkür ederiz. Dersinize tam erişimin keyfini çıkarın!</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">Bir hata gerçekleşti</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">Dersinizi yükseltirken bir şeyler ters gitmiş gibi görünüyor. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">Uygulamada ders yükseltilirken hata oluştu</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">Yardım Alın</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">Yeniden denemek için yenileyin</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">Yükseltmek istediğiniz ders bulunamadı. Lütfen yükseltmenizi tekrar deneyin. Bu hata devam ederse, Destek ile iletişime geçin.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">Hesabınızın kimliği doğrulanamadı. Çıkış yapmayı ve uygulamada tekrar oturum açmayı deneyin. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">Yükseltmek istediğiniz dersin ücreti zaten ödendi. Güncellemek için uygulamanızı hızlıca yenilememiz gerek.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">Ödemeniz şu anda işlenemedi. Lütfen tekrar deneyin. Ek yardım için Destek ile iletişime geçin.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">Ders deneyiminizi güncellemeye çalıştığımızda bir şey oldu. Bu hata devam ederse, yardım için Destek ile iletişime geçin.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">İsteğiniz şu anda tamamlanamadı. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">Kilidini açma</string>
+    <string name="fullscreen_loader_full_access">tam erişim</string>
+    <string name="fullscreen_loader_to_your_course">dersinize</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">Notlu ödevlerin kilidini aç</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">Yeni deneyim mevcut</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">Satın alınan bir dersin kilidini açmak için güncelleme mevcut. Güncellemek için uygulamanızı hızlıca yenilememiz gerek. Şimdi güncelleme yapmak istemezseniz daha sonra tekrar deneyeceğiz.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">Şimdi yenile</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">Güncelleme yapmadan devam et</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">Satın almalar kontrol ediliyor\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">Satın alımlarınız başarıyla geri yüklendi</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">Tüm satın alımlar güncel. Satın alımlarınızın geri yüklenmediğini fark ettiyseniz deneyimi yenilemek için lütfen uygulamanızı tekrar başlatmayı deneyin.</string>
 </resources>

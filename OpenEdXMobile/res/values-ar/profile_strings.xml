@@ -35,7 +35,14 @@
     <string name="description_delete_account">تتبع التعليمات في الشاشة التالية لتحذف حسابك و كل البيانات المتعلقة</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">إصدار</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">السرية</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">سياسة الخصوصية</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">سياسة ملفات تعريف الارتباط</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">لا أوافق على بيع معلوماتي الشخصية</string>
     <!-- Logout button label -->
     <string name="logout">تسجيل الخروج</string>
     <!-- Profile screen version -->

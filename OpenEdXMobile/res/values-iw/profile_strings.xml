@@ -12,7 +12,7 @@
     <!--  Heading of Wifi Field  -->
     <string name="label_wifi">Wifi</string>
     <!--  Heading of Personal Information  -->
-    <string name="label_personal_information">מידע אישי</string>
+    <string name="label_personal_information">פרטים אישיים</string>
     <!--  Heading of Help Field  -->
     <string name="label_help">עֶזרָה</string>
     <!--  Description of Submit feedback Field  -->
@@ -35,7 +35,14 @@
     <string name="description_delete_account">עקוב אחר ההוראות במסך הבא כדי למחוק את חשבונך ואת כל הנתונים הקשורים.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">גִרְסָה</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">פרטיות</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">מדיניות פרטיות</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">מדיניות עוגיות</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">לא למכור את הפרטים האישיים שלי</string>
     <!-- Logout button label -->
     <string name="logout">התנתקות</string>
     <!-- Profile screen version -->

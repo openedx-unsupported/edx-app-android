@@ -9,7 +9,7 @@
     <string name="course_modal_unlock_access">Débloquez l\'accès à toutes les activités du cours, y compris les devoirs notés</string>
     <string name="course_modal_full_access_course">Accès complet au contenu et aux supports de cours, même après la fin du cours</string>
     <!-- Label Course Upgrade button  -->
-    <string name="label_upgrade_course_button">Mettre à niveau pour {price}</string>
+    <string name="label_upgrade_course_button">Mettre à niveau maintenant pour {price}</string>
     <!-- Title Course Locked Modal  -->
     <string name="course_locked_modal_title">En savoir plus sur les fonctionnalités verrouillées </string>
     <!-- Label Course Modal Graded Assignments Locked -->

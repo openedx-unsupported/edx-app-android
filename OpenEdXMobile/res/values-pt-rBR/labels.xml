@@ -40,6 +40,7 @@
   <!--Alert dialog Update now button-->
   <string name="label_update_now">Atualizar agora</string>
   <!--Alert dialog Remove button-->
+  <string name="label_remove">Remover</string>
   <!--Done button label-->
   <string name="label_done">Concluído</string>
   <!--Undo button label-->

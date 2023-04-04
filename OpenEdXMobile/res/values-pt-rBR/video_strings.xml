@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Button text to show user Video Settings screen -->
-    <string name="label_video_settings">Configurações de vídeo</string>
     <!-- Title of Video Quality Dialog -->
     <string name="video_download_quality_title">Qualidade do vídeo</string>
     <!-- Auto Video Quality option -->
@@ -53,17 +51,20 @@
     <!-- Info message text for to let use know how many videos were deleted -->
     <plurals name="delete_video_snackbar_msg">
         <item quantity="one">%s vídeo apagado</item>
+        <item quantity="many">%s vídeos apagados</item>
         <item quantity="other">%s vídeos apagados</item>
     </plurals>
 
     <!-- Subtitle labels for video durations in hours-->
     <plurals name="video_duration_hour">
         <item quantity="one">%d hora</item>
+        <item quantity="many">%d horas</item>
         <item quantity="other">%d horas</item>
     </plurals>
     <!-- Subtitle labels for video durations in minutes-->
     <plurals name="video_duration_minutes">
         <item quantity="one">%d min</item>
+        <item quantity="many">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
 </resources>

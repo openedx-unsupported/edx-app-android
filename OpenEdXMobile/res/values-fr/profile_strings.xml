@@ -35,7 +35,14 @@
     <string name="description_delete_account">Suivez les instructions sur l\'écran suivant pour supprimer votre compte et toutes les données associées.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Version</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Vie privée</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">politique de confidentialité</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Politique en matière de cookies</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">Ne vendez pas mes informations personnelles</string>
     <!-- Logout button label -->
     <string name="logout">Déconnexion</string>
     <!-- Profile screen version -->

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.decodeToLong
 import org.edx.mobile.http.model.NetworkResponseCallback
@@ -29,6 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InAppPurchasesViewModel @Inject constructor(
+    private val environment: IEdxEnvironment,
     private val billingProcessor: BillingProcessor,
     private val repository: InAppPurchasesRepository,
     private val iapAnalytics: InAppPurchasesAnalytics
@@ -70,10 +72,12 @@ class InAppPurchasesViewModel @Inject constructor(
 
         override fun onPurchaseComplete(purchase: Purchase) {
             super.onPurchaseComplete(purchase)
-            iapFlowData.purchaseToken = purchase.purchaseToken
-            _productPurchased.postEvent(iapFlowData)
-            iapAnalytics.trackIAPEvent(eventName = Analytics.Events.IAP_PAYMENT_TIME)
-            iapAnalytics.initUnlockContentTime()
+            if (purchase.skus[0] == iapFlowData.productId) {
+                iapFlowData.purchaseToken = purchase.purchaseToken
+                _productPurchased.postEvent(iapFlowData)
+                iapAnalytics.trackIAPEvent(eventName = Analytics.Events.IAP_PAYMENT_TIME)
+                iapAnalytics.initUnlockContentTime()
+            }
         }
     }
 
@@ -218,6 +222,7 @@ class InAppPurchasesViewModel @Inject constructor(
             return
         }
         billingProcessor.queryPurchase { _, purchases ->
+            environment.appFeaturesPrefs.setAutoCheckUnfulfilledPurchase(false)
             if (purchases.isEmpty()) {
                 _fakeUnfulfilledCompletion.postEvent(true)
                 return@queryPurchase

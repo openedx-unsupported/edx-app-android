@@ -6,4 +6,56 @@
     <string name="title_purchase">לשחזר רכישות</string>
     <!--  Description of Purchases Field  -->
     <string name="description_purchase">היכנס לחנות Play כדי לשחזר גישה לקורסים ששילמת בעבר כדי לשדרג</string>
+
+    <!-- Message for successful course purchase -->
+    <string name="purchase_success_message">תודה לך על הרכישה. ברכות על הגישה המלאה לקורס!</string>
+
+    <!-- Title of Course Upgrade Error Alert -->
+    <string name="title_upgrade_error">אירעה שגיאה</string>
+    <!-- Message for course upgrade error -->
+    <string name="general_error_message">נראה שמשהו השתבש בשדרוג הקורס שלך. אם השגיאה הזאת נמשכת, נא ליצור קשר עם התמיכה.</string>
+    <!-- Email Subject for Course Upgrade Error -->
+    <string name="email_subject_upgrade_error">שגיאה בשדרוג הקורס ביישומון</string>
+    <!-- Get Help button label -->
+    <string name="label_get_help">קבלת עזרה</string>
+    <!-- Refresh To Retry button label -->
+    <string name="label_refresh_to_retry">יש לרענן כדי לנסות שוב</string>
+
+    <!--  Error Messages  -->
+    <!--  Course didn't found against the course sku in the course upgrade API -->
+    <string name="error_course_not_found">הקורס שברצונך לשדרג לא נמצא. נא לנסות את השדרוג שלך שוב. אם השגיאה הזאת נמשכת, נא ליצור קשר עם התמיכה.</string>
+    <!-- Authentication error in course upgrade API's basket, checkout, execute  -->
+    <string name="error_user_not_authenticated">לא ניתן לאמת את החשבון שלך. כדאי לנסות לצאת ולהיכנס ליישומון בחזרה. אם השגיאה הזאת נמשכת, נא ליצור קשר עם התמיכה.</string>
+    <!--  The course is already upgraded  -->
+    <string name="error_course_already_paid">הקורס שברצונך לשדרג כבר שולם. כדי לעדכן, אנחנו צריכים לרענן את היישומון שלך בזריזות.</string>
+    <!--  Course sku or the payment processor didn't found  -->
+    <string name="error_payment_not_processed">לא ניתן לעבד את התשלום שלך כרגע. נא לנסות שוב. לעזרה נוספת, נא לפנות לתמיכה.</string>
+    <!--  The native payment is complete but an error occurred while marking the course verified  -->
+    <string name="error_course_not_fullfilled">משהו קרה כשניסינו לעדכן את חוויית הקורס שלך. אם השגיאה הזאת נמשכת, נא לפנות לתמיכה לעזרה.</string>
+    <!--  The price wasn't fetched from the payment sdk  -->
+    <string name="error_price_not_fetched">לא ניתן להשלים את הבקשה שלך כרגע. אם השגיאה הזאת נמשכת, נא לפנות לתמיכה.</string>
+
+    <!-- Full Screen Loader -->
+    <string name="fullscreen_loader_unlocking">הגישה המלאה</string>
+    <string name="fullscreen_loader_full_access">לקורס שלך</string>
+    <string name="fullscreen_loader_to_your_course">מתבצעת</string>
+
+    <!-- Label Course Modal Unlock Graded Assignments -->
+    <string name="course_modal_unlock_graded_assignment">שחרור מטלות מדורגות</string>
+
+    <!-- Silent Course Upgrade Success Alert -->
+    <!-- Silent Course Upgrade Success Alert Title -->
+    <string name="silent_course_upgrade_success_title">חוויה חדשה זמינה</string>
+    <!-- Silent Course Upgrade Success Alert Message -->
+    <string name="silent_course_upgrade_success_message">יש עדכון זמין לשחרור קורס שנרכש. כדי לעדכן, עלינו לרענן את היישומון שלך בזריזות. אם לא מתאים לך לעדכן כרגע, ננסה שוב בהמשך.</string>
+    <!-- Label Refresh Now -->
+    <string name="label_refresh_now">לרענן כעת</string>
+    <!-- Label Continue Without Update -->
+    <string name="label_continue_without_update">להמשיך בלי העדכון</string>
+    <!-- Title of the dialog to while verifying the incomplete purchases -->
+    <string name="title_checking_purchases">הרכישות נבדקות\.\.\.</string>
+    <!-- Title of the Purchases successfully restored dialog -->
+    <string name="title_purchases_restored">רכישות שוחזרו בהצלחה</string>
+    <!-- Message for the Purchases successfully restored dialog -->
+    <string name="message_purchases_restored">כל הרכישות עדכניות. אם הרכישות שלך לא שוחזרו, נא לנסות להפעיל את היישומון של מחדש כדי לרענן את החוויה.</string>
 </resources>

@@ -47,4 +47,12 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
         }
         return false
     }
+
+    fun canAutoCheckUnfulfilledPurchase(): Boolean {
+        return pref.getBoolean(PrefManager.Key.CHECK_UNFULFILLED_PURCHASE, false)
+    }
+
+    fun setAutoCheckUnfulfilledPurchase(canCheckUnfulfilledPurchase: Boolean) {
+        pref.put(PrefManager.Key.CHECK_UNFULFILLED_PURCHASE, canCheckUnfulfilledPurchase)
+    }
 }

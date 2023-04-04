@@ -10,13 +10,13 @@
 
     <!--  String for Profile Screen  -->
     <!--  Heading of Wifi Field  -->
-    <string name="label_wifi">Wifi</string>
+    <string name="label_wifi">Wi-Fi</string>
     <!--  Heading of Personal Information  -->
     <string name="label_personal_information">Kişisel bilgiler</string>
     <!--  Heading of Help Field  -->
     <string name="label_help">Yardım</string>
     <!--  Description of Submit feedback Field  -->
-    <string name="description_submit_feedback">Bir özellik isteğinde bulunmak veya bize uygulamamıza dair geri bildirim vermek mi istiyorsunuz?</string>
+    <string name="description_submit_feedback">Bir özellik isteğinde bulunmak veya uygulamamıza dair geri bildirim vermek mi istiyorsunuz?</string>
     <!--  Label of Submit feedback Button  -->
     <string name="label_submit_feedback_btn">Destek ekibine e-posta gönder</string>
     <!--  Heading of Get Support Field  -->
@@ -35,11 +35,18 @@
     <string name="description_delete_account">Hesabınızı ve tüm ilgili verileri silmek için bir sonraki ekranda yer alan talimatları uygulayın.</string>
     <!--  Label of App Version  -->
     <string name="label_app_version">Sürüm</string>
-
+    <!--  Heading of Privacy Fields  -->
+    <string name="label_privacy">Gizlilik</string>
+    <!--  Label of Privacy Policy Button  -->
+    <string name="label_privacy_policy">Gizlilik Politikası</string>
+    <!--  Label of Cookie Policy Button  -->
+    <string name="label_cookie_policy">Çerez Politikası</string>
+    <!--  Label of Data Consent Button  -->
+    <string name="label_do_not_sell_my_personal_data">Kişisel Bilgilerimi Satma</string>
     <!-- Logout button label -->
     <string name="logout">Çıkış</string>
     <!-- Profile screen version -->
-    <string name="label_version">Uygulama sürümü</string>
+    <string name="label_version">Uygulama Sürümü</string>
 
     <!-- User Profiles -->
     <!-- Window title for the user profile screen -->
@@ -65,7 +72,7 @@
     <!-- Shown when viewing your own incomplete profile -->
     <string name="profile_incomplete_explanation">Profiliniz henüz tamamlanmadı gibi görünüyor. Haydi, doldurmaya başlayalım.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
-    <string name="profile_incomplete_edit_button">Başla</string>
+    <string name="profile_incomplete_edit_button">Başlayalım</string>
     <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
     <string name="profile_incomplete_about_me">\"Hakkımda\" bilgisi sağlanmamış.</string>
     <!-- Window title for edit profile screen -->
@@ -99,5 +106,5 @@
     <!-- Tab title for section of profile that displays a user's bio -->
     <string name="profile_tab_bio">Hakkımda</string>
     <!-- Tab title for section of profile that lists a user's accomplishments -->
-    <string name="profile_tab_accomplishment">Başarılar</string>
+    <string name="profile_tab_accomplishment">Başarılarım</string>
 </resources>

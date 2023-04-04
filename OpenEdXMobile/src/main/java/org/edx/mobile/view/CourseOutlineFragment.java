@@ -45,8 +45,8 @@ import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.IAPFlowEvent;
 import org.edx.mobile.event.LogoutEvent;
-import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.MediaStatusChangeEvent;
+import org.edx.mobile.event.MyCoursesRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.CourseContentNotValidException;
 import org.edx.mobile.exception.ErrorMessage;
@@ -1061,7 +1061,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
                     // Update the User CourseEnrollments & Dates banner if after user
                     // Purchase course from Locked Component
                     courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), true);
-                    EventBus.getDefault().post(new MainDashboardRefreshEvent());
+                    EventBus.getDefault().post(new MyCoursesRefreshEvent());
                 }
             } else {
                 final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
@@ -1138,7 +1138,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
             case PURCHASE_FLOW_COMPLETE: {
                 courseData.setMode(EnrollmentMode.VERIFIED.toString());
                 getCourseComponentFromServer(false, true);
-                EventBus.getDefault().post(new MainDashboardRefreshEvent());
+                EventBus.getDefault().post(new MyCoursesRefreshEvent());
                 break;
             }
         }

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Button text to show user Video Settings screen -->
-    <string name="label_video_settings">動画設定</string>
     <!-- Title of Video Quality Dialog -->
     <string name="video_download_quality_title">動画のダウンロード品質</string>
     <!-- Auto Video Quality option -->
