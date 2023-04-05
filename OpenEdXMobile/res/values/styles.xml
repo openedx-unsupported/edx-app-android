@@ -144,10 +144,6 @@
         <item name="android:layout_height">1dp</item>
     </style>
 
-    <style name="blue_separator" parent="separator_base">
-        <item name="android:background">@color/primaryBaseColor</item>
-    </style>
-
     <style name="gray_separator" parent="separator_base">
         <item name="android:background">@color/neutralDark</item>
     </style>

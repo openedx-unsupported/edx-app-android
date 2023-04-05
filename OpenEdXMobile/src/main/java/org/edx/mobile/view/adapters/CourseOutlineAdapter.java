@@ -167,7 +167,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 return getHeaderView(position, convertView);
             }
             case SectionRow.RESUME_COURSE_ITEM: {
-                return getResumeCourseView(position, convertView);
+                return convertView;
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
@@ -581,13 +581,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         } else {
             titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
-        return convertView;
-    }
-
-    private View getResumeCourseView(int position, View convertView) {
-        final SectionRow sectionRow = getItem(position);
-        final TextView tvResumeCourseComponentTitle = (TextView) convertView.findViewById(R.id.resume_course_text);
-        tvResumeCourseComponentTitle.setText(sectionRow.component.getDisplayName());
         return convertView;
     }
 

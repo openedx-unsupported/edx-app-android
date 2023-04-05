@@ -177,8 +177,7 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="upgrade_to_verified_today_title">Faça o upgrade para o módulo Verificado hoje mesmo</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Realizar pedido</string>
-  <!--label for resume course section. Will be followed by course name-->
-  <string name="label_resume">Continuar</string>
+
   <!--Mobile Payments-->
   <string name="payments_info_header">Possui um certificado verificado!</string>
   <string name="payments_info_details">Destaque seu currículo com um certificado válido.\n\nTenha em mãos mais um credencial válida para melhorar suas perspectivas de emprego e avançar na sua carreira, ou ao inscrever-se em outras escolas.</string>
