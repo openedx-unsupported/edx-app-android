@@ -91,6 +91,7 @@ import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.CourseViewModel;
+import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType;
 import org.edx.mobile.viewModel.InAppPurchasesViewModel;
 import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
@@ -203,7 +204,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 errorNotification.hideError();
                 canFetchBannerInfo = true;
                 courseViewModel.getCourseData(courseData.getCourseId(), null, false, true,
-                        CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
+                        CoursesRequestType.LIVE.INSTANCE);
             }
         });
         UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
@@ -322,7 +323,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                         errorMessage,
                         (dialogInterface, i) -> courseViewModel
                                 .getCourseData(courseData.getCourseId(), null, false, false,
-                                        CourseViewModel.CoursesRequestType.LIVE.INSTANCE),
+                                        CoursesRequestType.LIVE.INSTANCE),
                         (dialogInterface, i) -> {
                             iapViewModel.getIapFlowData().clear();
                             FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
@@ -389,7 +390,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         if (environment.getLoginPrefs().isUserLoggedIn()) {
             final String courseId = courseData.getCourseId();
             courseViewModel.getCourseData(courseId, courseComponentId, true, false,
-                    CourseViewModel.CoursesRequestType.CACHE.INSTANCE);
+                    CoursesRequestType.APP_LEVEL_CACHE.INSTANCE);
         } else {
             EventBus.getDefault().post(new LogoutEvent());
         }
@@ -412,7 +413,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }));
 
         courseViewModel.getShowProgress().observe(getViewLifecycleOwner(), showProgress -> {
-            loadingIndicator.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+            ViewExtKt.setVisibility(loadingIndicator, showProgress);
         });
 
         courseViewModel.getSwipeRefresh().observe(getViewLifecycleOwner(), swipeRefresh -> {
@@ -1060,7 +1061,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 restore(arguments);
             }
             courseViewModel.getCourseData(courseData.getCourseId(), courseComponentId, false,
-                    false, CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
+                    false, CoursesRequestType.LIVE.INSTANCE);
             return;
         }
         fetchCourseComponent();
@@ -1074,7 +1075,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         // Hide payments banner
         updatePaymentsBannerVisibility(View.GONE);
         courseViewModel.getCourseData(courseData.getCourseId(), null, true, false,
-                CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
+                CoursesRequestType.LIVE.INSTANCE);
     }
 
     @Subscribe
@@ -1091,7 +1092,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             case PURCHASE_FLOW_COMPLETE: {
                 courseData.setMode(EnrollmentMode.VERIFIED.toString());
                 courseViewModel.getCourseData(courseData.getCourseId(), null, false, false,
-                        CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
+                        CoursesRequestType.LIVE.INSTANCE);
                 EventBus.getDefault().post(new MyCoursesRefreshEvent());
                 break;
             }

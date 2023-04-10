@@ -24,18 +24,20 @@ class CourseRepository @Inject constructor(
     private val courseAPI: CourseAPI, private var courseManager: CourseManager
 ) {
     fun fetchEnrolledCourses(
-        type: CoursesRequestType, callback: NetworkResponseCallback<EnrollmentResponse>
+        type: CoursesRequestType,
+        callback: NetworkResponseCallback<EnrollmentResponse>
     ) {
         val call = when (type) {
             CoursesRequestType.STALE -> courseAPI.enrolledCourses
-            CoursesRequestType.CACHE -> courseAPI.enrolledCoursesFromCache
+            CoursesRequestType.PERSISTABLE_CACHE -> courseAPI.enrolledCoursesFromCache
             CoursesRequestType.LIVE -> courseAPI.enrolledCoursesWithoutStale
             else -> throw java.lang.Exception("Unknown Request Type: $type")
         }
 
         call.enqueue(object : Callback<EnrollmentResponse> {
             override fun onResponse(
-                call: Call<EnrollmentResponse>, response: Response<EnrollmentResponse>
+                call: Call<EnrollmentResponse>,
+                response: Response<EnrollmentResponse>
             ) {
                 when (response.isSuccessful && response.body() != null) {
                     true -> callback.onSuccess(
@@ -60,24 +62,25 @@ class CourseRepository @Inject constructor(
         })
     }
 
-    suspend fun getCourseComponentsFromCache(
+    suspend fun getCourseComponentsFromAppLevelCache(
         courseId: String,
         courseComponentId: String? = null,
-        coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
-    ): CourseComponent? = withContext(coroutineDispatcher) {
-        var courseComponent: CourseComponent? = null
-        if (android.text.TextUtils.isEmpty(courseComponentId).not()) {
+        dispatcher: CoroutineDispatcher = Dispatchers.Default
+    ): CourseComponent? = withContext(dispatcher) {
+        if (courseComponentId?.isNotEmpty() == true) {
             // Course data exist in app session cache
-            courseComponentId?.let { courseManager.getComponentByIdFromAppLevelCache(courseId, it) }
+            courseManager.getComponentByIdFromAppLevelCache(courseId, courseComponentId)
         } else {
             // Check if course data is available in app session cache
-            courseComponent = courseManager.getCourseDataFromAppLevelCache(courseId)
+            courseManager.getCourseDataFromAppLevelCache(courseId)
         }
-        // Check if course data is available in persistable cache
-        if (courseComponent == null) {
-            courseComponent = courseManager.getCourseDataFromPersistableCache(courseId)
-        }
-        courseComponent
+    }
+
+    suspend fun getCourseDataFromPersistableCache(
+        courseId: String,
+        dispatcher: CoroutineDispatcher = Dispatchers.Default
+    ): CourseComponent? = withContext(dispatcher) {
+        courseManager.getCourseDataFromPersistableCache(courseId)
     }
 
     suspend fun getCourseStructure(
@@ -93,7 +96,7 @@ class CourseRepository @Inject constructor(
             courseDataResponse.body()?.also { courseStructureV1Model ->
                 courseComponent = CourseAPI.normalizeCourseStructure(
                     courseStructureV1Model, courseId
-                ) as CourseComponent
+                ) as CourseComponent?
                 // Update the course data cache after Course Purchase
                 courseComponent?.let {
                     courseManager.addCourseDataInAppLevelCache(courseId, it)
@@ -108,10 +111,16 @@ class CourseRepository @Inject constructor(
     private fun getCourseStructureCall(
         courseId: String, coursesRequestType: CoursesRequestType
     ): Call<CourseStructureV1Model> {
-        return if (coursesRequestType == CoursesRequestType.STALE) {
-            courseAPI.getCourseStructureWithStale(courseId)
-        } else {
-            courseAPI.getCourseStructureWithoutStale(courseId)
+        return when (coursesRequestType) {
+            CoursesRequestType.STALE -> {
+                courseAPI.getCourseStructureWithStale(courseId)
+            }
+            CoursesRequestType.LIVE -> {
+                courseAPI.getCourseStructureWithoutStale(courseId)
+            }
+            else -> {
+                throw java.lang.Exception("Unknown Request Type: $coursesRequestType")
+            }
         }
     }
 }

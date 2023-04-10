@@ -20,8 +20,9 @@ import org.edx.mobile.module.db.DataCallback
 import org.edx.mobile.repository.CourseRepository
 import org.edx.mobile.util.observer.Event
 import org.edx.mobile.util.observer.postEvent
-import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.CACHE
+import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.APP_LEVEL_CACHE
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.LIVE
+import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.PERSISTABLE_CACHE
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType.STALE
 import javax.inject.Inject
 
@@ -74,7 +75,7 @@ class CourseViewModel @Inject constructor(
                         _enrolledCourses.postEvent(it.enrollments)
                         environment.appFeaturesPrefs.setAppConfig(it.appConfig)
 
-                        if (type != CACHE) {
+                        if (type != PERSISTABLE_CACHE) {
                             updateDatabaseAfterDownload(it.enrollments)
                         } else {
                             fetchEnrolledCourses(type = STALE, it.enrollments.isEmpty())
@@ -83,7 +84,7 @@ class CourseViewModel @Inject constructor(
                 }
 
                 override fun onError(error: Result.Error) {
-                    if (type == CACHE) {
+                    if (type == PERSISTABLE_CACHE) {
                         fetchEnrolledCourses(type = STALE)
                     } else {
                         _handleError.value = error.throwable
@@ -127,60 +128,50 @@ class CourseViewModel @Inject constructor(
         viewModelScope.launch {
             _swipeRefresh.postValue(swipeRefresh)
             _showProgress.postValue(showProgress)
-            val courseComponentData: kotlin.Result<CourseComponent?> = when (coursesRequestType) {
-                CACHE -> {
-                    runCatching {
-                        courseRepository.getCourseComponentsFromCache(
-                            courseId,
-                            courseComponentId,
-                            Dispatchers.IO
-                        )
-                    }
-                }
-                STALE, LIVE -> {
-                    runCatching {
-                        courseRepository.getCourseStructure(
-                            courseId,
-                            coursesRequestType,
-                            Dispatchers.IO
-                        )
-                    }
-                }
-                else -> {
-                    throw Exception("Unknown Request Type: $coursesRequestType")
-                }
-            }
-            courseComponentData.onSuccess { courseComponent ->
+
+            val courseComponentResult =
+                getCourseComponentResults(courseId, courseComponentId, coursesRequestType)
+
+            courseComponentResult.onSuccess { courseComponent ->
                 _swipeRefresh.postValue(false)
                 _showProgress.postValue(false)
                 if (courseComponent == null) {
-                    if ((coursesRequestType == CACHE || coursesRequestType == STALE)) {
-                        getCourseData(
-                            courseId,
-                            courseComponentId,
-                            showProgress = showProgress,
-                            swipeRefresh = false,
-                            coursesRequestType = LIVE
-                        )
+                    var newRequestType: CoursesRequestType = LIVE
+                    if (coursesRequestType == APP_LEVEL_CACHE) {
+                        // Course data is not available in app session cache
+                        newRequestType = PERSISTABLE_CACHE
+                    } else if (coursesRequestType == PERSISTABLE_CACHE || coursesRequestType == STALE) {
+                        // Course data is neither available in app session cache nor available in persistable cache
+                        newRequestType = LIVE
                     }
+                    getCourseData(
+                        courseId,
+                        courseComponentId,
+                        showProgress = true,
+                        swipeRefresh = false,
+                        coursesRequestType = newRequestType
+                    )
                 } else {
-                    _courseComponent.postEvent(courseComponent)
-                    // if course data exist in persistable cache update the course data in background
-                    if (coursesRequestType == CACHE) {
+                    if (coursesRequestType == PERSISTABLE_CACHE) {
+                        // Course data exist in persistable cache
+                        // Send a server call in background for refreshed data
                         getCourseData(
                             courseId,
                             courseComponentId,
-                            showProgress = false,
+                            showProgress = true,
                             swipeRefresh = false,
                             coursesRequestType = STALE
                         )
                     }
+                    _courseComponent.postEvent(courseComponent)
                 }
-
             }.onFailure {
                 if (coursesRequestType == LIVE || coursesRequestType == STALE) {
                     _handleError.postValue(it)
+                    _swipeRefresh.postValue(false)
+                    _showProgress.postValue(false)
                 } else {
+                    // Unable to get Course data neither from app session cache nor available in persistable cache
                     getCourseData(
                         courseId,
                         courseComponentId,
@@ -193,15 +184,50 @@ class CourseViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getCourseComponentResults(
+        courseId: String,
+        courseComponentId: String?,
+        coursesRequestType: CoursesRequestType
+    ): kotlin.Result<CourseComponent?> = when (coursesRequestType) {
+        APP_LEVEL_CACHE -> {
+            runCatching {
+                courseRepository.getCourseComponentsFromAppLevelCache(
+                    courseId,
+                    courseComponentId,
+                    Dispatchers.IO
+                )
+            }
+        }
+        PERSISTABLE_CACHE -> {
+            runCatching {
+                courseRepository.getCourseDataFromPersistableCache(courseId, Dispatchers.IO)
+            }
+        }
+        STALE, LIVE -> {
+            runCatching {
+                courseRepository.getCourseStructure(
+                    courseId,
+                    coursesRequestType,
+                    Dispatchers.IO
+                )
+            }
+        }
+        else -> {
+            throw Exception("Unknown Request Type: $coursesRequestType")
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         courseRequestType = CoursesRequestType.NONE
     }
 
+    @Suppress("ClassName")
     sealed class CoursesRequestType {
         object LIVE : CoursesRequestType()
         object STALE : CoursesRequestType()
-        object CACHE : CoursesRequestType()
+        object PERSISTABLE_CACHE : CoursesRequestType() // represents max-stale with only-if-cached
+        object APP_LEVEL_CACHE : CoursesRequestType() // represents the LruCache from CourseManager
         object NONE : CoursesRequestType()
     }
 }
