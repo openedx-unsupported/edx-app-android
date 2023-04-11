@@ -93,7 +93,6 @@ class AccountFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        environment.analyticsRegistry.trackScreenView(Analytics.Screens.PROFILE)
         EventBus.getDefault().register(this)
         sendGetUpdatedAccountCall()
     }
@@ -172,11 +171,6 @@ class AccountFragment : BaseFragment() {
         binding.appVersion.text = String.format(
             "%s %s %s", getString(R.string.label_app_version),
             BuildConfig.VERSION_NAME, config.environmentDisplayName
-        )
-
-        environment.analyticsRegistry.trackScreenViewEvent(
-            Analytics.Events.PROFILE_PAGE_VIEWED,
-            Analytics.Screens.PROFILE
         )
     }
 

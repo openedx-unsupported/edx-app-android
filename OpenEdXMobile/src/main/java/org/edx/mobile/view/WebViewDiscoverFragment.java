@@ -79,14 +79,11 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     private void initTitle() {
         Bundle args = getArguments();
-        if (args != null) {
-            String screenTitle = args.getString(Router.EXTRA_SCREEN_TITLE);
-            if (screenTitle != null) {
-                binding.toolbar.getRoot().setVisibility(View.VISIBLE);
-                binding.toolbar.collapsingToolbar.setTitle(screenTitle);
-            } else {
-                binding.toolbar.getRoot().setVisibility(View.GONE);
-            }
+        if (args != null && !TextUtils.isEmpty(args.getString(Router.EXTRA_SCREEN_TITLE))) {
+            binding.toolbar.getRoot().setVisibility(View.VISIBLE);
+            binding.toolbar.collapsingToolbar.setTitle(args.getString(Router.EXTRA_SCREEN_TITLE));
+        } else {
+            binding.toolbar.getRoot().setVisibility(View.GONE);
         }
     }
 

@@ -67,6 +67,11 @@ class MainTabsDashboardFragment : BaseFragment() {
         binding.viewPager.isUserInputEnabled = false
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(SELECTED_POSITION, selectedTabPosition)
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleTabSelection(intent.extras)
@@ -77,8 +82,8 @@ class MainTabsDashboardFragment : BaseFragment() {
 
     private fun initializeTabs(arguments: Bundle?) {
         val tabLayout = binding.tabs
-
         tabLayout.setVisibility(fragmentItems.size > 1)
+
         val tabChangeListener = object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab) {
                 binding.viewPager.currentItem = tab.position
@@ -88,17 +93,18 @@ class MainTabsDashboardFragment : BaseFragment() {
             override fun onTabUnselected(tab: Tab) {}
             override fun onTabReselected(tab: Tab) {}
         }
-
-        val adapter = FragmentItemPagerAdapter(requireActivity(), fragmentItems)
-        binding.viewPager.adapter = adapter
-        binding.viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+        val pageChangeCallback = object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val item = fragmentItems[position]
                 activity?.let { it.title = item.title }
                 item.listener?.onFragmentSelected()
             }
-        })
+        }
+
+        val adapter = FragmentItemPagerAdapter(requireActivity(), fragmentItems)
+        binding.viewPager.adapter = adapter
+        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
         if (fragmentItems.size - 1 > 1) {
             binding.viewPager.offscreenPageLimit = fragmentItems.size - 1
         }
@@ -117,6 +123,18 @@ class MainTabsDashboardFragment : BaseFragment() {
         ) ?: defaultTabPosition
         tabLayout.selectTab(tabLayout.getTabAt(selectedTabPosition))
         tabLayout.addOnTabSelectedListener(tabChangeListener)
+
+        /*
+         The ViewPager may not automatically call the onPageSelected method for the first item, so
+         it's necessary to manually invoke the method to ensure it's called. It's also important to
+         take steps to prevent it from being called again during orientation changes.
+         Inspiration for this solution: https://stackoverflow.com/a/16074152/1402616
+         */
+        if ((arguments?.getInt(SELECTED_POSITION, -1) ?: -1) < 0) {
+            binding.viewPager.post {
+                pageChangeCallback.onPageSelected(binding.viewPager.currentItem)
+            }
+        }
     }
 
     private fun createTab(tab: Tab, fragmentItem: FragmentItemModel) {
@@ -157,6 +175,8 @@ class MainTabsDashboardFragment : BaseFragment() {
             resources.getString(R.string.profile_title),
             R.drawable.ic_person, arguments
         ) {
+            // Todo: We need to discuss the usage of this event
+            environment.analyticsRegistry.trackScreenView(Analytics.Screens.PROFILE)
             environment.analyticsRegistry.trackScreenViewEvent(
                 Analytics.Events.PROFILE_PAGE_VIEWED,
                 Analytics.Screens.PROFILE
