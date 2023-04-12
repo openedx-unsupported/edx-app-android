@@ -1077,9 +1077,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     @SuppressWarnings("unused")
     public void onEvent(CourseOutlineRefreshEvent event) {
         errorNotification.hideError();
-        final Bundle arguments = getArguments();
-        if (isOnCourseOutline() && arguments != null) {
-            restore(arguments);
+        if (isOnCourseOutline()) {
             refreshOnResume = true;
         }
     }
