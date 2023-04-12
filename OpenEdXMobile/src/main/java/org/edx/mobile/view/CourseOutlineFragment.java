@@ -445,6 +445,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     }
                     // Remove bulk video download if the course has NO downloadable videos
                     UiUtils.INSTANCE.removeFragmentByTag(CourseOutlineFragment.this, "bulk_download");
+                    if (!EventBus.getDefault().isRegistered(this)) {
+                        EventBus.getDefault().register(this);
+                    }
                 }
             }
         });
