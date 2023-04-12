@@ -127,7 +127,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.myCourseList.onItemClickListener = adapter
 
         initCourseObservers()
-        courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.CACHE)
+        courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.PERSISTABLE_CACHE)
 
         return binding.root
     }
@@ -156,7 +156,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         SnackbarErrorNotification(binding.root).showUpgradeSuccessSnackbar(R.string.purchase_success_message)
                         fullscreenLoader.closeLoader()
                     } else if (environment.appFeaturesPrefs.canAutoCheckUnfulfilledPurchase() &&
-                        courseViewModel.courseRequestType != CoursesRequestType.CACHE
+                        courseViewModel.courseRequestType != CoursesRequestType.PERSISTABLE_CACHE
                     ) {
                         detectUnfulfilledPurchase(enrolledCourses)
                     }
@@ -271,7 +271,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         }
         if (refreshOnResume) {
             courseViewModel.fetchEnrolledCourses(
-                type = CoursesRequestType.CACHE,
+                type = CoursesRequestType.PERSISTABLE_CACHE,
                 showProgress = false
             )
             refreshOnResume = false

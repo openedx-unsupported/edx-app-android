@@ -5,7 +5,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
+import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ActivityCourseBaseBinding;
@@ -16,15 +18,15 @@ import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.viewModel.CourseViewModel;
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
 
 /**
  * A base class to handle some common task
@@ -46,8 +48,6 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     protected EnrolledCoursesResponse courseData;
     protected CourseUpgradeResponse courseUpgradeData;
     protected String courseComponentId;
-
-    private Call<CourseStructureV1Model> getHierarchyCall;
 
     private ActivityCourseBaseBinding binding;
 
@@ -86,15 +86,6 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (getHierarchyCall != null) {
-            getHierarchyCall.cancel();
-            getHierarchyCall = null;
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
@@ -122,32 +113,35 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
             EventBus.getDefault().post(new LogoutEvent());
             return;
         }
-        getHierarchyCall = courseApi.getCourseStructureWithoutStale(courseId);
-        getHierarchyCall.enqueue(new CourseAPI.GetCourseStructureCallback(this, courseId,
-                new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification,
-                null, this) {
-            @Override
-            protected void onResponse(@NonNull final CourseComponent courseComponent) {
-                // Check if the Course structure is updated from a specific component
-                // so need to set the courseComponentId to that specific component
-                // as after update app needs to show the updated content for that component.
-                if (componentId != null) {
-                    // Update the course data cache after Course Purchase
-                    courseManager.addCourseDataInAppLevelCache(courseId, courseComponent);
-                    courseComponentId = componentId;
-                } else {
-                    courseComponentId = courseComponent.getId();
-                }
-                invalidateOptionsMenu();
-                onLoadData();
-            }
 
-            @Override
-            protected void onFailure(@NonNull Throwable error) {
-                super.onFailure(error);
-                onCourseRefreshError(error);
+        CourseViewModel courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+        courseViewModel.getCourseComponent().observe(this, new EventObserver<>(courseComponent -> {
+            // Check if the Course structure is updated from a specific component
+            // so need to set the courseComponentId to that specific component
+            // as after update app needs to show the updated content for that component.
+            if (componentId != null) {
+                courseComponentId = componentId;
+            } else {
+                courseComponentId = courseComponent.getId();
             }
+            invalidateOptionsMenu();
+            onLoadData();
+            return null;
+        }));
+
+        courseViewModel.getHandleError().observe(this, throwable -> {
+            if (errorNotification != null) {
+                errorNotification.showError(CourseBaseActivity.this, throwable, R.string.lbl_reload, v -> {
+                    if (NetworkUtil.isConnected(CourseBaseActivity.this)) {
+                        onRefresh();
+                    }
+                });
+            }
+            onCourseRefreshError(throwable);
         });
+
+        courseViewModel.getCourseData(courseId, null, false, false,
+                CourseViewModel.CoursesRequestType.LIVE.INSTANCE);
     }
 
     @Override

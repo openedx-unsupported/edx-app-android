@@ -7,10 +7,7 @@ import org.edx.mobile.exception.CourseContentNotValidException
 import org.edx.mobile.http.callback.ErrorHandlingCallback
 import org.edx.mobile.http.constants.ApiConstants
 import org.edx.mobile.http.constants.TimeInterval
-import org.edx.mobile.http.notifications.ErrorNotification
-import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.http.util.CallUtil
-import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.model.Page
 import org.edx.mobile.model.api.CourseComponentStatusResponse
 import org.edx.mobile.model.api.CourseUpgradeResponse
@@ -98,7 +95,7 @@ class CourseAPI @Inject constructor(
         return courseService.getCourseDetail(courseId, loginPrefs.username)
     }
 
-    fun getCourseStructure(courseId: String): Call<CourseStructureV1Model> {
+    fun getCourseStructureWithStale(courseId: String): Call<CourseStructureV1Model> {
         return courseService.getCourseStructure(
             "max-stale=" + TimeInterval.HOUR,
             config.apiUrlVersionConfig.blocksApiVersion,
@@ -239,28 +236,6 @@ class CourseAPI @Inject constructor(
         }
 
         protected abstract fun onResponse(coursesResponse: EnrolledCoursesResponse)
-    }
-
-    abstract class GetCourseStructureCallback(
-        context: Context,
-        private val courseId: String,
-        progressCallback: TaskProgressCallback?,
-        errorNotification: ErrorNotification?,
-        snackbarErrorNotification: SnackbarErrorNotification?,
-        refreshListener: RefreshListener?
-    ) : ErrorHandlingCallback<CourseStructureV1Model>(
-        context, progressCallback, errorNotification, snackbarErrorNotification, refreshListener
-    ) {
-
-        override fun onResponse(model: CourseStructureV1Model) {
-            try {
-                onResponse(normalizeCourseStructure(model, courseId) as CourseComponent)
-            } catch (e: CourseContentNotValidException) {
-                onFailure(e)
-            }
-        }
-
-        protected abstract fun onResponse(courseComponent: CourseComponent)
     }
 
     companion object {
