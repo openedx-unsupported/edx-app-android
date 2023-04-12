@@ -140,6 +140,7 @@ class CourseViewModel @Inject constructor(
                     if (coursesRequestType == APP_LEVEL_CACHE) {
                         // Course data is not available in app session cache
                         newRequestType = PERSISTABLE_CACHE
+
                     } else if (coursesRequestType == PERSISTABLE_CACHE || coursesRequestType == STALE) {
                         // Course data is neither available in app session cache nor available in persistable cache
                         newRequestType = LIVE
@@ -158,7 +159,7 @@ class CourseViewModel @Inject constructor(
                         getCourseData(
                             courseId,
                             courseComponentId,
-                            showProgress = true,
+                            showProgress = false,
                             swipeRefresh = false,
                             coursesRequestType = STALE
                         )

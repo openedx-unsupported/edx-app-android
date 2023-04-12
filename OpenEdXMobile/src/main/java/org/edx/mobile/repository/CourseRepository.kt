@@ -2,7 +2,6 @@ package org.edx.mobile.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.http.HttpStatusException
@@ -88,9 +87,7 @@ class CourseRepository @Inject constructor(
         coursesRequestType: CoursesRequestType = CoursesRequestType.LIVE,
         defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
     ): CourseComponent? = withContext(defaultDispatcher) {
-        val courseDataDeferred =
-            async { getCourseStructureCall(courseId, coursesRequestType).execute() }
-        val courseDataResponse = courseDataDeferred.await()
+        val courseDataResponse = getCourseStructureCall(courseId, coursesRequestType).execute()
         var courseComponent: CourseComponent? = null
         if (courseDataResponse.isSuccessful) {
             courseDataResponse.body()?.also { courseStructureV1Model ->
