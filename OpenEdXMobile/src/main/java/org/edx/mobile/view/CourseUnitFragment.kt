@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.annotation.NonNull
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
-import org.edx.mobile.event.CourseDashboardRefreshEvent
+import org.edx.mobile.event.CourseOutlineRefreshEvent
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.services.CourseManager
 import org.greenrobot.eventbus.EventBus
@@ -38,7 +38,7 @@ abstract class CourseUnitFragment : BaseFragment() {
             */
             courseManager?.getComponentByIdFromAppLevelCache(it.courseId, it.id)
                 ?.setCompleted(if (isCompleted) 1 else 0)
-            EventBus.getDefault().post(CourseDashboardRefreshEvent())
+            EventBus.getDefault().post(CourseOutlineRefreshEvent())
         }
     }
 

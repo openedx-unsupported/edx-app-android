@@ -40,6 +40,7 @@ import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
+import org.edx.mobile.event.CourseOutlineRefreshEvent;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.IAPFlowEvent;
 import org.edx.mobile.event.LogoutEvent;
@@ -161,6 +162,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private String screenName;
 
     private AlertDialogFragment loaderDialog;
+    private boolean refreshOnResume = false;
 
     public static Bundle makeArguments(@NonNull EnrolledCoursesResponse model,
                                        @Nullable String courseComponentId, boolean isVideosMode, @ScreenDef String screenName) {
@@ -218,7 +220,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             initCourseDateObserver();
             initInAppPurchaseSetup();
         }
-
+        initCourseObservers();
         fetchCourseComponent();
         // Track CourseOutline for A/A test
         trackAATestCourseOutline();
@@ -385,7 +387,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     }
 
     private void fetchCourseComponent() {
-        initCourseObservers();
         // Prepare the loader. Either re-connect with an existing one or start a new one.
         if (environment.getLoginPrefs().isUserLoggedIn()) {
             final String courseId = courseData.getCourseId();
@@ -925,6 +926,16 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (refreshOnResume) {
+            courseViewModel.getCourseData(courseData.getCourseId(), courseComponentId, false,
+                    false, CoursesRequestType.LIVE.INSTANCE);
+            refreshOnResume = false;
+        }
+    }
+
+    @Override
     public void onRevisit() {
         super.onRevisit();
         fetchLastAccessed();
@@ -1056,15 +1067,21 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     public void onEvent(CourseDashboardRefreshEvent e) {
         errorNotification.hideError();
         final Bundle arguments = getArguments();
-        if (isOnCourseOutline()) {
-            if (arguments != null) {
-                restore(arguments);
-            }
-            courseViewModel.getCourseData(courseData.getCourseId(), courseComponentId, false,
-                    false, CoursesRequestType.LIVE.INSTANCE);
-            return;
+        if (isOnCourseOutline() && arguments != null) {
+            restore(arguments);
         }
         fetchCourseComponent();
+    }
+
+    @Subscribe(sticky = true)
+    @SuppressWarnings("unused")
+    public void onEvent(CourseOutlineRefreshEvent event) {
+        errorNotification.hideError();
+        final Bundle arguments = getArguments();
+        if (isOnCourseOutline() && arguments != null) {
+            restore(arguments);
+            refreshOnResume = true;
+        }
     }
 
     @Subscribe(sticky = true)
