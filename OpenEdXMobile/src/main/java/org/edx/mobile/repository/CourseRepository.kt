@@ -120,4 +120,20 @@ class CourseRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun getCourseStatusInfo(
+        courseId: String,
+        dispatcher: CoroutineDispatcher = Dispatchers.Default
+    ): CourseComponent? = withContext(dispatcher) {
+        val response = courseAPI.getCourseStatusInfo(courseId).execute()
+        if (response.isSuccessful) {
+            val lastAccessBlockId = response.body()?.lastVisitedBlockId ?: return@withContext null
+            courseManager.getComponentByIdFromAppLevelCache(
+                courseId,
+                lastAccessBlockId
+            )
+        } else {
+            throw HttpStatusException(response.raw())
+        }
+    }
 }
