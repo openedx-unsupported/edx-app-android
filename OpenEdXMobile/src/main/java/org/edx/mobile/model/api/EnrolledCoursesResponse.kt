@@ -95,7 +95,7 @@ object EnrolledCoursesComparator : DiffUtil.ItemCallback<EnrolledCoursesResponse
         oldItem: EnrolledCoursesResponse,
         newItem: EnrolledCoursesResponse,
     ): Boolean {
-        return oldItem.courseId == newItem.courseId
+        return oldItem == newItem
     }
 
     /**
@@ -106,6 +106,6 @@ object EnrolledCoursesComparator : DiffUtil.ItemCallback<EnrolledCoursesResponse
         oldItem: EnrolledCoursesResponse,
         newItem: EnrolledCoursesResponse,
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.courseId == newItem.courseId
     }
 }

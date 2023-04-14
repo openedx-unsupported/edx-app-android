@@ -567,4 +567,16 @@ public class CourseComponent implements IBlock, IPathNode {
     public void setCourseSku(String courseSku) {
         this.courseSku = courseSku;
     }
+
+    public ArrayList<SectionRow> getSectionData() {
+        ArrayList<SectionRow> sections = new ArrayList<>();
+        if (isContainer()) {
+            for (CourseComponent block : children) {
+                if (block.isContainer()) {
+                    sections.add(new SectionRow(SectionRow.SECTION, block));
+                }
+            }
+        }
+        return sections;
+    }
 }

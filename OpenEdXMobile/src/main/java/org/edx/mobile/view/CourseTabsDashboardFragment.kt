@@ -732,11 +732,12 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     private fun createCourseOutlineItem(screenName: String?): FragmentItemModel {
         return FragmentItemModel(
-            CourseOutlineFragment::class.java,
+            CourseHomeTabFragment::class.java,
             resources.getString(R.string.label_home),
-            CourseOutlineFragment.makeArguments(
-                courseData, arguments?.getString(Router.EXTRA_COURSE_COMPONENT_ID),
-                false, screenName
+            CourseHomeTabFragment.makeArguments(
+                courseData,
+                arguments?.getString(Router.EXTRA_COURSE_COMPONENT_ID),
+                screenName
             )
         ) {
             environment.analyticsRegistry.trackScreenView(
