@@ -40,6 +40,9 @@ class CourseViewModel @Inject constructor(
     private val _courseComponent = MutableLiveData<Event<CourseComponent>>()
     val courseComponent: LiveData<Event<CourseComponent>> = _courseComponent
 
+    private val _lastAccessedComponent = MutableLiveData<Event<CourseComponent>>()
+    val lastAccessedComponent: LiveData<Event<CourseComponent>> = _lastAccessedComponent
+
     private val _showProgress = MutableLiveData(true)
     val showProgress: LiveData<Boolean> = _showProgress
 
@@ -120,7 +123,7 @@ class CourseViewModel @Inject constructor(
 
     fun getCourseData(
         courseId: String,
-        courseComponentId: String?,
+        courseComponentId: String? = null,
         showProgress: Boolean = false,
         swipeRefresh: Boolean = false,
         coursesRequestType: CoursesRequestType = LIVE
@@ -215,6 +218,21 @@ class CourseViewModel @Inject constructor(
         }
         else -> {
             throw Exception("Unknown Request Type: $coursesRequestType")
+        }
+    }
+
+    fun getCourseStatusInfo(courseId: String) {
+        viewModelScope.launch {
+            val courseStatusResult = runCatching {
+                courseRepository.getCourseStatusInfo(courseId, Dispatchers.IO)
+            }
+            courseStatusResult.onSuccess {
+                it?.let {
+                    _lastAccessedComponent.postEvent(it)
+                }
+            }.onFailure {
+                // nothing to do
+            }
         }
     }
 

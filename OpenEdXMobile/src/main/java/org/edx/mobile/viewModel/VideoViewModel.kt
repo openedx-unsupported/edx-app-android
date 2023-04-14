@@ -19,10 +19,10 @@ class VideoViewModel @Inject constructor() : ViewModel() {
     private val _clearChoices = MutableLiveData<Event<Boolean>>()
     val clearChoices: LiveData<Event<Boolean>> = _clearChoices
 
-    private val _selectedVideosPosition = MutableLiveData<Event<Int>>()
-    val selectedVideosPosition: LiveData<Event<Int>> = _selectedVideosPosition
+    private val _selectedVideosPosition = MutableLiveData<Event<Pair<Int, Int>>>()
+    val selectedVideosPosition: LiveData<Event<Pair<Int, Int>>> = _selectedVideosPosition
 
-    fun deleteVideosAtPosition(position: Int) {
+    fun deleteVideosAtPosition(position: Pair<Int, Int>) {
         _selectedVideosPosition.postEvent(position)
     }
 

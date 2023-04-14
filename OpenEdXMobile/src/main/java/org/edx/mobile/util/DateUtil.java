@@ -1,11 +1,13 @@
 package org.edx.mobile.util;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 
 import androidx.annotation.Nullable;
 
 import com.google.gson.internal.bind.util.ISO8601Utils;
 
+import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 
 import java.text.ParseException;
@@ -13,6 +15,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @SuppressLint("SimpleDateFormat")
@@ -61,6 +64,26 @@ public class DateUtil {
             //This will be removed when the PR for log changes is merged with master
             logger.error(e);
             return null;
+        }
+    }
+
+    /**
+     * This function returns the course due date. (e.g due today at 03:30, due May 25, 2023)
+     *
+     */
+    public static String getFormattedDueDate(Context context, final String date) throws IllegalArgumentException {
+        final SimpleDateFormat dateFormat;
+        final Date dueDate = DateUtil.convertToDate(date);
+        if (android.text.format.DateUtils.isToday(dueDate.getTime())) {
+            dateFormat = new SimpleDateFormat("HH:mm");
+            String formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string.due_date_today,
+                    "due_date", dateFormat.format(dueDate)).toString();
+            formattedDate += " " + TimeZoneUtils.getTimeZoneAbbreviation(TimeZone.getDefault());
+            return formattedDate;
+        } else {
+            dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+            return ResourceUtil.getFormattedString(context.getResources(), R.string.due_date_past_future,
+                    "due_date", dateFormat.format(dueDate)).toString();
         }
     }
 
