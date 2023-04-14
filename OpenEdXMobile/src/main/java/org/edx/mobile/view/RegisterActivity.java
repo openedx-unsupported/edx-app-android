@@ -35,11 +35,11 @@ import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.constants.ApiConstants;
+import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
@@ -54,7 +54,6 @@ import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
-import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.custom.DividerWithTextView;
 
@@ -87,15 +86,13 @@ public class RegisterActivity extends BaseFragmentActivity
     private View facebookButton;
     private View googleButton;
     private View microsoftButton;
-    private TextView errorTextView;
+    private FullScreenErrorNotification errorNotification;
 
     @Inject
     LoginPrefs loginPrefs;
 
     @Inject
     LoginService loginService;
-
-    AnalyticsRegistry analyticsRegistry;
 
     @NonNull
     public static Intent newIntent() {
@@ -114,11 +111,11 @@ public class RegisterActivity extends BaseFragmentActivity
 
         loadingIndicator = findViewById(R.id.loadingIndicator);
         registrationForm = findViewById(R.id.registration_form);
+        errorNotification = new FullScreenErrorNotification(loadingIndicator);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState,
                 this, environment.getConfig(), loginPrefs, SocialLoginDelegate.Feature.REGISTRATION);
 
-        errorTextView = (TextView) findViewById(R.id.content_unavailable_error_text);
 
         boolean isSocialEnabled = false;
         facebookButton = findViewById(R.id.facebook_button);
@@ -251,12 +248,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void showErrorMessage(String errorMsg, @DrawableRes int errorIconResId) {
-        errorTextView.setVisibility(View.VISIBLE);
-        errorTextView.setText(errorMsg);
-        errorTextView.setCompoundDrawables(null, UiUtils.INSTANCE.getDrawable(this, errorIconResId,
-                R.dimen.content_unavailable_error_icon_size, R.color.neutralDark),
-                null, null
-        );
+        errorNotification.showError(errorMsg, errorIconResId, R.string.lbl_reload, v -> getRegistrationForm());
     }
 
     public void getRegistrationForm() {
@@ -267,6 +259,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         tryToSetUIInteraction(false);
         loadingIndicator.setVisibility(View.VISIBLE);
+        errorNotification.hideError();
 
         final Call<RegistrationDescription> getRegistrationFormCall = loginService.getRegistrationForm(
                 environment.getConfig().getApiUrlVersionConfig().getRegistrationApiVersion());
@@ -280,8 +273,13 @@ public class RegisterActivity extends BaseFragmentActivity
             @Override
             protected void onFailure(@NonNull Throwable error) {
                 updateUI(false);
-                showErrorMessage(ErrorUtils.getErrorMessage(error, RegisterActivity.this),
-                        R.drawable.ic_error);
+                if (error instanceof HttpStatusException &&
+                        ((HttpStatusException) error).getStatusCode() == HttpStatus.UPGRADE_REQUIRED) {
+                    errorNotification.showError(getApplicationContext(), error);
+                } else {
+                    showErrorMessage(ErrorUtils.getErrorMessage(error, RegisterActivity.this),
+                            R.drawable.ic_error);
+                }
                 logger.error(error);
             }
 
