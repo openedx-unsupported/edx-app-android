@@ -81,8 +81,6 @@
   <string name="label_programs">Chương trình</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Tìm khóa học</string>
-  <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Khám phá</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Gửi phản hồi</string>
   <!--Toggle switch on state label-->

@@ -66,6 +66,7 @@ public class Router {
     public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
     public static final String EXTRA_IS_SELF_PACED = "is_self_paced";
     public static final String EXTRA_IS_UPGRADEABLE = "is_upgradeable";
+    public static final String EXTRA_SCREEN_TITLE = "screen_title";
 
     @Inject
     Config config;
@@ -425,14 +426,6 @@ public class Router {
 
     public void showWhatsNewActivity(@NonNull Activity activity) {
         activity.startActivity(WhatsNewActivity.newIntent(activity));
-    }
-
-    public void showAccountActivity(@NonNull Activity activity) {
-        activity.startActivity(AccountActivity.newIntent(activity, null));
-    }
-
-    public void showAccountActivity(@NonNull Activity activity, @Nullable @ScreenDef String screenName) {
-        activity.startActivity(AccountActivity.newIntent(activity, screenName));
     }
 
     public void showPaymentsInfoActivity(@NonNull Context context, @NonNull EnrolledCoursesResponse courseDate,

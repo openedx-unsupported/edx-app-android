@@ -82,8 +82,6 @@
   <string name="label_programs">Programmes</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Trouver des cours</string>
-  <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Découverte</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Envoyer commentaire</string>
   <!--Toggle switch on state label-->

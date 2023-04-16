@@ -11,11 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.ActivityMainDashboardBinding;
 import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
@@ -36,7 +38,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainDashboardActivity extends OfflineSupportBaseActivity {
+public class MainDashboardActivity extends OfflineSupportBaseActivity<ActivityMainDashboardBinding> {
 
     @Inject
     NotificationDelegate notificationDelegate;
@@ -59,10 +61,21 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container_view, getMainTabsDashboardFragment(), null);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
+        }
+
         initWhatsNew();
     }
 
-    @Override
+    public int getViewResourceId() {
+        return R.layout.activity_main_dashboard;
+    }
+
     public Object getRefreshEvent() {
         return new MainDashboardRefreshEvent();
     }
@@ -113,14 +126,12 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
         }
     }
 
-    @Override
-    public Fragment getFirstFragment() {
+    public Fragment getMainTabsDashboardFragment() {
         final Fragment fragment = new MainTabsDashboardFragment();
         final Bundle bundle = getIntent().getExtras();
         fragment.setArguments(bundle);
         return fragment;
     }
-
 
     @Override
     protected void onResume() {
@@ -136,7 +147,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
     @Subscribe
     public void onEvent(@NonNull final NewVersionAvailableEvent newVersionAvailableEvent) {
         if (!newVersionAvailableEvent.isConsumed()) {
-            final Snackbar snackbar = Snackbar.make(getBinding().coordinatorLayout,
+            final Snackbar snackbar = Snackbar.make(binding.getRoot(),
                     newVersionAvailableEvent.getNotificationString(this),
                     Snackbar.LENGTH_INDEFINITE);
             if (AppStoreUtils.canUpdate(this)) {
@@ -161,6 +172,16 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
             bar.setDisplayHomeAsUpEnabled(false);
             bar.setIcon(android.R.color.transparent);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
+        if (fragment instanceof MainTabsDashboardFragment &&
+                ((MainTabsDashboardFragment) fragment).onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

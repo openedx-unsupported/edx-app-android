@@ -55,16 +55,13 @@ public class DeepLinkManager {
                         deepLink.getTopicId(), deepLink.getThreadId(), screenName);
                 break;
             }
+            case Screen.PROFILE:
+            case Screen.USER_PROFILE:
             case Screen.PROGRAM:
             case Screen.DISCOVERY:
             case Screen.DISCOVERY_COURSE_DETAIL:
             case Screen.DISCOVERY_PROGRAM_DETAIL: {
                 router.showMainDashboard(activity, screenName, deepLink.getPathId());
-                break;
-            }
-            case Screen.PROFILE:
-            case Screen.USER_PROFILE: {
-                router.showAccountActivity(activity, screenName);
                 break;
             }
             default: {
