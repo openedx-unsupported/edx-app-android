@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,12 +19,19 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <org.edx.mobile.view.custom.AuthenticatedWebView
-                android:id="@+id/auth_webview"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <org.edx.mobile.view.custom.AuthenticatedWebView
+                    android:id="@+id/auth_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white" />
+
+            </androidx.core.widget.NestedScrollView>
 
             <TextView
                 android:id="@+id/tv_open_browser"

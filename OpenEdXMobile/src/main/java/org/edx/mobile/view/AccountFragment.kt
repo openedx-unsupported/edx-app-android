@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -96,7 +94,6 @@ class AccountFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        environment.analyticsRegistry.trackScreenView(Analytics.Screens.PROFILE)
         EventBus.getDefault().register(this)
         sendGetUpdatedAccountCall()
     }
@@ -120,14 +117,28 @@ class AccountFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initTitle()
         initPersonalInfo()
+        initPurchases()
         handleIntentBundle(arguments)
         initVideoQuality()
         updateWifiSwitch()
         updateSDCardSwitch()
         initHelpFields()
         initPrivacyFields()
+        initViews()
+    }
 
+    private fun initTitle() {
+        arguments?.getString(Router.EXTRA_SCREEN_TITLE)?.let {
+            binding.toolbar.root.setVisibility(true)
+            binding.toolbar.collapsingToolbar.title = it
+        } ?: run {
+            binding.toolbar.root.setVisibility(false)
+        }
+    }
+
+    private fun initPurchases() {
         val iapEnabled = environment.featuresPrefs.isIAPEnabledForUser(loginPrefs.isOddUserId)
         if (iapEnabled) {
             initRestorePurchasesObservers()
@@ -146,39 +157,6 @@ class AccountFragment : BaseFragment() {
         } else {
             binding.containerPurchases.setVisibility(false)
         }
-        if (loginPrefs.isUserLoggedIn) {
-            binding.btnSignOut.visibility = View.VISIBLE
-            binding.btnSignOut.setOnClickListener {
-                environment.router.performManualLogout(
-                    context,
-                    environment.analyticsRegistry, environment.notificationDelegate
-                )
-            }
-
-            config.deleteAccountUrl?.let { deleteAccountUrl ->
-                binding.containerDeleteAccount.visibility = View.VISIBLE
-                binding.btnDeleteAccount.setOnClickListener {
-                    environment.router.showAuthenticatedWebViewActivity(
-                        this.requireContext(),
-                        deleteAccountUrl, getString(R.string.title_delete_my_account), false
-                    )
-                    trackEvent(
-                        Analytics.Events.DELETE_ACCOUNT_CLICKED,
-                        Analytics.Values.DELETE_ACCOUNT_CLICKED
-                    )
-                }
-            }
-        }
-
-        binding.appVersion.text = String.format(
-            "%s %s %s", getString(R.string.label_app_version),
-            BuildConfig.VERSION_NAME, config.environmentDisplayName
-        )
-
-        environment.analyticsRegistry.trackScreenViewEvent(
-            Analytics.Events.PROFILE_PAGE_VIEWED,
-            Analytics.Screens.PROFILE
-        )
     }
 
     private fun initRestorePurchasesObservers() {
@@ -450,6 +428,37 @@ class AccountFragment : BaseFragment() {
         binding.containerPrivacy.setVisibility(isContainerVisible)
     }
 
+    private fun initViews() {
+        if (loginPrefs.isUserLoggedIn) {
+            binding.btnSignOut.visibility = View.VISIBLE
+            binding.btnSignOut.setOnClickListener {
+                environment.router.performManualLogout(
+                    context,
+                    environment.analyticsRegistry, environment.notificationDelegate
+                )
+            }
+
+            config.deleteAccountUrl?.let { deleteAccountUrl ->
+                binding.containerDeleteAccount.visibility = View.VISIBLE
+                binding.btnDeleteAccount.setOnClickListener {
+                    environment.router.showAuthenticatedWebViewActivity(
+                        this.requireContext(),
+                        deleteAccountUrl, getString(R.string.title_delete_my_account), false
+                    )
+                    trackEvent(
+                        Analytics.Events.DELETE_ACCOUNT_CLICKED,
+                        Analytics.Values.DELETE_ACCOUNT_CLICKED
+                    )
+                }
+            }
+        }
+
+        binding.appVersion.text = String.format(
+            "%s %s %s", getString(R.string.label_app_version),
+            BuildConfig.VERSION_NAME, config.environmentDisplayName
+        )
+    }
+
     private fun updateWifiSwitch() {
         binding.switchWifi.setOnCheckedChangeListener(null)
         binding.switchWifi.isChecked = userPrefs.isDownloadOverWifiOnly
@@ -542,7 +551,7 @@ class AccountFragment : BaseFragment() {
 
     @Subscribe(sticky = true)
     @Suppress("UNUSED_PARAMETER")
-    fun onEventMainThread(@NonNull event: AccountDataLoadedEvent) {
+    fun onEventMainThread(event: AccountDataLoadedEvent) {
         if (!environment.config.isUserProfilesEnabled) {
             return
         }
@@ -561,7 +570,7 @@ class AccountFragment : BaseFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(@Nullable bundle: Bundle?): AccountFragment {
+        fun newInstance(bundle: Bundle): AccountFragment {
             val fragment = AccountFragment()
             fragment.arguments = bundle
             return fragment

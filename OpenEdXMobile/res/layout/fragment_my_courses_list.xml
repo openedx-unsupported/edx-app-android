@@ -24,6 +24,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/widget_margin_half"
                     android:paddingBottom="@dimen/widget_margin_half"
+                    android:clipToPadding="false"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="2"

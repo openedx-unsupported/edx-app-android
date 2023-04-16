@@ -2,8 +2,11 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseSingleFragmentActivity;
+import androidx.annotation.LayoutRes;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.interfaces.RefreshListener;
@@ -19,8 +22,10 @@ import org.greenrobot.eventbus.EventBus;
  * {@link SnackbarErrorNotification} should never appear until and unless the
  * {@link FullScreenErrorNotification} is hidden.
  */
-public abstract class OfflineSupportBaseActivity extends BaseSingleFragmentActivity
+public abstract class OfflineSupportBaseActivity<VB extends ViewDataBinding> extends BaseFragmentActivity
         implements SnackbarStatusListener, RefreshListener {
+
+    protected VB binding;
 
     private SnackbarErrorNotification snackbarErrorNotification;
     private boolean isFullScreenErrorVisible = true;
@@ -28,7 +33,8 @@ public abstract class OfflineSupportBaseActivity extends BaseSingleFragmentActiv
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        snackbarErrorNotification = new SnackbarErrorNotification(findViewById(R.id.coordinator_layout));
+        binding = DataBindingUtil.setContentView(this, getViewResourceId());
+        snackbarErrorNotification = new SnackbarErrorNotification(binding.getRoot());
     }
 
     @Override
@@ -42,7 +48,7 @@ public abstract class OfflineSupportBaseActivity extends BaseSingleFragmentActiv
         final boolean isNetworkConnected = NetworkUtil.isConnected(this);
         if (fullScreenErrorVisibility || isNetworkConnected) {
             snackbarErrorNotification.hideError();
-        } else if (!isNetworkConnected) {
+        } else {
             snackbarErrorNotification.showOfflineError(this);
         }
     }
@@ -69,4 +75,12 @@ public abstract class OfflineSupportBaseActivity extends BaseSingleFragmentActiv
      * @return The event object.
      */
     public abstract Object getRefreshEvent();
+
+    /**
+     * Provides the layout resource id of the layout to be used by inherited activity.
+     *
+     * @return The event object.
+     */
+    public abstract @LayoutRes
+    int getViewResourceId();
 }

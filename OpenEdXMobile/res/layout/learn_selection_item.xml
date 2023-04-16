@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:padding="@dimen/edx_half_margin"
-    app:lineHeight="@dimen/widget_margin_double"
-    tools:text="@string/app_name"
     android:textColor="@color/primaryBaseColor"
-    android:textSize="@dimen/edx_medium" />
+    android:textSize="@dimen/edx_medium"
+    app:lineHeight="@dimen/widget_margin_double"
+    tools:text="@string/app_name" />
