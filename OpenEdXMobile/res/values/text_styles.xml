@@ -289,4 +289,14 @@
         <item name="android:fontFamily">?attr/fontRegular</item>
         <item name="lineHeight">@dimen/widget_margin_x_double</item>
     </style>
+
+    <style name="TabItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/tab_selector</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="lineHeight">@dimen/edx_default_margin</item>
+    </style>
 </resources>

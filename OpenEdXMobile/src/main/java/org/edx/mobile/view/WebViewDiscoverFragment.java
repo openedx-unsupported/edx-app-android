@@ -45,6 +45,7 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initTitle();
         setWebViewActionListener();
         setWebViewBackPressListener();
 
@@ -73,6 +74,16 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
+    }
+
+    private void initTitle() {
+        Bundle args = getArguments();
+        if (args != null && !TextUtils.isEmpty(args.getString(Router.EXTRA_SCREEN_TITLE))) {
+            binding.toolbar.getRoot().setVisibility(View.VISIBLE);
+            binding.toolbar.collapsingToolbar.setTitle(args.getString(Router.EXTRA_SCREEN_TITLE));
+        } else {
+            binding.toolbar.getRoot().setVisibility(View.GONE);
         }
     }
 
