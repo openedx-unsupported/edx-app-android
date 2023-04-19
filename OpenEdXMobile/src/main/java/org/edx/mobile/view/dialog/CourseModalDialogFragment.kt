@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
@@ -198,6 +199,9 @@ class CourseModalDialogFragment : DialogFragment() {
                     )
                 dismiss()
             }
+        } else if (BillingResponseCode.USER_CANCELED == errorMessage.getHttpErrorCode()) {
+            iapAnalytics.trackIAPEvent(eventName = Events.IAP_PAYMENT_CANCELED)
+            return
         } else if (errorMessage.canRetry()) {
             retryListener = DialogInterface.OnClickListener { _, _ ->
                 when (errorMessage.requestType) {
@@ -208,8 +212,7 @@ class CourseModalDialogFragment : DialogFragment() {
             }
         }
         iapDialog.handleIAPException(
-            fragment =
-            this@CourseModalDialogFragment,
+            fragment = this@CourseModalDialogFragment,
             errorMessage = errorMessage,
             retryListener = retryListener
         )

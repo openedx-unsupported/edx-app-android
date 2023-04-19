@@ -1,7 +1,7 @@
 package org.edx.mobile.module.analytics
 
 import org.edx.mobile.core.IEdxEnvironment
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -111,6 +111,9 @@ class InAppPurchasesAnalytics @Inject constructor(
                 elapsedTime = getCurrentTime() - loadPriceTime
                 trackEvent(eventName, Analytics.Values.IAP_LOAD_PRICE_TIME)
                 loadPriceTime = 0
+            }
+            Analytics.Events.IAP_PAYMENT_CANCELED -> {
+                trackEvent(eventName, Analytics.Values.IAP_PAYMENT_CANCELED)
             }
             Analytics.Events.IAP_PAYMENT_ERROR -> {
                 this.errorMsg = errorMsg
