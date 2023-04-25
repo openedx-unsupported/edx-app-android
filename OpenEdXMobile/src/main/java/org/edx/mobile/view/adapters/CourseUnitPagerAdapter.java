@@ -95,7 +95,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
             final VideoBlockModel videoBlockModel = (VideoBlockModel) minifiedUnit;
             videoBlockModel.setVideoThumbnail(courseData.getCourse().getCourse_image());
             unitFragment = CourseUnitVideoPlayerFragment.newInstance(videoBlockModel, (pos < unitList.size()), (pos > 0));
-        } else if (isYoutubeVideo && config.getYoutubePlayerConfig().isYoutubePlayerEnabled() && VideoUtil.isYoutubeAPISupported(((CourseBaseActivity) callback).getApplicationContext())) {
+        } else if (isYoutubeVideo && config.getYoutubePlayerConfig().isYoutubePlayerEnabled()) {
             unitFragment = CourseUnitYoutubePlayerFragment.newInstance((VideoBlockModel) minifiedUnit);
         } else if (isYoutubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);

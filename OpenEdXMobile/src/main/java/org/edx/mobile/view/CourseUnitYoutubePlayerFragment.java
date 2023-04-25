@@ -4,12 +4,18 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayer.Provider;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import androidx.annotation.NonNull;
+
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -22,22 +28,25 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.VideoUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import subtitleFile.Caption;
 import subtitleFile.TimedTextObject;
 
 @AndroidEntryPoint
-public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment implements YouTubePlayer.OnInitializedListener {
+public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
+        implements YouTubePlayerListener, FullscreenListener {
 
+    private YouTubePlayerView youTubePlayerView;
     private YouTubePlayer youTubePlayer;
-    private Handler initializeHandler = new Handler();
-    private YouTubePlayerSupportFragment youTubePlayerFragment;
-
+    PlayerConstants.PlayerState currentPlayerState = PlayerConstants.PlayerState.UNSTARTED;
+    private double currentTimeInSec = 0;
     private int attempts;
+    private boolean isFullscreen = false;
 
     /**
      * Create a new instance of fragment
@@ -51,87 +60,96 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        releaseYoutubePlayer();
-        if (VideoUtil.isYoutubeAPISupported(getContext())) {
-            youTubePlayerFragment = new YouTubePlayerSupportFragment();
-            getChildFragmentManager().beginTransaction().replace(R.id.player_container, youTubePlayerFragment, "player").commit();
-        }
-        attempts = 0;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (unit != null) {
             setVideoModel();
-            /*
-             * This method is not called property when the user leaves quickly the view on the view pager
-             * so the youtube player can not be released( only one youtube player instance is allowed by the library)
-             * so in order to avoid to create multiple youtube player instances, the youtube player only will be initialize
-             * after minor delay.
-             */
-            initializeHandler.post(this::initializeYoutubePlayer);
+            initializeYoutubePlayer();
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().register(this);
             }
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        releaseYoutubePlayer();
-        initializeHandler.removeCallbacks(null);
-        EventBus.getDefault().unregister(this);
-    }
-
     public void initializeYoutubePlayer() {
         try {
-            if (getActivity() != null && youTubePlayerFragment != null &&
+            if (getActivity() != null &&
                     NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
                 downloadTranscript();
-                String apiKey = environment.getConfig().getYoutubePlayerConfig().getApiKey();
-                if (apiKey == null || apiKey.isEmpty()) {
-                    logger.error(new Throwable("YOUTUBE_IN_APP_PLAYER:API_KEY is missing or empty"));
-                    return;
-                }
-                youTubePlayerFragment.initialize(apiKey, this);
+                releaseYoutubePlayer();
+                youTubePlayerView = new YouTubePlayerView(requireContext());
+                youTubePlayerView.setEnableAutomaticInitialization(false);
+                youTubePlayerView.addFullscreenListener(this);
+                attempts = 0;
+                IFramePlayerOptions iFramePlayerOptions = new IFramePlayerOptions.Builder()
+                        .controls(1)
+                        .fullscreen(1)      // enable full screen button
+                        .build();
+                youTubePlayerView.initialize(this, false, iFramePlayerOptions);
+                addPlayerToScreen(youTubePlayerView);
             }
         } catch (NullPointerException localException) {
             logger.error(localException);
         }
     }
 
+    private void addPlayerToScreen(View youTubePlayerView) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        ViewGroup playerContainer = ((ViewGroup) getView().findViewById(R.id.player_container));
+        playerContainer.removeAllViews();
+        ((ViewGroup) getView().findViewById(R.id.player_container)).addView(youTubePlayerView, params);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        releaseYoutubePlayer();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+        if (getActivity() == null) {
+            return;
+        }
+        youTubePlayer.addListener(this);
+        final int orientation = getActivity().getResources().getConfiguration().orientation;
+        int currentPos = 0;
+        if (videoModel != null) {
+            currentPos = (int) videoModel.getLastPlayedOffset();
+        }
+        final Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
+        /*
+         *  Youtube player loads the video using the video id from the url
+         *  the url has the following format "https://www.youtube.com/watch?v=3_yD_cEKoCk" where v is the video id
+         */
+        final String videoId = uri.getQueryParameter("v");
+        CourseUnitYoutubePlayerFragment.this.youTubePlayer = youTubePlayer;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            youTubePlayer.toggleFullscreen();
+        }
+        youTubePlayer.loadVideo(videoId, (float) (currentPos / AppConstants.MILLISECONDS_PER_SECOND));
+    }
+
     @Override
     protected boolean canProcessSubtitles() {
-        return youTubePlayer != null && youTubePlayer.isPlaying();
+        return youTubePlayer != null && isPlaying();
     }
 
     @Override
     protected long getPlayerCurrentPosition() {
-        return youTubePlayer == null ? 0 : youTubePlayer.getCurrentTimeMillis();
+        return youTubePlayer == null ? 0 : getCurrentTimeMillis();
     }
 
     @Override
     protected void setFullScreen(boolean fullscreen) {
-        /*
-         * If the youtube player is not in a proper state then it throws the IllegalStateException.
-         * To avoid the crash and continue the flow we are reinitializing the player here.
-         *
-         * It may occur when the edX app was in background and user kills the on-device YouTube app.
-         */
-        if (youTubePlayer != null) {
-            try {
-                if (DeviceSettingUtil.isDeviceRotationON(getActivity())) {
-                    youTubePlayer.setFullscreen(fullscreen);
-                }
-            } catch (IllegalStateException e) {
-                logger.error(e);
-                releaseYoutubePlayer();
-                initializeYoutubePlayer();
+        if (youTubePlayer != null && DeviceSettingUtil.isDeviceRotationON(getActivity())) {
+            final int orientation = getResources().getConfiguration().orientation;
+            if ((isFullscreen && orientation == Configuration.ORIENTATION_LANDSCAPE) ||
+                    (!isFullscreen && orientation != Configuration.ORIENTATION_LANDSCAPE)) {
+                return;
             }
+            youTubePlayer.toggleFullscreen();
         }
     }
 
@@ -153,42 +171,6 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     protected void showClosedCaptionData(TimedTextObject subtitles) {
     }
 
-    @Override
-    public void onInitializationSuccess(Provider provider,
-                                        YouTubePlayer player,
-                                        boolean wasRestored) {
-        if (getActivity() == null) {
-            return;
-        }
-        final int orientation = getActivity().getResources().getConfiguration().orientation;
-        int currentPos = 0;
-        if (videoModel != null) {
-            currentPos = (int) videoModel.getLastPlayedOffset();
-        }
-        if (!wasRestored) {
-            final Uri uri = Uri.parse(unit.getData().encodedVideos.getYoutubeVideoInfo().url);
-            /*
-             *  Youtube player loads the video using the video id from the url
-             *  the url has the following format "https://www.youtube.com/watch?v=3_yD_cEKoCk" where v is the video id
-             */
-            final String videoId = uri.getQueryParameter("v");
-            player.loadVideo(videoId, currentPos);
-            youTubePlayer = player;
-            youTubePlayer.setPlayerStateChangeListener(new StateChangeListener());
-            youTubePlayer.setPlaybackEventListener(new PlaybackListener());
-            youTubePlayer.setOnFullscreenListener(new FullscreenListener());
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                youTubePlayer.setFullscreen(true);
-            }
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider,
-                                        YouTubeInitializationResult result) {
-        redirectToYoutubeDialog();
-    }
-
     private void redirectToYoutubeDialog() {
         releaseYoutubePlayer();
         if (getActivity() != null && !getActivity().isDestroyed()) {
@@ -206,12 +188,11 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     }
 
     private void releaseYoutubePlayer() {
-        if (youTubePlayer != null) {
-            saveCurrentPlaybackPosition(youTubePlayer.getCurrentTimeMillis());
-            youTubePlayer.setPlayerStateChangeListener(null);
-            youTubePlayer.setPlaybackEventListener(null);
-            youTubePlayer.setOnFullscreenListener(null);
-            youTubePlayer.release();
+        if (youTubePlayerView != null && youTubePlayer != null) {
+            saveCurrentPlaybackPosition(getCurrentTimeMillis());
+            youTubePlayerView.release();
+            ((ViewGroup) getView().findViewById(R.id.player_container)).removeAllViews();
+            youTubePlayerView = null;
             youTubePlayer = null;
         }
     }
@@ -219,9 +200,9 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     @Override
     public void seekToCaption(Caption caption) {
         if (youTubePlayer != null) {
-            saveCurrentPlaybackPosition(youTubePlayer.getCurrentTimeMillis());
+            saveCurrentPlaybackPosition(getCurrentTimeMillis());
             if (caption != null) {
-                youTubePlayer.seekToMillis(caption.start.getMseconds());
+                youTubePlayer.seekTo(caption.start.getMseconds() / 1000f);
             }
         }
     }
@@ -245,102 +226,119 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
         }
     }
 
-    private class StateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
-        @Override
-        public void onLoading() {
+    @Override
+    public void onApiChange(@NonNull YouTubePlayer youTubePlayer) {
+    }
 
+    @Override
+    public void onCurrentSecond(@NonNull YouTubePlayer youTubePlayer, float timeInSec) {
+        currentTimeInSec = timeInSec;
+    }
+
+    @Override
+    public void onError(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerError playerError) {
+        /*
+         * The most common errorReason is because there is a previous player running so this sets free it
+         * and re-initialize the youtube player
+         */
+        if (attempts <= 3) {
+            releaseYoutubePlayer();
+            initializeYoutubePlayer();
+            attempts++;
+        } else {
+            redirectToYoutubeDialog();
         }
+    }
 
-        @Override
-        public void onLoaded(String s) {
+    @Override
+    public void onPlaybackQualityChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlaybackQuality playbackQuality) {
+    }
 
-        }
+    @Override
+    public void onPlaybackRateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlaybackRate playbackRate) {
+    }
 
-        @Override
-        public void onAdStarted() {
-
-        }
-
-        @Override
-        public void onVideoStarted() {
-
-        }
-
-        @Override
-        public void onVideoEnded() {
-            youTubePlayer.seekToMillis(0);
-            youTubePlayer.pause();
-            onPlaybackComplete();
-        }
-
-        @Override
-        public void onError(YouTubePlayer.ErrorReason errorReason) {
-            /*
-             * The most common errorReason is because there is a previous player running so this sets free it
-             * and reloads the fragment
-             */
-            if (attempts <= 3) {
-                releaseYoutubePlayer();
-                initializeHandler.postDelayed(CourseUnitYoutubePlayerFragment.this::initializeYoutubePlayer, 500);
-                attempts++;
-            } else {
+    @Override
+    public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState playerState) {
+        currentPlayerState = playerState;
+        switch (playerState) {
+            case ENDED: {
+                youTubePlayer.seekTo(0);
+                youTubePlayer.pause();
+                onPlaybackComplete();
+                break;
+            }
+            case PLAYING: {
+                updateTranscriptCallbackStatus(true);
+                if (videoModel != null) {
+                    environment.getAnalyticsRegistry().trackVideoPlaying(videoModel.videoId,
+                            currentTimeInSec, videoModel.eid, videoModel.lmsUrl,
+                            Analytics.Values.YOUTUBE);
+                }
+                break;
+            }
+            case PAUSED: {
+                saveCurrentPlaybackPosition(getPlayerCurrentPosition());
+                updateTranscriptCallbackStatus(false);
+                if (videoModel != null) {
+                    environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
+                            currentTimeInSec, videoModel.eid, videoModel.lmsUrl,
+                            Analytics.Values.YOUTUBE);
+                }
+                break;
+            }
+            case UNKNOWN: {
                 redirectToYoutubeDialog();
+                break;
             }
         }
     }
 
-    private class PlaybackListener implements YouTubePlayer.PlaybackEventListener {
+    @Override
+    public void onVideoDuration(@NonNull YouTubePlayer youTubePlayer, float duration) {
+    }
 
-        @Override
-        public void onPlaying() {
-            updateTranscriptCallbackStatus(true);
-            if (videoModel != null) {
-                environment.getAnalyticsRegistry().trackVideoPlaying(videoModel.videoId,
-                        youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
-                        videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
-            }
+    @Override
+    public void onVideoId(@NonNull YouTubePlayer youTubePlayer, @NonNull String videoId) {
+    }
+
+    @Override
+    public void onVideoLoadedFraction(@NonNull YouTubePlayer youTubePlayer, float loadedFraction) {
+    }
+
+    private boolean isPlaying() {
+        return currentPlayerState == PlayerConstants.PlayerState.PLAYING;
+    }
+
+    private long getCurrentTimeMillis() {
+        return (long) (currentTimeInSec * 1000L);
+    }
+
+    @Override
+    public void onEnterFullscreen(@NonNull View fullscreenView, @NonNull Function0<Unit> exitFullscreen) {
+        isFullscreen = true;
+        if (getActivity() != null) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-
-        @Override
-        public void onPaused() {
-            saveCurrentPlaybackPosition(getPlayerCurrentPosition());
-            updateTranscriptCallbackStatus(false);
-            if (videoModel != null) {
-                environment.getAnalyticsRegistry().trackVideoPause(videoModel.videoId,
-                        youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
-                        videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
-            }
-        }
-
-        @Override
-        public void onStopped() {
-
-        }
-
-        @Override
-        public void onBuffering(boolean b) {
-
-        }
-
-        @Override
-        public void onSeekTo(int i) {
-
+        addPlayerToScreen(fullscreenView);
+        if (videoModel != null) {
+            environment.getAnalyticsRegistry().trackVideoOrientation(videoModel.videoId,
+                    currentTimeInSec, true, videoModel.eid, videoModel.lmsUrl,
+                    Analytics.Values.YOUTUBE);
         }
     }
 
-    private class FullscreenListener implements YouTubePlayer.OnFullscreenListener {
-        @Override
-        public void onFullscreen(boolean fullScreen) {
-            if (getActivity() != null) {
-                getActivity().setRequestedOrientation(fullScreen ?
-                        ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE :
-                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-            if (videoModel != null) {
-                environment.getAnalyticsRegistry().trackVideoOrientation(videoModel.videoId,
-                        youTubePlayer.getCurrentTimeMillis() / AppConstants.MILLISECONDS_PER_SECOND,
-                        fullScreen, videoModel.eid, videoModel.lmsUrl, Analytics.Values.YOUTUBE);
-            }
+    @Override
+    public void onExitFullscreen() {
+        isFullscreen = false;
+        if (getActivity() != null) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        addPlayerToScreen(youTubePlayerView);
+        if (videoModel != null) {
+            environment.getAnalyticsRegistry().trackVideoOrientation(videoModel.videoId,
+                    currentTimeInSec, false, videoModel.eid, videoModel.lmsUrl,
+                    Analytics.Values.YOUTUBE);
         }
     }
 }

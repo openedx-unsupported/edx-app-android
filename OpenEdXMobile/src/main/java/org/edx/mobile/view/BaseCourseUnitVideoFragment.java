@@ -275,9 +275,8 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         if (playerContainer != null) {
             final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                float screenHeight = displayMetrics.heightPixels;
                 playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                 setFullScreen(true);
             } else {
                 float screenWidth = displayMetrics.widthPixels;

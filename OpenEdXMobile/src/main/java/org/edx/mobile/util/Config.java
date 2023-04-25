@@ -493,15 +493,8 @@ public class Config {
         @SerializedName("ENABLED")
         private boolean enabled;
 
-        @SerializedName("API_KEY")
-        private String apiKey;
-
         public boolean isYoutubePlayerEnabled() {
             return enabled;
-        }
-
-        public String getApiKey() {
-            return apiKey;
         }
     }
 
