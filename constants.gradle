@@ -2,9 +2,9 @@ project.ext {
     APPLICATION_ID = "org.edx.mobile"
     KOTLIN_VERSION = "1.8.10"
     GRADLE_PLUGIN_VERSION = "8.0.2"
-    COMPILE_SDK_VERSION = 31
+    COMPILE_SDK_VERSION = 33
     // API Level that the application will target
-    TARGET_SDK_VERSION = 31
+    TARGET_SDK_VERSION = 33
     // Minimum API Level required for the application to run
     MIN_SDK_VERSION = 21
 
@@ -16,7 +16,7 @@ project.ext {
     gms_google_services = "4.3.10"
 
     // Kotlin extensions library versions
-    androidXLifeCycle = '2.5.1'
-    androidXKotlinCore = '1.6.0'
+    androidXLifeCycle = '2.6.1'
+    androidXKotlinCore = '1.10.0'
     androidXKotlinFramgnet = '1.5.7'
 }
