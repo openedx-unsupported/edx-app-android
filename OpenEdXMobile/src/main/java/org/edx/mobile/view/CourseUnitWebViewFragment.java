@@ -31,6 +31,7 @@ import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
@@ -77,13 +78,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
     private FragmentAuthenticatedWebviewBinding binding;
     private AlertDialogFragment loaderDialog;
 
-    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, String courseName, String enrollmentMode, boolean isSelfPaced) {
+    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit, EnrolledCoursesResponse courseData) {
         CourseUnitWebViewFragment fragment = new CourseUnitWebViewFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
-        args.putSerializable(Router.EXTRA_COURSE_NAME, courseName);
-        args.putString(Router.EXTRA_ENROLLMENT_MODE, enrollmentMode);
-        args.putBoolean(Router.EXTRA_IS_SELF_PACED, isSelfPaced);
+        args.putSerializable(Router.EXTRA_COURSE_NAME, courseData.getCourse().getName());
+        args.putString(Router.EXTRA_ENROLLMENT_MODE, courseData.getMode());
+        args.putBoolean(Router.EXTRA_IS_SELF_PACED, courseData.getCourse().isSelfPaced());
         fragment.setArguments(args);
         return fragment;
     }
