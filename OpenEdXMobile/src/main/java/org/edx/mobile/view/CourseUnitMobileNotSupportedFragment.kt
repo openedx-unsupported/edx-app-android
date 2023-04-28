@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
@@ -89,6 +90,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     Analytics.Values.CONTROL
                 }
             }
+            environment.analyticsRegistry.trackLockedContentTapped(unit.courseId, unit.blockId)
             environment.analyticsRegistry.trackValuePropMessageViewed(
                 unit.courseId,
                 Screens.COURSE_UNIT,
@@ -196,6 +198,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                     IAPFlowEvent(IAPAction.SHOW_FULL_SCREEN_LOADER, iapViewModel.iapFlowData)
                 )
             }
+        } else if (BillingClient.BillingResponseCode.USER_CANCELED == errorMessage.getHttpErrorCode()) {
+            iapAnalytics.trackIAPEvent(eventName = Events.IAP_PAYMENT_CANCELED)
+            return
         } else if (errorMessage.canRetry()) {
             retryListener = DialogInterface.OnClickListener { _, _ ->
                 when (errorMessage.requestType) {
@@ -246,14 +251,6 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        unit?.let {
-            val isUpgradeable = getBooleanArgument(Router.EXTRA_IS_UPGRADEABLE, true)
-            if (it.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS
-                && environment.appFeaturesPrefs.isValuePropEnabled() && isUpgradeable
-            ) {
-                environment.analyticsRegistry.trackLockedContentTapped(it.courseId, it.blockId)
-            }
-        }
     }
 
     override fun onPause() {
