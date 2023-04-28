@@ -17,17 +17,12 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.Analytics;
 import org.greenrobot.eventbus.Subscribe;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class CourseOutlineActivity extends BaseSingleFragmentActivity {
-
-    private Bundle courseBundle;
-    private String courseComponentId = null;
-    private boolean isVideoMode = false;
 
     public static Intent newIntent(Activity activity,
                                    EnrolledCoursesResponse courseData,
@@ -45,27 +40,6 @@ public class CourseOutlineActivity extends BaseSingleFragmentActivity {
         intent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
 
         return intent;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        parseExtras();
-
-        if (courseComponentId == null) {
-            EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) courseBundle.getSerializable(EXTRA_COURSE_DATA);
-            environment.getAnalyticsRegistry().trackScreenView(
-                    isVideoMode ? Analytics.Screens.VIDEOS_COURSE_VIDEOS : Analytics.Screens.COURSE_OUTLINE,
-                    courseData.getCourse().getId(), null);
-
-            setTitle(courseData.getCourse().getName());
-        }
-    }
-
-    private void parseExtras() {
-        courseBundle = getIntent().getBundleExtra(EXTRA_BUNDLE);
-        courseComponentId = getIntent().getStringExtra(EXTRA_COURSE_COMPONENT_ID);
-        isVideoMode = getIntent().getBooleanExtra(EXTRA_IS_VIDEOS_MODE, false);
     }
 
     @Override

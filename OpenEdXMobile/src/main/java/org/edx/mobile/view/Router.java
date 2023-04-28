@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -213,27 +212,6 @@ public class Router {
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
-    }
-
-    public void showCourseAnnouncementFromNotification(@NonNull Context context, @NonNull String courseId) {
-        final Bundle courseBundle = new Bundle();
-        courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
-        courseBundle.putString(Router.EXTRA_COURSE_ID, courseId);
-        final Intent courseDetail = new Intent(context, CourseAnnouncementsActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
-        // TODO: It's not essential, but we may want additional activities on the back-stack
-        TaskStackBuilder.create(context)
-                .addNextIntent(courseDetail)
-                .startActivities();
-    }
-
-    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse courseData,
-                                           CourseUpgradeResponse courseUpgradeData,
-                                           String courseComponentId) {
-        Intent courseDetail = CourseOutlineActivity.newIntent(activity, courseData,
-                courseUpgradeData, courseComponentId, null, false);
-        //TODO - what's the most suitable FLAG?
-        // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivityForResult(courseDetail, -1);
     }
 
     public void showCourseContainerOutline(Fragment fragment, int requestCode,

@@ -624,6 +624,7 @@ public class SegmentAnalytics implements Analytics {
         aEvent.properties.putValue(Keys.NAME, Values.COMPONENT_VIEWED);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.MINIFIED_BLOCK_ID, minifiedBlockId);
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
@@ -637,6 +638,7 @@ public class SegmentAnalytics implements Analytics {
         SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.OPEN_IN_BROWSER);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        aEvent.data.putValue(Keys.MINIFIED_BLOCK_ID, minifiedBlockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.SUPPORTED, isSupported);
 
