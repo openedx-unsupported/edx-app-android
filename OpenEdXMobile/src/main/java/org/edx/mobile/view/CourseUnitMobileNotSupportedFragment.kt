@@ -41,8 +41,8 @@ import javax.inject.Inject
 class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
     private lateinit var binding: FragmentCourseUnitGradeBinding
-    private val iapViewModel: InAppPurchasesViewModel
-            by viewModels(ownerProducer = { requireActivity() })
+
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
     @Inject
     lateinit var iapAnalytics: InAppPurchasesAnalytics
