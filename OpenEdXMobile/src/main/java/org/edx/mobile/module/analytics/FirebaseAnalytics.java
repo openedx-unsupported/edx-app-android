@@ -403,7 +403,8 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.COMPONENT_VIEWED,
                 Values.COMPONENT_VIEWED);
         event.putCourseId(courseId);
-        event.putString(Keys.BLOCK_ID, minifiedBlockId);
+        event.putString(Keys.BLOCK_ID, blockId);
+        event.putString(Keys.MINIFIED_BLOCK_ID, minifiedBlockId);
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.NAVIGATION, Keys.COMPONENT_VIEWED);
@@ -416,7 +417,8 @@ public class FirebaseAnalytics implements Analytics {
         final FirebaseEvent event = new FirebaseEvent(Events.OPEN_IN_BROWSER,
                 Values.OPEN_IN_BROWSER);
         event.putCourseId(courseId);
-        event.putString(Keys.BLOCK_ID, minifiedBlockId);
+        event.putString(Keys.BLOCK_ID, blockId);
+        event.putString(Keys.MINIFIED_BLOCK_ID, minifiedBlockId);
         event.putBoolean(Keys.SUPPORTED, isSupported);
 
         //Add category for Google Analytics
