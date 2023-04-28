@@ -36,6 +36,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStatus;
+import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.module.analytics.Analytics;
@@ -253,6 +254,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     @Override
     public void refreshCourseData(@NonNull String courseId, @NonNull String componentId) {
         refreshCourse = true;
+        courseData.setMode(EnrollmentMode.VERIFIED.toString());
         updateCourseStructure(courseId, componentId);
     }
 
