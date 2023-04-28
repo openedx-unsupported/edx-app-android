@@ -38,7 +38,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStatus;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.iap.IAPFlowData;
-import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.FileUtil;
@@ -126,26 +125,20 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         pager2.setAdapter(pagerAdapter);
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                invalidateOptionsMenu();
-            }
-
-            @Override
             public void onPageSelected(int position) {
+                invalidateOptionsMenu();
+                CourseComponent currentComponent = pagerAdapter.getUnit(position);
                 if (pagerAdapter.getUnit(position).isMultiDevice()) {
                     // Disable ViewPager2 scrolling to enable horizontal scrolling to for the WebView (Specific HTML Components).
                     List<BlockType> horizontalBlocks = Arrays.asList(
                             BlockType.DRAG_AND_DROP_V2, BlockType.LTI_CONSUMER, BlockType.WORD_CLOUD);
                     pager2.setUserInputEnabled(!horizontalBlocks
-                            .contains(pagerAdapter.getUnit(position).getType()));
+                            .contains(currentComponent.getType()));
                 }
-            }
+                environment.getAnalyticsRegistry().trackCourseComponentViewed(currentComponent.getId(),
+                        courseData.getCourse().getId(), currentComponent.getBlockId());
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    tryToUpdateForEndOfSequential();
-                }
+                tryToUpdateForEndOfSequential();
             }
         });
     }
@@ -318,11 +311,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         Intent resultData = new Intent();
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
-
-        environment.getAnalyticsRegistry().trackScreenView(
-                Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
-        environment.getAnalyticsRegistry().trackCourseComponentViewed(selectedUnit.getId(),
-                courseData.getCourse().getId(), selectedUnit.getBlockId());
     }
 
     private void tryToUpdateForEndOfSequential() {

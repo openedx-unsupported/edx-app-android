@@ -671,6 +671,7 @@ public interface Analytics {
         String EMAIL_OPT_IN = "email_opt_in";
         String PROVIDER = "provider";
         String BLOCK_ID = "block_id";
+        String MINIFIED_BLOCK_ID = "minified_block_id";
         String BLOCK_TYPE = "block_type";
         String SUBSECTION_ID = "subsection_id";
         String UNIT_ID = "unit_id";
