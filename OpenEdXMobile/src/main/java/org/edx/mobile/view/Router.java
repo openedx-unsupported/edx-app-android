@@ -67,6 +67,7 @@ public class Router {
     public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
     public static final String EXTRA_IS_SELF_PACED = "is_self_paced";
     public static final String EXTRA_IS_UPGRADEABLE = "is_upgradeable";
+    public static final String EXTRA_IS_IAP_WHATS_NEW = "IAP_WHATS_NEW";
 
     @Inject
     Config config;
@@ -454,8 +455,8 @@ public class Router {
         context.startActivity(discoveryIntent);
     }
 
-    public void showWhatsNewActivity(@NonNull Activity activity) {
-        activity.startActivity(WhatsNewActivity.newIntent(activity));
+    public void showWhatsNewActivity(@NonNull Activity activity, boolean isIAPWhatsNew, String courseId) {
+        activity.startActivity(WhatsNewActivity.newIntent(activity, isIAPWhatsNew, courseId));
     }
 
     public void showAccountActivity(@NonNull Activity activity) {

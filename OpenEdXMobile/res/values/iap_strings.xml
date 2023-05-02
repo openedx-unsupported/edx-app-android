@@ -61,4 +61,7 @@
     <string name="title_purchases_restored">Purchases have been successfully restored</string>
     <!-- Message for the Purchases successfully restored dialog -->
     <string name="message_purchases_restored">All purchases are up to date. If you’re not seeing your purchases restored, please try restarting your app to refresh the experience.</string>
+
+    <string name="iap_whats_new_title">This course is upgradeable on mobile!</string>
+
 </resources>

@@ -1,5 +1,18 @@
 [
   {
+    "version": "4.0.1",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "iap_demo.json",
+        "title": "Upgrade on the go",
+        "message": "Unlock full access to course content and upgrade features: Now you can upgrade from the edX app."
+      }
+    ]
+  },
+  {
     "version": "3.1",
     "messages": [
       {

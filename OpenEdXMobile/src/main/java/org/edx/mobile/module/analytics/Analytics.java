@@ -973,6 +973,7 @@ public interface Analytics {
         String PROFILE_EDIT_TEXT_VALUE = "Edit Text Form Value";
         String APP_REVIEWS_VIEW_RATING = "AppReviews: View Rating";
         String WHATS_NEW = "WhatsNew: Whats New";
+        String WHATS_NEW_IAP = "IAP Whats New";
         String VIDEOS_COURSE_VIDEOS = "Videos: Course Videos";
         String PAYMENTS_INFO_SCREEN = "Payments info";
         String COURSE_UNIT_LOCKED = "Course unit locked";

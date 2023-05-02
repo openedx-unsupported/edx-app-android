@@ -88,7 +88,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
                 }
             }
             if (shouldShowWhatsNew) {
-                environment.getRouter().showWhatsNewActivity(this);
+                environment.getRouter().showWhatsNewActivity(this, false, null);
             }
         }
     }

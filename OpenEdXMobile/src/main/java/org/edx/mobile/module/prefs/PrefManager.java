@@ -308,6 +308,7 @@ public class PrefManager {
         // Preference to save app config
         public static final String APP_CONFIG = "APP_CONFIG";
         public static final String CHECK_UNFULFILLED_PURCHASE = "CHECK_UNFULFILLED_PURCHASE";
+        public static final String IAP_WHATS_NEW_COURSES = "IAP_WHATS_NEW_COURSES";
     }
 
     public static final class Value {

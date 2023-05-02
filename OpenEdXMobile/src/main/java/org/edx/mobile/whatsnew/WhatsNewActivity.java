@@ -13,14 +13,18 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.view.Router;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class WhatsNewActivity extends BaseFragmentActivity {
 
-    public static Intent newIntent(@NonNull Context context) {
-        return new Intent(context, WhatsNewActivity.class);
+    public static Intent newIntent(@NonNull Context context, boolean isIAPWhatsNew, String courseId) {
+        Intent intent = new Intent(context, WhatsNewActivity.class);
+        intent.putExtra(Router.EXTRA_IS_IAP_WHATS_NEW, isIAPWhatsNew);
+        intent.putExtra(Router.EXTRA_COURSE_ID, courseId);
+        return intent;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class WhatsNewActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_whats_new);
 
-        Fragment singleFragment = new WhatsNewFragment();
+        Fragment singleFragment = WhatsNewFragment.newInstance(getIntent().getExtras());
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, singleFragment, null);

@@ -180,6 +180,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.0.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation ('com.github.bumptech.glide:okhttp3-integration:4.11.0')
+    implementation 'com.airbnb.android:lottie:3.4.0'
 
     // Segment Library
     implementation 'com.segment.analytics.android:analytics:4.10.4'
