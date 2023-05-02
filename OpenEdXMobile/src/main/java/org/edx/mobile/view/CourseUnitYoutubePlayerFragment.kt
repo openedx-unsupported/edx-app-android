@@ -176,6 +176,9 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
         youTubePlayerView?.release()
         youTubePlayerView = null
         youTubePlayer = null
+        activity?.let {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        }
     }
 
     public override fun seekToCaption(caption: Caption) {
