@@ -302,8 +302,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment
     }
 
     private void initInAppPurchaseSetup() {
-        if (courseData.isAuditMode() && !isVideoMode) {
+        if (courseData.isUpgradeable() && !isVideoMode && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
             initInAppPurchaseObserver();
+            boolean isPurchaseEnabled = courseData.getCourseSku() != null &&
+                    environment.getAppFeaturesPrefs().isIAPEnabled(environment.getLoginPrefs().isOddUserId());
+
+            if (isPurchaseEnabled && environment.getAppFeaturesPrefs().canShowIAPWhatsNew(courseData.getCourseId())) {
+                environment.getAppFeaturesPrefs().addIAPWhatsNewCourse(courseData.getCourseId());
+                environment.getRouter().showWhatsNewActivity(getActivity(), true, courseData.getCourseId());
+            }
         }
     }
 

@@ -52,7 +52,8 @@
             android:id="@+id/fl_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/whats_new_bottom_bar_min_height">
+            android:minHeight="@dimen/whats_new_bottom_bar_min_height"
+            android:visibility="gone">
 
             <FrameLayout
                 android:id="@+id/indicator_container"

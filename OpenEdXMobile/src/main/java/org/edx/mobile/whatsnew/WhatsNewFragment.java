@@ -27,6 +27,7 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.WhatsNewUtil;
+import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.IndicatorController;
 
 import java.io.IOException;
@@ -53,6 +54,12 @@ public class WhatsNewFragment extends BaseFragment {
     private int noOfPages = 0;
     private int totalPagesViewed = 1;
 
+    public static WhatsNewFragment newInstance(Bundle bundle) {
+        WhatsNewFragment fragment = new WhatsNewFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,10 +79,18 @@ public class WhatsNewFragment extends BaseFragment {
         initButtons();
         initProgressIndicator();
 
-        final Map<String, String> map = new HashMap<>();
-        map.put(Analytics.Keys.APP_VERSION, BuildConfig.VERSION_NAME);
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.WHATS_NEW, null,
-                null, map);
+        if (getBooleanArgument(Router.EXTRA_IS_IAP_WHATS_NEW, false)) {
+            binding.screenTitle.setText(R.string.iap_whats_new_title);
+            final Map<String, String> map = new HashMap<>();
+            map.put(Analytics.Keys.APP_VERSION, BuildConfig.VERSION_NAME);
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.WHATS_NEW_IAP, getStringArgument(Router.EXTRA_COURSE_ID),
+                    null, map);
+        } else {
+            final Map<String, String> map = new HashMap<>();
+            map.put(Analytics.Keys.APP_VERSION, BuildConfig.VERSION_NAME);
+            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.WHATS_NEW, null,
+                    null, map);
+        }
     }
 
     private void initViewPager() {
@@ -129,8 +144,10 @@ public class WhatsNewFragment extends BaseFragment {
         binding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                environment.getAnalyticsRegistry().trackWhatsNewClosed(BuildConfig.VERSION_NAME,
-                        totalPagesViewed, binding.viewPager2.getCurrentItem() + 1, noOfPages);
+                if (!getBooleanArgument(Router.EXTRA_IS_IAP_WHATS_NEW, false)) {
+                    environment.getAnalyticsRegistry().trackWhatsNewClosed(BuildConfig.VERSION_NAME,
+                            totalPagesViewed, binding.viewPager2.getCurrentItem() + 1, noOfPages);
+                }
                 getActivity().finish();
             }
         });

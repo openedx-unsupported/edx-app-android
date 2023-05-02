@@ -48,6 +48,15 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
         return false
     }
 
+    fun addIAPWhatsNewCourse(courseId: String) {
+        val courses = "${pref.getString(PrefManager.Key.IAP_WHATS_NEW_COURSES)},$courseId"
+        pref.put(PrefManager.Key.IAP_WHATS_NEW_COURSES, courses)
+    }
+
+    fun canShowIAPWhatsNew(courseId: String): Boolean {
+        return (pref.getString(PrefManager.Key.IAP_WHATS_NEW_COURSES)?.contains(courseId)?.not() ?: true)
+    }
+
     fun canAutoCheckUnfulfilledPurchase(): Boolean {
         return pref.getBoolean(PrefManager.Key.CHECK_UNFULFILLED_PURCHASE, false)
     }
