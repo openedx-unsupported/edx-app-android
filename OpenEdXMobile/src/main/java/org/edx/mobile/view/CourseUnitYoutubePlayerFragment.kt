@@ -1,5 +1,6 @@
 package org.edx.mobile.view
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -44,10 +45,11 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
     private var currentTimeInSec = 0.0
     private var attempts = 0
     private var isFullscreen = false
+    private val currentTimeMillis: Long get() = (currentTimeInSec * AppConstants.MILLISECONDS_PER_SECOND).toLong()
 
     override fun onResume() {
         super.onResume()
-        if (unit != null) {
+        unit?.let {
             setVideoModel()
             initializeYoutubePlayer()
             if (!EventBus.getDefault().isRegistered(this)) {
@@ -65,11 +67,13 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
                 youTubePlayerView?.enableAutomaticInitialization = false
                 youTubePlayerView?.addFullscreenListener(this)
                 attempts = 0
-                val iFramePlayerOptions: IFramePlayerOptions = IFramePlayerOptions.Builder()
-                    .controls(1)
-                    .fullscreen(1) // enable full screen button
-                    .build()
-                youTubePlayerView?.initialize(this, false, iFramePlayerOptions)
+                youTubePlayerView?.initialize(
+                    this, false,
+                    IFramePlayerOptions.Builder()
+                        .controls(1)
+                        .fullscreen(1) // enable full screen button
+                        .build()
+                )
                 addPlayerToScreen(youTubePlayerView)
             }
         } catch (localException: NullPointerException) {
@@ -100,15 +104,13 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
             this.youTubePlayer = youTubePlayer
             youTubePlayer.addListener(this)
             val orientation = activity.resources?.configuration?.orientation
-            var currentPos = 0
-            if (videoModel != null) {
-                currentPos = videoModel.getLastPlayedOffset().toInt()
-            }
+            val currentPos = videoModel?.getLastPlayedOffset()?.toInt() ?: 0
             val uri = Uri.parse(unit.data.encodedVideos.youtubeVideoInfo?.url)
-            /*
-             *  Youtube player loads the video using the video id from the url
-             *  the url has the following format "https://www.youtube.com/watch?v=3_yD_cEKoCk" where v is the video id
-             */
+            /* The YouTube player loads a video by using its unique video ID, which is included in
+            * the URL of the video's watch page. The format of the URL is typically
+            * "https://www.youtube.com/watch?v=VIDEO_ID" where VIDEO_ID is a string of characters
+            * that uniquely identifies the video.
+            */
             val videoId = uri.getQueryParameter("v")
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 youTubePlayer.toggleFullscreen()
@@ -159,11 +161,11 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
                     getString(R.string.assessment_unable_to_play_video_message),
                     getString(R.string.assessment_open_on_youtube),
                     { _: DialogInterface, _: Int ->
-                        BrowserUtil
-                            .open(
-                                activity,
-                                unit.data.encodedVideos.youtubeVideoInfo?.url, true
-                            )
+                        BrowserUtil.open(
+                            activity,
+                            unit.data.encodedVideos.youtubeVideoInfo?.url,
+                            true
+                        )
                     },
                     getString(R.string.label_ok), null
                 )
@@ -176,9 +178,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
         youTubePlayerView?.release()
         youTubePlayerView = null
         youTubePlayer = null
-        activity?.let {
-            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-        }
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     public override fun seekToCaption(caption: Caption) {
@@ -233,7 +233,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
             }
             PlayerState.PLAYING -> {
                 updateTranscriptCallbackStatus(true)
-                if (videoModel != null) {
+                videoModel?.let {
                     environment.analyticsRegistry.trackVideoPlaying(
                         videoModel.videoId,
                         currentTimeInSec, videoModel.eid, videoModel.lmsUrl,
@@ -244,7 +244,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
             PlayerState.PAUSED -> {
                 saveCurrentPlaybackPosition(playerCurrentPosition)
                 updateTranscriptCallbackStatus(false)
-                if (videoModel != null) {
+                videoModel?.let {
                     environment.analyticsRegistry.trackVideoPause(
                         videoModel.videoId,
                         currentTimeInSec, videoModel.eid, videoModel.lmsUrl,
@@ -259,15 +259,11 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
         }
     }
 
-    private val currentTimeMillis: Long get() = (currentTimeInSec * AppConstants.MILLISECONDS_PER_SECOND).toLong()
-
     override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: Function0<Unit>) {
         isFullscreen = true
-        activity?.let {
-            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         addPlayerToScreen(fullscreenView)
-        if (videoModel != null) {
+        videoModel?.let {
             environment.analyticsRegistry.trackVideoOrientation(
                 videoModel.videoId,
                 currentTimeInSec, true, videoModel.eid, videoModel.lmsUrl,
@@ -276,16 +272,15 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
         }
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onExitFullscreen() {
         isFullscreen = false
-        activity?.let {
-            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         addPlayerToScreen(youTubePlayerView)
-        if (videoModel != null) {
+        videoModel?.let {
             environment.analyticsRegistry.trackVideoOrientation(
-                videoModel.videoId,
-                currentTimeInSec, false, videoModel.eid, videoModel.lmsUrl,
+                it.videoId,
+                currentTimeInSec, false, it.eid, it.lmsUrl,
                 Analytics.Values.YOUTUBE
             )
         }
@@ -306,12 +301,11 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
 
     companion object {
         @JvmStatic
-        fun newInstance(unit: VideoBlockModel?): CourseUnitYoutubePlayerFragment {
-            val fragment = CourseUnitYoutubePlayerFragment()
-            val args = Bundle()
-            args.putSerializable(Router.EXTRA_COURSE_UNIT, unit)
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance(unit: VideoBlockModel?): CourseUnitYoutubePlayerFragment =
+            CourseUnitYoutubePlayerFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(Router.EXTRA_COURSE_UNIT, unit)
+                }
+            }
     }
 }
