@@ -138,8 +138,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                 }
                 environment.getAnalyticsRegistry().trackCourseComponentViewed(currentComponent.getId(),
                         courseData.getCourse().getId(), currentComponent.getBlockId());
+            }
 
-                tryToUpdateForEndOfSequential();
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    tryToUpdateForEndOfSequential();
+                }
             }
         });
     }
