@@ -136,10 +136,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
 
     override fun setFullScreen(fullscreen: Boolean) {
         if (DeviceSettingUtil.isDeviceRotationON(activity)) {
-            val orientation = resources.configuration.orientation
-            if ((isFullscreen && orientation == Configuration.ORIENTATION_LANDSCAPE) ||
-                (!isFullscreen && orientation != Configuration.ORIENTATION_LANDSCAPE)
-            ) {
+            if ((isFullscreen && isLandscape) || (!isFullscreen && !isLandscape)) {
                 return
             }
             youTubePlayer?.toggleFullscreen()
@@ -263,7 +260,9 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
 
     override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: Function0<Unit>) {
         isFullscreen = true
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        if (!isLandscape) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
         addPlayerToScreen(fullscreenView)
         videoModel?.let {
             environment.analyticsRegistry.trackVideoOrientation(
@@ -277,7 +276,9 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onExitFullscreen() {
         isFullscreen = false
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (isLandscape) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
         addPlayerToScreen(youTubePlayerView)
         videoModel?.let {
             environment.analyticsRegistry.trackVideoOrientation(

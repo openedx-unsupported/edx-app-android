@@ -3,6 +3,7 @@ package org.edx.mobile.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -150,5 +151,12 @@ public class BaseFragment extends Fragment {
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_updated,
                 0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
+    }
+
+    /**
+     * Returns true if current orientation is LANDSCAPE, false otherwise.
+     */
+    protected boolean isLandscape() {
+        return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 }
