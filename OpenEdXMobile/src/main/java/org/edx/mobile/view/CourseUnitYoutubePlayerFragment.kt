@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import subtitleFile.Caption
 import subtitleFile.TimedTextObject
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePlayerListener,
@@ -45,7 +46,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
     private var currentTimeInSec = 0.0
     private var attempts = 0
     private var isFullscreen = false
-    private val currentTimeMillis: Long get() = (currentTimeInSec * AppConstants.MILLISECONDS_PER_SECOND).toLong()
+    private val currentTimeMillis: Long get() = TimeUnit.SECONDS.toMillis(currentTimeInSec.toLong())
 
     override fun onResume() {
         super.onResume()
@@ -68,8 +69,9 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
                 youTubePlayerView?.addFullscreenListener(this)
                 attempts = 0
                 youTubePlayerView?.initialize(
-                    this, false,
-                    IFramePlayerOptions.Builder()
+                    youTubePlayerListener = this,
+                    handleNetworkEvents = false,
+                    playerOptions = IFramePlayerOptions.Builder()
                         .controls(1)
                         .fullscreen(1) // enable full screen button
                         .build()
