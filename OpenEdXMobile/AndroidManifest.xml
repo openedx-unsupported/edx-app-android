@@ -171,7 +171,7 @@
 
         <activity
             android:name="org.edx.mobile.view.CourseUnitNavigationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:label="@string/app_name"
             android:screenOrientation="user"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
