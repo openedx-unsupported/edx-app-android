@@ -16,7 +16,6 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.VideoUtil;
-import org.edx.mobile.view.CourseBaseActivity;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
@@ -95,7 +94,7 @@ public class CourseUnitPagerAdapter extends FragmentStateAdapter {
             final VideoBlockModel videoBlockModel = (VideoBlockModel) minifiedUnit;
             videoBlockModel.setVideoThumbnail(courseData.getCourse().getCourse_image());
             unitFragment = CourseUnitVideoPlayerFragment.newInstance(videoBlockModel, (pos < unitList.size()), (pos > 0));
-        } else if (isYoutubeVideo && config.getYoutubePlayerConfig().isYoutubePlayerEnabled() && VideoUtil.isYoutubeAPISupported(((CourseBaseActivity) callback).getApplicationContext())) {
+        } else if (isYoutubeVideo && config.getYoutubePlayerConfig().isYoutubePlayerEnabled()) {
             unitFragment = CourseUnitYoutubePlayerFragment.newInstance((VideoBlockModel) minifiedUnit);
         } else if (isYoutubeVideo) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit);
