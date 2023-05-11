@@ -2,6 +2,7 @@ package org.edx.mobile.view
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -32,10 +33,13 @@ import org.edx.mobile.event.MoveToDiscoveryTabEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.logger.Logger
+import org.edx.mobile.model.CourseDatesCalendarSync
 import org.edx.mobile.model.FragmentItemModel
 import org.edx.mobile.model.api.EnrolledCoursesResponse
+import org.edx.mobile.model.course.CourseBannerType.RESET_DATES
 import org.edx.mobile.model.course.EnrollmentMode
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.model.iap.IAPFlowData.IAPFlowType
@@ -43,8 +47,16 @@ import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.AnalyticsRegistry
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.CalendarUtils
+import org.edx.mobile.util.CalendarUtils.createOrUpdateCalendar
+import org.edx.mobile.util.CalendarUtils.deleteCalendar
+import org.edx.mobile.util.CalendarUtils.isCalendarOutOfDate
+import org.edx.mobile.util.ConfigUtil.Companion.checkCalendarSyncEnabled
+import org.edx.mobile.util.ConfigUtil.OnCalendarSyncListener
+import org.edx.mobile.util.CourseDateUtil
 import org.edx.mobile.util.DateUtil
 import org.edx.mobile.util.InAppPurchasesException
+import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.TextUtils.setIconifiedText
 import org.edx.mobile.util.UiUtils.enforceSingleScrollDirection
@@ -56,12 +68,14 @@ import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.adapters.FragmentItemPagerAdapter
 import org.edx.mobile.view.custom.error.EdxCourseAccessErrorState.State
 import org.edx.mobile.view.custom.error.EdxErrorState
+import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import org.edx.mobile.view.dialog.CourseModalDialogFragment.Companion.newInstance
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment.Companion.getRetainedInstance
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment.Companion.newInstance
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment.FullScreenDismissListener
+import org.edx.mobile.viewModel.CourseDateViewModel
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
 import org.greenrobot.eventbus.EventBus
@@ -73,10 +87,6 @@ import kotlin.math.abs
 @AndroidEntryPoint
 class CourseTabsDashboardFragment : BaseFragment() {
     private val logger = Logger(javaClass.name)
-
-    private lateinit var binding: FragmentCourseTabsDashboardBinding
-
-    private lateinit var courseData: EnrolledCoursesResponse
 
     @Inject
     lateinit var environment: IEdxEnvironment
@@ -93,10 +103,31 @@ class CourseTabsDashboardFragment : BaseFragment() {
     @Inject
     lateinit var iapDialog: InAppPurchasesDialog
 
-    private var isCollapsedTitleVisible = false
-    private var isExpandedTitleVisible = true
+    private lateinit var binding: FragmentCourseTabsDashboardBinding
+
+    private lateinit var courseData: EnrolledCoursesResponse
 
     private val iapViewModel: InAppPurchasesViewModel by viewModels()
+
+    private val courseDateViewModel: CourseDateViewModel by viewModels()
+
+    private val loaderDialog: AlertDialogFragment by lazy {
+        AlertDialogFragment.newInstance(
+            R.string.title_syncing_calendar, R.layout.alert_dialog_progress
+        )
+    }
+
+    private val accountName: String by lazy {
+        CalendarUtils.getUserAccountForSync(environment)
+    }
+
+    private val calendarTitle: String by lazy {
+        CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
+    }
+
+    private var isCollapsedTitleVisible = false
+
+    private var isExpandedTitleVisible = true
 
     private val fullscreenLoader: FullscreenLoaderDialogFragment?
         get() = getRetainedInstance(childFragmentManager)
@@ -158,9 +189,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
 
         setHasOptionsMenu(courseData.course.coursewareAccess.hasAccess())
-        environment.analyticsRegistry.trackScreenView(
-            Analytics.Screens.COURSE_DASHBOARD, courseData.course.id, null
-        )
+
         if (!courseData.course.coursewareAccess.hasAccess()) {
             setupToolbar(false)
             val auditAccessExpired =
@@ -194,6 +223,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         } else {
             setupToolbar(true)
             setViewPager()
+            initCourseDateObserver()
         }
         return binding.root
     }
@@ -201,6 +231,10 @@ class CourseTabsDashboardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handleTabSelection(requireArguments())
+
+        environment.analyticsRegistry.trackScreenView(
+            Analytics.Screens.COURSE_DASHBOARD, courseData.course.id, null
+        )
     }
 
     private fun setupIAPLayout() {
@@ -304,9 +338,88 @@ class CourseTabsDashboardFragment : BaseFragment() {
         }
     }
 
+    private fun initCourseDateObserver() {
+        courseDateViewModel.courseDates.observe(viewLifecycleOwner, EventObserver {
+            if (it.courseDateBlocks != null) {
+                it.organiseCourseDates()
+                val outdatedCalenderId =
+                    isCalendarOutOfDate(
+                        requireContext(),
+                        accountName,
+                        calendarTitle,
+                        it.courseDateBlocks
+                    )
+                if (outdatedCalenderId != -1L) {
+                    showCalendarOutOfDateDialog(outdatedCalenderId)
+                }
+            }
+        })
+
+        courseDateViewModel.bannerInfo.observe(viewLifecycleOwner, NonNullObserver {
+            if (!it.hasEnded && it.datesBannerInfo.getCourseBannerType() == RESET_DATES) {
+                CourseDateUtil.setupCourseDatesBanner(
+                    view = binding.toolbar.datesBanner.root,
+                    courseId = courseData.courseId,
+                    enrollmentMode = courseData.mode,
+                    isSelfPaced = courseData.course.isSelfPaced,
+                    screenName = Analytics.Screens.COURSE_DASHBOARD,
+                    analyticsRegistry = environment.analyticsRegistry,
+                    courseBannerInfoModel = it
+                ) {
+                    courseDateViewModel.resetCourseDatesBanner(courseData.courseId)
+                }
+            } else {
+                binding.toolbar.datesBanner.root.setVisibility(false)
+            }
+        })
+
+        courseDateViewModel.resetCourseDates.observe(viewLifecycleOwner, NonNullObserver {
+            if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
+                showShiftDateSnackBar(true)
+                binding.toolbar.datesBanner.root.setVisibility(false)
+            }
+        })
+
+        courseDateViewModel.syncLoader.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                loaderDialog.isCancelable = false
+                loaderDialog.showNow(childFragmentManager, null)
+            } else {
+                loaderDialog.dismiss()
+                showCalendarUpdatedSnackbar()
+                trackCalendarEvent(
+                    Analytics.Events.CALENDAR_UPDATE_SUCCESS,
+                    Analytics.Values.CALENDAR_UPDATE_SUCCESS
+                )
+            }
+        })
+
+        courseDateViewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver {
+            if (it.throwable is HttpStatusException &&
+                it.throwable.statusCode == HttpStatus.UNAUTHORIZED
+            ) {
+                environment.router.forceLogout(
+                    contextOrThrow,
+                    environment.analyticsRegistry,
+                    environment.notificationDelegate
+                )
+            } else {
+                when (it.requestType) {
+                    ErrorMessage.BANNER_INFO_CODE -> {
+                        binding.toolbar.datesBanner.root.setVisibility(false)
+                    }
+                    ErrorMessage.COURSE_RESET_DATES_CODE -> {
+                        showShiftDateSnackBar(false)
+                    }
+                }
+            }
+        })
+    }
+
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        courseDateViewModel.fetchCourseDates(courseData.courseId, true)
     }
 
     override fun onPause() {
@@ -473,6 +586,96 @@ class CourseTabsDashboardFragment : BaseFragment() {
         } else {
             binding.toolbar.certificate.root.setVisibility(false)
         }
+    }
+
+    private fun showShiftDateSnackBar(isSuccess: Boolean) {
+        val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
+        if (isSuccess) {
+            var actionListener: View.OnClickListener? = null
+            var actionResId = 0
+
+            if (binding.pager.currentItem != 3) {
+                actionListener = View.OnClickListener { binding.pager.currentItem = 3 }
+                actionResId = R.string.assessment_view_all_dates
+            }
+            snackbarErrorNotification.showError(
+                R.string.assessment_shift_dates_success_msg,
+                0, actionResId,
+                SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
+                actionListener
+            )
+        } else {
+            snackbarErrorNotification.showError(
+                R.string.course_dates_reset_unsuccessful,
+                0, 0,
+                SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null
+            )
+        }
+        environment.analyticsRegistry.trackPLSCourseDatesShift(
+            courseData.courseId, courseData.mode, Analytics.Screens.PLS_COURSE_DASHBOARD, isSuccess
+        )
+    }
+
+    private fun showCalendarOutOfDateDialog(calendarId: Long) {
+        val alertDialogFragment = AlertDialogFragment.newInstance(
+            getString(R.string.title_calendar_out_of_date),
+            getString(R.string.message_calendar_out_of_date),
+            getString(R.string.label_update_now),
+            { _: DialogInterface?, _: Int -> updateCalendarEvents() },
+            getString(R.string.label_remove_course_calendar)
+        ) { _: DialogInterface?, _: Int ->
+            removeCalendar(
+                calendarId
+            )
+        }
+        alertDialogFragment.isCancelable = false
+        alertDialogFragment.show(childFragmentManager, null)
+    }
+
+    private fun updateCalendarEvents() {
+        trackCalendarEvent(
+            Analytics.Events.CALENDAR_SYNC_UPDATE,
+            Analytics.Values.CALENDAR_SYNC_UPDATE
+        )
+        val newCalId = createOrUpdateCalendar(
+            contextOrThrow, accountName, CalendarContract.ACCOUNT_TYPE_LOCAL, calendarTitle
+        )
+        checkCalendarSyncEnabled(environment.config,
+            object : OnCalendarSyncListener {
+                override fun onCalendarSyncResponse(response: CourseDatesCalendarSync) {
+                    courseDateViewModel.addOrUpdateEventsInCalendar(
+                        contextOrThrow,
+                        newCalId,
+                        courseData.courseId,
+                        courseData.course.name,
+                        response.isDeepLinkEnabled,
+                        true
+                    )
+                }
+            })
+    }
+
+    private fun removeCalendar(calendarId: Long) {
+        trackCalendarEvent(
+            Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE
+        )
+        deleteCalendar(contextOrThrow, calendarId)
+        showCalendarRemovedSnackbar()
+        trackCalendarEvent(
+            Analytics.Events.CALENDAR_REMOVE_SUCCESS, Analytics.Values.CALENDAR_REMOVE_SUCCESS
+        )
+    }
+
+    private fun trackCalendarEvent(eventName: String, biValue: String) {
+        environment.analyticsRegistry.trackCalendarEvent(
+            eventName,
+            biValue,
+            courseData.courseId,
+            courseData.mode,
+            courseData.course.isSelfPaced,
+            courseDateViewModel.getSyncingCalendarTime()
+        )
+        courseDateViewModel.resetSyncingCalendarTime()
     }
 
     private fun fetchCourseById() {
@@ -647,7 +850,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
         }
     }
 
-
     @Subscribe
     fun onEventMainThread(event: IAPFlowEvent) {
         if (!this.isResumed) {
@@ -656,6 +858,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         if (event.flowAction == IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE) {
             courseData.mode = EnrollmentMode.VERIFIED.toString()
             arguments?.putString(Router.EXTRA_COURSE_ID, courseData.courseId)
+            courseDateViewModel.fetchCourseDates(courseData.courseId, true)
             fetchCourseById()
             EventBus.getDefault().post(MainDashboardRefreshEvent())
         }

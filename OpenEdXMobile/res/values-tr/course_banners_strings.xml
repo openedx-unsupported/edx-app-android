@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date"><b>Önerilen programımıza göre bazı önemli son tarihleri kaçırmışsınız gibi görünüyor.</b>
-        Plana uygun kalmak için bu programı güncelleyebilir ve tarihi geçmiş ödevleri geleceğe taşıyabilirsiniz. Endişelenmeyin, bitiş tarihlerinizi değiştirdiğinizde ilerlemenizin hiçbir kısmını kaybetmeyeceksiniz.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Bitiş tarihlerini değiştir</string>
 
@@ -16,9 +13,6 @@
     <!-- Message Course Dates Banner Upgrade to Reset -->
     <string name="course_dates_banner_upgrade_to_reset">Bu kursu denetlemektesiniz,
         dolayısıyla notlu ödevlere katılamazsınız. Önerilen programımıza göre bazı önemli son tarihleri kaçırmışsınız gibi görünüyor. Bu kursun parçası olarak notlu ödevler tamamlamak ve tarihi geçmiş ödevleri geleceğe taşımak için bugün yükseltme yapabilirsiniz.</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">Önerilen programımıza göre bazı önemli son tarihleri kaçırmışsınız gibi görünüyor.
-        Plana uygun kalmak için bu programı güncelleyebilir ve tarihi geçmiş ödevleri geleceğe taşıyabilirsiniz. Endişelenmeyin, bitiş tarihlerinizi değiştirdiğinizde ilerlemenizin hiçbir kısmını kaybetmeyeceksiniz.</string>
     <!-- Label Course Card Graded Message -->
     <string name="value_prop_course_card_message">Daha fazla özelliğe erişmek için yükseltme yapın</string>
 

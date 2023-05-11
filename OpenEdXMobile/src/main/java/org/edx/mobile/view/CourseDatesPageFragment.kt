@@ -208,14 +208,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         })
 
-        viewModel.resetCourseDates.observe(viewLifecycleOwner, Observer { resetCourseDates ->
-            if (resetCourseDates != null) {
-                if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                    showShiftDateSnackBar(true)
-                }
-            }
-        })
-
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer { errorMsg ->
             if (errorMsg != null) {
                 if (errorMsg.throwable is HttpStatusException) {
@@ -247,8 +239,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                             )
                         ErrorMessage.BANNER_INFO_CODE ->
                             initDatesBanner(null)
-                        ErrorMessage.COURSE_RESET_DATES_CODE ->
-                            showShiftDateSnackBar(false)
                     }
                 }
             }
@@ -319,7 +309,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 }
             })
 
-        CourseDateUtil.setupCourseDatesBanner(view = binding.banner.root,
+        CourseDateUtil.setupCourseDatesBanner(
+            view = binding.banner.root,
             isCourseDatePage = true,
             courseId = courseData.courseId,
             enrollmentMode = courseData.mode,
@@ -327,7 +318,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             screenName = Analytics.Screens.PLS_COURSE_DATES,
             analyticsRegistry = environment.analyticsRegistry,
             courseBannerInfoModel = courseBannerInfo,
-            clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
+            clickListener = null
+        )
 
     }
 
@@ -438,20 +430,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                 })
         alertDialog.isCancelable = false
         alertDialog.show(childFragmentManager, null)
-    }
-
-    private fun showShiftDateSnackBar(isSuccess: Boolean) {
-        val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
-        snackbarErrorNotification.showError(
-            if (isSuccess) R.string.assessment_shift_dates_success_msg else R.string.course_dates_reset_unsuccessful,
-            0, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null
-        )
-        environment.analyticsRegistry.trackPLSCourseDatesShift(
-            courseData.courseId,
-            courseData.mode,
-            Analytics.Screens.PLS_COURSE_DATES,
-            isSuccess
-        )
     }
 
     private fun insertCalendarEvent() {
