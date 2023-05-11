@@ -192,8 +192,8 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
         if (!courseData.course.coursewareAccess.hasAccess()) {
             setupToolbar(false)
-            val auditAccessExpired =
-                Date().after(DateUtil.convertToDate(courseData.auditAccessExpires))
+            val auditAccessExpired = !courseData.auditAccessExpires.isNullOrEmpty() &&
+                    Date().after(DateUtil.convertToDate(courseData.auditAccessExpires))
             if (auditAccessExpired) {
                 if (courseData.isUpgradeable && environment.appFeaturesPrefs.isValuePropEnabled()) {
                     setupIAPLayout()

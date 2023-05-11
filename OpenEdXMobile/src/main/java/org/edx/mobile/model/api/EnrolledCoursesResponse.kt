@@ -11,7 +11,7 @@ data class EnrolledCoursesResponse(
     var mode: String,
 
     @SerializedName("audit_access_expires")
-    val auditAccessExpires: String,
+    val auditAccessExpires: String?,
 
     @SerializedName("is_active")
     val isActive: Boolean = false,
