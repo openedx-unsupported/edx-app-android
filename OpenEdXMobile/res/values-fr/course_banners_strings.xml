@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Déplacer les dates d\'échéances</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Programme du cours</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">Nous vous suggérons un programme prédéfini pour vous aider à rester sur la bonne voie. Mais ne vous inquiétez pas : il est flexible et vous pouvez donc apprendre à votre rythme.
         Si vous prenez du retard, vous pouvez ajuster les dates afin de rester sur la bonne voie.</string>

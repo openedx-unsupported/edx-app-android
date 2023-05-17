@@ -80,7 +80,6 @@ import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import java.util.Date
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -192,26 +191,24 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
         if (!courseData.course.coursewareAccess.hasAccess()) {
             setupToolbar(false)
-            val auditAccessExpired = !courseData.auditAccessExpires.isNullOrEmpty() &&
-                    Date().after(DateUtil.convertToDate(courseData.auditAccessExpires))
-            if (auditAccessExpired) {
+            if (courseData.isAuditAccessExpired) {
                 if (courseData.isUpgradeable && environment.appFeaturesPrefs.isValuePropEnabled()) {
                     setupIAPLayout()
                 } else {
-                    binding.accessError.let { error ->
-                        error.setVisibility(true)
-                        error.setState(State.AUDIT_ACCESS_EXPIRED, null)
-                        error.setPrimaryButtonListener(onFindCourseClick())
+                    binding.accessError.apply {
+                        setVisibility(true)
+                        setState(State.AUDIT_ACCESS_EXPIRED, null)
+                        setPrimaryButtonListener(onFindCourseClick())
                     }
                 }
             } else if (!courseData.course.isStarted) {
-                binding.accessError.let { error ->
-                    error.setVisibility(true)
-                    error.setState(
+                binding.accessError.apply {
+                    setVisibility(true)
+                    setState(
                         State.NOT_STARTED,
                         DateUtil.formatCourseNotStartedDate(courseData.course.start)
                     )
-                    error.setPrimaryButtonListener(onFindCourseClick())
+                    setPrimaryButtonListener(onFindCourseClick())
                 }
             } else {
                 //Todo Remove when Next Session Enrollment feature is added
@@ -238,23 +235,25 @@ class CourseTabsDashboardFragment : BaseFragment() {
     }
 
     private fun setupIAPLayout() {
-        binding.accessError.visibility = View.VISIBLE
-        binding.accessError.setState(State.IS_UPGRADEABLE, null)
         val isPurchaseEnabled = environment.appFeaturesPrefs.isIAPEnabled(
             environment.loginPrefs.isOddUserId
         )
-        if (isPurchaseEnabled) {
-            initIAPObservers()
-            // Shimmer container taking sometime to get ready and perform the animation, so
-            // by adding the some delay fixed that issue for lower-end devices, and for the
-            // proper animation.
-            binding.accessError.postDelayed(
-                { iapViewModel.initializeProductPrice(courseData.courseSku) }, 1500
-            )
-            binding.accessError.setSecondaryButtonListener(onFindCourseClick())
-        } else {
-            binding.accessError.replacePrimaryWithSecondaryButton(R.string.label_find_a_course)
-            binding.accessError.setPrimaryButtonListener(onFindCourseClick())
+        binding.accessError.apply {
+            setVisibility(true)
+            setState(State.IS_UPGRADEABLE, null)
+            if (isPurchaseEnabled) {
+                initIAPObservers()
+                // Shimmer container taking sometime to get ready and perform the animation, so
+                // by adding the some delay fixed that issue for lower-end devices, and for the
+                // proper animation.
+                postDelayed(
+                    { iapViewModel.initializeProductPrice(courseData.courseSku) }, 1500
+                )
+                setSecondaryButtonListener(onFindCourseClick())
+            } else {
+                replacePrimaryWithSecondaryButton(R.string.label_find_a_course)
+                setPrimaryButtonListener(onFindCourseClick())
+            }
         }
     }
 
@@ -286,17 +285,19 @@ class CourseTabsDashboardFragment : BaseFragment() {
     private fun setUpUpgradeButton(skuDetails: SkuDetails) {
         // The app get the sku details instantly, so add some wait to perform
         // animation at least one cycle.
-        binding.accessError.setPrimaryButtonText(
-            ResourceUtil.getFormattedString(
-                resources,
-                R.string.label_upgrade_course_button,
-                AppConstants.PRICE,
-                skuDetails.price
-            ).toString()
-        )
-        binding.accessError.setPrimaryButtonListener {
-            iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UPGRADE_NOW_CLICKED, "", "")
-            iapViewModel.startPurchaseFlow(skuDetails.sku)
+        binding.accessError.apply {
+            setPrimaryButtonText(
+                ResourceUtil.getFormattedString(
+                    resources,
+                    R.string.label_upgrade_course_button,
+                    AppConstants.PRICE,
+                    skuDetails.price
+                ).toString()
+            )
+            setPrimaryButtonListener {
+                iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UPGRADE_NOW_CLICKED, "", "")
+                iapViewModel.startPurchaseFlow(skuDetails.sku)
+            }
         }
     }
 
@@ -304,7 +305,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         var retryListener: DialogInterface.OnClickListener? = null
 
         if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
-            retryListener = DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
+            retryListener = DialogInterface.OnClickListener { _, _ ->
                 // already purchased course.
                 iapViewModel.iapFlowData.isVerificationPending = false
                 iapViewModel.iapFlowData.flowType = IAPFlowType.SILENT
@@ -326,16 +327,12 @@ class CourseTabsDashboardFragment : BaseFragment() {
         fullscreenLoader.show(childFragmentManager, FullscreenLoaderDialogFragment.TAG)
     }
 
-    private fun onCloseClick(): View.OnClickListener {
-        return View.OnClickListener { requireActivity().finish() }
-    }
+    private fun onCloseClick() = View.OnClickListener { requireActivity().finish() }
 
-    private fun onFindCourseClick(): View.OnClickListener {
-        return View.OnClickListener {
-            environment.analyticsRegistry.trackUserFindsCourses()
-            EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
-            requireActivity().finish()
-        }
+    private fun onFindCourseClick() = View.OnClickListener {
+        environment.analyticsRegistry.trackUserFindsCourses()
+        EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
+        requireActivity().finish()
     }
 
     private fun initCourseDateObserver() {
@@ -439,10 +436,10 @@ class CourseTabsDashboardFragment : BaseFragment() {
         bundle?.let {
             @ScreenDef val screenName = bundle.getString(Router.EXTRA_SCREEN_NAME)
             if (screenName != null && !bundle.getBoolean(Router.EXTRA_SCREEN_SELECTED, false)) {
-                for (i in courseTabItems.indices) {
-                    val item = courseTabItems[i]
+                for (index in courseTabItems.indices) {
+                    val item = courseTabItems[index]
                     if (shouldSelectFragment(item, screenName)) {
-                        binding.pager.currentItem = i
+                        binding.pager.currentItem = index
                         break
                     }
                 }
@@ -474,7 +471,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
     }
 
     private fun setViewPager() {
-        binding.pager.visibility = View.VISIBLE
+        binding.pager.setVisibility(true)
         enforceSingleScrollDirection(binding.pager)
 
         binding.toolbar.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
@@ -518,8 +515,10 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
             val expiryDate = CourseCardUtils.getFormattedDate(requireContext(), courseData)
             if (!expiryDate.isNullOrEmpty()) {
-                courseExpiryDate.setVisibility(true)
-                courseExpiryDate.text = expiryDate
+                courseExpiryDate.apply {
+                    setVisibility(true)
+                    text = expiryDate
+                }
             }
 
             if (environment.config.isCourseSharingEnabled) {
@@ -575,16 +574,18 @@ class CourseTabsDashboardFragment : BaseFragment() {
     }
 
     private fun showCertificate() {
-        if (courseData.isCertificateEarned && environment.config.areCertificateLinksEnabled()) {
-            binding.toolbar.certificate.root.setVisibility(true)
-            binding.toolbar.certificate.viewCertificate.setOnClickListener {
-                environment.router.showCertificate(
-                    requireContext(),
-                    courseData
-                )
+        binding.toolbar.certificate.apply {
+            if (courseData.isCertificateEarned && environment.config.areCertificateLinksEnabled()) {
+                root.setVisibility(true)
+                viewCertificate.setOnClickListener {
+                    environment.router.showCertificate(
+                        requireContext(),
+                        courseData
+                    )
+                }
+            } else {
+                root.setVisibility(false)
             }
-        } else {
-            binding.toolbar.certificate.root.setVisibility(false)
         }
     }
 

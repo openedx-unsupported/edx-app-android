@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">改变截止日期</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">课程表</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">我们制定了一个建议的时间表，以帮助您保持合理进度。但别担心，它很灵活，所以你可以按照自己的节奏学习。
 如果你碰巧落后了，你可以调整日期，让自己的学习保持进度。

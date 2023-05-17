@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">期限を移動</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">コーススケジュール</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">スムーズに学習を進められるよう、推奨スケジュールをご用意しています。忙しい方も心配無用。自分のペースに合わせて柔軟に学習できるので、
         万が一予定より遅れてもその都度、調整が可能です。</string>

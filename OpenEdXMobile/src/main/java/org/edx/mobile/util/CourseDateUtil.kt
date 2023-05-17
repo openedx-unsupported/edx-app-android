@@ -49,7 +49,6 @@ object CourseDateUtil {
     ) {
         val context = view.context as Context
         val containerLayout = view as LinearLayout
-        val title = view.findViewById(R.id.banner_title) as TextView
         val bannerMessage = view.findViewById(R.id.banner_info) as TextView
         val button = view.findViewById(R.id.btn_shift_dates) as Button
         var description: CharSequence = ""
@@ -59,7 +58,6 @@ object CourseDateUtil {
         val bannerType = courseBannerInfoModel.datesBannerInfo.getCourseBannerType()
 
         if (isCourseDatePage) {
-            title.visibility = View.VISIBLE
             containerLayout.setBackgroundColor(Color.TRANSPARENT)
 
             when (bannerType) {

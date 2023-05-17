@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Di chuyển ngày đến hạn</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Lịch biểu khóa học</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">Chúng tôi đã xây dựng một lịch biểu gợi ý để giúp bạn đi đúng hướng. Nhưng đừng lo lắng – lịch biểu rất linh hoạt nên bạn có thể học theo tốc độ của riêng mình.
         Nếu bạn vô tình bị tụt lại phía sau, bạn sẽ có thể điều chỉnh các mốc thời gian để bạn luôn đi đúng hướng.</string>

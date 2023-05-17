@@ -14,18 +14,6 @@
         tools:visibility="visible">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/banner_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edx_half_margin"
-            android:fontFamily="?attr/fontSemiBold"
-            android:text="@string/course_schedule_title"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="@dimen/edx_large"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/banner_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,11 +25,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_shift_dates"
-            style="@style/edX.Widget.PrimaryActionButton"
+            style="@style/edX.Widget.PrimaryBaseActionButton"
             android:layout_marginTop="@dimen/edx_default_margin"
-            android:background="@color/primaryBaseColor"
             android:text="@string/course_dates_banner_reset_date_button"
-            android:textSize="@dimen/edx_x_small"
             android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>

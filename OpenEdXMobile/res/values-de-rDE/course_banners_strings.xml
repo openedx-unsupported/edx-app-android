@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Fälligkeitstermine verschieben</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Kursplan</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">Wir haben einen vorgeschlagenen Zeitplan erstellt, um Ihnen zu helfen, Ihre Planung einzuhalten. Aber keine Sorge – er ist flexibel, sodass Sie in Ihrem eigenen Tempo lernen können.
 Wenn Sie in Verzug geraten, können Sie die Termine anpassen, um den Zeitplan einzuhalten.</string>

@@ -5,8 +5,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Shift due dates</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Course Schedule</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">We built a suggested schedule to help you stay on track. But don’t worry – it’s flexible so you can learn at your own pace.
         If you happen to fall behind, you’ll be able to adjust the dates to keep yourself on track.</string>

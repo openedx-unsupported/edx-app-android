@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Bitiş tarihlerini değiştir</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Kurs Programı</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">Öğreniminizin planlandığı gibi gitmesine yardımcı olmak için önerilen bir program oluşturduk. Ancak endişelenmeyin, bu esnek bir program olduğu için kendi hızınızda öğrenebilirsiniz.
         Geride kalırsanız tarihleri plana uygun kalmanızı sağlayacak şekilde ayarlayabileceksiniz.</string>

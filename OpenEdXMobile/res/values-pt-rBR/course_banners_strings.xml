@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Alterar datas de entrega</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Programação do Curso</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">Fizemos uma programação como sugestão para te ajudar a manter o ritmo. Mas não se preocupe, ela é flexível, assim você pode aprender no seu próprio ritmo. 
 Se você não conseguir acompanhar tudo nas datas sugeridas, você poderá ajustá-las de forma que seja melhor para você.</string>

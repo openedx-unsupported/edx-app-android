@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">תאריכי יעד של משמרת</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">לוח זמנים של הקורס</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">בנינו לוח זמנים מוצע כדי לעזור לך להישאר על המסלול. אבל אל דאגה - זה גמיש כך שתוכל ללמוד בקצב שלך.
 אם במקרה תיקלע לפיגור, תוכל להתאים את התאריכים כדי לשמור על עצמך על המסלול.</string>

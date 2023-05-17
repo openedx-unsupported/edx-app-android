@@ -3,8 +3,6 @@
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">تغيير المواعيد المقررة</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">جدول الدورة</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">لقد قمنا ببناء جدول زمني مقترح لمساعدتك على البقاء على المسار الصحيح.1 ولكن لا تقلق ، فهي مرنة بحيث يمكنك التعلم على السرعة الخاصة بك. إذا كنت تتخلف عن التواريخ المقترحة، ستكون قادرا على ضبطها للحفاظ على المسار</string>
     <!-- Message Course Dates Banner Upgrade to Complete Graded -->
