@@ -205,7 +205,6 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
                     @Override
                     protected void onResponse(@NonNull final EnrolledCoursesResponse course) {
                         enrollCallback.onResponse(course);
-                        environment.getRouter().showMainDashboard(activity);
                         environment.getRouter().showCourseDashboardTabs(activity, course, false);
                     }
 
