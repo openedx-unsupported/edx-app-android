@@ -85,7 +85,7 @@ public class VideoUtil {
         String preferredVideoUrl = null;
         final VideoInfo preferredVideoInfo = video.encodedVideos
                 .getPreferredVideoInfoForDownloading(
-                        MainApplication.getEnvironment(MainApplication.instance()).getLoginPrefs().getVideoQuality()
+                        MainApplication.getEnvironment(MainApplication.instance()).getUserPrefs().getVideoQuality()
                 );
 
         if (preferredVideoInfo != null &&

@@ -1,7 +1,6 @@
 package org.edx.mobile.module.prefs
 
 import android.content.Context
-import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.model.api.AppConfig
@@ -9,27 +8,28 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context) {
-    private val pref: PrefManager = PrefManager(context, PrefManager.Pref.APP_FEATURES)
+class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context) :
+    PrefBaseManager(context, Pref.APP_FEATURES) {
 
-    fun isValuePropEnabled() = getAppConfig().isValuePropEnabled
+    val isValuePropEnabled get() = appConfig.isValuePropEnabled
 
-    fun setAppConfig(appConfig: AppConfig) {
-        pref.put(PrefManager.Key.APP_CONFIG, Gson().toJson(appConfig))
-    }
-
-    private fun getAppConfig(): AppConfig {
-        return pref.getString(PrefManager.Key.APP_CONFIG)?.let {
-            Gson().fromJson(it, AppConfig::class.java)
+    var appConfig: AppConfig
+        get() = getString(APP_CONFIG)?.let {
+            gson.fromJson(it, AppConfig::class.java)
         } ?: AppConfig()
-    }
+        set(value) = put(APP_CONFIG, gson.toJson(value))
 
-    private fun getIAPConfig() = getAppConfig().iapConfig
+    private val iapConfig get() = appConfig.iapConfig
 
-    fun isIAPEnabled() = getIAPConfig().isEnabled &&
-            getIAPConfig().disableVersions.contains(BuildConfig.VERSION_NAME).not()
+    val isIAPEnabled
+        get() = iapConfig.isEnabled &&
+                iapConfig.disableVersions.contains(BuildConfig.VERSION_NAME).not()
 
-    fun isIAPExperimentEnabled() = isIAPEnabled() && getIAPConfig().isExperimentEnabled
+    val isIAPExperimentEnabled get() = isIAPEnabled && iapConfig.isExperimentEnabled
+
+    var canAutoCheckUnfulfilledPurchase: Boolean
+        get() = getBoolean(CHECK_UNFULFILLED_PURCHASE, false)
+        set(value) = put(CHECK_UNFULFILLED_PURCHASE, value)
 
     /**
      * Method to check if the IAP is enabled for treatment/control group
@@ -38,9 +38,9 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
      * The App will allow the user to purchase the course only if [org.edx.mobile.model.api.IAPConfig.isEnabled] is true
      * If [org.edx.mobile.model.api.IAPConfig.isExperimentEnabled] is true then only treatment group will be able to buy the course.
      */
-    fun isIAPEnabled(isOddUserId: Boolean): Boolean {
-        if (isIAPEnabled()) {
-            if (isIAPExperimentEnabled()) {
+    fun isIAPEnabledForUser(isOddUserId: Boolean): Boolean {
+        if (isIAPEnabled) {
+            if (isIAPExperimentEnabled) {
                 return isOddUserId
             }
             return true
@@ -48,11 +48,9 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
         return false
     }
 
-    fun canAutoCheckUnfulfilledPurchase(): Boolean {
-        return pref.getBoolean(PrefManager.Key.CHECK_UNFULFILLED_PURCHASE, false)
-    }
-
-    fun setAutoCheckUnfulfilledPurchase(canCheckUnfulfilledPurchase: Boolean) {
-        pref.put(PrefManager.Key.CHECK_UNFULFILLED_PURCHASE, canCheckUnfulfilledPurchase)
+    companion object {
+        // Preference to save app config
+        private const val APP_CONFIG = "APP_CONFIG"
+        private const val CHECK_UNFULFILLED_PURCHASE = "CHECK_UNFULFILLED_PURCHASE"
     }
 }

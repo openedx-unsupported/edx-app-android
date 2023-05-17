@@ -102,9 +102,8 @@ public class FileUtil {
             downloadDir = getExternalAppDir(context);
         }
 
-        final ProfileModel profile = userPref.getProfile();
         if (downloadDir != null && environment.getLoginPrefs().isUserLoggedIn()) {
-            final File usersVideosDir = getUserVideoDirectory(downloadDir, profile.username);
+            final File usersVideosDir = getUserVideoDirectory(downloadDir, environment.getLoginPrefs().getUsername());
             usersVideosDir.mkdirs();
             try {
                 final File noMediaFile = new File(usersVideosDir, ".nomedia");

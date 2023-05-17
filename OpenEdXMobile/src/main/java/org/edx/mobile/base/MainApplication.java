@@ -28,7 +28,7 @@ import org.edx.mobile.model.api.UnacknowledgedNoticeResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.AppInfoPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
@@ -176,7 +176,7 @@ public abstract class MainApplication extends MultiDexApplication {
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
-        PrefManager.AppInfoPrefManager prefManager = new PrefManager.AppInfoPrefManager(context);
+        AppInfoPrefs prefManager = new AppInfoPrefs(context);
         long previousVersionCode = prefManager.getAppVersionCode();
         final long curVersionCode = BuildConfig.VERSION_CODE;
         if (previousVersionCode < 0) {

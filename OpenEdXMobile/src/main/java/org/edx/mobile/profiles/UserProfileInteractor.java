@@ -10,11 +10,9 @@ import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.profile.UserProfileBioModel;
 import org.edx.mobile.model.profile.UserProfileViewModel;
 import org.edx.mobile.model.user.Account;
-import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
@@ -47,13 +45,11 @@ public class UserProfileInteractor implements RefreshListener {
     @NonNull
     private final Logger logger = new Logger(getClass().getName());
 
-    public UserProfileInteractor(@NonNull final String username, @NonNull final UserService userService, @NonNull EventBus eventBus, @NonNull UserPrefs userPrefs) {
+    public UserProfileInteractor(@NonNull final String username, @NonNull final UserService userService, @NonNull EventBus eventBus, @NonNull boolean viewingOwnProfile) {
         this.username = username;
         this.eventBus = eventBus;
         this.userService = userService;
-
-        final ProfileModel model = userPrefs.getProfile();
-        viewingOwnProfile = model.username.equalsIgnoreCase(username);
+        this.viewingOwnProfile = viewingOwnProfile;
 
         eventBus.register(this);
         onRefresh();

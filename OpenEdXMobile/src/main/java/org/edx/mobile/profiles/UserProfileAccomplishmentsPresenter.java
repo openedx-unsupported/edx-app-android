@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.edx.mobile.http.callback.Callback;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.profile.BadgeAssertion;
-import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.view.ViewHoldingPresenter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -33,11 +31,10 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
 
     private boolean pageLoading = false;
 
-    public UserProfileAccomplishmentsPresenter(@NonNull UserService userService, @NonNull UserPrefs userPrefs, @NonNull String username) {
+    public UserProfileAccomplishmentsPresenter(@NonNull UserService userService, @NonNull String username, boolean viewingOwnProfile) {
         this.userService = userService;
         this.username = username;
-        final ProfileModel model = userPrefs.getProfile();
-        viewingOwnProfile = model.username.equalsIgnoreCase(username);
+        this.viewingOwnProfile = viewingOwnProfile;
     }
 
     @Override

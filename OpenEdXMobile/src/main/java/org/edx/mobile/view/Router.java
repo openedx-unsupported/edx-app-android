@@ -27,6 +27,7 @@ import org.edx.mobile.model.discussion.DiscussionTopic;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
@@ -75,6 +76,9 @@ public class Router {
 
     @Inject
     LoginPrefs loginPrefs;
+
+    @Inject
+    UserPrefs userPrefs;
 
     @Inject
     IStorage storage;
@@ -356,8 +360,8 @@ public class Router {
      * @see #performManualLogout(Context, AnalyticsRegistry, NotificationDelegate)
      */
     public void forceLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
-        loginPrefs.clear();
-
+        userPrefs.clear();
+        loginPrefs.clearLogin();
         analyticsRegistry.trackUserLogout();
         analyticsRegistry.resetIdentifyUser();
 

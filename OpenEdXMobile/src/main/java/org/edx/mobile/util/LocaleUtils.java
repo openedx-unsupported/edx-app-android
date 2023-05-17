@@ -7,10 +7,10 @@ import android.view.accessibility.CaptioningManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.edx.mobile.R;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.user.FormOption;
-import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.PrefBaseManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -178,9 +178,8 @@ public class LocaleUtils {
     @Nullable
     public static String getTranscriptURL(@NonNull Context context,
                                           @NonNull TranscriptModel transcript) {
-        String subtitleLanguage = new LoginPrefs(context).getSubtitleLanguage();
-        if (subtitleLanguage == null ||
-                subtitleLanguage.equals(context.getString(R.string.lbl_cc_none))) {
+        String subtitleLanguage = new UserPrefs(context).getSubtitleLanguage();
+        if (subtitleLanguage.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
             subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(context);
         }
         String transcriptUrl = null;

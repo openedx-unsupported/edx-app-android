@@ -18,7 +18,7 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.PrefBaseManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
@@ -64,13 +64,13 @@ public class SocialLoginDelegate {
         google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, config);
         google.setCallback(accessToken -> {
             logger.debug("Google logged in; token= " + accessToken);
-            onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_GOOGLE);
+            onSocialLoginSuccess(accessToken, PrefBaseManager.Value.BACKEND_GOOGLE);
         });
 
         facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, config);
         facebook.setCallback(accessToken -> {
             logger.debug("Facebook logged in; token= " + accessToken);
-            onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
+            onSocialLoginSuccess(accessToken, PrefBaseManager.Value.BACKEND_FACEBOOK);
         });
 
         microsoft = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, config);
@@ -90,7 +90,7 @@ public class SocialLoginDelegate {
             @Override
             public void onLogin(String accessToken) {
                 logger.debug("Microsoft logged in; token= " + accessToken);
-                onSocialLoginSuccess(accessToken, PrefManager.Value.BACKEND_MICROSOFT);
+                onSocialLoginSuccess(accessToken, PrefBaseManager.Value.BACKEND_MICROSOFT);
             }
         });
         google.onActivityCreated(activity, savedInstanceState);
@@ -229,19 +229,19 @@ public class SocialLoginDelegate {
         protected AuthResponse doInBackground(Void... voids) {
             final AuthResponse auth;
             try {
-                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
+                if (backend.equalsIgnoreCase(PrefBaseManager.Value.BACKEND_FACEBOOK)) {
                     try {
                         auth = loginAPI.logInUsingFacebook(accessToken);
                     } catch (LoginAPI.AccountNotLinkedException e) {
                         throw new LoginException(makeLoginErrorMessage(e));
                     }
-                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
+                } else if (backend.equalsIgnoreCase(PrefBaseManager.Value.BACKEND_GOOGLE)) {
                     try {
                         auth = loginAPI.logInUsingGoogle(accessToken);
                     } catch (LoginAPI.AccountNotLinkedException e) {
                         throw new LoginException(makeLoginErrorMessage(e));
                     }
-                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT)) {
+                } else if (backend.equalsIgnoreCase(PrefBaseManager.Value.BACKEND_MICROSOFT)) {
                     try {
                         auth = loginAPI.logInUsingMicrosoft(accessToken);
                     } catch (LoginAPI.AccountNotLinkedException e) {
@@ -258,8 +258,8 @@ public class SocialLoginDelegate {
         }
 
         public LoginErrorMessage makeLoginErrorMessage(@NonNull LoginAPI.AccountNotLinkedException e) throws LoginException {
-            final boolean isFacebook = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK);
-            final boolean isMicrosoft = backend.equalsIgnoreCase(PrefManager.Value.BACKEND_MICROSOFT);
+            final boolean isFacebook = backend.equalsIgnoreCase(PrefBaseManager.Value.BACKEND_FACEBOOK);
+            final boolean isMicrosoft = backend.equalsIgnoreCase(PrefBaseManager.Value.BACKEND_MICROSOFT);
             if (feature == Feature.SIGN_IN && e.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                 final String title = activity.getResources().getString(R.string.login_error);
                 final CharSequence desc = ResourceUtil.getFormattedString(context.get().getResources(),

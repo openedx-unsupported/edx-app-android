@@ -22,9 +22,9 @@ import org.edx.mobile.module.db.DatabaseModelFactory;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.IDownloadManager;
+import org.edx.mobile.module.prefs.AppInfoPrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.module.prefs.VideoPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -54,7 +54,10 @@ public class Storage implements IStorage {
     IDownloadManager dm;
 
     @Inject
-    UserPrefs pref;
+    UserPrefs userPrefs;
+
+    @Inject
+    AppInfoPrefs appInfoPrefs;
 
     @Inject
     Config config;
@@ -64,9 +67,6 @@ public class Storage implements IStorage {
 
     @Inject
     CourseAPI api;
-
-    @Inject
-    VideoPrefs videoPrefs;
 
     // To remove the dependency cycle.
     // ref: https://www.reddit.com/r/android_devs/comments/hc6dea/comment/fvffemo/?utm_source=share&utm_medium=web2x&context=3
@@ -95,7 +95,7 @@ public class Storage implements IStorage {
         //IVideoModel videoById = db.getVideoEntryByVideoId(model.getVideoId(), null);
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {
-            boolean downloadPreference = pref.isDownloadOverWifiOnly();
+            boolean downloadPreference = userPrefs.isDownloadOverWifiOnly();
             if(NetworkUtil.isOnZeroRatedNetwork(context, config)){
                 //If the device has zero rated network, then allow downloading
                 //on mobile network even if user has "Only on wifi" settings as ON
@@ -158,7 +158,7 @@ public class Storage implements IStorage {
         // anyways, we mark the video as DELETED
         int videosDeleted = db.deleteVideoByVideoId(model, null);
         // Reset the state of Videos Bulk Download view whenever a delete happens
-        videoPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
+        appInfoPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
         EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
         return videosDeleted;
     }

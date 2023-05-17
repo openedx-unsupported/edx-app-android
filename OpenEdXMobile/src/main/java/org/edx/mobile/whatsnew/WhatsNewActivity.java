@@ -12,7 +12,7 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.AppInfoPrefs;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,7 +35,6 @@ public class WhatsNewActivity extends BaseFragmentActivity {
         fragmentTransaction.disallowAddToBackStack();
         fragmentTransaction.commit();
 
-        final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
-        appPrefs.setWhatsNewShown(BuildConfig.VERSION_NAME);
+        new AppInfoPrefs(MainApplication.application).setWhatsNewShownVersion(BuildConfig.VERSION_NAME);
     }
 }

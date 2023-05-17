@@ -31,7 +31,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.prefs.VideoPrefs;
+import org.edx.mobile.module.prefs.AppInfoPrefs;
 import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
 import org.edx.mobile.util.DownloadUtil;
@@ -87,7 +87,8 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
 
     @Inject
     protected IEdxEnvironment environment;
-    private VideoPrefs prefManager;
+    @Inject
+    protected AppInfoPrefs appInfoPrefs;
     private SwitchState switchState = SwitchState.DEFAULT;
     private boolean isDeleteScheduled = false;
     private Handler bgThreadHandler;
@@ -147,7 +148,6 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prefManager = new VideoPrefs(getContext());
         permissionListener = this;
 
         final HandlerThread handlerThread = new HandlerThread("BulkDownloadBgThread");
@@ -229,7 +229,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                                 videosStatus.remaining++;
                                 final VideoBlockModel videoBlockModel = (VideoBlockModel) video;
                                 final long videoSize = videoBlockModel
-                                        .getPreferredVideoEncodingSize(environment.getLoginPrefs().getVideoQuality());
+                                        .getPreferredVideoEncodingSize(environment.getUserPrefs().getVideoQuality());
                                 if (videoSize != -1) {
                                     videosStatus.remainingVideosSize += videoSize;
                                     videosStatus.totalVideosSize += videoSize;
@@ -245,11 +245,11 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                             }
                         }
 
-                        if (prefManager.getBulkDownloadSwitchState(videosStatus.courseComponentId)
+                        if (appInfoPrefs.getBulkDownloadSwitchState(videosStatus.courseComponentId)
                                 == SwitchState.USER_TURNED_ON && remainingVideos.size() > 0) {
                             // It means that the switch was turned on by user but either a video was
                             // deleted by user or a video download was cancelled.
-                            prefManager.setBulkDownloadSwitchState(SwitchState.DEFAULT, videosStatus.courseComponentId);
+                            appInfoPrefs.setBulkDownloadSwitchState(SwitchState.DEFAULT, videosStatus.courseComponentId);
                         }
                         updateRootViewVisibility(View.VISIBLE);
 
@@ -290,7 +290,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     }
 
     private void updateUI() {
-        switchState = prefManager.getBulkDownloadSwitchState(videosStatus.courseComponentId);
+        switchState = appInfoPrefs.getBulkDownloadSwitchState(videosStatus.courseComponentId);
 
         if (videosStatus.allVideosDownloaded()) {
             bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
@@ -386,7 +386,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                 if (videosStatus.allVideosDownloading(switchState)) {
                     // Now that all videos have been enqueued to Download manager, enable the Switch and update its state
                     switchState = SwitchState.USER_TURNED_ON;
-                    prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                    appInfoPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     setSwitchState();
                 }
                 break;
@@ -398,7 +398,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                     // This means that all the videos have been downloaded or they are currently
                     // downloading without the use of Bulk Download switch
                     switchState = SwitchState.USER_TURNED_ON;
-                    prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                    appInfoPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     setSwitchState();
                 }
                 break;
@@ -429,7 +429,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                             PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                 } else {
                     switchState = SwitchState.USER_TURNED_OFF;
-                    prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                    appInfoPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     // Delete all videos after a delay
                     startVideosDeletion();
                     bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
@@ -454,7 +454,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         isDeleteScheduled = false;
 
         switchState = SwitchState.IN_PROCESS;
-        prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+        appInfoPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
         setSwitchState();
 
         // Download all videos
@@ -594,7 +594,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         }
         binding.swDownload.setChecked(false);
         switchState = SwitchState.DEFAULT;
-        prefManager.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+        appInfoPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
         updateUI();
     }
 

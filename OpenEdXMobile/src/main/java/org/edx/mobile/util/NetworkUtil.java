@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 
 import java.util.List;
 
@@ -123,8 +123,7 @@ public class NetworkUtil {
      */
 
     public static boolean verifyDownloadPossible(BaseFragmentActivity activity) {
-        if (new PrefManager(activity, PrefManager.Pref.WIFI).getBoolean(PrefManager.Key
-                .DOWNLOAD_ONLY_ON_WIFI, true)) {
+        if (new UserPrefs(activity).isDownloadOverWifiOnly()) {
             if (!isConnectedWifi(activity)) {
                 activity.showInfoMessage(activity.getString(R.string.wifi_off_message));
                 return false;

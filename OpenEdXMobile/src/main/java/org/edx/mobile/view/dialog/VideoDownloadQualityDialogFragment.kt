@@ -16,7 +16,7 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.VideoQualityDialogFragmentBinding
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
-import org.edx.mobile.module.prefs.LoginPrefs
+import org.edx.mobile.module.prefs.UserPrefs
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.view.adapters.VideoQualityAdapter
 
@@ -25,7 +25,7 @@ class VideoDownloadQualityDialogFragment(
     var callback: IListDialogCallback
 ) : DialogFragment() {
 
-    private var loginPref: LoginPrefs? = environment.loginPrefs
+    private var userPrefs: UserPrefs = environment.userPrefs
     private val videoQualities: ArrayList<VideoQuality> = arrayListOf()
     private lateinit var binding: VideoQualityDialogFragmentBinding
 
@@ -66,17 +66,13 @@ class VideoDownloadQualityDialogFragment(
             "platform_name",
             platformName
         )
-        var selectedVideoQuality = VideoQuality.AUTO
-        loginPref?.videoQuality?.let {
-            selectedVideoQuality = it
-        }
-        val adapter = object : VideoQualityAdapter(context, environment, selectedVideoQuality) {
+        val adapter = object : VideoQualityAdapter(context, environment, userPrefs.videoQuality) {
             override fun onItemClicked(videoQuality: VideoQuality) {
                 environment.analyticsRegistry.trackVideoDownloadQualityChanged(
                     videoQuality,
-                    environment.loginPrefs.videoQuality
+                    userPrefs.videoQuality
                 )
-                environment.loginPrefs.videoQuality = videoQuality
+                userPrefs.videoQuality = videoQuality
                 callback.onItemClicked(videoQuality)
                 dismiss()
             }

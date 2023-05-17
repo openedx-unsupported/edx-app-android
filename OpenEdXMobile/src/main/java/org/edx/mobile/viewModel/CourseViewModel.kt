@@ -73,7 +73,7 @@ class CourseViewModel @Inject constructor(
                     result.data?.let {
                         courseRequestType = type
                         _enrolledCourses.postEvent(it.enrollments)
-                        environment.appFeaturesPrefs.setAppConfig(it.appConfig)
+                        environment.appFeaturesPrefs.appConfig = it.appConfig
 
                         if (type != PERSISTABLE_CACHE) {
                             updateDatabaseAfterDownload(it.enrollments)

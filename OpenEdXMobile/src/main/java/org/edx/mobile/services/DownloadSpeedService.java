@@ -14,7 +14,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.io.IOException;
@@ -165,8 +165,7 @@ public class DownloadSpeedService extends Service {
     }
 
     private void setCurrentDownloadSpeed(float downloadSpeedKps) {
-        PrefManager manager = new PrefManager(this, PrefManager.Pref.WIFI);
-        manager.put(PrefManager.Key.SPEED_TEST_KBPS, downloadSpeedKps);
+        new UserPrefs(getApplicationContext()).setPlaybackSpeed(downloadSpeedKps);
     }
 
     public class SpeedTestHandler extends Handler {

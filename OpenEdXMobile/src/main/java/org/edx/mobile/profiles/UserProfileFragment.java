@@ -31,7 +31,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.model.profile.UserProfileViewModel;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -84,7 +84,7 @@ public class UserProfileFragment
     EventBus eventBus;
 
     @Inject
-    UserPrefs userPrefs;
+    LoginPrefs loginPrefs;
 
     @Inject
     Config config;
@@ -127,13 +127,14 @@ public class UserProfileFragment
     @Override
     protected UserProfilePresenter createPresenter() {
         final String username = getUsername();
+        final boolean viewingOwnProfile = username.equalsIgnoreCase(loginPrefs.getUsername());
         return new UserProfilePresenter(
                 analyticsRegistry,
                 new UserProfileInteractor(
                         username,
                         userService,
                         eventBus,
-                        userPrefs),
+                        viewingOwnProfile),
                 new UserProfileTabsInteractor(
                         username,
                         userService,

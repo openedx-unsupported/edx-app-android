@@ -23,7 +23,7 @@ import org.edx.mobile.model.profile.UserProfileViewModel;
 import org.edx.mobile.model.user.Account;
 import org.edx.mobile.model.user.LanguageProficiency;
 import org.edx.mobile.model.user.ProfileImage;
-import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.observer.Observer;
 import org.greenrobot.eventbus.EventBus;
@@ -43,7 +43,7 @@ public class UserProfileInteractorTest extends BaseTest {
     private UserService userService;
 
     @Mock
-    private UserPrefs userPrefs;
+    private LoginPrefs loginPrefs;
 
     private EventBus eventBus;
 
@@ -66,7 +66,8 @@ public class UserProfileInteractorTest extends BaseTest {
     }
 
     private void createAndObserveInteractor() {
-        interactor = new UserProfileInteractor(ProfileValues.USERNAME, userService, eventBus, userPrefs);
+        boolean viewingOwnProfile = ProfileValues.USERNAME.equalsIgnoreCase(loginPrefs.getUsername());
+        interactor = new UserProfileInteractor(ProfileValues.USERNAME, userService, eventBus, viewingOwnProfile);
         interactor.observeProfile().subscribe(profileObserver);
         interactor.observeProfileImage().subscribe(imageObserver);
     }
@@ -320,7 +321,7 @@ public class UserProfileInteractorTest extends BaseTest {
 
     private void setAuthenticatedUsername(@NonNull String username) {
         final ProfileModel profileModel = new ProfileModel(0, username, "", null);
-        when(userPrefs.getProfile()).thenReturn(profileModel);
+        when(loginPrefs.getUsername()).thenReturn(profileModel.username);
     }
 
     @NonNull

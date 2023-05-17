@@ -48,8 +48,10 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.prefs.AppInfoPrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.PrefBaseManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
@@ -89,6 +91,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
         IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE
     }
+
+    @Inject
+    LoginPrefs loginPrefs;
+
+    @Inject
+    UserPrefs userPrefs;
 
     private static final Logger logger = new Logger(PlayerFragment.class.getName());
     private static final String KEY_VIDEO = "video";
@@ -794,7 +802,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
 
         clearAllErrors();
-        player.setPlaybackSpeed(loginPrefs.getDefaultPlaybackSpeed());
+        player.setPlaybackSpeed(userPrefs.getPlaybackSpeed());
         if (subtitlesObj != null) {
             showClosedCaptionData(subtitlesObj);
         } else {
@@ -856,7 +864,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (!environment.getConfig().getAppStoreUris().isEmpty() &&
                 environment.getConfig().isAppReviewsEnabled() &&
                 NetworkUtil.isConnected(getContext())) {
-            final PrefManager.AppInfoPrefManager appPrefs = new PrefManager.AppInfoPrefManager(MainApplication.application);
+            final AppInfoPrefs appPrefs = new AppInfoPrefs(MainApplication.application);
             final float appRating = appPrefs.getAppRating();
             // If user has not given rating yet, open dialog
             // consider not rated if rating is -1 or less (default is -1)
@@ -1375,8 +1383,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             @Override
             public void onItemClicked(Float speed) {
                 if (player != null) {
-                    float oldSpeed = loginPrefs.getDefaultPlaybackSpeed();
-                    loginPrefs.saveDefaultPlaybackSpeed(speed);
+                    float oldSpeed = userPrefs.getPlaybackSpeed();
+                    userPrefs.setPlaybackSpeed(speed);
                     player.setPlaybackSpeed(speed);
 
                     environment.getAnalyticsRegistry().trackVideoSpeed(videoEntry.videoId,
@@ -1389,7 +1397,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             public void onCancelClicked() {
                 speedDialogFragment.dismiss();
             }
-        }, loginPrefs.getDefaultPlaybackSpeed());
+        }, userPrefs.getPlaybackSpeed());
         speedDialogFragment.show(getFragmentManager(), "video_speed_dialog");
         speedDialogFragment.setCancelable(true);
     }
@@ -1429,7 +1437,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 public void onCancelClicked() {
                     closedCaptionsEnabled = false;
                     hideClosedCaptioning();
-                    setSubtitleLanguage(getString(R.string.lbl_cc_none));
+                    setSubtitleLanguage(PrefBaseManager.DEFAULT_VALUE);
                     if (player != null) {
                         environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
@@ -1483,16 +1491,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     }
 
-    @Inject
-    LoginPrefs loginPrefs;
-
-    @Nullable
     private String getSubtitleLanguage() {
-        return loginPrefs.getSubtitleLanguage();
+        return userPrefs.getSubtitleLanguage();
     }
 
     private void setSubtitleLanguage(@NonNull String language) {
-        loginPrefs.setSubtitleLanguage(language);
+        userPrefs.setSubtitleLanguage(language);
     }
 
     @Override
