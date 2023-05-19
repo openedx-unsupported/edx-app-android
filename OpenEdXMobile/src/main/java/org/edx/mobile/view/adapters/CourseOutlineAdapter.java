@@ -85,7 +85,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private EnrolledCoursesResponse courseData;
     private DownloadListener downloadListener;
     private boolean isVideoMode;
-    private Long lastBtnClickTime = 0L;
+    private Long lastValuePropClickTime = 0L;
 
     public CourseOutlineAdapter(final Context context, final EnrolledCoursesResponse courseData,
                                 final IEdxEnvironment environment, DownloadListener listener,
@@ -636,8 +636,8 @@ public class CourseOutlineAdapter extends BaseAdapter {
             ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
             upgradeBtnText.setOnClickListener(v -> {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - lastBtnClickTime >= BaseListAdapter.MIN_CLICK_INTERVAL) {
-                    lastBtnClickTime = currentTime;
+                if (currentTime - lastValuePropClickTime >= BaseListAdapter.MIN_CLICK_INTERVAL) {
+                    lastValuePropClickTime = currentTime;
                     CourseModalDialogFragment.newInstance(
                             Analytics.Screens.PLS_COURSE_DASHBOARD,
                             courseData.getCourseId(),
