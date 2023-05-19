@@ -85,6 +85,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private EnrolledCoursesResponse courseData;
     private DownloadListener downloadListener;
     private boolean isVideoMode;
+    private Long lastValuePropClickTime = 0L;
 
     public CourseOutlineAdapter(final Context context, final EnrolledCoursesResponse courseData,
                                 final IEdxEnvironment environment, DownloadListener listener,
@@ -633,14 +634,20 @@ public class CourseOutlineAdapter extends BaseAdapter {
         if (courseData.isUpgradeable() && environment.getAppFeaturesPrefs().isValuePropEnabled()) {
             upgradeBtn.setVisibility(View.VISIBLE);
             ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
-            upgradeBtnText.setOnClickListener(view1 -> CourseModalDialogFragment.newInstance(
+            upgradeBtnText.setOnClickListener(v -> {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastValuePropClickTime >= BaseListAdapter.MIN_CLICK_INTERVAL) {
+                    lastValuePropClickTime = currentTime;
+                    CourseModalDialogFragment.newInstance(
                             Analytics.Screens.PLS_COURSE_DASHBOARD,
                             courseData.getCourseId(),
                             courseData.getCourseSku(),
                             courseData.getCourse().getName(),
-                            courseData.getCourse().isSelfPaced())
-                    .show(((AppCompatActivity) context).getSupportFragmentManager(),
-                            CourseModalDialogFragment.TAG));
+                            courseData.getCourse().isSelfPaced()
+                    ).show(((AppCompatActivity) context).getSupportFragmentManager(),
+                            CourseModalDialogFragment.TAG);
+                }
+            });
             upgradeBtnText.setText(R.string.value_prop_course_card_message);
         } else {
             upgradeBtn.setVisibility(View.GONE);
