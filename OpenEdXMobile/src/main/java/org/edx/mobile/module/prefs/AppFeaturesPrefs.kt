@@ -8,10 +8,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context) :
-    PrefBaseManager(context, Pref.APP_FEATURES) {
-
-    val isValuePropEnabled get() = appConfig.isValuePropEnabled
+class AppFeaturesPrefs @Inject constructor(
+    @ApplicationContext context: Context
+) : PrefBaseManager(context, APP_FEATURES) {
 
     var appConfig: AppConfig
         get() = getString(APP_CONFIG)?.let {
@@ -19,13 +18,18 @@ class AppFeaturesPrefs @Inject constructor(@ApplicationContext context: Context)
         } ?: AppConfig()
         set(value) = put(APP_CONFIG, gson.toJson(value))
 
-    private val iapConfig get() = appConfig.iapConfig
+    private val iapConfig
+        get() = appConfig.iapConfig
+
+    val isValuePropEnabled
+        get() = appConfig.isValuePropEnabled
 
     val isIAPEnabled
         get() = iapConfig.isEnabled &&
                 iapConfig.disableVersions.contains(BuildConfig.VERSION_NAME).not()
 
-    val isIAPExperimentEnabled get() = isIAPEnabled && iapConfig.isExperimentEnabled
+    val isIAPExperimentEnabled
+        get() = isIAPEnabled && iapConfig.isExperimentEnabled
 
     var canAutoCheckUnfulfilledPurchase: Boolean
         get() = getBoolean(CHECK_UNFULFILLED_PURCHASE, false)

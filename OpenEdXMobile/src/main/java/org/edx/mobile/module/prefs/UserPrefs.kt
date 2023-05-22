@@ -9,12 +9,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserPrefs @Inject constructor(@ApplicationContext context: Context) :
-    PrefBaseManager(context, Pref.USER_PREF) {
-    private val loginPrefs: LoginPrefs = LoginPrefs(context)
+class UserPrefs @Inject constructor(
+    @ApplicationContext context: Context,
+    loginPrefs: LoginPrefs
+) : PrefBaseManager(context, USER) {
 
     init {
-        migrateData(PrefBaseManager(context, Pref.WIFI))
+        migrateData(object : PrefBaseManager(context, WIFI) {})
         loginPrefs.getString(TRANSCRIPT_LANGUAGE)?.let {
             put(TRANSCRIPT_LANGUAGE, it)
             loginPrefs.removeKey(TRANSCRIPT_LANGUAGE)
@@ -42,7 +43,7 @@ class UserPrefs @Inject constructor(@ApplicationContext context: Context) :
 
     var speedTestKBPS: Float
         get() = getFloat(SPEED_TEST_KBPS, 0.0f)
-        set(value) = put(SPEED_TEST_KBPS, value);
+        set(value) = put(SPEED_TEST_KBPS, value)
 
     var subtitleLanguage: String
         get() {

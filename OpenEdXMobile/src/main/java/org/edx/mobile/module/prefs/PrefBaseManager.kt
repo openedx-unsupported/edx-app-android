@@ -9,17 +9,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * This is a Utility for reading and writing to shared preferences.
- * This class also contains the constants for the preference names and the keys.
- * These constants are defined in inner classes `Pref` and `Key`.
+ * This class serves as the base for all preferences, providing a framework for managing shared
+ * preferences efficiently. It includes constants for preference names defined in the inner class
+ * Pref. Its purpose is to simplify the reading and writing of data to shared preferences.
  */
-@Singleton
-open class PrefBaseManager @Inject constructor(var context: Context, prefName: String) {
-
-    init {
-        if (MainApplication.instance() != null) this.context =
-            MainApplication.instance().applicationContext
-    }
+abstract class PrefBaseManager constructor(
+    var context: Context,
+    prefName: String
+) {
 
     private val editor = context.getSharedPreferences(prefName, Context.MODE_PRIVATE).edit()
     private val sharedPreferences: SharedPreferences =
@@ -30,7 +27,7 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
      * Puts given key-value pair to the Shared Preferences.
      *
      * @param key
-     * @param value - String
+     * @param value - String?
      */
     fun put(key: String, value: String?) {
         editor.putString(key, value).apply()
@@ -52,7 +49,7 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
      * @param key
      * @param value - long
      */
-    fun put(key: String?, value: Long) {
+    fun put(key: String, value: Long) {
         editor.putLong(key, value).apply()
     }
 
@@ -62,7 +59,7 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
      * @param key
      * @param value - float
      */
-    fun put(key: String?, value: Float) {
+    fun put(key: String, value: Float) {
         editor.putFloat(key, value).apply()
     }
 
@@ -72,7 +69,7 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
      * @param key
      * @param value - int
      */
-    fun put(key: String?, value: Int) {
+    fun put(key: String, value: Int) {
         editor.putInt(key, value).apply()
     }
 
@@ -80,22 +77,22 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
      * Returns String value for the given key, null if no value is found.
      *
      * @param key
-     * @return String
+     * @return String or null
      */
     fun getString(key: String): String? = sharedPreferences.getString(key, null)
 
     /**
-     * Returns String value for the given key, null if no value is found.
+     * Returns String value for the given key, defaultValue if no value is found.
      *
      * @param key
      * @param defaultValue
-     * @return String
+     * @return String or defaultValue if no value is found
      */
     fun getString(key: String, defaultValue: String): String =
         sharedPreferences.getString(key, defaultValue) ?: defaultValue
 
     /**
-     * Returns boolean value for the given key, can set default value as well.
+     * Returns boolean value for the given key, defaultValue if no value is found.
      *
      * @param key
      * @param defaultValue
@@ -105,7 +102,7 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
         sharedPreferences.getBoolean(key, defaultValue)
 
     /**
-     * Returns long value for the given key, -1 if no value is found.
+     * Returns long value for the given key, defaultValue if no value is found.
      *
      * @param key
      * @param defaultValue
@@ -127,73 +124,67 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
     /**
      * Returns int value for the given key, defaultValue if no value is found.
      *
-     * @param key,default value
+     * @param key
+     * @param defaultValue
      * @return int
      */
     fun getInt(key: String, defaultValue: Int = -1): Int =
         sharedPreferences.getInt(key, defaultValue)
 
+    /**
+     * Remove the key and its associated value.
+     *
+     * @param key
+     */
     fun removeKey(key: String) = editor.remove(key).apply()
 
+    /**
+     * Remove all key value pairs
+     */
     fun clear() = editor.clear().apply()
 
+    /**
+     * Migrates data from the old preference manager to the new preference manager and remove the old preferences
+     *
+     * @param oldPrefBaseManager The old preference manager to migrate data from.
+     */
     fun migrateData(oldPrefBaseManager: PrefBaseManager) {
-        oldPrefBaseManager.sharedPreferences.all.forEach {
-            when (it.value) {
-                is Int -> put(it.key, it.value as Int)
-                is Long -> put(it.key, it.value as Long)
-                is Float -> put(it.key, it.value as Float)
-                is Boolean -> put(it.key, it.value as Boolean)
-                is String -> put(it.key, it.value as String)
+        oldPrefBaseManager.sharedPreferences.all.forEach { (key, value) ->
+            when (value) {
+                is Int -> put(key, value)
+                is Long -> put(key, value)
+                is Float -> put(key, value)
+                is Boolean -> put(key, value)
+                is String -> put(key, value)
             }
-            oldPrefBaseManager.removeKey(it.key)
+            oldPrefBaseManager.removeKey(key)
         }
     }
 
-    /**
-     * Contains preference name constants. These must be unique.
-     */
-    object Pref {
+    companion object {
+
+        const val APP_FEATURES = "app_features"
+        const val APP_INFO = "pref_app_info"
         const val LOGIN = "pref_login"
+        const val USER = "pref_user"
         const val WIFI = "pref_wifi"
         const val VIDEOS = "pref_videos"
-        const val APP_FEATURES = "app_features"
         const val COURSE_CALENDAR_PREF = "course_calendar_pref"
-        const val APP_INFO = "pref_app_info"
-        const val USER_PREF = "pref_user"
-        val all: Array<String>
-            get() = arrayOf(
-                LOGIN,
-                WIFI,
-                VIDEOS,
-                APP_FEATURES,
-                COURSE_CALENDAR_PREF,
-                APP_INFO,
-                USER_PREF
-            )
 
-        @JvmStatic
-        val allPreferenceFileNames: Array<String>
-            get() {
-                val preferencesFilesList = all
-                for (i in preferencesFilesList.indices) {
-                    preferencesFilesList[i] += ".xml"
-                }
-                return preferencesFilesList
-            }
-    }
-
-    object Value {
-        /*
-         * These values are used in API endpoint
-         */
-        const val BACKEND_FACEBOOK = "facebook"
-        const val BACKEND_GOOGLE = "google-oauth2"
-        const val BACKEND_MICROSOFT = "azuread-oauth2"
-    }
-
-    companion object {
         const val DEFAULT_VALUE = "NONE"
+
+        private val preferencesList = listOf(
+            APP_FEATURES,
+            APP_INFO,
+            LOGIN,
+            USER,
+            WIFI,
+            VIDEOS,
+            COURSE_CALENDAR_PREF
+        )
+
+        val allPreferenceFileNames: Array<String>
+            get() = preferencesList.map { "$it.xml" }.toTypedArray()
 
         /**
          * Clears all the shared preferences that are used in the app.
@@ -202,14 +193,13 @@ open class PrefBaseManager @Inject constructor(var context: Context, prefName: S
          */
         @JvmStatic
         fun nukeSharedPreferences(exceptions: List<String?>) {
-            for (prefName in Pref.all) {
-                if (exceptions.contains(prefName)) {
-                    continue
+            preferencesList
+                .filterNot { exceptions.contains(it) }
+                .forEach { pref ->
+                    MainApplication.application.getSharedPreferences(
+                        pref, Context.MODE_PRIVATE
+                    ).edit().clear().apply()
                 }
-                MainApplication.application.getSharedPreferences(
-                    prefName, Context.MODE_PRIVATE
-                ).edit().clear().apply()
-            }
         }
     }
 }

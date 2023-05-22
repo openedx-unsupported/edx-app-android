@@ -21,7 +21,7 @@ import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.module.prefs.AppInfoPrefs;
+import org.edx.mobile.module.prefs.AppPrefs;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
@@ -70,7 +70,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
     private void initWhatsNew() {
         if (environment.getConfig().isWhatsNewEnabled()) {
             boolean shouldShowWhatsNew = false;
-            final AppInfoPrefs appPrefs = new AppInfoPrefs(this);
+            final AppPrefs appPrefs = environment.getAppPrefs();
             final String lastWhatsNewShownVersion = appPrefs.getWhatsNewShownVersion();
             if (lastWhatsNewShownVersion == null) {
                 shouldShowWhatsNew = true;

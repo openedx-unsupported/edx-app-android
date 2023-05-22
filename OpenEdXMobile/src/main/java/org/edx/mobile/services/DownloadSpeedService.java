@@ -60,6 +60,9 @@ public class DownloadSpeedService extends Service {
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
+    @Inject
+    UserPrefs userPrefs;
+
     SpeedTestHandler messageHandler;
 
     Timer timer = null;
@@ -165,7 +168,7 @@ public class DownloadSpeedService extends Service {
     }
 
     private void setCurrentDownloadSpeed(float downloadSpeedKps) {
-        new UserPrefs(getApplicationContext()).setPlaybackSpeed(downloadSpeedKps);
+        userPrefs.setPlaybackSpeed(downloadSpeedKps);
     }
 
     public class SpeedTestHandler extends Handler {

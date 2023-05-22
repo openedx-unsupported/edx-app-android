@@ -7,11 +7,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppInfoPrefs @Inject constructor(@ApplicationContext context: Context) :
-    PrefBaseManager(context, Pref.APP_INFO) {
+class AppPrefs @Inject constructor(@ApplicationContext context: Context) :
+    PrefBaseManager(context, APP_INFO) {
     init {
-        migrateData(PrefBaseManager(context, Pref.COURSE_CALENDAR_PREF))
-        migrateData(PrefBaseManager(context, Pref.VIDEOS))
+        migrateData(object : PrefBaseManager(context, COURSE_CALENDAR_PREF) {})
+        migrateData(object : PrefBaseManager(context, VIDEOS) {})
     }
 
     var appVersionCode: Long
@@ -34,18 +34,16 @@ class AppInfoPrefs @Inject constructor(@ApplicationContext context: Context) :
         get() = getString(WHATS_NEW_SHOWN_FOR_VERSION)
         set(version) = put(WHATS_NEW_SHOWN_FOR_VERSION, version)
 
-    fun setSyncAlertPopupDisabled(courseName: String) {
+    fun setCalendarSyncAlertPopupDisabled(courseName: String) {
         put(courseName.replace(" ", "_"), true)
     }
 
-    fun isSyncAlertPopupDisabled(courseName: String): Boolean =
+    fun isCalendarSyncAlertPopupDisabled(courseName: String): Boolean =
         getBoolean(courseName.replace(" ", "_"), false)
 
     fun getBulkDownloadSwitchState(courseId: String?): BulkDownloadFragment.SwitchState {
-        val ordinal = getInt(
-            String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId),
-            BulkDownloadFragment.SwitchState.DEFAULT.ordinal
-        )
+        val key: String = String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId)
+        val ordinal = getInt(key, BulkDownloadFragment.SwitchState.DEFAULT.ordinal)
         return BulkDownloadFragment.SwitchState.values()[ordinal]
     }
 
@@ -55,7 +53,6 @@ class AppInfoPrefs @Inject constructor(@ApplicationContext context: Context) :
     ) {
         put(String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId), state.ordinal)
     }
-
 
     companion object {
         private const val APP_VERSION_NAME = "app_version_name"

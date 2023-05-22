@@ -90,7 +90,8 @@ public class CourseUnitYoutubePlayerFragment extends BaseCourseUnitVideoFragment
     public void initializeYoutubePlayer() {
         try {
             if (getActivity() != null && youTubePlayerFragment != null &&
-                    NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity())) {
+                    NetworkUtil.verifyDownloadPossible((BaseFragmentActivity) getActivity(),
+                            userPrefs.isDownloadOverWifiOnly())) {
                 downloadTranscript();
                 String apiKey = environment.getConfig().getYoutubePlayerConfig().getApiKey();
                 if (apiKey == null || apiKey.isEmpty()) {

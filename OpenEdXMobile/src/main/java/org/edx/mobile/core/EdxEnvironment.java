@@ -5,7 +5,7 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.AppFeaturesPrefs;
-import org.edx.mobile.module.prefs.AppInfoPrefs;
+import org.edx.mobile.module.prefs.AppPrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
@@ -38,7 +38,7 @@ public class EdxEnvironment implements IEdxEnvironment {
     AppFeaturesPrefs appFeaturesPrefs;
 
     @Inject
-    AppInfoPrefs appInfoPrefs;
+    AppPrefs appPrefs;
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
@@ -85,8 +85,8 @@ public class EdxEnvironment implements IEdxEnvironment {
     }
 
     @Override
-    public AppInfoPrefs getAppInfoPrefs() {
-        return appInfoPrefs;
+    public AppPrefs getAppPrefs() {
+        return appPrefs;
     }
 
     public AnalyticsRegistry getAnalyticsRegistry() {

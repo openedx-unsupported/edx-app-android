@@ -206,7 +206,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         Activity activity = getActivity();
         if (activity != null) {
             TranscriptModel transcript = getTranscriptModel();
-            String transcriptUrl = LocaleUtils.getTranscriptURL(activity, transcript);
+            String transcriptUrl = LocaleUtils.getTranscriptURL(activity, transcript, userPrefs.getSubtitleLanguage());
             transcriptManager.downloadTranscriptsForVideo(transcriptUrl, (TimedTextObject transcriptTimedTextObject) -> {
                 subtitlesObj = transcriptTimedTextObject;
                 if (!activity.isDestroyed()) {

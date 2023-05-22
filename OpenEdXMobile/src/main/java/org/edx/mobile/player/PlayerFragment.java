@@ -40,7 +40,6 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.googlecast.GoogleCastDelegate;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -48,8 +47,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.prefs.AppInfoPrefs;
-import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.AppPrefs;
 import org.edx.mobile.module.prefs.PrefBaseManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.AppConstants;
@@ -93,9 +91,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     @Inject
-    LoginPrefs loginPrefs;
-
-    @Inject
     UserPrefs userPrefs;
 
     private static final Logger logger = new Logger(PlayerFragment.class.getName());
@@ -108,7 +103,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME_MS = 1000;
     private static final int UNFREEZE_DELAY_MS = 300;
-    private static final int SUBTITLES_DISPLAY_DELAY_MS = 100;
 
     @Inject
     IEdxEnvironment environment;
@@ -531,7 +525,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         this.langList = LocaleUtils.getLanguageList(transcript);
         // request focus on audio channel, as we are starting playback
         requestAudioFocus();
-        String path = VideoUtil.getVideoPath(getActivity(), videoEntry);
+        String path = VideoUtil.getVideoPath(getActivity(), videoEntry,
+                userPrefs.getSpeedTestKBPS());
         try {
             if (videoEntry.isVideoForWebOnly) {
                 showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
@@ -864,7 +859,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (!environment.getConfig().getAppStoreUris().isEmpty() &&
                 environment.getConfig().isAppReviewsEnabled() &&
                 NetworkUtil.isConnected(getContext())) {
-            final AppInfoPrefs appPrefs = new AppInfoPrefs(MainApplication.application);
+            final AppPrefs appPrefs = environment.getAppPrefs();
             final float appRating = appPrefs.getAppRating();
             // If user has not given rating yet, open dialog
             // consider not rated if rating is -1 or less (default is -1)

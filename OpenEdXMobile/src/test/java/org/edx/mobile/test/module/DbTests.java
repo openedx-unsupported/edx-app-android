@@ -2,6 +2,7 @@ package org.edx.mobile.test.module;
 
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.Injector;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -29,7 +30,7 @@ public class DbTests extends BaseTestCase {
     @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        loginPrefs = new LoginPrefs(context);
+        loginPrefs = injector.getInstance(IEdxEnvironment.class).getLoginPrefs();
     }
 
     @Override

@@ -11,8 +11,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LoginPrefs @Inject constructor(@ApplicationContext context: Context) :
-    PrefBaseManager(context, Pref.LOGIN) {
+class LoginPrefs @Inject constructor(
+    @ApplicationContext context: Context
+) : PrefBaseManager(context, LOGIN) {
 
     enum class AuthBackend {
         PASSWORD, FACEBOOK, GOOGLE, MICROSOFT;
@@ -170,5 +171,9 @@ class LoginPrefs @Inject constructor(@ApplicationContext context: Context) :
         private const val AUTH_TOKEN_SOCIAL = "facebook_token"
         private const val AUTH_TOKEN_BACKEND = "google_token"
         private const val ANALYTICS_KEY_BACKEND = "segment_backend"
+
+        const val BACKEND_FACEBOOK = "facebook"
+        const val BACKEND_GOOGLE = "google-oauth2"
+        const val BACKEND_MICROSOFT = "azuread-oauth2"
     }
 }

@@ -38,7 +38,7 @@ public class SecurityUtil {
     public static void clearUserData(@NonNull Context context) {
         // Add all preference files and db in exceptions list
         final ArrayList<String> exceptionsList = new ArrayList<>();
-        Collections.addAll(exceptionsList, PrefBaseManager.Pref.getAllPreferenceFileNames());
+        Collections.addAll(exceptionsList, PrefBaseManager.Companion.getAllPreferenceFileNames());
         exceptionsList.add(DbStructure.NAME);
 
         // Clear the data directory
@@ -67,7 +67,7 @@ public class SecurityUtil {
         }
 
         // Now clear all the shared preferences except app related preferences
-        PrefBaseManager.nukeSharedPreferences(Collections.singletonList(PrefBaseManager.Pref.APP_INFO));
+        PrefBaseManager.nukeSharedPreferences(Collections.singletonList(PrefBaseManager.APP_INFO));
 
         // Clear app level caching of all courses
         final CourseManager courseManager = EntryPointAccessors.fromApplication(

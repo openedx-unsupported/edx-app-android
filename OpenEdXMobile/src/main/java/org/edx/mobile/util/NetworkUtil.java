@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.module.prefs.UserPrefs;
 
 import java.util.List;
 
@@ -122,8 +121,9 @@ public class NetworkUtil {
      * @return If downloads can be performed, returns true; else returns false.
      */
 
-    public static boolean verifyDownloadPossible(BaseFragmentActivity activity) {
-        if (new UserPrefs(activity).isDownloadOverWifiOnly()) {
+    public static boolean verifyDownloadPossible(BaseFragmentActivity activity,
+                                                 Boolean isDownloadOverWifiOnly) {
+        if (isDownloadOverWifiOnly) {
             if (!isConnectedWifi(activity)) {
                 activity.showInfoMessage(activity.getString(R.string.wifi_off_message));
                 return false;

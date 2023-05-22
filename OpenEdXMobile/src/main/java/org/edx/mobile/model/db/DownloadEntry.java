@@ -9,7 +9,6 @@ import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EncodingsModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.JavaUtil;
 
 
@@ -244,15 +243,13 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         duration = video.getDuration();
     }
 
-    public String getBestEncodingUrl(Context context) {
+    public String getBestEncodingUrl(Context context, Float speedTestKBPS) {
         if (!TextUtils.isEmpty(url_hls)) {
             return url_hls;
         }
 
-        UserPrefs prefs = new UserPrefs(context);
-        float thresholdKps = (float)context.getResources().getInteger(R.integer.threshold_kbps_for_video);
-
-        EncodingsModel.EncodingLevel level = prefs.getSpeedTestKBPS() > thresholdKps ?
+        float thresholdKps = (float) context.getResources().getInteger(R.integer.threshold_kbps_for_video);
+        EncodingsModel.EncodingLevel level = speedTestKBPS > thresholdKps ?
                 EncodingsModel.EncodingLevel.HIGH : EncodingsModel.EncodingLevel.LOW;
 
         switch (level) {

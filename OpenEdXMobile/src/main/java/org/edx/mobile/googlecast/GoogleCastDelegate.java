@@ -159,7 +159,8 @@ public class GoogleCastDelegate extends RemoteMediaClient.Callback implements
         if (castSession == null || !castSession.isConnected()) {
             return;
         }
-        final String videoUrl = videoEntry.getBestEncodingUrl(activity);
+        Float speedTestKBPS = MainApplication.getEnvironment(activity).getUserPrefs().getSpeedTestKBPS();
+        final String videoUrl = videoEntry.getBestEncodingUrl(activity, speedTestKBPS);
         final RemoteMediaClient remoteMediaClient = castSession.getRemoteMediaClient();
         // If remote media player is not idle and playing the same video, don't do anything
         if (remoteMediaClient == null ||
