@@ -584,7 +584,7 @@
         <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
     </style>
 
-    <style name="edX.Widget.PrimaryBaseActionButton" parent="edX.Widget.PrimaryActionButton">
+    <style name="edX.Widget.TertiaryActionButton" parent="edX.Widget.PrimaryActionButton">
         <item name="android:background">@color/primaryBaseColor</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
     </style>

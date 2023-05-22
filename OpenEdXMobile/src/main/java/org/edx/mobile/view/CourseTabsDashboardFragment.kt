@@ -103,12 +103,13 @@ class CourseTabsDashboardFragment : BaseFragment() {
     lateinit var iapDialog: InAppPurchasesDialog
 
     private lateinit var binding: FragmentCourseTabsDashboardBinding
-
     private lateinit var courseData: EnrolledCoursesResponse
 
     private val iapViewModel: InAppPurchasesViewModel by viewModels()
-
     private val courseDateViewModel: CourseDateViewModel by viewModels()
+
+    private var isCollapsedTitleVisible = false
+    private var isExpandedTitleVisible = true
 
     private val loaderDialog: AlertDialogFragment by lazy {
         AlertDialogFragment.newInstance(
@@ -123,10 +124,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
     private val calendarTitle: String by lazy {
         CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
     }
-
-    private var isCollapsedTitleVisible = false
-
-    private var isExpandedTitleVisible = true
 
     private val fullscreenLoader: FullscreenLoaderDialogFragment?
         get() = getRetainedInstance(childFragmentManager)
@@ -218,7 +215,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 return errorLayoutBinding.root
             }
         } else {
-            setupToolbar(true)
             setViewPager()
             initCourseDateObserver()
         }
@@ -471,6 +467,8 @@ class CourseTabsDashboardFragment : BaseFragment() {
     }
 
     private fun setViewPager() {
+        setupToolbar(true)
+
         binding.pager.setVisibility(true)
         enforceSingleScrollDirection(binding.pager)
 
