@@ -14,7 +14,7 @@ import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.Injector;
-import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseService;
 import org.edx.mobile.http.HttpStatus;
@@ -95,7 +95,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        LoginPrefs loginPref = injector.getInstance(IEdxEnvironment.class).getLoginPrefs();
+        LoginPrefs loginPref = MainApplication.getEnvironment(context).getLoginPrefs();
         loginService = injector.getInstance(LoginService.class);
         loginAPI = new LoginAPI(loginService, config, loginPref,
                 new AnalyticsRegistry(), new DummyNotificationDelegate(), injector.getGson());
