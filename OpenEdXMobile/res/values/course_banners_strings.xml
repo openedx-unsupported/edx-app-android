@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date"><b>It looks like you missed some important deadlines based on our suggested schedule.</b>
-        To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
+    <string name="course_dashboard_banner_reset_date"><b>Missed some deadlines?</b> Don\'t worry - shift our suggested schedule to complete past due assignments without losing any progress.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Shift due dates</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Course Schedule</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">We built a suggested schedule to help you stay on track. But don’t worry – it’s flexible so you can learn at your own pace.
         If you happen to fall behind, you’ll be able to adjust the dates to keep yourself on track.</string>
@@ -16,9 +13,6 @@
     <!-- Message Course Dates Banner Upgrade to Reset -->
     <string name="course_dates_banner_upgrade_to_reset">You are auditing this course,
         which means that you are unable to participate in graded assignments. It looks like you missed some important deadlines based on our suggested schedule. To complete graded assignments as part of this course and shift the past due assignments into the future, you can upgrade today.</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">It looks like you missed some important deadlines based on our suggested schedule.
-        To keep yourself on track, you can update this schedule and shift the past due assignments into the future. Don’t worry—you won’t lose any of the progress you’ve made when you shift your due dates.</string>
     <!-- Label Course Card Graded Message -->
     <string name="value_prop_course_card_message">Upgrade to access more features</string>
 

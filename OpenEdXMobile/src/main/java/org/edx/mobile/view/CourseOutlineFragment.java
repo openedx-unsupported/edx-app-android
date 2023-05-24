@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseAPI;
-import org.edx.mobile.databinding.LayoutCourseDatesBannerBinding;
 import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.Screen;
 import org.edx.mobile.deeplink.ScreenDef;
@@ -45,7 +43,6 @@ import org.edx.mobile.event.MediaStatusChangeEvent;
 import org.edx.mobile.event.MyCoursesRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.exception.CourseContentNotValidException;
-import org.edx.mobile.exception.ErrorMessage;
 import org.edx.mobile.extenstion.ViewExtKt;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.HttpStatusException;
@@ -58,8 +55,6 @@ import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
-import org.edx.mobile.model.course.CourseBannerInfoModel;
-import org.edx.mobile.model.course.CourseBannerType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.HasDownloadEntry;
@@ -75,23 +70,17 @@ import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.CalendarUtils;
 import org.edx.mobile.util.ConfigUtil;
-import org.edx.mobile.util.CourseDateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter.SectionRow;
-import org.edx.mobile.view.dialog.AlertDialogFragment;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
-import org.edx.mobile.viewModel.CourseDateViewModel;
 import org.edx.mobile.viewModel.CourseViewModel;
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType;
-import org.edx.mobile.viewModel.InAppPurchasesViewModel;
 import org.edx.mobile.viewModel.VideoViewModel;
-import org.edx.mobile.wrapper.InAppPurchasesDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -116,14 +105,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
 
     private CourseOutlineAdapter adapter;
     private ListView listView;
-    private LayoutCourseDatesBannerBinding bannerViewBinding;
     private EnrolledCoursesResponse courseData;
     private String courseComponentId;
     private boolean isVideoMode;
-    // Flag to check whether the course dates banner info api call can be made or not
-    private boolean canFetchBannerInfo = true;
-    // Flag to check if the course dates banner is visible or not
-    private boolean isBannerVisible = false;
     private boolean isOnCourseOutline;
     // Flag to differentiate between single or multiple video download
     private boolean isSingleVideoDownload;
@@ -139,13 +123,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     @Inject
     VideoDownloadHelper downloadManager;
 
-    @Inject
-    InAppPurchasesDialog iapDialogs;
-
     private CourseViewModel courseViewModel;
-    private CourseDateViewModel courseDateViewModel;
-    private InAppPurchasesViewModel iapViewModel;
-
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
     private View videoQualityLayout;
@@ -153,11 +131,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private CourseOutlineAdapter.DownloadListener downloadListener;
     private Call<CourseUpgradeResponse> getCourseUpgradeStatus;
     private CourseUpgradeResponse courseUpgradeData;
-    private String calendarTitle = "";
-    private String accountName = "";
     private String screenName;
 
-    private AlertDialogFragment loaderDialog;
     private boolean refreshOnResume = false;
 
     private final ActivityResultLauncher<Intent> courseUnitDetailLauncher = registerForActivityResult(
@@ -175,9 +150,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                             requireActivity().setResult(Activity.RESULT_OK, intent);
                             fetchCourseComponent();
                         } else {
-                            // Update the User CourseEnrollments & Dates banner if after user
-                            // Purchase course from Locked Component
-                            courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), true);
                             EventBus.getDefault().post(new MyCoursesRefreshEvent());
                         }
                     } else {
@@ -238,22 +210,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 // Hide the progress bar as swipe layout has its own progress indicator
                 loadingIndicator.setVisibility(View.GONE);
                 errorNotification.hideError();
-                canFetchBannerInfo = true;
                 courseViewModel.getCourseData(courseData.getCourseId(), null, false, true,
                         CoursesRequestType.LIVE.INSTANCE);
             }
         });
         UiUtils.INSTANCE.setSwipeRefreshLayoutColors(swipeContainer);
         restore(bundle);
-        calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.getCourse().getName());
-        accountName = CalendarUtils.getUserAccountForSync(environment);
-        loaderDialog = AlertDialogFragment.newInstance(R.string.title_syncing_calendar, R.layout.alert_dialog_progress);
-        initListView(view);
+        initListView();
         initVideoObserver();
 
-        if (isOnCourseOutline) {
-            initCourseDateObserver();
-        }
         initCourseObservers();
         fetchCourseComponent();
         // Track CourseOutline for A/A test
@@ -287,76 +252,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }));
     }
 
-    private void initCourseDateObserver() {
-        courseDateViewModel = new ViewModelProvider(this).get(CourseDateViewModel.class);
-
-        courseDateViewModel.getSyncLoader().observe(getViewLifecycleOwner(), new EventObserver<>(showLoader -> {
-            if (showLoader) {
-                loaderDialog.setCancelable(false);
-                loaderDialog.showNow(getChildFragmentManager(), null);
-            } else {
-                loaderDialog.dismiss();
-                showCalendarUpdatedSnackbar();
-                trackCalendarEvent(Analytics.Events.CALENDAR_UPDATE_SUCCESS, Analytics.Values.CALENDAR_UPDATE_SUCCESS);
-            }
-            return null;
-        }));
-
-        courseDateViewModel.getCourseDates().observe(getViewLifecycleOwner(), new EventObserver<>(courseDates -> {
-            if (courseDates.getCourseDateBlocks() != null) {
-                courseDates.organiseCourseDates();
-                long outdatedCalenderId = CalendarUtils.isCalendarOutOfDate(
-                        requireContext(), accountName, calendarTitle, courseDates.getCourseDateBlocks());
-                if (outdatedCalenderId != -1L) {
-                    showCalendarOutOfDateDialog(outdatedCalenderId);
-                }
-            }
-            return null;
-        }));
-
-        courseDateViewModel.getBannerInfo().observe(getViewLifecycleOwner(), this::initDatesBanner);
-
-        courseDateViewModel.getShowLoader().observe(getViewLifecycleOwner(), flag ->
-                loadingIndicator.setVisibility(flag ? View.VISIBLE : View.GONE));
-
-        courseDateViewModel.getSwipeRefresh().observe(getViewLifecycleOwner(), canRefresh ->
-                swipeContainer.setRefreshing(canRefresh));
-
-        courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
-            if (resetCourseDates != null) {
-                if (!CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
-                    showShiftDateSnackBar(true);
-                }
-            }
-        });
-
-        courseDateViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
-            if (errorMessage != null) {
-                if (errorMessage.getThrowable() instanceof HttpStatusException &&
-                        ((HttpStatusException) errorMessage.getThrowable()).getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                    environment.getRouter().forceLogout(getContextOrThrow(),
-                            environment.getAnalyticsRegistry(),
-                            environment.getNotificationDelegate());
-                } else {
-                    switch (errorMessage.getRequestType()) {
-                        case ErrorMessage.BANNER_INFO_CODE:
-                            initDatesBanner(null);
-                            break;
-                        case ErrorMessage.COURSE_RESET_DATES_CODE:
-                            showShiftDateSnackBar(false);
-                            break;
-                    }
-                }
-            }
-        });
-    }
-
-    private void initInAppPurchaseSetup() {
-        if (courseData.isAuditMode() && !isVideoMode) {
-            initInAppPurchaseObserver();
-        }
-    }
-
     private void showFullscreenLoader(@NonNull IAPFlowData iapFlowData) {
         // To proceed with the same instance of dialog fragment in case of orientation change
         FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
@@ -365,60 +260,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             fullscreenLoader = FullscreenLoaderDialogFragment.newInstance(iapFlowData);
         }
         fullscreenLoader.show(getChildFragmentManager(), FullscreenLoaderDialogFragment.TAG);
-    }
-
-    private void initInAppPurchaseObserver() {
-        iapViewModel = new ViewModelProvider(this).get(InAppPurchasesViewModel.class);
-
-        iapViewModel.getErrorMessage().observe(getViewLifecycleOwner(), new EventObserver<>(errorMessage -> {
-            if (errorMessage.getRequestType() == ErrorMessage.COURSE_REFRESH_CODE) {
-                iapDialogs.handleIAPException(
-                        CourseOutlineFragment.this,
-                        errorMessage,
-                        (dialogInterface, i) -> courseViewModel
-                                .getCourseData(courseData.getCourseId(), null, false, false,
-                                        CoursesRequestType.LIVE.INSTANCE),
-                        (dialogInterface, i) -> {
-                            iapViewModel.getIapFlowData().clear();
-                            FullscreenLoaderDialogFragment fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(getChildFragmentManager());
-                            if (fullScreenLoader != null) {
-                                fullScreenLoader.dismiss();
-                            }
-                        }
-                );
-            }
-            return null;
-        }));
-    }
-
-    private void showCalendarOutOfDateDialog(Long calendarId) {
-        AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(getString(R.string.title_calendar_out_of_date),
-                getString(R.string.message_calendar_out_of_date),
-                getString(R.string.label_update_now), (dialogInterface, which) -> updateCalendarEvents(),
-                getString(R.string.label_remove_course_calendar), (dialogInterface, which) -> removeCalendar(calendarId));
-        alertDialogFragment.setCancelable(false);
-        alertDialogFragment.show(getChildFragmentManager(), null);
-    }
-
-    private void updateCalendarEvents() {
-        trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_UPDATE, Analytics.Values.CALENDAR_SYNC_UPDATE);
-        long newCalId = CalendarUtils.createOrUpdateCalendar(getContextOrThrow(), accountName, CalendarContract.ACCOUNT_TYPE_LOCAL, calendarTitle);
-        ConfigUtil.Companion.checkCalendarSyncEnabled(environment.getConfig(), response ->
-                courseDateViewModel.addOrUpdateEventsInCalendar(getContextOrThrow(),
-                        newCalId, courseData.getCourseId(), courseData.getCourse().getName(), response.isDeepLinkEnabled(), true));
-    }
-
-    private void removeCalendar(Long calendarId) {
-        trackCalendarEvent(Analytics.Events.CALENDAR_SYNC_REMOVE, Analytics.Values.CALENDAR_SYNC_REMOVE);
-        CalendarUtils.INSTANCE.deleteCalendar(getContextOrThrow(), calendarId);
-        showCalendarRemovedSnackbar();
-        trackCalendarEvent(Analytics.Events.CALENDAR_REMOVE_SUCCESS, Analytics.Values.CALENDAR_REMOVE_SUCCESS);
-    }
-
-    private void trackCalendarEvent(String eventName, String biValue) {
-        environment.getAnalyticsRegistry().trackCalendarEvent(eventName, biValue, courseData.getCourseId(),
-                courseData.getMode(), courseData.getCourse().isSelfPaced(), courseDateViewModel.getSyncingCalendarTime());
-        courseDateViewModel.resetSyncingCalendarTime();
     }
 
     private void restore(@Nullable Bundle savedInstanceState) {
@@ -481,13 +322,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                             environment.getAnalyticsRegistry(),
                             environment.getNotificationDelegate());
                 } else {
-                    FullscreenLoaderDialogFragment fullscreenLoader = FullscreenLoaderDialogFragment
-                            .getRetainedInstance(getChildFragmentManager());
                     if (throwable instanceof CourseContentNotValidException) {
                         errorNotification.showError(requireContext(), throwable);
                         logger.error(throwable, true);
-                    } else if (fullscreenLoader != null && fullscreenLoader.isResumed()) {
-                        iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, throwable);
                     } else {
                         errorNotification.showError(requireContext(), throwable, R.string.lbl_reload, v -> {
                             if (NetworkUtil.isConnected(requireContext())) {
@@ -541,19 +378,12 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         return courseComponent;
     }
 
-    private void initListView(@NonNull View view) {
+    private void initListView() {
         initAdapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Checking if the onItemClick action performed on course dates banner
-                if (!isVideoMode && isBannerVisible) {
-                    if (position == 0)
-                        return;
-                    else
-                        position -= 1;
-                }
                 listView.clearChoices();
                 final CourseComponent component = adapter.getItem(position).component;
                 if (component.isContainer()) {
@@ -575,10 +405,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         });
 
         listView.setOnItemLongClickListener((parent, itemView, position, id) -> {
-            // Checking if the onItemLongClick action performed on course dates banner
-            if (!isVideoMode && isBannerVisible && position == 0) {
-                return false;
-            }
             final AppCompatImageView bulkDownloadIcon = (AppCompatImageView) itemView.findViewById(R.id.bulk_download);
             if (bulkDownloadIcon != null && bulkDownloadIcon.getTag() != null &&
                     (Integer) bulkDownloadIcon.getTag() == R.drawable.ic_download_done) {
@@ -626,33 +452,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }
     }
 
-    /**
-     * Initialized dates info banner on CourseOutlineFragment
-     *
-     * @param courseBannerInfo object of course deadline info
-     */
-    private void initDatesBanner(CourseBannerInfoModel courseBannerInfo) {
-        if (bannerViewBinding == null)
-            bannerViewBinding = LayoutCourseDatesBannerBinding.inflate(getLayoutInflater(), listView, false);
-
-        if (courseBannerInfo != null && !isVideoMode && isOnCourseOutline && !courseBannerInfo.getHasEnded() &&
-                courseBannerInfo.getDatesBannerInfo().getCourseBannerType() == CourseBannerType.RESET_DATES) {
-
-            CourseDateUtil.INSTANCE.setupCourseDatesBanner(bannerViewBinding.getRoot(),
-                    courseData.getCourse().getId(), courseData.getMode(), courseData.getCourse().isSelfPaced(),
-                    Analytics.Screens.PLS_COURSE_DASHBOARD, environment.getAnalyticsRegistry(), courseBannerInfo,
-                    v -> courseDateViewModel.resetCourseDatesBanner(courseData.getCourseId()));
-
-            if (listView.getHeaderViewsCount() == 0 && ViewExtKt.isVisible(bannerViewBinding.getRoot())) {
-                listView.addHeaderView(bannerViewBinding.getRoot());
-                isBannerVisible = true;
-            }
-        } else {
-            listView.removeHeaderView(bannerViewBinding.getRoot());
-            isBannerVisible = false;
-        }
-    }
-
     private void detectDeepLinking() {
         if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName)
                 && !TextUtils.isEmpty(courseComponentId)) {
@@ -661,23 +460,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             courseUnitDetailLauncher.launch(courseUnitDetailIntent);
             screenName = null;
         }
-    }
-
-    private void showShiftDateSnackBar(boolean isSuccess) {
-        if (!isAdded()) {
-            return;
-        }
-        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(listView);
-        if (isSuccess) {
-            snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
-                    0, R.string.assessment_view_all_dates, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION,
-                    v -> environment.getRouter().showCourseDashboardTabs(getActivity(), courseData.getCourseId(), Screen.COURSE_DATES));
-        } else {
-            snackbarErrorNotification.showError(R.string.course_dates_reset_unsuccessful, 0,
-                    0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null);
-        }
-        environment.getAnalyticsRegistry().trackPLSCourseDatesShift(courseData.getCourseId(),
-                courseData.getMode(), Analytics.Screens.PLS_COURSE_DASHBOARD, isSuccess);
     }
 
     public void onPermissionGranted() {
@@ -789,10 +571,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             return;
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
-        }
-        if (!isVideoMode && isOnCourseOutline && canFetchBannerInfo) {
-            courseDateViewModel.fetchCourseDates(courseData.getCourseId(), true, !swipeContainer.isRefreshing(), swipeContainer.isRefreshing());
-            canFetchBannerInfo = false;
         }
 
         adapter.setData(courseComponent);

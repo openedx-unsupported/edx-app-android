@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date">يبدو انك فاتتك بعض المراعيد المهمة بناء على جدولنا المقترح
-لتبقى نفسك على المسار الصحيح، يمكنك ترقية جدولك و نقل واجبات الماضي الي المستقبل. لا تقلق لن تخسر اي تقدم فعلته عندما تنقل التواريخ المحددة</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">تغيير المواعيد المقررة</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">جدول الدورة</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">لقد قمنا ببناء جدول زمني مقترح لمساعدتك على البقاء على المسار الصحيح.1 ولكن لا تقلق ، فهي مرنة بحيث يمكنك التعلم على السرعة الخاصة بك. إذا كنت تتخلف عن التواريخ المقترحة، ستكون قادرا على ضبطها للحفاظ على المسار</string>
     <!-- Message Course Dates Banner Upgrade to Complete Graded -->
@@ -15,9 +10,6 @@
     <!-- Message Course Dates Banner Upgrade to Reset -->
     <string name="course_dates_banner_upgrade_to_reset">أنت تراجع هذه الدورة ، 
 مما يعني أنك غير قادر على المشاركة في الواجبات المقدرة. يبدو أنك فاتتك بعض المواعيد النهائية المهمة بناءً على جدولنا الزمني المقترح. لإكمال الواجبات المقدرة كجزء من هذه الدورة التدريبية ونقل الواجبات السابقة المستحقة إلى المستقبل ، يمكنك الترقية اليوم.</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">يبدو أنك فاتتك بعض المواعيد النهائية المهمة بناءً على جدولنا الزمني المقترح
-للبقاء على المسار الصحيح ، يمكنك تحديث هذا الجدول وتحويل المهام السابقة المستحقة إلى المستقبل. لا تقلق - لن تفقد أي تقدم أحرزته عند تغيير تواريخ الاستحقاق.</string>
     <!-- Label Course Card Graded Message -->
     <string name="value_prop_course_card_message">قم بالترقية للوصول إلى المزيد من الميزات</string>
 
