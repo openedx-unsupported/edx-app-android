@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.text.TextUtils
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.edx.mobile.R
@@ -46,13 +45,11 @@ object CourseDateUtil {
         screenName: String,
         analyticsRegistry: AnalyticsRegistry,
         courseBannerInfoModel: CourseBannerInfoModel,
-        clickListener: View.OnClickListener
+        clickListener: View.OnClickListener?
     ) {
         val context = view.context as Context
         val containerLayout = view as LinearLayout
-        val title = view.findViewById(R.id.banner_title) as TextView
         val bannerMessage = view.findViewById(R.id.banner_info) as TextView
-        val imgView = view.findViewById(R.id.iv_calender) as ImageView
         val button = view.findViewById(R.id.btn_shift_dates) as Button
         var description: CharSequence = ""
         var buttonText = ""
@@ -61,7 +58,6 @@ object CourseDateUtil {
         val bannerType = courseBannerInfoModel.datesBannerInfo.getCourseBannerType()
 
         if (isCourseDatePage) {
-            title.visibility = View.VISIBLE
             containerLayout.setBackgroundColor(Color.TRANSPARENT)
 
             when (bannerType) {
@@ -75,18 +71,12 @@ object CourseDateUtil {
                     biValue = Analytics.Values.COURSE_DATES_BANNER_UPGRADE_TO_SHIFT
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_UPGRADE_TO_SHIFT
                 }
-                CourseBannerType.RESET_DATES -> {
-                    description = context.getText(R.string.course_dates_banner_reset_date)
-                    buttonText = context.getString(R.string.course_dates_banner_reset_date_button)
-                    biValue = Analytics.Values.COURSE_DATES_BANNER_SHIFT_DATES
-                    bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_SHIFT_DATES
-                }
                 CourseBannerType.INFO_BANNER -> {
                     description = context.getText(R.string.course_dates_info_banner)
                     biValue = Analytics.Values.COURSE_DATES_BANNER_INFO
                     bannerTypeValue = Analytics.Values.PLS_BANNER_TYPE_INFO
                 }
-                CourseBannerType.BLANK -> description = ""
+                else -> description = ""
             }
         } else if (bannerType == CourseBannerType.RESET_DATES) {
             description = context.getText(R.string.course_dashboard_banner_reset_date)
@@ -100,9 +90,8 @@ object CourseDateUtil {
             if (!TextUtils.isEmpty(buttonText)) {
                 button.text = buttonText
                 button.visibility = View.VISIBLE
-                imgView.visibility = if (isCourseDatePage) View.GONE else View.VISIBLE
                 button.setOnClickListener { v ->
-                    clickListener.onClick(v)
+                    clickListener?.onClick(v)
                     analyticsRegistry.trackPLSShiftButtonTapped(
                         courseId,
                         enrollmentMode,
@@ -111,7 +100,6 @@ object CourseDateUtil {
                 }
             } else {
                 button.visibility = View.GONE
-                imgView.visibility = View.GONE
             }
             view.visibility = View.VISIBLE
             analyticsRegistry.trackPLSCourseDatesBanner(

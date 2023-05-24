@@ -372,17 +372,6 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="edX.Widget.BannerActionButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:layout_marginTop">@dimen/widget_margin</item>
-        <item name="android:fontFamily">?attr/fontSemiBold</item>
-        <item name="android:background">@drawable/edx_primary_button</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/edx_small</item>
-    </style>
-
     <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
         <item name="android:textColor">?attr/disableableButtonTextColor</item>
     </style>
@@ -595,4 +584,8 @@
         <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
     </style>
 
+    <style name="edX.Widget.TertiaryActionButton" parent="edX.Widget.PrimaryActionButton">
+        <item name="android:background">@color/primaryBaseColor</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
 </resources>

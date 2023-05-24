@@ -129,6 +129,11 @@
                 </LinearLayout>
 
                 <include
+                    android:id="@+id/dates_banner"
+                    layout="@layout/layout_course_dates_banner"
+                    android:visibility="gone" />
+
+                <include
                     android:id="@+id/certificate"
                     layout="@layout/layout_course_dashboard_certificate"
                     android:visibility="gone" />

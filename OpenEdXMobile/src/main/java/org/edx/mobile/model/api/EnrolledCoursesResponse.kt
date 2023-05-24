@@ -4,6 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName
 import org.edx.mobile.interfaces.SectionItemInterface
 import org.edx.mobile.model.course.EnrollmentMode
+import org.edx.mobile.util.DateUtil
+import java.util.Date
 
 data class EnrolledCoursesResponse(
 
@@ -11,7 +13,7 @@ data class EnrolledCoursesResponse(
     var mode: String,
 
     @SerializedName("audit_access_expires")
-    val auditAccessExpires: String,
+    val auditAccessExpires: String?,
 
     @SerializedName("is_active")
     val isActive: Boolean = false,
@@ -44,6 +46,10 @@ data class EnrolledCoursesResponse(
 
     val isAuditMode: Boolean
         get() = EnrollmentMode.AUDIT.toString().equals(mode, ignoreCase = true)
+
+    val isAuditAccessExpired: Boolean
+        get() = auditAccessExpires.isNullOrEmpty().not() &&
+                Date().after(DateUtil.convertToDate(auditAccessExpires))
 
     val isUpgradeable: Boolean
         get() = isAuditMode &&
