@@ -128,7 +128,7 @@ class AccountFragment : BaseFragment() {
         initHelpFields()
         initPrivacyFields()
 
-        val iapEnabled = environment.appFeaturesPrefs.isIAPEnabledForUser(loginPrefs.isOddUserId)
+        val iapEnabled = environment.featuresPrefs.isIAPEnabledForUser(loginPrefs.isOddUserId)
         if (iapEnabled) {
             initRestorePurchasesObservers()
             binding.containerPurchases.setVisibility(true)

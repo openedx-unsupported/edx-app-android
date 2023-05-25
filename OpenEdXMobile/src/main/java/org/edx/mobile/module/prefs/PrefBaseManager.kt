@@ -5,8 +5,6 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.edx.mobile.base.MainApplication
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This class serves as the base for all preferences, providing a framework for managing shared
@@ -183,8 +181,7 @@ abstract class PrefBaseManager constructor(
             COURSE_CALENDAR_PREF
         )
 
-        val allPreferenceFileNames: Array<String>
-            get() = preferencesList.map { "$it.xml" }.toTypedArray()
+        val allPreferenceFileNames = preferencesList.map { "$it.xml" }.toTypedArray()
 
         /**
          * Clears all the shared preferences that are used in the app.

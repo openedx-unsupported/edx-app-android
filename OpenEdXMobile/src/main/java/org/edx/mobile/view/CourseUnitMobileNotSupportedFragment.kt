@@ -64,7 +64,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         super.onViewCreated(view, savedInstanceState)
         val isUpgradeable = getBooleanArgument(Router.EXTRA_IS_UPGRADEABLE, true)
         if (AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS == unit?.authorizationDenialReason) {
-            if (environment.appFeaturesPrefs.isValuePropEnabled && isUpgradeable) {
+            if (environment.featuresPrefs.isValuePropEnabled && isUpgradeable) {
                 showGradedContent()
             } else {
                 showNotAvailableOnMobile(isLockedContent = true)
@@ -78,12 +78,12 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         unit?.let { unit ->
             val isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, false)
             val isPurchaseEnabled = unit.courseSku.isNullOrEmpty().not() &&
-                    environment.appFeaturesPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
+                    environment.featuresPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
 
             binding.containerLayoutNotAvailable.setVisibility(false)
             binding.llGradedContentLayout.setVisibility(true)
             var experimentGroup: String? = null
-            if (environment.appFeaturesPrefs.isIAPExperimentEnabled) {
+            if (environment.featuresPrefs.isIAPExperimentEnabled) {
                 experimentGroup = if (environment.loginPrefs.isOddUserId) {
                     Analytics.Values.TREATMENT
                 } else {
@@ -95,7 +95,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 unit.courseId,
                 Screens.COURSE_UNIT,
                 (unit.courseSku.isNullOrEmpty()
-                    .not() && environment.appFeaturesPrefs.isIAPEnabled),
+                    .not() && environment.featuresPrefs.isIAPEnabled),
                 experimentGroup,
                 unit.id
             )

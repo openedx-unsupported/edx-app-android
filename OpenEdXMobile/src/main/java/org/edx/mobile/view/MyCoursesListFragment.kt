@@ -146,7 +146,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 populateCourseData(data = enrolledCourses)
                 // Checking if the user is logged-in as we need userId to enable IAP
                 if (environment.loginPrefs.isUserLoggedIn &&
-                    environment.appFeaturesPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
+                    environment.featuresPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
                 ) {
                     initInAppPurchaseSetup()
                     val fullscreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(
@@ -155,7 +155,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     if (fullscreenLoader != null) {
                         SnackbarErrorNotification(binding.root).showUpgradeSuccessSnackbar(R.string.purchase_success_message)
                         fullscreenLoader.closeLoader()
-                    } else if (environment.appFeaturesPrefs.canAutoCheckUnfulfilledPurchase &&
+                    } else if (environment.featuresPrefs.canAutoCheckUnfulfilledPurchase &&
                         courseViewModel.courseRequestType != CoursesRequestType.PERSISTABLE_CACHE
                     ) {
                         detectUnfulfilledPurchase(enrolledCourses)
@@ -307,7 +307,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun initInAppPurchaseSetup() {
-        if (isAdded && environment.appFeaturesPrefs.isValuePropEnabled &&
+        if (isAdded && environment.featuresPrefs.isValuePropEnabled &&
             isObserversInitialized
         ) {
             initIAPObservers()

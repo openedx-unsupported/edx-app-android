@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.edx.mobile.R
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.util.VideoPlaybackSpeed
+import org.edx.mobile.view.BulkDownloadFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -64,6 +65,26 @@ class UserPrefs @Inject constructor(
         get() = VideoQuality.values()[getInt(VIDEO_QUALITY, VideoQuality.AUTO.ordinal)]
         set(quality) = put(VIDEO_QUALITY, quality.ordinal)
 
+    fun setCalendarSyncViewEventAlertDisabled(courseName: String) {
+        put(courseName.replace(" ", "_"), true)
+    }
+
+    fun isCalendarSyncViewEventAlertDisabled(courseName: String): Boolean =
+        getBoolean(courseName.replace(" ", "_"), false)
+
+    fun getBulkDownloadSwitchState(courseId: String?): BulkDownloadFragment.SwitchState {
+        val key = String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId)
+        val ordinal = getInt(key, BulkDownloadFragment.SwitchState.DEFAULT.ordinal)
+        return BulkDownloadFragment.SwitchState.values()[ordinal]
+    }
+
+    fun setBulkDownloadSwitchState(
+        state: BulkDownloadFragment.SwitchState,
+        courseId: String?
+    ) {
+        put(String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId), state.ordinal)
+    }
+
     companion object {
         private const val DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi"
         private const val TRANSCRIPT_LANGUAGE = "transcript_language"
@@ -71,5 +92,6 @@ class UserPrefs @Inject constructor(
         private const val VIDEO_QUALITY = "video_quality"
         private const val DOWNLOAD_TO_SDCARD = "download_to_sdcard"
         private const val SPEED_TEST_KBPS = "speed_test_kbps"
+        private const val BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s"
     }
 }

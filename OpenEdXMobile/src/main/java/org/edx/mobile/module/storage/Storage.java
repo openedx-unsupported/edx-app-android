@@ -22,7 +22,6 @@ import org.edx.mobile.module.db.DatabaseModelFactory;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.IDownloadManager;
-import org.edx.mobile.module.prefs.AppPrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
@@ -55,9 +54,6 @@ public class Storage implements IStorage {
 
     @Inject
     UserPrefs userPrefs;
-
-    @Inject
-    AppPrefs appPrefs;
 
     @Inject
     Config config;
@@ -158,7 +154,7 @@ public class Storage implements IStorage {
         // anyways, we mark the video as DELETED
         int videosDeleted = db.deleteVideoByVideoId(model, null);
         // Reset the state of Videos Bulk Download view whenever a delete happens
-        appPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
+        userPrefs.setBulkDownloadSwitchState(BulkDownloadFragment.SwitchState.DEFAULT, model.getEnrollmentId());
         EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
         return videosDeleted;
     }

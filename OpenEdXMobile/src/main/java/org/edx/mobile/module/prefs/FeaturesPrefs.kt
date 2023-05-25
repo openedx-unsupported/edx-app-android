@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppFeaturesPrefs @Inject constructor(
+class FeaturesPrefs @Inject constructor(
     @ApplicationContext context: Context
 ) : PrefBaseManager(context, APP_FEATURES) {
 

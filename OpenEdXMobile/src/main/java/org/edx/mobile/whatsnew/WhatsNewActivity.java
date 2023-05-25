@@ -33,6 +33,6 @@ public class WhatsNewActivity extends BaseFragmentActivity {
         fragmentTransaction.disallowAddToBackStack();
         fragmentTransaction.commit();
 
-        environment.getAppPrefs().setWhatsNewShownVersion(BuildConfig.VERSION_NAME);
+        environment.getInfoPrefs().setWhatsNewShownVersion(BuildConfig.VERSION_NAME);
     }
 }

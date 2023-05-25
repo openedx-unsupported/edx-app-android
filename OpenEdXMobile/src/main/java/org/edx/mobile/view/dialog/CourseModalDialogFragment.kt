@@ -89,7 +89,7 @@ class CourseModalDialogFragment : DialogFragment() {
             arguments?.getString(KEY_COURSE_NAME)
         )
         val isPurchaseEnabled = courseSku.isNullOrEmpty().not() &&
-                environment.appFeaturesPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
+                environment.featuresPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
 
         binding.layoutUpgradeBtn.root.setVisibility(isPurchaseEnabled)
         binding.dialogDismiss.setOnClickListener {
@@ -122,14 +122,14 @@ class CourseModalDialogFragment : DialogFragment() {
             mapOf(Pair(KEY_SCREEN_NAME, screenName))
         )
         var experimentGroup: String? = null
-        if (environment.appFeaturesPrefs.isIAPExperimentEnabled) {
+        if (environment.featuresPrefs.isIAPExperimentEnabled) {
             experimentGroup =
                 if (environment.loginPrefs.isOddUserId) Analytics.Values.TREATMENT else Analytics.Values.CONTROL
         }
         environment.analyticsRegistry.trackValuePropMessageViewed(
             courseId,
             screenName,
-            (courseSku.isNullOrEmpty().not() && environment.appFeaturesPrefs.isIAPEnabled),
+            (courseSku.isNullOrEmpty().not() && environment.featuresPrefs.isIAPEnabled),
             experimentGroup,
             null
         )

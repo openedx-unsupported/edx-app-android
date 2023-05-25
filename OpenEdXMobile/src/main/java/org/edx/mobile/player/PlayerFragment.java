@@ -47,7 +47,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.prefs.AppPrefs;
+import org.edx.mobile.module.prefs.InfoPrefs;
 import org.edx.mobile.module.prefs.PrefBaseManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.AppConstants;
@@ -859,15 +859,15 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         if (!environment.getConfig().getAppStoreUris().isEmpty() &&
                 environment.getConfig().isAppReviewsEnabled() &&
                 NetworkUtil.isConnected(getContext())) {
-            final AppPrefs appPrefs = environment.getAppPrefs();
-            final float appRating = appPrefs.getAppRating();
+            final InfoPrefs infoPrefs = environment.getInfoPrefs();
+            final float appRating = infoPrefs.getAppRating();
             // If user has not given rating yet, open dialog
             // consider not rated if rating is -1 or less (default is -1)
             if (appRating <= AppConstants.APP_NOT_RATED_THRESHOLD) {
                 showRatingDialog();
             } else if (appRating <= AppConstants.APP_NEGATIVE_RATING_THRESHOLD) {
                 try {
-                    final Version oldVersion = new Version(appPrefs.getLastRatedVersion());
+                    final Version oldVersion = new Version(infoPrefs.getLastRatedVersion());
                     final Version curVersion = new Version(BuildConfig.VERSION_NAME);
                     if (oldVersion.isNMinorVersionsDiff(curVersion, AppConstants.MINOR_VERSIONS_DIFF_REQUIRED_FOR_NEGATIVE_RATERS)) {
                         // App updated to 2 minor versions

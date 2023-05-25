@@ -17,7 +17,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDialogRatingBinding;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.prefs.AppPrefs;
+import org.edx.mobile.module.prefs.InfoPrefs;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.ResourceUtil;
@@ -39,7 +39,7 @@ public class RatingDialogFragment extends DialogFragment implements AlertDialog.
     @Inject
     AnalyticsRegistry analyticsRegistry;
     @Inject
-    AppPrefs appPrefs;
+    InfoPrefs infoPrefs;
 
     private AlertDialog mAlertDialog;
     @NonNull
@@ -205,8 +205,8 @@ public class RatingDialogFragment extends DialogFragment implements AlertDialog.
 
     public void persistRatingAndAppVersion(final float rating) {
         // Persist rating and current app version name
-        appPrefs.setAppRating(rating);
-        appPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
+        infoPrefs.setAppRating(rating);
+        infoPrefs.setLastRatedVersion(BuildConfig.VERSION_NAME);
     }
 
     public interface OnCancelListener {

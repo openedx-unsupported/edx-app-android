@@ -2,13 +2,14 @@ package org.edx.mobile.module.prefs
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.edx.mobile.view.BulkDownloadFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppPrefs @Inject constructor(@ApplicationContext context: Context) :
-    PrefBaseManager(context, APP_INFO) {
+class InfoPrefs @Inject constructor(
+    @ApplicationContext context: Context
+) : PrefBaseManager(context, APP_INFO) {
+
     init {
         migrateData(object : PrefBaseManager(context, COURSE_CALENDAR_PREF) {})
         migrateData(object : PrefBaseManager(context, VIDEOS) {})
@@ -34,32 +35,11 @@ class AppPrefs @Inject constructor(@ApplicationContext context: Context) :
         get() = getString(WHATS_NEW_SHOWN_FOR_VERSION)
         set(version) = put(WHATS_NEW_SHOWN_FOR_VERSION, version)
 
-    fun setCalendarSyncAlertPopupDisabled(courseName: String) {
-        put(courseName.replace(" ", "_"), true)
-    }
-
-    fun isCalendarSyncAlertPopupDisabled(courseName: String): Boolean =
-        getBoolean(courseName.replace(" ", "_"), false)
-
-    fun getBulkDownloadSwitchState(courseId: String?): BulkDownloadFragment.SwitchState {
-        val key: String = String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId)
-        val ordinal = getInt(key, BulkDownloadFragment.SwitchState.DEFAULT.ordinal)
-        return BulkDownloadFragment.SwitchState.values()[ordinal]
-    }
-
-    fun setBulkDownloadSwitchState(
-        state: BulkDownloadFragment.SwitchState,
-        courseId: String?
-    ) {
-        put(String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId), state.ordinal)
-    }
-
     companion object {
         private const val APP_VERSION_NAME = "app_version_name"
         private const val APP_VERSION_CODE = "app_version_code"
         private const val APP_RATING = "APP_RATING"
         private const val LAST_RATED_VERSION = "LAST_RATED_VERSION"
         private const val WHATS_NEW_SHOWN_FOR_VERSION = "WHATS_NEW_SHOWN_FOR_VERSION"
-        private const val BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s"
     }
 }

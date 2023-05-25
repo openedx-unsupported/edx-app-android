@@ -99,9 +99,7 @@ class LoginPrefs @Inject constructor(
 
     var lastAuthenticatedEmail: String?
         get() = getString(AUTH_EMAIL)
-        set(emailAddress) {
-            put(AUTH_EMAIL, emailAddress)
-        }
+        set(emailAddress) = put(AUTH_EMAIL, emailAddress)
 
     fun storeAuthTokenResponse(response: AuthResponse, backend: AuthBackend) {
         currentAuth = response

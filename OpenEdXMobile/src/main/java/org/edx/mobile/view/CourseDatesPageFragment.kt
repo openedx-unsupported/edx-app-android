@@ -499,10 +499,10 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     private fun calendarAddedSuccessDialog() {
         isCalendarExist = true
-        if (environment.appPrefs.isCalendarSyncAlertPopupDisabled(courseData.course.name)) {
+        if (environment.userPrefs.isCalendarSyncViewEventAlertDisabled(courseData.course.name)) {
             showAddCalendarSuccessSnackbar()
         } else {
-            environment.appPrefs.setCalendarSyncAlertPopupDisabled(courseData.course.name)
+            environment.userPrefs.setCalendarSyncViewEventAlertDisabled(courseData.course.name)
             val message: String = ResourceUtil.getFormattedString(
                 resources,
                 R.string.message_for_alert_after_course_calendar_added,

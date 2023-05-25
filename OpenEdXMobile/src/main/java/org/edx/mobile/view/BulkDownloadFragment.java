@@ -31,7 +31,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.prefs.AppPrefs;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
 import org.edx.mobile.util.DownloadUtil;
@@ -88,7 +88,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     @Inject
     protected IEdxEnvironment environment;
     @Inject
-    protected AppPrefs appPrefs;
+    protected UserPrefs userPrefs;
     private SwitchState switchState = SwitchState.DEFAULT;
     private boolean isDeleteScheduled = false;
     private Handler bgThreadHandler;
@@ -245,11 +245,11 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                             }
                         }
 
-                        if (appPrefs.getBulkDownloadSwitchState(videosStatus.courseComponentId)
+                        if (userPrefs.getBulkDownloadSwitchState(videosStatus.courseComponentId)
                                 == SwitchState.USER_TURNED_ON && remainingVideos.size() > 0) {
                             // It means that the switch was turned on by user but either a video was
                             // deleted by user or a video download was cancelled.
-                            appPrefs.setBulkDownloadSwitchState(SwitchState.DEFAULT, videosStatus.courseComponentId);
+                            userPrefs.setBulkDownloadSwitchState(SwitchState.DEFAULT, videosStatus.courseComponentId);
                         }
                         updateRootViewVisibility(View.VISIBLE);
 
@@ -290,7 +290,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     }
 
     private void updateUI() {
-        switchState = appPrefs.getBulkDownloadSwitchState(videosStatus.courseComponentId);
+        switchState = userPrefs.getBulkDownloadSwitchState(videosStatus.courseComponentId);
 
         if (videosStatus.allVideosDownloaded()) {
             bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
@@ -386,7 +386,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                 if (videosStatus.allVideosDownloading(switchState)) {
                     // Now that all videos have been enqueued to Download manager, enable the Switch and update its state
                     switchState = SwitchState.USER_TURNED_ON;
-                    appPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                    userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     setSwitchState();
                 }
                 break;
@@ -398,7 +398,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                     // This means that all the videos have been downloaded or they are currently
                     // downloading without the use of Bulk Download switch
                     switchState = SwitchState.USER_TURNED_ON;
-                    appPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                    userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     setSwitchState();
                 }
                 break;
@@ -429,7 +429,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                             PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
                 } else {
                     switchState = SwitchState.USER_TURNED_OFF;
-                    appPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                    userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     // Delete all videos after a delay
                     startVideosDeletion();
                     bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
@@ -454,7 +454,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         isDeleteScheduled = false;
 
         switchState = SwitchState.IN_PROCESS;
-        appPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+        userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
         setSwitchState();
 
         // Download all videos
@@ -594,7 +594,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         }
         binding.swDownload.setChecked(false);
         switchState = SwitchState.DEFAULT;
-        appPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+        userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
         updateUI();
     }
 
