@@ -17,6 +17,9 @@ class UserPrefs @Inject constructor(
 
     init {
         migrateData(object : PrefBaseManager(context, WIFI) {})
+        migrateData(object : PrefBaseManager(context, COURSE_CALENDAR_PREF) {})
+        migrateData(object : PrefBaseManager(context, VIDEOS) {})
+
         loginPrefs.getString(TRANSCRIPT_LANGUAGE)?.let {
             put(TRANSCRIPT_LANGUAGE, it)
             loginPrefs.removeKey(TRANSCRIPT_LANGUAGE)

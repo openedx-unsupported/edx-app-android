@@ -8,12 +8,7 @@ import javax.inject.Singleton
 @Singleton
 class InfoPrefs @Inject constructor(
     @ApplicationContext context: Context
-) : PrefBaseManager(context, APP_INFO) {
-
-    init {
-        migrateData(object : PrefBaseManager(context, COURSE_CALENDAR_PREF) {})
-        migrateData(object : PrefBaseManager(context, VIDEOS) {})
-    }
+) : PrefBaseManager(context, INFO) {
 
     var appVersionCode: Long
         get() = getLong(APP_VERSION_CODE)

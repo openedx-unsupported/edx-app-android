@@ -15,19 +15,6 @@ class LoginPrefs @Inject constructor(
     @ApplicationContext context: Context
 ) : PrefBaseManager(context, LOGIN) {
 
-    enum class AuthBackend {
-        PASSWORD, FACEBOOK, GOOGLE, MICROSOFT;
-
-        fun value(): String {
-            return when (this) {
-                PASSWORD -> LoginPrefs.PASSWORD
-                FACEBOOK -> LoginPrefs.FACEBOOK
-                GOOGLE -> LoginPrefs.GOOGLE
-                MICROSOFT -> LoginPrefs.MICROSOFT
-            }
-        }
-    }
-
     var currentAuth: AuthResponse?
         get() {
             val jsonAuth = getString(AUTH_JSON) ?: return null
@@ -153,6 +140,19 @@ class LoginPrefs @Inject constructor(
     fun setProfileImage(username: String, profileImage: ProfileImage?) {
         if (username == this.username) {
             this.profileImage = profileImage
+        }
+    }
+
+    enum class AuthBackend {
+        PASSWORD, FACEBOOK, GOOGLE, MICROSOFT;
+
+        fun value(): String {
+            return when (this) {
+                PASSWORD -> LoginPrefs.PASSWORD
+                FACEBOOK -> LoginPrefs.FACEBOOK
+                GOOGLE -> LoginPrefs.GOOGLE
+                MICROSOFT -> LoginPrefs.MICROSOFT
+            }
         }
     }
 

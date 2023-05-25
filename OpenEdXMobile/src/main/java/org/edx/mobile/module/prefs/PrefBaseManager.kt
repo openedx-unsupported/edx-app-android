@@ -161,8 +161,8 @@ abstract class PrefBaseManager constructor(
 
     companion object {
 
-        const val APP_FEATURES = "app_features"
-        const val APP_INFO = "pref_app_info"
+        const val FEATURES = "app_features"
+        const val INFO = "pref_app_info"
         const val LOGIN = "pref_login"
         const val USER = "pref_user"
         const val WIFI = "pref_wifi"
@@ -172,8 +172,8 @@ abstract class PrefBaseManager constructor(
         const val DEFAULT_VALUE = "NONE"
 
         private val preferencesList = listOf(
-            APP_FEATURES,
-            APP_INFO,
+            FEATURES,
+            INFO,
             LOGIN,
             USER,
             WIFI,

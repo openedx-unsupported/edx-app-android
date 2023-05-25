@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class FeaturesPrefs @Inject constructor(
     @ApplicationContext context: Context
-) : PrefBaseManager(context, APP_FEATURES) {
+) : PrefBaseManager(context, FEATURES) {
 
     var appConfig: AppConfig
         get() = getString(APP_CONFIG)?.let {

@@ -307,9 +307,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun initInAppPurchaseSetup() {
-        if (isAdded && environment.featuresPrefs.isValuePropEnabled &&
-            isObserversInitialized
-        ) {
+        if (isAdded && environment.featuresPrefs.isValuePropEnabled && isObserversInitialized) {
             initIAPObservers()
             isObserversInitialized = false
         }
