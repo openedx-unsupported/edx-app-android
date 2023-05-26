@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DbStructure;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.PrefBaseManager;
 import org.edx.mobile.services.CourseManager;
 
 import java.io.File;
@@ -38,7 +38,7 @@ public class SecurityUtil {
     public static void clearUserData(@NonNull Context context) {
         // Add all preference files and db in exceptions list
         final ArrayList<String> exceptionsList = new ArrayList<>();
-        Collections.addAll(exceptionsList, PrefManager.Pref.getAllPreferenceFileNames());
+        Collections.addAll(exceptionsList, PrefBaseManager.Companion.getAllPreferenceFileNames());
         exceptionsList.add(DbStructure.NAME);
 
         // Clear the data directory
@@ -67,7 +67,7 @@ public class SecurityUtil {
         }
 
         // Now clear all the shared preferences except app related preferences
-        PrefManager.nukeSharedPreferences(Collections.singletonList(PrefManager.Pref.APP_INFO));
+        PrefBaseManager.nukeSharedPreferences(Collections.singletonList(PrefBaseManager.INFO));
 
         // Clear app level caching of all courses
         final CourseManager courseManager = EntryPointAccessors.fromApplication(

@@ -7,10 +7,9 @@ import android.view.accessibility.CaptioningManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.edx.mobile.R;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.user.FormOption;
-import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.PrefBaseManager;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -171,16 +170,16 @@ public class LocaleUtils {
      * Utility method to extract the download url from the {@link TranscriptModel} based on
      * the last select transcript language or current device language.
      *
-     * @param context    - current application {@link Context}
-     * @param transcript - {@link TranscriptModel} transcript model contains transcript info
+     * @param context          - current application {@link Context}
+     * @param transcript       - {@link TranscriptModel} transcript model contains transcript info
+     * @param subtitleLanguage - subtitle language
      * @return downloadable transcript url that can be null if transcripts are not available
      */
     @Nullable
     public static String getTranscriptURL(@NonNull Context context,
-                                          @NonNull TranscriptModel transcript) {
-        String subtitleLanguage = new LoginPrefs(context).getSubtitleLanguage();
-        if (subtitleLanguage == null ||
-                subtitleLanguage.equals(context.getString(R.string.lbl_cc_none))) {
+                                          @NonNull TranscriptModel transcript,
+                                          @NonNull String subtitleLanguage) {
+        if (subtitleLanguage.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
             subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(context);
         }
         String transcriptUrl = null;

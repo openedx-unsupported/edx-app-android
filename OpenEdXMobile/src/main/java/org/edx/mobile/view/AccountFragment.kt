@@ -35,7 +35,7 @@ import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.module.prefs.LoginPrefs
-import org.edx.mobile.module.prefs.PrefManager
+import org.edx.mobile.module.prefs.UserPrefs
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
 import org.edx.mobile.util.AgreementUrlType
@@ -75,6 +75,9 @@ class AccountFragment : BaseFragment() {
 
     @Inject
     lateinit var loginPrefs: LoginPrefs
+
+    @Inject
+    lateinit var userPrefs: UserPrefs
 
     @Inject
     lateinit var userService: UserService
@@ -125,8 +128,7 @@ class AccountFragment : BaseFragment() {
         initHelpFields()
         initPrivacyFields()
 
-        val iapEnabled =
-            environment.appFeaturesPrefs.isIAPEnabled(loginPrefs.isOddUserId)
+        val iapEnabled = environment.featuresPrefs.isIAPEnabledForUser(loginPrefs.isOddUserId)
         if (iapEnabled) {
             initRestorePurchasesObservers()
             binding.containerPurchases.setVisibility(true)
@@ -378,8 +380,8 @@ class AccountFragment : BaseFragment() {
                 Analytics.Values.PERSONAL_INFORMATION_CLICKED
             )
             environment.router.showUserProfile(requireActivity(), loginPrefs.username)
-            setVideoQualityDescription(loginPrefs.videoQuality)
         }
+        setVideoQualityDescription(userPrefs.videoQuality)
     }
 
     private fun initPrivacyFields() {
@@ -449,14 +451,11 @@ class AccountFragment : BaseFragment() {
     }
 
     private fun updateWifiSwitch() {
-        val wifiPrefManager = PrefManager(requireContext(), PrefManager.Pref.WIFI)
         binding.switchWifi.setOnCheckedChangeListener(null)
-        binding.switchWifi.isChecked =
-            wifiPrefManager.getBoolean(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true)
+        binding.switchWifi.isChecked = userPrefs.isDownloadOverWifiOnly
         binding.switchWifi.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true)
-                wifiPrefManager.put(PrefManager.Key.DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG, true)
+                userPrefs.isDownloadOverWifiOnly = true
                 trackEvent(Analytics.Events.WIFI_ON, Analytics.Values.WIFI_ON)
             } else {
                 showWifiDialog()
@@ -470,33 +469,19 @@ class AccountFragment : BaseFragment() {
                 getString(R.string.wifi_dialog_message_help),
                 object : IDialogCallback {
                     override fun onPositiveClicked() {
-                        try {
-                            val wifiPrefManager =
-                                PrefManager(requireContext(), PrefManager.Pref.WIFI)
-                            wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false)
-                            trackEvent(Analytics.Events.WIFI_ALLOW, Analytics.Values.WIFI_ALLOW)
-                            trackEvent(Analytics.Events.WIFI_OFF, Analytics.Values.WIFI_OFF)
-                            updateWifiSwitch()
-                        } catch (ex: Exception) {
-                        }
+                        userPrefs.isDownloadOverWifiOnly = false
+                        trackEvent(Analytics.Events.WIFI_ALLOW, Analytics.Values.WIFI_ALLOW)
+                        trackEvent(Analytics.Events.WIFI_OFF, Analytics.Values.WIFI_OFF)
+                        updateWifiSwitch()
                     }
 
                     override fun onNegativeClicked() {
-                        try {
-                            val wifiPrefManager =
-                                PrefManager(requireContext(), PrefManager.Pref.WIFI)
-                            wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true)
-                            wifiPrefManager.put(
-                                PrefManager.Key.DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG,
-                                true
-                            )
-                            trackEvent(
-                                Analytics.Events.WIFI_DONT_ALLOW,
-                                Analytics.Values.WIFI_DONT_ALLOW
-                            )
-                            updateWifiSwitch()
-                        } catch (ex: Exception) {
-                        }
+                        userPrefs.isDownloadOverWifiOnly = true
+                        trackEvent(
+                            Analytics.Events.WIFI_DONT_ALLOW,
+                            Analytics.Values.WIFI_DONT_ALLOW
+                        )
+                        updateWifiSwitch()
                     }
                 })
         dialogFragment.isCancelable = false
@@ -504,11 +489,10 @@ class AccountFragment : BaseFragment() {
     }
 
     private fun updateSDCardSwitch() {
-        val prefManager = PrefManager(requireContext(), PrefManager.Pref.USER_PREF)
         if (!environment.config.isDownloadToSDCardEnabled || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             binding.containerSdCard.visibility = View.GONE
             binding.tvDescriptionSdCard.visibility = View.GONE
-            prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, false)
+            userPrefs.isDownloadToSDCardEnabled = false
         } else {
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().register(this)
@@ -516,7 +500,7 @@ class AccountFragment : BaseFragment() {
             binding.switchSdCard.setOnCheckedChangeListener(null)
             binding.switchSdCard.isChecked = environment.userPrefs.isDownloadToSDCardEnabled
             binding.switchSdCard.setOnCheckedChangeListener { _, isChecked ->
-                prefManager.put(PrefManager.Key.DOWNLOAD_TO_SDCARD, isChecked)
+                userPrefs.isDownloadToSDCardEnabled = isChecked
                 // Send analytics
                 if (isChecked) trackEvent(
                     Analytics.Events.DOWNLOAD_TO_SD_CARD_ON,

@@ -28,7 +28,7 @@ import org.edx.mobile.model.api.UnacknowledgedNoticeResponse;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.analytics.FirebaseAnalytics;
 import org.edx.mobile.module.analytics.SegmentAnalytics;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.InfoPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
@@ -176,20 +176,20 @@ public abstract class MainApplication extends MultiDexApplication {
     }
 
     private void checkIfAppVersionUpgraded(Context context) {
-        PrefManager.AppInfoPrefManager prefManager = new PrefManager.AppInfoPrefManager(context);
-        long previousVersionCode = prefManager.getAppVersionCode();
+        InfoPrefs infoPrefs = getEnvironment(context).getInfoPrefs();
+        long previousVersionCode = infoPrefs.getAppVersionCode();
         final long curVersionCode = BuildConfig.VERSION_CODE;
         if (previousVersionCode < 0) {
             // App opened first time after installation
             // Save version code and name in preferences
-            prefManager.setAppVersionCode(curVersionCode);
-            prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
+            infoPrefs.setAppVersionCode(curVersionCode);
+            infoPrefs.setAppVersionName(BuildConfig.VERSION_NAME);
             logger.debug("App opened first time, VersionCode:" + curVersionCode);
         } else if (previousVersionCode < curVersionCode) {
-            final String previousVersionName = prefManager.getAppVersionName();
+            final String previousVersionName = infoPrefs.getAppVersionName();
             // Update version code and name in preferences
-            prefManager.setAppVersionCode(curVersionCode);
-            prefManager.setAppVersionName(BuildConfig.VERSION_NAME);
+            infoPrefs.setAppVersionCode(curVersionCode);
+            infoPrefs.setAppVersionName(BuildConfig.VERSION_NAME);
             logger.debug("App updated, VersionCode:" + previousVersionCode + "->" + curVersionCode);
             // App updated
             onAppUpdated(previousVersionCode, curVersionCode, previousVersionName, BuildConfig.VERSION_NAME);

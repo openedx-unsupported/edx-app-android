@@ -85,7 +85,7 @@ public class VideoUtil {
         String preferredVideoUrl = null;
         final VideoInfo preferredVideoInfo = video.encodedVideos
                 .getPreferredVideoInfoForDownloading(
-                        MainApplication.getEnvironment(MainApplication.instance()).getLoginPrefs().getVideoQuality()
+                        MainApplication.getEnvironment(MainApplication.instance()).getUserPrefs().getVideoQuality()
                 );
 
         if (preferredVideoInfo != null &&
@@ -132,7 +132,7 @@ public class VideoUtil {
      * @param video   {@link DownloadEntry} object having different video encodings
      * @return Best encoding video url that can be locally downloaded path or online url
      */
-    public static String getVideoPath(Context context, DownloadEntry video) {
+    public static String getVideoPath(Context context, DownloadEntry video, float speedTestKBPS) {
         String filepath = null;
         if (video.filepath != null && video.filepath.length() > 0) {
             if (video.isDownloaded()) {
@@ -159,7 +159,7 @@ public class VideoUtil {
 
         if (TextUtils.isEmpty(filepath)) {
             // not available on local, so play online
-            filepath = video.getBestEncodingUrl(context);
+            filepath = video.getBestEncodingUrl(context, speedTestKBPS);
         }
         return filepath;
     }

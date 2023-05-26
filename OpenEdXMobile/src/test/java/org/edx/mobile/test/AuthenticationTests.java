@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.Injector;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.authenticator.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.model.authentication.AuthResponse;
@@ -49,7 +50,7 @@ public final class AuthenticationTests extends BaseTestCase {
     @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        loginPrefs = new LoginPrefs(context);
+        loginPrefs = MainApplication.getEnvironment(context).getLoginPrefs();
         loginPrefs.storeAuthTokenResponse(MockDataUtil.getMockResponse("post_oauth2_access_token", AuthResponse.class), LoginPrefs.AuthBackend.PASSWORD);
         oauthRefreshTokenAuthenticator = new OauthRefreshTokenAuthenticator(
                 () -> config,

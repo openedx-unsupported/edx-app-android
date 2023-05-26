@@ -60,7 +60,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseComponentStatusResponse;
 import org.edx.mobile.model.api.CourseUpgradeResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseBannerInfoModel;
 import org.edx.mobile.model.course.CourseBannerType;
@@ -459,12 +458,11 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
             firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
                 final String group = firebaseRemoteConfig.getString(Analytics.Keys.AA_EXPERIMENT);
-                final ProfileModel profileModel = environment.getLoginPrefs().getCurrentUserProfile();
                 if (!TextUtils.isEmpty(group) && environment.getLoginPrefs().isUserLoggedIn()) {
                     final Map<String, String> values = new HashMap<>();
                     values.put(Analytics.Keys.EXPERIMENT, Analytics.Keys.AA_EXPERIMENT);
                     values.put(Analytics.Keys.GROUP, group);
-                    values.put(Analytics.Keys.USER_ID, Long.toString(profileModel.id));
+                    values.put(Analytics.Keys.USER_ID, Long.toString(environment.getLoginPrefs().getUserId()));
                     values.put(Analytics.Keys.COURSE_ID, courseData.getCourseId());
                     environment.getAnalyticsRegistry().trackExperimentParams(Analytics.Events.MOBILE_EXPERIMENT_EVALUATED, values);
                 }
@@ -833,7 +831,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                         Analytics.Values.COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED);
                 showVideoQualitySelectionModal(courseComponent);
             });
-            setVideoQualityHeaderLabel(environment.getLoginPrefs().getVideoQuality());
+            setVideoQualityHeaderLabel(environment.getUserPrefs().getVideoQuality());
         }
     }
 

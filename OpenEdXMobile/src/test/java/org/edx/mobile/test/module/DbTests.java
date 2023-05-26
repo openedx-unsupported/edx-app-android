@@ -1,7 +1,16 @@
 package org.edx.mobile.test.module;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import androidx.test.core.app.ApplicationProvider;
+
 import org.edx.mobile.base.BaseTestCase;
 import org.edx.mobile.base.Injector;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -15,10 +24,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
-import androidx.test.core.app.ApplicationProvider;
-
 public class DbTests extends BaseTestCase {
 
     final Object lock = new Object();
@@ -29,7 +34,7 @@ public class DbTests extends BaseTestCase {
     @Override
     protected void inject(Injector injector) throws Exception {
         super.inject(injector);
-        loginPrefs = new LoginPrefs(context);
+        loginPrefs = MainApplication.getEnvironment(context).getLoginPrefs();
     }
 
     @Override

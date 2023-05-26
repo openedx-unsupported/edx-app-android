@@ -27,7 +27,8 @@ public class SegmentEvent {
         this.properties.put(Analytics.Keys.CONTEXT, cxtProps);
 
         // Set User ID in each event if a user is logged-in
-        final LoginPrefs loginPrefs = new LoginPrefs(MainApplication.instance());
+        LoginPrefs loginPrefs = MainApplication.getEnvironment(MainApplication.instance())
+                .getLoginPrefs();
         if (loginPrefs.isUserLoggedIn()) {
             this.properties.putValue(Analytics.Keys.USER_ID, loginPrefs.getUserId());
         }

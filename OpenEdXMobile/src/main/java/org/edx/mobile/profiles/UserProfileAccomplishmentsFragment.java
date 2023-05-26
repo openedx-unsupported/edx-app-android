@@ -14,7 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
 import org.edx.mobile.model.profile.BadgeAssertion;
-import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
@@ -35,7 +35,7 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
     UserService userService;
 
     @Inject
-    UserPrefs userPrefs;
+    LoginPrefs loginPrefs;
 
     FragmentUserProfileAccomplishmentsBinding binding;
 
@@ -50,9 +50,9 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
     @NonNull
     @Override
     protected UserProfileAccomplishmentsPresenter createPresenter() {
+        final String username = ((UserProfileBioTabParent) getParentFragment()).getBioInteractor().getUsername();
         return new UserProfileAccomplishmentsPresenter(
-                userService, userPrefs,
-                ((UserProfileBioTabParent) getParentFragment()).getBioInteractor().getUsername());
+                userService, username, username.equalsIgnoreCase(loginPrefs.getUsername()));
     }
 
     @NonNull

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -77,13 +76,13 @@ public class ApiConstants {
     public static String getOAuthGroupIdForAuthBackend(@NonNull LoginPrefs.AuthBackend authBackend) {
         switch (authBackend) {
             case FACEBOOK: {
-                return PrefManager.Value.BACKEND_FACEBOOK;
+                return LoginPrefs.BACKEND_FACEBOOK;
             }
             case GOOGLE: {
-                return PrefManager.Value.BACKEND_GOOGLE;
+                return LoginPrefs.BACKEND_GOOGLE;
             }
             case MICROSOFT: {
-                return PrefManager.Value.BACKEND_MICROSOFT;
+                return LoginPrefs.BACKEND_MICROSOFT;
             }
             default: {
                 throw new IllegalArgumentException(authBackend.name());

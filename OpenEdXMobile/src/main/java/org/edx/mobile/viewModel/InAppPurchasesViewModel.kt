@@ -222,7 +222,7 @@ class InAppPurchasesViewModel @Inject constructor(
             return
         }
         billingProcessor.queryPurchase { _, purchases ->
-            environment.appFeaturesPrefs.setAutoCheckUnfulfilledPurchase(false)
+            environment.featuresPrefs.canAutoCheckUnfulfilledPurchase = false
             if (purchases.isEmpty()) {
                 _fakeUnfulfilledCompletion.postEvent(true)
                 return@queryPurchase

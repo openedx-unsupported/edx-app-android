@@ -26,7 +26,8 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.PrefBaseManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.TranscriptListener;
 import org.edx.mobile.player.TranscriptManager;
@@ -108,7 +109,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
     private float topOffset = 0;
 
     @Inject
-    LoginPrefs loginPrefs;
+    UserPrefs userPrefs;
 
     @Inject
     CourseAPI courseApi;
@@ -134,8 +135,8 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     int startMillis = subtitle.start.getMseconds();
                     int endMillis = subtitle.end.getMseconds();
                     if (currentPos >= startMillis && currentPos <= endMillis) {
-                        String subtitleLang = loginPrefs.getSubtitleLanguage();
-                        if (subtitleLang == null || !subtitleLang.equalsIgnoreCase(getString(R.string.lbl_cc_none))) {
+                        String subtitleLang = userPrefs.getSubtitleLanguage();
+                        if (subtitleLang.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
                             updateClosedCaptionData(subtitle);
                         }
                         updateSelection(currentSubtitleIndex);
@@ -205,7 +206,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         Activity activity = getActivity();
         if (activity != null) {
             TranscriptModel transcript = getTranscriptModel();
-            String transcriptUrl = LocaleUtils.getTranscriptURL(activity, transcript);
+            String transcriptUrl = LocaleUtils.getTranscriptURL(activity, transcript, userPrefs.getSubtitleLanguage());
             transcriptManager.downloadTranscriptsForVideo(transcriptUrl, (TimedTextObject transcriptTimedTextObject) -> {
                 subtitlesObj = transcriptTimedTextObject;
                 if (!activity.isDestroyed()) {
@@ -230,11 +231,11 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         if (subtitlesObj != null) {
             initTranscriptListView();
             updateTranscript(subtitlesObj);
-            String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(getActivity());
-            if (loginPrefs.getSubtitleLanguage() == null &&
+            String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
+            if (userPrefs.getSubtitleLanguage().equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE) &&
                     !android.text.TextUtils.isEmpty(subtitleLanguage) &&
                     getTranscriptModel().containsKey(subtitleLanguage)) {
-                loginPrefs.setSubtitleLanguage(subtitleLanguage);
+                userPrefs.setSubtitleLanguage(subtitleLanguage);
             }
             showClosedCaptionData(subtitlesObj);
         }

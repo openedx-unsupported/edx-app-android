@@ -44,7 +44,7 @@ public class SplashActivity extends ComponentActivity {
         }
 
         final IEdxEnvironment environment = MainApplication.getEnvironment(this);
-        environment.getAppFeaturesPrefs().setAutoCheckUnfulfilledPurchase(true);
+        environment.getFeaturesPrefs().setCanAutoCheckUnfulfilledPurchase(true);
         if (environment.getLoginPrefs().isUserLoggedIn()) {
             environment.getRouter().showMainDashboard(SplashActivity.this);
         } else if (!environment.getConfig().isRegistrationEnabled()) {

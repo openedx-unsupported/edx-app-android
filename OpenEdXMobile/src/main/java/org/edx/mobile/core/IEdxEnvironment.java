@@ -5,8 +5,8 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.module.prefs.CourseCalendarPrefs;
-import org.edx.mobile.module.prefs.AppFeaturesPrefs;
+import org.edx.mobile.module.prefs.FeaturesPrefs;
+import org.edx.mobile.module.prefs.InfoPrefs;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
@@ -28,9 +28,9 @@ public interface IEdxEnvironment {
 
     LoginPrefs getLoginPrefs();
 
-    CourseCalendarPrefs getCourseCalendarPrefs();
+    FeaturesPrefs getFeaturesPrefs();
 
-    AppFeaturesPrefs getAppFeaturesPrefs();
+    InfoPrefs getInfoPrefs();
 
     AnalyticsRegistry getAnalyticsRegistry();
 

@@ -4,8 +4,8 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
 
@@ -20,7 +20,7 @@ public class DeepLinkManager {
         // Pass the Config class instance as parameter while manually creating the Router object instated of
         // using injection technique. Otherwise Router unable to initiate the config object in it.
         final Router router = new Router(new Config(activity));
-        final boolean isUserLoggedIn = new LoginPrefs(activity).isUserLoggedIn();
+        final boolean isUserLoggedIn = MainApplication.getEnvironment(activity).getLoginPrefs().isUserLoggedIn();
         @ScreenDef final String screenName = deepLink.getScreenName();
         if (!isUserLoggedIn) {
             switch (screenName) {
