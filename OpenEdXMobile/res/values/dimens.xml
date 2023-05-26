@@ -204,6 +204,7 @@
     <dimen name="bulk_download_progress_height">3dp</dimen>
     <dimen name="bulk_download_description_top_margin">4dp</dimen>
     <dimen name="download_background_size">30dp</dimen>
+    <dimen name="home_download_background_size">24dp</dimen>
 
     <!-- Logistration Launch screen -->
     <dimen name="logo_top_margin">90dp</dimen>

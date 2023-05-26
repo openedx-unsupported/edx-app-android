@@ -25,9 +25,9 @@ class VideoMoreOptionsBottomSheet : BottomSheetDialogFragment() {
         binding = BottomSheetVideoMoreOptionsBinding.inflate(inflater, container, false)
 
         binding.deleteOption.setOnClickListener {
-            videoViewModel.deleteVideosAtPosition(
-                arguments?.getInt(LIST_ITEM_POSITION) ?: DEFAULT_LIST_POSITION
-            )
+            @Suppress("UNCHECKED_CAST") val selectedItemPosition =
+                arguments?.getSerializable(LIST_ITEM_POSITION) as Pair<Int, Int>?
+            videoViewModel.deleteVideosAtPosition(selectedItemPosition ?: DEFAULT_LIST_POSITION)
             dismiss()
         }
 
@@ -41,13 +41,13 @@ class VideoMoreOptionsBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         private const val LIST_ITEM_POSITION = "list_item_position"
-        private const val DEFAULT_LIST_POSITION = -1
+        private val DEFAULT_LIST_POSITION = Pair(-1, -1)
 
         @JvmStatic
-        fun newInstance(position: Int): VideoMoreOptionsBottomSheet =
+        fun newInstance(position: Pair<Int, Int>): VideoMoreOptionsBottomSheet =
             VideoMoreOptionsBottomSheet().apply {
                 arguments = Bundle().apply {
-                    putInt(LIST_ITEM_POSITION, position)
+                    putSerializable(LIST_ITEM_POSITION, position)
                 }
             }
     }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bulk_download_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/widget_margin_half"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:paddingEnd="@dimen/widget_margin_half"
+    tools:ignore="RtlSymmetry">
+
+    <FrameLayout
+        android:layout_width="@dimen/download_background_size"
+        android:layout_height="@dimen/download_background_size">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bulk_download"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_download" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorSize="@dimen/edx_large"
+            app:trackThickness="@dimen/edx_x_quarter_margin"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/no_of_videos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/widget_margin_half"
+        android:layout_marginEnd="@dimen/widget_margin_half"
+        android:fontFamily="?attr/fontSemiBold"
+        android:textColor="@color/primaryXLightColor"
+        android:textSize="@dimen/edx_small"
+        android:visibility="gone"
+        tools:text="0"
+        tools:visibility="visible" />
+</LinearLayout>
