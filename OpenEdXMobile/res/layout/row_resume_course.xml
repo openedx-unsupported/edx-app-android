@@ -3,33 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/resume_course_bar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/resume_course_bar_height"
+    android:layout_marginStart="@dimen/edx_default_margin"
+    android:layout_marginTop="@dimen/edx_default_margin"
+    android:layout_marginEnd="@dimen/edx_default_margin"
+    android:background="@drawable/edx_neutral_x_light_bordered_button"
+    android:gravity="center"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/resume_course_bar_height"
-        android:layout_margin="@dimen/edx_default_margin"
-        android:background="@drawable/edx_neutral_x_light_bordered_button"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/edx_half_margin"
-        android:paddingBottom="@dimen/edx_half_margin">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="?attr/fontSemiBold"
+        android:text="@string/label_resume_course"
+        android:textColor="@color/primaryBaseColor"
+        android:textSize="@dimen/edx_small" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="?attr/fontSemiBold"
-            android:text="@string/label_resume_course"
-            android:textColor="@color/primaryBaseColor"
-            android:textSize="@dimen/edx_small" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/resume_course_arrow_margin"
+        app:srcCompat="@drawable/ic_arrow_right" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/resume_course_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/resume_course_arrow_margin"
-            app:srcCompat="@drawable/ic_arrow_right" />
-
-    </LinearLayout>
 </LinearLayout>
