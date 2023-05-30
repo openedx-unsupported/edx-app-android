@@ -259,7 +259,9 @@ public class FileUtil {
      * @param filepath Video storage file path
      * @return True if video file exists on a given path
      */
-    public static boolean isVideoFileExists(@NonNull Context context, @NonNull String filepath) {
+    public static boolean isVideoFileExists(@NonNull Context context, @Nullable String filepath) {
+        if (TextUtils.isEmpty(filepath))
+            return false;
         final File videoFile = new File(filepath);
         if (videoFile.exists()) {
             // Inspiration of this solution has taken from the following answer

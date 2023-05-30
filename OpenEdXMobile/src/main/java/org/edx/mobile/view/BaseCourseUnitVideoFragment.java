@@ -434,7 +434,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                 // p.s. Without this listener the getHeight function returns 0
                 transcriptListLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                     public void onGlobalLayout() {
-                        if (getActivity() != null) {
+                        if (getActivity() != null && transcriptListView != null) {
                             transcriptListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                             final float transcriptRowHeight = getActivity().getResources().getDimension(R.dimen.transcript_row_height);
                             final float listviewHeight = transcriptListView.getHeight();

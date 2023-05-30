@@ -608,6 +608,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     }
 
     private void showShiftDateSnackBar(boolean isSuccess) {
+        if (!isAdded()) {
+            return;
+        }
         SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(listView);
         if (isSuccess) {
             snackbarErrorNotification.showError(R.string.assessment_shift_dates_success_msg,
@@ -1040,10 +1043,13 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }
         final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
                 courseData.getCourseId(), courseComponentId);
-        final BlockPath outlinePath = outlineComp.getPath();
-        final int outlinePathSize = outlinePath.getPath().size();
+        if (outlineComp != null) {
+            final BlockPath outlinePath = outlineComp.getPath();
+            final int outlinePathSize = outlinePath.getPath().size();
 
-        return outlinePathSize <= 1;
+            return outlinePathSize <= 1;
+        }
+        return false;
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
