@@ -170,8 +170,6 @@
   <string name="upgrade_to_verified_today_title">الترقية إلى مسار معتمَد الآن</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">إرسال طلب</string>
-  <!--label for resume course section. Will be followed by course name-->
-  <string name="label_resume">سيرة ذاتية</string>
   <!--Mobile Payments-->
   <string name="payments_info_header">تعقب موثوقية الشهادة</string>
   <string name="payments_info_details">إبراز معرفتك ومهاراتك الجديدة من خلال شهادة موثقة استخدم بيانات الاعتماد القيّمة هذه لتحسين فرص وظيفتك وتعزيز حياتك المهنية ، أو إبراز شهادتك في تطبيقات المدرسة.</string>

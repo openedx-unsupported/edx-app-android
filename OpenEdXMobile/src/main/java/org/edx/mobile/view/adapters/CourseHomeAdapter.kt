@@ -194,7 +194,6 @@ class CourseHomeAdapter(
     inner class ResumeCourseViewHolder(val binding: RowResumeCourseBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(lastAccessedComponent: CourseComponent) {
-            binding.resumeCourseText.text = lastAccessedComponent.displayName
             binding.root.setOnClickListener {
                 itemClickListener.resumeCourseClicked(lastAccessedComponent)
             }

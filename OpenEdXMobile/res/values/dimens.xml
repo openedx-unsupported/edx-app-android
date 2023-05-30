@@ -29,13 +29,8 @@
     <dimen name="width_chapter_text">185dp</dimen>
 
     <!-- Resume Course Bar-->
-    <dimen name="resume_course_bar_left_margin">26dp</dimen>
-    <dimen name="resume_course_bar_height">72dp</dimen>
-    <dimen name="resume_course_header_text_size">@dimen/edx_small</dimen>
-    <dimen name="resume_course_header_unit_vertical_margin">2dp</dimen>
-    <dimen name="resume_course_button_text_size">@dimen/edx_base</dimen>
-    <dimen name="resume_course_button_padding">12dp</dimen>
-    <dimen name="resume_course_button_right_margin">14dp</dimen>
+    <dimen name="resume_course_bar_height">36dp</dimen>
+    <dimen name="resume_course_arrow_margin">12dp</dimen>
 
     <!-- Course Card -->
     <dimen name="course_card_height">190dp</dimen>
@@ -50,8 +45,6 @@
     <!-- Course Outline -->
     <dimen name="course_item_vertical_padding">8dp</dimen>
     <dimen name="course_item_horizontal_padding">9dp</dimen>
-    <dimen name="course_item_half_separator_left_margin">@dimen/resume_course_bar_left_margin
-    </dimen>
     <dimen name="course_section_header_margin">22dp</dimen>
     <dimen name="course_section_header_height">40dp</dimen>
 

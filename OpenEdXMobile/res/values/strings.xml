@@ -189,8 +189,6 @@
     <string name="upgrade_to_verified_today_title">Upgrade to Verified Today</string>
     <!--Title of place order for course upgrade screen-->
     <string name="place_order_title">Place Order</string>
-    <!-- label for resume course section. Will be followed by course name -->
-    <string name="label_resume">Resume</string>
 
     <!-- Mobile Payments -->
     <string name="payments_info_header">Pursue a Verified Certificate!</string>
