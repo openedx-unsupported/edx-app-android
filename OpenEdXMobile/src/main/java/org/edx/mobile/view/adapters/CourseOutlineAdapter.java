@@ -557,13 +557,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View getResumeCourseView(int position, View convertView) {
-        final SectionRow sectionRow = getItem(position);
-        final TextView tvResumeCourseComponentTitle = (TextView) convertView.findViewById(R.id.resume_course_text);
-        tvResumeCourseComponentTitle.setText(sectionRow.getComponent().getDisplayName());
-        return convertView;
-    }
-
     /**
      * Tells if specified non-courseware item exists in the adapter's list or not.
      *

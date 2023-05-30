@@ -56,4 +56,6 @@
     <string name="label_certificate_view_button">View certificate</string>
     <!-- Title of Find Courses tab on Main Dashboard screen -->
     <string name="label_discover">Discover</string>
+    <!-- Label for resume course section -->
+    <string name="label_resume_course">Resume course</string>
 </resources>
