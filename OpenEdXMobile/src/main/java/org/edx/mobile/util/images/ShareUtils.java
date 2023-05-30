@@ -5,12 +5,14 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
@@ -103,12 +105,15 @@ public enum ShareUtils {
      * @param listener    Listener to take a callback when user select a particular app from
      *                    displayed popup.
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressWarnings("RestrictedApi")
     public static void showShareMenu(@NonNull Activity activity, @NonNull Intent shareIntent,
                                      @NonNull View anchor, final @NonNull ShareMenuItemListener listener) {
         final PopupMenu popupMenu = new PopupMenu(activity, anchor);
         final PackageManager packageManager = activity.getPackageManager();
         final List<ResolveInfo> resolveInfoList = packageManager.queryIntentActivities(shareIntent, 0);
+        //TODO: Temporary removed WPS Office Application because security risks, we'll check if the issue is still persist or not after 4.0.2 release
+        resolveInfoList.removeIf(resolveInfo -> resolveInfo.activityInfo.processName.equalsIgnoreCase("cn.wps.moffice_eng"));
         for (final ResolveInfo resolveInfo : resolveInfoList) {
             final MenuItem shareItem = popupMenu.getMenu().add(resolveInfo.loadLabel(packageManager));
             shareItem.setIcon(resolveInfo.loadIcon(packageManager));
