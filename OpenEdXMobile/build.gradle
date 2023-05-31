@@ -329,12 +329,13 @@ if (isMicrosoftEnabled) {
 }
 
 android {
+    namespace APPLICATION_ID
     compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
 
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig true
     }
 
     flavorDimensions "default"
@@ -470,14 +471,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError true
-        showAll true
-        warning 'TypographyQuotes', 'InvalidPackage'
-        error 'StopShip', 'ContentDescription'
-        warning 'MissingTranslation'
-        warning 'ImpliedQuantity'
-    }
 
     productFlavors {
         prod {
@@ -519,16 +512,12 @@ android {
             }
         }
     }
-
     packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'APK LICENSE.txt'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
+        resources {
+            excludes += ['LICENSE.txt', 'APK LICENSE.txt', 'META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
     }
+
     testOptions {
          unitTests.all {
              maxHeapSize '1g'
@@ -536,8 +525,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -547,7 +536,13 @@ android {
          * Ref: https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#important-2
          */
         freeCompilerArgs = ['-Xjvm-default=all']
-        jvmTarget = "11"
+        jvmTarget = "17"
+    }
+    lint {
+        abortOnError true
+        error 'StopShip', 'ContentDescription'
+        showAll true
+        warning 'TypographyQuotes', 'InvalidPackage', 'MissingTranslation', 'ImpliedQuantity'
     }
 }
 
