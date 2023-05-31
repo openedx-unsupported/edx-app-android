@@ -24,7 +24,7 @@ subprojects {
         // we should figure this out
         implementation "org.codehaus.groovy:groovy-all:3.0.13"
         implementation gradleApi()
-        implementation "org.yaml:snakeyaml:1.29"
+        implementation "org.yaml:snakeyaml:2.0"
     }
 }
 

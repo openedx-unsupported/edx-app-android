@@ -5,11 +5,11 @@ allprojects {
         // The order in which you list these repositories matter.
         google()
         mavenCentral()
-        maven { url 'https://maven.google.com' }
-        maven { url 'https://jitpack.io' }
+        maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
         maven { url "https://appboy.github.io/appboy-android-sdk/sdk" }
         maven { url "https://appboy.github.io/appboy-segment-android/sdk" }
-        maven { url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1' }
+        maven { url "https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1" }
     }
     project.apply from: "${rootDir}/constants.gradle"
 }
@@ -25,56 +25,56 @@ buildscript {
         classpath "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
         classpath "com.google.gms:google-services:$gms_google_services"
         // Add the dependency for the Performance Monitoring plugin
-        classpath 'com.google.firebase:perf-plugin:1.4.1'  // Performance Monitoring plugin
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}"
+        classpath "com.google.firebase:perf-plugin:1.4.2"  // Performance Monitoring plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
         // Firebase Crashlytics Gradle plugin.
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.2'
-        classpath "com.google.dagger:hilt-android-gradle-plugin:${hilt_version}"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:2.9.5"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath "org.jacoco:org.jacoco.core:0.8.8"
     }
 }
 
-// task that creates 'artifacts' directory
+// task that creates "artifacts" directory
 task createBuildArtifactsDirectory { task ->
     doLast {
         def hashPipe = new ByteArrayOutputStream()
         task.project.exec {
-            commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
+            commandLine = ["git", "rev-parse", "--verify", "HEAD"]
             standardOutput = hashPipe
         }
 
         def destDir = "artifacts"
         task.project.exec {
-            commandLine = ['mkdir', '-p', destDir]
+            commandLine = ["mkdir", "-p", destDir]
         }
     }
 }
 
-// Copies unit test reports to the 'artifacts' directory
+// Copies unit test reports to the "artifacts" directory
 task copyUnitTestBuildArtifacts { task ->
     doLast {
         // copy unit test reports
         def srcPath = "OpenEdXMobile/build/reports"
         task.project.exec {
-            commandLine = ['cp', '-R', srcPath, 'artifacts']
+            commandLine = ["cp", "-R", srcPath, "artifacts"]
         }
     }
 }
 copyUnitTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
-// Copies lint report to the 'artifacts' directory
+// Copies lint report to the "artifacts" directory
 task copyLintBuildArtifacts(type: Copy) {
-    from 'OpenEdXMobile/build/outputs'
-    into 'artifacts'
-    include 'lint-results*'
-    include 'lint-results*/**'
+    from "OpenEdXMobile/build/outputs"
+    into "artifacts"
+    include "lint-results*"
+    include "lint-results*/**"
 }
 copyLintBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
 // Disables preDex which reduces the amount of memory required to build an APK. This is important
 // for CI where there is a memory limit. PreDex is also not useful in CI where a new build is
 // desired on every run.
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+project.ext.preDexLibs = !project.hasProperty("disablePreDex")
 
 // Increases adb timeout for installing an apk. This tweak is need for slow adb installs on an
 // emulator for CI.
