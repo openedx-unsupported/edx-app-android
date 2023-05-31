@@ -5,11 +5,7 @@
 
     <!-- Required by app for server communication and video download -->
     <!-- Required by Segment -->
-    <!-- Required by NewRelic -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Required by NewRelic -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Required by app for preventing screen lock while playing a video -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />

@@ -19,5 +19,4 @@ project.ext {
     androidXLifeCycle = '2.5.1'
     androidXKotlinCore = '1.6.0'
     androidXKotlinFramgnet = '1.3.0'
-    newrelic_version = '6.3.1'
 }

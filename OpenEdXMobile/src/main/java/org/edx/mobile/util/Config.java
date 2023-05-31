@@ -58,7 +58,6 @@ public class Config {
     private static final String GOOGLE = "GOOGLE";
     private static final String TWITTER = "TWITTER";
     private static final String BRANCH = "BRANCH";
-    private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String FIREBASE = "FIREBASE";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
@@ -290,22 +289,6 @@ public class Config {
 
         public String getSecret() {
             return secret;
-        }
-    }
-
-    public static class NewRelicConfig {
-        @SerializedName("ENABLED")
-        private boolean mEnabled;
-
-        @SerializedName("NEW_RELIC_KEY")
-        private String mNewRelicKey;
-
-        public boolean isEnabled() {
-            return mEnabled && !TextUtils.isEmpty(mNewRelicKey);
-        }
-
-        public String getNewRelicKey() {
-            return mNewRelicKey;
         }
     }
 
@@ -741,11 +724,6 @@ public class Config {
     @NonNull
     public BranchConfig getBranchConfig() {
         return getObjectOrNewInstance(BRANCH, BranchConfig.class);
-    }
-
-    @NonNull
-    public NewRelicConfig getNewRelicConfig() {
-        return getObjectOrNewInstance(NEW_RELIC, NewRelicConfig.class);
     }
 
     @NonNull

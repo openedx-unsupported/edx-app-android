@@ -128,7 +128,7 @@ Any assets placed here will override resources of the same name in the `OpenEdXM
 
 Third Party Services
 --------------------
-The app relies on the presence of several third party services: Facebook, NewRelic, Google+, SegmentIO, and Crashlytics. You may need to remove services you choose not to use. You can comment out the lines of code that mention these services.
+The app relies on the presence of several third party services: Facebook, Google+, SegmentIO, and Crashlytics. You may need to remove services you choose not to use. You can comment out the lines of code that mention these services.
 
 We're working on making it easier for Open edX installations to apply customizations and select third party services without modifying the repository itself.
 

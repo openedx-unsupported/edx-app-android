@@ -11,10 +11,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.NewRelicEvent;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.util.PermissionsUtil;
-import org.greenrobot.eventbus.EventBus;
 
 public class BaseFragment extends Fragment {
     public interface PermissionListener {
@@ -29,7 +27,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().post(new NewRelicEvent(getClass().getSimpleName()));
     }
 
     /**

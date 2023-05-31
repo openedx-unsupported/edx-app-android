@@ -9,8 +9,6 @@ buildscript {
 
     dependencies {
         classpath 'org.yaml:snakeyaml:1.29'
-        //Included for NewRelic
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:$newrelic_version"
         //Screenshot testing library
         classpath 'com.facebook.testing.screenshot:plugin:0.14.0'
         classpath "com.google.gms:google-services:$gms_google_services"
@@ -28,7 +26,6 @@ edx {
     platform = ANDROID
 }
 
-apply plugin: 'newrelic'
 apply plugin: 'com.facebook.testing.screenshot'
 apply from: file('gradle_scripts/AndroidHelper.gradle')
 apply plugin: 'dagger.hilt.android.plugin'
@@ -209,9 +206,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1"
     implementation "com.android.installreferrer:installreferrer:2.2"
     implementation "androidx.browser:browser:1.3.0"
-
-    //New Relic Integration
-    implementation "com.newrelic.agent.android:android-agent:$newrelic_version"
 
     // ViewPager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
