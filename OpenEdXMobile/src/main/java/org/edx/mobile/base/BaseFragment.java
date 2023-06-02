@@ -1,9 +1,11 @@
 package org.edx.mobile.base;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -104,13 +106,22 @@ public class BaseFragment extends Fragment {
             if (permissionListener != null && getGrantedPermissionsCount(permissions) == permissions.length) {
                 permissionListener.onPermissionGranted(permissions, requestCode);
             } else {
-                PermissionsUtil.requestPermissions(requestCode, permissions, BaseFragment.this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                        (requestCode == PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST ||
+                                requestCode == PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST)) {
+
+                    PermissionsUtil.requestPermissions(requestCode,
+                            new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO}, BaseFragment.this);
+                } else {
+                    PermissionsUtil.requestPermissions(requestCode, permissions, BaseFragment.this);
+                }
             }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (grantResults.length > 0 && getGrantedPermissionsCount(permissions) == permissions.length) {
             if (permissionListener != null) {
                 permissionListener.onPermissionGranted(permissions, requestCode);
