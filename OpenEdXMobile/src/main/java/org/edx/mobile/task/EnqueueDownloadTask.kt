@@ -12,6 +12,7 @@ abstract class EnqueueDownloadTask(
     private var transcriptManager = EntryPointAccessors
         .fromApplication(context, ProviderEntryPoint::class.java).getTranscriptManager()
 
+    @Deprecated("Deprecated in Java")
     override fun doInBackground(vararg params: Void?): Long {
         var count = 0
         for (downloadEntry in downloadList) {

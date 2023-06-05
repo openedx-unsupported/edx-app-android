@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -30,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 
 import java.io.IOException;
@@ -110,7 +110,7 @@ public class UserProfileInteractorTest extends BaseTest {
         setAuthenticatedUsername(ProfileValues.ALTERNATE_USERNAME);
         configureBareMockAccount();
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -126,7 +126,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = configureBareMockAccount();
         when(account.getAccountPrivacy()).thenReturn(Account.Privacy.PRIVATE);
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -142,7 +142,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = configureBareMockAccount();
         when(account.getAccountPrivacy()).thenReturn(Account.Privacy.PRIVATE);
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE,
                 null,
                 null,
@@ -159,7 +159,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = configureBareMockAccount();
         when(account.requiresParentalConsent()).thenReturn(true);
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -175,7 +175,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = configureBareMockAccount();
         when(account.requiresParentalConsent()).thenReturn(true);
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -193,7 +193,7 @@ public class UserProfileInteractorTest extends BaseTest {
         when(profileImage.hasImage()).thenReturn(true);
         when(profileImage.getImageUrlFull()).thenReturn(ProfileValues.ABSOLUTE_URL);
         createAndObserveInteractor();
-        verify(imageObserver).onData(refEq(new UserProfileImageViewModel(Uri.parse(ProfileValues.ABSOLUTE_URL), true)));
+        verify(imageObserver).onData(ArgumentMatchers.refEq(new UserProfileImageViewModel(Uri.parse(ProfileValues.ABSOLUTE_URL), true)));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class UserProfileInteractorTest extends BaseTest {
         setAuthenticatedUsername(ProfileValues.USERNAME);
         configureBareMockAccount();
         createAndObserveInteractor();
-        verify(imageObserver).onData(refEq(new UserProfileImageViewModel(null, true)));
+        verify(imageObserver).onData(ArgumentMatchers.refEq(new UserProfileImageViewModel(null, true)));
     }
 
     @Test
@@ -212,7 +212,7 @@ public class UserProfileInteractorTest extends BaseTest {
         when(account.getCountry()).thenReturn(ProfileValues.COUNTRY_CODE);
         when(account.getLanguageProficiencies()).thenReturn(Collections.singletonList(new LanguageProficiency(ProfileValues.LANGUAGE_CODE)));
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 ProfileValues.LANGUAGE_NAME,
                 ProfileValues.COUNTRY_NAME,
@@ -228,7 +228,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = configureBareMockAccount();
         when(account.getCountry()).thenReturn(ProfileValues.INVALID_COUNTRY_CODE);
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -244,7 +244,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = configureBareMockAccount();
         when(account.getLanguageProficiencies()).thenReturn(Collections.singletonList(new LanguageProficiency(ProfileValues.INVALID_LANGUAGE_CODE)));
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -259,10 +259,10 @@ public class UserProfileInteractorTest extends BaseTest {
         setAuthenticatedUsername(ProfileValues.USERNAME);
         configureBareMockAccount();
         createAndObserveInteractor();
-        verify(imageObserver).onData(refEq(new UserProfileImageViewModel(null, true)));
+        verify(imageObserver).onData(ArgumentMatchers.refEq(new UserProfileImageViewModel(null, true)));
         final Uri newPhotoUri = Uri.parse(ProfileValues.ABSOLUTE_URL);
         eventBus.post(new ProfilePhotoUpdatedEvent(ProfileValues.USERNAME, newPhotoUri));
-        verify(imageObserver).onData(refEq(new UserProfileImageViewModel(newPhotoUri, false)));
+        verify(imageObserver).onData(ArgumentMatchers.refEq(new UserProfileImageViewModel(newPhotoUri, false)));
     }
 
     @Test
@@ -270,7 +270,7 @@ public class UserProfileInteractorTest extends BaseTest {
         setAuthenticatedUsername(ProfileValues.USERNAME);
         configureBareMockAccount();
         createAndObserveInteractor();
-        verify(imageObserver).onData(refEq(new UserProfileImageViewModel(null, true)));
+        verify(imageObserver).onData(ArgumentMatchers.refEq(new UserProfileImageViewModel(null, true)));
         eventBus.post(new ProfilePhotoUpdatedEvent(ProfileValues.ALTERNATE_USERNAME, Uri.parse(ProfileValues.ABSOLUTE_URL)));
         verifyNoMoreInteractions(imageObserver);
     }
@@ -280,7 +280,7 @@ public class UserProfileInteractorTest extends BaseTest {
         setAuthenticatedUsername(ProfileValues.ALTERNATE_USERNAME);
         final Account account = configureBareMockAccount();
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -290,7 +290,7 @@ public class UserProfileInteractorTest extends BaseTest {
         )));
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
         eventBus.post(new AccountDataLoadedEvent(account));
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
@@ -305,7 +305,7 @@ public class UserProfileInteractorTest extends BaseTest {
         setAuthenticatedUsername(ProfileValues.ALTERNATE_USERNAME);
         final Account account = configureBareMockAccount();
         createAndObserveInteractor();
-        verify(profileObserver).onData(refEq(new UserProfileViewModel(
+        verify(profileObserver).onData(ArgumentMatchers.refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,

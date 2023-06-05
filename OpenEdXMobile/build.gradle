@@ -222,8 +222,8 @@ dependencies {
     testImplementation 'androidx.test:core-ktx:1.2.0'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     // To mock static classes
-    testImplementation 'org.mockito:mockito-inline:3.4.0'
-    testImplementation ("org.mockito:mockito-core:2.19.0"){
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    testImplementation ("org.mockito:mockito-core:5.3.1"){
         exclude group: 'org.hamcrest'
     }
     testImplementation "org.robolectric:robolectric:4.7.3"
@@ -259,7 +259,7 @@ dependencies {
     androidTestImplementation ('org.mockito:mockito-core:2.8.9'){
         exclude group: 'org.hamcrest'
     }
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${KOTLIN_VERSION}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}"
     implementation "com.android.billingclient:billing-ktx:$kotlin_version_billing"
 
     // dependency on Shimmer for Android

@@ -19,7 +19,7 @@ import java.util.Collections;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 public class AccomplishmentListAdapterTest extends BaseTestCase {
     private AccomplishmentListAdapter adapter;
@@ -67,7 +67,7 @@ public class AccomplishmentListAdapterTest extends BaseTestCase {
         adapter.setPageLoading(true);
         final LoadingViewHolder viewHolder = mock(LoadingViewHolder.class);
         adapter.onBindViewHolder(viewHolder, 0);
-        verifyZeroInteractions(viewHolder);
+        verifyNoInteractions(viewHolder);
     }
 
     @Test
