@@ -17,6 +17,7 @@ import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setImageDrawable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.inapppurchases.getPriceAmount
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
@@ -237,7 +238,11 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
             unit?.courseSku?.let { productId ->
-                iapViewModel.startPurchaseFlow(productId)
+                iapViewModel.startPurchaseFlow(
+                    productId,
+                    skuDetail.getPriceAmount(),
+                    skuDetail.priceCurrencyCode
+                )
             } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }
     }

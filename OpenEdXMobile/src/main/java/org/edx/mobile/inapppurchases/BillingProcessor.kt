@@ -209,6 +209,7 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
         private val TAG = BillingProcessor::class.java.simpleName
         private const val RECONNECT_TIMER_START_MILLISECONDS = 1L * 1000L
         private const val RECONNECT_MAX_COUNT = 3 // retry connection max count
+        const val MICROS_TO_UNIT = 1_000_000 // 1,000,000 micro-units equal one unit of the currency.
     }
 
     interface BillingFlowListeners {
@@ -221,3 +222,5 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
         fun onPurchaseComplete(purchase: Purchase) {}
     }
 }
+
+fun SkuDetails.getPriceAmount(): Long = this.priceAmountMicros / BillingProcessor.MICROS_TO_UNIT
