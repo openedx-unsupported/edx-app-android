@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '17'
 
       # Cache and restore the Gradle dependencies on multiple runs
       - name: Gradle cache
@@ -73,7 +73,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '17'
 
       # Install Python 2.7 to support Pillow library for screenshot testing
       # Ref: https://github.com/facebook/screenshot-tests-for-android#requirements
