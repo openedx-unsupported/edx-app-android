@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         run: |
           chmod +x gradlew
-          ./gradlew jacocoTestProdDebugUnitTestReport
+          ./gradlew jacocoProdDebugUnitTestReport
           ./gradlew copyUnitTestBuildArtifacts
 
       # Uploads the folder or file in path to GitHub
@@ -50,7 +50,7 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           directory: artifacts
-          files: jacocoTestProdDebugUnitTestReport.xml
+          files: jacocoProdDebugUnitTestReport.xml
           fail_ci_if_error: false
           verbose: true
 

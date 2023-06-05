@@ -52,7 +52,7 @@ quality:
 	@./gradlew assembleDebug
 
 test:
-	@./gradlew jacocoTestProdDebugUnitTestReport
+	@./gradlew jacocoProdDebugUnitTestReport
 
 validate: quality test
 
