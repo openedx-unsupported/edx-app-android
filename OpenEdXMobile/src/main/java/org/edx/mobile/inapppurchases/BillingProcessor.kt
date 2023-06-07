@@ -223,5 +223,5 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
     }
 }
 
-fun SkuDetails.getPriceAmount(): Float =
-    this.priceAmountMicros.toFloat() / BillingProcessor.MICROS_TO_UNIT
+fun SkuDetails.getPriceAmount(): Double =
+    this.priceAmountMicros.toDouble() / BillingProcessor.MICROS_TO_UNIT

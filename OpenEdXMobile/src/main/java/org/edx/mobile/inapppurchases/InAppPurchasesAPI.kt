@@ -26,7 +26,7 @@ class InAppPurchasesAPI @Inject constructor(private val iapService: InAppPurchas
         basketId: Long,
         productId: String,
         purchaseToken: String,
-        priceAmount: Float?,
+        priceAmount: Double?,
         currencyCode: String?,
     ): Call<ExecuteOrderResponse> {
         return iapService.executeOrder(

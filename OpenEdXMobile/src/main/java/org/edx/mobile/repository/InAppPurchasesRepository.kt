@@ -47,7 +47,7 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
         basketId: Long,
         productId: String,
         purchaseToken: String,
-        priceAmount: Float?,
+        priceAmount: Double?,
         currencyCode: String?,
         callback: NetworkResponseCallback<ExecuteOrderResponse>
     ) {

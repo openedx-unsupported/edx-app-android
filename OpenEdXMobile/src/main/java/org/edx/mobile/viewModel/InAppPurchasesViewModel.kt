@@ -110,7 +110,7 @@ class InAppPurchasesViewModel @Inject constructor(
         } ?: dispatchError(requestType = ErrorMessage.PRICE_CODE)
     }
 
-    fun startPurchaseFlow(productId: String, priceAmount: Float, currencyCode: String) {
+    fun startPurchaseFlow(productId: String, priceAmount: Double, currencyCode: String) {
         iapFlowData.productId = productId
         iapFlowData.priceAmount = priceAmount
         iapFlowData.currencyCode = currencyCode
