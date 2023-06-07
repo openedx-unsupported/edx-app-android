@@ -1,0 +1,105 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar" />
+
+        <FrameLayout
+            android:id="@+id/content_error_root"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/content_area"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pager2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    android:orientation="horizontal" />
+
+                <LinearLayout
+                    android:id="@+id/course_unit_nav_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/course_unit_nav_bar_height"
+                    android:layout_weight="0"
+                    android:background="@drawable/rectangle_with_top_border"
+                    android:gravity="center"
+                    android:measureWithLargestChild="true"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
+                    android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/goto_prev"
+                            style="@style/edX.Widget.DisableableButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                            android:text="@string/assessment_previous" />
+
+                        <TextView
+                            android:id="@+id/prev_unit_title"
+                            style="@style/section_lbl"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0px"
+                        android:layout_height="0px"
+                        android:layout_weight="1" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/goto_next"
+                            style="@style/edX.Widget.DisableableButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/course_unit_nav_bar_btn_height"
+                            android:text="@string/assessment_next" />
+
+                        <TextView
+                            android:id="@+id/next_unit_title"
+                            style="@style/section_lbl"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/flying_message"
+                style="@style/flying_message"
+                android:visibility="gone" />
+
+            <include layout="@layout/content_error" />
+
+            <include
+                android:id="@+id/loading_indicator"
+                layout="@layout/loading_indicator" />
+
+        </FrameLayout>
+    </LinearLayout>
+</layout>
