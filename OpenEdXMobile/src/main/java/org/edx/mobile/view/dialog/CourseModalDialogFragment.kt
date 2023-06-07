@@ -182,7 +182,7 @@ class CourseModalDialogFragment : DialogFragment() {
                 iapViewModel.startPurchaseFlow(
                     it,
                     skuDetails.getPriceAmount(),
-                    skuDetails.priceCurrencyCode
+                    skuDetails.priceCurrencyCode,
                 )
             } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }

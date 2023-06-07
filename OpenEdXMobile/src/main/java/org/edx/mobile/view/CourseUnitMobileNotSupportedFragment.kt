@@ -241,7 +241,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 iapViewModel.startPurchaseFlow(
                     productId,
                     skuDetail.getPriceAmount(),
-                    skuDetail.priceCurrencyCode
+                    skuDetail.priceCurrencyCode,
                 )
             } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }

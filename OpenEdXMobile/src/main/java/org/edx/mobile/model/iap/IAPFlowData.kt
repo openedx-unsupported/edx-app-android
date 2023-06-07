@@ -9,7 +9,7 @@ data class IAPFlowData(
     var productId: String = "",
     var basketId: Long = 0,
     var purchaseToken: String = "",
-    var price: Long? = null,
+    var priceAmount: Float? = null,
     var currencyCode: String? = null,
     var screenName: String = "",
     var isVerificationPending: Boolean = false
@@ -19,7 +19,7 @@ data class IAPFlowData(
         isCourseSelfPaced = false
         productId = ""
         basketId = 0
-        price = null
+        priceAmount = null
         currencyCode = null
         purchaseToken = ""
         isVerificationPending = false

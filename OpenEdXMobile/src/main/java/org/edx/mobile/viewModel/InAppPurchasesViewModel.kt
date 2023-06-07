@@ -110,9 +110,9 @@ class InAppPurchasesViewModel @Inject constructor(
         } ?: dispatchError(requestType = ErrorMessage.PRICE_CODE)
     }
 
-    fun startPurchaseFlow(productId: String, price: Long, currencyCode: String) {
+    fun startPurchaseFlow(productId: String, priceAmount: Float, currencyCode: String) {
         iapFlowData.productId = productId
-        iapFlowData.price = price
+        iapFlowData.priceAmount = priceAmount
         iapFlowData.currencyCode = currencyCode
         iapFlowData.flowType = IAPFlowData.IAPFlowType.USER_INITIATED
         iapFlowData.isVerificationPending = true
@@ -180,7 +180,7 @@ class InAppPurchasesViewModel @Inject constructor(
                 basketId = iapData.basketId,
                 productId = iapData.productId,
                 purchaseToken = iapData.purchaseToken,
-                price = iapData.price,
+                priceAmount = iapData.priceAmount,
                 currencyCode = iapData.currencyCode,
                 callback = object : NetworkResponseCallback<ExecuteOrderResponse> {
                     override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
