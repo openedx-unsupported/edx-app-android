@@ -102,20 +102,22 @@ public class BaseFragment extends Fragment {
      * @param requestCode The request code passed in {@link #requestPermissions(String[], int)}.
      */
     protected void askForPermission(String[] permissions, int requestCode) {
-        if (getActivity() != null) {
-            if (permissionListener != null && getGrantedPermissionsCount(permissions) == permissions.length) {
-                permissionListener.onPermissionGranted(permissions, requestCode);
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                        (requestCode == PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST ||
-                                requestCode == PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST)) {
+        if (getActivity() == null || permissionListener == null) {
+            return;
+        }
 
-                    PermissionsUtil.requestPermissions(requestCode,
-                            new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO}, BaseFragment.this);
-                } else {
-                    PermissionsUtil.requestPermissions(requestCode, permissions, BaseFragment.this);
-                }
-            }
+        if (getGrantedPermissionsCount(permissions) == permissions.length ||
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                        requestCode == PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST)) {
+            permissionListener.onPermissionGranted(permissions, requestCode);
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                (requestCode == PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST)) {
+            PermissionsUtil.requestPermissions(requestCode,
+                    new String[]{Manifest.permission.READ_MEDIA_IMAGES}, BaseFragment.this);
+
+        } else {
+            PermissionsUtil.requestPermissions(requestCode, permissions, BaseFragment.this);
         }
     }
 
@@ -141,7 +143,7 @@ public class BaseFragment extends Fragment {
     public int getGrantedPermissionsCount(String[] permissions) {
         int grantedPermissionsCount = 0;
         for (String permission : permissions) {
-            if (PermissionsUtil.checkPermissions(permission, getActivity())) {
+            if (PermissionsUtil.checkPermissions(permission, requireActivity())) {
                 grantedPermissionsCount++;
             }
         }

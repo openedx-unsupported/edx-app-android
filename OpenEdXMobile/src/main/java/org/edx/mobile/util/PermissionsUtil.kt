@@ -16,10 +16,8 @@ object PermissionsUtil {
     @JvmStatic
     fun checkPermissions(permission: String, context: Context): Boolean {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-            context,
-            permission
-        )
+                PackageManager.PERMISSION_GRANTED ==
+                ContextCompat.checkSelfPermission(context, permission)
     }
 
     @JvmStatic
