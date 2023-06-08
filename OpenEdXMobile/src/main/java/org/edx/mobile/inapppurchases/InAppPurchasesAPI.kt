@@ -26,15 +26,15 @@ class InAppPurchasesAPI @Inject constructor(private val iapService: InAppPurchas
         basketId: Long,
         productId: String,
         purchaseToken: String,
-        priceAmount: Double?,
-        currencyCode: String?,
+        price: Double,
+        currencyCode: String,
     ): Call<ExecuteOrderResponse> {
         return iapService.executeOrder(
             basketId = basketId,
             productId = productId,
             paymentProcessor = ApiConstants.PAYMENT_PROCESSOR,
             purchaseToken = purchaseToken,
-            priceAmount = priceAmount,
+            price = price,
             currencyCode = currencyCode,
         )
     }

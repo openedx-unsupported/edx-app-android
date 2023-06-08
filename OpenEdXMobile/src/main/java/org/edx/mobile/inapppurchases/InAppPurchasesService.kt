@@ -46,7 +46,7 @@ interface InAppPurchasesService {
         @Field("productId") productId: String,
         @Field("payment_processor") paymentProcessor: String,
         @Field("purchaseToken") purchaseToken: String,
-        @Field("price_amount") priceAmount: Double?,
-        @Field("currency_code") currencyCode: String?,
+        @Field("price") price: Double,
+        @Field("currency_code") currencyCode: String,
     ): Call<ExecuteOrderResponse>
 }

@@ -13,6 +13,7 @@ import org.edx.mobile.extenstion.decodeToLong
 import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
 import org.edx.mobile.inapppurchases.BillingProcessor
+import org.edx.mobile.inapppurchases.getPriceAmount
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.api.getAuditCourses
 import org.edx.mobile.model.iap.AddToBasketResponse
@@ -92,7 +93,7 @@ class InAppPurchasesViewModel @Inject constructor(
             billingProcessor.querySyncDetails(
                 productId = courseSku
             ) { billingResult, skuDetails ->
-                val skuDetail = skuDetails?.get(0)
+                val skuDetail = skuDetails?.first()
                 skuDetail?.let {
                     if (it.sku == courseSku) {
                         _productPrice.postEvent(it)
@@ -110,9 +111,9 @@ class InAppPurchasesViewModel @Inject constructor(
         } ?: dispatchError(requestType = ErrorMessage.PRICE_CODE)
     }
 
-    fun startPurchaseFlow(productId: String, priceAmount: Double, currencyCode: String) {
+    fun startPurchaseFlow(productId: String, price: Double, currencyCode: String) {
         iapFlowData.productId = productId
-        iapFlowData.priceAmount = priceAmount
+        iapFlowData.price = price
         iapFlowData.currencyCode = currencyCode
         iapFlowData.flowType = IAPFlowData.IAPFlowType.USER_INITIATED
         iapFlowData.isVerificationPending = true
@@ -180,7 +181,7 @@ class InAppPurchasesViewModel @Inject constructor(
                 basketId = iapData.basketId,
                 productId = iapData.productId,
                 purchaseToken = iapData.purchaseToken,
-                priceAmount = iapData.priceAmount,
+                price = iapData.price,
                 currencyCode = iapData.currencyCode,
                 callback = object : NetworkResponseCallback<ExecuteOrderResponse> {
                     override fun onSuccess(result: Result.Success<ExecuteOrderResponse>) {
@@ -268,7 +269,20 @@ class InAppPurchasesViewModel @Inject constructor(
             screenName = iapFlowData.screenName
         )
         iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNFULFILLED_PURCHASE_INITIATED)
-        addProductToBasket()
+
+        //Start the purchase flow
+        billingProcessor.querySyncDetails(
+            productId = iapFlowData.productId
+        ) { _, skuDetails ->
+            val skuDetail = skuDetails?.first()
+            skuDetail?.let {
+                if (it.sku == iapFlowData.productId) {
+                    iapFlowData.currencyCode = it.priceCurrencyCode
+                    iapFlowData.price = it.getPriceAmount()
+                    addProductToBasket()
+                }
+            }
+        }
     }
 
     private fun markPurchaseComplete(iapFlowData: IAPFlowData) {
