@@ -47,12 +47,16 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
         basketId: Long,
         productId: String,
         purchaseToken: String,
+        price: Double,
+        currencyCode: String,
         callback: NetworkResponseCallback<ExecuteOrderResponse>
     ) {
         iapAPI.executeOrder(
             basketId = basketId,
             productId = productId,
-            purchaseToken = purchaseToken
+            purchaseToken = purchaseToken,
+            price = price,
+            currencyCode = currencyCode,
         ).enqueue(object : Callback<ExecuteOrderResponse> {
             override fun onResponse(
                 call: Call<ExecuteOrderResponse>,

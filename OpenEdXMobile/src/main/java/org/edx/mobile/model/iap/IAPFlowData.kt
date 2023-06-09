@@ -9,6 +9,8 @@ data class IAPFlowData(
     var productId: String = "",
     var basketId: Long = 0,
     var purchaseToken: String = "",
+    var price: Double = 0.0,
+    var currencyCode: String = "",
     var screenName: String = "",
     var isVerificationPending: Boolean = false
 ) : Serializable {
@@ -17,6 +19,8 @@ data class IAPFlowData(
         isCourseSelfPaced = false
         productId = ""
         basketId = 0
+        price = 0.0
+        currencyCode = ""
         purchaseToken = ""
         isVerificationPending = false
         screenName = ""

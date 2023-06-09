@@ -17,6 +17,7 @@ import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.inapppurchases.getPriceAmount
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
@@ -178,7 +179,11 @@ class CourseModalDialogFragment : DialogFragment() {
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
             courseSku?.let {
-                iapViewModel.startPurchaseFlow(it)
+                iapViewModel.startPurchaseFlow(
+                    it,
+                    skuDetails.getPriceAmount(),
+                    skuDetails.priceCurrencyCode,
+                )
             } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }
     }
