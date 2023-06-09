@@ -31,7 +31,6 @@ public class ConfigTests extends BaseTestCase {
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
-    private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String BRANCH = "BRANCH";
@@ -46,7 +45,6 @@ public class ConfigTests extends BaseTestCase {
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
     private static final String KEY = "KEY";
     private static final String SECRET = "SECRET";
-    private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
     private static final String DOMAINS = "DOMAINS";
 
@@ -285,42 +283,6 @@ public class ConfigTests extends BaseTestCase {
         assertTrue(config.getBranchConfig().isEnabled());
         assertEquals(key, config.getBranchConfig().getKey());
         assertEquals(secret, config.getBranchConfig().getSecret());
-    }
-
-    @Test
-    public void testNewRelicNoConfig() {
-        JsonObject configBase = new JsonObject();
-        Config config = new Config(configBase);
-        assertFalse(config.getNewRelicConfig().isEnabled());
-        assertNull(config.getNewRelicConfig().getNewRelicKey());
-    }
-
-    @Test
-    public void testNewRelicEmptyConfig() {
-        JsonObject fabricConfig = new JsonObject();
-
-        JsonObject configBase = new JsonObject();
-        configBase.add(NEW_RELIC, fabricConfig);
-
-        Config config = new Config(configBase);
-        assertFalse(config.getNewRelicConfig().isEnabled());
-        assertNull(config.getNewRelicConfig().getNewRelicKey());
-    }
-
-    @Test
-    public void testNewRelicConfig() {
-        String key = "fake-key";
-
-        JsonObject newRelicConfig = new JsonObject();
-        newRelicConfig.add(ENABLED, new JsonPrimitive(true));
-        newRelicConfig.add(NEW_RELIC_KEY, new JsonPrimitive(key));
-
-        JsonObject configBase = new JsonObject();
-        configBase.add(NEW_RELIC, newRelicConfig);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getNewRelicConfig().isEnabled());
-        assertEquals(key, config.getNewRelicConfig().getNewRelicKey());
     }
 
     @Test

@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '17'
 
       # Cache and restore the Gradle dependencies on multiple runs
       - name: Gradle cache
@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         run: |
           chmod +x gradlew
-          ./gradlew jacocoTestProdDebugUnitTestReport
+          ./gradlew jacocoProdDebugUnitTestReport
           ./gradlew copyUnitTestBuildArtifacts
 
       # Uploads the folder or file in path to GitHub
@@ -50,7 +50,7 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           directory: artifacts
-          files: jacocoTestProdDebugUnitTestReport.xml
+          files: jacocoProdDebugUnitTestReport.xml
           fail_ci_if_error: false
           verbose: true
 
@@ -73,7 +73,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '17'
 
       # Install Python 2.7 to support Pillow library for screenshot testing
       # Ref: https://github.com/facebook/screenshot-tests-for-android#requirements

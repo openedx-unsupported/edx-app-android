@@ -15,6 +15,7 @@ abstract class LoginTask(
     var loginAPI = EntryPointAccessors
         .fromApplication(context, ProviderEntryPoint::class.java).getLoginAPI()
 
+    @Deprecated("Deprecated in Java")
     override fun doInBackground(vararg voids: Void): AuthResponse? {
         try {
             return loginAPI.logInUsingEmail(username, password)

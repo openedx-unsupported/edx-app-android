@@ -25,11 +25,12 @@ buildscript {
         classpath "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
         classpath "com.google.gms:google-services:$gms_google_services"
         // Add the dependency for the Performance Monitoring plugin
-        classpath 'com.google.firebase:perf-plugin:1.2.1'  // Performance Monitoring plugin
+        classpath 'com.google.firebase:perf-plugin:1.4.1'  // Performance Monitoring plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}"
         // Firebase Crashlytics Gradle plugin.
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.2'
         classpath "com.google.dagger:hilt-android-gradle-plugin:${hilt_version}"
+        classpath "org.jacoco:org.jacoco.core:0.8.8"
     }
 }
 
