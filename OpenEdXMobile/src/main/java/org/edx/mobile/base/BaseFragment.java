@@ -112,7 +112,7 @@ public class BaseFragment extends Fragment {
             permissionListener.onPermissionGranted(permissions, requestCode);
 
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                (requestCode == PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST)) {
+                requestCode == PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST) {
             PermissionsUtil.requestPermissions(requestCode,
                     new String[]{Manifest.permission.READ_MEDIA_IMAGES}, BaseFragment.this);
 
