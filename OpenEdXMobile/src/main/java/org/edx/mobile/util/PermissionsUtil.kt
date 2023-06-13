@@ -12,6 +12,7 @@ object PermissionsUtil {
     const val CAMERA_PERMISSION_REQUEST = 2
     const val READ_STORAGE_PERMISSION_REQUEST = 3
     const val CALENDAR_PERMISSION_REQUEST = 4
+    const val POST_NOTIFICATION_REQUEST = 5
 
     @JvmStatic
     fun checkPermissions(permission: String, context: Context): Boolean {

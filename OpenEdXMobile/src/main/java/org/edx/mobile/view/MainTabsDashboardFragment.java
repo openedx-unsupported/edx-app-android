@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +15,7 @@ import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,6 +39,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.viewPager2.setUserInputEnabled(false);
+        requestPostNotificationsPermission();
     }
 
     @Override
@@ -101,6 +105,26 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
 
         return items;
+    }
+
+    private void requestPostNotificationsPermission() {
+        permissionListener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted(String[] permissions, int requestCode) {
+            }
+
+            @Override
+            public void onPermissionDenied(String[] permissions, int requestCode) {
+            }
+        };
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+            askForPermission(
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    PermissionsUtil.POST_NOTIFICATION_REQUEST
+            );
+        }
     }
 
     @Subscribe
