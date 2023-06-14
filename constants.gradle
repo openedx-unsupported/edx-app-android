@@ -13,7 +13,7 @@ project.ext {
     androidXCardviewVersion = "1.0.0"
     androidXAnnotationVersion = "1.6.0"
     androidXAppCompactVersion = "1.6.1"
-    kotlin_version_billing = "4.0.0"
+    kotlin_version_billing = "6.0.0"
     hilt_version = "2.44"
     gms_google_services = "4.3.15"
 

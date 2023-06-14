@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentCourseUnitGradeBinding
@@ -165,8 +165,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     private fun initIAPObserver() {
         initializeBaseObserver()
 
-        iapViewModel.productPrice.observe(viewLifecycleOwner, EventObserver { skuDetails ->
-            setUpUpgradeButton(skuDetails)
+        iapViewModel.productPrice.observe(viewLifecycleOwner, EventObserver {
+            setUpUpgradeButton(it)
         })
 
         iapViewModel.launchPurchaseFlow.observe(viewLifecycleOwner, EventObserver {
@@ -217,8 +217,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
         )
     }
 
-    private fun setUpUpgradeButton(skuDetail: SkuDetails) {
-        price = skuDetail.price
+    private fun setUpUpgradeButton(productDetails: ProductDetails.OneTimePurchaseOfferDetails) {
+        price = productDetails.formattedPrice
         binding.layoutUpgradeBtn.root.setVisibility(true)
 
         binding.layoutUpgradeBtn.btnUpgrade.text =
@@ -226,9 +226,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 resources,
                 R.string.label_upgrade_course_button,
                 AppConstants.PRICE,
-                skuDetail.price
+                productDetails.formattedPrice
             ).toString()
-        // The app get the sku details instantly, so add some wait to perform
+        // The app get the product details instantly, so add some wait to perform
         // animation at least one cycle.
         binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
             binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
@@ -240,8 +240,8 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             unit?.courseSku?.let { productId ->
                 iapViewModel.startPurchaseFlow(
                     productId,
-                    skuDetail.getPriceAmount(),
-                    skuDetail.priceCurrencyCode,
+                    productDetails.getPriceAmount(),
+                    productDetails.priceCurrencyCode,
                 )
             } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }

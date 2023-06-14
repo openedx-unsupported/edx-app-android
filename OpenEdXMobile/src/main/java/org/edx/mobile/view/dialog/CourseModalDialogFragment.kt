@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.android.billingclient.api.BillingClient.BillingResponseCode
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.core.IEdxEnvironment
@@ -137,8 +137,8 @@ class CourseModalDialogFragment : DialogFragment() {
     }
 
     private fun initIAPObservers() {
-        iapViewModel.productPrice.observe(viewLifecycleOwner, EventObserver { skuDetails ->
-            setUpUpgradeButton(skuDetails)
+        iapViewModel.productPrice.observe(viewLifecycleOwner, EventObserver {
+            setUpUpgradeButton(it)
         })
 
         iapViewModel.launchPurchaseFlow.observe(viewLifecycleOwner, EventObserver {
@@ -161,15 +161,15 @@ class CourseModalDialogFragment : DialogFragment() {
         })
     }
 
-    private fun setUpUpgradeButton(skuDetails: SkuDetails) {
+    private fun setUpUpgradeButton(productDetails: ProductDetails.OneTimePurchaseOfferDetails) {
         binding.layoutUpgradeBtn.btnUpgrade.text =
             ResourceUtil.getFormattedString(
                 resources,
                 R.string.label_upgrade_course_button,
                 AppConstants.PRICE,
-                skuDetails.price
+                productDetails.formattedPrice
             ).toString()
-        // The app get the sku details instantly, so add some wait to perform
+        // The app get the product details instantly, so add some wait to perform
         // animation at least one cycle.
         binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
             binding.layoutUpgradeBtn.shimmerViewContainer.hideShimmer()
@@ -181,8 +181,8 @@ class CourseModalDialogFragment : DialogFragment() {
             courseSku?.let {
                 iapViewModel.startPurchaseFlow(
                     it,
-                    skuDetails.getPriceAmount(),
-                    skuDetails.priceCurrencyCode,
+                    productDetails.getPriceAmount(),
+                    productDetails.priceCurrencyCode,
                 )
             } ?: iapDialog.showPreUpgradeErrorDialog(this)
         }

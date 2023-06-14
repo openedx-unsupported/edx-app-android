@@ -8,13 +8,15 @@ import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.ProductDetailsResponseListener
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesResponseListener
 import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
-import com.android.billingclient.api.SkuDetailsResponseListener
+import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryPurchasesParams
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.logger.Logger
@@ -103,20 +105,18 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
      * Called to purchase the new product. Query the product details and launch the purchase flow.
      *
      * @param activity active activity to launch our billing flow from
-     * @param productId SKU (Product ID) to be purchased
+     * @param productId Product Id to be purchased
      * @param userId    User Id of the purchaser
      */
     fun purchaseItem(activity: Activity, productId: String, userId: Long) {
         startConnection()
         if (billingClient.isReady) {
-            querySyncDetails(productId) { billingResult, skuDetailsList ->
+            querySyncDetails(productId) { billingResult, productDetailsList ->
                 logger.debug(
                     "Getting Purchases -> Response code: " + billingResult.responseCode.toString() +
                             " Debug message: " + billingResult.debugMessage
                 )
-                if (skuDetailsList != null) {
-                    launchBillingFlow(activity, skuDetailsList[0], userId)
-                }
+                launchBillingFlow(activity, productDetailsList[0], userId)
             }
         }
     }
@@ -126,12 +126,22 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
      * an Activity reference.
      *
      * @param activity active activity to launch our billing flow from
-     * @param skuDetail SKU (Product) to be purchased
+     * @param productDetails Product to be purchased
      * @param userId    User Id of the purchaser
      */
-    private fun launchBillingFlow(activity: Activity, skuDetail: SkuDetails, userId: Long) {
+    private fun launchBillingFlow(
+        activity: Activity,
+        productDetails: ProductDetails,
+        userId: Long
+    ) {
+        val productDetailsParamsList = listOf(
+            ProductDetailsParams.newBuilder()
+                .setProductDetails(productDetails)
+                .build()
+        )
+
         val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
-        billingFlowParamsBuilder.setSkuDetails(skuDetail)
+        billingFlowParamsBuilder.setProductDetailsParamsList(productDetailsParamsList)
         billingFlowParamsBuilder.setObfuscatedAccountId(userId.encodeToString())
         billingClient.launchBillingFlow(
             activity, billingFlowParamsBuilder.build()
@@ -171,20 +181,28 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
     }
 
     /**
-     * Calls the billing client functions to query sku details for in-app SKUs. SKU details are
-     * useful for displaying item names and price lists to the user, and are required to make a
-     * purchase.
+     * Calls the billing client functions to query product details for in-app products. Product
+     * details are useful for displaying item names and price lists to the user, and are required to
+     * make purchase.
      *
-     * @param productId SKU of the product
-     * @param listener [SkuDetailsResponseListener]
+     * @param productId Id of the product
+     * @param listener [ProductDetailsResponseListener]
      * */
-    fun querySyncDetails(productId: String, listener: SkuDetailsResponseListener) {
+    fun querySyncDetails(productId: String, listener: ProductDetailsResponseListener) {
         startConnection()
-        billingClient.querySkuDetailsAsync(
-            SkuDetailsParams.newBuilder()
-                .setType(BillingClient.SkuType.INAPP)
-                .setSkusList(listOf(productId))
-                .build(), listener
+
+        val productList = listOf(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(productId)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        )
+
+        billingClient.queryProductDetailsAsync(
+            QueryProductDetailsParams.newBuilder()
+                .setProductList(productList)
+                .build(),
+            listener
         )
     }
 
@@ -197,7 +215,10 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
     fun queryPurchase(listener: PurchasesResponseListener) {
         startConnection()
         billingClient.queryPurchasesAsync(
-            BillingClient.SkuType.INAPP, listener
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build(),
+            listener
         )
     }
 
@@ -223,5 +244,5 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
     }
 }
 
-fun SkuDetails.getPriceAmount(): Double =
-    this.priceAmountMicros.toDouble() / BillingProcessor.MICROS_TO_UNIT
+fun ProductDetails.OneTimePurchaseOfferDetails.getPriceAmount(): Double =
+    this.priceAmountMicros.toDouble().div(BillingProcessor.MICROS_TO_UNIT)
