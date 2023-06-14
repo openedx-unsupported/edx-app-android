@@ -6,22 +6,31 @@ import android.os.Handler
 import android.os.Looper
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
-import com.android.billingclient.api.ProductDetailsResponseListener
+import com.android.billingclient.api.ProductDetailsResult
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesResponseListener
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
+import com.android.billingclient.api.acknowledgePurchase
+import com.android.billingclient.api.queryProductDetails
+import com.android.billingclient.api.queryPurchasesAsync
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.logger.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * The BillingProcessor implements all billing functionality for application.
@@ -33,8 +42,9 @@ import javax.inject.Singleton
  * Inspiration: [https://github.com/android/play-billing-samples/blob/master/TrivialDriveKotlin/app/src/main/java/com/sample/android/trivialdrivesample/billing/BillingDataSource.kt]
  * */
 @Singleton
-class BillingProcessor @Inject constructor(@ApplicationContext val context: Context) :
-    PurchasesUpdatedListener, BillingClientStateListener {
+class BillingProcessor @Inject constructor(
+    @ApplicationContext val context: Context,
+) : PurchasesUpdatedListener {
 
     private val logger = Logger(TAG)
 
@@ -42,6 +52,7 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
     private var connectionTryCount = 0
 
     private lateinit var listener: BillingFlowListeners
+    private lateinit var billingClientStateListener: BillingClientStateListener
 
     // Billing client, connection, cached data
     private val billingClient: BillingClient = BillingClient.newBuilder(context)
@@ -53,30 +64,31 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
         this.listener = listener
     }
 
-    fun startConnection() {
-        if (!isConnected()) {
-            billingClient.startConnection(this)
-        }
+    private suspend fun connectIfNeeded(): Boolean {
+        return billingClient.isReady || connect()
     }
 
-    override fun onBillingSetupFinished(billingResult: BillingResult) {
-        logger.debug(
-            "BillingSetupFinished -> Response code: " + billingResult.responseCode.toString() +
-                    " Debug message: " + billingResult.debugMessage
-        )
-        listener.onBillingSetupFinished(billingResult)
-    }
+    private suspend fun connect(): Boolean {
+        return suspendCoroutine { continuation ->
+            billingClientStateListener = object : BillingClientStateListener {
+                override fun onBillingSetupFinished(billingResult: BillingResult) {
+                    logger.debug("BillingSetupFinished -> $billingResult")
+                    continuation.resume(true)
+                }
 
-    /**
-     * This is a pretty unusual occurrence. It happens primarily if the Google Play Store
-     * self-upgrades or is force closed.
-     */
-    override fun onBillingServiceDisconnected() {
-        if (connectionTryCount > RECONNECT_MAX_COUNT) {
-            connectionTryCount++
-            retryBillingServiceConnectionWithExponentialBackoff()
-        } else {
-            listener.onBillingServiceDisconnected()
+                /**
+                 * This is a pretty unusual occurrence. It happens primarily if the Google Play
+                 * Store self-upgrades or is force closed.
+                 */
+                override fun onBillingServiceDisconnected() {
+                    if (connectionTryCount > RECONNECT_MAX_COUNT) {
+                        connectionTryCount++
+                        retryBillingServiceConnectionWithExponentialBackoff()
+                    }
+                    continuation.resume(false)
+                }
+            }
+            billingClient.startConnection(billingClientStateListener)
         }
     }
 
@@ -90,11 +102,13 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
         billingResult: BillingResult,
         purchases: MutableList<Purchase>?
     ) {
-        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            if (!purchases[0].isAcknowledged) {
-                acknowledgePurchase(purchases[0])
+        if (billingResult.responseCode == BillingResponseCode.OK && purchases != null) {
+            if (!purchases.first().isAcknowledged) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    acknowledgePurchase(purchases.first())
+                }
             } else {
-                listener.onPurchaseComplete(purchases[0])
+                listener.onPurchaseComplete(purchases.first())
             }
         } else {
             listener.onPurchaseCancel(billingResult.responseCode, billingResult.debugMessage)
@@ -108,15 +122,14 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
      * @param productId Product Id to be purchased
      * @param userId    User Id of the purchaser
      */
-    fun purchaseItem(activity: Activity, productId: String, userId: Long) {
-        startConnection()
+    suspend fun purchaseItem(activity: Activity, productId: String, userId: Long) {
+        connectIfNeeded()
         if (billingClient.isReady) {
-            querySyncDetails(productId) { billingResult, productDetailsList ->
-                logger.debug(
-                    "Getting Purchases -> Response code: " + billingResult.responseCode.toString() +
-                            " Debug message: " + billingResult.debugMessage
-                )
-                launchBillingFlow(activity, productDetailsList[0], userId)
+            val response = querySyncDetails(productId)
+            logger.debug("Getting Purchases -> ${response.billingResult}")
+
+            response.productDetailsList?.first()?.let {
+                launchBillingFlow(activity, it, userId)
             }
         }
     }
@@ -141,8 +154,8 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
         )
 
         val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
-        billingFlowParamsBuilder.setProductDetailsParamsList(productDetailsParamsList)
-        billingFlowParamsBuilder.setObfuscatedAccountId(userId.encodeToString())
+            .setProductDetailsParamsList(productDetailsParamsList)
+            .setObfuscatedAccountId(userId.encodeToString())
         billingClient.launchBillingFlow(
             activity, billingFlowParamsBuilder.build()
         )
@@ -152,21 +165,16 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
      * Acknowledge new purchases are ones not yet acknowledged.
      * @param purchase new purchase
      */
-    private fun acknowledgePurchase(purchase: Purchase) {
-        startConnection()
-        billingClient.acknowledgePurchase(
+    private suspend fun acknowledgePurchase(purchase: Purchase) {
+        connectIfNeeded()
+        val billingResult = billingClient.acknowledgePurchase(
             AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
                 .build()
-        ) { billingResult: BillingResult ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                logger.debug(
-                    "acknowledgePurchase -> " +
-                            "Response code: " + billingResult.responseCode.toString() +
-                            " Debug message: " + billingResult.debugMessage
-                )
-                listener.onPurchaseComplete(purchase)
-            }
+        )
+        if (billingResult.responseCode == BillingResponseCode.OK) {
+            logger.debug("acknowledgePurchase -> $billingResult")
+            listener.onPurchaseComplete(purchase)
         }
     }
 
@@ -175,7 +183,7 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
      */
     private fun retryBillingServiceConnectionWithExponentialBackoff() {
         handler.postDelayed(
-            { billingClient.startConnection(this@BillingProcessor) },
+            { billingClient.startConnection(billingClientStateListener) },
             RECONNECT_TIMER_START_MILLISECONDS
         )
     }
@@ -186,11 +194,10 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
      * make purchase.
      *
      * @param productId Id of the product
-     * @param listener [ProductDetailsResponseListener]
+     * @return Details of the product
      * */
-    fun querySyncDetails(productId: String, listener: ProductDetailsResponseListener) {
-        startConnection()
-
+    suspend fun querySyncDetails(productId: String): ProductDetailsResult {
+        connectIfNeeded()
         val productList = listOf(
             QueryProductDetailsParams.Product.newBuilder()
                 .setProductId(productId)
@@ -198,32 +205,29 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
                 .build()
         )
 
-        billingClient.queryProductDetailsAsync(
-            QueryProductDetailsParams.newBuilder()
-                .setProductList(productList)
-                .build(),
-            listener
-        )
+        return withContext(Dispatchers.IO) {
+            billingClient.queryProductDetails(
+                QueryProductDetailsParams
+                    .newBuilder()
+                    .setProductList(productList)
+                    .build()
+            )
+        }
     }
 
     /**
      * Method to query the Purchases async and returns purchases details for currently owned items
      * bought within the app.
      *
-     * @param listener callback interface to get the Purchases.
-     * */
-    fun queryPurchase(listener: PurchasesResponseListener) {
-        startConnection()
-        billingClient.queryPurchasesAsync(
+     * @return List of purchases
+     **/
+    suspend fun queryPurchases(): List<Purchase> {
+        connectIfNeeded()
+        return billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.SUBS)
-                .build(),
-            listener
-        )
-    }
-
-    fun isConnected(): Boolean {
-        return billingClient.isReady
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        ).purchasesList
     }
 
     companion object {
@@ -234,10 +238,6 @@ class BillingProcessor @Inject constructor(@ApplicationContext val context: Cont
     }
 
     interface BillingFlowListeners {
-        fun onBillingServiceDisconnected() {}
-
-        fun onBillingSetupFinished(billingResult: BillingResult) {}
-
         fun onPurchaseCancel(responseCode: Int, message: String) {}
 
         fun onPurchaseComplete(purchase: Purchase) {}
