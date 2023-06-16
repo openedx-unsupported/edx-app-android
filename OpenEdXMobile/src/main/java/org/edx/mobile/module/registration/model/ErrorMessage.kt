@@ -1,25 +1,14 @@
-package org.edx.mobile.module.registration.model;
+package org.edx.mobile.module.registration.model
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-/**
- * Created by rohan on 2/11/15.
- */
-public class ErrorMessage {
+data class ErrorMessage(
+    @SerializedName("required")
+    val required: String? = null,
 
-    private @SerializedName("required") String required;
-    private @SerializedName("min_length") String minLength;
-    private @SerializedName("max_length") String maxLength;
+    @SerializedName("min_length")
+    val minLength: String? = null,
 
-    public String getRequired() {
-        return required;
-    }
-
-    public String getMinLength() {
-        return minLength;
-    }
-
-    public String getMaxLength() {
-        return maxLength;
-    }
-}
+    @SerializedName("max_length")
+    val maxLength: String? = null,
+)

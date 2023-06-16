@@ -1,85 +1,53 @@
-package org.edx.mobile.module.registration.model;
+package org.edx.mobile.module.registration.model
 
-import androidx.annotation.NonNull;
+import com.google.gson.annotations.SerializedName
 
-import com.google.gson.annotations.SerializedName;
+data class RegistrationFormField(
+    @SerializedName("required")
+    val isRequired: Boolean = false,
 
-import java.util.ArrayList;
-import java.util.List;
+    @SerializedName("name")
+    val name: String? = null,
 
-public class RegistrationFormField {
-    private @SerializedName("required")         boolean required;
-    private @SerializedName("name")             String name;
-    private @SerializedName("placeholder")      String placeholder;
-    private @SerializedName("defaultValue")     String defaultValue;
-    private @SerializedName("restrictions")     RegistrationRestriction restriction;
-    private @SerializedName("errorMessages")    ErrorMessage errorMessage;
-    private @SerializedName("instructions")     String instructions;
-    private @SerializedName("type")             RegistrationFieldType fieldType;
-    private @SerializedName("label")            String label;
-    private @SerializedName("options")          List<RegistrationOption> options; // may be empty
-    private @SerializedName("defaultOption")    RegistrationOption defaultOption; // may be nil
-    private @SerializedName("supplementalText") String supplementalText;
-    private @SerializedName("supplementalLink") String supplementalLink;
-    private @SerializedName("exposed")          boolean exposed;
+    @SerializedName("placeholder")
+    val placeholder: String? = null,
 
-    public boolean isRequired() {
-        return required;
-    }
+    @SerializedName("defaultValue")
+    val defaultValue: String? = null,
 
-    public String getName() {
-        return name;
-    }
+    @SerializedName("restrictions")
+    val restriction: RegistrationRestriction = RegistrationRestriction(),
 
-    public boolean isExposed() {
-        return exposed;
-    }
+    @SerializedName("errorMessages")
+    val errorMessage: ErrorMessage? = null,
 
-    public String getPlaceholder() {
-        return placeholder;
-    }
+    @SerializedName("instructions")
+    val instructions: String? = null,
 
-    public RegistrationOption getDefaultOption() {
-        return defaultOption;
-    }
+    @SerializedName("type")
+    val fieldType: RegistrationFieldType? = RegistrationFieldType.UNKNOWN,
 
-    public RegistrationRestriction getRestriction() {
-        return restriction;
-    }
+    @SerializedName("label")
+    val label: String? = null,
 
-    public ErrorMessage getErrorMessage() {
-        return errorMessage;
-    }
+    @SerializedName("options")
+    var options: List<RegistrationOption> = arrayListOf(),
 
-    public String getInstructions() {
-        return instructions;
-    }
+    @SerializedName("defaultOption")
+    val defaultOption: RegistrationOption? = null,
 
-    @NonNull
-    public RegistrationFieldType getFieldType() {
-        return fieldType != null ? fieldType : RegistrationFieldType.UNKNOWN;
-    }
+    @SerializedName("supplementalText")
+    val supplementalText: String? = null,
 
-    public String getLabel() {
-        return label;
-    }
+    @SerializedName("supplementalLink")
+    val supplementalLink: String? = null,
 
-    public List<RegistrationOption> getOptions() {
-        if (options == null) {
-            options = new ArrayList<>();
-        }
-        return options;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public String getSupplementalText() {
-        return supplementalText;
-    }
-
-    public String getSupplementalLink() {
-        return supplementalLink;
-    }
+    @SerializedName("exposed")
+    val isExposed: Boolean = false,
+) {
+    val isEmailField = RegistrationFieldType.EMAIL.name.equals(name, ignoreCase = true)
+    val isConfirmEmailField =
+        RegistrationFieldType.CONFIRM_EMAIL.name.equals(name, ignoreCase = true)
+    val isPasswordField = RegistrationFieldType.PASSWORD.name.equals(name, ignoreCase = true)
+    val isMultiField = RegistrationFieldType.MULTI.name.equals(name, ignoreCase = true)
 }

@@ -1,8 +1,8 @@
-package org.edx.mobile.module.registration.model;
+package org.edx.mobile.module.registration.model
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-public enum RegistrationFieldType {
+enum class RegistrationFieldType {
     @SerializedName("select")
     MULTI,
 
@@ -26,6 +26,5 @@ public enum RegistrationFieldType {
 
     @SerializedName("checkbox")
     CHECKBOX,
-
-    UNKNOWN
+    UNKNOWN,
 }
