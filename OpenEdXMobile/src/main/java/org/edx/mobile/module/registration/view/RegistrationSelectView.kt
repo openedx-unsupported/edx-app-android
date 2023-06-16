@@ -1,201 +1,168 @@
-package org.edx.mobile.module.registration.view;
+package org.edx.mobile.module.registration.view
 
-import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.view.View.OnFocusChangeListener
+import androidx.core.view.ViewCompat
+import com.google.gson.JsonElement
+import com.google.gson.JsonPrimitive
+import org.edx.mobile.R
+import org.edx.mobile.databinding.ViewRegisterAutoCompleteBinding
+import org.edx.mobile.extenstion.isNotNullOrEmpty
+import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.logger.Logger
+import org.edx.mobile.module.registration.model.RegistrationFormField
+import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
 
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.TextView;
+class RegistrationSelectView(private val mField: RegistrationFormField, mView: View) :
+    IRegistrationFieldView {
+    private var mBinding: ViewRegisterAutoCompleteBinding =
+        ViewRegisterAutoCompleteBinding.bind(mView)
+    private var hasFocusLost = false
 
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-
-import org.edx.mobile.R;
-import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.registration.model.RegistrationFieldType;
-import org.edx.mobile.module.registration.model.RegistrationFormField;
-import org.edx.mobile.module.registration.model.RegistrationOption;
-
-public class RegistrationSelectView implements IRegistrationFieldView {
-
-    protected static final Logger logger = new Logger(RegistrationSelectView.class);
-    private RegistrationFormField mField;
-    private View mView;
-    private RegistrationOptionAutoCompleteTextView mInputView;
-    protected TextInputLayout mTextInputLayout;
-    private TextView mInstructionsView;
-    private TextView mErrorView;
-    private boolean hasFocusLost = false;
-
-    public RegistrationSelectView(RegistrationFormField field, View view) {
-        // create and configure view and save it to an instance variable
-        this.mField = field;
-        this.mView = view;
-
-        this.mTextInputLayout = (TextInputLayout) view.findViewById(R.id.input_wrapper_auto_complete);
-        this.mInputView = (RegistrationOptionAutoCompleteTextView) view.findViewById(R.id.input_auto_complete);
-        this.mInstructionsView = (TextView) view.findViewById(R.id.input_auto_complete_instructions);
-        this.mErrorView = (TextView) view.findViewById(R.id.input_auto_complete_error);
-
+    init {
         // Remove JSON defined default value, which is appropriate for web but not for mobile.
         // e.g. server sends "--" as the default value for a select box, but on mobile we want
         // the default value to be the label of select box like Gender, Country etc.
-        for (RegistrationOption option : mField.getOptions()) {
-            if (option.isDefaultValue()) {
-                mField.getOptions().remove(option);
-                break;
+        for (option in mField.options) {
+            if (option.isDefaultValue) {
+                mField.options.minus(option)
+                break
             }
         }
         // Set Hint using label text
-        mTextInputLayout.setHint(mField.getLabel());
+        mBinding.autoCompleteLayout.hint = mField.label
 
         //Set options
-        mInputView.setItems(mField.getOptions());
-
-        setInstructions(field.getInstructions());
+        mBinding.etAutoComplete.setItems(mField.options)
+        setInstructions(mField.instructions)
 
         // hide error text view
-        mErrorView.setVisibility(View.GONE);
+        mBinding.errorMessage.setVisibility(false)
 
         // This tag is necessary for End-to-End tests to work properly
-        mInputView.setTag(mField.getName());
+        mBinding.etAutoComplete.tag = mField.name
 
         // Do a11y adjustment
-        mInputView.setContentDescription(String.format("%s. %s.", mInputView.getSelectedItemName(), mField.getInstructions()));
-        ViewCompat.setImportantForAccessibility(mInstructionsView, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
-
-        mInputView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!mInputView.hasValue(s.toString().trim())) {
-                    mInputView.setSelectedItem(null);
+        mBinding.etAutoComplete.contentDescription =
+            String.format("%s. %s.", mBinding.etAutoComplete.selectedItemName, mField.instructions)
+        ViewCompat.setImportantForAccessibility(
+            mBinding.instructions,
+            ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO
+        )
+        mBinding.etAutoComplete.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (!mBinding.etAutoComplete.hasValue(s.toString().trim { it <= ' ' })) {
+                    mBinding.etAutoComplete.selectedItem = null
                 }
                 // Don't show the error until view has lost the focus at least once
                 if (hasFocusLost) {
-                    isValidInput();
+                    isValidInput()
                 }
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        mInputView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            override fun afterTextChanged(s: Editable) {}
+        })
+        mBinding.etAutoComplete.onFocusChangeListener =
+            OnFocusChangeListener { _, hasFocus: Boolean ->
                 if (hasFocus) {
-                    mInputView.showDropDown();
+                    mBinding.etAutoComplete.showDropDown()
                 } else {
-                    hasFocusLost = true;
-                    isValidInput();
+                    hasFocusLost = true
+                    isValidInput()
                 }
             }
-        });
     }
 
-    @Override
-    public JsonElement getCurrentValue() {
+    override fun getCurrentValue(): JsonElement {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mInputView.getSelectedItemValue());
+        return JsonPrimitive(mBinding.etAutoComplete.selectedItemValue)
     }
 
-    public boolean setRawValue(String value) {
-        if (mInputView.hasValue(value)) {
-            mInputView.select(value);
-            return true;
+    override fun setRawValue(value: String?): Boolean {
+        if (mBinding.etAutoComplete.hasValue(value)) {
+            mBinding.etAutoComplete.select(value)
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean hasValue() {
-        return (mInputView.getSelectedItem() != null
-                && !TextUtils.isEmpty(mInputView.getSelectedItemValue()));
+    override fun hasValue(): Boolean {
+        return (mBinding.etAutoComplete.selectedItem != null &&
+                mBinding.etAutoComplete.selectedItemValue.isNotNullOrEmpty())
     }
 
-    @Override
-    public RegistrationFormField getField() {
-        return mField;
+    override fun getField(): RegistrationFormField {
+        return mField
     }
 
-    @Override
-    public View getView() {
-        return mView;
+    override fun getView(): View {
+        return mBinding.root
     }
 
-    @Override
-    public void setInstructions(@Nullable String instructions) {
-        if (instructions != null && !instructions.isEmpty()) {
-            mInstructionsView.setVisibility(View.VISIBLE);
-            mInstructionsView.setText(instructions);
-        }
-        else {
-            mInstructionsView.setVisibility(View.GONE);
+    override fun setInstructions(instructions: String?) {
+        mBinding.instructions.setVisibility(instructions.isNotNullOrEmpty())
+        if (instructions.isNotNullOrEmpty()) {
+            mBinding.instructions.text = instructions
         }
     }
 
-    @Override
-    public void handleError(String error) {
-        if (error != null && !error.isEmpty()) {
-            mErrorView.setVisibility(View.VISIBLE);
-            mErrorView.setText(error);
-
-            final String errorTag = mInputView.getResources().getString(R.string.label_error);
-            mInputView.setContentDescription(String.format("%s. %s. %s, %s.",
-                    mInputView.getSelectedItemName(), mField.getInstructions(), errorTag, error));
-        }
-        else {
-            logger.warn("error message not provided, so not informing the user about this error");
+    override fun handleError(errorMessage: String?) {
+        if (errorMessage.isNotNullOrEmpty()) {
+            mBinding.errorMessage.setVisibility(true)
+            mBinding.errorMessage.text = errorMessage
+            val errorTag = mBinding.etAutoComplete.resources.getString(R.string.label_error)
+            mBinding.etAutoComplete.contentDescription = String.format(
+                "%s. %s. %s, %s.",
+                mBinding.etAutoComplete.selectedItemName, mField.instructions, errorTag, errorMessage
+            )
+        } else {
+            logger.warn("error message not provided, so not informing the user about this error")
         }
     }
 
-    @Override
-    public boolean isValidInput() {
+    override fun isValidInput(): Boolean {
         // hide error as we are re-validating the input
-        mErrorView.setVisibility(View.GONE);
-
-        mInputView.setContentDescription(String.format("%s. %s.", mInputView.getSelectedItemName(), mField.getInstructions()));
+        mBinding.errorMessage.setVisibility(false)
+        mBinding.etAutoComplete.contentDescription =
+            String.format("%s. %s.", mBinding.etAutoComplete.selectedItemName, mField.instructions)
 
         // check if this is required field and has an input value or field is optional and have some value
-        if ((mField.isRequired() || (!mField.isRequired() && mField.getFieldType().equals(RegistrationFieldType.MULTI)
-                && mInputView.length() > 0)) && !hasValue()) {
-            initializeErrorMessage();
-            return false;
+        if (mField.isRequired || (mField.isMultiField && mBinding.etAutoComplete.text.isNotEmpty()) && !hasValue()) {
+            initializeErrorMessage()
+            return false
         }
 
         //For select we should not have length checks as there is no input
-        return true;
+        return true
     }
 
-    private void initializeErrorMessage(){
-        String errorMessage = mField.getErrorMessage().getRequired();
-        if (errorMessage == null || errorMessage.isEmpty()) {
-            errorMessage = getView().getResources().getString(R.string.error_select_or_enter_field,
-                    mField.getLabel());
+    private fun initializeErrorMessage() {
+        var errorMessage = mField.errorMessage!!.required
+        if (errorMessage.isNotNullOrEmpty()) {
+            errorMessage = getView().resources.getString(
+                R.string.error_select_or_enter_field,
+                mField.label
+            )
         }
-        handleError(errorMessage);
+        handleError(errorMessage)
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        mInputView.setEnabled(enabled);
+    override fun setEnabled(enabled: Boolean) {
+        mBinding.etAutoComplete.isEnabled = enabled
     }
 
-    @Override
-    public void setActionListener(IActionListener actionListener) {
+    override fun setActionListener(actionListener: IActionListener?) {
         // no actions for this field
     }
 
-    @Override
-    public View getOnErrorFocusView() {
-        return mInputView;
+    override fun getOnErrorFocusView(): View {
+        return mBinding.etAutoComplete
+    }
+
+    companion object {
+        private val logger = Logger(RegistrationSelectView::class.java)
     }
 }
