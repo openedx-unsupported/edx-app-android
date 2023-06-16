@@ -1,124 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cl_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:fitsSystemWindows="true"
-    android:paddingBottom="@dimen/widget_margin">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include layout="@layout/toolbar" />
-
-    <FrameLayout
-        android:id="@+id/registration_form"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:visibility="visible">
+        android:background="@color/neutralWhiteT"
+        android:fitsSystemWindows="true">
 
-        <ScrollView
-            android:id="@+id/scrollview"
+        <include layout="@layout/toolbar" />
+
+        <FrameLayout
+            android:id="@+id/registration_form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:visibility="visible">
 
-            <LinearLayout
-                android:id="@+id/registrationLayout"
+            <ScrollView
+                android:id="@+id/scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/widget_margin_double"
-                android:layout_marginEnd="@dimen/widget_margin_double"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/message_layout"
+                    android:id="@+id/registrationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <include layout="@layout/panel_message_with_check" />
-                </LinearLayout>
-
-                <org.edx.mobile.view.custom.DividerWithTextView
-                    android:id="@+id/signup_with_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/social_auth_bottom_margin"
-                    android:text="@string/register_with" />
-
-                <include layout="@layout/panel_social_auth" />
-
-                <org.edx.mobile.view.custom.DividerWithTextView
-                    android:id="@+id/or_signup_with_email_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/or_register_with_email" />
-
-                <LinearLayout
-                    android:id="@+id/required_fields_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/widget_margin_half"
-                    android:orientation="vertical" />
-
-                <org.edx.mobile.view.custom.DividerWithTextView
-                    android:id="@+id/optional_field_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="0dp"
-                    android:text="@string/show_optional_text" />
-
-                <LinearLayout
-                    android:id="@+id/optional_fields_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/edx_default_margin"
+                    android:layout_marginEnd="@dimen/edx_default_margin"
+                    android:animateLayoutChanges="true"
                     android:orientation="vertical"
-                    android:visibility="gone" />
+                    android:paddingBottom="@dimen/widget_margin">
 
-                <LinearLayout
-                    android:id="@+id/optionally_exposed_fields_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    <include
+                        android:id="@+id/message_layout"
+                        layout="@layout/panel_message_with_check"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/by_creating_account_tv"
-                    style="@style/agreement_text_style"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="@string/by_creating_account" />
+                    <LinearLayout
+                        android:id="@+id/required_fields_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
 
-                <LinearLayout
-                    android:id="@+id/createAccount_button_layout"
-                    style="@style/edX.Widget.SignInButtonLayout"
-                    android:contentDescription="@string/create_account_btn"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatToggleButton
+                        android:id="@+id/optional_field_tv"
+                        style="@style/regular_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/edx_default_margin"
+                        android:layout_marginBottom="@dimen/widget_margin_double"
+                        android:background="@drawable/selectable_rounded_box_overlay"
+                        android:button="@null"
+                        android:drawableEnd="@drawable/option_field_icon_selector"
+                        android:drawablePadding="@dimen/edx_half_margin"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/edx_default_margin"
+                        android:paddingEnd="@dimen/edx_default_margin"
+                        android:textAllCaps="false"
+                        android:textColor="@color/neutralXXDark"
+                        android:textOff="@string/show_optional_text"
+                        android:textOn="@string/hide_optional_text"
+                        android:textSize="@dimen/edx_small" />
+
+
+                    <LinearLayout
+                        android:id="@+id/optional_fields_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/optionally_exposed_fields_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
 
                     <TextView
-                        android:id="@+id/create_account_tv"
-                        style="@style/edX.Widget.SignInButton"
-                        android:text="@string/create_account_text" />
+                        android:id="@+id/eula_tv"
+                        style="@style/agreement_text_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="@string/by_creating_account" />
 
-                    <include layout="@layout/button_progress_indicator" />
+                    <LinearLayout
+                        android:id="@+id/create_account_btn"
+                        style="@style/edX.Widget.SignInButtonLayout"
+                        android:layout_marginBottom="@dimen/widget_margin_double"
+                        android:contentDescription="@string/create_account_text"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/create_account_tv"
+                            style="@style/edX.Widget.SignInButton"
+                            android:text="@string/create_account_text" />
+
+                        <include
+                            android:id="@+id/btn_progress"
+                            layout="@layout/button_progress_indicator" />
+                    </LinearLayout>
+
+                    <include
+                        android:id="@+id/social_auth"
+                        layout="@layout/panel_social_auth" />
                 </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
+            </ScrollView>
 
-    </FrameLayout>
+        </FrameLayout>
 
-    <TextView
-        android:id="@+id/content_unavailable_error_text"
-        style="@style/content_unavailable_error_text"
-        android:text="@string/reset_no_network_message"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/error_message"
+            style="@style/content_unavailable_error_text"
+            android:text="@string/reset_no_network_message"
+            android:visibility="gone" />
 
-    <include
-        android:id="@+id/loadingIndicator"
-        layout="@layout/loading_indicator"
-        android:visibility="gone" />
+        <include
+            android:id="@+id/loadingIndicator"
+            layout="@layout/loading_indicator"
+            android:visibility="gone" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

@@ -1,439 +1,397 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Handler;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import org.edx.mobile.BuildConfig;
-import org.edx.mobile.R;
-import org.edx.mobile.authentication.LoginAPI;
-import org.edx.mobile.authentication.LoginService;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.http.HttpStatus;
-import org.edx.mobile.http.HttpStatusException;
-import org.edx.mobile.http.callback.ErrorHandlingCallback;
-import org.edx.mobile.http.constants.ApiConstants;
-import org.edx.mobile.model.api.FormFieldMessageBody;
-import org.edx.mobile.model.api.RegisterResponseFieldError;
-import org.edx.mobile.model.authentication.AuthResponse;
-import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.module.registration.model.RegistrationFieldType;
-import org.edx.mobile.module.registration.model.RegistrationFormField;
-import org.edx.mobile.module.registration.view.IRegistrationFieldView;
-import org.edx.mobile.social.SocialFactory;
-import org.edx.mobile.social.SocialLoginDelegate;
-import org.edx.mobile.task.RegisterTask;
-import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppStoreUtils;
-import org.edx.mobile.util.IntentFactory;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.SoftKeyboardUtil;
-import org.edx.mobile.util.UiUtils;
-import org.edx.mobile.util.images.ErrorUtils;
-import org.edx.mobile.view.custom.DividerWithTextView;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import retrofit2.Call;
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Rect
+import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.view.View
+import android.view.accessibility.AccessibilityEvent
+import android.widget.ScrollView
+import androidx.annotation.DrawableRes
+import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.AndroidEntryPoint
+import org.edx.mobile.BuildConfig
+import org.edx.mobile.R
+import org.edx.mobile.authentication.LoginAPI.RegistrationException
+import org.edx.mobile.authentication.LoginService
+import org.edx.mobile.base.BaseFragmentActivity
+import org.edx.mobile.databinding.ActivityRegisterBinding
+import org.edx.mobile.extenstion.isNotNullOrEmpty
+import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.http.HttpStatusException
+import org.edx.mobile.http.callback.ErrorHandlingCallback
+import org.edx.mobile.http.constants.ApiConstants
+import org.edx.mobile.model.api.RegisterResponseFieldError
+import org.edx.mobile.model.authentication.AuthResponse
+import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.module.prefs.LoginPrefs
+import org.edx.mobile.module.registration.model.RegistrationDescription
+import org.edx.mobile.module.registration.model.RegistrationFieldType
+import org.edx.mobile.module.registration.view.IRegistrationFieldView
+import org.edx.mobile.module.registration.view.IRegistrationFieldView.Factory.getInstance
+import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
+import org.edx.mobile.social.SocialFactory
+import org.edx.mobile.social.SocialFactory.SOCIAL_SOURCE_TYPE
+import org.edx.mobile.social.SocialLoginDelegate
+import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
+import org.edx.mobile.task.RegisterTask
+import org.edx.mobile.task.Task
+import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.AppStoreUtils
+import org.edx.mobile.util.IntentFactory
+import org.edx.mobile.util.NetworkUtil
+import org.edx.mobile.util.ResourceUtil
+import org.edx.mobile.util.TextUtils
+import org.edx.mobile.util.UiUtils.getDrawable
+import org.edx.mobile.util.images.ErrorUtils
+import javax.inject.Inject
 
 @AndroidEntryPoint
-public class RegisterActivity extends BaseFragmentActivity
-        implements SocialLoginDelegate.MobileLoginCallback {
-    private static final int ACCESSIBILITY_FOCUS_DELAY_MS = 500;
+class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
-    private ViewGroup createAccountBtn;
-    private LinearLayout requiredFieldsLayout;
-    private LinearLayout optionalFieldsLayout;
-    private LinearLayout optionallyExposedFieldsLayout;
-    private TextView createAccountTv;
-    private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
-    private SocialLoginDelegate socialLoginDelegate;
-    private DividerWithTextView optionalText;
-    private View loadingIndicator;
-    private View registrationForm;
-    private View facebookButton;
-    private View googleButton;
-    private View microsoftButton;
-    private TextView errorTextView;
+    private lateinit var mBinding: ActivityRegisterBinding
+    private val mFieldViews: MutableList<IRegistrationFieldView> = ArrayList()
+    private var socialLoginDelegate: SocialLoginDelegate? = null
 
     @Inject
-    LoginPrefs loginPrefs;
+    lateinit var loginPrefs: LoginPrefs
 
     @Inject
-    LoginService loginService;
+    lateinit var loginService: LoginService
 
-    AnalyticsRegistry analyticsRegistry;
-
-    @NonNull
-    public static Intent newIntent() {
-        return IntentFactory.newIntentForComponent(RegisterActivity.class);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
+        super.setToolbarAsActionBar()
+        setTitle(R.string.register_title)
+        environment.analyticsRegistry.trackScreenView(Analytics.Screens.REGISTER)
+        getRegistrationForm()
+        hideSoftKeypad()
+        tryToSetUIInteraction(true)
+        initEULA()
+        mBinding.createAccountBtn.setOnClickListener {
+            hideSoftKeypad()
+            validateRegistrationFields()
+        }
+        mBinding.optionalFieldTv.setOnCheckedChangeListener { _, isChecked: Boolean ->
+            mBinding.optionalFieldsLayout.setVisibility(
+                isChecked
+            )
+        }
+        setupSocialAuth(savedInstanceState)
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        super.setToolbarAsActionBar();
-
-        setTitle(R.string.register_title);
-
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.REGISTER);
-
-        loadingIndicator = findViewById(R.id.loadingIndicator);
-        registrationForm = findViewById(R.id.registration_form);
-
-        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState,
-                this, environment.getConfig(), loginPrefs, SocialLoginDelegate.Feature.REGISTRATION);
-
-        errorTextView = (TextView) findViewById(R.id.content_unavailable_error_text);
-
-        boolean isSocialEnabled = false;
-        facebookButton = findViewById(R.id.facebook_button);
-        googleButton = findViewById(R.id.google_button);
-        microsoftButton = findViewById(R.id.microsoft_button);
-
-        if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, environment.getConfig())) {
-            facebookButton.setVisibility(View.GONE);
-        } else {
-            isSocialEnabled = true;
-            facebookButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
-        }
-
-        if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, environment.getConfig())) {
-            googleButton.setVisibility(View.GONE);
-        } else {
-            isSocialEnabled = true;
-            googleButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
-        }
-
-        if (!SocialFactory.isSocialFeatureEnabled(getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, environment.getConfig())) {
-            microsoftButton.setVisibility(View.GONE);
-        } else {
-            isSocialEnabled = true;
-            microsoftButton.setOnClickListener(socialLoginDelegate
-                    .createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT));
-        }
-
-        if (!isSocialEnabled) {
-            findViewById(R.id.panel_social_layout).setVisibility(View.GONE);
-            findViewById(R.id.or_signup_with_email_title).setVisibility(View.GONE);
-            findViewById(R.id.signup_with_row).setVisibility(View.GONE);
-        }
-
-        TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
-        agreementMessageView.setMovementMethod(LinkMovementMethod.getInstance());
-        agreementMessageView.setText(org.edx.mobile.util.TextUtils.generateLicenseText(
-                environment.getConfig(), this, R.string.by_creating_account));
-
-        createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
-        createAccountBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SoftKeyboardUtil.hide(RegisterActivity.this);
-                validateRegistrationFields();
-            }
-        });
-
-        createAccountTv = (TextView) findViewById(R.id.create_account_tv);
-        requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
-        optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
-        optionallyExposedFieldsLayout = (LinearLayout) findViewById(R.id.optionally_exposed_fields_layout);
-        optionalText = (DividerWithTextView) findViewById(R.id.optional_field_tv);
-        optionalText.setTextColor(ContextCompat.getColor(this, R.color.primaryXLightColor));
-        optionalText.setDividerColor(ContextCompat.getColor(this, R.color.neutralBase));
-        optionalText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (optionalFieldsLayout.getVisibility() == View.VISIBLE) {
-                    optionalFieldsLayout.setVisibility(View.GONE);
-                    optionalText.setText(getString(R.string.show_optional_text));
-                } else {
-                    optionalFieldsLayout.setVisibility(View.VISIBLE);
-                    optionalText.setText(getString(R.string.hide_optional_text));
-                }
-            }
-        });
-
-        getRegistrationForm();
-
-        hideSoftKeypad();
-        tryToSetUIInteraction(true);
+    private fun initEULA() {
+        mBinding.eulaTv.movementMethod = LinkMovementMethod.getInstance()
+        mBinding.eulaTv.text = TextUtils.generateLicenseText(
+            environment.config, this, R.string.by_creating_account
+        )
     }
 
-    private void validateRegistrationFields() {
-        Bundle parameters = getRegistrationParameters();
-        if (parameters == null) {
-            return;
+    private fun setupSocialAuth(savedInstanceState: Bundle?) {
+        socialLoginDelegate = SocialLoginDelegate(
+            this, savedInstanceState,
+            this, environment.config, loginPrefs, SocialLoginDelegate.Feature.REGISTRATION
+        )
+        var isSocialEnabled = false
+        if (isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK)) {
+            isSocialEnabled = true
+            mBinding.socialAuth.facebookButton.text =
+                getString(R.string.continue_with_social, getString(R.string.facebook_text))
+            mBinding.socialAuth.facebookButton.setOnClickListener(
+                socialLoginDelegate?.createSocialButtonClickHandler(
+                    SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK
+                )
+            )
+        } else {
+            mBinding.socialAuth.facebookButton.setVisibility(false)
         }
-        showProgress();
-        final Map<String, String> parameterMap = new HashMap<>();
-        for (String key : parameters.keySet()) {
-            parameterMap.put(key, parameters.getString(key));
+        if (isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.TYPE_GOOGLE)) {
+            isSocialEnabled = true
+            mBinding.socialAuth.googleButton.text =
+                getString(R.string.continue_with_social, getString(R.string.google_text))
+            mBinding.socialAuth.googleButton.setOnClickListener(
+                socialLoginDelegate?.createSocialButtonClickHandler(
+                    SOCIAL_SOURCE_TYPE.TYPE_GOOGLE
+                )
+            )
+        } else {
+            mBinding.socialAuth.googleButton.setVisibility(false)
         }
-        Call<JsonObject> validateRegistrationFields = loginService.validateRegistrationFields(parameterMap);
-        validateRegistrationFields.enqueue(new ErrorHandlingCallback<JsonObject>(this) {
-            @Override
-            protected void onResponse(@NonNull JsonObject responseBody) {
+        if (isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT)) {
+            isSocialEnabled = true
+            mBinding.socialAuth.microsoftButton.text =
+                getString(R.string.continue_with_social, getString(R.string.microsoft_text))
+            mBinding.socialAuth.microsoftButton.setOnClickListener(
+                socialLoginDelegate?.createSocialButtonClickHandler(SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT)
+            )
+        } else {
+            mBinding.socialAuth.microsoftButton.setVisibility(false)
+        }
+        mBinding.socialAuth.root.setVisibility(isSocialEnabled)
+    }
+
+    private fun isSocialFeatureEnable(type: SOCIAL_SOURCE_TYPE): Boolean {
+        return SocialFactory.isSocialFeatureEnabled(application, type, environment.config)
+    }
+
+    private fun validateRegistrationFields() {
+        val parameters = getRegistrationParameters() ?: return
+
+        invalidateBtnProgress(true)
+        val parameterMap: MutableMap<String, String?> = HashMap()
+        for (key in parameters.keySet()) {
+            parameterMap[key] = parameters.getString(key)
+        }
+        val validateRegistrationFields = loginService.validateRegistrationFields(parameterMap)
+        validateRegistrationFields.enqueue(object : ErrorHandlingCallback<JsonObject?>(this) {
+            override fun onResponse(responseBody: JsonObject) {
                 // Callback method for a successful HTTP response.
-                final Type stringMapType = new TypeToken<HashMap<String, String>>() {
-                }.getType();
-                final HashMap<String, String> messageBody = new Gson().fromJson(responseBody.get(ApiConstants.VALIDATION_DECISIONS), stringMapType);
+                val stringMapType = object : TypeToken<HashMap<String?, String?>?>() {}.type
+                val messageBody = Gson().fromJson<HashMap<String, String>>(
+                    responseBody[ApiConstants.VALIDATION_DECISIONS], stringMapType
+                )
                 if (hasValidationError(messageBody)) {
-                    hideProgress();
+                    invalidateBtnProgress(false)
                 } else {
-                    createAccount(parameters);
+                    createAccount(parameters)
                 }
             }
 
-            @Override
-            protected void onFailure(@NonNull Throwable error) {
-                hideProgress();
-                RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(error,
-                        RegisterActivity.this));
-                logger.error(error);
+            override fun onFailure(error: Throwable) {
+                invalidateBtnProgress(false)
+                this@RegisterActivity.showAlertDialog(
+                    null, ErrorUtils.getErrorMessage(
+                        error,
+                        this@RegisterActivity
+                    )
+                )
+                logger.error(error)
             }
-        });
+        })
     }
 
-    private boolean hasValidationError(HashMap<String, String> messageBody) {
-        boolean errorShown = false;
-        for (String key : messageBody.keySet()) {
-            if (key == null)
-                continue;
-            for (IRegistrationFieldView fieldView : mFieldViews) {
-                String error = messageBody.get(key);
-                if (!TextUtils.isEmpty(error) && key.equalsIgnoreCase(fieldView.getField().getName())) {
-                    fieldView.handleError(error);
+    private fun hasValidationError(messageBody: HashMap<String, String>): Boolean {
+        var errorShown = false
+        for (key in messageBody.keys) {
+            for (fieldView in mFieldViews) {
+                val error = messageBody[key]
+                if (error.isNotNullOrEmpty() &&
+                    key.equals(fieldView.getField().name, ignoreCase = true)
+                ) {
+                    fieldView.handleError(error)
                     if (!errorShown) {
                         // this is the first input field with error,
                         // so focus on it after showing the popup
-                        showErrorPopup(fieldView.getOnErrorFocusView());
-                        errorShown = true;
+                        showErrorPopup(fieldView.getOnErrorFocusView())
+                        errorShown = true
                     }
-                    break;
+                    break
                 }
             }
         }
-        return errorShown;
+        return errorShown
     }
 
-    private void showErrorMessage(String errorMsg, @DrawableRes int errorIconResId) {
-        errorTextView.setVisibility(View.VISIBLE);
-        errorTextView.setText(errorMsg);
-        errorTextView.setCompoundDrawables(null, UiUtils.INSTANCE.getDrawable(this, errorIconResId,
-                R.dimen.content_unavailable_error_icon_size, R.color.neutralDark),
-                null, null
-        );
+    private fun showErrorMessage(errorMsg: String, @DrawableRes errorIconResId: Int) {
+        mBinding.errorMessage.visibility = View.VISIBLE
+        mBinding.errorMessage.text = errorMsg
+        mBinding.errorMessage.setCompoundDrawables(
+            null, getDrawable(
+                this, errorIconResId,
+                R.dimen.content_unavailable_error_icon_size, R.color.neutralDark
+            ),
+            null, null
+        )
     }
 
-    public void getRegistrationForm() {
+    private fun getRegistrationForm() {
         if (!NetworkUtil.isConnected(this)) {
-            showErrorMessage(getString(R.string.reset_no_network_message), R.drawable.ic_wifi);
-            return;
+            showErrorMessage(getString(R.string.reset_no_network_message), R.drawable.ic_wifi)
+            return
         }
-
-        tryToSetUIInteraction(false);
-        loadingIndicator.setVisibility(View.VISIBLE);
-
-        final Call<RegistrationDescription> getRegistrationFormCall = loginService.getRegistrationForm(
-                environment.getConfig().getApiUrlVersionConfig().getRegistrationApiVersion());
-        getRegistrationFormCall.enqueue(new ErrorHandlingCallback<RegistrationDescription>(this) {
-            @Override
-            protected void onResponse(@NonNull RegistrationDescription registrationDescription) {
-                updateUI(true);
-                setupRegistrationForm(registrationDescription);
+        tryToSetUIInteraction(false)
+        mBinding.loadingIndicator.root.visibility = View.VISIBLE
+        val getRegistrationFormCall = loginService.getRegistrationForm(
+            environment.config.apiUrlVersionConfig.registrationApiVersion
+        )
+        getRegistrationFormCall.enqueue(object :
+            ErrorHandlingCallback<RegistrationDescription?>(this) {
+            override fun onResponse(registrationDescription: RegistrationDescription) {
+                updateUI(true)
+                setupRegistrationForm(registrationDescription)
             }
 
-            @Override
-            protected void onFailure(@NonNull Throwable error) {
-                updateUI(false);
-                showErrorMessage(ErrorUtils.getErrorMessage(error, RegisterActivity.this),
-                        R.drawable.ic_error);
-                logger.error(error);
+            override fun onFailure(error: Throwable) {
+                updateUI(false)
+                showErrorMessage(
+                    ErrorUtils.getErrorMessage(error, this@RegisterActivity),
+                    R.drawable.ic_error
+                )
+                logger.error(error)
             }
 
-            private void updateUI(boolean isSuccess) {
-                tryToSetUIInteraction(true);
-                registrationForm.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
-                loadingIndicator.setVisibility(View.GONE);
+            private fun updateUI(isSuccess: Boolean) {
+                tryToSetUIInteraction(true)
+                mBinding.registrationForm.setVisibility(isSuccess)
+                mBinding.loadingIndicator.root.visibility = View.GONE
             }
-        });
+        })
     }
 
-    private void setupRegistrationForm(RegistrationDescription form) {
-        LayoutInflater inflater = getLayoutInflater();
-
-        for (RegistrationFormField field : form.getFields()) {
-            IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
-            if (fieldView != null) mFieldViews.add(fieldView);
+    private fun setupRegistrationForm(form: RegistrationDescription) {
+        val inflater = layoutInflater
+        for (field in form.fields) {
+            val fieldView = getInstance(inflater, field)
+            if (fieldView != null) mFieldViews.add(fieldView)
         }
 
         // add required and optional fields to the window
-        for (IRegistrationFieldView v : mFieldViews) {
-            if (v.getField().isRequired()) {
-                requiredFieldsLayout.addView(v.getView());
-            } else if (!v.getField().isRequired() && v.getField().isExposed()) {
-                optionallyExposedFieldsLayout.addView(v.getView());
+        for (v in mFieldViews) {
+            if (v.getField().isRequired) {
+                mBinding.requiredFieldsLayout.addView(v.getView())
+            } else if (!v.getField().isRequired && v.getField().isExposed) {
+                mBinding.optionallyExposedFieldsLayout.addView(v.getView())
             } else {
-                optionalFieldsLayout.addView(v.getView());
+                mBinding.optionalFieldsLayout.addView(v.getView())
             }
         }
-
-        if (optionalFieldsLayout.getChildCount() == 0)
-            optionalText.setVisibility(View.GONE);
+        if (mBinding.optionalFieldsLayout.childCount == 0) mBinding.optionalFieldTv.visibility =
+            View.GONE
 
         // enable all the views
-        tryToSetUIInteraction(true);
+        tryToSetUIInteraction(true)
     }
 
-    private void createAccount(Bundle parameters) {
+    private fun createAccount(parameters: Bundle) {
         // set honor_code and terms_of_service to true
-        parameters.putString("honor_code", "true");
-        parameters.putString("terms_of_service", "true");
+        parameters.putString("honor_code", "true")
+        parameters.putString("terms_of_service", "true")
 
         //set parameter required by social registration
-        final String access_token = loginPrefs.getSocialLoginAccessToken();
-        final String provider = loginPrefs.getSocialLoginProvider();
-        boolean fromSocialNet = !TextUtils.isEmpty(access_token);
-        if (fromSocialNet) {
-            parameters.putString("access_token", access_token);
-            parameters.putString("provider", provider);
-            parameters.putString("client_id", environment.getConfig().getOAuthClientId());
+        val accessToken = loginPrefs.socialLoginAccessToken
+        val provider = loginPrefs.socialLoginProvider
+        if (accessToken.isNotNullOrEmpty()) {
+            parameters.putString("access_token", accessToken)
+            parameters.putString("provider", provider)
+            parameters.putString("client_id", environment.config.oAuthClientId)
         }
 
         // Send analytics event for Create Account button click
-        final String appVersion = String.format("%s v%s", getString(R.string.android), BuildConfig.VERSION_NAME);
-        environment.getAnalyticsRegistry().trackCreateAccountClicked(appVersion, provider);
-
-        final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(provider);
-        final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
-            @Override
-            protected void onPostExecute(AuthResponse auth) {
-                super.onPostExecute(auth);
-                if (auth != null) {
-                    environment.getAnalyticsRegistry().trackRegistrationSuccess(appVersion, provider);
-                    onUserLoginSuccess();
+        val appVersion =
+            String.format("%s v%s", getString(R.string.android), BuildConfig.VERSION_NAME)
+        environment.analyticsRegistry.trackCreateAccountClicked(appVersion, provider)
+        val backSourceType = SOCIAL_SOURCE_TYPE.fromString(provider)
+        @SuppressLint("StaticFieldLeak") val task: RegisterTask =
+            object : RegisterTask(this, parameters, accessToken, backSourceType) {
+                @Deprecated("Deprecated in Java")
+                override fun onPostExecute(auth: AuthResponse?) {
+                    super.onPostExecute(auth)
+                    if (auth != null) {
+                        environment.analyticsRegistry.trackRegistrationSuccess(appVersion, provider)
+                        onUserLoginSuccess()
+                    }
                 }
-            }
 
-            @Override
-            public void onException(Exception ex) {
-                hideProgress();
-                if (ex instanceof LoginAPI.RegistrationException) {
-                    final FormFieldMessageBody messageBody = ((LoginAPI.RegistrationException) ex).getFormErrorBody();
-                    boolean errorShown = false;
-                    for (String key : messageBody.keySet()) {
-                        if (key == null)
-                            continue;
-                        for (IRegistrationFieldView fieldView : mFieldViews) {
-                            if (key.equalsIgnoreCase(fieldView.getField().getName())) {
-                                List<RegisterResponseFieldError> error = messageBody.get(key);
-                                showErrorOnField(error, fieldView);
-                                if (!errorShown) {
-                                    // this is the first input field with error,
-                                    // so focus on it after showing the popup
-                                    showErrorPopup(fieldView.getOnErrorFocusView());
-                                    errorShown = true;
+                override fun onException(ex: Exception) {
+                    invalidateBtnProgress(false)
+                    if (ex is RegistrationException) {
+                        val messageBody = ex.formErrorBody
+                        var errorShown = false
+                        for (key in messageBody.keys) {
+                            if (key == null) continue
+                            for (fieldView in mFieldViews) {
+                                if (key.equals(fieldView.getField().name, ignoreCase = true)) {
+                                    val error = messageBody[key]
+                                    showErrorOnField(error, fieldView)
+                                    if (!errorShown) {
+                                        // this is the first input field with error,
+                                        // so focus on it after showing the popup
+                                        showErrorPopup(fieldView.getOnErrorFocusView())
+                                        errorShown = true
+                                    }
+                                    break
                                 }
-                                break;
                             }
                         }
+                        if (errorShown) {
+                            // We have already shown a specific error message.
+                            return  // Return here to avoid falling back to the generic error handler.
+                        }
                     }
-                    if (errorShown) {
-                        // We have already shown a specific error message.
-                        return; // Return here to avoid falling back to the generic error handler.
-                    }
-                }
-                // If app version is un-supported
-                if (ex instanceof HttpStatusException &&
-                        ((HttpStatusException) ex).getStatusCode() == HttpStatus.UPGRADE_REQUIRED) {
-                    RegisterActivity.this.showAlertDialog(null,
+                    // If app version is un-supported
+                    if (ex is HttpStatusException &&
+                        ex.statusCode == HttpStatus.UPGRADE_REQUIRED
+                    ) {
+                        this@RegisterActivity.showAlertDialog(
+                            null,
                             getString(R.string.app_version_unsupported_register_msg),
                             getString(R.string.label_update),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    AppStoreUtils.openAppInAppStore(RegisterActivity.this);
-                                }
-                            }, getString(android.R.string.cancel), null);
-                } else {
-                    RegisterActivity.this.showAlertDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+                            { _, _ -> AppStoreUtils.openAppInAppStore(this@RegisterActivity) },
+                            getString(android.R.string.cancel),
+                            null
+                        )
+                    } else {
+                        this@RegisterActivity.showAlertDialog(
+                            null,
+                            ErrorUtils.getErrorMessage(ex, this@RegisterActivity)
+                        )
+                    }
                 }
             }
-        };
-        task.execute();
+        task.execute()
     }
 
-    private Bundle getRegistrationParameters() {
-        boolean hasError = false;
-        Bundle parameters = new Bundle();
-        String email = null, confirm_email = null;
-        for (IRegistrationFieldView v : mFieldViews) {
+    // this is the first input field with error,
+    // so focus on it after showing the popup
+    // do NOT proceed if validations are failed
+    // we submit the field only if it provides a value
+    // Validating email field with confirm email field
+    private fun getRegistrationParameters(): Bundle? {
+        var hasError = false
+        val parameters = Bundle()
+        var email: String? = null
+        var confirmEmail: String? = null
+        for (v in mFieldViews) {
             if (v.isValidInput()) {
-                if (v.getField().getName().equalsIgnoreCase(RegistrationFieldType.EMAIL.name())) {
-                    email = v.getCurrentValue().getAsString();
+                if (v.getField().isEmailField) {
+                    email = v.getCurrentValue()?.asString
                 }
-                if (v.getField().getName().equalsIgnoreCase(RegistrationFieldType.CONFIRM_EMAIL.name())) {
-                    confirm_email = v.getCurrentValue().getAsString();
+                if (v.getField().isConfirmEmailField) {
+                    confirmEmail = v.getCurrentValue()?.asString
                 }
 
                 // Validating email field with confirm email field
-                if (email != null && confirm_email != null && !email.equalsIgnoreCase(confirm_email)) {
-                    v.handleError(v.getField().getErrorMessage().getRequired());
-                    showErrorPopup(v.getOnErrorFocusView());
-                    return null;
+                if (email.isNotNullOrEmpty() &&
+                    confirmEmail.isNotNullOrEmpty() &&
+                    !email.equals(confirmEmail)
+                ) {
+                    v.handleError(v.getField().errorMessage?.required)
+                    showErrorPopup(v.getOnErrorFocusView())
+                    return null
                 }
                 if (v.hasValue()) {
                     // we submit the field only if it provides a value
-                    parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
+                    parameters.putString(v.getField().name, v.getCurrentValue()?.asString)
                 }
             } else {
                 if (!hasError) {
                     // this is the first input field with error,
                     // so focus on it after showing the popup
-                    showErrorPopup(v.getOnErrorFocusView());
+                    showErrorPopup(v.getOnErrorFocusView())
                 }
-                hasError = true;
+                hasError = true
             }
         }
         // do NOT proceed if validations are failed
-        if (hasError) {
-            return null;
-        }
-        return parameters;
+        return if (hasError) {
+            null
+        } else parameters
     }
 
     /**
@@ -443,56 +401,25 @@ public class RegisterActivity extends BaseFragmentActivity
      * @param fieldView
      * @return
      */
-    private void showErrorOnField(List<RegisterResponseFieldError> errors, @NonNull IRegistrationFieldView fieldView) {
-        if (errors != null && !errors.isEmpty()) {
-            StringBuffer buffer = new StringBuffer();
-            for (RegisterResponseFieldError e : errors) {
-                buffer.append(e.getUserMessage() + " ");
+    private fun showErrorOnField(
+        errors: List<RegisterResponseFieldError>?,
+        fieldView: IRegistrationFieldView
+    ) {
+        if (!errors.isNullOrEmpty()) {
+            val buffer = StringBuffer()
+            for (e in errors) {
+                buffer.append(e.userMessage + " ")
             }
-            fieldView.handleError(buffer.toString());
+            fieldView.handleError(buffer.toString())
         }
     }
 
-    private void showErrorPopup(@NonNull final View errorView) {
-        showAlertDialog(getResources().getString(R.string.registration_error_title), getResources().getString(R.string.registration_error_message), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                scrollToView((ScrollView) findViewById(R.id.scrollview), errorView);
-            }
-        });
-    }
-
-    /**
-     * Scrolls to the top of the given View in the given ScrollView.
-     *
-     * @param scrollView
-     * @param view
-     */
-    public static void scrollToView(final ScrollView scrollView, final View view) {
-        /*
-        The delayed focus has been added so that TalkBack reads the proper view's description that
-        we want focus on. For example in case of {@link RegistrationEditText} we want accessibility
-        focus on TIL when an error is displayed instead of the EditText within it, which can only
-        be achieved through this delay.
-         */
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                view.requestFocus();
-                view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
-            }
-        }, ACCESSIBILITY_FOCUS_DELAY_MS);
-
-        // Determine if scroll needs to happen
-        final Rect scrollBounds = new Rect();
-        scrollView.getHitRect(scrollBounds);
-        if (!view.getLocalVisibleRect(scrollBounds)) {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.smoothScrollTo(0, view.getTop());
-                }
-            });
+    private fun showErrorPopup(errorView: View) {
+        showAlertDialog(
+            resources.getString(R.string.registration_error_title),
+            resources.getString(R.string.registration_error_message)
+        ) { _, _ ->
+            scrollToView(mBinding.scrollview, errorView)
         }
     }
 
@@ -501,123 +428,100 @@ public class RegisterActivity extends BaseFragmentActivity
      *
      * @param socialType
      */
-    private void showRegularMessage(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-        LinearLayout messageLayout = (LinearLayout) findViewById(R.id.message_layout);
-        TextView messageView = (TextView) findViewById(R.id.message_body);
-        //we replace facebook and google programmatically here
-        //in order to make localization work
-        String socialTypeString = "";
-        String signUpSuccessString = "";
-        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
-            socialTypeString = getString(R.string.facebook_text);
-            signUpSuccessString = getString(R.string.sign_up_with_facebook_ok);
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT) {
-            socialTypeString = getString(R.string.microsoft_text);
-            signUpSuccessString = getString(R.string.sign_up_with_microsoft_ok);
-        } else {  //google
-            socialTypeString = getString(R.string.google_text);
-            signUpSuccessString = getString(R.string.sign_up_with_google_ok);
-        }
-        StringBuilder sb = new StringBuilder();
-        CharSequence extraInfoPrompt = ResourceUtil.getFormattedString(getResources(), R.string.sign_up_with_social_ok, "platform_name", environment.getConfig().getPlatformName());
-        sb.append(signUpSuccessString.replace(socialTypeString, "<b><strong>" + socialTypeString + "</strong></b>"))
-                .append("<br>").append(extraInfoPrompt);
+    private fun showRegularMessage(socialType: SOCIAL_SOURCE_TYPE) {
+        mBinding.messageLayout.title.text = when (socialType) {
+            SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ->
+                getString(R.string.sign_up_with_facebook_ok)
 
-        Spanned result = Html.fromHtml(sb.toString());
-        messageView.setText(result);
-        messageLayout.setVisibility(View.VISIBLE);
-        // UiUtils.INSTANCE.animateLayouts(messageLayout);
+            SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT ->
+                getString(R.string.sign_up_with_microsoft_ok)
+
+            SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ->
+                getString(R.string.sign_up_with_google_ok)
+
+            else -> ""
+        }
+        mBinding.messageLayout.message.text = ResourceUtil.getFormattedString(
+            resources,
+            R.string.sign_up_with_social_ok,
+            AppConstants.PLATFORM_NAME,
+            environment.config.platformName
+        )
+        mBinding.messageLayout.root.visibility = View.VISIBLE
     }
 
-    private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken) {
+    private fun updateUIOnSocialLoginToEdxFailure(
+        socialType: SOCIAL_SOURCE_TYPE,
+        accessToken: String
+    ) {
         //change UI.
-        View signupWith = findViewById(R.id.signup_with_row);
-        signupWith.setVisibility(View.GONE);
-        View socialPanel = findViewById(R.id.panel_social_layout);
-        socialPanel.setVisibility(View.GONE);
-        DividerWithTextView signupWithEmailTitle = (DividerWithTextView) findViewById(R.id.or_signup_with_email_title);
-        signupWithEmailTitle.setText(getString(R.string.complete_registration));
+        val socialPanel = findViewById<View>(R.id.panel_social_layout)
+        socialPanel.visibility = View.GONE
         //help method
-        showRegularMessage(socialType);
+        showRegularMessage(socialType)
         //populate the field with value from social site
-        populateEmailFromSocialSite(socialType, accessToken);
+        populateEmailFromSocialSite(socialType, accessToken)
         //hide confirm email and password field as we don't need them in case of social signup
-        List<IRegistrationFieldView> extraFields = new ArrayList<>();
-        for (IRegistrationFieldView field : this.mFieldViews) {
-            String fieldName = field.getField().getName();
-            if (RegistrationFieldType.CONFIRM_EMAIL.name().equalsIgnoreCase(fieldName) ||
-                    RegistrationFieldType.PASSWORD.name().equalsIgnoreCase(fieldName)) {
-                field.getView().setVisibility(View.GONE);
-                extraFields.add(field);
+        val extraFields: MutableList<IRegistrationFieldView> = ArrayList()
+        for (field in mFieldViews) {
+            if (field.getField().isConfirmEmailField || field.getField().isPasswordField) {
+                field.getView().setVisibility(false)
+                extraFields.add(field)
             }
         }
-        this.mFieldViews.removeAll(extraFields);
+        mFieldViews.removeAll(extraFields)
         // registrationLayout.requestLayout();
     }
 
-    protected void populateFormField(String fieldName, String value) {
-        for (IRegistrationFieldView field : this.mFieldViews) {
-            if (fieldName.equalsIgnoreCase(field.getField().getName())) {
-                boolean success = field.setRawValue(value);
-                if (success)
-                    break;
+    private fun populateFormField(fieldName: String, value: String?) {
+        for (field in mFieldViews) {
+            if (fieldName.equals(field.getField().name, ignoreCase = true)) {
+                val success = field.setRawValue(value)
+                if (success) break
             }
         }
     }
 
+    private fun populateEmailFromSocialSite(socialType: SOCIAL_SOURCE_TYPE, accessToken: String) {
+        socialLoginDelegate?.getUserInfo(socialType, accessToken) { email, name ->
+            populateFormField("email", email)
+            if (name.isNotNullOrEmpty()) {
+                populateFormField("name", name)
 
-    private void populateEmailFromSocialSite(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken) {
-        this.socialLoginDelegate.getUserInfo(socialType, accessToken, new SocialLoginDelegate.SocialUserInfoCallback() {
-            @Override
-            public void setSocialUserInfo(String email, String name) {
-                populateFormField("email", email);
-                if (name != null && name.length() > 0) {
-                    populateFormField("name", name);
-
-                    //Should we save the email here?
-                    loginPrefs.setLastAuthenticatedEmail(email);
-                }
+                //Should we save the email here?
+                loginPrefs.lastAuthenticatedEmail = email
             }
-        });
+        }
     }
 
     ///////section related to social login ///////////////
     // there are some duplicated code from login activity, as the logic
     //between login and registration is different subtly
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        socialLoginDelegate.onActivityDestroyed();
+    override fun onDestroy() {
+        super.onDestroy()
+        socialLoginDelegate?.onActivityDestroyed()
     }
 
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         // outState.putString("username", email_et.getText().toString().trim());
-        socialLoginDelegate.onActivitySaveInstanceState(outState);
-
+        socialLoginDelegate?.onActivitySaveInstanceState(outState)
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        socialLoginDelegate.onActivityStopped();
-
+    override fun onStop() {
+        super.onStop()
+        socialLoginDelegate?.onActivityStopped()
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        socialLoginDelegate.onActivityStarted();
+    override fun onStart() {
+        super.onStart()
+        socialLoginDelegate?.onActivityStarted()
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
-        tryToSetUIInteraction(true);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        socialLoginDelegate?.onActivityResult(requestCode, resultCode, data)
+        tryToSetUIInteraction(true)
     }
 
     /**
@@ -630,93 +534,82 @@ public class RegisterActivity extends BaseFragmentActivity
      * @param accessToken
      * @param backend
      */
-    public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
+    override fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>?) {
         //we should handle UI update here. but right now we do nothing in UI
     }
 
     /*
      *  callback if login to edx success using social access_token
      */
-    public void onUserLoginSuccess() {
-        setResult(RESULT_OK);
-        finish();
+    override fun onUserLoginSuccess() {
+        setResult(RESULT_OK)
+        finish()
     }
 
     /**
      * callback if login to edx failed using social access_token
      */
-    public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
+    override fun onUserLoginFailure(ex: Exception, accessToken: String, backend: String) {
         // FIXME: We are assuming that if we get here, the accessToken is valid. That may not be the case!
 
         //we should redirect to current page.
         //do nothing
         //we need to add 1)access_token   2) provider 3) client_id
         // handle if this is a LoginException
-        tryToSetUIInteraction(true);
-        logger.error(ex);
-        if (ex instanceof HttpStatusException && ((HttpStatusException) ex).getStatusCode() == HttpStatus.FORBIDDEN) {
-            RegisterActivity.this.showAlertDialog(getString(R.string.login_error),
-                    getString(R.string.auth_provider_disabled_user_error),
-                    getString(R.string.label_customer_support),
-                    (dialog, which) -> environment.getRouter()
-                            .showFeedbackScreen(RegisterActivity.this,
-                                    getString(R.string.email_subject_account_disabled)), getString(android.R.string.cancel), null);
+        tryToSetUIInteraction(true)
+        logger.error(ex)
+        if (ex is HttpStatusException && ex.statusCode == HttpStatus.FORBIDDEN) {
+            this@RegisterActivity.showAlertDialog(
+                getString(R.string.login_error),
+                getString(R.string.auth_provider_disabled_user_error),
+                getString(R.string.label_customer_support),
+                { _, _ ->
+                    environment.router
+                        .showFeedbackScreen(
+                            this@RegisterActivity,
+                            getString(R.string.email_subject_account_disabled)
+                        )
+                }, getString(android.R.string.cancel), null
+            )
         } else {
-            SocialFactory.SOCIAL_SOURCE_TYPE socialType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backend);
-            updateUIOnSocialLoginToEdxFailure(socialType, accessToken);
+            val socialType = SOCIAL_SOURCE_TYPE.fromString(backend)
+            updateUIOnSocialLoginToEdxFailure(socialType, accessToken)
         }
     }
 
-    //help functions for UI enable/disable states
-
-    private void showProgress() {
-        tryToSetUIInteraction(false);
-        View progress = findViewById(R.id.progress_indicator);
-        progress.setVisibility(View.VISIBLE);
-        createAccountTv.setText(getString(R.string.creating_account_text));
+    /**
+     * Show/Hide loading progress on Create Account button
+     *
+     * @param isEnable flag to enable/disable view
+     */
+    private fun invalidateBtnProgress(isEnable: Boolean) {
+        tryToSetUIInteraction(isEnable)
+        mBinding.btnProgress.progressIndicator.setVisibility(isEnable)
+        mBinding.createAccountTv.text =
+            getString(if (isEnable) R.string.creating_account_text else R.string.create_account_text)
     }
 
-    private void hideProgress() {
-        tryToSetUIInteraction(true);
-        View progress = findViewById(R.id.progress_indicator);
-        progress.setVisibility(View.GONE);
-        createAccountTv.setText(getString(R.string.create_account_text));
+    /**
+     * Enable/Disable the Create button during server calls
+     *
+     * @param isEnable flag to enable/disable view
+     */
+    private fun invalidateCreateAccBtn(isEnable: Boolean) {
+        mBinding.createAccountBtn.isEnabled = isEnable
+        mBinding.createAccountTv.text = getString(R.string.create_account_text)
     }
 
-
-    //Disable the Create button during server call
-    private void createButtonDisabled() {
-        createAccountBtn.setEnabled(false);
-        createAccountTv.setText(getString(R.string.create_account_text));
-    }
-
-    //Enable the Create button during server call
-    private void createButtonEnabled() {
-        createAccountBtn.setEnabled(true);
-        createAccountTv.setText(getString(R.string.create_account_text));
-    }
-
-
-    @Override
-    public boolean tryToSetUIInteraction(boolean enable) {
-        if (enable) {
-            unblockTouch();
-            createButtonEnabled();
-        } else {
-            blockTouch();
-            createButtonDisabled();
+    override fun tryToSetUIInteraction(enable: Boolean): Boolean {
+        invalidateTouch(enable)
+        invalidateCreateAccBtn(enable)
+        for (v in mFieldViews) {
+            v.setEnabled(enable)
+            setActionListeners(v)
         }
-
-        for (IRegistrationFieldView v : mFieldViews) {
-            v.setEnabled(enable);
-            setActionListeners(v);
-        }
-
-        facebookButton.setClickable(enable);
-        googleButton.setClickable(enable);
-        microsoftButton.setClickable(enable);
-
-        return true;
+        mBinding.socialAuth.facebookButton.isClickable = enable
+        mBinding.socialAuth.googleButton.isClickable = enable
+        mBinding.socialAuth.microsoftButton.isClickable = enable
+        return true
     }
 
     /**
@@ -724,21 +617,58 @@ public class RegisterActivity extends BaseFragmentActivity
      *
      * @param view
      */
-    private void setActionListeners(IRegistrationFieldView view) {
-        if (RegistrationFieldType.CHECKBOX == view.getField().getFieldType()) {
-            view.setActionListener(() -> {
-                if (view.getCurrentValue().getAsBoolean()) {
-                    environment.getAnalyticsRegistry().trackEvent(
+    private fun setActionListeners(view: IRegistrationFieldView) {
+        if (RegistrationFieldType.CHECKBOX == view.getField().fieldType) {
+            view.setActionListener(object : IActionListener {
+                override fun onClickAgreement() {
+                    if (view.getCurrentValue()?.asBoolean == true) {
+                        environment.analyticsRegistry.trackEvent(
                             Analytics.Events.REGISTRATION_OPT_IN_TURNED_ON,
                             Analytics.Values.REGISTRATION_OPT_IN_TURNED_ON
-                    );
-                } else {
-                    environment.getAnalyticsRegistry().trackEvent(
+                        )
+                    } else {
+                        environment.analyticsRegistry.trackEvent(
                             Analytics.Events.REGISTRATION_OPT_IN_TURNED_OFF,
                             Analytics.Values.REGISTRATION_OPT_IN_TURNED_OFF
-                    );
+                        )
+                    }
                 }
-            });
+            })
+        }
+    }
+
+    /**
+     * Scrolls to the top of the given View in the given ScrollView.
+     *
+     * @param scrollView
+     * @param view
+     */
+    private fun scrollToView(scrollView: ScrollView, view: View) {
+        /*
+    The delayed focus has been added so that TalkBack reads the proper view's description that
+    we want focus on. For example in case of {@link RegistrationEditText} we want accessibility
+    focus on TIL when an error is displayed instead of the EditText within it, which can only
+    be achieved through this delay.
+     */
+        view.postDelayed({
+            view.requestFocus()
+            view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+        }, ACCESSIBILITY_FOCUS_DELAY_MS.toLong())
+
+        // Determine if scroll needs to happen
+        val scrollBounds = Rect()
+        scrollView.getHitRect(scrollBounds)
+        if (!view.getLocalVisibleRect(scrollBounds)) {
+            Runnable { scrollView.smoothScrollTo(0, view.top) }
+        }
+    }
+
+    companion object {
+        private const val ACCESSIBILITY_FOCUS_DELAY_MS = 500
+
+        @JvmStatic
+        fun newIntent(): Intent {
+            return IntentFactory.newIntentForComponent(RegisterActivity::class.java)
         }
     }
 }
