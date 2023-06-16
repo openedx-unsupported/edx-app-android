@@ -119,9 +119,8 @@
     <color name="toolbar_controls_color">@color/primaryBaseColor</color>
 
     <!-- Social platform colors -->
-    <color name="fb_blue">#4267B2</color>
-    <color name="microsoft_dark">#333333</color>
-    <color name="google_blue">#4285F4</color>
+    <color name="fb_bg">#1877F2</color>
+    <color name="microsoft_bg">#2F2F2F</color>
 
 
 
@@ -138,7 +137,6 @@
     <color name="transparent_white_85">#D9FFFFFF</color>
     <color name="transparent_white_30">#4DFFFFFF</color>
     <color name="transparent_white_26">#42FFFFFF</color>
-    <color name="transparent_white_20">#33FFFFFF</color>
     <color name="transparent_white_13">#21ffffff</color>
 
     <color name="cyan_text_navigation_20">#20299ED7</color>

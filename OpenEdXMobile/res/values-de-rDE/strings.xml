@@ -39,16 +39,10 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">Diese Funktion erfordert eine aktive Internetverbindung</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">Nutzername oder E-Mail-Adresse</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">E-Mail-Adresse</string>
   <!--Hint text for password field-->
   <string name="password">Passwort</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">Passwort vergessen?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Einloggen</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Anmelde Knopf</string>
   <!--Message shown while waiting for action-->
@@ -72,7 +66,6 @@
   <string name="tos_and_honor_code">{platform_name} Nutzungsbedingungen und Verhaltenskodex</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">Datenschutzbestimmungen</string>
-  <string name="login_title">Anmelden</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Schließen</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -428,8 +421,6 @@ Du verlierst am {date} jeglichen Kurszugriff, einschliesslich Deines Fortschritt
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Suchst du nach einer neuen Herausforderung?</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">Oder melden Sie sich an mit</string>
   <!--Facebook login method-->
   <string name="facebook_text">facebook</string>
   <!--Google login method-->
@@ -445,9 +436,6 @@ Du verlierst am {date} jeglichen Kurszugriff, einschliesslich Deines Fortschritt
   <string name="already_have_an_account">Sie haben bereits ein Konto? Melden Sie sich hier an</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Registrieren und sofort lernen.</string>
-  <!--In Register screen-->
-  <string name="register_with">Registrieren mit</string>
-  <string name="or_register_with_email">Oder registrieren Sie sich mit Ihrer E-Mail Adresse</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">Registrieren</string>
@@ -462,14 +450,8 @@ Du verlierst am {date} jeglichen Kurszugriff, einschliesslich Deines Fortschritt
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Optionale Felder anzeigen</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Blende optionale Felder aus</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Erstelle mir einen Account</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Benutzerkonto erstellen Schaltfläche</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Erstelle Account...</string>
   <!--Registration screen title-->

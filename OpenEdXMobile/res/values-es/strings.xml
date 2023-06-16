@@ -39,16 +39,10 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">Esta funcionalidad requiere una conexión a internet activa.</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">Nombre de usuario o dirección de correo electrónico</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">Correo electrónico</string>
   <!--Hint text for password field-->
   <string name="password">Contraseña</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">¿Olvidó su contraseña?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Iniciar sesión</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Botón de inicio de sesión</string>
   <!--Message shown while waiting for action-->
@@ -72,7 +66,6 @@
   <string name="tos_and_honor_code">{platform_name} Términos de Servicio y Código de Honor</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">Política de Privacidad</string>
-  <string name="login_title">iniciar sesión</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Cerrar</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -430,8 +423,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">¿Buscando un nuevo reto?</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">O iniciar sesión con</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -447,9 +438,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Inicie sesión y comience a aprender</string>
-  <!--In Register screen-->
-  <string name="register_with">Registrarse con</string>
-  <string name="or_register_with_email">o registrarse con el correo electrónico</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">Registrarse</string>
@@ -466,14 +454,8 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>Explora todos los cursos</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Mostrar campos opcionales</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Ocultar campos opcionales</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Crear mi cuenta</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Botón de Crear mi cuenta</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Creando cuenta...</string>
   <!--Registration screen title-->
