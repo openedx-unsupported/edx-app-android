@@ -1,48 +1,31 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.CallSuper
+import org.edx.mobile.util.observer.MainThreadObservable
+import org.edx.mobile.util.observer.Observable
+import org.edx.mobile.util.observer.SubscriptionManager
 
-import org.edx.mobile.util.observer.MainThreadObservable;
-import org.edx.mobile.util.observer.Observable;
-import org.edx.mobile.util.observer.SubscriptionManager;
+abstract class ViewHoldingPresenter<V> : Presenter<V> {
+    var view: V? = null
+    private val viewSubscriptionManager = SubscriptionManager()
 
-public abstract class ViewHoldingPresenter<V> implements Presenter<V> {
-
-    @Nullable
-    private V view;
-
-    @NonNull
-    private final SubscriptionManager viewSubscriptionManager = new SubscriptionManager();
-
-    @Override
     @CallSuper
-    public void attachView(@NonNull V view) {
-        this.view = view;
+    override fun attachView(view: V) {
+        this.view = view
     }
 
-    @Override
     @CallSuper
-    public void detachView() {
-        this.view = null;
-        viewSubscriptionManager.unsubscribeAll();
+    override fun detachView() {
+        view = null
+        viewSubscriptionManager.unsubscribeAll()
     }
 
-    @Override
     @CallSuper
-    public void destroy() {
-        viewSubscriptionManager.unsubscribeAll();
+    override fun destroy() {
+        viewSubscriptionManager.unsubscribeAll()
     }
 
-    @NonNull
-    public <T> Observable<T> observeOnView(@NonNull Observable<T> observable) {
-        return viewSubscriptionManager.wrap(new MainThreadObservable<>(observable));
+    fun <T> observeOnView(observable: Observable<T>): Observable<T> {
+        return viewSubscriptionManager.wrap(MainThreadObservable(observable))
     }
-
-    @Nullable
-    public V getView() {
-        return view;
-    }
-
 }

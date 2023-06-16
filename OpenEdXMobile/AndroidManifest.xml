@@ -91,7 +91,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="org.edx.mobile.view.LoginActivity"
+            android:name="org.edx.mobile.view.login.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"

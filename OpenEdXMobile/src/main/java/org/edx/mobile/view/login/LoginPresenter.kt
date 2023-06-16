@@ -1,42 +1,42 @@
-package org.edx.mobile.view.login;
+package org.edx.mobile.view.login
 
-import androidx.annotation.NonNull;
+import org.edx.mobile.util.Config
+import org.edx.mobile.util.NetworkUtil.ZeroRatedNetworkInfo
+import org.edx.mobile.view.ViewHoldingPresenter
+import org.edx.mobile.view.login.LoginPresenter.LoginViewInterface
 
-import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.ViewHoldingPresenter;
+class LoginPresenter constructor(
+    private val config: Config,
+    private val networkInfo: ZeroRatedNetworkInfo
+) : ViewHoldingPresenter<LoginViewInterface>() {
 
-public class LoginPresenter extends ViewHoldingPresenter<LoginPresenter.LoginViewInterface> {
-
-    final private Config config;
-    final private NetworkUtil.ZeroRatedNetworkInfo networkInfo;
-
-    public LoginPresenter(Config config, NetworkUtil.ZeroRatedNetworkInfo networkInfo) {
-        this.config = config;
-        this.networkInfo = networkInfo;
-    }
-
-    @Override
-    public void attachView(@NonNull LoginViewInterface view) {
-        super.attachView(view);
-
-        if (networkInfo.isOnZeroRatedNetwork()) {
-            view.setSocialLoginButtons(false, false, false);
+    override fun attachView(view: LoginViewInterface) {
+        super.attachView(view)
+        if (networkInfo.isOnZeroRatedNetwork) {
+            view.setSocialLoginButtons(
+                googleEnabled = false,
+                facebookEnabled = false,
+                microsoftEnabled = false
+            )
         } else {
-            view.setSocialLoginButtons(config.getGoogleConfig().isEnabled(), config.getFacebookConfig().isEnabled(),
-                    config.getMicrosoftConfig().isEnabled());
+            view.setSocialLoginButtons(
+                googleEnabled = config.googleConfig.isEnabled,
+                facebookEnabled = config.facebookConfig.isEnabled,
+                microsoftEnabled = config.microsoftConfig.isEnabled
+            )
         }
-
-        if (!config.isRegistrationEnabled()) {
-            view.disableToolbarNavigation();
+        if (!config.isRegistrationEnabled) {
+            view.disableToolbarNavigation()
         }
     }
 
-    public interface LoginViewInterface {
+    interface LoginViewInterface {
+        fun setSocialLoginButtons(
+            googleEnabled: Boolean,
+            facebookEnabled: Boolean,
+            microsoftEnabled: Boolean
+        )
 
-        void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled, boolean microsoftEnabled);
-
-        void disableToolbarNavigation();
-
+        fun disableToolbarNavigation()
     }
 }

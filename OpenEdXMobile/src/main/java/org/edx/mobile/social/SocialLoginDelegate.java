@@ -52,7 +52,7 @@ public class SocialLoginDelegate {
     private String userEmail;
     private Feature feature;
 
-    public SocialLoginDelegate(@NonNull Activity activity, @NonNull Bundle savedInstanceState,
+    public SocialLoginDelegate(@NonNull Activity activity, @Nullable Bundle savedInstanceState,
                                @NonNull MobileLoginCallback callback, @NonNull Config config,
                                @NonNull LoginPrefs loginPrefs, @NonNull Feature feature) {
 
