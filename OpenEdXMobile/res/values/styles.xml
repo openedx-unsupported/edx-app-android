@@ -606,7 +606,7 @@
     <style name="edX.Widget.inputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="minHeight">@dimen/upgrade_now_button_height</item>
+        <item name="minHeight">@dimen/auth_panel_btn_height</item>
         <item name="hintTextColor">@color/neutralXXDark</item>
         <item name="boxStrokeColor">@color/neutralXDark</item>
         <item name="boxStrokeWidthFocused">1dp</item>

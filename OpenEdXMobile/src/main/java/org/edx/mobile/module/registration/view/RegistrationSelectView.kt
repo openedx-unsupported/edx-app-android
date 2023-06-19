@@ -27,7 +27,7 @@ class RegistrationSelectView(private val mField: RegistrationFormField, mView: V
         // the default value to be the label of select box like Gender, Country etc.
         for (option in mField.options) {
             if (option.isDefaultValue) {
-                mField.options.minus(option)
+                mField.options -= option
                 break
             }
         }
