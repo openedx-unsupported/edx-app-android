@@ -130,7 +130,7 @@ class RegistrationSelectView(private val mField: RegistrationFormField, mView: V
             String.format("%s. %s.", mBinding.etAutoComplete.selectedItemName, mField.instructions)
 
         // check if this is required field and has an input value or field is optional and have some value
-        if (mField.isRequired || (mField.isMultiField && mBinding.etAutoComplete.text.isNotEmpty()) && !hasValue()) {
+        if ((mField.isRequired || (mField.isMultiField && mBinding.etAutoComplete.text.isNotEmpty())) && !hasValue()) {
             initializeErrorMessage()
             return false
         }
