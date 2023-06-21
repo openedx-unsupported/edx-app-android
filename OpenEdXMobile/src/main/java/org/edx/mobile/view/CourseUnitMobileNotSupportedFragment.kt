@@ -226,7 +226,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 resources,
                 R.string.label_upgrade_course_button,
                 AppConstants.PRICE,
-                productDetails.formattedPrice
+                price
             ).toString()
         // The app get the product details instantly, so add some wait to perform
         // animation at least one cycle.

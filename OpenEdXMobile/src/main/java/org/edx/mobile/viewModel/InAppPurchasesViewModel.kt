@@ -97,7 +97,7 @@ class InAppPurchasesViewModel @Inject constructor(
 
         viewModelScope.launch {
             val response = billingProcessor.querySyncDetails(courseSku)
-            val productDetail = response.productDetailsList?.first()
+            val productDetail = response.productDetailsList?.firstOrNull()
 
             if (productDetail?.productId == courseSku) {
                 productDetail.oneTimePurchaseOfferDetails?.let {
@@ -281,7 +281,7 @@ class InAppPurchasesViewModel @Inject constructor(
         //Start the purchase flow
         viewModelScope.launch {
             val response = billingProcessor.querySyncDetails(iapFlowData.productId)
-            val productDetail = response.productDetailsList?.first()
+            val productDetail = response.productDetailsList?.firstOrNull()
             if (productDetail?.productId == iapFlowData.productId) {
                 productDetail.oneTimePurchaseOfferDetails?.let {
                     iapFlowData.currencyCode = it.priceCurrencyCode

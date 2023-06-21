@@ -64,7 +64,7 @@ class BillingProcessor @Inject constructor(
         this.listener = listener
     }
 
-    private suspend fun connectIfNeeded(): Boolean {
+    private suspend fun isReadyOrConnect(): Boolean {
         return billingClient.isReady || connect()
     }
 
@@ -73,7 +73,11 @@ class BillingProcessor @Inject constructor(
             billingClientStateListener = object : BillingClientStateListener {
                 override fun onBillingSetupFinished(billingResult: BillingResult) {
                     logger.debug("BillingSetupFinished -> $billingResult")
-                    continuation.resume(true)
+                    if (billingResult.responseCode == BillingResponseCode.OK) {
+                        continuation.resume(true)
+                    } else {
+                        continuation.resume(false)
+                    }
                 }
 
                 /**
@@ -123,14 +127,15 @@ class BillingProcessor @Inject constructor(
      * @param userId    User Id of the purchaser
      */
     suspend fun purchaseItem(activity: Activity, productId: String, userId: Long) {
-        connectIfNeeded()
-        if (billingClient.isReady) {
+        if (isReadyOrConnect()) {
             val response = querySyncDetails(productId)
             logger.debug("Getting Purchases -> ${response.billingResult}")
 
             response.productDetailsList?.first()?.let {
                 launchBillingFlow(activity, it, userId)
             }
+        } else {
+            listener.onPurchaseCancel(BillingResponseCode.BILLING_UNAVAILABLE, "")
         }
     }
 
@@ -153,12 +158,12 @@ class BillingProcessor @Inject constructor(
                 .build()
         )
 
-        val billingFlowParamsBuilder = BillingFlowParams.newBuilder()
+        val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(productDetailsParamsList)
             .setObfuscatedAccountId(userId.encodeToString())
-        billingClient.launchBillingFlow(
-            activity, billingFlowParamsBuilder.build()
-        )
+            .build()
+
+        billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
     /**
@@ -166,7 +171,7 @@ class BillingProcessor @Inject constructor(
      * @param purchase new purchase
      */
     private suspend fun acknowledgePurchase(purchase: Purchase) {
-        connectIfNeeded()
+        isReadyOrConnect()
         val billingResult = billingClient.acknowledgePurchase(
             AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
@@ -197,32 +202,30 @@ class BillingProcessor @Inject constructor(
      * @return Details of the product
      * */
     suspend fun querySyncDetails(productId: String): ProductDetailsResult {
-        connectIfNeeded()
-        val productList = listOf(
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(productId)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build()
-        )
+        isReadyOrConnect()
+        val productDetails = QueryProductDetailsParams.Product.newBuilder()
+            .setProductId(productId)
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
 
         return withContext(Dispatchers.IO) {
             billingClient.queryProductDetails(
                 QueryProductDetailsParams
                     .newBuilder()
-                    .setProductList(productList)
+                    .setProductList(listOf(productDetails))
                     .build()
             )
         }
     }
 
     /**
-     * Method to query the Purchases async and returns purchases details for currently owned items
+     * Method to query the Purchases async and returns purchases for currently owned items
      * bought within the app.
      *
      * @return List of purchases
      **/
     suspend fun queryPurchases(): List<Purchase> {
-        connectIfNeeded()
+        isReadyOrConnect()
         return billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.INAPP)
