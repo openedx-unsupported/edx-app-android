@@ -26,6 +26,9 @@
     <!-- Required by app to to perform in app purchases -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <!-- Required by app to to post notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <!-- Setup for Code Coverage -->
     <instrumentation
         android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
