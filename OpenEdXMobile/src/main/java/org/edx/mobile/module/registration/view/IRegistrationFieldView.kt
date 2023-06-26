@@ -19,7 +19,7 @@ interface IRegistrationFieldView {
     fun handleError(errorMessage: String?)
     fun isValidInput(): Boolean
     fun setEnabled(enabled: Boolean)
-    fun setActionListener(actionListener: IActionListener?)
+    fun setActionListener(actionListener: IActionListener)
 
     /**
      * Get the specific child view which should be focused when the error child view is visible.
@@ -34,6 +34,7 @@ interface IRegistrationFieldView {
      *
      */
     fun setRawValue(value: String?): Boolean
+
     interface IActionListener {
         fun onClickAgreement()
     }
@@ -44,6 +45,7 @@ interface IRegistrationFieldView {
      */
     object Factory {
         private val logger = Logger(Factory::class.java)
+
         @JvmStatic
         fun getInstance(
             inflater: LayoutInflater,
@@ -54,38 +56,40 @@ interface IRegistrationFieldView {
                     val view = inflater.inflate(R.layout.view_register_edit_text, null)
                     RegistrationEmailView(field, view)
                 }
+
                 RegistrationFieldType.PASSWORD -> {
                     val view = inflater.inflate(R.layout.view_register_edit_text, null)
                     RegistrationPasswordView(field, view)
                 }
+
                 RegistrationFieldType.TEXT -> {
                     val view = inflater.inflate(R.layout.view_register_edit_text, null)
                     RegistrationTextView(field, view)
                 }
+
                 RegistrationFieldType.TEXTAREA -> {
                     val view = inflater.inflate(R.layout.view_register_edit_text, null)
                     RegistrationTextAreaView(field, view)
                 }
+
                 RegistrationFieldType.MULTI -> {
                     val view = inflater.inflate(R.layout.view_register_auto_complete, null)
                     RegistrationSelectView(field, view)
                 }
+
                 RegistrationFieldType.PLAINTEXT -> {
                     // For now we aren't using this field type
                     null
                 }
+
                 RegistrationFieldType.CHECKBOX -> {
                     val view = inflater.inflate(R.layout.view_register_checkbox, null)
                     RegistrationCheckBoxView(field, view)
                 }
+
                 else -> {
                     logger.error(
-                        Exception(
-                            String.format(
-                                "Unknown field type found for field named: %s in RegistrationDescription, skipping it!",
-                                field.name
-                            )
-                        )
+                        Exception("Unknown field type found for field named: ${field.name} in RegistrationDescription, skipping it!")
                     )
                     null
                 }

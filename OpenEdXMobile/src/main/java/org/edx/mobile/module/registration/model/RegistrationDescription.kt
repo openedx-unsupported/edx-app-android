@@ -10,5 +10,5 @@ data class RegistrationDescription(
     val method: String? = null,
 
     @SerializedName("fields")
-    var fields: List<RegistrationFormField> = arrayListOf(),
+    var fields: List<RegistrationFormField> = listOf(),
 )

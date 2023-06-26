@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_message_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,14 +11,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/green_rounded_bg"
+        android:background="@drawable/success_alert_rounded_bg"
         android:orientation="vertical"
         android:padding="@dimen/dialog_padding_material">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/icon"
-            android:layout_width="@dimen/ic_x_large"
-            android:layout_height="@dimen/ic_x_large"
+            android:layout_width="@dimen/ic_xx_large"
+            android:layout_height="@dimen/ic_xx_large"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -29,11 +30,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/widget_margin"
-            android:text="@string/sign_up_with_google_ok"
             android:textSize="@dimen/edx_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/icon"
-            app:layout_constraintTop_toTopOf="@+id/icon" />
+            app:layout_constraintTop_toTopOf="@+id/icon"
+            app:lineHeight="@dimen/widget_margin_x_double"
+            tools:text="@string/sign_up_with_google_ok" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/message"
@@ -47,7 +49,8 @@
             android:textSize="@dimen/edx_small"
             app:layout_constraintEnd_toEndOf="@id/title"
             app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:lineHeight="@dimen/widget_margin_x_double" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatTextView

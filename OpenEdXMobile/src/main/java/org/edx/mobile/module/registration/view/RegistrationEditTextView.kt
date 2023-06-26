@@ -6,6 +6,8 @@ import android.text.InputFilter.LengthFilter
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -17,73 +19,65 @@ import org.edx.mobile.logger.Logger
 import org.edx.mobile.module.registration.model.RegistrationFormField
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
 
-open class RegistrationEditTextView(private var mField: RegistrationFormField, view: View) :
-    IRegistrationFieldView {
-    protected val mBinding: ViewRegisterEditTextBinding = ViewRegisterEditTextBinding.bind(view)
+open class RegistrationEditTextView(
+    private var mField: RegistrationFormField,
+    view: View,
+) : IRegistrationFieldView {
+    protected val mBinding = ViewRegisterEditTextBinding.bind(view)
     private var hasFocusLost = false
 
     init {
-        // set max lines for this input to be 1
-        mBinding.editText.setLines(1)
+        mBinding.editText.apply {
+            setLines(1)
+            setText(mField.defaultValue)
+            contentDescription = mField.label
+            // apply max length
+            if (mField.restriction.maxLength > 0) {
+                // otherwise, you may end up disabling the field
+                filters = arrayOf(LengthFilter(mField.restriction.maxLength))
+            }
 
-        // apply max length
-        if (mField.restriction.maxLength > 0) {
-            // otherwise, you may end up disabling the field
-            mBinding.editText.filters = arrayOf(LengthFilter(mField.restriction.maxLength))
-        }
-        setInstructions(mField.instructions)
+            addTextChangedListener(object : TextWatcher {
+                /*
+                 TextWatcher events also trigger at time of registration of this listener. Which we
+                 don't want in this case. So, to handle it, a flag is required to check if the text
+                 is being changed by the user or not.
+                 This issue has also been discussed on stackoverflow through different questions.
+                 e.g. https://stackoverflow.com/questions/33257937/edittext-addtextchangedlistener-only-for-user-input/33258065#33258065
+                */
+                private var isChangedByUser = false
+                override fun beforeTextChanged(s: CharSequence, a: Int, b: Int, c: Int) {}
 
-        // set hint
-        mBinding.inputLayout.hint = mField.label
-
-        // set default
-        mBinding.editText.setText(mField.defaultValue)
-
-        // hide error text view
-        mBinding.errorMessage.visibility = View.GONE
-
-        // This tag is necessary for End-to-End tests to work properly
-        mBinding.inputLayout.tag = mField.name
-
-        // Do a11y adjustment
-        mBinding.inputLayout.contentDescription =
-            String.format("%s. %s.", mField.label, mField.instructions)
-        mBinding.editText.contentDescription = mField.label
-        ViewCompat.setImportantForAccessibility(
-            mBinding.instructions,
-            ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO
-        )
-
-        // Add text change listener
-        mBinding.editText.addTextChangedListener(object : TextWatcher {
-            /*
-             TextWatcher events also trigger at time of registration of this listener. Which we
-             don't want in this case. So, to handle it, a flag is required to check if the text
-             is being changed by the user or not.
-             This issue has also been discussed on stackoverflow through different questions.
-             e.g. https://stackoverflow.com/questions/33257937/edittext-addtextchangedlistener-only-for-user-input/33258065#33258065
-            */
-            private var isChangedByUser = false
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!isChangedByUser) {
-                    isChangedByUser = true
-                    return
+                override fun onTextChanged(s: CharSequence, a: Int, b: Int, c: Int) {
+                    if (!isChangedByUser) {
+                        isChangedByUser = true
+                        return
+                    }
+                    // Don't show the error until view has lost the focus at least once
+                    if (hasFocusLost) {
+                        isValidInput()
+                    }
                 }
-                // Don't show the error until view has lost the focus at least once
-                if (hasFocusLost) {
+
+                override fun afterTextChanged(s: Editable) {}
+            })
+
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+                if (!hasFocus) {
                     isValidInput()
+                    hasFocusLost = true
                 }
             }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-        mBinding.editText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-            if (!hasFocus) {
-                isValidInput()
-                hasFocusLost = true
-            }
         }
+//        setInstructions(mField.instructions)
+
+        mBinding.inputLayout.apply {
+            hint = mField.label
+            tag = mField.name
+            contentDescription = "${mField.label}. ${mField.instructions}."
+        }
+        // hide error text view
+        mBinding.errorMessage.setVisibility(false)
     }
 
     override fun setRawValue(value: String?): Boolean {
@@ -96,35 +90,40 @@ open class RegistrationEditTextView(private var mField: RegistrationFormField, v
         return JsonPrimitive(mBinding.editText.text.toString())
     }
 
-    override fun hasValue(): Boolean {
-        return mBinding.editText.text.toString().isNotEmpty()
-    }
+    override fun hasValue(): Boolean = mBinding.editText.text.toString().isNotEmpty()
 
-    override fun getField(): RegistrationFormField {
-        return mField
-    }
+    override fun getField(): RegistrationFormField = mField
 
-    override fun getView(): View {
-        return mBinding.root
-    }
+    override fun getView(): View = mBinding.root
 
     override fun setInstructions(instructions: String?) {
         mBinding.instructions.setVisibility(instructions.isNotNullOrEmpty())
         if (instructions.isNotNullOrEmpty()) {
             mBinding.instructions.text = Html.fromHtml(instructions)
         }
+        ViewCompat.setImportantForAccessibility(
+            mBinding.instructions,
+            ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO
+        )
     }
 
     override fun handleError(errorMessage: String?) {
         if (errorMessage.isNotNullOrEmpty()) {
-            mBinding.errorMessage.text = Html.fromHtml(errorMessage)
-            mBinding.errorMessage.setVisibility(true)
+//            mBinding.errorMessage.text = Html.fromHtml(errorMessage)
+            mBinding.errorMessage.setVisibility(false)
             // Add error message in a11y content for mTextInputLayout
             val errorTag = mBinding.inputLayout.resources.getString(R.string.label_error)
             mBinding.inputLayout.contentDescription = String.format(
                 "%s. %s. %s, %s.",
                 mField.label, mField.instructions, errorTag, errorMessage
             )
+            mBinding.inputLayout.error = Html.fromHtml(errorMessage)
+            mBinding.inputLayout.apply {
+                findViewById<TextView>(com.google.android.material.R.id.textinput_error)?.apply {
+                    setTextAppearance(context, R.style.registration_error_message)
+                }
+            }
+            mBinding.inputLayout.errorIconDrawable = null
         } else {
             logger.warn("error message not provided, so not informing the user about this error")
         }
@@ -182,13 +181,11 @@ open class RegistrationEditTextView(private var mField: RegistrationFormField, v
         mBinding.inputLayout.isEnabled = enabled
     }
 
-    override fun setActionListener(actionListener: IActionListener?) {
+    override fun setActionListener(actionListener: IActionListener) {
         // no actions for this field
     }
 
-    override fun getOnErrorFocusView(): View {
-        return mBinding.inputLayout
-    }
+    override fun getOnErrorFocusView(): View = mBinding.inputLayout
 
     companion object {
         protected val logger = Logger(

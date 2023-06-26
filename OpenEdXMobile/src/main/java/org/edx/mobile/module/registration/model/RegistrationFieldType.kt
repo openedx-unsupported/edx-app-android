@@ -26,5 +26,6 @@ enum class RegistrationFieldType {
 
     @SerializedName("checkbox")
     CHECKBOX,
+
     UNKNOWN,
 }

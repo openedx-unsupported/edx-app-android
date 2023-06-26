@@ -48,7 +48,7 @@ class RegistrationCheckBoxView(
         binding.registerCheckbox.isEnabled = enabled
     }
 
-    override fun setActionListener(actionListener: IActionListener?) {
+    override fun setActionListener(actionListener: IActionListener) {
         this.actionListener = actionListener
     }
 }

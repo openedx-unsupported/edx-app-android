@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_register_edit_text_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_register_edit_text_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/edx_x_quarter_margin"
-        android:paddingBottom="@dimen/edx_x_quarter_margin">
+        android:layout_marginBottom="@dimen/edx_half_margin"
+        android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout"
-            style="@style/edX.Widget.inputLayout"
-            android:layout_marginTop="@dimen/edx_default_margin">
+            style="@style/edX.Widget.InputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text"
@@ -24,14 +25,14 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/instructions"
-            style="@style/registration_instruction_message"
-            android:visibility="gone" />
-
-        <TextView
             android:id="@+id/error_message"
             style="@style/registration_error_message"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/instructions"
+            style="@style/registration_instruction_message"
+            android:visibility="gone" />
+
     </LinearLayout>
-</layout>
+</LinearLayout>

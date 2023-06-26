@@ -6,7 +6,7 @@
         android:id="@+id/panel_social_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/widget_margin_double"
+        android:layout_marginTop="@dimen/edx_default_margin"
         android:layout_marginBottom="@dimen/edx_default_margin"
         android:gravity="center"
         android:orientation="vertical">
@@ -27,9 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/edx_default_margin"
-            android:background="@color/fb_bg"
+            android:background="@color/facebook_button_background"
             android:text="@string/sign_in_with_facebook"
-            android:textColor="@color/neutralWhite"
+            android:textColor="@color/neutralWhiteT"
             app:icon="@drawable/ic_facebook_logo" />
 
         <com.google.android.material.button.MaterialButton
@@ -38,9 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/edx_default_margin"
-            android:background="@color/microsoft_bg"
+            android:background="@color/microsoft_button_background"
             android:text="@string/sign_in_with_microsoft"
-            android:textColor="@color/neutralWhite"
+            android:textColor="@color/neutralWhiteT"
             app:icon="@drawable/ic_microsoft_logo" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

@@ -34,10 +34,9 @@
                     android:contentDescription="@string/phonetic_app_name"
                     app:srcCompat="@drawable/login_screen_logo" />
 
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/usernameWrapper"
-                    style="@style/edX.Widget.inputLayout"
+                    style="@style/edX.Widget.InputLayout"
                     android:layout_marginTop="@dimen/edx_default_margin"
                     android:hint="@string/email_username">
 
@@ -52,7 +51,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/passwordWrapper"
-                    style="@style/edX.Widget.inputLayout"
+                    style="@style/edX.Widget.InputLayout"
                     android:layout_marginTop="@dimen/edx_default_margin"
                     android:hint="@string/password"
                     app:endIconMode="password_toggle">
@@ -90,16 +89,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/edx_half_margin"
-                    android:layout_marginBottom="@dimen/edx_default_margin_double"
+                    android:layout_marginBottom="@dimen/widget_margin_double"
                     android:background="@drawable/selectable_rounded_box_overlay"
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="@dimen/edx_half_margin"
                     android:text="@string/forgot_password"
                     android:textColor="@color/neutralXXDark"
-                    android:textSize="@dimen/edx_small" />
-
+                    android:textSize="@dimen/edx_small"
+                    app:textFontWeight="@{600}"/>
 
                 <include
                     android:id="@+id/social_auth"

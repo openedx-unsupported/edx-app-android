@@ -345,6 +345,8 @@
         <item name="android:textColorLink">@color/primaryDarkColor</item>
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:layout_marginTop">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/edx_default_margin</item>
         <item name="lineHeight">@dimen/edx_x_small</item>
         <item name="lineSpacing">@dimen/edx_x_quarter_margin</item>
     </style>
@@ -376,7 +378,8 @@
     <style name="edX.Widget.SignInButtonLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/upgrade_now_button_height</item>
-        <item name="android:layout_marginTop">@dimen/edx_margin</item>
+        <item name="android:layout_marginTop">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/edx_default_margin</item>
         <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
@@ -602,14 +605,16 @@
         <item name="iconPadding">@dimen/edx_margin</item>
     </style>
 
-
-    <style name="edX.Widget.inputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="edX.Widget.InputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="minHeight">@dimen/auth_panel_btn_height</item>
         <item name="hintTextColor">@color/neutralXXDark</item>
         <item name="boxStrokeColor">@color/neutralXDark</item>
-        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxStrokeErrorColor">@color/errorLight</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="endIconMode">none</item>
         <item name="boxCornerRadiusTopStart">0dp</item>
         <item name="boxCornerRadiusTopEnd">0dp</item>
         <item name="boxCornerRadiusBottomStart">0dp</item>

@@ -12,110 +12,104 @@
 
         <include layout="@layout/toolbar" />
 
-        <FrameLayout
-            android:id="@+id/registration_form"
+        <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="visible">
 
-            <ScrollView
-                android:id="@+id/scrollview"
+            <LinearLayout
+                android:id="@+id/registrationLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/edx_default_margin"
+                android:layout_marginEnd="@dimen/edx_default_margin"
+                android:paddingTop="@dimen/container_padding"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/widget_margin">
+
+                <include
+                    android:id="@+id/message_layout"
+                    layout="@layout/panel_message_with_check"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
-                    android:id="@+id/registrationLayout"
+                    android:id="@+id/required_fields_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/edx_default_margin"
-                    android:layout_marginEnd="@dimen/edx_default_margin"
-                    android:animateLayoutChanges="true"
+                    android:orientation="vertical" />
+
+                <androidx.appcompat.widget.AppCompatToggleButton
+                    android:id="@+id/optional_field_tv"
+                    style="@style/regular_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/edx_default_margin"
+                    android:layout_marginBottom="@dimen/widget_margin_double"
+                    android:background="@drawable/selectable_rounded_box_overlay"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/option_field_icon_selector"
+                    android:drawablePadding="@dimen/edx_half_margin"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/edx_default_margin"
+                    android:paddingEnd="@dimen/edx_default_margin"
+                    android:textAllCaps="false"
+                    android:textColor="@color/neutralXXDark"
+                    android:textOff="@string/show_optional_text"
+                    android:textOn="@string/hide_optional_text"
+                    android:textSize="@dimen/edx_small"
+                    app:textFontWeight="@{700}" />
+
+                <LinearLayout
+                    android:id="@+id/optional_fields_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/widget_margin">
+                    android:visibility="gone" />
 
-                    <include
-                        android:id="@+id/message_layout"
-                        layout="@layout/panel_message_with_check"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                <LinearLayout
+                    android:id="@+id/optionally_exposed_fields_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
-                    <LinearLayout
-                        android:id="@+id/required_fields_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                <TextView
+                    android:id="@+id/eula_tv"
+                    style="@style/agreement_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/by_creating_account" />
 
-                    <androidx.appcompat.widget.AppCompatToggleButton
-                        android:id="@+id/optional_field_tv"
-                        style="@style/regular_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/edx_default_margin"
-                        android:layout_marginBottom="@dimen/widget_margin_double"
-                        android:background="@drawable/selectable_rounded_box_overlay"
-                        android:button="@null"
-                        android:drawableEnd="@drawable/option_field_icon_selector"
-                        android:drawablePadding="@dimen/edx_half_margin"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingStart="@dimen/edx_default_margin"
-                        android:paddingEnd="@dimen/edx_default_margin"
-                        android:textAllCaps="false"
-                        android:textColor="@color/neutralXXDark"
-                        android:textOff="@string/show_optional_text"
-                        android:textOn="@string/hide_optional_text"
-                        android:textSize="@dimen/edx_small" />
-
-
-                    <LinearLayout
-                        android:id="@+id/optional_fields_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/optionally_exposed_fields_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                <LinearLayout
+                    android:id="@+id/create_account_btn"
+                    style="@style/edX.Widget.SignInButtonLayout"
+                    android:layout_marginBottom="@dimen/edx_default_margin_double"
+                    android:contentDescription="@string/create_account_text"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/eula_tv"
-                        style="@style/agreement_text_style"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="@string/by_creating_account" />
-
-                    <LinearLayout
-                        android:id="@+id/create_account_btn"
-                        style="@style/edX.Widget.SignInButtonLayout"
-                        android:layout_marginBottom="@dimen/widget_margin_double"
-                        android:contentDescription="@string/create_account_text"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/create_account_tv"
-                            style="@style/edX.Widget.SignInButton"
-                            android:text="@string/create_account_text" />
-
-                        <include
-                            android:id="@+id/btn_progress"
-                            layout="@layout/button_progress_indicator" />
-                    </LinearLayout>
+                        android:id="@+id/create_account_tv"
+                        style="@style/edX.Widget.SignInButton"
+                        android:text="@string/create_account_text" />
 
                     <include
-                        android:id="@+id/social_auth"
-                        layout="@layout/panel_social_auth" />
+                        android:id="@+id/btn_progress"
+                        layout="@layout/button_progress_indicator" />
                 </LinearLayout>
-            </ScrollView>
 
-        </FrameLayout>
+                <include
+                    android:id="@+id/social_auth"
+                    layout="@layout/panel_social_auth" />
+            </LinearLayout>
+        </ScrollView>
 
         <TextView
             android:id="@+id/error_message"

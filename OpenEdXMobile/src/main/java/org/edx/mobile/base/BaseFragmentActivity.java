@@ -376,7 +376,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      *
      * @param isEnable flag to block/unblock touch
      */
-    protected void invalidateTouch(boolean isEnable) {
+    protected void isTouchEnabled(boolean isEnable) {
         if (isEnable) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {

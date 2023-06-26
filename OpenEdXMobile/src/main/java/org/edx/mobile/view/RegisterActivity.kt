@@ -9,7 +9,6 @@ import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ScrollView
 import androidx.annotation.DrawableRes
-import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
@@ -21,6 +20,7 @@ import org.edx.mobile.authentication.LoginService
 import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.databinding.ActivityRegisterBinding
 import org.edx.mobile.extenstion.isNotNullOrEmpty
+import org.edx.mobile.extenstion.isVisible
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
@@ -54,9 +54,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
-    private lateinit var mBinding: ActivityRegisterBinding
-    private val mFieldViews: MutableList<IRegistrationFieldView> = ArrayList()
-    private var socialLoginDelegate: SocialLoginDelegate? = null
+    private lateinit var binding: ActivityRegisterBinding
+    private val mFieldViews: MutableList<IRegistrationFieldView> = mutableListOf()
+    private lateinit var socialLoginDelegate: SocialLoginDelegate
 
     @Inject
     lateinit var loginPrefs: LoginPrefs
@@ -66,74 +66,77 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
-        super.setToolbarAsActionBar()
-        setTitle(R.string.register_title)
-        environment.analyticsRegistry.trackScreenView(Analytics.Screens.REGISTER)
-        getRegistrationForm()
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initViews(savedInstanceState)
         hideSoftKeypad()
         tryToSetUIInteraction(true)
-        initEULA()
-        mBinding.createAccountBtn.setOnClickListener {
-            hideSoftKeypad()
+        environment.analyticsRegistry.trackScreenView(Analytics.Screens.REGISTER)
+    }
+
+    private fun initViews(savedInstanceState: Bundle?) {
+        setToolbarAsActionBar()
+        setTitle(R.string.register_title)
+        getRegistrationForm()
+        binding.createAccountBtn.setOnClickListener {
             validateRegistrationFields()
         }
-        mBinding.optionalFieldTv.setOnCheckedChangeListener { _, isChecked: Boolean ->
-            mBinding.optionalFieldsLayout.setVisibility(
-                isChecked
-            )
+        binding.optionalFieldTv.setOnCheckedChangeListener { _, isChecked: Boolean ->
+            binding.optionalFieldsLayout.setVisibility(isChecked)
         }
         setupSocialAuth(savedInstanceState)
+        initEULA()
     }
 
     private fun initEULA() {
-        mBinding.eulaTv.movementMethod = LinkMovementMethod.getInstance()
-        mBinding.eulaTv.text = TextUtils.generateLicenseText(
+        binding.eulaTv.movementMethod = LinkMovementMethod.getInstance()
+        binding.eulaTv.text = TextUtils.generateLicenseText(
             environment.config, this, R.string.by_creating_account
         )
     }
 
     private fun setupSocialAuth(savedInstanceState: Bundle?) {
-        socialLoginDelegate = SocialLoginDelegate(
-            this, savedInstanceState,
-            this, environment.config, loginPrefs, SocialLoginDelegate.Feature.REGISTRATION
-        )
-        var isSocialEnabled = false
-        if (isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK)) {
-            isSocialEnabled = true
-            mBinding.socialAuth.facebookButton.text =
+        if (setupSocialLoginButton()) {
+            socialLoginDelegate = SocialLoginDelegate(
+                this,
+                savedInstanceState,
+                this,
+                environment.config,
+                environment.loginPrefs,
+                SocialLoginDelegate.Feature.REGISTRATION
+            ).apply {
+                binding.socialAuth.facebookButton.setOnClickListener {
+                    createSocialButtonClickHandler(SOCIAL_SOURCE_TYPE.FACEBOOK)
+                }
+                binding.socialAuth.googleButton.setOnClickListener(
+                    createSocialButtonClickHandler(SOCIAL_SOURCE_TYPE.GOOGLE)
+                )
+                binding.socialAuth.microsoftButton.setOnClickListener(
+                    createSocialButtonClickHandler(SOCIAL_SOURCE_TYPE.MICROSOFT)
+                )
+            }
+        }
+    }
+
+    private fun setupSocialLoginButton(): Boolean {
+        binding.socialAuth.apply {
+            facebookButton.text =
                 getString(R.string.continue_with_social, getString(R.string.facebook_text))
-            mBinding.socialAuth.facebookButton.setOnClickListener(
-                socialLoginDelegate?.createSocialButtonClickHandler(
-                    SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK
-                )
-            )
-        } else {
-            mBinding.socialAuth.facebookButton.setVisibility(false)
-        }
-        if (isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.TYPE_GOOGLE)) {
-            isSocialEnabled = true
-            mBinding.socialAuth.googleButton.text =
+            facebookButton.setVisibility(isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.FACEBOOK))
+
+            googleButton.text =
                 getString(R.string.continue_with_social, getString(R.string.google_text))
-            mBinding.socialAuth.googleButton.setOnClickListener(
-                socialLoginDelegate?.createSocialButtonClickHandler(
-                    SOCIAL_SOURCE_TYPE.TYPE_GOOGLE
-                )
-            )
-        } else {
-            mBinding.socialAuth.googleButton.setVisibility(false)
-        }
-        if (isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT)) {
-            isSocialEnabled = true
-            mBinding.socialAuth.microsoftButton.text =
+            googleButton.setVisibility(isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.GOOGLE))
+
+            microsoftButton.text =
                 getString(R.string.continue_with_social, getString(R.string.microsoft_text))
-            mBinding.socialAuth.microsoftButton.setOnClickListener(
-                socialLoginDelegate?.createSocialButtonClickHandler(SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT)
-            )
-        } else {
-            mBinding.socialAuth.microsoftButton.setVisibility(false)
+            microsoftButton.setVisibility(isSocialFeatureEnable(SOCIAL_SOURCE_TYPE.MICROSOFT))
+
+            val isSocialLoginEnable =
+                facebookButton.isVisible() || googleButton.isVisible() || microsoftButton.isVisible()
+            root.setVisibility(isSocialLoginEnable)
+            return isSocialLoginEnable
         }
-        mBinding.socialAuth.root.setVisibility(isSocialEnabled)
     }
 
     private fun isSocialFeatureEnable(type: SOCIAL_SOURCE_TYPE): Boolean {
@@ -141,10 +144,11 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     private fun validateRegistrationFields() {
+        hideSoftKeypad()
         val parameters = getRegistrationParameters() ?: return
 
-        invalidateBtnProgress(true)
-        val parameterMap: MutableMap<String, String?> = HashMap()
+        isBtnProgressEnabled(true)
+        val parameterMap: MutableMap<String, String?> = mutableMapOf()
         for (key in parameters.keySet()) {
             parameterMap[key] = parameters.getString(key)
         }
@@ -152,19 +156,19 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         validateRegistrationFields.enqueue(object : ErrorHandlingCallback<JsonObject?>(this) {
             override fun onResponse(responseBody: JsonObject) {
                 // Callback method for a successful HTTP response.
-                val stringMapType = object : TypeToken<HashMap<String?, String?>?>() {}.type
+                val stringMapType = object : TypeToken<HashMap<String, String?>?>() {}.type
                 val messageBody = Gson().fromJson<HashMap<String, String>>(
                     responseBody[ApiConstants.VALIDATION_DECISIONS], stringMapType
                 )
                 if (hasValidationError(messageBody)) {
-                    invalidateBtnProgress(false)
+                    isBtnProgressEnabled(false)
                 } else {
                     createAccount(parameters)
                 }
             }
 
             override fun onFailure(error: Throwable) {
-                invalidateBtnProgress(false)
+                isBtnProgressEnabled(false)
                 this@RegisterActivity.showAlertDialog(
                     null, ErrorUtils.getErrorMessage(
                         error,
@@ -199,15 +203,20 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     private fun showErrorMessage(errorMsg: String, @DrawableRes errorIconResId: Int) {
-        mBinding.errorMessage.visibility = View.VISIBLE
-        mBinding.errorMessage.text = errorMsg
-        mBinding.errorMessage.setCompoundDrawables(
-            null, getDrawable(
-                this, errorIconResId,
-                R.dimen.content_unavailable_error_icon_size, R.color.neutralDark
-            ),
-            null, null
-        )
+        binding.errorMessage.apply {
+            setVisibility(true)
+            text = errorMsg
+            setCompoundDrawables(
+                null,
+                getDrawable(
+                    context,
+                    errorIconResId,
+                    R.dimen.content_unavailable_error_icon_size,
+                    R.color.neutralDark
+                ),
+                null, null
+            )
+        }
     }
 
     private fun getRegistrationForm() {
@@ -216,12 +225,12 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             return
         }
         tryToSetUIInteraction(false)
-        mBinding.loadingIndicator.root.visibility = View.VISIBLE
+        binding.loadingIndicator.root.setVisibility(true)
         val getRegistrationFormCall = loginService.getRegistrationForm(
             environment.config.apiUrlVersionConfig.registrationApiVersion
         )
         getRegistrationFormCall.enqueue(object :
-            ErrorHandlingCallback<RegistrationDescription?>(this) {
+            ErrorHandlingCallback<RegistrationDescription>(this) {
             override fun onResponse(registrationDescription: RegistrationDescription) {
                 updateUI(true)
                 setupRegistrationForm(registrationDescription)
@@ -238,8 +247,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
             private fun updateUI(isSuccess: Boolean) {
                 tryToSetUIInteraction(true)
-                mBinding.registrationForm.setVisibility(isSuccess)
-                mBinding.loadingIndicator.root.visibility = View.GONE
+                binding.scrollview.setVisibility(isSuccess)
+                binding.loadingIndicator.root.setVisibility(false)
             }
         })
     }
@@ -252,17 +261,16 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         }
 
         // add required and optional fields to the window
-        for (v in mFieldViews) {
-            if (v.getField().isRequired) {
-                mBinding.requiredFieldsLayout.addView(v.getView())
-            } else if (!v.getField().isRequired && v.getField().isExposed) {
-                mBinding.optionallyExposedFieldsLayout.addView(v.getView())
+        for (regField in mFieldViews) {
+            if (regField.getField().isRequired) {
+                binding.requiredFieldsLayout.addView(regField.getView())
+            } else if (!regField.getField().isRequired && regField.getField().isExposed) {
+                binding.optionallyExposedFieldsLayout.addView(regField.getView())
             } else {
-                mBinding.optionalFieldsLayout.addView(v.getView())
+                binding.optionalFieldsLayout.addView(regField.getView())
             }
         }
-        if (mBinding.optionalFieldsLayout.childCount == 0) mBinding.optionalFieldTv.visibility =
-            View.GONE
+        binding.optionalFieldTv.setVisibility(binding.optionalFieldsLayout.childCount != 0)
 
         // enable all the views
         tryToSetUIInteraction(true)
@@ -274,8 +282,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         parameters.putString("terms_of_service", "true")
 
         //set parameter required by social registration
-        val accessToken = loginPrefs.socialLoginAccessToken
-        val provider = loginPrefs.socialLoginProvider
+        val accessToken = environment.loginPrefs.socialLoginAccessToken
+        val provider = environment.loginPrefs.socialLoginProvider
         if (accessToken.isNotNullOrEmpty()) {
             parameters.putString("access_token", accessToken)
             parameters.putString("provider", provider)
@@ -283,67 +291,61 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         }
 
         // Send analytics event for Create Account button click
-        val appVersion =
-            String.format("%s v%s", getString(R.string.android), BuildConfig.VERSION_NAME)
-        environment.analyticsRegistry.trackCreateAccountClicked(appVersion, provider)
+        val appVersion = "${getString(R.string.android)} ${BuildConfig.VERSION_NAME}"
         val backSourceType = SOCIAL_SOURCE_TYPE.fromString(provider)
-        @SuppressLint("StaticFieldLeak") val task: RegisterTask =
-            object : RegisterTask(this, parameters, accessToken, backSourceType) {
-                @Deprecated("Deprecated in Java")
-                override fun onPostExecute(auth: AuthResponse?) {
-                    super.onPostExecute(auth)
-                    if (auth != null) {
-                        environment.analyticsRegistry.trackRegistrationSuccess(appVersion, provider)
-                        onUserLoginSuccess()
-                    }
-                }
+        environment.analyticsRegistry.trackCreateAccountClicked(appVersion, provider)
 
-                override fun onException(ex: Exception) {
-                    invalidateBtnProgress(false)
-                    if (ex is RegistrationException) {
-                        val messageBody = ex.formErrorBody
-                        var errorShown = false
-                        for (key in messageBody.keys) {
-                            if (key == null) continue
-                            for (fieldView in mFieldViews) {
-                                if (key.equals(fieldView.getField().name, ignoreCase = true)) {
-                                    val error = messageBody[key]
-                                    showErrorOnField(error, fieldView)
-                                    if (!errorShown) {
-                                        // this is the first input field with error,
-                                        // so focus on it after showing the popup
-                                        showErrorPopup(fieldView.getOnErrorFocusView())
-                                        errorShown = true
-                                    }
-                                    break
-                                }
-                            }
-                        }
-                        if (errorShown) {
-                            // We have already shown a specific error message.
-                            return  // Return here to avoid falling back to the generic error handler.
-                        }
-                    }
-                    // If app version is un-supported
-                    if (ex is HttpStatusException &&
-                        ex.statusCode == HttpStatus.UPGRADE_REQUIRED
-                    ) {
-                        this@RegisterActivity.showAlertDialog(
-                            null,
-                            getString(R.string.app_version_unsupported_register_msg),
-                            getString(R.string.label_update),
-                            { _, _ -> AppStoreUtils.openAppInAppStore(this@RegisterActivity) },
-                            getString(android.R.string.cancel),
-                            null
-                        )
-                    } else {
-                        this@RegisterActivity.showAlertDialog(
-                            null,
-                            ErrorUtils.getErrorMessage(ex, this@RegisterActivity)
-                        )
-                    }
+        @SuppressLint("StaticFieldLeak")
+        val task = object : RegisterTask(this, parameters, accessToken, backSourceType) {
+            @Deprecated("Deprecated in Java")
+            override fun onPostExecute(auth: AuthResponse?) {
+                super.onPostExecute(auth)
+                if (auth != null) {
+                    environment.analyticsRegistry.trackRegistrationSuccess(appVersion, provider)
+                    onUserLoginSuccess()
                 }
             }
+
+            override fun onException(ex: Exception) {
+                isBtnProgressEnabled(false)
+                if (ex is RegistrationException) {
+                    val messageBody = ex.formErrorBody
+                    var errorShown = false
+                    for ((key, value) in messageBody) {
+                        mFieldViews.find { it.getField().name.equals(key, true) }
+                            ?.let { fieldView ->
+                                showErrorOnField(value, fieldView)
+                                if (!errorShown) {
+                                    // this is the first input field with error,
+                                    // so focus on it after showing the popup
+                                    showErrorPopup(fieldView.getOnErrorFocusView())
+                                    errorShown = true
+                                }
+                            }
+                    }
+                    if (errorShown) {
+                        // We have already shown a specific error message.
+                        return  // Return here to avoid falling back to the generic error handler.
+                    }
+                }
+                // If app version is un-supported
+                if (ex is HttpStatusException && ex.statusCode == HttpStatus.UPGRADE_REQUIRED) {
+                    this@RegisterActivity.showAlertDialog(
+                        null,
+                        getString(R.string.app_version_unsupported_register_msg),
+                        getString(R.string.label_update),
+                        { _, _ -> AppStoreUtils.openAppInAppStore(this@RegisterActivity) },
+                        getString(android.R.string.cancel),
+                        null
+                    )
+                } else {
+                    this@RegisterActivity.showAlertDialog(
+                        null,
+                        ErrorUtils.getErrorMessage(ex, this@RegisterActivity)
+                    )
+                }
+            }
+        }
         task.execute()
     }
 
@@ -357,13 +359,13 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         val parameters = Bundle()
         var email: String? = null
         var confirmEmail: String? = null
-        for (v in mFieldViews) {
-            if (v.isValidInput()) {
-                if (v.getField().isEmailField) {
-                    email = v.getCurrentValue()?.asString
+        for (fieldView in mFieldViews) {
+            if (fieldView.isValidInput()) {
+                if (fieldView.getField().isEmailField) {
+                    email = fieldView.getCurrentValue()?.asString
                 }
-                if (v.getField().isConfirmEmailField) {
-                    confirmEmail = v.getCurrentValue()?.asString
+                if (fieldView.getField().isConfirmEmailField) {
+                    confirmEmail = fieldView.getCurrentValue()?.asString
                 }
 
                 // Validating email field with confirm email field
@@ -371,27 +373,28 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                     confirmEmail.isNotNullOrEmpty() &&
                     !email.equals(confirmEmail)
                 ) {
-                    v.handleError(v.getField().errorMessage?.required)
-                    showErrorPopup(v.getOnErrorFocusView())
+                    fieldView.handleError(fieldView.getField().errorMessage?.required)
+                    showErrorPopup(fieldView.getOnErrorFocusView())
                     return null
                 }
-                if (v.hasValue()) {
+                if (fieldView.hasValue()) {
                     // we submit the field only if it provides a value
-                    parameters.putString(v.getField().name, v.getCurrentValue()?.asString)
+                    parameters.putString(
+                        fieldView.getField().name,
+                        fieldView.getCurrentValue()?.asString
+                    )
                 }
             } else {
                 if (!hasError) {
                     // this is the first input field with error,
                     // so focus on it after showing the popup
-                    showErrorPopup(v.getOnErrorFocusView())
+                    showErrorPopup(fieldView.getOnErrorFocusView())
                 }
                 hasError = true
             }
         }
         // do NOT proceed if validations are failed
-        return if (hasError) {
-            null
-        } else parameters
+        return if (hasError) null else parameters
     }
 
     /**
@@ -402,10 +405,10 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
      * @return
      */
     private fun showErrorOnField(
-        errors: List<RegisterResponseFieldError>?,
+        errors: List<RegisterResponseFieldError>,
         fieldView: IRegistrationFieldView
     ) {
-        if (!errors.isNullOrEmpty()) {
+        if (errors.isNotEmpty()) {
             val buffer = StringBuffer()
             for (e in errors) {
                 buffer.append(e.userMessage + " ")
@@ -419,7 +422,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             resources.getString(R.string.registration_error_title),
             resources.getString(R.string.registration_error_message)
         ) { _, _ ->
-            scrollToView(mBinding.scrollview, errorView)
+            scrollToView(binding.scrollview, errorView)
         }
     }
 
@@ -429,25 +432,25 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
      * @param socialType
      */
     private fun showRegularMessage(socialType: SOCIAL_SOURCE_TYPE) {
-        mBinding.messageLayout.title.text = when (socialType) {
-            SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ->
+        binding.messageLayout.title.text = when (socialType) {
+            SOCIAL_SOURCE_TYPE.FACEBOOK ->
                 getString(R.string.sign_up_with_facebook_ok)
 
-            SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT ->
+            SOCIAL_SOURCE_TYPE.MICROSOFT ->
                 getString(R.string.sign_up_with_microsoft_ok)
 
-            SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ->
+            SOCIAL_SOURCE_TYPE.GOOGLE ->
                 getString(R.string.sign_up_with_google_ok)
 
             else -> ""
         }
-        mBinding.messageLayout.message.text = ResourceUtil.getFormattedString(
+        binding.messageLayout.message.text = ResourceUtil.getFormattedString(
             resources,
             R.string.sign_up_with_social_ok,
             AppConstants.PLATFORM_NAME,
             environment.config.platformName
         )
-        mBinding.messageLayout.root.visibility = View.VISIBLE
+        binding.messageLayout.root.setVisibility(true)
     }
 
     private fun updateUIOnSocialLoginToEdxFailure(
@@ -456,7 +459,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     ) {
         //change UI.
         val socialPanel = findViewById<View>(R.id.panel_social_layout)
-        socialPanel.visibility = View.GONE
+        socialPanel.setVisibility(false)
         //help method
         showRegularMessage(socialType)
         //populate the field with value from social site
@@ -483,13 +486,13 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     private fun populateEmailFromSocialSite(socialType: SOCIAL_SOURCE_TYPE, accessToken: String) {
-        socialLoginDelegate?.getUserInfo(socialType, accessToken) { email, name ->
+        socialLoginDelegate.getUserInfo(socialType, accessToken) { email, name ->
             populateFormField("email", email)
             if (name.isNotNullOrEmpty()) {
                 populateFormField("name", name)
 
                 //Should we save the email here?
-                loginPrefs.lastAuthenticatedEmail = email
+                environment.loginPrefs.lastAuthenticatedEmail = email
             }
         }
     }
@@ -499,28 +502,28 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     //between login and registration is different subtly
     override fun onDestroy() {
         super.onDestroy()
-        socialLoginDelegate?.onActivityDestroyed()
+        socialLoginDelegate.onActivityDestroyed()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // outState.putString("username", email_et.getText().toString().trim());
-        socialLoginDelegate?.onActivitySaveInstanceState(outState)
+        socialLoginDelegate.onActivitySaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        socialLoginDelegate?.onActivityStopped()
+        socialLoginDelegate.onActivityStopped()
     }
 
     override fun onStart() {
         super.onStart()
-        socialLoginDelegate?.onActivityStarted()
+        socialLoginDelegate.onActivityStarted()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        socialLoginDelegate?.onActivityResult(requestCode, resultCode, data)
+        socialLoginDelegate.onActivityResult(requestCode, resultCode, data)
         tryToSetUIInteraction(true)
     }
 
@@ -582,11 +585,16 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
      *
      * @param isEnable flag to enable/disable view
      */
-    private fun invalidateBtnProgress(isEnable: Boolean) {
-        tryToSetUIInteraction(isEnable)
-        mBinding.btnProgress.progressIndicator.setVisibility(isEnable)
-        mBinding.createAccountTv.text =
-            getString(if (isEnable) R.string.creating_account_text else R.string.create_account_text)
+    private fun isBtnProgressEnabled(isEnable: Boolean) {
+        tryToSetUIInteraction(isEnable.not())
+        binding.btnProgress.progressIndicator.setVisibility(isEnable)
+        binding.createAccountTv.text = getString(
+            if (isEnable) {
+                R.string.creating_account_text
+            } else {
+                R.string.create_account_text
+            }
+        )
     }
 
     /**
@@ -594,21 +602,21 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
      *
      * @param isEnable flag to enable/disable view
      */
-    private fun invalidateCreateAccBtn(isEnable: Boolean) {
-        mBinding.createAccountBtn.isEnabled = isEnable
-        mBinding.createAccountTv.text = getString(R.string.create_account_text)
+    private fun isCreateAccBtnEnabled(isEnable: Boolean) {
+        binding.createAccountBtn.isEnabled = isEnable
+        binding.createAccountTv.text = getString(R.string.create_account_text)
     }
 
     override fun tryToSetUIInteraction(enable: Boolean): Boolean {
-        invalidateTouch(enable)
-        invalidateCreateAccBtn(enable)
+        isTouchEnabled(enable)
+        isCreateAccBtnEnabled(enable)
         for (v in mFieldViews) {
             v.setEnabled(enable)
             setActionListeners(v)
         }
-        mBinding.socialAuth.facebookButton.isClickable = enable
-        mBinding.socialAuth.googleButton.isClickable = enable
-        mBinding.socialAuth.microsoftButton.isClickable = enable
+        binding.socialAuth.facebookButton.isClickable = enable
+        binding.socialAuth.googleButton.isClickable = enable
+        binding.socialAuth.microsoftButton.isClickable = enable
         return true
     }
 

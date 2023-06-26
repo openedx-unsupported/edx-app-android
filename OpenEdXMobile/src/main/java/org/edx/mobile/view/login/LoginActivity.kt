@@ -16,12 +16,12 @@ import org.edx.mobile.deeplink.DeepLink
 import org.edx.mobile.deeplink.DeepLinkManager
 import org.edx.mobile.exception.LoginErrorMessage
 import org.edx.mobile.exception.LoginException
+import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.analytics.Analytics
-import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.social.SocialFactory
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
@@ -36,22 +36,26 @@ import org.edx.mobile.view.PresenterActivity
 import org.edx.mobile.view.Router
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment
 import org.edx.mobile.view.login.LoginPresenter.LoginViewInterface
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     MobileLoginCallback {
-    private var socialLoginDelegate: SocialLoginDelegate? = null
-    private lateinit var activityLoginBinding: ActivityLoginBinding
-
-    @Inject
-    lateinit var loginPrefs: LoginPrefs
+    private lateinit var socialLoginDelegate: SocialLoginDelegate
+    private lateinit var binding: ActivityLoginBinding
 
     val email: String
-        get() = activityLoginBinding.emailEt.text.toString().trim()
+        get() = binding.emailEt.text.toString().trim()
 
     val password: String
-        get() = activityLoginBinding.passwordEt.text.toString().trim()
+        get() = binding.passwordEt.text.toString().trim()
+
+    val loginException: LoginException
+        get() = LoginException(
+            LoginErrorMessage(
+                getString(R.string.login_error),
+                getString(R.string.login_failed)
+            )
+        )
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -66,22 +70,18 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     }
 
     override fun createView(savedInstanceState: Bundle?): LoginViewInterface {
-        activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        initViews(savedInstanceState)
         hideSoftKeypad()
-        setupSocialLogin(savedInstanceState)
-        environment.analyticsRegistry.trackScreenView(Analytics.Screens.LOGIN)
-        initViews()
-        initEULA()
         // enable login buttons at launch
         tryToSetUIInteraction(true)
-
+        environment.analyticsRegistry.trackScreenView(Analytics.Screens.LOGIN)
         return object : LoginViewInterface {
             override fun disableToolbarNavigation() {
-                val actionBar = supportActionBar
-                if (actionBar != null) {
-                    actionBar.setHomeButtonEnabled(false)
-                    actionBar.setDisplayHomeAsUpEnabled(false)
-                    actionBar.setDisplayShowHomeEnabled(false)
+                supportActionBar?.apply {
+                    setHomeButtonEnabled(false)
+                    setDisplayHomeAsUpEnabled(false)
+                    setDisplayShowHomeEnabled(false)
                 }
             }
 
@@ -89,19 +89,23 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
                 googleEnabled: Boolean, facebookEnabled: Boolean,
                 microsoftEnabled: Boolean
             ) {
-                activityLoginBinding.socialAuth.root.setVisibility((!facebookEnabled && !googleEnabled && !microsoftEnabled).not())
-                activityLoginBinding.socialAuth.googleButton.setVisibility(googleEnabled)
-                activityLoginBinding.socialAuth.facebookButton.setVisibility(facebookEnabled)
-                activityLoginBinding.socialAuth.microsoftButton.setVisibility(microsoftEnabled)
+                binding.socialAuth.apply {
+                    root.setVisibility((!facebookEnabled && !googleEnabled && !microsoftEnabled).not())
+                    googleButton.setVisibility(googleEnabled)
+                    facebookButton.setVisibility(facebookEnabled)
+                    microsoftButton.setVisibility(microsoftEnabled)
+                }
             }
         }
     }
 
-    private fun initViews() {
+    private fun initViews(savedInstanceState: Bundle?) {
         title = getString(R.string.login_title)
 
-        activityLoginBinding.loginButtonLayout.setOnClickListener { callServerForLogin() }
-        activityLoginBinding.forgotPasswordTv.setOnClickListener { // Calling help dialog
+        binding.loginButtonLayout.setOnClickListener {
+            callServerForLogin()
+        }
+        binding.forgotPasswordTv.setOnClickListener { // Calling help dialog
             if (NetworkUtil.isConnected(this@LoginActivity)) {
                 showResetPasswordDialog()
             } else {
@@ -111,35 +115,54 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
                 )
             }
         }
-        activityLoginBinding.emailEt.addTextChangedListener(object : TextWatcher {
+        binding.emailEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
 
             override fun onTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
 
             override fun afterTextChanged(editable: Editable) {
-                activityLoginBinding.usernameWrapper.error = null
+                binding.usernameWrapper.error = null
             }
         })
-        activityLoginBinding.passwordEt.addTextChangedListener(object : TextWatcher {
+        binding.passwordEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
 
             override fun onTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
 
             override fun afterTextChanged(editable: Editable) {
-                activityLoginBinding.passwordWrapper.error = null
+                binding.passwordWrapper.error = null
             }
         })
+        setupSocialLogin(savedInstanceState)
+        initEULA()
+    }
+
+    private fun setupSocialLogin(savedInstanceState: Bundle?) {
+        socialLoginDelegate = SocialLoginDelegate(
+            this, savedInstanceState, this,
+            environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
+        ).apply {
+            binding.socialAuth.facebookButton.setOnClickListener {
+                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK)
+            }
+            binding.socialAuth.googleButton.setOnClickListener(
+                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE)
+            )
+            binding.socialAuth.microsoftButton.setOnClickListener(
+                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT)
+            )
+        }
     }
 
     private fun initEULA() {
-        activityLoginBinding.endUserAgreementTv.movementMethod = LinkMovementMethod.getInstance()
-        activityLoginBinding.endUserAgreementTv.text = TextUtils.generateLicenseText(
+        binding.endUserAgreementTv.movementMethod = LinkMovementMethod.getInstance()
+        binding.endUserAgreementTv.text = TextUtils.generateLicenseText(
             environment.config, this, R.string.by_signing_in
         )
 
         val envDisplayName = environment.config.environmentDisplayName
-        if (envDisplayName.isNullOrEmpty().not()) {
-            activityLoginBinding.versionEnvTv.setVisibility(true)
+        if (envDisplayName.isNotNullOrEmpty()) {
+            binding.versionEnvTv.setVisibility(true)
             val versionName = BuildConfig.VERSION_NAME
             val text = String.format(
                 "%s %s %s",
@@ -147,42 +170,19 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
                 versionName,
                 envDisplayName
             )
-            activityLoginBinding.versionEnvTv.text = text
+            binding.versionEnvTv.text = text
         }
-    }
-
-    private fun setupSocialLogin(savedInstanceState: Bundle?) {
-        socialLoginDelegate = SocialLoginDelegate(
-            this, savedInstanceState, this,
-            environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
-        )
-
-        activityLoginBinding.socialAuth.facebookButton.setOnClickListener(
-            socialLoginDelegate?.createSocialButtonClickHandler(
-                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK
-            )
-        )
-        activityLoginBinding.socialAuth.googleButton.setOnClickListener(
-            socialLoginDelegate?.createSocialButtonClickHandler(
-                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE
-            )
-        )
-        activityLoginBinding.socialAuth.microsoftButton.setOnClickListener(
-            socialLoginDelegate?.createSocialButtonClickHandler(
-                SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT
-            )
-        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        socialLoginDelegate?.onActivityDestroyed()
+        socialLoginDelegate.onActivityDestroyed()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("username", email)
-        socialLoginDelegate?.onActivitySaveInstanceState(outState)
+        socialLoginDelegate.onActivitySaveInstanceState(outState)
     }
 
     override fun onStart() {
@@ -195,7 +195,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        activityLoginBinding.emailEt.setText(savedInstanceState.getString("username"))
+        binding.emailEt.setText(savedInstanceState.getString("username"))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -215,7 +215,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     }
 
     private fun displayLastEmailId() {
-        activityLoginBinding.emailEt.setText(loginPrefs.lastAuthenticatedEmail)
+        binding.emailEt.setText(environment.loginPrefs.lastAuthenticatedEmail)
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -228,18 +228,19 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             return
         }
         if (password.isEmpty()) {
-            activityLoginBinding.passwordWrapper.error = getString(R.string.error_enter_password)
-            activityLoginBinding.passwordEt.requestFocus()
+            binding.passwordWrapper.error = getString(R.string.error_enter_password)
+            binding.passwordEt.requestFocus()
         }
         if (email.isEmpty()) {
-            activityLoginBinding.usernameWrapper.error = getString(R.string.error_enter_email)
-            activityLoginBinding.emailEt.requestFocus()
+            binding.usernameWrapper.error = getString(R.string.error_enter_email)
+            binding.emailEt.requestFocus()
         }
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            activityLoginBinding.emailEt.isEnabled = false
-            activityLoginBinding.passwordEt.isEnabled = false
-            activityLoginBinding.forgotPasswordTv.isEnabled = false
-            activityLoginBinding.endUserAgreementTv.isEnabled = false
+            binding.emailEt.isEnabled = false
+            binding.passwordEt.isEnabled = false
+            binding.forgotPasswordTv.isEnabled = false
+            binding.endUserAgreementTv.isEnabled = false
+
             val loginTask: LoginTask = object : LoginTask(this, email, password) {
                 override fun onPostExecute(result: AuthResponse?) {
                     super.onPostExecute(result)
@@ -249,24 +250,15 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
                 }
 
                 override fun onException(ex: Exception) {
-                    if (ex is HttpStatusException &&
-                        ex.statusCode == HttpStatus.BAD_REQUEST
-                    ) {
-                        onUserLoginFailure(
-                            LoginException(
-                                LoginErrorMessage(
-                                    getString(R.string.login_error),
-                                    getString(R.string.login_failed)
-                                )
-                            ), null, null
-                        )
+                    if (ex is HttpStatusException && ex.statusCode == HttpStatus.BAD_REQUEST) {
+                        onUserLoginFailure(loginException, null, null)
                     } else {
                         onUserLoginFailure(ex, null, null)
                     }
                 }
             }
             tryToSetUIInteraction(false)
-            loginTask.setProgressDialog(activityLoginBinding.progress.progressIndicator)
+            loginTask.setProgressDialog(binding.progress.progressIndicator)
             loginTask.execute()
         }
     }
@@ -293,7 +285,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
      */
     override fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>) {
         tryToSetUIInteraction(false)
-        task.setProgressDialog(activityLoginBinding.progress.progressIndicator)
+        task.setProgressDialog(binding.progress.progressIndicator)
     }
 
     override fun onUserLoginSuccess() {
@@ -314,12 +306,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         when (ex) {
             is LoginException -> {
                 val errorMessage = ex.loginErrorMessage
-                showAlertDialog(
-                    errorMessage.messageLine1,
-                    if (errorMessage.messageLine2 != null) errorMessage.messageLine2 else getString(
-                        R.string.login_failed
-                    )
-                )
+                showAlertDialog(errorMessage.messageLine1, errorMessage.messageLine2)
             }
 
             is HttpStatusException -> {
@@ -369,17 +356,18 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     }
 
     override fun tryToSetUIInteraction(enable: Boolean): Boolean {
-        activityLoginBinding.loginButtonLayout.isEnabled = enable
-        invalidateTouch(enable)
-        activityLoginBinding.loginBtnTv.text =
-            getString(if (enable) R.string.login else R.string.signing_in)
-        activityLoginBinding.socialAuth.facebookButton.isClickable = enable
-        activityLoginBinding.socialAuth.googleButton.isClickable = enable
-        activityLoginBinding.socialAuth.microsoftButton.isClickable = enable
-        activityLoginBinding.emailEt.isEnabled = enable
-        activityLoginBinding.passwordEt.isEnabled = enable
-        activityLoginBinding.forgotPasswordTv.isEnabled = enable
-        activityLoginBinding.endUserAgreementTv.isEnabled = enable
+        isTouchEnabled(enable)
+        binding.apply {
+            loginButtonLayout.isEnabled = enable
+            emailEt.isEnabled = enable
+            passwordEt.isEnabled = enable
+            loginBtnTv.text = getString(if (enable) R.string.login else R.string.signing_in)
+            forgotPasswordTv.isEnabled = enable
+            socialAuth.facebookButton.isClickable = enable
+            socialAuth.googleButton.isClickable = enable
+            socialAuth.microsoftButton.isClickable = enable
+            endUserAgreementTv.isEnabled = enable
+        }
         return true
     }
 

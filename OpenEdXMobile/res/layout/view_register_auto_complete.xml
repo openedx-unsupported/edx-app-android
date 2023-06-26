@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_auto_complete"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/edx_x_quarter_margin"
+    android:paddingBottom="@dimen/edx_x_quarter_margin">
 
-    <LinearLayout
-        android:id="@+id/ll_auto_complete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/edx_x_quarter_margin"
-        android:paddingBottom="@dimen/edx_x_quarter_margin">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/auto_complete_layout"
+        style="@style/edX.Widget.InputLayout"
+        android:textColorHint="@color/neutralXXDark"
+        app:endIconDrawable="@drawable/auto_complete_end_icon_selector"
+        app:endIconMode="dropdown_menu">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/auto_complete_layout"
-            style="@style/edX.Widget.inputLayout"
+        <org.edx.mobile.module.registration.view.RegistrationOptionAutoCompleteTextView
+            android:id="@+id/et_auto_complete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:imeOptions="actionDone"
+            android:inputType="textAutoComplete"
+            android:maxLines="1"
+            android:minHeight="@dimen/auth_panel_btn_height"
+            android:paddingStart="@dimen/edx_default_margin"
+            android:paddingEnd="@dimen/edx_default_margin"
             android:textColorHint="@color/neutralXXDark"
-            app:endIconMode="dropdown_menu">
+            android:textSize="@dimen/edx_small" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <org.edx.mobile.module.registration.view.RegistrationOptionAutoCompleteTextView
-                android:id="@+id/et_auto_complete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/auth_panel_btn_height"
-                android:ellipsize="end"
-                android:focusable="true"
-                android:imeOptions="actionDone"
-                android:inputType="textAutoComplete"
-                android:maxLines="1"
-                android:paddingStart="@dimen/edx_default_margin"
-                android:paddingEnd="@dimen/edx_default_margin"
-                android:textColorHint="@color/neutralXXDark"
-                android:textSize="@dimen/edx_small" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/error_message"
+        style="@style/registration_error_message"
+        android:visibility="gone"
+        tools:text="error text here"
+        tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/instructions"
-            style="@style/registration_instruction_message"
-            android:visibility="visible"
-            tools:text="error text here" />
-
-        <TextView
-            android:id="@+id/error_message"
-            style="@style/registration_error_message"
-            android:visibility="visible"
-            tools:text="error text here" />
-    </LinearLayout>
-</layout>
+    <TextView
+        android:id="@+id/instructions"
+        style="@style/registration_instruction_message"
+        android:visibility="gone"
+        tools:text="Instructions text here"
+        tools:visibility="visible" />
+</LinearLayout>
