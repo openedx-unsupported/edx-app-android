@@ -136,7 +136,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     int endMillis = subtitle.end.getMseconds();
                     if (currentPos >= startMillis && currentPos <= endMillis) {
                         String subtitleLang = userPrefs.getSubtitleLanguage();
-                        if (subtitleLang.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
+                        if (!subtitleLang.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
                             updateClosedCaptionData(subtitle);
                         }
                         updateSelection(currentSubtitleIndex);
@@ -232,7 +232,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
             initTranscriptListView();
             updateTranscript(subtitlesObj);
             String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
-            if (userPrefs.getSubtitleLanguage().equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE) &&
+            if (!userPrefs.getSubtitleLanguage().equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE) &&
                     !android.text.TextUtils.isEmpty(subtitleLanguage) &&
                     getTranscriptModel().containsKey(subtitleLanguage)) {
                 userPrefs.setSubtitleLanguage(subtitleLanguage);

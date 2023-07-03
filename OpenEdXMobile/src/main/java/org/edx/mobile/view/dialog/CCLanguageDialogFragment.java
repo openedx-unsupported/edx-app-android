@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 
 import java.util.HashMap;
@@ -43,7 +44,6 @@ public class CCLanguageDialogFragment extends DialogFragment {
         d.callback = callback;
         d.langList = dialogMap;
         Bundle args = new Bundle();
-        d.langList = dialogMap;
         args.putString("selectedLanguage", languageSelected);
         d.setArguments(args);
 
@@ -70,7 +70,6 @@ public class CCLanguageDialogFragment extends DialogFragment {
                     };
             lv_ccLang.setAdapter(ccAdaptor);
             lv_ccLang.setOnItemClickListener(ccAdaptor);
-            //ArrayList<String> langList =  getArguments().getStringArrayList("langs");
 
             if (langList != null) {
                 HashMap<String, String> hm;
@@ -83,7 +82,7 @@ public class CCLanguageDialogFragment extends DialogFragment {
             }
             String langSelected = getArguments().getString("selectedLanguage");
             if (langSelected != null && !langList.containsKey(langSelected)) {
-                langSelected = langList.keySet().toArray()[0].toString();
+                langSelected = UserPrefs.DEFAULT_VALUE;
             }
             ccAdaptor.selectedLanguage = langSelected;
             ccAdaptor.notifyDataSetChanged();
@@ -115,5 +114,4 @@ public class CCLanguageDialogFragment extends DialogFragment {
         }
         return v;
     }
-
 }
