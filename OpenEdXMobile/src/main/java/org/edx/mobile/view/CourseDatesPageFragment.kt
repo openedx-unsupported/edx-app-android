@@ -17,6 +17,7 @@ import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.databinding.FragmentCourseDatesPageBinding
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
@@ -32,6 +33,7 @@ import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.CalendarUtils
 import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.CourseDateUtil
+import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.PermissionsUtil
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.UiUtils
@@ -123,8 +125,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         permissionListener = this
-
-        courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+        courseData = arguments.serializableOrThrow(Router.EXTRA_COURSE_DATA)
         isSelfPaced = courseData.course.isSelfPaced
         calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
         accountName = CalendarUtils.getUserAccountForSync(environment)
@@ -165,12 +166,12 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun initObserver() {
-        viewModel.showLoader.observe(viewLifecycleOwner, Observer { showLoader ->
+        viewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver { showLoader ->
             binding.loadingIndicator.loadingIndicator.visibility =
                 if (showLoader) View.VISIBLE else View.GONE
         })
 
-        viewModel.bannerInfo.observe(viewLifecycleOwner, Observer {
+        viewModel.bannerInfo.observe(viewLifecycleOwner, NonNullObserver {
             initDatesBanner(it)
         })
 
@@ -209,11 +210,9 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         })
 
-        viewModel.resetCourseDates.observe(viewLifecycleOwner, Observer { resetCourseDates ->
-            if (resetCourseDates != null) {
-                if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                    showShiftDateSnackBar(true)
-                }
+        viewModel.resetCourseDates.observe(viewLifecycleOwner, NonNullObserver {
+            if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
+                showShiftDateSnackBar(true)
             }
         })
 
@@ -255,7 +254,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         })
 
-        viewModel.swipeRefresh.observe(viewLifecycleOwner, Observer { enableSwipeListener ->
+        viewModel.swipeRefresh.observe(viewLifecycleOwner, NonNullObserver { enableSwipeListener ->
             binding.swipeContainer.isRefreshing = enableSwipeListener
         })
     }
@@ -328,7 +327,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             screenName = Analytics.Screens.PLS_COURSE_DATES,
             analyticsRegistry = environment.analyticsRegistry,
             courseBannerInfoModel = courseBannerInfo,
-            clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
+            clickListener = { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
 
     }
 

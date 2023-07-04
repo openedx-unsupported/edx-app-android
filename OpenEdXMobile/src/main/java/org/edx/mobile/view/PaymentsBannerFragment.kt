@@ -14,6 +14,9 @@ import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.FragmentPaymentsBannerBinding
+import org.edx.mobile.extenstion.parcelableOrThrow
+import org.edx.mobile.extenstion.serializable
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.model.api.CourseUpgradeResponse
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
@@ -86,9 +89,9 @@ class PaymentsBannerFragment : BaseFragment() {
 
     private fun populateCourseUpgradeBanner(context: Context) {
         val courseUpgradeData: CourseUpgradeResponse =
-            arguments?.getParcelable<CourseUpgradeResponse>(Router.EXTRA_COURSE_UPGRADE_DATA) as CourseUpgradeResponse
+            arguments.parcelableOrThrow(Router.EXTRA_COURSE_UPGRADE_DATA)
         val courseData: EnrolledCoursesResponse =
-            arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+            arguments.serializableOrThrow(Router.EXTRA_COURSE_DATA)
         val showInfoButton: Boolean = arguments?.getBoolean(EXTRA_SHOW_INFO_BUTTON) ?: false
         binding.upgradeToVerifiedFooter.visibility = View.VISIBLE
         if (showInfoButton) {
@@ -109,8 +112,7 @@ class PaymentsBannerFragment : BaseFragment() {
             binding.tvUpgradePrice.visibility = View.GONE
         }
 
-        val courseUnit: CourseComponent? =
-            arguments?.getSerializable(Router.EXTRA_COURSE_UNIT) as CourseComponent?
+        val courseUnit: CourseComponent? = arguments?.serializable(Router.EXTRA_COURSE_UNIT)
 
         courseUpgradeData.basketUrl?.let { basketUrl ->
             binding.llUpgradeButton.setOnClickListener {
