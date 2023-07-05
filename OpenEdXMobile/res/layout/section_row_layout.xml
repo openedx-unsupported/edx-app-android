@@ -49,7 +49,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_up"
+            app:srcCompat="@drawable/ic_drop_up"
             app:tint="@color/neutralDark"
             tools:ignore="ContentDescription, ImageContrastCheck" />
 

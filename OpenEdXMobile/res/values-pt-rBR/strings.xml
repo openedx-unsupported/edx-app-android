@@ -47,8 +47,6 @@
   <string name="login_btn">Botão Entrar</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Aguarde</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Entrando...</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Mensagem de erro</string>
   <!--Generic error during log in-->

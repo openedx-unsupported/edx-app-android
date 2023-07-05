@@ -47,8 +47,6 @@
   <string name="login_btn">登录按钮</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">请稍等</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">正在登录</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">错误信息</string>
   <!--Generic error during log in-->

@@ -47,8 +47,6 @@
   <string name="login_btn">زر تسجيل الدخول</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">انتظر من فضلك</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">جار تسجيل الدخول</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">حدث خطأ</string>
   <!--Generic error during log in-->

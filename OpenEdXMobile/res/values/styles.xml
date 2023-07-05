@@ -30,6 +30,7 @@
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
         <item name="fontItalic">@font/inter_italic</item>
         <item name="fontRegular">@font/inter_regular</item>
+        <item name="fontMedium">@font/inter_medium</item>
         <item name="fontSemiBoldItalic">@font/inter_semi_bold_italic</item>
         <item name="fontSemiBold">@font/inter_semi_bold</item>
         <item name="secondaryFontRegular">@font/roboto_mono_regular</item>

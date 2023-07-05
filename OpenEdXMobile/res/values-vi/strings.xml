@@ -46,8 +46,6 @@
   <string name="login_btn">Nút đăng nhập</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Vui lòng đợi</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Đang đăng nhập</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Thông báo lỗi</string>
   <!--Generic error during log in-->

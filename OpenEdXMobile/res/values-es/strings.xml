@@ -47,8 +47,6 @@
   <string name="login_btn">Botón de inicio de sesión</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Espere por favor....</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Iniciando sesión...</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Mensaje de error</string>
   <!--Generic error during log in-->

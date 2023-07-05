@@ -608,7 +608,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     override fun tryToSetUIInteraction(enable: Boolean): Boolean {
-        isTouchEnabled(enable)
+        setTouchEnabled(enable)
         isCreateAccBtnEnabled(enable)
         for (v in mFieldViews) {
             v.setEnabled(enable)

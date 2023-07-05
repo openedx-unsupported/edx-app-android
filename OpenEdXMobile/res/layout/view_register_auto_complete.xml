@@ -33,13 +33,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/error_message"
-        style="@style/registration_error_message"
-        android:visibility="gone"
-        tools:text="error text here"
-        tools:visibility="visible" />
-
-    <TextView
         android:id="@+id/instructions"
         style="@style/registration_instruction_message"
         android:visibility="gone"

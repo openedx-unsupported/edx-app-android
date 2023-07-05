@@ -47,8 +47,6 @@
   <string name="login_btn">Bouton de connexion</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Veuillez patienter</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Connexion en cours</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Message d\'erreur</string>
   <!--Generic error during log in-->

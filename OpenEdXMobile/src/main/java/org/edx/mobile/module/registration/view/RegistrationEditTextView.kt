@@ -6,7 +6,6 @@ import android.text.InputFilter.LengthFilter
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.google.gson.JsonElement
@@ -69,7 +68,7 @@ open class RegistrationEditTextView(
                 }
             }
         }
-//        setInstructions(mField.instructions)
+        setInstructions(mField.instructions)
 
         mBinding.inputLayout.apply {
             hint = mField.label
@@ -77,7 +76,7 @@ open class RegistrationEditTextView(
             contentDescription = "${mField.label}. ${mField.instructions}."
         }
         // hide error text view
-        mBinding.errorMessage.setVisibility(false)
+        mBinding.inputLayout.error = null
     }
 
     override fun setRawValue(value: String?): Boolean {
@@ -109,8 +108,6 @@ open class RegistrationEditTextView(
 
     override fun handleError(errorMessage: String?) {
         if (errorMessage.isNotNullOrEmpty()) {
-//            mBinding.errorMessage.text = Html.fromHtml(errorMessage)
-            mBinding.errorMessage.setVisibility(false)
             // Add error message in a11y content for mTextInputLayout
             val errorTag = mBinding.inputLayout.resources.getString(R.string.label_error)
             mBinding.inputLayout.contentDescription = String.format(
@@ -131,7 +128,7 @@ open class RegistrationEditTextView(
 
     override fun isValidInput(): Boolean {
         // hide error as we are re-validating the input
-        mBinding.errorMessage.setVisibility(false)
+        mBinding.inputLayout.isErrorEnabled = false
 
         // Update a11y content for mTextInputLayout
         mBinding.inputLayout.contentDescription =

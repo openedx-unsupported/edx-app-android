@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
-import androidx.databinding.DataBindingUtil
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
@@ -70,12 +69,14 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     }
 
     override fun createView(savedInstanceState: Bundle?): LoginViewInterface {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initViews(savedInstanceState)
         hideSoftKeypad()
         // enable login buttons at launch
         tryToSetUIInteraction(true)
         environment.analyticsRegistry.trackScreenView(Analytics.Screens.LOGIN)
+
         return object : LoginViewInterface {
             override fun disableToolbarNavigation() {
                 supportActionBar?.apply {
@@ -190,7 +191,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         if (email.isEmpty()) {
             displayLastEmailId()
         }
-        socialLoginDelegate?.onActivityStarted()
+        socialLoginDelegate.onActivityStarted()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -201,7 +202,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         tryToSetUIInteraction(true)
-        socialLoginDelegate?.onActivityResult(requestCode, resultCode, data)
+        socialLoginDelegate.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             ResetPasswordDialogFragment.REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
@@ -265,7 +266,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
 
     override fun onStop() {
         super.onStop()
-        socialLoginDelegate?.onActivityStopped()
+        socialLoginDelegate.onActivityStopped()
     }
 
     private fun showResetPasswordDialog() {
@@ -356,12 +357,12 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     }
 
     override fun tryToSetUIInteraction(enable: Boolean): Boolean {
-        isTouchEnabled(enable)
+        setTouchEnabled(enable)
         binding.apply {
             loginButtonLayout.isEnabled = enable
             emailEt.isEnabled = enable
             passwordEt.isEnabled = enable
-            loginBtnTv.text = getString(if (enable) R.string.login else R.string.signing_in)
+            loginBtnTv.text = getString(if (enable) R.string.login_title else R.string.signing_in)
             forgotPasswordTv.isEnabled = enable
             socialAuth.facebookButton.isClickable = enable
             socialAuth.googleButton.isClickable = enable

@@ -6,6 +6,7 @@ import org.edx.mobile.util.observer.Observable
 import org.edx.mobile.util.observer.SubscriptionManager
 
 abstract class ViewHoldingPresenter<V> : Presenter<V> {
+
     var view: V? = null
     private val viewSubscriptionManager = SubscriptionManager()
 

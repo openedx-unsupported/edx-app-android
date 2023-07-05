@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/panel_social_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/edx_default_margin"
+    android:layout_marginBottom="@dimen/edx_default_margin"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/panel_social_layout"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/google_button"
+        style="@style/edX.Widget.SocialLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edx_neutral_x_dark_bordered_button"
+        android:text="@string/sign_in_with_google"
+        android:textColor="@color/neutralXDark"
+        app:icon="@drawable/ic_google_logo" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/facebook_button"
+        style="@style/edX.Widget.SocialLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/edx_default_margin"
-        android:layout_marginBottom="@dimen/edx_default_margin"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@color/facebook_button_background"
+        android:text="@string/sign_in_with_facebook"
+        android:textColor="@color/neutralWhiteT"
+        app:icon="@drawable/ic_facebook_logo" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/google_button"
-            style="@style/edX.Widget.SocialLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edx_neutral_x_dark_bordered_button"
-            android:text="@string/sign_in_with_google"
-            android:textColor="@color/neutralXDark"
-            app:icon="@drawable/ic_google_logo" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/facebook_button"
-            style="@style/edX.Widget.SocialLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/edx_default_margin"
-            android:background="@color/facebook_button_background"
-            android:text="@string/sign_in_with_facebook"
-            android:textColor="@color/neutralWhiteT"
-            app:icon="@drawable/ic_facebook_logo" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/microsoft_button"
-            style="@style/edX.Widget.SocialLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/edx_default_margin"
-            android:background="@color/microsoft_button_background"
-            android:text="@string/sign_in_with_microsoft"
-            android:textColor="@color/neutralWhiteT"
-            app:icon="@drawable/ic_microsoft_logo" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-</layout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/microsoft_button"
+        style="@style/edX.Widget.SocialLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/edx_default_margin"
+        android:background="@color/microsoft_button_background"
+        android:text="@string/sign_in_with_microsoft"
+        android:textColor="@color/neutralWhiteT"
+        app:icon="@drawable/ic_microsoft_logo" />
+</LinearLayout>

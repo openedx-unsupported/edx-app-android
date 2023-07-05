@@ -63,8 +63,6 @@
     <string name="login_title">Sign in</string>
     <!-- Hint text for username/email field -->
     <string name="email_username">Username or email</string>
-    <!-- Button initiating login process after user enters credentials like username and password -->
-    <string name="login">Sign in</string>
     <!-- Button text allowing user to reset their password -->
     <string name="forgot_password">Forgot password</string>
     <!-- Label sign in with google for social login buttons -->
@@ -79,4 +77,6 @@
     <string name="create_account_text">Create an account</string>
     <!-- Label signup with social register buttons -->
     <string name="continue_with_social">Continue with %s</string>
+    <!-- Message shown while user waits for response to a sign in request-->
+    <string name="signing_in">Signing in</string>
 </resources>

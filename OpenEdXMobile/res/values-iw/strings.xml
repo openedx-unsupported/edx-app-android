@@ -47,8 +47,6 @@
   <string name="login_btn">כפתור כניסה</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">אנא המתינ</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">נכנס</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">הודעת שגיאה</string>
   <!--Generic error during log in-->

@@ -286,12 +286,4 @@ object DataBindingHelperUtils {
         )
         textView.setText(string, TextView.BufferType.SPANNABLE)
     }
-
-    @JvmStatic
-    @BindingAdapter("app:textFontWeight")
-    fun TextView.textFontWeight(int: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            typeface = Typeface.create(typeface, int, false)
-        }
-    }
 }

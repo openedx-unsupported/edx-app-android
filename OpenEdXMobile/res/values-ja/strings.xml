@@ -44,8 +44,6 @@
   <string name="login_btn">サインインボタン</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">お待ちください</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">サインイン中</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">エラーメッセージ</string>
   <!--Generic error during log in-->

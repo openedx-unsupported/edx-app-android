@@ -38,7 +38,7 @@ class RegistrationSelectView(
         }
 
         mBinding.autoCompleteLayout.hint = mField.label
-//        setInstructions(mField.instructions)
+        setInstructions(mField.instructions)
 
         mBinding.etAutoComplete.apply {
             setItems(mField.options)
@@ -79,7 +79,7 @@ class RegistrationSelectView(
         }
 
         // hide error text view
-        mBinding.errorMessage.setVisibility(false)
+        mBinding.autoCompleteLayout.error = null
     }
 
     override fun getCurrentValue(): JsonElement {
@@ -117,8 +117,6 @@ class RegistrationSelectView(
 
     override fun handleError(errorMessage: String?) {
         if (errorMessage.isNotNullOrEmpty()) {
-            mBinding.errorMessage.setVisibility(false)
-            mBinding.errorMessage.text = errorMessage
             val errorTag = mBinding.etAutoComplete.resources.getString(R.string.label_error)
             mBinding.etAutoComplete.contentDescription = String.format(
                 "%s. %s. %s, %s.",
@@ -140,7 +138,7 @@ class RegistrationSelectView(
 
     override fun isValidInput(): Boolean {
         // hide error as we are re-validating the input
-        mBinding.errorMessage.setVisibility(false)
+        mBinding.autoCompleteLayout.isErrorEnabled = false
         mBinding.etAutoComplete.contentDescription =
             String.format("%s. %s.", mBinding.etAutoComplete.selectedItemName, mField.instructions)
 
