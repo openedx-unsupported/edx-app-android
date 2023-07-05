@@ -458,8 +458,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         accessToken: String
     ) {
         //change UI.
-        val socialPanel = findViewById<View>(R.id.panel_social_layout)
-        socialPanel.setVisibility(false)
+        binding.socialAuth.root.setVisibility(false)
         //help method
         showRegularMessage(socialType)
         //populate the field with value from social site
@@ -473,7 +472,6 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             }
         }
         mFieldViews.removeAll(extraFields)
-        // registrationLayout.requestLayout();
     }
 
     private fun populateFormField(fieldName: String, value: String?) {

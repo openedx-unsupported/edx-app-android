@@ -35,7 +35,6 @@ public class SocialFactory {
         }
     }
 
-
     public static ISocial getInstance(Activity activity, SOCIAL_SOURCE_TYPE type, Config config) {
         if (isSocialFeatureEnabled(activity.getApplicationContext(), type, config)) {
             switch (type) {

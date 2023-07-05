@@ -11,7 +11,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import org.edx.mobile.R
 import org.edx.mobile.databinding.ViewRegisterEditTextBinding
-import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.module.registration.model.RegistrationFormField
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
@@ -108,19 +107,19 @@ open class RegistrationEditTextView(
     }
 
     override fun handleError(errorMessage: String?) {
-        if (errorMessage.isNotNullOrEmpty()) {
-            // Add error message in a11y content for mTextInputLayout
-            val errorTag = mBinding.inputLayout.resources.getString(R.string.label_error)
-            mBinding.inputLayout.contentDescription = String.format(
-                "%s. %s. %s, %s.",
-                mField.label, mField.instructions, errorTag, errorMessage
-            )
-            mBinding.inputLayout.error =
-                HtmlCompat.fromHtml(errorMessage!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
-            mBinding.inputLayout.errorIconDrawable = null
-        } else {
+        if (errorMessage.isNullOrEmpty()) {
             logger.warn("error message not provided, so not informing the user about this error")
+            return
         }
+        // Add error message in a11y content for mTextInputLayout
+        val errorTag = mBinding.inputLayout.resources.getString(R.string.label_error)
+        mBinding.inputLayout.contentDescription = String.format(
+            "%s. %s. %s, %s.",
+            mField.label, mField.instructions, errorTag, errorMessage
+        )
+        mBinding.inputLayout.error =
+            HtmlCompat.fromHtml(errorMessage, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        mBinding.inputLayout.errorIconDrawable = null
     }
 
     override fun isValidInput(): Boolean {

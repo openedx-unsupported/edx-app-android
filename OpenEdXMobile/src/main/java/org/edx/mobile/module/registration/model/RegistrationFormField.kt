@@ -45,9 +45,12 @@ data class RegistrationFormField(
     @SerializedName("exposed")
     val isExposed: Boolean = false,
 ) {
-    val isEmailField = RegistrationFieldType.EMAIL.name.equals(name, ignoreCase = true)
-    val isConfirmEmailField =
-        RegistrationFieldType.CONFIRM_EMAIL.name.equals(name, ignoreCase = true)
-    val isPasswordField = RegistrationFieldType.PASSWORD.name.equals(name, ignoreCase = true)
-    val isMultiField = RegistrationFieldType.MULTI.name.equals(name, ignoreCase = true)
+    val isEmailField
+        get() = RegistrationFieldType.EMAIL.name.equals(name, ignoreCase = true)
+    val isConfirmEmailField
+        get() = RegistrationFieldType.CONFIRM_EMAIL.name.equals(name, ignoreCase = true)
+    val isPasswordField
+        get() = RegistrationFieldType.PASSWORD.name.equals(name, ignoreCase = true)
+    val isMultiField
+        get() = RegistrationFieldType.MULTI.name.equals(name, ignoreCase = true)
 }

@@ -1,3 +1,5 @@
 package org.edx.mobile.exception
 
-class LoginException(val loginErrorMessage: LoginErrorMessage) : Exception()
+data class LoginException(
+    val loginErrorMessage: LoginErrorMessage
+) : Exception()
