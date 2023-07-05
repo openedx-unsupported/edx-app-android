@@ -1,18 +1,16 @@
 package org.edx.mobile.module.registration.view
 
 import android.text.Editable
-import android.text.Html
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import org.edx.mobile.R
 import org.edx.mobile.databinding.ViewRegisterAutoCompleteBinding
 import org.edx.mobile.extenstion.isNotNullOrEmpty
-import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.module.registration.model.RegistrationFormField
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
@@ -57,7 +55,7 @@ class RegistrationSelectView(
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (!mBinding.etAutoComplete.hasValue(s.toString().trim { it <= ' ' })) {
+                    if (!mBinding.etAutoComplete.hasValue(s.toString().trim())) {
                         mBinding.etAutoComplete.selectedItem = null
                     }
                     // Don't show the error until view has lost the focus at least once
@@ -105,42 +103,38 @@ class RegistrationSelectView(
     override fun getView(): View = mBinding.root
 
     override fun setInstructions(instructions: String?) {
-        mBinding.instructions.setVisibility(instructions.isNotNullOrEmpty())
+        mBinding.autoCompleteLayout.isHelperTextEnabled = instructions.isNotNullOrEmpty()
         if (instructions.isNotNullOrEmpty()) {
-            mBinding.instructions.text = instructions
+            mBinding.autoCompleteLayout.helperText = instructions
         }
         ViewCompat.setImportantForAccessibility(
-            mBinding.instructions,
+            mBinding.autoCompleteLayout,
             ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO
         )
     }
 
     override fun handleError(errorMessage: String?) {
-        if (errorMessage.isNotNullOrEmpty()) {
-            val errorTag = mBinding.etAutoComplete.resources.getString(R.string.label_error)
-            mBinding.etAutoComplete.contentDescription = String.format(
-                "%s. %s. %s, %s.",
-                mBinding.etAutoComplete.selectedItemName,
-                mField.instructions,
-                errorTag,
-                errorMessage
-            )
-            mBinding.autoCompleteLayout.error = Html.fromHtml(errorMessage)
-            mBinding.autoCompleteLayout.apply {
-                findViewById<TextView>(com.google.android.material.R.id.textinput_error)?.apply {
-                    setTextAppearance(context, R.style.registration_error_message)
-                }
-            }
-        } else {
+        if (errorMessage.isNullOrEmpty()) {
             logger.warn("error message not provided, so not informing the user about this error")
+            return
         }
+        val errorTag = mBinding.etAutoComplete.resources.getString(R.string.label_error)
+        mBinding.etAutoComplete.contentDescription = String.format(
+            "%s. %s. %s, %s.",
+            mBinding.etAutoComplete.selectedItemName,
+            mField.instructions,
+            errorTag,
+            errorMessage
+        )
+        mBinding.autoCompleteLayout.error =
+            HtmlCompat.fromHtml(errorMessage, HtmlCompat.FROM_HTML_MODE_COMPACT)
     }
 
     override fun isValidInput(): Boolean {
         // hide error as we are re-validating the input
         mBinding.autoCompleteLayout.isErrorEnabled = false
         mBinding.etAutoComplete.contentDescription =
-            String.format("%s. %s.", mBinding.etAutoComplete.selectedItemName, mField.instructions)
+            "${mBinding.etAutoComplete.selectedItemName}. ${mField.instructions}."
 
         // check if this is required field and has an input value or field is optional and have some value
         if ((mField.isRequired || (mField.isMultiField && mBinding.etAutoComplete.text.isNotEmpty())) && !hasValue()) {

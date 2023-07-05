@@ -10,8 +10,8 @@ data class RegistrationOption(
     var name: String = "",
 
     @SerializedName("value")
-    val value: String? = null,
-){
+    val value: String = "",
+) {
     override fun toString(): String {
         return name
     }

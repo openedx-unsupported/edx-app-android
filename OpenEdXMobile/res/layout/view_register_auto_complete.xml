@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_auto_complete"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +13,9 @@
         style="@style/edX.Widget.InputLayout"
         android:textColorHint="@color/neutralXXDark"
         app:endIconDrawable="@drawable/auto_complete_end_icon_selector"
-        app:endIconMode="dropdown_menu">
+        app:endIconMode="dropdown_menu"
+        app:errorTextAppearance="@style/registration_error_message"
+        app:helperTextTextAppearance="@style/registration_instruction_message">
 
         <org.edx.mobile.module.registration.view.RegistrationOptionAutoCompleteTextView
             android:id="@+id/et_auto_complete"
@@ -31,11 +32,4 @@
             android:textColorHint="@color/neutralXXDark"
             android:textSize="@dimen/edx_small" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/instructions"
-        style="@style/registration_instruction_message"
-        android:visibility="gone"
-        tools:text="Instructions text here"
-        tools:visibility="visible" />
 </LinearLayout>

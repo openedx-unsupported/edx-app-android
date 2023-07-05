@@ -9,7 +9,7 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionLis
 
 class RegistrationCheckBoxView(
     field: RegistrationFormField,
-    view: View
+    view: View,
 ) : IRegistrationFieldView {
 
     private val binding: ViewRegisterCheckboxBinding = ViewRegisterCheckboxBinding.bind(view)

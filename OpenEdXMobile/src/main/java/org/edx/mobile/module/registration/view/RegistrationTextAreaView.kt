@@ -5,8 +5,10 @@ import android.view.Gravity
 import android.view.View
 import org.edx.mobile.module.registration.model.RegistrationFormField
 
-internal class RegistrationTextAreaView(field: RegistrationFormField, view: View) :
-    RegistrationEditTextView(field, view) {
+internal class RegistrationTextAreaView(
+    field: RegistrationFormField,
+    view: View,
+) : RegistrationEditTextView(field, view) {
     init {
         mBinding.editText.apply {
             setLines(MIN_LINES_COUNT)

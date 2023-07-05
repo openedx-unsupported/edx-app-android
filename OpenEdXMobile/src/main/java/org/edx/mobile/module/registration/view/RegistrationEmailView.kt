@@ -6,8 +6,11 @@ import org.edx.mobile.R
 import org.edx.mobile.module.registration.model.RegistrationFormField
 import org.edx.mobile.util.InputValidationUtil
 
-internal class RegistrationEmailView(field: RegistrationFormField, view: View) :
-    RegistrationEditTextView(field, view) {
+internal class RegistrationEmailView(
+    field: RegistrationFormField,
+    view: View,
+) : RegistrationEditTextView(field, view) {
+
     init {
         mBinding.editText.inputType = (InputType.TYPE_CLASS_TEXT
                 or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)

@@ -5,8 +5,10 @@ import android.view.View
 import com.google.android.material.textfield.TextInputLayout
 import org.edx.mobile.module.registration.model.RegistrationFormField
 
-internal class RegistrationPasswordView(field: RegistrationFormField, view: View) :
-    RegistrationEditTextView(field, view) {
+internal class RegistrationPasswordView(
+    field: RegistrationFormField,
+    view: View,
+) : RegistrationEditTextView(field, view) {
     init {
         mBinding.editText.inputType = (InputType.TYPE_CLASS_TEXT
                 or InputType.TYPE_TEXT_VARIATION_PASSWORD

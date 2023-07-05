@@ -147,7 +147,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         hideSoftKeypad()
         val parameters = getRegistrationParameters() ?: return
 
-        isBtnProgressEnabled(true)
+        setBtnProgressEnabled(true)
         val parameterMap: MutableMap<String, String?> = mutableMapOf()
         for (key in parameters.keySet()) {
             parameterMap[key] = parameters.getString(key)
@@ -161,14 +161,14 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                     responseBody[ApiConstants.VALIDATION_DECISIONS], stringMapType
                 )
                 if (hasValidationError(messageBody)) {
-                    isBtnProgressEnabled(false)
+                    setBtnProgressEnabled(false)
                 } else {
                     createAccount(parameters)
                 }
             }
 
             override fun onFailure(error: Throwable) {
-                isBtnProgressEnabled(false)
+                setBtnProgressEnabled(false)
                 this@RegisterActivity.showAlertDialog(
                     null, ErrorUtils.getErrorMessage(
                         error,
@@ -307,7 +307,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             }
 
             override fun onException(ex: Exception) {
-                isBtnProgressEnabled(false)
+                setBtnProgressEnabled(false)
                 if (ex is RegistrationException) {
                     val messageBody = ex.formErrorBody
                     var errorShown = false
@@ -583,13 +583,13 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     /**
      * Show/Hide loading progress on Create Account button
      *
-     * @param isEnable flag to enable/disable view
+     * @param enable flag to enable/disable view
      */
-    private fun isBtnProgressEnabled(isEnable: Boolean) {
-        tryToSetUIInteraction(isEnable.not())
-        binding.btnProgress.progressIndicator.setVisibility(isEnable)
+    private fun setBtnProgressEnabled(enable: Boolean) {
+        tryToSetUIInteraction(enable.not())
+        binding.btnProgress.progressIndicator.setVisibility(enable)
         binding.createAccountTv.text = getString(
-            if (isEnable) {
+            if (enable) {
                 R.string.creating_account_text
             } else {
                 R.string.create_account_text
@@ -600,16 +600,16 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     /**
      * Enable/Disable the Create button during server calls
      *
-     * @param isEnable flag to enable/disable view
+     * @param enable flag to enable/disable view
      */
-    private fun isCreateAccBtnEnabled(isEnable: Boolean) {
-        binding.createAccountBtn.isEnabled = isEnable
+    private fun setCreateAccBtnEnabled(enable: Boolean) {
+        binding.createAccountBtn.isEnabled = enable
         binding.createAccountTv.text = getString(R.string.create_account_text)
     }
 
     override fun tryToSetUIInteraction(enable: Boolean): Boolean {
         setTouchEnabled(enable)
-        isCreateAccBtnEnabled(enable)
+        setCreateAccBtnEnabled(enable)
         for (v in mFieldViews) {
             v.setEnabled(enable)
             setActionListeners(v)

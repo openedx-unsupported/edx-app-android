@@ -1,19 +1,17 @@
 package org.edx.mobile.module.registration.view
 
 import android.text.Editable
-import android.text.Html
 import android.text.InputFilter.LengthFilter
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import org.edx.mobile.R
 import org.edx.mobile.databinding.ViewRegisterEditTextBinding
 import org.edx.mobile.extenstion.isNotNullOrEmpty
-import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.module.registration.model.RegistrationFormField
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
@@ -22,6 +20,7 @@ open class RegistrationEditTextView(
     private var mField: RegistrationFormField,
     view: View,
 ) : IRegistrationFieldView {
+
     protected val mBinding = ViewRegisterEditTextBinding.bind(view)
     private var hasFocusLost = false
 
@@ -95,13 +94,15 @@ open class RegistrationEditTextView(
 
     override fun getView(): View = mBinding.root
 
-    override fun setInstructions(instructions: String?) {
-        mBinding.instructions.setVisibility(instructions.isNotNullOrEmpty())
-        if (instructions.isNotNullOrEmpty()) {
-            mBinding.instructions.text = Html.fromHtml(instructions)
-        }
+    final override fun setInstructions(instructions: String?) {
+        if (instructions.isNullOrEmpty())
+            return
+
+        mBinding.inputLayout.helperText =
+            HtmlCompat.fromHtml(instructions, HtmlCompat.FROM_HTML_MODE_COMPACT)
+
         ViewCompat.setImportantForAccessibility(
-            mBinding.instructions,
+            mBinding.inputLayout,
             ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO
         )
     }
@@ -114,12 +115,8 @@ open class RegistrationEditTextView(
                 "%s. %s. %s, %s.",
                 mField.label, mField.instructions, errorTag, errorMessage
             )
-            mBinding.inputLayout.error = Html.fromHtml(errorMessage)
-            mBinding.inputLayout.apply {
-                findViewById<TextView>(com.google.android.material.R.id.textinput_error)?.apply {
-                    setTextAppearance(context, R.style.registration_error_message)
-                }
-            }
+            mBinding.inputLayout.error =
+                HtmlCompat.fromHtml(errorMessage!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
             mBinding.inputLayout.errorIconDrawable = null
         } else {
             logger.warn("error message not provided, so not informing the user about this error")
@@ -131,8 +128,7 @@ open class RegistrationEditTextView(
         mBinding.inputLayout.isErrorEnabled = false
 
         // Update a11y content for mTextInputLayout
-        mBinding.inputLayout.contentDescription =
-            String.format("%s. %s.", mField.label, mField.instructions)
+        mBinding.inputLayout.contentDescription = "${mField.label}. ${mField.instructions}."
 
         // check if this is required field and has an input value
         if (mField.isRequired && !hasValue()) {
