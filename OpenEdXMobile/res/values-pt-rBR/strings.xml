@@ -112,10 +112,6 @@
 Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Insira o endereço de e-mail da sua conta para receber as instruções de redefinição da sua senha. </string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">Saindo do aplicativo {platform_name}</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">Se você sair do aplicativo, não estará mais visualizando o conteúdo grátis do {platform_name}. Sujeito à cobrança de dados.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title"> Contrato de Licença de Usuário Final</string>
   <!--Title of privacy policy users must accept to use the app-->

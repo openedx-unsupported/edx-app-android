@@ -112,10 +112,6 @@
         Vérifiez votre dossier de spams si vous ne le recevez pas dans les 5 minutes.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Saisir l\'email de votre compte, nous vous enverrons un message pour réinitialiser votre mot de passe.</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">Déconnexion de l\'App {platform_name}</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">Si vous quittez l\'app, vous ne pourrez plus accéder au contenu  {platform_name} gratuit. Des charges additionnelles peuvent s\'appliquer.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">Engagement de Licence</string>
   <!--Title of privacy policy users must accept to use the app-->

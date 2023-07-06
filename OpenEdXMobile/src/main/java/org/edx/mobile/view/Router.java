@@ -478,7 +478,7 @@ public class Router {
                 .append(String.format("%s %s", activity.getString(R.string.android_device_model), Build.MODEL))
                 .append(NEW_LINE).append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
-        EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
+        EmailUtil.sendEmailIntent(activity, to, subject, body.toString());
     }
 
     public void showFeedbackScreen(
@@ -498,6 +498,6 @@ public class Router {
                 .append(NEW_LINE)
                 .append(NEW_LINE)
                 .append(activity.getString(R.string.insert_feedback));
-        EmailUtil.openEmailClient(activity, to, subject, body.toString(), config);
+        EmailUtil.sendEmailIntent(activity, to, subject, body.toString());
     }
 }

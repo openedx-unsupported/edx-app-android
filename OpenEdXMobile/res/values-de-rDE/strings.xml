@@ -112,10 +112,6 @@
 Kontrollieren Sie auch Ihren Spam-Ordner.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Geben Sie Ihre E-Mail Adresse zu Ihrem Benutzerkonto ein. Wir senden Ihnen dann die entsprechenden Instruktionen, wie Sie Ihr Passwort zurücksetzen können.</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">Verlassen der {platform_name} App</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">Wenn Sie die App verlassen, können Sie keine freien Inhalte der {platform_name}  mehr einsehen.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">Endbenutzer-Lizenzvertrag</string>
   <!--Title of privacy policy users must accept to use the app-->

@@ -112,10 +112,6 @@
         Birkaç dakika içinde göremezseniz, lütfen spam klasörünüze bakın.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Hesabınız için e-posta adresinizi girin, ardından size parolanızı sıfırlamak için yönergeler göndereceğiz.</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">{platform_name} uygulamasından çıkıyorsunuz</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">Uygulamayı terkederseniz, {platform_name} platformunun ücretsiz içeriklerini artık göremezsiniz. Veri trafiği ücretlendirilebilir.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">Son Kullanıcı Lisans Sözleşmesi</string>
   <!--Title of privacy policy users must accept to use the app-->

@@ -1,6 +1,11 @@
 package org.edx.mobile.test;
 
-import com.google.gson.JsonArray;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -11,14 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by aleffert on 2/6/15.
@@ -27,76 +25,19 @@ public class ConfigTests extends BaseTestCase {
     //TODO - should we place constant at a central place?
     /* Config keys */
     private static final String DISCOVERY = "DISCOVERY";
-    private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
-    private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
     private static final String SEGMENT_IO = "SEGMENT_IO";
-    private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String BRANCH = "BRANCH";
 
     private static final String ENABLED = "ENABLED";
-    private static final String DISABLED_CARRIERS = "DISABLED_CARRIERS";
-    private static final String CARRIERS = "CARRIERS";
     private static final String BASE_URL = "BASE_URL";
     private static final String COURSE_DETAIL_TEMPLATE = "COURSE_DETAIL_TEMPLATE";
     private static final String TYPE = "TYPE";
     private static final String PROGRAM_DETAIL_TEMPLATE = "PROGRAM_DETAIL_TEMPLATE";
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
     private static final String KEY = "KEY";
-    private static final String SECRET = "SECRET";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
-    private static final String DOMAINS = "DOMAINS";
-
-    @Test
-    public void testZeroRatingNoConfig() {
-        JsonObject configBase = new JsonObject();
-        Config config = new Config(configBase);
-        assertFalse(config.getZeroRatingConfig().isEnabled());
-        assertEquals(config.getZeroRatingConfig().getCarriers().size(), 0);
-    }
-
-    @Test
-    public void testZeroRatingEmptyConfig() {
-        JsonObject configBase = new JsonObject();
-        JsonObject socialConfig = new JsonObject();
-        configBase.add(ZERO_RATING, socialConfig);
-
-        Config config = new Config(configBase);
-        assertFalse(config.getZeroRatingConfig().isEnabled());
-        assertEquals(config.getZeroRatingConfig().getCarriers().size(), 0);
-    }
-
-    @Test
-    public void testZeroRatingConfig() {
-        JsonObject configBase = new JsonObject();
-        JsonObject zeroRatingConfig = new JsonObject();
-        zeroRatingConfig.add(ENABLED, new JsonPrimitive(true));
-        configBase.add(ZERO_RATING, zeroRatingConfig);
-
-        ArrayList<String> carrierList = new ArrayList<String>();
-        carrierList.add("12345");
-        carrierList.add("foo");
-        JsonArray carriers = new JsonArray();
-        for (String carrier : carrierList) {
-            carriers.add(new JsonPrimitive(carrier));
-        }
-        zeroRatingConfig.add(CARRIERS, carriers);
-
-        ArrayList<String> domainList = new ArrayList<>();
-        domainList.add("domain1");
-        domainList.add("domain2");
-        JsonArray domains = new JsonArray();
-        for (String domain : domainList) {
-            domains.add(new JsonPrimitive(domain));
-        }
-        zeroRatingConfig.add(WHITE_LIST_OF_DOMAINS, domains);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getZeroRatingConfig().isEnabled());
-        assertEquals(carrierList, config.getZeroRatingConfig().getCarriers());
-        assertEquals(domainList, config.getZeroRatingConfig().getWhiteListedDomains());
-    }
 
     @Test
     public void testEnrollmentNoConfig() {
@@ -250,7 +191,6 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertFalse(config.getBranchConfig().isEnabled());
         assertNull(config.getBranchConfig().getKey());
-        assertNull(config.getBranchConfig().getSecret());
     }
 
     @Test
@@ -263,18 +203,15 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertFalse(config.getBranchConfig().isEnabled());
         assertNull(config.getBranchConfig().getKey());
-        assertNull(config.getBranchConfig().getSecret());
     }
 
     @Test
     public void testBranchConfig() {
         final String key = "fake-key";
-        final String secret = "fake-secret";
 
         JsonObject branchConfig = new JsonObject();
         branchConfig.add(ENABLED, new JsonPrimitive(true));
         branchConfig.add(KEY, new JsonPrimitive(key));
-        branchConfig.add(SECRET, new JsonPrimitive(secret));
 
         JsonObject configBase = new JsonObject();
         configBase.add(BRANCH, branchConfig);
@@ -282,7 +219,6 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertTrue(config.getBranchConfig().isEnabled());
         assertEquals(key, config.getBranchConfig().getKey());
-        assertEquals(secret, config.getBranchConfig().getSecret());
     }
 
     @Test

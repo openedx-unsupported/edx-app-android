@@ -14,7 +14,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.view.dialog.AlertDialogFragment;
-import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
 
@@ -43,7 +42,7 @@ public class BrowserUtil {
         }
         String title = activity.getString(R.string.label_leaving_the_app);
         String msg = ResourceUtil.getFormattedString(activity.getResources(),
-                R.string.leaving_the_app_message, AppConstants.PLATFORM_NAME, platformName)
+                        R.string.leaving_the_app_message, AppConstants.PLATFORM_NAME, platformName)
                 .toString();
         String positiveBtn = activity.getString(R.string.label_continue);
         String negativeBtn = activity.getString(R.string.label_cancel);
@@ -87,37 +86,7 @@ public class BrowserUtil {
             openInBrowser(activity, absoluteUrl, canTrackEvent);
             return;
         }
-
-
-        // verify if the app is running on zero-rated mobile data?
-        if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity, config)) {
-
-            // check if this URL is a white-listed URL, anything outside the white-list is EXTERNAL LINK
-            if (ConfigUtil.Companion.isWhiteListedURL(url, config)) {
-                // this is white-listed URL
-                logger.debug(String.format("opening white-listed URL: %s", url));
-                openInBrowser(activity, url, canTrackEvent);
-            } else {
-                // for non-white-listed URLs
-
-                // inform user they may get charged for browsing this URL
-                IDialogCallback callback = new IDialogCallback() {
-                    @Override
-                    public void onPositiveClicked() {
-                        openInBrowser(activity, url, canTrackEvent);
-                    }
-
-                    @Override
-                    public void onNegativeClicked() {
-                    }
-                };
-
-                MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
-            }
-        } else {
-            logger.debug(String.format("non-zero rated network, opening URL: %s", url));
-            openInBrowser(activity, url, canTrackEvent);
-        }
+        openInBrowser(activity, url, canTrackEvent);
     }
 
     private static void openInBrowser(FragmentActivity context, String url, boolean canTrackEvent) {

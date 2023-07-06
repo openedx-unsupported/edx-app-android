@@ -111,10 +111,6 @@
 Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mục spam.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">Nhập địa chỉ e-mail của tài khoản và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu cho bạn.</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">Đang rời khỏi Ứng dụng {platform_name}</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">Nếu rời khỏi ứng dụng, bạn sẽ không thể xem nội dung {platform_name} miễn phí. Chi phí dữ liệu có thể được áp dụng.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">Thỏa thuận người dùng cấp phép</string>
   <!--Title of privacy policy users must accept to use the app-->

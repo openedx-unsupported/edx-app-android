@@ -71,9 +71,7 @@ public class LoginActivity
     @NonNull
     @Override
     protected LoginPresenter createPresenter(@Nullable Bundle savedInstanceState) {
-        return new LoginPresenter(
-                environment.getConfig(),
-                new NetworkUtil.ZeroRatedNetworkInfo(getApplicationContext(), environment.getConfig()));
+        return new LoginPresenter(environment.getConfig());
     }
 
     @NonNull

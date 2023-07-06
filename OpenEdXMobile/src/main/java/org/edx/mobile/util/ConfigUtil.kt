@@ -13,24 +13,6 @@ import java.lang.reflect.InvocationTargetException
 class ConfigUtil {
     companion object {
         /**
-         * Returns true if domain of the given URL is white-listed in the configuration,
-         * false otherwise.
-         *
-         * @param url
-         * @return
-         */
-        fun isWhiteListedURL(url: String, config: Config): Boolean {
-            // check if this URL is a white-listed URL, anything outside the white-list is EXTERNAL LINK
-            for (domain in config.zeroRatingConfig.whiteListedDomains) {
-                if (BrowserUtil.isUrlOfHost(url, domain)) {
-                    // this is white-listed URL
-                    return true
-                }
-            }
-            return false
-        }
-
-        /**
          * Utility method to check the status of the course upgrade.
          *
          * @param config   [Config]

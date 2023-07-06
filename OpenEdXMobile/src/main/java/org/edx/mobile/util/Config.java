@@ -52,7 +52,6 @@ public class Config {
     /* Composite configuration keys */
     private static final String DISCOVERY = "DISCOVERY";
     private static final String PROGRAM = "PROGRAM";
-    private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String MICROSOFT = "MICROSOFT";
     private static final String GOOGLE = "GOOGLE";
@@ -61,7 +60,6 @@ public class Config {
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String FIREBASE = "FIREBASE";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
-    private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String API_URL_VERSION = "API_URL_VERSION";
     private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
     private static final String AGREEMENT_URLS = "AGREEMENT_URLS";
@@ -75,7 +73,6 @@ public class Config {
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
-    private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
     private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
@@ -84,29 +81,6 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
     private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
-
-    public static class ZeroRatingConfig {
-        @SerializedName("ENABLED")
-        private boolean mEnabled;
-
-        @SerializedName("CARRIERS")
-        private List<String> mCarriers;
-
-        @SerializedName("WHITE_LIST_OF_DOMAINS")
-        private List<String> mWhiteListedDomains;
-
-        public boolean isEnabled() {
-            return mEnabled;
-        }
-
-        public List<String> getCarriers() {
-            return mCarriers != null ? mCarriers : new ArrayList<String>();
-        }
-
-        public List<String> getWhiteListedDomains() {
-            return mWhiteListedDomains != null ? mWhiteListedDomains : new ArrayList<String>();
-        }
-    }
 
     public static class DiscoveryConfig {
         @SerializedName("TYPE")
@@ -276,19 +250,12 @@ public class Config {
         @SerializedName("KEY")
         private String key;
 
-        @SerializedName("SECRET")
-        private String secret;
-
         public boolean isEnabled() {
             return mEnabled;
         }
 
         public String getKey() {
             return key;
-        }
-
-        public String getSecret() {
-            return secret;
         }
     }
 
@@ -620,10 +587,6 @@ public class Config {
         return getBoolean(NEW_LOGISTRATION_ENABLED, false);
     }
 
-    public boolean isDiscussionProfilePicturesEnabled() {
-        return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
-    }
-
     public boolean isRegistrationEnabled() {
         return getBoolean(REGISTRATION_ENABLED, true);
     }
@@ -697,11 +660,6 @@ public class Config {
     }
 
     @NonNull
-    public ZeroRatingConfig getZeroRatingConfig() {
-        return getObjectOrNewInstance(ZERO_RATING, ZeroRatingConfig.class);
-    }
-
-    @NonNull
     public FacebookConfig getFacebookConfig() {
         return getObjectOrNewInstance(FACEBOOK, FacebookConfig.class);
     }
@@ -742,6 +700,7 @@ public class Config {
     }
 
     @NonNull
+    @SuppressWarnings("unused")
     public EndToEndConfig getEndToEndConfig() {
         return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
     }

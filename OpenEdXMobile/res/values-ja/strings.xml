@@ -100,10 +100,6 @@
 もし数分経ってもメールが見つからない場合は、迷惑メールフォルダを確認してください。</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">あなたのアカウントに登録しているメールアドレスを入力してください。パスワード変更手順についてのメールをお送りします。</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">{platform_name} アプリを閉じる</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">アプリを閉じると、無料で {platform_name} コンテンツを見ることができなくなり、データ通信料が課金される場合があります。</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">エンドユーザーライセンス同意書</string>
   <!--Title of privacy policy users must accept to use the app-->

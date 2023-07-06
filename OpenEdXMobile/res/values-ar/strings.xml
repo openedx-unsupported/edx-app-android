@@ -111,10 +111,6 @@
   <string name="success_dialog_message_help">لقد أرسلنا رسالةً بتعليمات تغيير كلمة المرور إلى عنوان بريدك الإلكتروني. في حال لم تصلك خلال بضع دقائق، يُرجى التأكد فيما إذا اعتُبرت رسالة غير مرغوب فيها ’spam‘.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">أدخل البريد الإلكتروني الخاص بحسابك وسنرسل لك تعليمات لإعادة ضبط كلمة المرور.</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">مغادرة تطبيق {platform_name}</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">إذا غادرت التطبيق، فلن تعود تتصفح محتويات {platform_name} المجانية. ربما يتم تطبيق رسوم البيانات.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">اتفاقية ترخيص للمستخدم</string>
   <!--Title of privacy policy users must accept to use the app-->

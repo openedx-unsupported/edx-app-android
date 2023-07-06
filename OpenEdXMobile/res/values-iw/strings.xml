@@ -112,10 +112,6 @@
 אם את\ה לא רואה את האימייל בדקות הקרובות, מומלץ לבדוק את תיקיית הספאם.</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">הכניסו את כתובת האימייל של החשבון שלכם, ואנחנו נשלח לכם הוראות לאיפוס הססמה שלכם.</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">עוזב את אפליקציית {platform_name}</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">אם אתם עוזבים את האפליקציה, לא תוכלו יותר לצפות בתוכן חינמי של {platform_name}. חיובי גלישה עשויים לחול.</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">הסכם רישיון למשתמש קצה </string>
   <!--Title of privacy policy users must accept to use the app-->

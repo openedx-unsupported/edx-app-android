@@ -1,7 +1,5 @@
 package org.edx.mobile.view.dialog;
 
-import org.edx.mobile.R;
-import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +7,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
+
+import org.edx.mobile.R;
 
 public class NetworkCheckDialogFragment extends DialogFragment {
 
@@ -31,21 +33,6 @@ public class NetworkCheckDialogFragment extends DialogFragment {
 
         args.putString(DIALOG_TITLE, title);
         args.putString(DIALOG_MESSAGE, message);
-        frag.setArguments(args);
-        return frag;
-    }
-
-    public static NetworkCheckDialogFragment newInstance(String title, String message, String positiveLabel, String negativeLabel, IDialogCallback callback){
-
-        NetworkCheckDialogFragment frag = new NetworkCheckDialogFragment();
-        frag.callback = callback;
-
-        Bundle args = new Bundle();
-
-        args.putString(DIALOG_TITLE, title);
-        args.putString(DIALOG_MESSAGE, message);
-        args.putString(DIALOG_POSITIVE_BUTTON, positiveLabel);
-        args.putString(DIALOG_NEGATIVE_BUTTON, negativeLabel);
         frag.setArguments(args);
         return frag;
     }

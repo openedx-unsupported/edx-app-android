@@ -1032,59 +1032,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         showNetworkError();
     }
 
-    public void onConnectedToMobile() {
-        boolean wifiPreference = environment.getUserPrefs().isDownloadOverWifiOnly();
-        if (!NetworkUtil.isOnZeroRatedNetwork(getActivity(), environment.getConfig()) && wifiPreference) {
-            //If the user is connected to a non zero rated mobile data network and his wifi preference is on,
-            //then prompt user to set change his wifi settings
-            showWifiSettingsMessage();
-        } else {
-            handleNetworkChangeVideoPlayback();
-        }
-    }
-
-    public void onConnectedToWifi() {
-        //Start playing video is user is connected to wifi
-        handleNetworkChangeVideoPlayback();
-    }
-
-    /**
-     * This method handles video playback on network change callbacks
-     */
-    private void handleNetworkChangeVideoPlayback() {
-        hideNetworkError();
-        try {
-            if (player != null) {
-                if (!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)) {
-                    if ((!player.isPaused()
-                            && !player.isPlaying() && !player.isPlayingLocally())
-                            || (player.isInError() || player.isReset())) {
-                        showProgress();
-                    }
-                }
-                if (player.isInError() || player.isReset()) {
-                    //If player is either in error state or has been reset, restart the player with current position
-                    player.restart(currentPosition);
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
-
-    /**
-     * LectureComplete dialog was creating problems if orientation is allowed when dialog is shown.
-     * So, locked orientation while the LectureComplete dialog is showing.
-     */
-    public void lockOrientation() {
-        orientationLocked = true;
-        if (isScreenLandscape()) {
-            enterFullScreen();
-        } else {
-            exitFullScreen();
-        }
-    }
-
     public void unlockOrientation() {
         orientationLocked = false;
         allowSensorOrientationIfApplicable();
