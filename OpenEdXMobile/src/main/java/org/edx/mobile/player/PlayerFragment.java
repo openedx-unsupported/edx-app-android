@@ -1718,7 +1718,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         this.subtitlesObj = subtitles;
         resetClosedCaptioning();
         if (subtitlesObj != null) {
-            closedCaptionsEnabled = true;
+            closedCaptionsEnabled = !userPrefs.getSubtitleLanguage().equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE);
             if (player != null) {
                 environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
                         player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,

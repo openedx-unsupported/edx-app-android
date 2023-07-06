@@ -231,11 +231,9 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         if (subtitlesObj != null) {
             initTranscriptListView();
             updateTranscript(subtitlesObj);
-            String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
             if (!userPrefs.getSubtitleLanguage().equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE) &&
-                    !android.text.TextUtils.isEmpty(subtitleLanguage) &&
-                    getTranscriptModel().containsKey(subtitleLanguage)) {
-                userPrefs.setSubtitleLanguage(subtitleLanguage);
+                    !getTranscriptModel().containsKey(userPrefs.getSubtitleLanguage())) {
+                userPrefs.setSubtitleLanguage(PrefBaseManager.DEFAULT_VALUE);
             }
             showClosedCaptionData(subtitlesObj);
         }
