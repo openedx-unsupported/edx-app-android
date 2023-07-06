@@ -61,20 +61,20 @@ open class RegistrationEditTextView(
 
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
                 if (!hasFocus) {
+                    mBinding.inputLayout.isHelperTextEnabled = false
                     isValidInput()
                     hasFocusLost = true
+                } else {
+                   setInstructions(mField.instructions)
                 }
             }
         }
-        setInstructions(mField.instructions)
 
         mBinding.inputLayout.apply {
             hint = mField.label
             tag = mField.name
             contentDescription = "${mField.label}. ${mField.instructions}."
         }
-        // hide error text view
-        mBinding.inputLayout.error = null
     }
 
     override fun setRawValue(value: String?): Boolean {
@@ -94,7 +94,7 @@ open class RegistrationEditTextView(
     override fun getView(): View = mBinding.root
 
     final override fun setInstructions(instructions: String?) {
-        if (instructions.isNullOrEmpty())
+        if (instructions.isNullOrEmpty() || mBinding.inputLayout.isErrorEnabled)
             return
 
         mBinding.inputLayout.helperText =

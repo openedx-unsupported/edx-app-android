@@ -36,7 +36,6 @@ class RegistrationSelectView(
         }
 
         mBinding.autoCompleteLayout.hint = mField.label
-        setInstructions(mField.instructions)
 
         mBinding.etAutoComplete.apply {
             setItems(mField.options)
@@ -69,8 +68,10 @@ class RegistrationSelectView(
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
                 if (hasFocus) {
                     mBinding.etAutoComplete.showDropDown()
+                    setInstructions(mField.instructions)
                 } else {
                     hasFocusLost = true
+                    mBinding.autoCompleteLayout.isHelperTextEnabled = false
                     isValidInput()
                 }
             }
@@ -103,10 +104,12 @@ class RegistrationSelectView(
     override fun getView(): View = mBinding.root
 
     override fun setInstructions(instructions: String?) {
-        mBinding.autoCompleteLayout.isHelperTextEnabled = instructions.isNotNullOrEmpty()
-        if (instructions.isNotNullOrEmpty()) {
-            mBinding.autoCompleteLayout.helperText = instructions
-        }
+        if (instructions.isNullOrEmpty() || mBinding.autoCompleteLayout.isErrorEnabled)
+            return
+
+        mBinding.autoCompleteLayout.helperText =
+            HtmlCompat.fromHtml(instructions, HtmlCompat.FROM_HTML_MODE_COMPACT)
+
         ViewCompat.setImportantForAccessibility(
             mBinding.autoCompleteLayout,
             ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO
