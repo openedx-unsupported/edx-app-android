@@ -51,10 +51,10 @@ class UserPrefs @Inject constructor(
 
     var subtitleLanguage: String
         get() {
-            getString(TRANSCRIPT_LANGUAGE, DEFAULT_VALUE).let {
+            getString(TRANSCRIPT_LANGUAGE, NONE).let {
                 return if (it == context.getString(R.string.lbl_cc_none)) {
-                    subtitleLanguage = DEFAULT_VALUE
-                    DEFAULT_VALUE
+                    subtitleLanguage = NONE
+                    NONE
                 } else it
             }
         }
@@ -88,6 +88,9 @@ class UserPrefs @Inject constructor(
         put(String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId), state.ordinal)
     }
 
+    val hasNoLanguagePref: Boolean
+        get() = subtitleLanguage == NONE
+
     companion object {
         private const val DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi"
         private const val TRANSCRIPT_LANGUAGE = "transcript_language"
@@ -96,5 +99,6 @@ class UserPrefs @Inject constructor(
         private const val DOWNLOAD_TO_SDCARD = "download_to_sdcard"
         private const val SPEED_TEST_KBPS = "speed_test_kbps"
         private const val BULK_DOWNLOAD_FOR_COURSE_ID = "BULK_DOWNLOAD_%s"
+        const val NONE = "NONE"
     }
 }

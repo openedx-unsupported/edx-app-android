@@ -3,7 +3,6 @@ package org.edx.mobile.view.dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -80,33 +79,27 @@ public class CCLanguageDialogFragment extends DialogFragment {
                     ccAdaptor.add(hm);
                 }
             }
-            String langSelected = getArguments().getString("selectedLanguage");
-            if (langSelected != null && !langList.containsKey(langSelected)) {
-                langSelected = UserPrefs.DEFAULT_VALUE;
+            String langSelected = getArguments().getString("selectedLanguage", UserPrefs.NONE);
+            if (!langList.containsKey(langSelected)) {
+                langSelected = UserPrefs.NONE;
             }
             ccAdaptor.selectedLanguage = langSelected;
             ccAdaptor.notifyDataSetChanged();
 
 
             TextView tvNone = (TextView) v.findViewById(R.id.tv_cc_cancel);
-            final String tvNoneTxt = getString(R.string.lbl_cc_none);
-            if (langSelected != null) {
-                if (langSelected.equalsIgnoreCase(tvNoneTxt)) {
-                    tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
-                } else {
-                    tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
-                }
-            } else {
+            if (langSelected.equalsIgnoreCase(UserPrefs.NONE)) {
                 tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
+            } else {
+                tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
             }
 
-            tvNone.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    if (callback != null) {
-                        callback.onCancelClicked();
-                    }
-                    dismiss();
+
+            tvNone.setOnClickListener(v1 -> {
+                if (callback != null) {
+                    callback.onCancelClicked();
                 }
+                dismiss();
             });
 
         } catch (Exception e) {
