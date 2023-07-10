@@ -135,7 +135,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     int startMillis = subtitle.start.getMseconds();
                     int endMillis = subtitle.end.getMseconds();
                     if (currentPos >= startMillis && currentPos <= endMillis) {
-                        if (!userPrefs.getHasNoLanguagePref()) {
+                        if (userPrefs.getHasSubtitleLanguage()) {
                             updateClosedCaptionData(subtitle);
                         }
                         updateSelection(currentSubtitleIndex);
@@ -230,10 +230,10 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         if (subtitlesObj != null) {
             initTranscriptListView();
             updateTranscript(subtitlesObj);
-            if (!userPrefs.getHasNoLanguagePref() && !getTranscriptModel().containsKey(userPrefs.getSubtitleLanguage())) {
-                String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
-                if (!TextUtils.isEmpty(subtitleLanguage) && getTranscriptModel().containsKey(subtitleLanguage)) {
-                    userPrefs.setSubtitleLanguage(subtitleLanguage);
+            if (userPrefs.getHasSubtitleLanguage() && !getTranscriptModel().containsKey(userPrefs.getSubtitleLanguage())) {
+                String deviceLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
+                if (!TextUtils.isEmpty(deviceLanguage) && getTranscriptModel().containsKey(deviceLanguage)) {
+                    userPrefs.setSubtitleLanguage(deviceLanguage);
                 } else {
                     userPrefs.setSubtitleLanguage(getTranscriptModel().keySet().toArray()[0].toString());
                 }

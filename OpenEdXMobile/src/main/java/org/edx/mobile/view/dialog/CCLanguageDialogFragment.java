@@ -53,10 +53,10 @@ public class CCLanguageDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        View v = inflater.inflate(R.layout.panel_cc_popup, container,
+        View view = inflater.inflate(R.layout.panel_cc_popup, container,
                 false);
         try {
-            ListView lv_ccLang = (ListView) v.findViewById(R.id.cc_list);
+            ListView lv_ccLang = (ListView) view.findViewById(R.id.cc_list);
             ClosedCaptionAdapter ccAdaptor = new
                     ClosedCaptionAdapter(getActivity().getBaseContext(), environment) {
                         @Override
@@ -81,21 +81,19 @@ public class CCLanguageDialogFragment extends DialogFragment {
             }
             String langSelected = getArguments().getString("selectedLanguage", UserPrefs.NONE);
             if (!langList.containsKey(langSelected)) {
-                langSelected = UserPrefs.NONE;
+                langSelected = langList.keySet().toArray()[0].toString();
             }
             ccAdaptor.selectedLanguage = langSelected;
             ccAdaptor.notifyDataSetChanged();
 
-
-            TextView tvNone = (TextView) v.findViewById(R.id.tv_cc_cancel);
+            TextView tvNone = (TextView) view.findViewById(R.id.tv_cc_cancel);
             if (langSelected.equalsIgnoreCase(UserPrefs.NONE)) {
                 tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
             } else {
                 tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
             }
 
-
-            tvNone.setOnClickListener(v1 -> {
+            tvNone.setOnClickListener(v -> {
                 if (callback != null) {
                     callback.onCancelClicked();
                 }
@@ -105,6 +103,6 @@ public class CCLanguageDialogFragment extends DialogFragment {
         } catch (Exception e) {
             logger.error(e);
         }
-        return v;
+        return view;
     }
 }

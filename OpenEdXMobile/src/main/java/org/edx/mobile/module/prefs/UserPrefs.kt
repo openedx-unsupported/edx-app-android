@@ -88,8 +88,8 @@ class UserPrefs @Inject constructor(
         put(String.format(BULK_DOWNLOAD_FOR_COURSE_ID, courseId), state.ordinal)
     }
 
-    val hasNoLanguagePref: Boolean
-        get() = subtitleLanguage == NONE
+    val hasSubtitleLanguage: Boolean
+        get() = subtitleLanguage.equals(NONE, true).not()
 
     companion object {
         private const val DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi"
