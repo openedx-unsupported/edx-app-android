@@ -80,7 +80,7 @@ public class CCLanguageDialogFragment extends DialogFragment {
                 }
             }
             String langSelected = getArguments().getString("selectedLanguage", UserPrefs.NONE);
-            if (!langList.containsKey(langSelected)) {
+            if (!langSelected.equalsIgnoreCase(UserPrefs.NONE) && !langList.containsKey(langSelected)) {
                 langSelected = langList.keySet().toArray()[0].toString();
             }
             ccAdaptor.selectedLanguage = langSelected;
