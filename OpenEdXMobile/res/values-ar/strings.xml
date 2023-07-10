@@ -527,11 +527,6 @@
   <!--Registration error-->
   <string name="registration_error_title">خطأ في التسجيل</string>
   <string name="registration_error_message">حدث الحقول المحددة وحاولة مرة أخرى.</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">قد يتم تطبيق رسوم البيانات.</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">هذا الرابط سيقوم بفتح متصفح الإنترنت، وربما يكلفك هذا رسوماً لتنزيل البيانات.</string>
   <string name="android">أندرويد</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">ملاحظات المستخدمين</string>

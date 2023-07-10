@@ -486,11 +486,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Registration error-->
   <string name="registration_error_title">Lỗi đăng ký</string>
   <string name="registration_error_message">Cập nhật những trường được đánh dấu và thử lại.</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">Chi phí dữ liệu có thể được áp dụng</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">Đường dẫn sẽ được mở trong trình duyệt di động và bạn có thể phải trả thêm phí dữ liệu.</string>
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Phản hồi của người dùng</string>

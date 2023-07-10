@@ -49,13 +49,4 @@ public class LoginPresenterTest extends PresenterTest<LoginPresenter, LoginPrese
         startPresenter(new LoginPresenter(config));
         verify(view).setSocialLoginButtons(true, true, true);
     }
-
-    @Test
-    public void testOnViewCreation_withZeroRatedNetwork_socialLoginButtonsNotVisible() {
-        when(config.getGoogleConfig()).thenReturn(new Config.GoogleConfig(true));
-        when(config.getFacebookConfig()).thenReturn(new Config.FacebookConfig(true, "dummy app id", "client_token"));
-        when(config.getMicrosoftConfig()).thenReturn(new Config.MicrosoftConfig(true));
-        startPresenter(new LoginPresenter(config));
-        verify(view).setSocialLoginButtons(false, false, false);
-    }
 }

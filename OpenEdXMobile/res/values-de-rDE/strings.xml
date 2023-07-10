@@ -510,11 +510,6 @@ Du verlierst am {date} jeglichen Kurszugriff, einschliesslich Deines Fortschritt
   <!--Registration error-->
   <string name="registration_error_title">Fehler beim registrieren</string>
   <string name="registration_error_message">Bitte aktualisieren Sie die markierten Felder und versuchen Sie es erneut.</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">Gebühren können anfallen.</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">Über diesen Link öffnet sich Ihr mobiler Browser, was eventuell zusätzliche Daten beansprucht.</string>
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Kundenfeedback</string>

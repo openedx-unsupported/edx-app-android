@@ -437,11 +437,6 @@
   <!--Registration error-->
   <string name="registration_error_title">登録失敗</string>
   <string name="registration_error_message">ハイライトしてある部分をアップデートして再試行してください。</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">データ通信料が課金される場合があります</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">このリンクはモバイルブラウザで開きます。データ通信料が追加で課金される場合があります。</string>
   <string name="android">アンドロイド</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">利用者フィードバック</string>

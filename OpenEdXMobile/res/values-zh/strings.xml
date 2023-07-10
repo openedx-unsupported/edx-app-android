@@ -508,11 +508,6 @@
   <!--Registration error-->
   <string name="registration_error_title">注册错误</string>
   <string name="registration_error_message">更新标注区域并重试</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">可能会产生数据流量费用</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">此链接将在您的浏览器中打开，这可能产生额外的数据费用。</string>
   <string name="android">安卓</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">用户反馈</string>

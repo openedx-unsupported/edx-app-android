@@ -512,11 +512,6 @@
   <!--Registration error-->
   <string name="registration_error_title">Kayıt Hatası</string>
   <string name="registration_error_message">Vurgulu alanları güncelle ve tekrar dene.</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">Veri ücretleri uygulanabilir</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">Bu bağlantı mobil tarayıcınız üzerinden açılacak, ek veri ücretleri söz konusu olabilir.</string>
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Müşteri Geribildirimi</string>

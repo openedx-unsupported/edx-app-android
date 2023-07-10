@@ -514,11 +514,6 @@
   <!--Registration error-->
   <string name="registration_error_title">שגיאת הרשמה</string>
   <string name="registration_error_message">עדכנו את השדות המודגשים ונסו שוב</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">עלולות לחול עלויות תקשורת</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">קישור זה יפתח בדפדפן הנייד שלך, יתכן שיחולו עלויות תקשורת.</string>
   <string name="android">אנדרואיד</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">משוב לקוח</string>

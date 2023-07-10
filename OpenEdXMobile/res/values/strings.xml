@@ -558,12 +558,6 @@
     <string name="registration_error_title">Registration Error</string>
     <string name="registration_error_message">Update the highlighted fields and try again.</string>
 
-    <!-- data charges may apply dialog text -->
-    <!-- Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app -->
-    <string name="open_external_url_title">Data charges may apply</string>
-    <!-- Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app -->
-    <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
-
     <string name="android">Android</string>
 
     <!--  Email subject line when user attempts to submit feedback about the app -->

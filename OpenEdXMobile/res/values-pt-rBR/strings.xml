@@ -516,11 +516,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Registration error-->
   <string name="registration_error_title">Erro de registro</string>
   <string name="registration_error_message">Atualize os campos destacados e tente novamente.</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">Sujeito à cobrança de dados</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">Esse link abrirá no navegador do seu dispositivo móvel e poderá haver cobranças adicionais de dados. </string>
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Opinião do usuário</string>

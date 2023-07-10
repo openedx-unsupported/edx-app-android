@@ -516,11 +516,6 @@
   <!--Registration error-->
   <string name="registration_error_title">Erreur d\'inscription</string>
   <string name="registration_error_message">Modifier les champs et réessayez.</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">Des frais de données peuvent vous être réclamés.</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">Ce lien s\'ouvrira dans votre navigateur mobile et peut entraîner des frais supplémentaires.</string>
   <string name="android">Android</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">Retour client</string>
