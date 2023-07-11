@@ -1,31 +1,38 @@
 package org.edx.mobile.base;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.notifications.SnackbarErrorNotification;
-import org.edx.mobile.util.PermissionsUtil;
 
 public class BaseFragment extends Fragment {
-    public interface PermissionListener {
-        void onPermissionGranted(String[] permissions, int requestCode);
-
-        void onPermissionDenied(String[] permissions, int requestCode);
-    }
 
     private boolean isFirstVisit = true;
-    protected PermissionListener permissionListener;
+
+    protected ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (!isGranted) {
+                    showPermissionDeniedMessage();
+                }
+            });
+
+    protected void showPermissionDeniedMessage() {
+        Snackbar.make(
+                requireActivity().findViewById(android.R.id.content),
+                getResources().getString(R.string.permission_not_granted),
+                Snackbar.LENGTH_LONG
+        ).show();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,71 +101,14 @@ public class BaseFragment extends Fragment {
     protected void onNewIntent(Intent intent) {
     }
 
-    /**
-     * Checks the status of the provided permissions, if a permission has been given, a callback
-     * function is called otherwise the said permission is requested.
-     *
-     * @param permissions The requested permissions.
-     * @param requestCode The request code passed in {@link #requestPermissions(String[], int)}.
-     */
-    protected void askForPermission(String[] permissions, int requestCode) {
-        if (getActivity() == null || permissionListener == null) {
-            return;
-        }
-
-        if (getGrantedPermissionsCount(permissions) == permissions.length ||
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
-                        requestCode == PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST)) {
-            permissionListener.onPermissionGranted(permissions, requestCode);
-
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                requestCode == PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST) {
-            PermissionsUtil.requestPermissions(requestCode,
-                    new String[]{Manifest.permission.READ_MEDIA_IMAGES}, BaseFragment.this);
-
-        } else {
-            PermissionsUtil.requestPermissions(requestCode, permissions, BaseFragment.this);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (grantResults.length > 0 && getGrantedPermissionsCount(permissions) == permissions.length) {
-            if (permissionListener != null) {
-                permissionListener.onPermissionGranted(permissions, requestCode);
-            }
-        } else {
-            // android.R.id.content gives you the root element of a view, without having to know its actual name/type/ID
-            // Ref: https://stackoverflow.com/questions/47666685/java-lang-illegalargumentexception-no-suitable-parent-found-from-the-given-view
-            Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG).show();
-            if (permissionListener != null) {
-                permissionListener.onPermissionDenied(permissions, requestCode);
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public int getGrantedPermissionsCount(String[] permissions) {
-        int grantedPermissionsCount = 0;
-        for (String permission : permissions) {
-            if (PermissionsUtil.checkPermissions(permission, requireActivity())) {
-                grantedPermissionsCount++;
-            }
-        }
-
-        return grantedPermissionsCount;
-    }
-
     public void showCalendarRemovedSnackbar() {
-        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(requireView());
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_removed,
                 0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
     }
 
     public void showCalendarUpdatedSnackbar() {
-        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(getView());
+        SnackbarErrorNotification snackbarErrorNotification = new SnackbarErrorNotification(requireView());
         snackbarErrorNotification.showError(R.string.message_after_course_calendar_updated,
                 0, R.string.label_close, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, v -> snackbarErrorNotification.hideError());
     }

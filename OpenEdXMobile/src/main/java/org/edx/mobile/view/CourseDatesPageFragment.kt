@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig.VERSION_NAME
 import org.edx.mobile.R
-import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.databinding.FragmentCourseDatesPageBinding
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.serializableOrThrow
@@ -43,7 +43,7 @@ import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
 
 @AndroidEntryPoint
-class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.PermissionListener {
+class CourseDatesPageFragment : OfflineSupportBaseFragment() {
 
     private lateinit var errorNotification: FullScreenErrorNotification
 
@@ -86,6 +86,23 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     private var isCalendarExist: Boolean = false
     private lateinit var loaderDialog: AlertDialogFragment
 
+    private val requestPermissions = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { isGranted ->
+        if (isGranted.containsValue(false).not()) {
+            askForCalendarSync()
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ACCESS_OK,
+                Analytics.Values.CALENDAR_ACCESS_OK
+            )
+        } else {
+            binding.switchSync.isChecked = false
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
+                Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
+            )
+        }
+    }
 
     companion object {
         @JvmStatic
@@ -124,7 +141,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionListener = this
         courseData = arguments.serializableOrThrow(Router.EXTRA_COURSE_DATA)
         isSelfPaced = courseData.course.isSelfPaced
         calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
@@ -228,6 +244,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                             )
                             return@Observer
                         }
+
                         else ->
                             errorNotification.showError(
                                 contextOrThrow,
@@ -245,8 +262,10 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                                 -1,
                                 null
                             )
+
                         ErrorMessage.BANNER_INFO_CODE ->
                             initDatesBanner(null)
+
                         ErrorMessage.COURSE_RESET_DATES_CODE ->
                             showShiftDateSnackBar(false)
                     }
@@ -387,15 +406,11 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
         val alertDialog =
             AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
-                { _: DialogInterface, _: Int ->
-                    PermissionsUtil.requestPermissions(
-                        PermissionsUtil.CALENDAR_PERMISSION_REQUEST,
-                        CalendarUtils.permissions,
-                        this@CourseDatesPageFragment
-                    )
+                { _, _ ->
+                    requestPermissions.launch(CalendarUtils.permissions)
                 },
                 getString(R.string.label_do_not_allow),
-                { _: DialogInterface?, _: Int ->
+                { _, _ ->
                     trackCalendarEvent(
                         Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
                         Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
@@ -589,19 +604,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             getString(R.string.label_cancel),
             null
         ).show(childFragmentManager, null)
-    }
-
-    override fun onPermissionGranted(permissions: Array<out String>?, requestCode: Int) {
-        askForCalendarSync()
-        trackCalendarEvent(Analytics.Events.CALENDAR_ACCESS_OK, Analytics.Values.CALENDAR_ACCESS_OK)
-    }
-
-    override fun onPermissionDenied(permissions: Array<out String>?, requestCode: Int) {
-        binding.switchSync.isChecked = false
-        trackCalendarEvent(
-            Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
-            Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
-        )
     }
 
     private fun trackCalendarEvent(eventName: String, biValue: String) {

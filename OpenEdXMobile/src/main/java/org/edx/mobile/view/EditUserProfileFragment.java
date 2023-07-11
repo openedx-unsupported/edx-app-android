@@ -20,6 +20,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
@@ -73,7 +75,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 
 @AndroidEntryPoint
-public class EditUserProfileFragment extends BaseFragment implements BaseFragment.PermissionListener {
+public class EditUserProfileFragment extends BaseFragment {
 
     private static final int EDIT_FIELD_REQUEST = 1;
     private static final int CAPTURE_PHOTO_REQUEST = 2;
@@ -108,6 +110,27 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
 
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
+
+    private final ActivityResultLauncher<String> storagePermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    final Intent galleryIntent = new Intent()
+                            .setType("image/*")
+                            .setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(galleryIntent, CHOOSE_PHOTO_REQUEST);
+                } else {
+                    showPermissionDeniedMessage();
+                }
+            });
+
+    private final ActivityResultLauncher<String> cameraPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    startActivityForResult(helper.createCaptureIntent(requireActivity()), CAPTURE_PHOTO_REQUEST);
+                } else {
+                    showPermissionDeniedMessage();
+                }
+            });
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -150,7 +173,6 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        permissionListener = this;
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
@@ -164,21 +186,16 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.take_photo: {
-                                askForPermission(new String[]{Manifest.permission.CAMERA},
-                                        PermissionsUtil.CAMERA_PERMISSION_REQUEST);
-                                break;
+                            case R.id.take_photo -> {
+                                cameraPermission.launch(Manifest.permission.CAMERA);
                             }
-                            case R.id.choose_photo: {
-                                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST);
-                                break;
+                            case R.id.choose_photo -> {
+                                storagePermission.launch(PermissionsUtil.getReadStoragePermission());
                             }
-                            case R.id.remove_photo: {
+                            case R.id.remove_photo -> {
                                 final Task<Void> task = new DeleteAccountImageTask(getActivity(), username);
                                 task.setProgressDialog(viewHolder.profileImageProgress);
                                 executePhotoTask(task);
-                                break;
                             }
                         }
                         return true;
@@ -417,7 +434,7 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
                 Uri imageUri = helper.getImageUriFromResult();
                 if (null != imageUri) {
                     // Rotate image according to exif tag, because exif rotation is creating rotation issues
-                    // in thirdparty libraries used for zooming and cropping in this project. [MA-3175]
+                    // in third-party libraries used for zooming and cropping in this project. [MA-3175]
                     final Uri rotatedImageUri = ImageUtils.rotateImageAccordingToExifTag(getContext(), imageUri);
                     if (null != rotatedImageUri) {
                         imageUri = rotatedImageUri;
@@ -531,26 +548,5 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         }
         parent.addView(textView);
         return textView;
-    }
-
-    @Override
-    public void onPermissionGranted(String[] permissions, int requestCode) {
-        switch (requestCode) {
-            case PermissionsUtil.CAMERA_PERMISSION_REQUEST:
-                startActivityForResult(helper.createCaptureIntent(getActivity()), CAPTURE_PHOTO_REQUEST);
-                break;
-            case PermissionsUtil.READ_STORAGE_PERMISSION_REQUEST:
-                final Intent galleryIntent = new Intent()
-                        .setType("image/*")
-                        .setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(galleryIntent, CHOOSE_PHOTO_REQUEST);
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onPermissionDenied(String[] permissions, int requestCode) {
     }
 }
