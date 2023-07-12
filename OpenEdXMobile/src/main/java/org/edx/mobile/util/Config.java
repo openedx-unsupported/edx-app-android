@@ -73,6 +73,7 @@ public class Config {
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
+    private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
     private static final String APP_REVIEWS_ENABLED = "APP_REVIEWS_ENABLED";
     private static final String VIDEO_TRANSCRIPT_ENABLED = "VIDEO_TRANSCRIPT_ENABLED";
@@ -81,6 +82,7 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
     private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
+    private static final String ANNOUNCEMENTS_ENABLED = "ANNOUNCEMENTS_ENABLED";
 
     public static class DiscoveryConfig {
         @SerializedName("TYPE")
@@ -587,6 +589,9 @@ public class Config {
         return getBoolean(NEW_LOGISTRATION_ENABLED, false);
     }
 
+    public boolean isDiscussionProfilePicturesEnabled() {
+        return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
+    }
     public boolean isRegistrationEnabled() {
         return getBoolean(REGISTRATION_ENABLED, true);
     }
@@ -643,6 +648,9 @@ public class Config {
 
     public boolean isCourseVideosEnabled() {
         return getBoolean(COURSE_VIDEOS_ENABLED, true);
+    }
+    public boolean isAnnouncementEnabled() {
+        return getBoolean(ANNOUNCEMENTS_ENABLED, true);
     }
 
     public boolean isDownloadToSDCardEnabled() {

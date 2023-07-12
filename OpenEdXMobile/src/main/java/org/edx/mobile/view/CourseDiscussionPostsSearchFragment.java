@@ -21,6 +21,7 @@ import org.edx.mobile.model.Page;
 import org.edx.mobile.model.discussion.DiscussionRequestFields;
 import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -29,7 +30,6 @@ import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,9 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
 
     @Inject
     DiscussionService discussionService;
+
+    @Inject
+    Config config;
 
     private String searchQuery;
     private Call<Page<DiscussionThread>> searchThreadListCall;
@@ -116,8 +119,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
         if (searchThreadListCall != null) {
             searchThreadListCall.cancel();
         }
-        final List<String> requestedFields = Collections.singletonList(
-                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        final List<String> requestedFields = DiscussionRequestFields.getRequestedFieldsList(config);
         searchThreadListCall = discussionService.searchThreadList(
                 courseData.getCourse().getId(), searchQuery, nextPage, requestedFields);
         final boolean isRefreshingSilently = callback.isRefreshingSilently();

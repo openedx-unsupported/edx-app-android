@@ -31,6 +31,7 @@ import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.model.discussion.DiscussionTopic;
 import org.edx.mobile.model.discussion.TimePeriod;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -59,6 +60,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @Inject
     DiscussionService discussionService;
+
+    @Inject
+    Config config;
 
     private FullScreenErrorNotification errorNotification;
 
@@ -327,8 +331,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             getThreadListCall.cancel();
         }
 
-        final List<String> requestedFields = Collections.singletonList(
-                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        final List<String> requestedFields = DiscussionRequestFields.getRequestedFieldsList(config);
         if (!discussionTopic.isFollowingType()) {
             getThreadListCall = discussionService.getThreadList(courseData.getCourse().getId(),
                     getAllTopicIds(), postsFilter.getQueryParamValue(),
