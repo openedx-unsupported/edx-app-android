@@ -77,11 +77,6 @@ import retrofit2.Call;
 @AndroidEntryPoint
 public class EditUserProfileFragment extends BaseFragment {
 
-    private static final int EDIT_FIELD_REQUEST = 1;
-    private static final int CAPTURE_PHOTO_REQUEST = 2;
-    private static final int CHOOSE_PHOTO_REQUEST = 3;
-    private static final int CROP_PHOTO_REQUEST = 4;
-
     private String username;
 
     private Call<Account> getAccountCall;
@@ -111,13 +106,69 @@ public class EditUserProfileFragment extends BaseFragment {
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
 
+    private final ActivityResultLauncher<Intent> cropPhotoResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Intent resultData = result.getData();
+                if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
+                    final Uri imageUri = CropImageActivity.getImageUriFromResult(resultData);
+                    final Rect cropRect = CropImageActivity.getCropRectFromResult(resultData);
+                    if (imageUri != null && cropRect != null) {
+                        final Task<Void> task = new SetAccountImageTask(requireActivity(), username, imageUri, cropRect);
+                        task.setProgressDialog(viewHolder.profileImageProgress);
+                        executePhotoTask(task);
+                        analyticsRegistry.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(resultData));
+                    }
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> choosePhotoResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Intent resultData = result.getData();
+                if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
+                    Uri imageUri = resultData.getData();
+                    if (imageUri != null) {
+                        cropPhotoResult.launch(
+                                CropImageActivity.newIntent(
+                                        requireActivity(), imageUri, false
+                                )
+                        );
+                    }
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> capturePhotoResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Uri imageUri = helper.getImageUriFromResult();
+                    if (imageUri != null) {
+                        // Rotate image according to exif tag, because exif rotation is creating rotation issues
+                        // in third-party libraries used for zooming and cropping in this project. [MA-3175]
+                        final Uri rotatedImageUri = ImageUtils.rotateImageAccordingToExifTag(requireActivity(), imageUri);
+                        if (rotatedImageUri != null) {
+                            imageUri = rotatedImageUri;
+                        }
+                        cropPhotoResult.launch(CropImageActivity.newIntent(requireActivity(), imageUri, true));
+                    }
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> editProfileResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Intent resultData = result.getData();
+                if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
+                    final FormField fieldName = (FormField) resultData.getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
+                    final String fieldValue = resultData.getStringExtra(FormFieldActivity.EXTRA_VALUE);
+                    executeUpdate(fieldName, fieldValue);
+                }
+            });
+
     private final ActivityResultLauncher<String> storagePermission =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     final Intent galleryIntent = new Intent()
                             .setType("image/*")
                             .setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(galleryIntent, CHOOSE_PHOTO_REQUEST);
+                    choosePhotoResult.launch(galleryIntent);
                 } else {
                     showPermissionDeniedMessage();
                 }
@@ -126,7 +177,7 @@ public class EditUserProfileFragment extends BaseFragment {
     private final ActivityResultLauncher<String> cameraPermission =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    startActivityForResult(helper.createCaptureIntent(requireActivity()), CAPTURE_PHOTO_REQUEST);
+                    capturePhotoResult.launch(helper.createCaptureIntent(requireActivity()));
                 } else {
                     showPermissionDeniedMessage();
                 }
@@ -398,7 +449,7 @@ public class EditUserProfileFragment extends BaseFragment {
                         createField(layoutInflater, viewHolder.fields, field, displayValue, isLimited && !field.getName().equals(Account.YEAR_OF_BIRTH_SERIALIZED_NAME), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivityForResult(FormFieldActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
+                                editProfileResult.launch(FormFieldActivity.newIntent(getActivity(), field, value));
                             }
                         });
                         break;
@@ -419,53 +470,6 @@ public class EditUserProfileFragment extends BaseFragment {
                 viewHolder.tvProfileVisibilityOff.setText(profileVisibilityMessage);
             } else {
                 viewHolder.llProfileVisibilityOff.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        switch (requestCode) {
-            case CAPTURE_PHOTO_REQUEST: {
-                Uri imageUri = helper.getImageUriFromResult();
-                if (null != imageUri) {
-                    // Rotate image according to exif tag, because exif rotation is creating rotation issues
-                    // in third-party libraries used for zooming and cropping in this project. [MA-3175]
-                    final Uri rotatedImageUri = ImageUtils.rotateImageAccordingToExifTag(getContext(), imageUri);
-                    if (null != rotatedImageUri) {
-                        imageUri = rotatedImageUri;
-                    }
-                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, true), CROP_PHOTO_REQUEST);
-                }
-                break;
-            }
-            case CHOOSE_PHOTO_REQUEST: {
-                final Uri imageUri = data.getData();
-                if (null != imageUri) {
-                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, false), CROP_PHOTO_REQUEST);
-                }
-                break;
-            }
-            case CROP_PHOTO_REQUEST: {
-                final Uri imageUri = CropImageActivity.getImageUriFromResult(data);
-                final Rect cropRect = CropImageActivity.getCropRectFromResult(data);
-                if (null != imageUri && null != cropRect) {
-                    final Task<Void> task = new SetAccountImageTask(getActivity(), username, imageUri, cropRect);
-                    task.setProgressDialog(viewHolder.profileImageProgress);
-                    executePhotoTask(task);
-                    analyticsRegistry.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
-                }
-                break;
-            }
-            case EDIT_FIELD_REQUEST: {
-                final FormField fieldName = (FormField) data.getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
-                final String fieldValue = data.getStringExtra(FormFieldActivity.EXTRA_VALUE);
-                executeUpdate(fieldName, fieldValue);
-                break;
             }
         }
     }

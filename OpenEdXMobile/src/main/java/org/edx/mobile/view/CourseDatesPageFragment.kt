@@ -1,8 +1,7 @@
 package org.edx.mobile.view
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,6 @@ import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.CourseDatesCalendarSync
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseBannerInfoModel
-import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.BrowserUtil
@@ -50,15 +48,30 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private lateinit var binding: FragmentCourseDatesPageBinding
     private val viewModel: CourseDateViewModel by viewModels()
 
+    private val courseUnitDetailResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val resultData = result.data
+            if (result?.resultCode == RESULT_OK && resultData != null) {
+                val outlineComp = courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
+                outlineComp?.let {
+                    navigateToCourseUnit(resultData, courseData, outlineComp)
+                }
+            }
+        }
+
     private var onDateItemClick: OnDateBlockListener = object : OnDateBlockListener {
         override fun onClick(link: String, blockId: String) {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
-                environment.router.showCourseUnitDetail(
+                val intent = environment.router.getCourseUnitDetailIntent(
                     this@CourseDatesPageFragment,
-                    REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, null, blockId, false
+                    courseData,
+                    null,
+                    blockId,
+                    false
                 )
+                courseUnitDetailResult.launch(intent)
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,
@@ -123,20 +136,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     ): View {
         binding = FragmentCourseDatesPageBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SHOW_COURSE_UNIT_DETAIL && resultCode == Activity.RESULT_OK
-            && data != null
-        ) {
-            val outlineComp: CourseComponent? =
-                courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
-            outlineComp?.let {
-                navigateToCourseUnit(data, courseData, outlineComp)
-            }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

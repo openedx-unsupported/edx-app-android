@@ -218,21 +218,19 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
-    public void showCourseContainerOutline(Fragment fragment, int requestCode,
-                                           EnrolledCoursesResponse courseData,
-                                           CourseUpgradeResponse courseUpgradeData,
-                                           String courseComponentId,
-                                           String lastAccessedId, boolean isVideosMode) {
-        Intent courseDetail = CourseOutlineActivity.newIntent(fragment.getActivity(),
+    public Intent getCourseContainerOutlineIntent(Fragment fragment,
+                                                  EnrolledCoursesResponse courseData,
+                                                  CourseUpgradeResponse courseUpgradeData,
+                                                  String courseComponentId,
+                                                  String lastAccessedId, boolean isVideosMode) {
+        return CourseOutlineActivity.newIntent(fragment.getActivity(),
                 courseData, courseUpgradeData, courseComponentId, lastAccessedId, isVideosMode);
-        //TODO - what's the most suitable FLAG?
-        // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        fragment.startActivityForResult(courseDetail, requestCode);
     }
 
-    public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
-                                     CourseUpgradeResponse courseUpgradeData,
-                                     String courseComponentId, boolean isVideosMode) {
+    public Intent getCourseUnitDetailIntent(Fragment fragment,
+                                          EnrolledCoursesResponse model,
+                                          CourseUpgradeResponse courseUpgradeData,
+                                          String courseComponentId, boolean isVideosMode) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putParcelable(EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
@@ -242,7 +240,7 @@ public class Router {
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        fragment.startActivityForResult(courseDetail, requestCode);
+        return courseDetail;
     }
 
     public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {

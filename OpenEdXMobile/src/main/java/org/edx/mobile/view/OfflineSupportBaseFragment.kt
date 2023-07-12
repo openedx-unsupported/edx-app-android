@@ -2,10 +2,13 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContracts
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
 import org.edx.mobile.extenstion.serializable
+import org.edx.mobile.http.notifications.FullScreenErrorNotification
+import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.services.CourseManager
@@ -34,6 +37,10 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
      * `false` otherwise.
      */
     protected abstract fun isShowingFullScreenError(): Boolean
+
+    private val courseContainerResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        }
 
     override fun onResume() {
         super.onResume()
@@ -85,10 +92,12 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
                 var i = outlinePathSize + 1
                 while (i < leafPathSize - 1) {
                     val nextComp = leafPath[i]
-                    environment.router?.showCourseContainerOutline(
-                            this@OfflineSupportBaseFragment,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, null,
-                            nextComp.id, leafCompId, false)
+                    val intent = environment.router?.getCourseContainerOutlineIntent(
+                        this@OfflineSupportBaseFragment,
+                        courseData, null,
+                        nextComp.id, leafCompId, false
+                    )
+                    courseContainerResult.launch(intent)
                     i += 2
                 }
             }
@@ -102,9 +111,5 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
      */
     open fun canUpdateRowSelection(): Boolean {
         return false
-    }
-
-    companion object {
-        const val REQUEST_SHOW_COURSE_UNIT_DETAIL = 101
     }
 }

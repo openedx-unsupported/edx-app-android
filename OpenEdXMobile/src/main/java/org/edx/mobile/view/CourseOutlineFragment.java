@@ -164,6 +164,34 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private AlertDialogFragment loaderDialog;
     private boolean refreshOnResume = false;
 
+    private final ActivityResultLauncher<Intent> courseUnitDetailResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Intent resultData = result.getData();
+                if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
+                    if (resultData.getBooleanExtra(AppConstants.COURSE_UPGRADED, false)) {
+                        courseData.setMode(EnrollmentMode.VERIFIED.toString());
+                        if (!isOnCourseOutline) {
+                            // As the Course Outline Fragment is used multiple time as a stack for CourseDashboard & SubComponents
+                            // So need to pass data from SubComponent screen to CourseDashboard to update the views after user
+                            // Purchase course from Locked Component
+                            Intent intent = new Intent();
+                            intent.putExtra(AppConstants.COURSE_UPGRADED, true);
+                            requireActivity().setResult(Activity.RESULT_OK, intent);
+                            fetchCourseComponent();
+                        } else {
+                            // Update the User CourseEnrollments & Dates banner if after user
+                            // Purchase course from Locked Component
+                            courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), true);
+                            EventBus.getDefault().post(new MyCoursesRefreshEvent());
+                        }
+                    } else {
+                        final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
+                                courseData.getCourseId(), courseComponentId);
+                        navigateToCourseUnit(resultData, courseData, outlineComp);
+                    }
+                }
+            });
+
     private final ActivityResultLauncher<String> storagePermission = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -517,14 +545,16 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 listView.clearChoices();
                 final CourseComponent component = adapter.getItem(position).component;
                 if (component.isContainer()) {
-                    environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, component.getId(), null, isVideoMode);
+                    Intent courseOutlineIntent = environment.getRouter().getCourseContainerOutlineIntent(CourseOutlineFragment.this,
+                            courseData, courseUpgradeData, component.getId(), null, isVideoMode);
+                    courseUnitDetailResult.launch(courseOutlineIntent);
                 } else {
                     if (adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM) {
                         environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
                     }
-                    environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, component.getId(), isVideoMode);
+                    Intent intent = environment.getRouter().getCourseUnitDetailIntent(CourseOutlineFragment.this,
+                            courseData, courseUpgradeData, component.getId(), isVideoMode);
+                    courseUnitDetailResult.launch(intent);
 
                     environment.getAnalyticsRegistry().trackScreenView(
                             Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
@@ -617,8 +647,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private void detectDeepLinking() {
         if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName)
                 && !TextUtils.isEmpty(courseComponentId)) {
-            environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
-                    REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseUpgradeData, courseComponentId, false);
+            Intent intent = environment.getRouter().getCourseUnitDetailIntent(CourseOutlineFragment.this,
+                    courseData, courseUpgradeData, courseComponentId, false);
+            courseUnitDetailResult.launch(intent);
             screenName = null;
         }
     }
@@ -1011,35 +1042,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                         listView.smoothScrollToPosition(selectedItemPosition);
                     }
                 }, AUTOSCROLL_DELAY_MS);
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SHOW_COURSE_UNIT_DETAIL && resultCode == Activity.RESULT_OK
-                && data != null) {
-            if (data.getBooleanExtra(AppConstants.COURSE_UPGRADED, false)) {
-                courseData.setMode(EnrollmentMode.VERIFIED.toString());
-                if (!isOnCourseOutline) {
-                    // As the Course Outline Fragment is used multiple time as a stack for CourseDashboard & SubComponents
-                    // So need to pass data from SubComponent screen to CourseDashboard to update the views after user
-                    // Purchase course from Locked Component
-                    Intent resultData = new Intent();
-                    resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
-                    requireActivity().setResult(Activity.RESULT_OK, resultData);
-                    fetchCourseComponent();
-                } else {
-                    // Update the User CourseEnrollments & Dates banner if after user
-                    // Purchase course from Locked Component
-                    courseDateViewModel.fetchCourseDatesBannerInfo(courseData.getCourseId(), true);
-                    EventBus.getDefault().post(new MyCoursesRefreshEvent());
-                }
-            } else {
-                final CourseComponent outlineComp = courseManager.getComponentByIdFromAppLevelCache(
-                        courseData.getCourseId(), courseComponentId);
-                navigateToCourseUnit(data, courseData, outlineComp);
             }
         }
     }

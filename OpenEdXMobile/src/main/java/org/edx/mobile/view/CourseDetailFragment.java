@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -55,8 +57,6 @@ import retrofit2.Call;
 @AndroidEntryPoint
 public class CourseDetailFragment extends BaseFragment {
 
-    private static final int LOG_IN_REQUEST_CODE = 42;
-
     private TextView mCourseTextName;
     private TextView mCourseTextDetails;
     private AppCompatImageView mHeaderImageView;
@@ -86,6 +86,13 @@ public class CourseDetailFragment extends BaseFragment {
 
     @Inject
     IEdxEnvironment environment;
+
+    private final ActivityResultLauncher<Intent> enrollCourseResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    enrollInCourse();
+                }
+            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -314,20 +321,12 @@ public class CourseDetailFragment extends BaseFragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            enrollInCourse();
-        }
-    }
-
     /**
      * Enroll in a course, Then open the course dashboard of the enrolled course.
      */
     public void enrollInCourse() {
         if (!environment.getLoginPrefs().isUserLoggedIn()) {
-            startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
+            enrollCourseResult.launch(environment.getRouter().getRegisterIntent());
             return;
         }
         environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);

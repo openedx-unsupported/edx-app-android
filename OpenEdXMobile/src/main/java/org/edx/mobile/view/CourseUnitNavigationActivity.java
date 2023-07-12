@@ -14,8 +14,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +27,7 @@ import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
+import org.edx.mobile.event.FileShareEvent;
 import org.edx.mobile.event.IAPFlowEvent;
 import org.edx.mobile.event.MyCoursesRefreshEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
@@ -40,8 +42,6 @@ import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NonNullObserver;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
@@ -92,6 +92,31 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private boolean isFirstSection = false;
     private boolean isVideoMode = false;
     private boolean refreshCourse = false;
+
+    ActivityResultLauncher<Intent> chooseFilesResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                Uri[] files = null;
+                Intent resultData = result.getData();
+                if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
+                    String dataString = resultData.getDataString();
+                    ClipData clipData = resultData.getClipData();
+                    if (clipData != null) {
+                        files = new Uri[clipData.getItemCount()];
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            files[i] = item.getUri();
+                        }
+                    }
+                    // Executed when user select only one file.
+                    if (dataString != null) {
+                        files = new Uri[]{Uri.parse(dataString)};
+                    }
+                    if (files != null) {
+                        EventBus.getDefault().post(new FileShareEvent(files));
+                    }
+                }
+            }
+    );
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -502,31 +527,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     @Subscribe
-    public void onEvent(CourseUpgradedEvent event) {
-        finish();
+    public void onEvent(FileSelectionEvent event) {
+        chooseFilesResult.launch(event.getIntent());
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Uri[] results = null;
-        if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                String dataString = data.getDataString();
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    results = new Uri[clipData.getItemCount()];
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        results[i] = item.getUri();
-                    }
-                }
-                // Executed when user select only one file.
-                if (dataString != null) {
-                    results = new Uri[]{Uri.parse(dataString)};
-                }
-            }
-            EventBus.getDefault().post(new FileSelectionEvent(results));
-        }
+    @Subscribe
+    public void onEvent(CourseUpgradedEvent event) {
+        finish();
     }
 }
