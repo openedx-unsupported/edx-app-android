@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -43,6 +44,20 @@ public class DownloadListActivity extends BaseFragmentActivity {
     private ListView downloadListView;
     private View loadingIndicator;
 
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            // Add result data into the intent to trigger the signal that `courseData` is updated after
+            // the course was purchased from a locked component screen.
+            if (isTaskRoot()) {
+                finish();
+                environment.getRouter().showSplashScreen(DownloadListActivity.this);
+                return;
+            }
+            finish();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,15 +87,17 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
         loadingIndicator.setVisibility(View.VISIBLE);
         downloadListView.setVisibility(View.GONE);
+
+        getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        observable.setObserver(new IDbCallback<List<DownloadEntryAdapter.Item>>() {
+        observable.setObserver(new IDbCallback<>() {
             @Override
             public void sendResult(List<DownloadEntryAdapter.Item> result) {
-                if (result != null) {
+                if (result != null && adapter != null) {
                     adapter.setItems(result);
                 }
                 loadingIndicator.setVisibility(View.GONE);
@@ -95,12 +112,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
             }
 
             private void fetchOngoingDownloadsAfterDelay() {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fetchOngoingDownloads();
-                    }
-                }, REFRESH_INTERVAL_IN_MILLISECONDS);
+                handler.postDelayed(() -> fetchOngoingDownloads(), REFRESH_INTERVAL_IN_MILLISECONDS);
             }
         });
         fetchOngoingDownloads();
@@ -115,31 +127,19 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // If this activity was opened from notification
-                if (isTaskRoot()) {
-                    finish();
-                    environment.getRouter().showSplashScreen(this);
-                    return true;
-                }
+        if (item.getItemId() == android.R.id.home) {
+            // If this activity was opened from notification
+            if (isTaskRoot()) {
+                finish();
+                environment.getRouter().showSplashScreen(this);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        // If this activity was opened from notification
-        if (isTaskRoot()) {
-            finish();
-            environment.getRouter().showSplashScreen(this);
-            return;
-        }
-        super.onBackPressed();
-    }
-
     private void fetchOngoingDownloads() {
-        environment.getDatabase().getListOfOngoingDownloads(new DataCallback<List<VideoModel>>(false) {
+        environment.getDatabase().getListOfOngoingDownloads(new DataCallback<>(false) {
             @Override
             public void onResult(List<VideoModel> result) {
                 final List<DownloadEntryAdapter.Item> downloadItems = new ArrayList<>(result.size());

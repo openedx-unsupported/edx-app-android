@@ -94,13 +94,6 @@ public class CourseAnnouncementsActivity extends BaseSingleFragmentActivity {
         outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
     }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
     @Override
     public Fragment getFirstFragment() {
         CourseAnnouncementsFragment fragment = new CourseAnnouncementsFragment();

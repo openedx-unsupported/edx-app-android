@@ -3,6 +3,7 @@ package org.edx.mobile.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.base.BaseSingleFragmentActivity
@@ -12,6 +13,14 @@ import org.edx.mobile.model.course.CourseComponent
 class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
 
     private var isModalView: Boolean = false
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (isModalView.not()) {
+                finish()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = intent.getStringExtra(EXTRA_SCREEN_TITLE)
@@ -19,6 +28,10 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
         if (isModalView || title.isNullOrEmpty()) {
             supportActionBar?.hide()
         }
+        onBackPressedDispatcher.addCallback(
+            this,
+            onBackPressedCallback
+        )
     }
 
     override fun getFirstFragment(): Fragment {
@@ -33,11 +46,21 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
 
         @JvmStatic
         fun newIntent(activity: Context?, unit: CourseComponent): Intent {
-            return newIntent(activity, url = unit.blockUrl, screenTitle = unit.displayName, isModalView = false)
+            return newIntent(
+                activity,
+                url = unit.blockUrl,
+                screenTitle = unit.displayName,
+                isModalView = false
+            )
         }
 
         @JvmStatic
-        fun newIntent(activity: Context?, url: String, screenTitle: String, isModalView: Boolean): Intent {
+        fun newIntent(
+            activity: Context?,
+            url: String,
+            screenTitle: String,
+            isModalView: Boolean
+        ): Intent {
             val intent = Intent(activity, AuthenticatedWebViewActivity::class.java)
             intent.putExtra(EXTRA_COMPONENT_URL, url)
             intent.putExtra(EXTRA_SCREEN_TITLE, screenTitle)
@@ -47,10 +70,5 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
             }
             return intent
         }
-    }
-
-    override fun onBackPressed() {
-        if (isModalView.not())
-            super.onBackPressed()
     }
 }

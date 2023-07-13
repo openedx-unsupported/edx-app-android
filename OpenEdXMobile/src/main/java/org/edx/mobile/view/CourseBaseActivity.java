@@ -160,16 +160,10 @@ public abstract class CourseBaseActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Manually handle backPress button on toolbar
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

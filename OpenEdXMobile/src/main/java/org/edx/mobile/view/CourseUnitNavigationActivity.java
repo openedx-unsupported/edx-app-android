@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import org.edx.mobile.model.course.EnrollmentMode;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
+import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NonNullObserver;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
@@ -118,6 +120,21 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             }
     );
 
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            // Add result data into the intent to trigger the signal that `courseData` is updated after
+            // the course was purchased from a locked component screen.
+            if (refreshCourse) {
+                Intent resultData = new Intent();
+                resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
+                setResult(RESULT_OK, resultData);
+                refreshCourse = false;
+            }
+            finish();
+        }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setToolbarAsActionBar();
@@ -143,6 +160,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (!isVideoMode) {
             getCourseCelebrationStatus();
         }
+        getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
     private void initAdapter() {
@@ -431,19 +449,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             pager2.setCurrentItem(index, false);
             tryToUpdateForEndOfSequential();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // Add result data into the intent to trigger the signal that `courseData` is updated after
-        // the course was purchased from a locked component screen.
-        if (refreshCourse) {
-            Intent resultData = new Intent();
-            resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
-            setResult(RESULT_OK, resultData);
-            refreshCourse = false;
-        }
-        super.onBackPressed();
     }
 
     @Override
