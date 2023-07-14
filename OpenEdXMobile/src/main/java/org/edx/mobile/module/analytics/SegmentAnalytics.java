@@ -494,13 +494,14 @@ public class SegmentAnalytics implements Analytics {
      * This function is used to track if user clicks on Find Courses
      */
     @Override
-    public void trackUserFindsCourses() {
+    public void trackUserFindsCourses(int noOfEnrolledCourses) {
         SegmentEvent aEvent = new SegmentEvent();
         aEvent.properties.putValue(Keys.NAME, Values.USER_FIND_COURSES);
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.USER_ENGAGEMENT, Values.COURSE_DISCOVERY);
+        aEvent.data.putValue(Keys.ENROLLED_COURSES_COUNT, noOfEnrolledCourses);
         trackSegmentEvent(Events.FIND_COURSES, aEvent.properties);
     }
 

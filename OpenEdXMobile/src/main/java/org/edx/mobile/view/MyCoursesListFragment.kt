@@ -382,7 +382,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             )
             binding.myCourseList.addFooterView(footer.root, null, false)
             footer.courseBtn.setOnClickListener {
-                environment.analyticsRegistry?.trackUserFindsCourses()
+                environment.analyticsRegistry?.trackUserFindsCourses(adapter.count)
                 EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
             }
         }
