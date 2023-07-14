@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.user.FormOption;
-import org.edx.mobile.module.prefs.PrefBaseManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -179,7 +179,7 @@ public class LocaleUtils {
     public static String getTranscriptURL(@NonNull Context context,
                                           @NonNull TranscriptModel transcript,
                                           @NonNull String subtitleLanguage) {
-        if (subtitleLanguage.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
+        if (subtitleLanguage.equalsIgnoreCase(UserPrefs.NONE)) {
             subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(context);
         }
         String transcriptUrl = null;

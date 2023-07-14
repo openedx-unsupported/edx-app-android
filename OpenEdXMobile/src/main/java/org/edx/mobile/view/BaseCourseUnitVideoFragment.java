@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,7 +27,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.prefs.PrefBaseManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.TranscriptListener;
@@ -135,8 +135,7 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     int startMillis = subtitle.start.getMseconds();
                     int endMillis = subtitle.end.getMseconds();
                     if (currentPos >= startMillis && currentPos <= endMillis) {
-                        String subtitleLang = userPrefs.getSubtitleLanguage();
-                        if (subtitleLang.equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE)) {
+                        if (userPrefs.getHasSubtitleLanguage()) {
                             updateClosedCaptionData(subtitle);
                         }
                         updateSelection(currentSubtitleIndex);
@@ -231,11 +230,13 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
         if (subtitlesObj != null) {
             initTranscriptListView();
             updateTranscript(subtitlesObj);
-            String subtitleLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
-            if (userPrefs.getSubtitleLanguage().equalsIgnoreCase(PrefBaseManager.DEFAULT_VALUE) &&
-                    !android.text.TextUtils.isEmpty(subtitleLanguage) &&
-                    getTranscriptModel().containsKey(subtitleLanguage)) {
-                userPrefs.setSubtitleLanguage(subtitleLanguage);
+            if (userPrefs.getHasSubtitleLanguage() && !getTranscriptModel().containsKey(userPrefs.getSubtitleLanguage())) {
+                String deviceLanguage = LocaleUtils.getCurrentDeviceLanguage(requireActivity());
+                if (!TextUtils.isEmpty(deviceLanguage) && getTranscriptModel().containsKey(deviceLanguage)) {
+                    userPrefs.setSubtitleLanguage(deviceLanguage);
+                } else {
+                    userPrefs.setSubtitleLanguage(getTranscriptModel().keySet().toArray()[0].toString());
+                }
             }
             showClosedCaptionData(subtitlesObj);
         }

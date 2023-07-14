@@ -169,8 +169,6 @@ abstract class PrefBaseManager constructor(
         const val VIDEOS = "pref_videos"
         const val COURSE_CALENDAR_PREF = "course_calendar_pref"
 
-        const val DEFAULT_VALUE = "NONE"
-
         private val preferencesList = listOf(
             FEATURES,
             INFO,

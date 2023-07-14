@@ -48,7 +48,6 @@ import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.InfoPrefs;
-import org.edx.mobile.module.prefs.PrefBaseManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -1432,7 +1431,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 public void onCancelClicked() {
                     closedCaptionsEnabled = false;
                     hideClosedCaptioning();
-                    setSubtitleLanguage(PrefBaseManager.DEFAULT_VALUE);
+                    setSubtitleLanguage(UserPrefs.NONE);
                     if (player != null) {
                         environment.getAnalyticsRegistry().trackHideTranscript(videoEntry.videoId,
                                 player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
@@ -1718,7 +1717,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         this.subtitlesObj = subtitles;
         resetClosedCaptioning();
         if (subtitlesObj != null) {
-            closedCaptionsEnabled = true;
+            closedCaptionsEnabled = userPrefs.getHasSubtitleLanguage();
             if (player != null) {
                 environment.getAnalyticsRegistry().trackShowTranscript(videoEntry.videoId,
                         player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,

@@ -3,7 +3,6 @@ package org.edx.mobile.view.dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 
 import java.util.HashMap;
@@ -43,7 +43,6 @@ public class CCLanguageDialogFragment extends DialogFragment {
         d.callback = callback;
         d.langList = dialogMap;
         Bundle args = new Bundle();
-        d.langList = dialogMap;
         args.putString("selectedLanguage", languageSelected);
         d.setArguments(args);
 
@@ -54,10 +53,10 @@ public class CCLanguageDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        View v = inflater.inflate(R.layout.panel_cc_popup, container,
+        View view = inflater.inflate(R.layout.panel_cc_popup, container,
                 false);
         try {
-            ListView lv_ccLang = (ListView) v.findViewById(R.id.cc_list);
+            ListView lv_ccLang = (ListView) view.findViewById(R.id.cc_list);
             ClosedCaptionAdapter ccAdaptor = new
                     ClosedCaptionAdapter(getActivity().getBaseContext(), environment) {
                         @Override
@@ -70,7 +69,6 @@ public class CCLanguageDialogFragment extends DialogFragment {
                     };
             lv_ccLang.setAdapter(ccAdaptor);
             lv_ccLang.setOnItemClickListener(ccAdaptor);
-            //ArrayList<String> langList =  getArguments().getStringArrayList("langs");
 
             if (langList != null) {
                 HashMap<String, String> hm;
@@ -81,39 +79,30 @@ public class CCLanguageDialogFragment extends DialogFragment {
                     ccAdaptor.add(hm);
                 }
             }
-            String langSelected = getArguments().getString("selectedLanguage");
-            if (langSelected != null && !langList.containsKey(langSelected)) {
+            String langSelected = getArguments().getString("selectedLanguage", UserPrefs.NONE);
+            if (!langSelected.equalsIgnoreCase(UserPrefs.NONE) && !langList.containsKey(langSelected)) {
                 langSelected = langList.keySet().toArray()[0].toString();
             }
             ccAdaptor.selectedLanguage = langSelected;
             ccAdaptor.notifyDataSetChanged();
 
-
-            TextView tvNone = (TextView) v.findViewById(R.id.tv_cc_cancel);
-            final String tvNoneTxt = getString(R.string.lbl_cc_none);
-            if (langSelected != null) {
-                if (langSelected.equalsIgnoreCase(tvNoneTxt)) {
-                    tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
-                } else {
-                    tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
-                }
-            } else {
+            TextView tvNone = (TextView) view.findViewById(R.id.tv_cc_cancel);
+            if (langSelected.equalsIgnoreCase(UserPrefs.NONE)) {
                 tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
+            } else {
+                tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
             }
 
-            tvNone.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    if (callback != null) {
-                        callback.onCancelClicked();
-                    }
-                    dismiss();
+            tvNone.setOnClickListener(v -> {
+                if (callback != null) {
+                    callback.onCancelClicked();
                 }
+                dismiss();
             });
 
         } catch (Exception e) {
             logger.error(e);
         }
-        return v;
+        return view;
     }
-
 }
