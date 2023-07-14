@@ -4,9 +4,11 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.android.billingclient.api.ProductDetails.OneTimePurchaseOfferDetails
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.decodeToLong
@@ -37,8 +39,8 @@ class InAppPurchasesViewModel @Inject constructor(
     private val iapAnalytics: InAppPurchasesAnalytics
 ) : ViewModel() {
 
-    private val _productPrice = MutableLiveData<Event<SkuDetails>>()
-    val productPrice: LiveData<Event<SkuDetails>> = _productPrice
+    private val _productPrice = MutableLiveData<Event<OneTimePurchaseOfferDetails>>()
+    val productPrice: LiveData<Event<OneTimePurchaseOfferDetails>> = _productPrice
 
     private val _launchPurchaseFlow = MutableLiveData<Event<Boolean>>()
     val launchPurchaseFlow: LiveData<Event<Boolean>> = _launchPurchaseFlow
@@ -73,7 +75,7 @@ class InAppPurchasesViewModel @Inject constructor(
 
         override fun onPurchaseComplete(purchase: Purchase) {
             super.onPurchaseComplete(purchase)
-            if (purchase.skus[0] == iapFlowData.productId) {
+            if (purchase.products.first() == iapFlowData.productId) {
                 iapFlowData.purchaseToken = purchase.purchaseToken
                 _productPurchased.postEvent(iapFlowData)
                 iapAnalytics.trackIAPEvent(eventName = Analytics.Events.IAP_PAYMENT_TIME)
@@ -84,31 +86,33 @@ class InAppPurchasesViewModel @Inject constructor(
 
     init {
         billingProcessor.setUpBillingFlowListeners(listener)
-        billingProcessor.startConnection()
     }
 
     fun initializeProductPrice(courseSku: String?) {
         iapAnalytics.initPriceTime()
-        courseSku?.let {
-            billingProcessor.querySyncDetails(
-                productId = courseSku
-            ) { billingResult, skuDetails ->
-                val skuDetail = skuDetails?.first()
-                skuDetail?.let {
-                    if (it.sku == courseSku) {
-                        _productPrice.postEvent(it)
-                        iapAnalytics.setPrice(skuDetail.price)
-                        iapAnalytics.trackIAPEvent(Analytics.Events.IAP_LOAD_PRICE_TIME)
-                    }
+        if (courseSku == null) {
+            dispatchError(requestType = ErrorMessage.PRICE_CODE)
+            return
+        }
+
+        viewModelScope.launch {
+            val response = billingProcessor.querySyncDetails(courseSku)
+            val productDetail = response.productDetailsList?.firstOrNull()
+
+            if (productDetail?.productId == courseSku) {
+                productDetail.oneTimePurchaseOfferDetails?.let {
+                    _productPrice.postEvent(it)
+                    iapAnalytics.setPrice(it.formattedPrice)
+                    iapAnalytics.trackIAPEvent(Analytics.Events.IAP_LOAD_PRICE_TIME)
                 } ?: dispatchError(
                     requestType = ErrorMessage.PRICE_CODE,
                     throwable = InAppPurchasesException(
-                        httpErrorCode = billingResult.responseCode,
-                        errorMessage = billingResult.debugMessage,
+                        httpErrorCode = response.billingResult.responseCode,
+                        errorMessage = response.billingResult.debugMessage,
                     )
                 )
             }
-        } ?: dispatchError(requestType = ErrorMessage.PRICE_CODE)
+        }
     }
 
     fun startPurchaseFlow(productId: String, price: Double, currencyCode: String) {
@@ -168,8 +172,10 @@ class InAppPurchasesViewModel @Inject constructor(
     }
 
     fun purchaseItem(activity: Activity, userId: Long, courseSku: String?) {
-        courseSku?.let {
-            billingProcessor.purchaseItem(activity, courseSku, userId)
+        viewModelScope.launch {
+            courseSku?.let {
+                billingProcessor.purchaseItem(activity, courseSku, userId)
+            }
         }
     }
 
@@ -226,12 +232,14 @@ class InAppPurchasesViewModel @Inject constructor(
             _fakeUnfulfilledCompletion.postEvent(true)
             return
         }
-        billingProcessor.queryPurchase { _, purchases ->
+        viewModelScope.launch {
+            val purchases = billingProcessor.queryPurchases()
             environment.featuresPrefs.canAutoCheckUnfulfilledPurchase = false
             if (purchases.isEmpty()) {
                 _fakeUnfulfilledCompletion.postEvent(true)
-                return@queryPurchase
+                return@launch
             }
+
             val userPurchases = purchases.filter {
                 it.accountIdentifiers?.obfuscatedAccountId?.decodeToLong() == userId
             }
@@ -271,12 +279,11 @@ class InAppPurchasesViewModel @Inject constructor(
         iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UNFULFILLED_PURCHASE_INITIATED)
 
         //Start the purchase flow
-        billingProcessor.querySyncDetails(
-            productId = iapFlowData.productId
-        ) { _, skuDetails ->
-            val skuDetail = skuDetails?.first()
-            skuDetail?.let {
-                if (it.sku == iapFlowData.productId) {
+        viewModelScope.launch {
+            val response = billingProcessor.querySyncDetails(iapFlowData.productId)
+            val productDetail = response.productDetailsList?.firstOrNull()
+            if (productDetail?.productId == iapFlowData.productId) {
+                productDetail.oneTimePurchaseOfferDetails?.let {
                     iapFlowData.currencyCode = it.priceCurrencyCode
                     iapFlowData.price = it.getPriceAmount()
                     addProductToBasket()
