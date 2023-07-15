@@ -2,6 +2,7 @@ package org.edx.mobile.http.notifications;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
 
     public static int COURSE_DATE_MESSAGE_DURATION = 5000;
     public static int COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION = 3000;
+    public static int REGISTERED_BECAME_LOGIN_DURATION = 8000;
 
     /**
      * Construct a new instance of the notification.
@@ -118,6 +120,18 @@ public class SnackbarErrorNotification extends ErrorNotification {
      */
     public void showUpgradeSuccessSnackbar(int stringResId) {
         showError(stringResId, 0, 0, COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION, null);
+    }
+
+    /**
+     * Show the a snackbar notification on login if a registered user tried to register again
+     *
+     * @param message Message to be displayed.
+     */
+    public void showRegisterBecameLoginSnackbar(String message) {
+        snackbar = Snackbar.make(view, message, REGISTERED_BECAME_LOGIN_DURATION);
+        TextView textView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setLines(3);
+        snackbar.show();
     }
 
     /**

@@ -150,7 +150,7 @@ public class LoginAPI {
                 Long.toString(profile.id),
                 profile.email,
                 usernameUsedToLogIn);
-        final String backendKey = loginPrefs.getAuthBackendKeyForSegment();
+        final String backendKey = loginPrefs.getAuthBackendType();
         if (backendKey != null) {
             analyticsRegistry.trackUserLogin(backendKey);
         }
