@@ -185,7 +185,7 @@ class CourseHomeAdapter(
                 if (isChildListVisible) {
                     R.drawable.ic_drop_down
                 } else {
-                    R.drawable.ic_arrow_up
+                    R.drawable.ic_drop_up
                 }
             )
         }

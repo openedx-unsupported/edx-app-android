@@ -36,22 +36,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">この機能はインターネット接続が必要です。</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">ユーザー名またはメールアドレス</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">メールアドレス</string>
   <!--Hint text for password field-->
   <string name="password">パスワード</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">パスワードをお忘れですか？</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">サインイン</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">サインインボタン</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">お待ちください</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">サインイン中</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">エラーメッセージ</string>
   <!--Generic error during log in-->
@@ -64,7 +56,6 @@
   <!--Label for End User License Agreement-->
   <!--Label for Terms of Service and Honor Code-->
   <!--Label for Privacy Policy-->
-  <string name="login_title">サインイン</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">閉じる</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -378,8 +369,6 @@
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">新しいチャレンジを探していますか？</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">またはサインイン</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -394,9 +383,6 @@
   <string name="already_have_an_account">アカウントをお持ちですか？サインインしてください。</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">登録申込をして学習を始める</string>
-  <!--In Register screen-->
-  <string name="register_with">登録</string>
-  <string name="or_register_with_email">メールで登録する</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <!--Button leading user to log in screen-->
@@ -406,14 +392,8 @@
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">任意のフィールドを表示する</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">任意のフィールドを隠す</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">アカウントを作成する</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">アカウントを作成するボタン</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">アカウント作成中…</string>
   <!--Registration screen title-->

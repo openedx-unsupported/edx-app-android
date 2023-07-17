@@ -11,8 +11,8 @@ public class SocialFactory {
 
     //TODO - we should create a central place for application wide constants.
     public enum SOCIAL_SOURCE_TYPE {
-        TYPE_UNKNOWN(-1, "unknown"), TYPE_GOOGLE(100, "google-oauth2"),
-        TYPE_FACEBOOK(101, "facebook"), TYPE_MICROSOFT(102, "microsoft");
+        UNKNOWN(-1, "unknown"), GOOGLE(100, "google-oauth2"),
+        FACEBOOK(101, "facebook"), MICROSOFT(102, "microsoft");
 
         private int code;
         private String value;
@@ -24,24 +24,23 @@ public class SocialFactory {
 
         public static SOCIAL_SOURCE_TYPE fromString(String source) {
             if ("facebook".equalsIgnoreCase(source))
-                return TYPE_FACEBOOK;
+                return FACEBOOK;
             if ("google-oauth2".equalsIgnoreCase(source) || "google".equalsIgnoreCase(source))
-                return TYPE_GOOGLE;
+                return GOOGLE;
             if ("azuread-oauth2".equalsIgnoreCase(source) || "azuread".equalsIgnoreCase(source))
-                return TYPE_MICROSOFT;
-            return TYPE_UNKNOWN;
+                return MICROSOFT;
+            return UNKNOWN;
         }
     }
-
 
     public static ISocial getInstance(Activity activity, SOCIAL_SOURCE_TYPE type, Config config) {
         if (isSocialFeatureEnabled(type, config)) {
             switch (type) {
-                case TYPE_GOOGLE:
+                case GOOGLE:
                     return new GoogleOauth2(activity);
-                case TYPE_FACEBOOK:
+                case FACEBOOK:
                     return new FacebookAuth(activity);
-                case TYPE_MICROSOFT:
+                case MICROSOFT:
                     return new MicrosoftAuth(activity);
             }
         }
@@ -49,11 +48,11 @@ public class SocialFactory {
     }
 
     public static boolean isSocialFeatureEnabled(SOCIAL_SOURCE_TYPE type, Config config) {
-        if (type == SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
+        if (type == SOCIAL_SOURCE_TYPE.GOOGLE) {
             return config.getGoogleConfig().isEnabled();
-        } else if (type == SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
+        } else if (type == SOCIAL_SOURCE_TYPE.FACEBOOK) {
             return config.getFacebookConfig().isEnabled();
-        } else if (type == SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT) {
+        } else if (type == SOCIAL_SOURCE_TYPE.MICROSOFT) {
             return config.getMicrosoftConfig().isEnabled();
         }
         return true;

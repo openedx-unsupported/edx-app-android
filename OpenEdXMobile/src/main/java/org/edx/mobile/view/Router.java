@@ -35,6 +35,7 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
 import org.edx.mobile.view.dialog.WebViewActivity;
+import org.edx.mobile.view.login.LoginActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import javax.inject.Inject;

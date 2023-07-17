@@ -30,11 +30,11 @@ public abstract class RegisterTask extends Task<AuthResponse> {
     protected AuthResponse doInBackground(Void... voids) {
         try {
             switch (backstoreType) {
-                case TYPE_GOOGLE:
+                case GOOGLE:
                     return loginAPI.registerUsingGoogle(parameters, accessToken);
-                case TYPE_FACEBOOK:
+                case FACEBOOK:
                     return loginAPI.registerUsingFacebook(parameters, accessToken);
-                case TYPE_MICROSOFT:
+                case MICROSOFT:
                     return loginAPI.registerUsingMicrosoft(parameters, accessToken);
             }
             // normal email address login

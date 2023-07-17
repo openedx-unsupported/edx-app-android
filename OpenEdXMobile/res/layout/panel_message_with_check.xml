@@ -1,33 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_message_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/registration_message_panel_margin"
-    android:layout_marginTop="@dimen/widget_margin_half"
-    android:layout_marginEnd="@dimen/registration_message_panel_margin"
-    android:background="@drawable/rectangle_border_background"
-    android:orientation="horizontal">
+    android:layout_margin="@dimen/edx_x_quarter_margin"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/message_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="@dimen/widget_margin_half"
-        android:layout_marginEnd="@dimen/widget_margin_half"
-        android:contentDescription="@null"
-        android:gravity="center"
-        app:srcCompat="@drawable/ic_check" />
-
-    <TextView
-        android:id="@+id/message_body"
-        style="@style/regular_text"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/widget_margin"
-        android:gravity="start"
-        android:text="@string/error_message"
-        android:textSize="@dimen/edx_x_small" />
+        android:background="@drawable/success_alert_rounded_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/dialog_padding_material">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/ic_xx_large"
+            android:layout_height="@dimen/ic_xx_large"
+            android:contentDescription="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_green_check" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            style="@style/bold_edx_black_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_margin"
+            android:textSize="@dimen/edx_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="@+id/icon"
+            app:lineHeight="@dimen/widget_margin_x_double"
+            tools:text="@string/sign_up_with_google_ok" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/message"
+            style="@style/regular_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_half_margin"
+            android:gravity="start"
+            android:text="@string/sign_up_with_social_ok"
+            android:textColor="@color/neutralXXDark"
+            android:textSize="@dimen/edx_small"
+            app:layout_constraintEnd_toEndOf="@id/title"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:lineHeight="@dimen/widget_margin_x_double" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/msg_complete_registration"
+        style="@style/bold_edx_black_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/edx_default_margin"
+        android:text="@string/complete_registration"
+        android:textSize="@dimen/edx_small" />
+
 </LinearLayout>

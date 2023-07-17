@@ -1,36 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_register_edit_text_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/registration_field_vertical_padding"
-    android:paddingBottom="@dimen/registration_field_vertical_padding"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/edx_default_margin">
 
-    <org.edx.mobile.view.custom.EdxTextInputLayout
-        android:id="@+id/register_edit_text_til"
-        style="@style/Widget.Design.TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/neutralXXDark">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout"
+        style="@style/edX.Widget.InputLayout"
+        app:errorTextAppearance="@style/registration_error_message"
+        app:helperTextTextAppearance="@style/registration_instruction_message">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/register_edit_text_tilEt"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:textColor="@color/neutralBlack"
-            android:focusableInTouchMode="true"/>
-    </org.edx.mobile.view.custom.EdxTextInputLayout>
+            android:inputType="textEmailAddress"
+            android:maxLength="100" />
 
-    <TextView
-        android:id="@+id/input_instructions"
-        style="@style/registration_instruction_message"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/input_error"
-        style="@style/registration_error_message"
-        android:visibility="gone" />
-
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import org.edx.mobile.base.PresenterTest;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.view.login.LoginPresenter;
 import org.junit.Test;
 import org.mockito.Mock;
 

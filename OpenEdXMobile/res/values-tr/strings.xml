@@ -39,22 +39,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">Bu özellik aktif bir internet bağlantısı gerektiriyor.</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">Kullanıcı adı veya e-posta adresi</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">E-posta adresi</string>
   <!--Hint text for password field-->
   <string name="password">Parola</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">Parolanızı mı unuttunuz?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Giriş</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Giriş düğmesi</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Lütfen bekleyin</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Giriş yapılıyor</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Hata Mesajı</string>
   <!--Generic error during log in-->
@@ -72,7 +64,6 @@
   <string name="tos_and_honor_code">{platform_name} Hizmet Şartları ve Etik Kuralları</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">Gizlilik Politikası</string>
-  <string name="login_title">Giriş</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Kapat</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -422,8 +413,6 @@
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Yeni bir maceraya hazır mısın?</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">Ya da şununla giriş yap </string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -439,9 +428,6 @@
   <string name="already_have_an_account">Hesabın var mı? Giriş yap</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Üye ol ve öğrenmeye başla</string>
-  <!--In Register screen-->
-  <string name="register_with">Şununla kaydol </string>
-  <string name="or_register_with_email">ya da e-posta ile kayıt ol</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">Kayıt ol</string>
@@ -458,14 +444,8 @@
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>Tüm dersleri keşfedin</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Seçimlik alanları göster</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Seçimlik alanları gizle</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Hesabımı oluştur</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Hesabımı oluştur düğmesi</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Hesap oluşturuluyor...</string>
   <!--Registration screen title-->
