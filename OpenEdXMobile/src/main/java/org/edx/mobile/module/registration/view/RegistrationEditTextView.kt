@@ -65,7 +65,7 @@ open class RegistrationEditTextView(
                     isValidInput()
                     hasFocusLost = true
                 } else {
-                   setInstructions(mField.instructions)
+                    setInstructions(mField.instructions)
                 }
             }
         }

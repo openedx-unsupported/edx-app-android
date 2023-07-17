@@ -8,7 +8,9 @@
     android:background="@color/neutralWhiteT"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/toolbar" />
+    <include
+        layout="@layout/toolbar"
+        android:background="@color/neutralWhite" />
 
     <ScrollView
         android:id="@+id/scrollview"
