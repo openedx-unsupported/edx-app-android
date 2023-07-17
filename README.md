@@ -24,7 +24,7 @@ This project is meant to be built using Android Studio. It can also be built fro
 
         git clone https://github.com/openedx/edx-app-android
 
-2. Setup the Android Studio. The latest tested Android Studio version is v3.3.2, you can download it from [the previous versions archive](https://developer.android.com/studio/archive). (You can find further details to run the project on the said version of Android Studio on this [PR](https://github.com/openedx/edx-app-android/pull/1264).
+2. Setup the Android Studio. The latest tested Android Studio version is Flamingo | 2022.2.1 Patch 2, you can download it from [the previous versions archive](https://developer.android.com/studio/archive).
 
 3. Open Android Studio and choose **Open an Existing Android Studio Project**
 
@@ -74,7 +74,7 @@ There are 3 Build Variants in this project:
 
 - **prodDebug**: Uses prod flavor for debug builds.
 - **prodDebuggable**: Uses prod flavor for debug builds with debugging enabled.
-- **prodRelease**: Uses prod flavor for release builds that'll work on devices with Android 4.4.x (KitKat) and above.
+- **prodRelease**: Uses prod flavor for release builds that'll work on devices with Android 5.0.x (Lollipop) and above.
 
 Building For Release
 --------------------
@@ -135,19 +135,6 @@ We're working on making it easier for Open edX installations to apply customizat
 
 Frequently Asked Questions
 ==========================
-**Q:** I see an error that mentions "Unsupported major.minor version 51.0". How do I fix this?
-
-**A:** Our build system requires Java 7 or later. If you see this error, install Java 7 or later.
-
-	 You will also need to specify the new JDK version in Android Studio. Refer to this Stack Overflow entry for help doing so:
-
-	 http://stackoverflow.com/questions/30631286/how-to-specify-the-jdk-version-in-android-studio
-
-**Q:** After I upgraded to Android Studio v2.3, I've been facing alot of issues while compiling/building the project. How do I fix this?
-
-**A:** We recently upgraded our project to support Android Studio v2.3.x and below. After the upgrade changes done in [PR #938](https://github.com/openedx/edx-app-android/pull/938), we too faced some issues.
-The fixes for the common issues can be seen in the [Issues section](https://github.com/openedx/edx-app-android/issues) of this GitHub project. The most common and helpful issue with the fixes is [Issue #976](https://github.com/openedx/edx-app-android/issues/976).
-
 **Q:** I want to use Firebase in my project, where do I place my [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) file?
 
 **A:** You don’t need to place the [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) into the project, we are generating it through gradle script ([AndroidHelper.gradle](https://github.com/openedx/edx-app-android/blob/master/OpenEdXMobile/gradle_scripts/AndroidHelper.gradle#L15)) that picks keys and values required in the [google-services.json](https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file) file from the [app's configuration file](https://github.com/openedx/edx-app-android/blob/master/OpenEdXMobile/default_config/config.yaml). For configuration details [see](https://openedx.atlassian.net/wiki/spaces/LEARNER/pages/48792067/App+Configuration+Flags)
