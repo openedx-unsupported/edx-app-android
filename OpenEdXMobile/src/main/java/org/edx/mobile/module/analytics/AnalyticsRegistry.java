@@ -86,9 +86,9 @@ public class AnalyticsRegistry implements Analytics {
     }
 
     @Override
-    public void trackUserFindsCourses() {
+    public void trackUserFindsCourses(int enrolledCoursesCount) {
         for (Analytics service : services) {
-            service.trackUserFindsCourses();
+            service.trackUserFindsCourses(enrolledCoursesCount);
         }
     }
 

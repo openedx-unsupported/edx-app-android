@@ -289,12 +289,13 @@ public class FirebaseAnalytics implements Analytics {
     }
 
     @Override
-    public void trackUserFindsCourses() {
+    public void trackUserFindsCourses(int enrolledCoursesCount) {
         final FirebaseEvent event = new FirebaseEvent(Events.FIND_COURSES,
                 Values.USER_FIND_COURSES);
 
         //Add category for Google Analytics
         event.addCategoryToBiEvents(Values.USER_ENGAGEMENT, Values.COURSE_DISCOVERY);
+        event.putInt(Keys.ENROLLED_COURSES_COUNT, enrolledCoursesCount);
         logFirebaseEvent(event.getName(), event.getBundle());
     }
 

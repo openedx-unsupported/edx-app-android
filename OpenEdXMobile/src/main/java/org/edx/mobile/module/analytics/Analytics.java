@@ -222,8 +222,10 @@ public interface Analytics {
 
     /**
      * This function is used to track if user clicks on Find Courses
+     *
+     * @param enrolledCoursesCount Count of Enrolled courses
      */
-    void trackUserFindsCourses();
+    void trackUserFindsCourses(int enrolledCoursesCount);
 
     /**
      * Track if user clicks on Create Account button on Registration screen.
@@ -732,6 +734,7 @@ public interface Analytics {
         String ALERT_ACTION = "alert_action";
         String ERROR = "error";
         String ERROR_ACTION = "error_action";
+        String ENROLLED_COURSES_COUNT = "enrolled_courses_count";
     }
 
     interface Values {
