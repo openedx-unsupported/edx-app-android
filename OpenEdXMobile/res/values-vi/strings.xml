@@ -38,22 +38,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">Tính năng này yêu cầu có kết nối mạng.</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">Tên đăng nhập hoặc dịa chỉ e-mail</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">Địa chỉ e-mail</string>
   <!--Hint text for password field-->
   <string name="password">Mật khẩu</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">Quên mật khẩu?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Đăng nhập</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Nút đăng nhập</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Vui lòng đợi</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Đang đăng nhập</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Thông báo lỗi</string>
   <!--Generic error during log in-->
@@ -71,7 +63,6 @@
   <string name="tos_and_honor_code">{platform_name} Điều khoản dịch vụ và Honor Code</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">Chính sách Bảo mật</string>
-  <string name="login_title">Đăng nhập</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Đóng</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -411,8 +402,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Tìm kiếm thử thách mới?</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">Hoặc đăng nhập với</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -427,9 +416,6 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <string name="already_have_an_account">Đã có tài khoản? Đăng nhập ngay</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Đăng ký và bắt đầu học</string>
-  <!--In Register screen-->
-  <string name="register_with">Đăng ký với</string>
-  <string name="or_register_with_email">hoặc đăng ký với email</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <!--Button leading user to log in screen-->
@@ -439,14 +425,8 @@ Nếu bạn vẫn chưa nhận được sau ít phút, hãy kiểm tra thư mụ
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Hiển thị những trường tùy chọn</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Ẩn những trường tùy chọn</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Tạo Tài khoản</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Nút tạo tài khoản</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Tài khoản đang được tạo...</string>
   <!--Registration screen title-->

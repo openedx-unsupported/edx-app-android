@@ -1,172 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/cl_root"
+    <include
+        layout="@layout/toolbar"
+        android:background="@color/neutralWhite" />
+
+    <ScrollView
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:background="@android:color/white"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/toolbar" />
-
-        <ScrollView
-            android:id="@+id/root_view"
+        <LinearLayout
+            android:id="@+id/ll_login_form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/edx_default_margin">
 
-            <LinearLayout
-                android:id="@+id/top_layout"
-                android:layout_width="match_parent"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/login_logo"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/login_layout_bottom_margin"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/edx_default_margin"
+                android:contentDescription="@string/phonetic_app_name"
+                app:srcCompat="@drawable/login_screen_logo" />
 
-                <FrameLayout
-                    android:id="@+id/fl_logo"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/login_edx_logo_height"
-                    android:layout_marginStart="@dimen/login_margin_horizontal"
-                    android:layout_marginTop="@dimen/login_logo_margin_top"
-                    android:layout_marginEnd="@dimen/login_margin_horizontal"
-                    android:layout_marginBottom="@dimen/login_logo_margin_bottom">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameWrapper"
+                style="@style/edX.Widget.InputLayout"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:hint="@string/email_username">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/login_map"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:contentDescription="@null"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/login_screen_image" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/login_logo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/phonetic_app_name"
-                        app:srcCompat="@drawable/login_screen_logo" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_login_form"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingStart="@dimen/login_margin_horizontal"
-                    android:paddingEnd="@dimen/login_margin_horizontal">
+                    android:inputType="textEmailAddress"
+                    android:maxLength="100" />
 
-                    <org.edx.mobile.view.custom.EdxTextInputLayout
-                        android:id="@+id/usernameWrapper"
-                        style="@style/Widget.Design.TextInputLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/email_username"
-                        android:paddingStart="@dimen/login_field_horizontal_padding"
-                        android:paddingEnd="@dimen/login_field_horizontal_padding"
-                        android:textColorHint="@color/neutralXXDark">
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/email_et"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:maxLength="100" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordWrapper"
+                style="@style/edX.Widget.InputLayout"
+                android:layout_marginTop="@dimen/container_padding"
+                android:hint="@string/password"
+                app:endIconMode="password_toggle">
 
-                    </org.edx.mobile.view.custom.EdxTextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:maxLength="100" />
 
-                    <org.edx.mobile.view.custom.EdxTextInputLayout
-                        android:id="@+id/passwordWrapper"
-                        style="@style/Widget.Design.TextInputLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:paddingStart="@dimen/login_field_horizontal_padding"
-                        android:paddingEnd="@dimen/login_field_horizontal_padding"
-                        android:textColorHint="@color/neutralXXDark">
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/password_et"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/edx_half_margin"
-                            android:inputType="textPassword"
-                            android:maxLength="100" />
+            <LinearLayout
+                android:id="@+id/login_button_layout"
+                style="@style/edX.Widget.SignInButtonLayout"
+                android:contentDescription="@string/login_btn"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                    </org.edx.mobile.view.custom.EdxTextInputLayout>
+                <TextView
+                    android:id="@+id/login_btn_tv"
+                    style="@style/edX.Widget.SignInButton"
+                    android:text="@string/login_title" />
 
-                    <TextView
-                        android:id="@+id/forgot_password_tv"
-                        style="@style/semibold_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/edx_half_margin"
-                        android:background="@drawable/selectable_box_overlay"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="@string/forgot_password"
-                        android:textColor="@color/infoBase"
-                        android:textSize="@dimen/edx_x_small" />
-
-                    <LinearLayout
-                        android:id="@+id/login_button_layout"
-                        style="@style/edX.Widget.SignInButtonLayout"
-                        android:contentDescription="@string/login_btn"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/login_btn_tv"
-                            style="@style/edX.Widget.SignInButton"
-                            android:text="@string/login" />
-
-                        <include
-                            android:id="@+id/progress"
-                            layout="@layout/button_progress_indicator" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/panel_login_social"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <org.edx.mobile.view.custom.DividerWithTextView
-                            android:id="@+id/text_alternate_sign_in"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/or_sign_in_with" />
-
-                        <include
-                            android:id="@+id/social_auth"
-                            layout="@layout/panel_social_auth" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/end_user_agreement_tv"
-                        style="@style/agreement_text_style"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/by_signing_in" />
-
-                    <TextView
-                        android:id="@+id/version_env_tv"
-                        style="@style/regular_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/edx_margin"
-                        android:gravity="center_horizontal"
-                        android:text=""
-                        android:textColor="@color/transparent_black_80"
-                        android:textSize="@dimen/edx_xxx_small"
-                        android:visibility="invisible" />
-                </LinearLayout>
+                <include
+                    android:id="@+id/progress"
+                    layout="@layout/button_progress_indicator" />
             </LinearLayout>
-        </ScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+
+            <TextView
+                android:id="@+id/forgot_password_tv"
+                style="@style/medium_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/edx_default_margin"
+                android:background="@drawable/selectable_rounded_box_overlay"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="@dimen/edx_half_margin"
+                android:text="@string/forgot_password"
+                android:textColor="@color/neutralXXDark"
+                android:textSize="@dimen/edx_small" />
+
+            <include
+                android:id="@+id/social_auth"
+                layout="@layout/panel_social_auth" />
+
+            <TextView
+                android:id="@+id/end_user_agreement_tv"
+                style="@style/agreement_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/by_signing_in" />
+
+            <TextView
+                android:id="@+id/version_env_tv"
+                style="@style/regular_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edx_margin"
+                android:gravity="center_horizontal"
+                android:text=""
+                android:textColor="@color/transparent_black_80"
+                android:textSize="@dimen/edx_xxx_small"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

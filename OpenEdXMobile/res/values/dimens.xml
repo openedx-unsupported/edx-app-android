@@ -17,7 +17,6 @@
     <dimen name="dialog_padding_top_material">18dp</dimen>
 
     <!-- Navigation Drawer -->
-    <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="drawer_profile_image_border_width">@dimen/image_border_width</dimen>
     <dimen name="drawer_app_version_text">12sp</dimen>
 
@@ -47,29 +46,6 @@
     <dimen name="course_item_horizontal_padding">9dp</dimen>
     <dimen name="course_section_header_margin">22dp</dimen>
     <dimen name="course_section_header_height">40dp</dimen>
-
-    <!-- Sign in dimensions-->
-    <dimen name="login_edx_logo_height">125dp</dimen>
-    <dimen name="login_logo_margin_top">20dp</dimen>
-    <dimen name="login_logo_margin_bottom">15dp</dimen>
-    <dimen name="login_margin_horizontal">44dp</dimen>
-    <dimen name="login_social_divider_margin_top">20dp</dimen>
-    <dimen name="login_social_divider_margin_bottom">15dp</dimen>
-    <dimen name="login_field_horizontal_padding">-4dp</dimen>
-    <dimen name="login_layout_bottom_margin">3dp</dimen>
-    <dimen name="launch_button_top_margin">25dp</dimen>
-    <dimen name="launch_button_bottom_margin">35dp</dimen>
-
-    <!-- Sign up -->
-    <dimen name="signup_social_title_margin">5dp</dimen>
-    <dimen name="signup_social_title_margin_large">13dp</dimen>
-    <dimen name="signup_social_title_margin_bottom">6dp</dimen>
-    <dimen name="registration_field_vertical_padding">2dp</dimen>
-    <dimen name="registration_field_horizontal_padding">2dp</dimen>
-    <dimen name="registration_message_panel_margin">2dp</dimen>
-    <dimen name="registration_spinner_horizontal_padding_start">-10dp</dimen>
-    <dimen name="registration_spinner_horizontal_padding_end">24dp</dimen>
-    <dimen name="social_auth_bottom_margin">5dp</dimen>
 
     <!-- Switch -->
     <dimen name="switch_corner_radius">3dp</dimen>
@@ -234,7 +210,6 @@
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
     <dimen name="button_icon_horizontal_padding">20dp</dimen>
-    <dimen name="divider_with_text_margin">12dp</dimen>
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>
     <dimen name="container_padding">12dp</dimen>
@@ -242,16 +217,6 @@
     <dimen name="edx_default_margin">16dp</dimen>
     <dimen name="edx_default_margin_double">32dp</dimen>
     <dimen name="profile_view_button_height">36dp</dimen>
-
-    <!-- Social platforms -->
-    <dimen name="social_btn_radius">3dp</dimen>
-    <dimen name="social_btn_min_height">40dp</dimen>
-    <dimen name="social_btn_divider_width">@dimen/edx_divider_length</dimen>
-    <dimen name="social_btn_icon_size">24dp</dimen>
-    <dimen name="social_btn_margin">8dp</dimen>
-    <dimen name="social_btn_divider_height">40dp</dimen>
-    <dimen name="social_btn_text_size">14sp</dimen>
-    <dimen name="social_btn_height">40dp</dimen>
 
     <!-- Segmented Control Dimensions -->
     <dimen name="edx_segmented_control_start_corner">5dp</dimen>

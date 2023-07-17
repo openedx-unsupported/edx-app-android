@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_register_auto_complete"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_auto_complete"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/registration_field_vertical_padding"
-    android:paddingBottom="@dimen/registration_field_vertical_padding">
+    android:paddingTop="@dimen/edx_x_quarter_margin"
+    android:paddingBottom="@dimen/edx_x_quarter_margin">
 
-    <org.edx.mobile.view.custom.EdxTextInputLayout
-        android:id="@+id/input_wrapper_auto_complete"
-        style="@style/Widget.Design.TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/neutralXXDark">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/auto_complete_layout"
+        style="@style/edX.Widget.InputLayout"
+        android:textColorHint="@color/neutralXXDark"
+        app:endIconDrawable="@drawable/auto_complete_end_icon_selector"
+        app:endIconMode="dropdown_menu"
+        app:errorTextAppearance="@style/registration_error_message"
+        app:helperTextTextAppearance="@style/registration_instruction_message">
 
         <org.edx.mobile.module.registration.view.RegistrationOptionAutoCompleteTextView
-            android:id="@+id/input_auto_complete"
+            android:id="@+id/et_auto_complete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -24,18 +26,10 @@
             android:imeOptions="actionDone"
             android:inputType="textAutoComplete"
             android:maxLines="1"
-            android:textColorHint="@color/neutralXXDark" />
-    </org.edx.mobile.view.custom.EdxTextInputLayout>
-
-    <TextView
-        android:id="@+id/input_auto_complete_instructions"
-        style="@style/registration_instruction_message"
-        android:visibility="visible"
-        tools:text="error text here" />
-
-    <TextView
-        android:id="@+id/input_auto_complete_error"
-        style="@style/registration_error_message"
-        android:visibility="visible"
-        tools:text="error text here" />
+            android:minHeight="@dimen/auth_panel_btn_height"
+            android:paddingStart="@dimen/edx_default_margin"
+            android:paddingEnd="@dimen/edx_default_margin"
+            android:textColorHint="@color/neutralXXDark"
+            android:textSize="@dimen/edx_small" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

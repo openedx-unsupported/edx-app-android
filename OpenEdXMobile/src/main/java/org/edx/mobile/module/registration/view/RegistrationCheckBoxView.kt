@@ -9,7 +9,7 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionLis
 
 class RegistrationCheckBoxView(
     field: RegistrationFormField,
-    view: View
+    view: View,
 ) : IRegistrationFieldView {
 
     private val binding: ViewRegisterCheckboxBinding = ViewRegisterCheckboxBinding.bind(view)
@@ -48,7 +48,7 @@ class RegistrationCheckBoxView(
         binding.registerCheckbox.isEnabled = enabled
     }
 
-    override fun setActionListener(actionListener: IActionListener?) {
+    override fun setActionListener(actionListener: IActionListener) {
         this.actionListener = actionListener
     }
 }
