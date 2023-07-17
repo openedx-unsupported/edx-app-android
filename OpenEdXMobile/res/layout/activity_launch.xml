@@ -25,9 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/edx_quadruple_margin"
-            android:layout_marginTop="@dimen/launch_button_top_margin"
+            android:layout_marginTop="@dimen/widget_margin_x_double"
             android:layout_marginEnd="@dimen/edx_quadruple_margin"
-            android:layout_marginBottom="@dimen/launch_button_bottom_margin"
+            android:layout_marginBottom="@dimen/edx_default_margin_double"
             android:gravity="center"
             android:orientation="vertical">
 

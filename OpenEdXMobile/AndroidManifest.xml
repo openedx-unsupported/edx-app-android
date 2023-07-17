@@ -91,15 +91,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="org.edx.mobile.view.LoginActivity"
+            android:name="org.edx.mobile.view.login.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
-            android:name="org.edx.mobile.view.RegisterActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <!--Intent filter to capture System Browser or Authenticator calling back to our app after sign-in-->

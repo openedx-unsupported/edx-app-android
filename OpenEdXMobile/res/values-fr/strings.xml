@@ -39,22 +39,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">Cette options requiert une connexion Internet.</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">Nom d\'utilisateur ou adresse e-mail</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">Adresse e-mail</string>
   <!--Hint text for password field-->
   <string name="password">Mot de passe</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">Mot de passe oublié ?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Connectez-vous</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Bouton de connexion</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Veuillez patienter</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Connexion en cours</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Message d\'erreur</string>
   <!--Generic error during log in-->
@@ -72,7 +64,6 @@
   <string name="tos_and_honor_code">les conditions d\'utilisation {platform_name}</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">politique de confidentialité</string>
-  <string name="login_title">Connexion</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Fermer</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -426,8 +417,6 @@
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">À la recherche d\'un nouveau challenge?</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">Ou se connecter avec</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -443,9 +432,6 @@
   <string name="already_have_an_account">Vous avez déjà un compte ? Connectez-vous</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Inscrivez-vous et commencez à apprendre</string>
-  <!--In Register screen-->
-  <string name="register_with">S\'inscrire avec</string>
-  <string name="or_register_with_email">ou s\'inscrire avec un email</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">S\'inscrire</string>
@@ -462,14 +448,8 @@
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>Parcourir tous les cours</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Montrer les champs optionnels</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Cacher les champs optionnels</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Créer mon compte</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Bouton Créer mon compte</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Créer un compte...</string>
   <!--Registration screen title-->

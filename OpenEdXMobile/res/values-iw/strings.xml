@@ -39,22 +39,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">מאפיין זה מצריך חיבור אינטרנט פעיל.</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">שם משתמש או כתובת דואר אלקטרוני</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">כתובת דוא\"ל</string>
   <!--Hint text for password field-->
   <string name="password">סיסמה</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">שכחת את סיסמתך?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">התחבר</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">כפתור כניסה</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">אנא המתינ</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">נכנס</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">הודעת שגיאה</string>
   <!--Generic error during log in-->
@@ -72,7 +64,6 @@
   <string name="tos_and_honor_code">תנאי השירות וקוד הכבוד ב-{platform_name}</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">מדיניות פרטיות</string>
-  <string name="login_title">היכנס</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">סגור</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
@@ -424,8 +415,6 @@
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">מחפש אתגרים חדשים?</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">או היכנס באמצעות</string>
   <!--Facebook login method-->
   <string name="facebook_text">פייסבוק</string>
   <!--Google login method-->
@@ -441,9 +430,6 @@
   <string name="already_have_an_account">כבר יש לך חשבון? התחבר</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">הירשם והתחל ללמוד</string>
-  <!--In Register screen-->
-  <string name="register_with">הירשם באמצעות</string>
-  <string name="or_register_with_email">או הירשמו באמצעות אימייל</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">הרשמה</string>
@@ -460,14 +446,8 @@
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>דפדוף בין כל הקורסים</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">הצג שדות רשות</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">הסתר שדות אופציונלים</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">צור את חשבוני</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">כפתור צור את החשבון שלי</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">צור חשבון...</string>
   <!--Registration screen title-->

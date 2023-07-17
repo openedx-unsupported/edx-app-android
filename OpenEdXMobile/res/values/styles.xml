@@ -30,6 +30,7 @@
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
         <item name="fontItalic">@font/inter_italic</item>
         <item name="fontRegular">@font/inter_regular</item>
+        <item name="fontMedium">@font/inter_medium</item>
         <item name="fontSemiBoldItalic">@font/inter_semi_bold_italic</item>
         <item name="fontSemiBold">@font/inter_semi_bold</item>
         <item name="secondaryFontRegular">@font/roboto_mono_regular</item>
@@ -344,8 +345,11 @@
         <item name="android:textColor">@color/neutralXDark</item>
         <item name="android:textColorLink">@color/primaryDarkColor</item>
         <item name="android:gravity">start</item>
-        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:layout_marginTop">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/edx_default_margin</item>
         <item name="lineHeight">@dimen/edx_x_small</item>
+        <item name="lineSpacing">@dimen/edx_x_quarter_margin</item>
     </style>
 
     <!-- Styles from the edX style guide will be nested under "edX" -->
@@ -374,8 +378,9 @@
 
     <style name="edX.Widget.SignInButtonLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/edx_button_height</item>
-        <item name="android:layout_marginTop">@dimen/edx_margin</item>
+        <item name="android:layout_height">@dimen/upgrade_now_button_height</item>
+        <item name="android:layout_marginTop">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/edx_default_margin</item>
         <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
@@ -583,5 +588,37 @@
     <style name="edX.Widget.TertiaryActionButton" parent="edX.Widget.PrimaryActionButton">
         <item name="android:background">@color/primaryBaseColor</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="edX.Widget.SocialLogin" parent="android:Widget.Material.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/upgrade_now_button_height</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:foreground">@drawable/selectable_rounded_box_overlay</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">start</item>
+        <item name="android:paddingStart">@dimen/edx_margin</item>
+        <item name="android:paddingEnd">@dimen/edx_margin</item>
+        <item name="backgroundTint">@null</item>
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">start</item>
+        <item name="iconPadding">@dimen/edx_margin</item>
+    </style>
+
+    <style name="edX.Widget.InputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="minHeight">@dimen/auth_panel_btn_height</item>
+        <item name="hintTextColor">@color/neutralXXDark</item>
+        <item name="boxStrokeColor">@color/neutralXDark</item>
+        <item name="boxStrokeErrorColor">@color/errorLight</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="endIconMode">none</item>
+        <item name="boxCornerRadiusTopStart">0dp</item>
+        <item name="boxCornerRadiusTopEnd">0dp</item>
+        <item name="boxCornerRadiusBottomStart">0dp</item>
+        <item name="boxCornerRadiusBottomEnd">0dp</item>
     </style>
 </resources>

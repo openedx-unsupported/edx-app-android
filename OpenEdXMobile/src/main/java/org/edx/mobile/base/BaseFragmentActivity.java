@@ -372,20 +372,17 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     /**
-     * Blocks touch event for this activity.
-     * Use {@link #unblockTouch()} method to unblock and activate touch events.
+     * Blocks/Unblocks touch event for this activity.
+     *
+     * @param isEnable flag to block/unblock touch
      */
-    protected void blockTouch() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    /**
-     * Unblocks touch event for this activity.
-     * This might should be called to unblock touch events that were blocked by {@link #blockTouch()} method.
-     */
-    protected void unblockTouch() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    protected void setTouchEnabled(boolean isEnable) {
+        if (isEnable) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
     }
 
     protected void hideSoftKeypad() {

@@ -77,10 +77,6 @@
         <item name="android:textColor">@color/neutralDark</item>
     </style>
 
-    <style name="regular_white_text" parent="@style/regular_text">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="bold_edx_brand_primary_base_text" parent="@style/bold_text">
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
@@ -117,19 +113,6 @@
         <item name="lineHeight">@dimen/fullscreen_message_line_height</item>
     </style>
 
-    <style name="account_option" parent="@style/regular_white_text">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/height_drawer_menu</item>
-        <item name="android:textColor">@color/primaryBaseColor</item>
-        <item name="android:background">@drawable/selectable_box_overlay</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingBottom">@dimen/widget_margin</item>
-        <item name="android:paddingStart">@dimen/edx_margin</item>
-        <item name="android:paddingEnd">@dimen/edx_margin</item>
-        <item name="android:paddingTop">@dimen/widget_margin</item>
-        <item name="android:textSize">@dimen/edx_base</item>
-    </style>
-
     <style name="bold_text">
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
@@ -140,6 +123,10 @@
 
     <style name="regular_text">
         <item name="android:fontFamily">?attr/fontRegular</item>
+    </style>
+
+    <style name="medium_text">
+        <item name="android:fontFamily">?attr/fontMedium</item>
     </style>
 
     <style name="text_network_error" parent="@style/semibold_white_text">

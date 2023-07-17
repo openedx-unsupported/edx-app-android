@@ -51,7 +51,7 @@ public class SocialLoginDelegate {
     private String userEmail;
     private Feature feature;
 
-    public SocialLoginDelegate(@NonNull Activity activity, @NonNull Bundle savedInstanceState,
+    public SocialLoginDelegate(@NonNull Activity activity, @Nullable Bundle savedInstanceState,
                                @NonNull MobileLoginCallback callback, @NonNull Config config,
                                @NonNull LoginPrefs loginPrefs, @NonNull Feature feature) {
 
@@ -60,19 +60,19 @@ public class SocialLoginDelegate {
         this.loginPrefs = loginPrefs;
         this.feature = feature;
 
-        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, config);
+        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE, config);
         google.setCallback(accessToken -> {
             logger.debug("Google logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_GOOGLE);
         });
 
-        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, config);
+        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK, config);
         facebook.setCallback(accessToken -> {
             logger.debug("Facebook logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_FACEBOOK);
         });
 
-        microsoft = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, config);
+        microsoft = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT, config);
         microsoft.setCallback(new ISocial.Callback() {
             @Override
             public void onCancel() {
@@ -129,13 +129,13 @@ public class SocialLoginDelegate {
 
     private void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
         switch (socialType) {
-            case TYPE_FACEBOOK:
+            case FACEBOOK:
                 facebook.login();
                 break;
-            case TYPE_GOOGLE:
+            case GOOGLE:
                 google.login();
                 break;
-            case TYPE_MICROSOFT:
+            case MICROSOFT:
                 microsoft.login();
                 break;
         }
@@ -143,13 +143,13 @@ public class SocialLoginDelegate {
 
     private void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
         switch (socialType) {
-            case TYPE_FACEBOOK:
+            case FACEBOOK:
                 facebook.logout();
                 break;
-            case TYPE_GOOGLE:
+            case GOOGLE:
                 google.logout();
                 break;
-            case TYPE_MICROSOFT:
+            case MICROSOFT:
                 microsoft.logout();
                 break;
         }
@@ -180,11 +180,11 @@ public class SocialLoginDelegate {
 
     public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken, final SocialUserInfoCallback userInfoCallback) {
         SocialProvider socialProvider = null;
-        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
+        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK) {
             socialProvider = new FacebookProvider();
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
+        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE) {
             socialProvider = new GoogleProvider((GoogleOauth2) google);
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT) {
+        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT) {
             socialProvider = new MicrosoftProvide();
         }
 
