@@ -222,9 +222,10 @@ public interface Analytics {
 
     /**
      * This function is used to track if user clicks on Find Courses
-     * @param noOfEnrolledCourses Count of Enrolled courses
+     *
+     * @param enrolledCoursesCount Count of Enrolled courses
      */
-    void trackUserFindsCourses(int noOfEnrolledCourses);
+    void trackUserFindsCourses(int enrolledCoursesCount);
 
     /**
      * Track if user clicks on Create Account button on Registration screen.
