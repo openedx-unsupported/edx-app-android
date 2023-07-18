@@ -4,36 +4,41 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/neutralDark" />
             <stroke android:width="@dimen/edx_line" android:color="@color/black" />
+            <corners android:radius="@dimen/profile_switcher_radius" />
         </shape>
     </item>
     <item android:state_checked="true" android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/neutralDark" />
             <stroke android:width="@dimen/edx_hairline" android:color="@color/neutralDark" />
+            <corners android:radius="@dimen/profile_switcher_radius" />
         </shape>
     </item>
     <item android:state_checked="true" android:state_focused="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/primaryBaseColor" />
             <stroke android:width="@dimen/edx_line" android:color="@color/black" />
+            <corners android:radius="@dimen/profile_switcher_radius" />
         </shape>
     </item>
     <item android:state_checked="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/primaryBaseColor" />
             <stroke android:width="@dimen/edx_hairline" android:color="@color/primaryBaseColor" />
+            <corners android:radius="@dimen/profile_switcher_radius" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/white" />
             <stroke android:width="@dimen/edx_line" android:color="@color/black" />
+            <corners android:radius="@dimen/profile_switcher_radius" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
-            <stroke android:width="@dimen/edx_hairline" android:color="@color/neutralDark" />
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="@dimen/profile_switcher_radius" />
         </shape>
     </item>
 </selector>

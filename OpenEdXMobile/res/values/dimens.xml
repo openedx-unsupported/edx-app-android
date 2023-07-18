@@ -242,6 +242,7 @@
     <dimen name="edx_default_margin">16dp</dimen>
     <dimen name="edx_default_margin_double">32dp</dimen>
     <dimen name="profile_view_button_height">36dp</dimen>
+    <dimen name="profile_switcher_radius">7dp</dimen>
 
     <!-- Social platforms -->
     <dimen name="social_btn_radius">3dp</dimen>

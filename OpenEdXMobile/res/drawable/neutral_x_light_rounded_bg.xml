@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/neutralXLight" />
+    <stroke
+        android:width="@dimen/edx_divider_length"
+        android:color="@color/neutralXLight" />
+    <corners android:radius="@dimen/profile_switcher_radius" />
+</shape>

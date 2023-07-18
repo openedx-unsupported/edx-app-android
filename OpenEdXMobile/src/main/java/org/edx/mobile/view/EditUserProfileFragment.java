@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -485,14 +486,14 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(instructions);
         final RadioGroup group = view.findViewById(R.id.options);
-        {
-            final RadioButton optionOne = view.findViewById(R.id.option_one);
-            final RadioButton optionTwo = view.findViewById(R.id.option_two);
-            optionOne.setText(field.getOptions().getValues().get(0).getName());
-            optionOne.setTag(field.getOptions().getValues().get(0).getValue());
-            optionTwo.setText(field.getOptions().getValues().get(1).getName());
-            optionTwo.setTag(field.getOptions().getValues().get(1).getValue());
-        }
+
+        final RadioButton optionOne = view.findViewById(R.id.option_one);
+        final RadioButton optionTwo = view.findViewById(R.id.option_two);
+        optionOne.setText(field.getOptions().getValues().get(0).getName());
+        optionOne.setTag(field.getOptions().getValues().get(0).getValue());
+        optionTwo.setText(field.getOptions().getValues().get(1).getName());
+        optionTwo.setTag(field.getOptions().getValues().get(1).getValue());
+
         for (int i = 0; i < group.getChildCount(); i++) {
             final View child = group.getChildAt(i);
             child.setEnabled(!readOnly);
@@ -507,7 +508,16 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
             group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
+                    RadioButton selectedOption = group.findViewById(checkedId);
+                    String selectedTag = (String) selectedOption.getTag();
+
+                    if (checkedId == optionOne.getId()) {
+                        optionOne.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_right_to_left));
+                    } else {
+                        optionTwo.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_left_to_right));
+                    }
+
+                    switchListener.onSwitch(selectedTag);
                 }
             });
         }
