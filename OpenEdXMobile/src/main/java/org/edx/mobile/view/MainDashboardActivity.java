@@ -20,16 +20,21 @@ import org.edx.mobile.deeplink.DeepLink;
 import org.edx.mobile.deeplink.ScreenDef;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NewVersionAvailableEvent;
+import org.edx.mobile.http.notifications.SnackbarErrorNotification;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.InfoPrefs;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.AppStoreUtils;
 import org.edx.mobile.util.IntentFactory;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.Version;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -60,6 +65,7 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWhatsNew();
+        showIfRegistrationBecameLogin();
     }
 
     @Override
@@ -89,6 +95,29 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity {
             }
             if (shouldShowWhatsNew) {
                 environment.getRouter().showWhatsNewActivity(this);
+            }
+        }
+    }
+
+    /**
+     * Shows a logged-in message when a registered user tries to register again using social auth
+     */
+    private void showIfRegistrationBecameLogin() {
+        if (environment.getLoginPrefs().getAlreadyRegisteredLoggedIn()) {
+            environment.getLoginPrefs().setAlreadyRegisteredLoggedIn(false);
+
+            if (environment.getLoginPrefs().getAuthBackendType() != null &&
+                    !environment.getLoginPrefs().getAuthBackendType().equals(LoginPrefs.AuthBackend.PASSWORD.value())) {
+
+                final Map<String, CharSequence> map = new HashMap<>();
+                map.put(AppConstants.PLATFORM_NAME, environment.getConfig().getPlatformName());
+                map.put(AppConstants.SOCIAL_PROVIDER, environment.getLoginPrefs().getAuthBackendType());
+
+                String loginMsg = ResourceUtil.getFormattedString(getResources(),
+                        R.string.social_registration_became_login_message, map).toString();
+
+                new SnackbarErrorNotification(getBinding().getRoot())
+                        .showRegistrationBecameLoginSnackbar(loginMsg, !isLandscape());
             }
         }
     }

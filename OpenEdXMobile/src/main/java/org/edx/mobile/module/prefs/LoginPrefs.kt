@@ -89,8 +89,8 @@ class LoginPrefs @Inject constructor(
         set(emailAddress) = put(AUTH_EMAIL, emailAddress)
 
     var alreadyRegisteredLoggedIn: Boolean
-        get() = getBoolean(ALREADY_REGISTERED_LOGGED_IN, false)
-        set(isRegisteredAlready) = put(ALREADY_REGISTERED_LOGGED_IN, isRegisteredAlready)
+        get() = getBoolean(ALREADY_REGISTERED_BECAME_LOGGED_IN, false)
+        set(isRegisteredAlready) = put(ALREADY_REGISTERED_BECAME_LOGGED_IN, isRegisteredAlready)
 
     fun storeAuthTokenResponse(response: AuthResponse, backend: AuthBackend) {
         currentAuth = response
@@ -172,9 +172,11 @@ class LoginPrefs @Inject constructor(
         private const val PROFILE_IMAGE = "profile_image"
         private const val AUTH_TOKEN_SOCIAL = "facebook_token"
         private const val AUTH_TOKEN_BACKEND = "google_token"
+
         //This key is used to store the Auth type, either password or any social provider
         private const val ANALYTICS_KEY_BACKEND = "segment_backend"
-        private const val ALREADY_REGISTERED_LOGGED_IN = "already_registered_logged_in"
+        private const val ALREADY_REGISTERED_BECAME_LOGGED_IN =
+            "already_registered_became_logged_in"
 
         const val BACKEND_FACEBOOK = "facebook"
         const val BACKEND_GOOGLE = "google-oauth2"

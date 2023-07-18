@@ -33,12 +33,9 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
-import org.edx.mobile.module.prefs.LoginPrefs
-import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
-import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.adapters.MyCoursesAdapter
@@ -129,34 +126,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.myCourseList.adapter = adapter
         binding.myCourseList.onItemClickListener = adapter
 
-        welcomeMessage()
         initCourseObservers()
         courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.PERSISTABLE_CACHE)
 
         return binding.root
-    }
-
-    /**
-     * Method to show logged in message in case a user(already registered with a social provide) tries to register again
-     */
-    private fun welcomeMessage() {
-        if (environment.loginPrefs.alreadyRegisteredLoggedIn) {
-            environment.loginPrefs.alreadyRegisteredLoggedIn = false
-
-            environment.loginPrefs.authBackendType?.let { authType ->
-                if (LoginPrefs.AuthBackend.PASSWORD.value() != authType) {
-                    val loginMsg: String = ResourceUtil.getFormattedString(
-                        resources,
-                        R.string.register_became_login_message,
-                        hashMapOf<String, CharSequence>(
-                            AppConstants.PLATFORM_NAME to environment.config.platformName,
-                            AppConstants.SOCIAL_PROVIDER to authType
-                        )
-                    ).toString()
-                    SnackbarErrorNotification(binding.root).showRegisterBecameLoginSnackbar(loginMsg)
-                }
-            }
-        }
     }
 
     private fun initCourseObservers() {
@@ -203,6 +176,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                                 )
                             }
                         }
+
                         HttpStatus.UPGRADE_REQUIRED -> {
                             context?.let { context ->
                                 errorNotification.showError(
@@ -213,6 +187,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         }
                     }
                 }
+
                 (FullscreenLoaderDialogFragment
                     .getRetainedInstance(fragmentManager = childFragmentManager)?.isAdded == true) -> {
                     iapViewModel.dispatchError(
@@ -220,6 +195,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         errorMessage = it.message
                     )
                 }
+
                 else -> {
                     showError(it)
                 }
@@ -327,6 +303,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     showFullscreenLoader(event.iapFlowData)
                 }
             }
+
             IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE -> {
                 courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.LIVE)
             }

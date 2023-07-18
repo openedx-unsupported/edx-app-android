@@ -36,7 +36,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
 
     public static int COURSE_DATE_MESSAGE_DURATION = 5000;
     public static int COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION = 3000;
-    public static int REGISTERED_BECAME_LOGIN_DURATION = 8000;
+    public static int REGISTRATION_BECAME_LOGIN_DURATION = 8000;
 
     /**
      * Construct a new instance of the notification.
@@ -123,14 +123,18 @@ public class SnackbarErrorNotification extends ErrorNotification {
     }
 
     /**
-     * Show the a snackbar notification on login if a registered user tried to register again
+     * Show a notification if a registered social user tries to register again but logged in.
      *
-     * @param message Message to be displayed.
+     * @param message               Message to be displayed.
+     * @param isOrientationPortrait flag to check Screen Orientation
      */
-    public void showRegisterBecameLoginSnackbar(String message) {
-        snackbar = Snackbar.make(view, message, REGISTERED_BECAME_LOGIN_DURATION);
-        TextView textView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
-        textView.setLines(3);
+    public void showRegistrationBecameLoginSnackbar(String message, boolean isOrientationPortrait) {
+        snackbar = Snackbar.make(view, message, REGISTRATION_BECAME_LOGIN_DURATION);
+        // To remove ellipsis, set Snackbar lines to 3 for portrait orientation.
+        if (isOrientationPortrait) {
+            TextView textView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+            textView.setLines(3);
+        }
         snackbar.show();
     }
 

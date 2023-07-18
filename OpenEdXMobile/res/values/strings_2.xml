@@ -8,7 +8,7 @@
     <string name="label_leaving_the_app">Leaving the app</string>
     <!-- Dialog Alert Message for Open in browser -->
     <string name="leaving_the_app_message">You are now leaving the {platform_name} app and opening a browser.</string>
-    <!-- Message for already registered became login -->
-    <string name="register_became_login_message">You already set up an {platform_name} account with your
+    <!-- Message for already registered social user tries to register again -->
+    <string name="social_registration_became_login_message">You already set up an {platform_name} account with your
         {social_provider} account. You have been logged in with that account.</string>
 </resources>
