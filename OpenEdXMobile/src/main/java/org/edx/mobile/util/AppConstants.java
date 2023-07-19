@@ -31,6 +31,7 @@ public enum AppConstants {
     public static final String ICON_PLACEHOLDER = "icon";
 
     public static final String PLATFORM_NAME = "platform_name";
+    public static final String SOCIAL_PROVIDER = "social_provider";
     public static final String COURSE_NAME = "course_name";
     public static final String ASSIGNMENT_DUE = "Assignment Due";
     public static final String EMAIL = "email";

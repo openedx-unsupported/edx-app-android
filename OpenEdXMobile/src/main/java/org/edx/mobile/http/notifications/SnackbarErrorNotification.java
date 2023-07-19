@@ -2,6 +2,7 @@ package org.edx.mobile.http.notifications;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ public class SnackbarErrorNotification extends ErrorNotification {
 
     public static int COURSE_DATE_MESSAGE_DURATION = 5000;
     public static int COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION = 3000;
+    public static int REGISTRATION_BECAME_LOGIN_DURATION = 8000;
 
     /**
      * Construct a new instance of the notification.
@@ -118,6 +120,22 @@ public class SnackbarErrorNotification extends ErrorNotification {
      */
     public void showUpgradeSuccessSnackbar(int stringResId) {
         showError(stringResId, 0, 0, COURSE_UPGRADE_SUCCESS_MESSAGE_DURATION, null);
+    }
+
+    /**
+     * Show a notification if a registered social user tries to register again but logged in.
+     *
+     * @param message               Message to be displayed.
+     * @param isOrientationPortrait flag to check Screen Orientation
+     */
+    public void showRegistrationBecameLoginSnackbar(String message, boolean isOrientationPortrait) {
+        snackbar = Snackbar.make(view, message, REGISTRATION_BECAME_LOGIN_DURATION);
+        // To remove ellipsis, set Snackbar lines to 3 for portrait orientation.
+        if (isOrientationPortrait) {
+            TextView textView = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+            textView.setLines(3);
+        }
+        snackbar.show();
     }
 
     /**

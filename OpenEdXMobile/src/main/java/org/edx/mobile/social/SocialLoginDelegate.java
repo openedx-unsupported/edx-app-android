@@ -220,6 +220,9 @@ public class SocialLoginDelegate {
         protected void onPostExecute(AuthResponse result) {
             super.onPostExecute(result);
             if (result != null) {
+                if (feature == Feature.REGISTRATION) {
+                    environment.getLoginPrefs().setAlreadyRegisteredLoggedIn(true);
+                }
                 callback.onUserLoginSuccess();
             }
         }

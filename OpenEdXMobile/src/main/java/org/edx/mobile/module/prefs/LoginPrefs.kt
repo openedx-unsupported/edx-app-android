@@ -22,7 +22,7 @@ class LoginPrefs @Inject constructor(
         }
         set(response) = put(AUTH_JSON, gson.toJson(response))
 
-    var authBackendKeyForSegment: String?
+    var authBackendType: String?
         get() = getString(ANALYTICS_KEY_BACKEND)
         set(backend) = put(ANALYTICS_KEY_BACKEND, backend)
 
@@ -88,9 +88,13 @@ class LoginPrefs @Inject constructor(
         get() = getString(AUTH_EMAIL)
         set(emailAddress) = put(AUTH_EMAIL, emailAddress)
 
+    var alreadyRegisteredLoggedIn: Boolean
+        get() = getBoolean(ALREADY_REGISTERED_BECAME_LOGGED_IN, false)
+        set(isRegisteredAlready) = put(ALREADY_REGISTERED_BECAME_LOGGED_IN, isRegisteredAlready)
+
     fun storeAuthTokenResponse(response: AuthResponse, backend: AuthBackend) {
         currentAuth = response
-        authBackendKeyForSegment = backend.value()
+        authBackendType = backend.value()
     }
 
     fun storeRefreshTokenResponse(refreshTokenResponse: AuthResponse) {
@@ -104,7 +108,7 @@ class LoginPrefs @Inject constructor(
 
     fun clearAuthTokenResponse() {
         currentAuth = null
-        authBackendKeyForSegment = null
+        authBackendType = null
     }
 
     private fun clearSocialLoginToken() {
@@ -168,7 +172,11 @@ class LoginPrefs @Inject constructor(
         private const val PROFILE_IMAGE = "profile_image"
         private const val AUTH_TOKEN_SOCIAL = "facebook_token"
         private const val AUTH_TOKEN_BACKEND = "google_token"
+
+        //This key is used to store the Auth type, either password or any social provider
         private const val ANALYTICS_KEY_BACKEND = "segment_backend"
+        private const val ALREADY_REGISTERED_BECAME_LOGGED_IN =
+            "already_registered_became_logged_in"
 
         const val BACKEND_FACEBOOK = "facebook"
         const val BACKEND_GOOGLE = "google-oauth2"
