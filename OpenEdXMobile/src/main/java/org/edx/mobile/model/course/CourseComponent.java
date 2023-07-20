@@ -3,6 +3,7 @@ package org.edx.mobile.model.course;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -181,7 +182,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public void setBlockCount(BlockCount count) {
-        this.blockCount = blockCount;
+        this.blockCount = count;
     }
 
     @Override
@@ -448,7 +449,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof CourseComponent)) {
+        if (!(obj instanceof CourseComponent)) {
             return false;
         }
         CourseComponent other = (CourseComponent) obj;
@@ -578,5 +579,19 @@ public class CourseComponent implements IBlock, IPathNode {
             }
         }
         return sections;
+    }
+
+    @Nullable
+    public CourseComponent getFirstIncompleteComponent() {
+        for (CourseComponent block : children) {
+            if (!block.isCompleted()) {
+                return block;
+            }
+        }
+        if (children.size() > 0) {
+            return children.get(children.size() - 1);
+        } else {
+            return null;
+        }
     }
 }

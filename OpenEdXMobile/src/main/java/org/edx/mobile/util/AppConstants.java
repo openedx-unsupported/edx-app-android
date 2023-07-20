@@ -31,7 +31,7 @@ public enum AppConstants {
     public static final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
     public static final String BROWSER_PLAYSTORE_YOUTUBE_URI = "https://play.google.com/store/apps/details?id=" + YOUTUBE_PACKAGE_NAME;
 
-    public static final String ICON_PLACEHOLDER = "icon";
+    public static final String ICON_PLACEHOLDER = "{icon}";
 
     public static final String PLATFORM_NAME = "platform_name";
     public static final String SOCIAL_PROVIDER = "social_provider";

@@ -1,6 +1,121 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/course_navigation_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@color/toolbar_background_color">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+                <LinearLayout
+                    android:id="@+id/expanded_toolbar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryLightColor"
+                    android:orientation="vertical"
+                    android:padding="@dimen/edx_default_margin"
+                    app:layout_collapseMode="parallax">
+
+                    <android.widget.Space
+                        android:id="@+id/space"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/collapsed_toolbar_height" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/course_sub_section_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="?attr/fontRegular"
+                        android:textColor="@color/neutralWhiteT"
+                        android:textDirection="locale"
+                        android:textSize="@dimen/edx_small"
+                        tools:text="What is Happiness?" />
+
+                    <FrameLayout
+                        android:id="@+id/fl_units_drop_down"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/edx_x_quarter_margin">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/course_unit_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="?attr/fontBold"
+                            android:textColor="@color/neutralWhiteT"
+                            android:textDirection="locale"
+                            android:textSize="@dimen/edx_base"
+                            tools:text="Introducing Weekly Check In" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/collapsed_toolbar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/collapsed_toolbar_height"
+                    android:background="@color/primaryLightColor"
+                    android:contentInsetStart="0dp"
+                    app:contentInsetStart="0dp"
+                    app:layout_collapseMode="pin">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_collapsed_back"
+                            android:layout_width="@dimen/ic_base"
+                            android:layout_height="@dimen/ic_base"
+                            android:layout_marginStart="@dimen/widget_margin"
+                            android:rotation="180"
+                            android:tint="@color/neutralWhiteT"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            tools:ignore="ContentDescription" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/collapsed_toolbar_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/widget_margin"
+                            android:ellipsize="end"
+                            android:fontFamily="?attr/fontBold"
+                            android:maxLines="1"
+                            android:textAppearance="@style/CourseDashboardCollapsedToolbarTitle"
+                            android:textSize="@dimen/edx_small"
+                            android:textStyle="bold"
+                            tools:text="Introducing Weekly Check Ins" />
+
+                    </LinearLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:orientation="horizontal"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
