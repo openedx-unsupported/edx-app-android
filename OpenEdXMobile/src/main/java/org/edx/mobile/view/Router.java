@@ -34,6 +34,7 @@ import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
+import org.edx.mobile.view.app_nav.NewCourseUnitNavigationActivity;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.view.login.LoginActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
@@ -207,22 +208,6 @@ public class Router {
         );
     }
 
-    /**
-     * FIXME - it will bring to different view in the future
-     *
-     * @param activity
-     * @param model
-     */
-    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model) {
-        final Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
-        final Intent courseDetail = new Intent(activity, CourseAnnouncementsActivity.class);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
-    }
-
     public Intent getCourseOutlineIntent(Activity activity,
                                          EnrolledCoursesResponse courseData,
                                          CourseUpgradeResponse courseUpgradeData,
@@ -232,20 +217,36 @@ public class Router {
                 courseData, courseUpgradeData, courseComponentId, lastAccessedId, isVideosMode);
     }
 
-    public Intent getCourseUnitDetailIntent(Activity activity,
-                                            EnrolledCoursesResponse model,
+
+    public Intent getLegacyCourseUnitDetailIntent(Activity activity,
+                                                  EnrolledCoursesResponse model,
+                                                  CourseUpgradeResponse courseUpgradeData,
+                                                  String courseComponentId, boolean isVideosMode) {
+        return getCourseUnitDetailIntent(activity, model, courseUpgradeData, courseComponentId,
+                isVideosMode, CourseUnitNavigationActivity.class);
+    }
+
+    public Intent getNewCourseUnitDetailIntent(Activity activity, EnrolledCoursesResponse model,
+                                               CourseUpgradeResponse courseUpgradeData,
+                                               String courseComponentId, boolean isVideosMode) {
+        return getCourseUnitDetailIntent(activity, model, courseUpgradeData, courseComponentId,
+                isVideosMode, NewCourseUnitNavigationActivity.class);
+    }
+
+    public Intent getCourseUnitDetailIntent(Activity activity, EnrolledCoursesResponse model,
                                             CourseUpgradeResponse courseUpgradeData,
-                                            String courseComponentId, boolean isVideosMode) {
+                                            String courseComponentId, boolean isVideosMode,
+                                            Class<?> courseDetailActivityType) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putParcelable(EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetailIntent = new Intent(activity, CourseUnitNavigationActivity.class);
-        courseDetailIntent.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetailIntent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
-        courseDetailIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        return courseDetailIntent;
+        Intent courseDetail = new Intent(activity, courseDetailActivityType);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return courseDetail;
     }
 
     public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {

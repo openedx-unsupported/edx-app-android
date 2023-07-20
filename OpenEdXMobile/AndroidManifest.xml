@@ -165,6 +165,13 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
+            android:name="org.edx.mobile.view.app_nav.NewCourseUnitNavigationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="user"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
             android:name="org.edx.mobile.view.DownloadListActivity"
             android:label="@string/title_download"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />

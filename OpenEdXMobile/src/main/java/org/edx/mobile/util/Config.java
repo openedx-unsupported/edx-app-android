@@ -83,6 +83,8 @@ public class Config {
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
     private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
     private static final String ANNOUNCEMENTS_ENABLED = "ANNOUNCEMENTS_ENABLED";
+    private static final String NEW_DASHBOARD_ENABLED = "NEW_DASHBOARD_ENABLED";
+    private static final String NEW_COURSE_UNIT_NAVIGATION_ENABLED = "NEW_COURSE_UNIT_NAVIGATION_ENABLED";
 
     public static class DiscoveryConfig {
         @SerializedName("TYPE")
@@ -251,6 +253,9 @@ public class Config {
 
         @SerializedName("KEY")
         private String key;
+
+        @SerializedName("SECRET")
+        private String secret;
 
         public boolean isEnabled() {
             return mEnabled;
@@ -650,6 +655,14 @@ public class Config {
 
     public boolean isDownloadToSDCardEnabled() {
         return getBoolean(DOWNLOAD_TO_SD_CARD_ENABLED, false);
+    }
+
+    public boolean isNewDashboardEnabled() {
+        return getBoolean(NEW_DASHBOARD_ENABLED, false);
+    }
+
+    public boolean isNewCourseUnitNavigationEnabled() {
+        return getBoolean(NEW_COURSE_UNIT_NAVIGATION_ENABLED, false);
     }
 
     @NonNull

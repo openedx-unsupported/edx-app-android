@@ -384,21 +384,26 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 listView.clearChoices();
                 final CourseComponent component = adapter.getItem(position).getComponent();
-                if (component.isContainer()) {
-                    Intent courseOutlineIntent = environment.getRouter().getCourseOutlineIntent(requireActivity(),
+                Intent intent;
+                if (environment.getConfig().isNewDashboardEnabled() &&
+                        environment.getConfig().isNewCourseUnitNavigationEnabled()) {
+                    intent = environment.getRouter().getNewCourseUnitDetailIntent(requireActivity(),
+                            courseData, courseUpgradeData, component.getId(), isVideoMode);
+                    environment.getAnalyticsRegistry().trackScreenView(
+                            Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
+                } else if (component.isContainer()) {
+                    intent = environment.getRouter().getCourseOutlineIntent(requireActivity(),
                             courseData, courseUpgradeData, component.getId(), null, isVideoMode);
-                    courseUnitDetailLauncher.launch(courseOutlineIntent);
                 } else {
                     if (adapter.getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM) {
                         environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
                     }
-                    Intent courseUnitDetailIntent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
+                    intent = environment.getRouter().getLegacyCourseUnitDetailIntent(requireActivity(),
                             courseData, courseUpgradeData, component.getId(), isVideoMode);
-                    courseUnitDetailLauncher.launch(courseUnitDetailIntent);
-
                     environment.getAnalyticsRegistry().trackScreenView(
                             Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
                 }
+                courseUnitDetailLauncher.launch(intent);
             }
         });
 
@@ -445,7 +450,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     environment.getRouter().showDownloads(getActivity());
                 }
             };
-            adapter = new CourseOutlineAdapter(getActivity(), courseData, environment, downloadListener,
+            adapter = new CourseOutlineAdapter(requireActivity(), courseData, environment, downloadListener,
                     isVideoMode, isOnCourseOutline);
         }
     }
@@ -453,8 +458,15 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private void detectDeepLinking() {
         if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName)
                 && !TextUtils.isEmpty(courseComponentId)) {
-            Intent courseUnitDetailIntent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
-                    courseData, courseUpgradeData, courseComponentId, false);
+            Intent courseUnitDetailIntent;
+            if (environment.getConfig().isNewDashboardEnabled() &&
+                    environment.getConfig().isNewCourseUnitNavigationEnabled()) {
+                courseUnitDetailIntent = environment.getRouter().getNewCourseUnitDetailIntent(requireActivity(),
+                        courseData, courseUpgradeData, courseComponentId, isVideoMode);
+            } else {
+                courseUnitDetailIntent = environment.getRouter().getLegacyCourseUnitDetailIntent(requireActivity(),
+                        courseData, courseUpgradeData, courseComponentId, false);
+            }
             courseUnitDetailLauncher.launch(courseUnitDetailIntent);
             screenName = null;
         }

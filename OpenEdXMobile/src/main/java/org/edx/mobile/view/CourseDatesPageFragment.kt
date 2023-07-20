@@ -2,6 +2,7 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -83,14 +84,47 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
-                val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
-                    requireActivity(),
-                    courseData,
-                    null,
-                    blockId,
-                    false
+
+                environment.analyticsRegistry.trackDatesCourseComponentTapped(
+                    courseData.courseId,
+                    component.id,
+                    component.type.toString().lowercase(),
+                    link
                 )
+            } else {
+                showOpenInBrowserDialog(link)
+                if (blockId.isNotEmpty()) {
+                    environment.analyticsRegistry.trackUnsupportedComponentTapped(
+                        courseData.courseId,
+                        blockId,
+                        link
+                    )
+                }
+            }
+
+            if (blockId.isNotEmpty() && component != null) {
+                val courseUnitDetailIntent: Intent
+                if (environment.config.isNewDashboardEnabled &&
+                    environment.config.isNewCourseUnitNavigationEnabled
+                ) {
+                    courseUnitDetailIntent = environment.router.getNewCourseUnitDetailIntent(
+                        requireActivity(),
+                        courseData,
+                        null,
+                        component.id,
+                        false
+                    )
+                } else {
+                    courseUnitDetailIntent = environment.router.getLegacyCourseUnitDetailIntent(
+                        requireActivity(),
+                        courseData,
+                        null,
+                        blockId,
+                        false
+                    )
+                }
                 courseUnitDetailLauncher.launch(courseUnitDetailIntent)
+
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,

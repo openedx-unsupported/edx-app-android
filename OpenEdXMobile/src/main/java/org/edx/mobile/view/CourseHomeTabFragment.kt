@@ -245,26 +245,53 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
         itemView: LinearLayout, parentPosition: Int, childPosition: Int
     ) {
         val component = adapter.getItem(parentPosition, childPosition)
-        if (component?.isContainer == true) {
-            environment.router.getCourseOutlineIntent(
-                requireActivity(),
-                courseData,
-                courseUpgradeData,
-                component.id,
-                null,
-                false
-            )?.let { startActivity(it) }
+        component?.let {
+            if (environment.config.isNewDashboardEnabled &&
+                environment.config.isNewCourseUnitNavigationEnabled
+            ) {
+                environment.router.getNewCourseUnitDetailIntent(
+                    requireActivity(),
+                    courseData,
+                    courseUpgradeData,
+                    component.id,
+                    false
+                )?.let { startActivity(it) }
+            } else if (component.isContainer) {
+                environment.router.getCourseOutlineIntent(
+                    requireActivity(),
+                    courseData,
+                    courseUpgradeData,
+                    component.id,
+                    null,
+                    false
+                )?.let { startActivity(it) }
+            } else {
+                // nothing to do.
+            }
         }
     }
 
     override fun resumeCourseClicked(lastAccessedComponent: CourseComponent) {
-        environment.router.getCourseUnitDetailIntent(
-            requireActivity(),
-            courseData,
-            courseUpgradeData,
-            lastAccessedComponent.id,
-            false
-        )?.let { startActivity(it) }
+        if (environment.config.isNewDashboardEnabled &&
+            environment.config.isNewCourseUnitNavigationEnabled
+        ) {
+            environment.router.getNewCourseUnitDetailIntent(
+                requireActivity(),
+                courseData,
+                null,
+                lastAccessedComponent.id,
+                false
+            )?.let { startActivity(it) }
+        } else {
+            environment.router.getLegacyCourseUnitDetailIntent(
+                requireActivity(),
+                courseData,
+                courseUpgradeData,
+                lastAccessedComponent.id,
+                false
+            )?.let { startActivity(it) }
+        }
+
         environment.analyticsRegistry.trackResumeCourseBannerTapped(
             lastAccessedComponent.courseId,
             lastAccessedComponent.id
