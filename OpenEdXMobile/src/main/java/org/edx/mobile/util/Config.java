@@ -452,6 +452,9 @@ public class Config {
             return enabled;
         }
 
+        // TODO we have removed the API key from Config as a part of
+        //  https://2u-internal.atlassian.net/browse/LEARNER-8794, This code will be removed once
+        //  https://2u-internal.atlassian.net/browse/LEARNER-9354 is completed and merged in master
         public String getApiKey() {
             return apiKey;
         }
