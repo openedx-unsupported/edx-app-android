@@ -13,7 +13,6 @@ import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.InAppPurchasesUtils
 import org.edx.mobile.util.TextUtils
-import org.edx.mobile.view.CourseTabsDashboardFragment
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -88,10 +87,12 @@ class InAppPurchasesDialog @Inject constructor(
                 eventName = Analytics.Events.IAP_PAYMENT_ERROR,
                 errorMsg = feedbackErrorMessage
             )
+
             ErrorMessage.PRICE_CODE -> iapAnalytics.trackIAPEvent(
                 eventName = Analytics.Events.IAP_PRICE_LOAD_ERROR,
                 errorMsg = feedbackErrorMessage
             )
+
             else -> iapAnalytics.trackIAPEvent(
                 eventName = Analytics.Events.IAP_COURSE_UPGRADE_ERROR,
                 errorMsg = feedbackErrorMessage
@@ -111,6 +112,7 @@ class InAppPurchasesDialog @Inject constructor(
                     positiveBtnResId = R.string.label_refresh_now
                     actionTaken = Analytics.Values.ACTION_REFRESH
                 }
+
                 else -> {
                     positiveBtnResId = R.string.try_again
                     actionTaken = Analytics.Values.ACTION_RELOAD_PRICE
@@ -139,8 +141,6 @@ class InAppPurchasesDialog @Inject constructor(
                     trackAlertCloseEvent(feedbackErrorMessage)
                     if (context is DialogFragment) {
                         context.dismiss()
-                    } else if (context is CourseTabsDashboardFragment) {
-                        context.activity?.finish()
                     }
                 } else {
                     showFeedbackScreen(context, feedbackErrorMessage)

@@ -559,7 +559,7 @@
 
     <style name="MainDashboardCollapsedToolbarTitle">
         <item name="android:textColor">@color/primaryBaseColor</item>
-        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
         <item name="android:fontFamily">@font/inter_semi_bold</item>
         <item name="android:textDirection">locale</item>
         <item name="android:gravity">start</item>
