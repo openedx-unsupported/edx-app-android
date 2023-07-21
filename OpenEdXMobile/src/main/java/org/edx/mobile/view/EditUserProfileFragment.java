@@ -15,10 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +24,8 @@ import androidx.appcompat.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.Tab;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -485,39 +484,40 @@ public class EditUserProfileFragment extends BaseFragment implements BaseFragmen
         final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(instructions);
-        final RadioGroup group = view.findViewById(R.id.options);
+        final TabLayout group = view.findViewById(R.id.options);
 
-        final RadioButton optionOne = view.findViewById(R.id.option_one);
-        final RadioButton optionTwo = view.findViewById(R.id.option_two);
+        final Tab optionOne = group.getTabAt(0);
+        final Tab optionTwo = group.getTabAt(1);
+
         optionOne.setText(field.getOptions().getValues().get(0).getName());
         optionOne.setTag(field.getOptions().getValues().get(0).getValue());
         optionTwo.setText(field.getOptions().getValues().get(1).getName());
         optionTwo.setTag(field.getOptions().getValues().get(1).getValue());
 
-        for (int i = 0; i < group.getChildCount(); i++) {
-            final View child = group.getChildAt(i);
-            child.setEnabled(!readOnly);
-            if (child.getTag().equals(value)) {
-                group.check(child.getId());
+        for (int i = 0; i < group.getTabCount(); i++) {
+            final Tab child = group.getTabAt(i);
+            if (child != null && value.equals(child.getTag())) {
+                child.select();
                 break;
             }
         }
         if (readOnly) {
             group.setEnabled(false);
         } else {
-            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            group.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    RadioButton selectedOption = group.findViewById(checkedId);
-                    String selectedTag = (String) selectedOption.getTag();
-
-                    if (checkedId == optionOne.getId()) {
-                        optionOne.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_right_to_left));
-                    } else {
-                        optionTwo.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_left_to_right));
+                public void onTabSelected(Tab tab) {
+                    if (tab.getTag() != null) {
+                        switchListener.onSwitch((String) tab.getTag());
                     }
+                }
 
-                    switchListener.onSwitch(selectedTag);
+                @Override
+                public void onTabUnselected(Tab tab) {
+                }
+
+                @Override
+                public void onTabReselected(Tab tab) {
                 }
             });
         }

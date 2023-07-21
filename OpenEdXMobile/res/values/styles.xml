@@ -526,6 +526,11 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
     </style>
 
+    <style name="ProfileTabItem">
+        <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
     <style name="CourseDashboardExpandedToolbarTitle">
         <item name="android:textColor">@color/neutralWhiteT</item>
         <item name="android:textSize">@dimen/edx_large</item>
