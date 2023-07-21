@@ -38,7 +38,7 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
 
     private FragmentWebviewBinding binding;
 
-    private final ActivityResultLauncher<Intent> enrollCourseResult = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> loginRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     defaultActionListener.onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
@@ -86,7 +86,7 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
                     public void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn) {
                         lastClickEnrollCourseId = courseId;
                         lastClickEnrollEmailOptIn = emailOptIn;
-                        enrollCourseResult.launch(environment.getRouter().getRegisterIntent());
+                        loginRequestLauncher.launch(environment.getRouter().getRegisterIntent());
                     }
                 });
         client.setActionListener(defaultActionListener);

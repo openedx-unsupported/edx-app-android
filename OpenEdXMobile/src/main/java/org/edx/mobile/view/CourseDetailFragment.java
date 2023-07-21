@@ -87,7 +87,7 @@ public class CourseDetailFragment extends BaseFragment {
     @Inject
     IEdxEnvironment environment;
 
-    private final ActivityResultLauncher<Intent> enrollCourseResult = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> loginRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     enrollInCourse();
@@ -320,7 +320,7 @@ public class CourseDetailFragment extends BaseFragment {
      */
     public void enrollInCourse() {
         if (!environment.getLoginPrefs().isUserLoggedIn()) {
-            enrollCourseResult.launch(environment.getRouter().getRegisterIntent());
+            loginRequestLauncher.launch(environment.getRouter().getRegisterIntent());
             return;
         }
         environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);

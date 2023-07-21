@@ -2,7 +2,6 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.Intent
-import androidx.activity.result.contract.ActivityResultContracts
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
@@ -37,10 +36,6 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
      * `false` otherwise.
      */
     protected abstract fun isShowingFullScreenError(): Boolean
-
-    private val courseContainerResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        }
 
     override fun onResume() {
         super.onResume()
@@ -97,7 +92,7 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
                         courseData, null,
                         nextComp.id, leafCompId, false
                     )
-                    courseContainerResult.launch(intent)
+                    intent?.let { startActivity(it) }
                     i += 2
                 }
             }

@@ -164,7 +164,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private AlertDialogFragment loaderDialog;
     private boolean refreshOnResume = false;
 
-    private final ActivityResultLauncher<Intent> courseUnitDetailResult =
+    private final ActivityResultLauncher<Intent> courseUnitDetailLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent resultData = result.getData();
                 if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
@@ -192,7 +192,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 }
             });
 
-    private final ActivityResultLauncher<String> storagePermission = registerForActivityResult(
+    private final ActivityResultLauncher<String> storagePermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     onPermissionGranted();
@@ -547,14 +547,14 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 if (component.isContainer()) {
                     Intent courseOutlineIntent = environment.getRouter().getCourseOutlineIntent(CourseOutlineFragment.this,
                             courseData, courseUpgradeData, component.getId(), null, isVideoMode);
-                    courseUnitDetailResult.launch(courseOutlineIntent);
+                    courseUnitDetailLauncher.launch(courseOutlineIntent);
                 } else {
                     if (adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM) {
                         environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
                     }
                     Intent intent = environment.getRouter().getCourseUnitDetailIntent(CourseOutlineFragment.this,
                             courseData, courseUpgradeData, component.getId(), isVideoMode);
-                    courseUnitDetailResult.launch(intent);
+                    courseUnitDetailLauncher.launch(intent);
 
                     environment.getAnalyticsRegistry().trackScreenView(
                             Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
@@ -592,7 +592,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         onPermissionGranted();
                     } else {
-                        storagePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     }
                 }
 
@@ -603,7 +603,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         onPermissionGranted();
                     } else {
-                        storagePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     }
                 }
 
@@ -649,7 +649,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 && !TextUtils.isEmpty(courseComponentId)) {
             Intent intent = environment.getRouter().getCourseUnitDetailIntent(CourseOutlineFragment.this,
                     courseData, courseUpgradeData, courseComponentId, false);
-            courseUnitDetailResult.launch(intent);
+            courseUnitDetailLauncher.launch(intent);
             screenName = null;
         }
     }

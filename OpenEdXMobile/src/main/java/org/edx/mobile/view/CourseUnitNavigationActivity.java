@@ -95,7 +95,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private boolean isVideoMode = false;
     private boolean refreshCourse = false;
 
-    ActivityResultLauncher<Intent> chooseFilesResult = registerForActivityResult(
+    ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 Uri[] files = null;
                 Intent resultData = result.getData();
@@ -533,7 +533,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     @Subscribe
     public void onEvent(FileSelectionEvent event) {
-        chooseFilesResult.launch(event.getIntent());
+        fileChooserLauncher.launch(event.getIntent());
     }
 
     @Subscribe

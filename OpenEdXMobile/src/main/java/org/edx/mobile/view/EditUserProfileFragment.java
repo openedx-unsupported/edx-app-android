@@ -106,7 +106,7 @@ public class EditUserProfileFragment extends BaseFragment {
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
 
-    private final ActivityResultLauncher<Intent> cropPhotoResult =
+    private final ActivityResultLauncher<Intent> photoCropLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent resultData = result.getData();
                 if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
@@ -121,13 +121,13 @@ public class EditUserProfileFragment extends BaseFragment {
                 }
             });
 
-    private final ActivityResultLauncher<Intent> choosePhotoResult =
+    private final ActivityResultLauncher<Intent> photoChooserLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent resultData = result.getData();
                 if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
                     Uri imageUri = resultData.getData();
                     if (imageUri != null) {
-                        cropPhotoResult.launch(
+                        photoCropLauncher.launch(
                                 CropImageActivity.newIntent(
                                         requireActivity(), imageUri, false
                                 )
@@ -136,7 +136,7 @@ public class EditUserProfileFragment extends BaseFragment {
                 }
             });
 
-    private final ActivityResultLauncher<Intent> capturePhotoResult =
+    private final ActivityResultLauncher<Intent> photoCaptureLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Uri imageUri = helper.getImageUriFromResult();
@@ -147,12 +147,12 @@ public class EditUserProfileFragment extends BaseFragment {
                         if (rotatedImageUri != null) {
                             imageUri = rotatedImageUri;
                         }
-                        cropPhotoResult.launch(CropImageActivity.newIntent(requireActivity(), imageUri, true));
+                        photoCropLauncher.launch(CropImageActivity.newIntent(requireActivity(), imageUri, true));
                     }
                 }
             });
 
-    private final ActivityResultLauncher<Intent> editProfileResult =
+    private final ActivityResultLauncher<Intent> editProfileLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent resultData = result.getData();
                 if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
@@ -162,22 +162,22 @@ public class EditUserProfileFragment extends BaseFragment {
                 }
             });
 
-    private final ActivityResultLauncher<String> storagePermission =
+    private final ActivityResultLauncher<String> storagePermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     final Intent galleryIntent = new Intent()
                             .setType("image/*")
                             .setAction(Intent.ACTION_GET_CONTENT);
-                    choosePhotoResult.launch(galleryIntent);
+                    photoChooserLauncher.launch(galleryIntent);
                 } else {
                     showPermissionDeniedMessage();
                 }
             });
 
-    private final ActivityResultLauncher<String> cameraPermission =
+    private final ActivityResultLauncher<String> cameraPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    capturePhotoResult.launch(helper.createCaptureIntent(requireActivity()));
+                    photoCaptureLauncher.launch(helper.createCaptureIntent(requireActivity()));
                 } else {
                     showPermissionDeniedMessage();
                 }
@@ -238,10 +238,10 @@ public class EditUserProfileFragment extends BaseFragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.take_photo -> {
-                                cameraPermission.launch(Manifest.permission.CAMERA);
+                                cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
                             }
                             case R.id.choose_photo -> {
-                                storagePermission.launch(PermissionsUtil.getReadStoragePermission());
+                                storagePermissionLauncher.launch(PermissionsUtil.getReadStoragePermission());
                             }
                             case R.id.remove_photo -> {
                                 final Task<Void> task = new DeleteAccountImageTask(requireActivity(), username);
@@ -449,7 +449,7 @@ public class EditUserProfileFragment extends BaseFragment {
                         createField(layoutInflater, viewHolder.fields, field, displayValue, isLimited && !field.getName().equals(Account.YEAR_OF_BIRTH_SERIALIZED_NAME), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                editProfileResult.launch(FormFieldActivity.newIntent(requireActivity(), field, value));
+                                editProfileLauncher.launch(FormFieldActivity.newIntent(requireActivity(), field, value));
                             }
                         });
                         break;

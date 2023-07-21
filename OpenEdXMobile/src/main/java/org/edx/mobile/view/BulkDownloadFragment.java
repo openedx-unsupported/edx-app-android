@@ -121,7 +121,7 @@ public class BulkDownloadFragment extends BaseFragment {
      */
     private final List<VideoModel> removableVideos = new ArrayList<>();
 
-    private final ActivityResultLauncher<String> permissionRequest =
+    private final ActivityResultLauncher<String> storagePermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     onPermissionGranted();
@@ -426,7 +426,7 @@ public class BulkDownloadFragment extends BaseFragment {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     onPermissionGranted();
                 } else {
-                    permissionRequest.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
             } else {
                 switchState = SwitchState.USER_TURNED_OFF;

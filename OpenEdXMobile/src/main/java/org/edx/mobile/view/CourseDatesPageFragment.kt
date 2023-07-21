@@ -48,7 +48,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private lateinit var binding: FragmentCourseDatesPageBinding
     private val viewModel: CourseDateViewModel by viewModels()
 
-    private val courseUnitDetailResult =
+    private val courseUnitDetailLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val resultData = result.data
             if (result?.resultCode == Activity.RESULT_OK && resultData != null) {
@@ -71,7 +71,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                     blockId,
                     false
                 )
-                courseUnitDetailResult.launch(courseUnitDetailIntent)
+                courseUnitDetailLauncher.launch(courseUnitDetailIntent)
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,
@@ -99,7 +99,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private var isCalendarExist: Boolean = false
     private lateinit var loaderDialog: AlertDialogFragment
 
-    private val requestPermissions = registerForActivityResult(
+    private val calendarPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { isGranted ->
         if (isGranted.containsValue(false).not()) {
@@ -406,7 +406,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
         val alertDialog =
             AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
                 { _, _ ->
-                    requestPermissions.launch(CalendarUtils.permissions)
+                    calendarPermissionLauncher.launch(CalendarUtils.permissions)
                 },
                 getString(R.string.label_do_not_allow),
                 { _, _ ->
