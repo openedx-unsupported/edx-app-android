@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.databinding.FragmentDiscussionResponsesOrCommentsBinding;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
@@ -271,7 +270,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             discussionService = EntryPointAccessors
                     .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
                     .getDiscussionService();
-            config = MainApplication.getEnvironment(context).getConfig();
+            config = EntryPointAccessors
+                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
+                    .getEnvironment().getConfig();
         }
 
         @Override
