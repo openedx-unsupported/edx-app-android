@@ -545,7 +545,7 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 listView.clearChoices();
                 final CourseComponent component = adapter.getItem(position).component;
                 if (component.isContainer()) {
-                    Intent courseOutlineIntent = environment.getRouter().getCourseContainerOutlineIntent(CourseOutlineFragment.this,
+                    Intent courseOutlineIntent = environment.getRouter().getCourseOutlineIntent(CourseOutlineFragment.this,
                             courseData, courseUpgradeData, component.getId(), null, isVideoMode);
                     courseUnitDetailResult.launch(courseOutlineIntent);
                 } else {

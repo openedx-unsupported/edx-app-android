@@ -14,7 +14,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.util.DateUtil
 import org.edx.mobile.util.ResourceUtil
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class PaymentsInfoFragment : BaseFragment() {
 

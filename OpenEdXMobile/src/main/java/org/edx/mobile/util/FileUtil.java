@@ -280,9 +280,10 @@ public class FileUtil {
     }
 
     /**
-     * Method to initiate the file selector with given supported file extensions.
+     * Creates an Intent to pick files with specified extensions.
      *
-     * @return
+     * @param acceptTypes An array of MIME types to filter file selection.
+     * @return An Intent for the file picker activity.
      */
     public static Intent getChooseFilesIntent(String[] acceptTypes) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

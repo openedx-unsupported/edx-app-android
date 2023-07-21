@@ -192,7 +192,7 @@ public class EditUserProfileFragment extends BaseFragment {
 
         parseExtras();
 
-        final Activity activity = getActivity();
+        final Activity activity = requireActivity();
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
         getAccountCall = userService.getAccount(username);
         getAccountCall.enqueue(new AccountDataUpdatedCallback(
@@ -222,7 +222,7 @@ public class EditUserProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
@@ -232,7 +232,7 @@ public class EditUserProfileFragment extends BaseFragment {
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PopupMenu popup = new PopupMenu(getActivity(), v);
+                final PopupMenu popup = new PopupMenu(requireActivity(), v);
                 popup.getMenuInflater().inflate(R.menu.change_photo, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
@@ -244,7 +244,7 @@ public class EditUserProfileFragment extends BaseFragment {
                                 storagePermission.launch(PermissionsUtil.getReadStoragePermission());
                             }
                             case R.id.remove_photo -> {
-                                final Task<Void> task = new DeleteAccountImageTask(getActivity(), username);
+                                final Task<Void> task = new DeleteAccountImageTask(requireActivity(), username);
                                 task.setProgressDialog(viewHolder.profileImageProgress);
                                 executePhotoTask(task);
                             }
@@ -294,7 +294,7 @@ public class EditUserProfileFragment extends BaseFragment {
     @Subscribe
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
-        UserProfileUtils.loadProfileImage(getContext(), event, viewHolder.profileImage);
+        UserProfileUtils.loadProfileImage(requireContext(), event, viewHolder.profileImage);
     }
 
     @Subscribe
@@ -449,7 +449,7 @@ public class EditUserProfileFragment extends BaseFragment {
                         createField(layoutInflater, viewHolder.fields, field, displayValue, isLimited && !field.getName().equals(Account.YEAR_OF_BIRTH_SERIALIZED_NAME), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                editProfileResult.launch(FormFieldActivity.newIntent(getActivity(), field, value));
+                                editProfileResult.launch(FormFieldActivity.newIntent(requireActivity(), field, value));
                             }
                         });
                         break;
@@ -486,7 +486,7 @@ public class EditUserProfileFragment extends BaseFragment {
             valueObject = fieldValue;
         }
         userService.updateAccount(username, Collections.singletonMap(field.getName(), valueObject))
-                .enqueue(new AccountDataUpdatedCallback(getActivity(), username,
+                .enqueue(new AccountDataUpdatedCallback(requireActivity(), username,
                         new DialogErrorNotification(this)) {
                     @Override
                     protected void onResponse(@NonNull final Account account) {
@@ -540,7 +540,7 @@ public class EditUserProfileFragment extends BaseFragment {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
         final SpannableString formattedValue = new SpannableString(value);
         formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.neutralXXDark)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textView.setText(ResourceUtil.getFormattedString(parent.getResources(), R.string.edit_user_profile_field, new HashMap<String, CharSequence>() {{
+        textView.setText(ResourceUtil.getFormattedString(parent.getResources(), R.string.edit_user_profile_field, new HashMap<>() {{
             put("label", field.getLabel());
             put("value", formattedValue);
         }}));

@@ -47,7 +47,7 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
         @JvmStatic
         fun newIntent(activity: Context?, unit: CourseComponent): Intent {
             return newIntent(
-                activity,
+                activity = activity,
                 url = unit.blockUrl,
                 screenTitle = unit.displayName,
                 isModalView = false

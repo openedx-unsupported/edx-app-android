@@ -1,6 +1,6 @@
 package org.edx.mobile.view
 
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -51,7 +51,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private val courseUnitDetailResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val resultData = result.data
-            if (result?.resultCode == RESULT_OK && resultData != null) {
+            if (result?.resultCode == Activity.RESULT_OK && resultData != null) {
                 val outlineComp = courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
                 outlineComp?.let {
                     navigateToCourseUnit(resultData, courseData, outlineComp)
@@ -64,14 +64,14 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
-                val intent = environment.router.getCourseUnitDetailIntent(
+                val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
                     this@CourseDatesPageFragment,
                     courseData,
                     null,
                     blockId,
                     false
                 )
-                courseUnitDetailResult.launch(intent)
+                courseUnitDetailResult.launch(courseUnitDetailIntent)
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,

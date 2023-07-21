@@ -7,7 +7,6 @@ import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 
 fun TextView.renderHtml(body: String) {
     parseHtml(body)?.let { spannedHtml ->
@@ -31,7 +30,7 @@ fun TextView.renderHtml(body: String) {
 private fun parseHtml(html: String): Spanned? {
     // If the HTML contains a paragraph at the end, there will be blank lines following the text
     // Therefore, we need to trim the resulting CharSequence to remove those extra lines
-    return trim(HtmlCompat.fromHtml(html, FROM_HTML_MODE_COMPACT)) as Spanned?
+    return trim(HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)) as Spanned?
 }
 
 private fun trim(s: CharSequence): CharSequence {

@@ -177,6 +177,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                                 )
                             }
                         }
+
                         HttpStatus.UPGRADE_REQUIRED -> {
                             context?.let { context ->
                                 errorNotification.showError(
@@ -187,6 +188,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         }
                     }
                 }
+
                 (FullscreenLoaderDialogFragment
                     .getRetainedInstance(fragmentManager = childFragmentManager)?.isAdded == true) -> {
                     iapViewModel.dispatchError(
@@ -194,6 +196,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         errorMessage = it.message
                     )
                 }
+
                 else -> {
                     showError(it)
                 }
@@ -301,6 +304,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     showFullscreenLoader(event.iapFlowData)
                 }
             }
+
             IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE -> {
                 courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.LIVE)
             }

@@ -3,8 +3,6 @@ package org.edx.mobile.social.facebook;
 import android.app.Activity;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -22,7 +20,7 @@ public class FacebookAuth extends ISocialImpl {
         super(activity);
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<>() {
+                new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         if (callback != null) {
@@ -37,7 +35,7 @@ public class FacebookAuth extends ISocialImpl {
                     }
 
                     @Override
-                    public void onError(@NonNull FacebookException error) {
+                    public void onError(FacebookException error) {
                         logger.error(error);
                     }
                 });
