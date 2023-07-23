@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.widget.ListPopupWindow
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentLearnBinding
 import org.edx.mobile.event.FragmentSelectionEvent
+import org.edx.mobile.extenstion.CollapsingToolbarStatListener
 import org.edx.mobile.extenstion.setImageDrawable
+import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.ViewAnimationUtil
@@ -70,34 +70,26 @@ class LearnFragment : OfflineSupportBaseFragment() {
                     binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_up)
                 }
             }
-            // Add an OnOffsetChangedListener to the AppBarLayout to adjust the title text size
-            // based on the collapse offset
-            binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                val minHeight = ViewCompat.getMinimumHeight(binding.collapsingToolbar)
-                if (binding.collapsingToolbar.height + verticalOffset <= minHeight) {
-                    // The toolbar is fully collapsed
-                    if (!isTitleCollapsed) {
-                        // Adjust title text size with animation when fully collapsed
+
+            binding.appbar.setTitleStateListener(
+                binding.collapsingToolbar,
+                object : CollapsingToolbarStatListener {
+                    override fun onExpanded() {
                         ViewAnimationUtil.animateTitleSize(
                             binding.tvSelectedItem,
-                            resources.getDimension(R.dimen.edx_base)
-                        )
-                        ImageUtils.animateIconSize(binding.ivSelectorIcon, 0.75f)
-                        isTitleCollapsed = true
-                    }
-                } else {
-                    // The toolbar is not collapsed
-                    if (isTitleCollapsed) {
-                        // Reset title text size with animation when not collapsed
-                        ViewAnimationUtil.animateTitleSize(
-                            binding.tvSelectedItem,
-                            resources.getDimension(R.dimen.edx_x_large)
+                            resources.getDimension(R.dimen.edx_slightly_above_x_large)
                         )
                         ImageUtils.animateIconSize(binding.ivSelectorIcon, 1f)
-                        isTitleCollapsed = false
                     }
-                }
-            })
+
+                    override fun onCollapsed() {
+                        ViewAnimationUtil.animateTitleSize(
+                            binding.tvSelectedItem,
+                            resources.getDimension(R.dimen.edx_large)
+                        )
+                        ImageUtils.animateIconSize(binding.ivSelectorIcon, 0.75f)
+                    }
+                })
         } else {
             binding.llLearnSelection.setVisibility(false)
         }

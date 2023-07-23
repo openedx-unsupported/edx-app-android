@@ -33,6 +33,7 @@
         <item name="fontMedium">@font/inter_medium</item>
         <item name="fontSemiBoldItalic">@font/inter_semi_bold_italic</item>
         <item name="fontSemiBold">@font/inter_semi_bold</item>
+        <item name="fontBold">@font/inter_bold</item>
         <item name="secondaryFontRegular">@font/roboto_mono_regular</item>
         <item name="android:fontFamily">?attr/fontRegular</item>
     </style>
@@ -548,22 +549,13 @@
         <item name="lineHeight">@dimen/widget_margin_double</item>
     </style>
 
-    <style name="MainDashboardExpandedToolbarTitle">
-        <item name="android:textColor">@color/primaryBaseColor</item>
-        <item name="android:textSize">@dimen/edx_x_large</item>
-        <item name="android:fontFamily">@font/inter_semi_bold</item>
+    <style name="MainDashboardToolbarTitle">
+        <item name="android:textColor">@color/primaryDarkColor</item>
+        <item name="android:textSize">@dimen/edx_slightly_above_x_large</item>
+        <item name="android:fontFamily">?attr/fontBold</item>
         <item name="android:textDirection">locale</item>
         <item name="android:gravity">start</item>
         <item name="lineHeight">@dimen/widget_margin_xx_double</item>
-    </style>
-
-    <style name="MainDashboardCollapsedToolbarTitle">
-        <item name="android:textColor">@color/primaryBaseColor</item>
-        <item name="android:textSize">@dimen/edx_x_large</item>
-        <item name="android:fontFamily">@font/inter_semi_bold</item>
-        <item name="android:textDirection">locale</item>
-        <item name="android:gravity">start</item>
-        <item name="lineHeight">@dimen/widget_margin_x_double</item>
     </style>
 
     <style name="edX.Widget.PrimaryActionButton" parent="@style/edX.Widget.Button">

@@ -12,13 +12,17 @@ import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentWebviewDiscoveryBinding;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.extenstion.CollapsingToolbarStatListener;
+import org.edx.mobile.extenstion.ToolbarExtKt;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UrlUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -81,7 +85,23 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
         Bundle args = getArguments();
         if (args != null && !TextUtils.isEmpty(args.getString(Router.EXTRA_SCREEN_TITLE))) {
             binding.toolbar.getRoot().setVisibility(View.VISIBLE);
-            binding.toolbar.collapsingToolbar.setTitle(args.getString(Router.EXTRA_SCREEN_TITLE));
+            binding.toolbar.tvTitle.setText(args.getString(Router.EXTRA_SCREEN_TITLE));
+            ToolbarExtKt.setTitleStateListener(binding.toolbar.appbar,
+                    binding.toolbar.collapsingToolbar,
+                    new CollapsingToolbarStatListener() {
+                        @Override
+                        public void onExpanded() {
+                            ViewAnimationUtil.animateTitleSize(
+                                    binding.toolbar.tvTitle,
+                                    getResources().getDimension(R.dimen.edx_slightly_above_x_large));
+                        }
+
+                        @Override
+                        public void onCollapsed() {
+                            ViewAnimationUtil.animateTitleSize(binding.toolbar.tvTitle,
+                                    getResources().getDimension(R.dimen.edx_large));
+                        }
+                    });
         } else {
             binding.toolbar.getRoot().setVisibility(View.GONE);
         }
