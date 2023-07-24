@@ -595,6 +595,7 @@ public class Config {
     public boolean isDiscussionProfilePicturesEnabled() {
         return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
     }
+
     public boolean isRegistrationEnabled() {
         return getBoolean(REGISTRATION_ENABLED, true);
     }
@@ -652,6 +653,7 @@ public class Config {
     public boolean isCourseVideosEnabled() {
         return getBoolean(COURSE_VIDEOS_ENABLED, true);
     }
+
     public boolean isAnnouncementEnabled() {
         return getBoolean(ANNOUNCEMENTS_ENABLED, true);
     }

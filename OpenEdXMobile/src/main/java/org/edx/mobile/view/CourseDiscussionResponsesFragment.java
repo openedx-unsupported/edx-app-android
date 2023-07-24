@@ -267,12 +267,10 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             this.threadId = threadId;
             this.isQuestionTypeThread = isQuestionTypeThread;
             this.isFetchingEndorsed = isQuestionTypeThread;
-            discussionService = EntryPointAccessors
-                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
-                    .getDiscussionService();
-            config = EntryPointAccessors
-                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
-                    .getEnvironment().getConfig();
+            EdxDefaultModule.ProviderEntryPoint entryPointProvider = EntryPointAccessors
+                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class);
+            discussionService = entryPointProvider.getDiscussionService();
+            config = entryPointProvider.getEnvironment().getConfig();
         }
 
         @Override
