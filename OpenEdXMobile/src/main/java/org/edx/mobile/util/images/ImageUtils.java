@@ -1,5 +1,6 @@
 package org.edx.mobile.util.images;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,5 +115,19 @@ public class ImageUtils {
             return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;
+    }
+
+    public static void animateIconSize(ImageView imageView, float targetScale) {
+        float initialScaleX = imageView.getScaleX();
+
+        ValueAnimator animator = ValueAnimator.ofFloat(initialScaleX, targetScale);
+        animator.addUpdateListener(valueAnimator -> {
+            float animatedScale = (float) valueAnimator.getAnimatedValue();
+            imageView.setScaleX(animatedScale);
+            imageView.setScaleY(animatedScale);
+        });
+
+        animator.setDuration(200); // Adjust the animation duration as needed
+        animator.start();
     }
 }

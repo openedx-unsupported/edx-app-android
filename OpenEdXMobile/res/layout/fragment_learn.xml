@@ -32,26 +32,24 @@
 
                 <LinearLayout
                     android:id="@+id/ll_learn_selection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/edx_button_height"
-                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_selected_item"
+                        style="@style/MainDashboardToolbarTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="?attr/fontSemiBold"
                         android:paddingEnd="@dimen/learn_drop_down_icon_margin"
                         android:text="@string/label_my_courses"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textSize="@dimen/edx_large"
                         tools:ignore="RtlSymmetry" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_selector_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/ic_small"
+                        android:layout_height="@dimen/ic_small"
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_drop_down"
                         tools:ignore="ContentDescription" />
