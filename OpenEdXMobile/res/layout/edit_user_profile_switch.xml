@@ -18,7 +18,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/profile_view_button_height"
+        android:layout_height="@dimen/profile_switcher_card_height"
         android:layout_marginTop="@dimen/edx_margin"
         app:cardBackgroundColor="@color/neutralXLight"
         app:cardCornerRadius="@dimen/profile_switcher_radius"
@@ -38,7 +38,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/white"
             app:tabTextAppearance="@style/ProfileTabItem"
-            app:tabTextColor="@color/edx_segmented_control_text_selector">
+            app:tabTextColor="@color/neutralBlackT">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/option_one"
