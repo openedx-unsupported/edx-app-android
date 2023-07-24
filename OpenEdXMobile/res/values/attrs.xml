@@ -33,5 +33,6 @@
     <attr name="fontMedium" format="reference" />
     <attr name="fontSemiBold" format="reference" />
     <attr name="fontSemiBoldItalic" format="reference" />
+    <attr name="fontBold" format="reference" />
     <attr name="secondaryFontRegular" format="reference" />
 </resources>

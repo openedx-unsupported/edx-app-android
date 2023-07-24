@@ -3,7 +3,9 @@ package org.edx.mobile.util;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -118,5 +120,15 @@ public class ViewAnimationUtil {
         alphaAnimation.setDuration(ALPHA_ANIMATIONS_DURATION);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
+    }
+
+    public static void animateTitleSize(TextView textView, float targetSize) {
+        ValueAnimator animator = ValueAnimator.ofFloat(textView.getTextSize(), targetSize);
+        animator.addUpdateListener(valueAnimator -> {
+            float animatedValue = (float) valueAnimator.getAnimatedValue();
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, animatedValue);
+        });
+        animator.setDuration(200); // Adjust the animation duration as needed
+        animator.start();
     }
 }

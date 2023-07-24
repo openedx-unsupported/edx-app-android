@@ -24,7 +24,9 @@ import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.CollapsingToolbarStatListener
 import org.edx.mobile.extenstion.isVisible
+import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.model.iap.IAPFlowData
@@ -46,6 +48,7 @@ import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.UserProfileUtils
+import org.edx.mobile.util.ViewAnimationUtil
 import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
@@ -132,7 +135,24 @@ class AccountFragment : BaseFragment() {
     private fun initTitle() {
         arguments?.getString(Router.EXTRA_SCREEN_TITLE)?.let {
             binding.toolbar.root.setVisibility(true)
-            binding.toolbar.collapsingToolbar.title = it
+            binding.toolbar.tvTitle.text = it
+            binding.toolbar.appbar.setTitleStateListener(
+                binding.toolbar.collapsingToolbar,
+                object : CollapsingToolbarStatListener {
+                    override fun onExpanded() {
+                        ViewAnimationUtil.animateTitleSize(
+                            binding.toolbar.tvTitle,
+                            resources.getDimension(R.dimen.edx_x_large)
+                        )
+                    }
+
+                    override fun onCollapsed() {
+                        ViewAnimationUtil.animateTitleSize(
+                            binding.toolbar.tvTitle,
+                            resources.getDimension(R.dimen.edx_large)
+                        )
+                    }
+                })
         } ?: run {
             binding.toolbar.root.setVisibility(false)
         }
