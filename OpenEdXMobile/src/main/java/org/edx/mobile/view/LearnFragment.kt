@@ -77,7 +77,7 @@ class LearnFragment : OfflineSupportBaseFragment() {
                     override fun onExpanded() {
                         ViewAnimationUtil.animateTitleSize(
                             binding.tvSelectedItem,
-                            resources.getDimension(R.dimen.edx_slightly_above_x_large)
+                            resources.getDimension(R.dimen.edx_x_large)
                         )
                         ImageUtils.animateIconSize(binding.ivSelectorIcon, 1f)
                     }

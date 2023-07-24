@@ -141,7 +141,7 @@ class AccountFragment : BaseFragment() {
                     override fun onExpanded() {
                         ViewAnimationUtil.animateTitleSize(
                             binding.toolbar.tvTitle,
-                            resources.getDimension(R.dimen.edx_slightly_above_x_large)
+                            resources.getDimension(R.dimen.edx_x_large)
                         )
                     }
 

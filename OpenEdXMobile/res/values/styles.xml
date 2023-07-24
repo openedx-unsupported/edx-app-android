@@ -551,7 +551,7 @@
 
     <style name="MainDashboardToolbarTitle">
         <item name="android:textColor">@color/primaryDarkColor</item>
-        <item name="android:textSize">@dimen/edx_slightly_above_x_large</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
         <item name="android:fontFamily">?attr/fontBold</item>
         <item name="android:textDirection">locale</item>
         <item name="android:gravity">start</item>

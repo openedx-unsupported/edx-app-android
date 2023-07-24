@@ -93,7 +93,7 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
                         public void onExpanded() {
                             ViewAnimationUtil.animateTitleSize(
                                     binding.toolbar.tvTitle,
-                                    getResources().getDimension(R.dimen.edx_slightly_above_x_large));
+                                    getResources().getDimension(R.dimen.edx_x_large));
                         }
 
                         @Override
