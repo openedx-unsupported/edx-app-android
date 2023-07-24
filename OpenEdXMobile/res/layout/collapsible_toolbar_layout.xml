@@ -13,7 +13,6 @@
         android:id="@+id/collapsingToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edx_quadruple_margin"
-        app:expandedTitleMarginStart="@dimen/edx_default_margin"
         app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
         <androidx.appcompat.widget.Toolbar
@@ -30,7 +29,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_title"
                 style="@style/MainDashboardToolbarTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingEnd="@dimen/learn_drop_down_icon_margin"
