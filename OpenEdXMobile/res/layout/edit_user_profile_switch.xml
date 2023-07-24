@@ -22,8 +22,7 @@
         android:layout_marginTop="@dimen/edx_margin"
         app:cardBackgroundColor="@color/neutralXLight"
         app:cardCornerRadius="@dimen/profile_switcher_radius"
-        app:contentPadding="@dimen/edx_x_quarter_margin"
-        app:strokeWidth="0dp">
+        app:contentPadding="@dimen/edx_x_quarter_margin">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/options"
