@@ -377,7 +377,7 @@ class AccountFragment : BaseFragment() {
                 Analytics.Events.PERSONAL_INFORMATION_CLICKED,
                 Analytics.Values.PERSONAL_INFORMATION_CLICKED
             )
-            environment.router.showUserProfile(requireActivity(), loginPrefs.username)
+            environment.router.showUserProfileEditor(requireActivity(), loginPrefs.username)
         }
         setVideoQualityDescription(userPrefs.videoQuality)
     }

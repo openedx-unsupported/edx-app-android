@@ -217,6 +217,8 @@
     <dimen name="edx_default_margin">16dp</dimen>
     <dimen name="edx_default_margin_double">32dp</dimen>
     <dimen name="profile_view_button_height">36dp</dimen>
+    <dimen name="profile_switcher_radius">7dp</dimen>
+    <dimen name="profile_switcher_card_height">36dp</dimen>
 
     <!-- Segmented Control Dimensions -->
     <dimen name="edx_segmented_control_start_corner">5dp</dimen>

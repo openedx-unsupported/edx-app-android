@@ -1,53 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:padding="@dimen/edx_margin"
-    android:background="@color/white">
+    android:padding="@dimen/edx_margin">
 
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Label"
         android:textColor="@color/neutralBlackT"
-        android:textSize="@dimen/edx_small" />
+        android:textSize="@dimen/edx_small"
+        tools:text="Label" />
 
-    <RadioGroup
-        android:id="@+id/options"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_height="@dimen/profile_switcher_card_height"
         android:layout_marginTop="@dimen/edx_margin"
-        android:clipToPadding="true"
-        android:orientation="horizontal">
+        app:cardBackgroundColor="@color/neutralXLight"
+        app:cardCornerRadius="@dimen/profile_switcher_radius"
+        app:contentPadding="@dimen/edx_x_quarter_margin">
 
-        <RadioButton
-            android:id="@+id/option_one"
-            style="@style/edX.Widget.SegmentedControlSegment"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/radio_tab_height"
-            android:layout_weight="1"
-            tools:text="Option One"/>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/options"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/neutralXLight"
+            app:tabGravity="fill"
+            app:tabIndicator="@drawable/edx_profile_tab_indicator"
+            app:tabIndicatorGravity="stretch"
+            app:tabMode="fixed"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/ProfileTabItem"
+            app:tabTextColor="@color/neutralBlackT">
 
-        <RadioButton
-            android:id="@+id/option_two"
-            style="@style/edX.Widget.SegmentedControlSegment"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/radio_tab_height"
-            android:layout_weight="1"
-            tools:text="Option Two" />
-    </RadioGroup>
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/option_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Option One" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/option_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Option Two" />
+        </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/edx_margin"
-        tools:text="Instructions"
         android:textColor="@color/neutralBlackT"
-        android:textSize="@dimen/edx_x_small" />
+        android:textSize="@dimen/edx_x_small"
+        tools:text="Instructions" />
 
 </LinearLayout>
