@@ -112,10 +112,6 @@
 如果您在几分钟之后还未收到，请注意检查您的垃圾邮件。</string>
   <!--Password reset dialog prompt-->
   <string name="confirm_dialog_message_help">请输入您账号的邮件地址，我们将发送重置密码的邮件。</string>
-  <!--Alert dialog title for users with zero rated data-->
-  <string name="leaving_app_data_title">离开 {platform_name} 应用</string>
-  <!--Alert dialog content for users with zero rated data-->
-  <string name="leaving_app_data_message">如果离开本应用，您将无法再查看免费的{platform_name}内容。可能会收取数据费用。</string>
   <!--Title of agreement users must accept to use the app-->
   <string name="end_user_title">用户协议</string>
   <!--Title of privacy policy users must accept to use the app-->
@@ -512,11 +508,6 @@
   <!--Registration error-->
   <string name="registration_error_title">注册错误</string>
   <string name="registration_error_message">更新标注区域并重试</string>
-  <!--data charges may apply dialog text-->
-  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_title">可能会产生数据流量费用</string>
-  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
-  <string name="open_external_url_desc">此链接将在您的浏览器中打开，这可能产生额外的数据费用。</string>
   <string name="android">安卓</string>
   <!--Email subject line when user attempts to submit feedback about the app-->
   <string name="email_subject">用户反馈</string>

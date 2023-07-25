@@ -40,7 +40,7 @@ public enum DiscussionRequestFields {
             requestedFields = Collections.singletonList(
                     DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
         } else {
-            requestedFields = Collections.EMPTY_LIST;
+            requestedFields = Collections.emptyList();
         }
         return requestedFields;
     }

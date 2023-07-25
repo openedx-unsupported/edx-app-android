@@ -52,7 +52,6 @@ public class Config {
     /* Composite configuration keys */
     private static final String DISCOVERY = "DISCOVERY";
     private static final String PROGRAM = "PROGRAM";
-    private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String MICROSOFT = "MICROSOFT";
     private static final String GOOGLE = "GOOGLE";
@@ -61,7 +60,6 @@ public class Config {
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String FIREBASE = "FIREBASE";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
-    private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
     private static final String API_URL_VERSION = "API_URL_VERSION";
     private static final String YOUTUBE_PLAYER = "YOUTUBE_PLAYER";
     private static final String AGREEMENT_URLS = "AGREEMENT_URLS";
@@ -84,29 +82,7 @@ public class Config {
     private static final String WHATS_NEW_ENABLED = "WHATS_NEW_ENABLED";
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
     private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
-
-    public static class ZeroRatingConfig {
-        @SerializedName("ENABLED")
-        private boolean mEnabled;
-
-        @SerializedName("CARRIERS")
-        private List<String> mCarriers;
-
-        @SerializedName("WHITE_LIST_OF_DOMAINS")
-        private List<String> mWhiteListedDomains;
-
-        public boolean isEnabled() {
-            return mEnabled;
-        }
-
-        public List<String> getCarriers() {
-            return mCarriers != null ? mCarriers : new ArrayList<String>();
-        }
-
-        public List<String> getWhiteListedDomains() {
-            return mWhiteListedDomains != null ? mWhiteListedDomains : new ArrayList<String>();
-        }
-    }
+    private static final String ANNOUNCEMENTS_ENABLED = "ANNOUNCEMENTS_ENABLED";
 
     public static class DiscoveryConfig {
         @SerializedName("TYPE")
@@ -276,19 +252,12 @@ public class Config {
         @SerializedName("KEY")
         private String key;
 
-        @SerializedName("SECRET")
-        private String secret;
-
         public boolean isEnabled() {
             return mEnabled;
         }
 
         public String getKey() {
             return key;
-        }
-
-        public String getSecret() {
-            return secret;
         }
     }
 
@@ -483,6 +452,9 @@ public class Config {
             return enabled;
         }
 
+        // TODO we have removed the API key from Config as a part of
+        //  https://2u-internal.atlassian.net/browse/LEARNER-8794, This code will be removed once
+        //  https://2u-internal.atlassian.net/browse/LEARNER-9354 is completed and merged in master
         public String getApiKey() {
             return apiKey;
         }
@@ -682,6 +654,10 @@ public class Config {
         return getBoolean(COURSE_VIDEOS_ENABLED, true);
     }
 
+    public boolean isAnnouncementEnabled() {
+        return getBoolean(ANNOUNCEMENTS_ENABLED, true);
+    }
+
     public boolean isDownloadToSDCardEnabled() {
         return getBoolean(DOWNLOAD_TO_SD_CARD_ENABLED, false);
     }
@@ -694,11 +670,6 @@ public class Config {
     @NonNull
     public DiscoveryConfig getDiscoveryConfig() {
         return getObjectOrNewInstance(DISCOVERY, DiscoveryConfig.class);
-    }
-
-    @NonNull
-    public ZeroRatingConfig getZeroRatingConfig() {
-        return getObjectOrNewInstance(ZERO_RATING, ZeroRatingConfig.class);
     }
 
     @NonNull
@@ -742,6 +713,7 @@ public class Config {
     }
 
     @NonNull
+    @SuppressWarnings("unused")
     public EndToEndConfig getEndToEndConfig() {
         return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
     }

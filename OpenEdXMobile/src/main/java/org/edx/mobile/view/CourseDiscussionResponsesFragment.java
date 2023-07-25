@@ -29,6 +29,7 @@ import org.edx.mobile.model.discussion.DiscussionRequestFields;
 import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
@@ -36,7 +37,6 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,6 +245,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             InfiniteScrollUtils.PageLoader<DiscussionComment> {
         @NonNull
         private final Context context;
+        private final Config config;
         @NonNull
         private final String threadId;
         private final boolean isQuestionTypeThread;
@@ -266,9 +267,10 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             this.threadId = threadId;
             this.isQuestionTypeThread = isQuestionTypeThread;
             this.isFetchingEndorsed = isQuestionTypeThread;
-            discussionService = EntryPointAccessors
-                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
-                    .getDiscussionService();
+            EdxDefaultModule.ProviderEntryPoint entryPointProvider = EntryPointAccessors
+                    .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class);
+            discussionService = entryPointProvider.getDiscussionService();
+            config = entryPointProvider.getEnvironment().getConfig();
         }
 
         @Override
@@ -276,8 +278,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             if (getResponsesListCall != null) {
                 getResponsesListCall.cancel();
             }
-            final List<String> requestedFields = Collections.singletonList(
-                    DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+            List<String> requestedFields = DiscussionRequestFields.getRequestedFieldsList(config);
             if (isQuestionTypeThread) {
                 getResponsesListCall = discussionService.getResponsesListForQuestion(
                         threadId, nextPage, isFetchingEndorsed, requestedFields);

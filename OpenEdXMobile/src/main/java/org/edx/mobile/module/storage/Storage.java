@@ -26,7 +26,6 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.FileUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.Sha1Util;
 import org.edx.mobile.view.BulkDownloadFragment;
 import org.greenrobot.eventbus.EventBus;
@@ -92,11 +91,6 @@ public class Storage implements IStorage {
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {
             boolean downloadPreference = userPrefs.isDownloadOverWifiOnly();
-            if(NetworkUtil.isOnZeroRatedNetwork(context, config)){
-                //If the device has zero rated network, then allow downloading
-                //on mobile network even if user has "Only on wifi" settings as ON
-                downloadPreference = false;
-            }
 
             // Fail the download if download directory isn't available
             final File downloadDirectory = FileUtil.getDownloadDirectory(context, environment.get());

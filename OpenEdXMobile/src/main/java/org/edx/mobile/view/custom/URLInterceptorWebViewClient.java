@@ -24,7 +24,6 @@ import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.links.WebViewLink;
@@ -294,10 +293,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
         // suppress external links on ZeroRated network
         String url = request.getUrl().toString();
-        if (isExternalLink(url)
-                && !ConfigUtil.Companion.isWhiteListedURL(url, config)
-                && NetworkUtil.isOnZeroRatedNetwork(context, config)
-                && NetworkUtil.isConnectedMobile(context)) {
+        if (isExternalLink(url) && NetworkUtil.isConnectedMobile(context)) {
             return new WebResourceResponse("text/html", StandardCharsets.UTF_8.name(), null);
         }
         return super.shouldInterceptRequest(view, request);

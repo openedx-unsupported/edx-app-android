@@ -75,19 +75,21 @@ public class ResourcesFragment extends OfflineSupportBaseFragment {
             }
         });
 
-        holder = createViewHolder(inflater, parent);
+        if (environment.getConfig().isAnnouncementEnabled()) {
+            holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_campaign));
-        holder.titleView.setText(R.string.announcement_title);
-        holder.subtitleView.setText(R.string.announcement_subtitle);
-        holder.rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (courseData != null) {
-                    environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
+            holder.typeView.setImageDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.ic_campaign));
+            holder.titleView.setText(R.string.announcement_title);
+            holder.subtitleView.setText(R.string.announcement_subtitle);
+            holder.rowView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (courseData != null) {
+                        environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         final Bundle arguments = getArguments();
         @ScreenDef String screenName;

@@ -4,14 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
-import android.telephony.TelephonyManager;
 
 import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-
-import java.util.List;
 
 public class NetworkUtil {
 
@@ -74,43 +71,6 @@ public class NetworkUtil {
     public static NetworkInfo getNetworkInfo(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo();
-    }
-
-    /**
-     * Returns true if Zero-Rating is enabled and app is running on a carrier id mentioned in zero-rated configuration,
-     * false otherwise.
-     *
-     * @param context
-     * @return
-     */
-    public static boolean isOnZeroRatedNetwork(Context context, Config config) {
-        if (config.getZeroRatingConfig().isEnabled()) {
-            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            String carrierId = manager.getNetworkOperator();
-
-            List<String> zeroRatedCarriers = config.getZeroRatingConfig().getCarriers();
-
-            for (String carrier : zeroRatedCarriers) {
-                if (carrier.equalsIgnoreCase(carrierId)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static class ZeroRatedNetworkInfo {
-        private final Context context;
-        private final Config config;
-
-        public ZeroRatedNetworkInfo(Context context, Config config) {
-            this.context = context.getApplicationContext();
-            this.config = config;
-        }
-
-        public boolean isOnZeroRatedNetwork() {
-            return NetworkUtil.isOnZeroRatedNetwork(context, config);
-        }
     }
 
     /**

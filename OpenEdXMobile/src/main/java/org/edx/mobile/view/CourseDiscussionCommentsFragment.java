@@ -29,13 +29,13 @@ import org.edx.mobile.model.discussion.DiscussionRequestFields;
 import org.edx.mobile.model.discussion.DiscussionThread;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +56,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
+
+    @Inject
+    Config config;
 
     private DiscussionThread discussionThread;
     private DiscussionComment discussionResponse;
@@ -145,8 +148,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         if (getCommentsListCall != null) {
             getCommentsListCall.cancel();
         }
-        final List<String> requestedFields = Collections.singletonList(
-                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        final List<String> requestedFields = DiscussionRequestFields.getRequestedFieldsList(config);
         getCommentsListCall = discussionService.getCommentsList(
                 discussionResponse.getIdentifier(), nextPage, requestedFields);
         final Activity activity = requireActivity();

@@ -122,21 +122,21 @@ public class RegisterActivity extends BaseFragmentActivity
         googleButton = findViewById(R.id.google_button);
         microsoftButton = findViewById(R.id.microsoft_button);
 
-        if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, environment.getConfig())) {
+        if (!SocialFactory.isSocialFeatureEnabled(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, environment.getConfig())) {
             facebookButton.setVisibility(View.GONE);
         } else {
             isSocialEnabled = true;
             facebookButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
         }
 
-        if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, environment.getConfig())) {
+        if (!SocialFactory.isSocialFeatureEnabled(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, environment.getConfig())) {
             googleButton.setVisibility(View.GONE);
         } else {
             isSocialEnabled = true;
             googleButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
         }
 
-        if (!SocialFactory.isSocialFeatureEnabled(getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, environment.getConfig())) {
+        if (!SocialFactory.isSocialFeatureEnabled(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_MICROSOFT, environment.getConfig())) {
             microsoftButton.setVisibility(View.GONE);
         } else {
             isSocialEnabled = true;

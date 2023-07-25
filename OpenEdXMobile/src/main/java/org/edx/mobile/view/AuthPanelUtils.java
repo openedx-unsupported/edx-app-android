@@ -21,10 +21,6 @@ public class AuthPanelUtils {
                 rootView.findViewById(R.id.log_in), rootView.findViewById(R.id.sign_up), environment);
     }
 
-    public static void configureAuthPanel(@NonNull final AuthPanelBinding binding, @NonNull final IEdxEnvironment environment) {
-        setAuthPanelVisible(shouldAuthPanelBeVisible(environment), binding, environment);
-    }
-
     public static boolean shouldAuthPanelBeVisible(@NonNull final IEdxEnvironment environment) {
         return !environment.getLoginPrefs().isUserLoggedIn()
                 && environment.getConfig().isNewLogistrationEnabled();
