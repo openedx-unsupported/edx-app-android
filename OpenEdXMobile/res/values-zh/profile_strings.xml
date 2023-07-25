@@ -75,8 +75,6 @@
     <string name="profile_incomplete_edit_button">开始</string>
     <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
     <string name="profile_incomplete_about_me">没有提供“关于我”信息。</string>
-    <!-- Window title for edit profile screen -->
-    <string name="edit_user_profile_title">编辑资料</string>
     <!-- How most profile fields are formatted when viewing the edit screen -->
     <string name="edit_user_profile_field">{label}: {value}</string>
     <!-- Default placeholder if a profile field is blank -->
