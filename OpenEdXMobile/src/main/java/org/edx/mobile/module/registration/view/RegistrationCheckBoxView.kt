@@ -36,7 +36,13 @@ class RegistrationCheckBoxView(
 
     override fun isValidInput(): Boolean = true
 
-    override fun setRawValue(value: String?): Boolean = false
+    override fun setRawValue(value: String?): Boolean {
+        value?.toBoolean()?.let {
+            binding.registerCheckbox.isChecked = it
+            return true
+        }
+        return false
+    }
 
     override fun setInstructions(instructions: String?) {
     }

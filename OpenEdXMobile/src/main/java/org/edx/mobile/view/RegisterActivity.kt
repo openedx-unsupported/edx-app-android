@@ -59,6 +59,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     private val mFieldViews: MutableList<IRegistrationFieldView> = mutableListOf()
     private lateinit var socialLoginDelegate: SocialLoginDelegate
     private lateinit var errorNotification: FullScreenErrorNotification
+    private var socialRegistrationType = SOCIAL_SOURCE_TYPE.UNKNOWN
+    private var savedRegistrationFormState: Bundle? = null
 
     @Inject
     lateinit var loginPrefs: LoginPrefs
@@ -229,6 +231,10 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             override fun onResponse(registrationDescription: RegistrationDescription) {
                 updateUI(true)
                 setupRegistrationForm(registrationDescription)
+                setRegistrationFields(savedRegistrationFormState)
+                if (socialRegistrationType != SOCIAL_SOURCE_TYPE.UNKNOWN) {
+                    updateUIOnSocialLoginToEdxFailure(socialRegistrationType)
+                }
             }
 
             override fun onFailure(error: Throwable) {
@@ -450,14 +456,14 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
     private fun updateUIOnSocialLoginToEdxFailure(
         socialType: SOCIAL_SOURCE_TYPE,
-        accessToken: String
+        accessToken: String? = null
     ) {
         //change UI.
         binding.socialAuth.root.setVisibility(false)
         //help method
         showRegularMessage(socialType)
         //populate the field with value from social site
-        populateEmailFromSocialSite(socialType, accessToken)
+        accessToken?.let { populateEmailFromSocialSite(socialType, it) }
         //hide confirm email and password field as we don't need them in case of social signup
         val extraFields: MutableList<IRegistrationFieldView> = ArrayList()
         for (field in mFieldViews) {
@@ -500,8 +506,37 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        // outState.putString("username", email_et.getText().toString().trim());
+        outState.putBundle(REGISTRATION_FORM_DATA, getRegistrationFields())
+        outState.putSerializable(SOCIAL_REGISTRATION_TYPE, socialRegistrationType)
         socialLoginDelegate.onActivitySaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedRegistrationFormState = savedInstanceState.getBundle(REGISTRATION_FORM_DATA)
+        socialRegistrationType =
+            savedInstanceState.getSerializable(SOCIAL_REGISTRATION_TYPE) as SOCIAL_SOURCE_TYPE
+    }
+
+    private fun getRegistrationFields(): Bundle {
+        val parameters = Bundle()
+        for (fieldView in mFieldViews) {
+            if (fieldView.hasValue()) {
+                parameters.putString(
+                    fieldView.getField().name,
+                    fieldView.getCurrentValue()?.asString
+                )
+            }
+        }
+        return parameters
+    }
+
+    private fun setRegistrationFields(parameters: Bundle?) {
+        parameters?.let {
+            for (fieldView in mFieldViews) {
+                fieldView.setRawValue(parameters.getString(fieldView.getField().name))
+            }
+        }
     }
 
     override fun onStop() {
@@ -568,8 +603,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 }, getString(android.R.string.cancel), null
             )
         } else {
-            val socialType = SOCIAL_SOURCE_TYPE.fromString(backend)
-            updateUIOnSocialLoginToEdxFailure(socialType, accessToken)
+            socialRegistrationType = SOCIAL_SOURCE_TYPE.fromString(backend)
+            updateUIOnSocialLoginToEdxFailure(socialRegistrationType, accessToken)
         }
     }
 
@@ -665,6 +700,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     companion object {
+        private const val REGISTRATION_FORM_DATA = "registration_form_data"
+        private const val SOCIAL_REGISTRATION_TYPE = "social_registration_type"
         private const val ACCESSIBILITY_FOCUS_DELAY_MS = 500
 
         @JvmStatic
