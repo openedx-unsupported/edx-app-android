@@ -497,10 +497,6 @@
         <item name="android:background">@drawable/edx_segmented_control_middle_background</item>
     </style>
 
-    <style name="edX.Widget.TextInputLayout.HintTextAppearance" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/primaryBaseColor</item>
-    </style>
-
     <style name="Calendar.Sync.Switch" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/primaryDarkColor</item>
         <item name="colorSwitchThumbNormal">@color/neutralDark</item>

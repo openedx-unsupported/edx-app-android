@@ -60,7 +60,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
                 null, false);
         binding.emailEditText.setText(getArguments().getString(ARG_LOGIN_EMAIL));
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+        final AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.confirm_dialog_title_help)
                 .setMessage(R.string.confirm_dialog_message_help)
                 .setPositiveButton(android.R.string.ok, null)
@@ -107,7 +107,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     }
 
     private void submit(@Nullable String email) {
-        if (!NetworkUtil.isConnected(getContext())) {
+        if (!NetworkUtil.isConnected(requireContext())) {
             showError(getString(R.string.network_not_connected_short));
         } else if (!InputValidationUtil.isValidEmail(email)) {
             showError(getString(R.string.error_invalid_email));
@@ -115,7 +115,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
             setUiForInteraction(false);
             binding.emailInputLayout.setError(null);
             resetCall = loginService.resetPassword(email);
-            resetCall.enqueue(new ErrorHandlingCallback<ResetPasswordResponse>(getContext()) {
+            resetCall.enqueue(new ErrorHandlingCallback<>(requireContext()) {
                 @Override
                 protected void onResponse(@NonNull final ResetPasswordResponse result) {
                     setUiForInteraction(true);
@@ -132,7 +132,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
                 @Override
                 protected void onFailure(@NonNull Throwable error) {
                     setUiForInteraction(true);
-                    final String errorMsg = ErrorUtils.getErrorMessage(error, getContext());
+                    final String errorMsg = ErrorUtils.getErrorMessage(error, requireContext());
                     showError(errorMsg);
                 }
             });
@@ -140,7 +140,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (resetCall != null) {
             resetCall.cancel();
