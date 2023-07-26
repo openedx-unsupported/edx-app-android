@@ -121,8 +121,8 @@ public class BulkDownloadFragment extends BaseFragment {
      */
     private final List<VideoModel> removableVideos = new ArrayList<>();
 
-    private final ActivityResultLauncher<String> storagePermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+    private final ActivityResultLauncher<String> storagePermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     onPermissionGranted();
                 } else {

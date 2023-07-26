@@ -88,7 +88,7 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
                 while (i < leafPathSize - 1) {
                     val nextComp = leafPath[i]
                     val intent = environment.router?.getCourseOutlineIntent(
-                        this@OfflineSupportBaseFragment,
+                        requireActivity(),
                         courseData, null,
                         nextComp.id, leafCompId, false
                     )

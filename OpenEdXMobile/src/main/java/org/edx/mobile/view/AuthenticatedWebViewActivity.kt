@@ -45,7 +45,7 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
         private const val EXTRA_IS_MODAL_VIEW = "is_modal_view"
 
         @JvmStatic
-        fun newIntent(activity: Context?, unit: CourseComponent): Intent {
+        fun newIntent(activity: Context, unit: CourseComponent): Intent {
             return newIntent(
                 activity = activity,
                 url = unit.blockUrl,
@@ -56,7 +56,7 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
 
         @JvmStatic
         fun newIntent(
-            activity: Context?,
+            activity: Context,
             url: String,
             screenTitle: String,
             isModalView: Boolean

@@ -1,6 +1,5 @@
 package org.edx.mobile.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,8 +18,8 @@ public class BaseFragment extends Fragment {
 
     private boolean isFirstVisit = true;
 
-    protected ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+    protected ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (!isGranted) {
                     showPermissionDeniedMessage();
                 }
@@ -88,15 +87,15 @@ public class BaseFragment extends Fragment {
 
     /**
      * Called when a Fragment is re-displayed to the user (the user has navigated back to it).
-     * Defined to mock the behavior of {@link Activity#onRestart() Activity.onRestart} function.
+     * Defined to mock the behavior of {@link `Activity#onRestart()` Activity.onRestart} function.
      */
     protected void onRevisit() {
     }
 
     /**
-     * Called when a parent activity receives a new intent in its {@link Activity#onNewIntent(Intent)
+     * Called when a parent activity receives a new intent in its {@link `Activity#onNewIntent(Intent)`
      * Activity.onNewIntent} function.
-     * Defined to mock the behavior of {@link Activity#onNewIntent(Intent) Activity.onNewIntent} function.
+     * Defined to mock the behavior of {@link `Activity#onNewIntent(Intent)` Activity.onNewIntent} function.
      */
     protected void onNewIntent(Intent intent) {
     }

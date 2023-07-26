@@ -164,8 +164,8 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private AlertDialogFragment loaderDialog;
     private boolean refreshOnResume = false;
 
-    private final ActivityResultLauncher<Intent> courseUnitDetailLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    private final ActivityResultLauncher<Intent> courseUnitDetailLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent resultData = result.getData();
                 if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
                     if (resultData.getBooleanExtra(AppConstants.COURSE_UPGRADED, false)) {
@@ -545,16 +545,16 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                 listView.clearChoices();
                 final CourseComponent component = adapter.getItem(position).component;
                 if (component.isContainer()) {
-                    Intent courseOutlineIntent = environment.getRouter().getCourseOutlineIntent(CourseOutlineFragment.this,
+                    Intent courseOutlineIntent = environment.getRouter().getCourseOutlineIntent(requireActivity(),
                             courseData, courseUpgradeData, component.getId(), null, isVideoMode);
                     courseUnitDetailLauncher.launch(courseOutlineIntent);
                 } else {
                     if (adapter.getItemViewType(position) == CourseOutlineAdapter.SectionRow.RESUME_COURSE_ITEM) {
                         environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
                     }
-                    Intent intent = environment.getRouter().getCourseUnitDetailIntent(CourseOutlineFragment.this,
+                    Intent courseUnitDetailIntent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
                             courseData, courseUpgradeData, component.getId(), isVideoMode);
-                    courseUnitDetailLauncher.launch(intent);
+                    courseUnitDetailLauncher.launch(courseUnitDetailIntent);
 
                     environment.getAnalyticsRegistry().trackScreenView(
                             Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
@@ -647,9 +647,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private void detectDeepLinking() {
         if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName)
                 && !TextUtils.isEmpty(courseComponentId)) {
-            Intent intent = environment.getRouter().getCourseUnitDetailIntent(CourseOutlineFragment.this,
+            Intent courseUnitDetailIntent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
                     courseData, courseUpgradeData, courseComponentId, false);
-            courseUnitDetailLauncher.launch(intent);
+            courseUnitDetailLauncher.launch(courseUnitDetailIntent);
             screenName = null;
         }
     }

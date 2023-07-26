@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.BuildConfig;
@@ -218,16 +217,16 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
-    public Intent getCourseOutlineIntent(Fragment fragment,
+    public Intent getCourseOutlineIntent(Activity activity,
                                          EnrolledCoursesResponse courseData,
                                          CourseUpgradeResponse courseUpgradeData,
                                          String courseComponentId,
                                          String lastAccessedId, boolean isVideosMode) {
-        return CourseOutlineActivity.newIntent(fragment.getActivity(),
+        return CourseOutlineActivity.newIntent(activity,
                 courseData, courseUpgradeData, courseComponentId, lastAccessedId, isVideosMode);
     }
 
-    public Intent getCourseUnitDetailIntent(Fragment fragment,
+    public Intent getCourseUnitDetailIntent(Activity activity,
                                             EnrolledCoursesResponse model,
                                             CourseUpgradeResponse courseUpgradeData,
                                             String courseComponentId, boolean isVideosMode) {
@@ -236,7 +235,7 @@ public class Router {
         courseBundle.putParcelable(EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetailIntent = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
+        Intent courseDetailIntent = new Intent(activity, CourseUnitNavigationActivity.class);
         courseDetailIntent.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetailIntent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
         courseDetailIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

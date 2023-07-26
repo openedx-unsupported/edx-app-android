@@ -48,16 +48,35 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private lateinit var binding: FragmentCourseDatesPageBinding
     private val viewModel: CourseDateViewModel by viewModels()
 
-    private val courseUnitDetailLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val resultData = result.data
-            if (result?.resultCode == Activity.RESULT_OK && resultData != null) {
-                val outlineComp = courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
-                outlineComp?.let {
-                    navigateToCourseUnit(resultData, courseData, outlineComp)
-                }
+    private val courseUnitDetailLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val resultData = result.data
+        if (result?.resultCode == Activity.RESULT_OK && resultData != null) {
+            val outlineComp = courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
+            outlineComp?.let {
+                navigateToCourseUnit(resultData, courseData, outlineComp)
             }
         }
+    }
+
+    private val calendarPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { isGranted ->
+        if (isGranted.containsValue(false).not()) {
+            askForCalendarSync()
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ACCESS_OK,
+                Analytics.Values.CALENDAR_ACCESS_OK
+            )
+        } else {
+            binding.switchSync.isChecked = false
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
+                Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
+            )
+        }
+    }
 
     private var onDateItemClick: OnDateBlockListener = object : OnDateBlockListener {
         override fun onClick(link: String, blockId: String) {
@@ -65,7 +84,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
                 val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
-                    this@CourseDatesPageFragment,
+                    requireActivity(),
                     courseData,
                     null,
                     blockId,
@@ -90,6 +109,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             }
         }
     }
+
     private lateinit var courseData: EnrolledCoursesResponse
     private var isSelfPaced: Boolean = true
     private var isDeepLinkEnabled: Boolean = false
@@ -98,24 +118,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     private lateinit var keyValMap: Map<String, CharSequence>
     private var isCalendarExist: Boolean = false
     private lateinit var loaderDialog: AlertDialogFragment
-
-    private val calendarPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { isGranted ->
-        if (isGranted.containsValue(false).not()) {
-            askForCalendarSync()
-            trackCalendarEvent(
-                Analytics.Events.CALENDAR_ACCESS_OK,
-                Analytics.Values.CALENDAR_ACCESS_OK
-            )
-        } else {
-            binding.switchSync.isChecked = false
-            trackCalendarEvent(
-                Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
-                Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
-            )
-        }
-    }
 
     companion object {
         @JvmStatic
@@ -262,11 +264,9 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                                 null
                             )
 
-                        ErrorMessage.BANNER_INFO_CODE ->
-                            initDatesBanner(null)
+                        ErrorMessage.BANNER_INFO_CODE -> initDatesBanner(null)
 
-                        ErrorMessage.COURSE_RESET_DATES_CODE ->
-                            showShiftDateSnackBar(false)
+                        ErrorMessage.COURSE_RESET_DATES_CODE -> showShiftDateSnackBar(false)
                     }
                 }
             }

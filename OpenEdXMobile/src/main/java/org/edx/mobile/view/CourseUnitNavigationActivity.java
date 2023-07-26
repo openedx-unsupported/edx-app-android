@@ -76,7 +76,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private ViewPager2 pager2;
     private CourseComponent selectedUnit;
 
-    private List<CourseComponent> unitList = new ArrayList<>();
+    private final List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
     private InAppPurchasesViewModel iapViewModel;
 
@@ -96,7 +96,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private boolean refreshCourse = false;
 
     ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
                 Uri[] files = null;
                 Intent resultData = result.getData();
                 if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
@@ -138,7 +139,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setToolbarAsActionBar();
-        RelativeLayout insertPoint = (RelativeLayout) findViewById(R.id.fragment_container);
+        RelativeLayout insertPoint = findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         @NonNull ViewCourseUnitPagerBinding binding = ViewCourseUnitPagerBinding.inflate(inflater, null, false);
@@ -194,7 +195,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     private void getCourseCelebrationStatus() {
         Call<CourseStatus> courseStatusCall = courseApi.getCourseStatus(courseData.getCourseId());
-        courseStatusCall.enqueue(new ErrorHandlingCallback<CourseStatus>(this, null, null) {
+        courseStatusCall.enqueue(new ErrorHandlingCallback<>(this, null, null) {
             @Override
             protected void onResponse(@NonNull CourseStatus responseBody) {
                 isFirstSection = responseBody.getCelebrationStatus().getFirstSection();
@@ -223,7 +224,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                         EventBus.getDefault().postSticky(new VideoPlaybackEvent(true));
                         if (!reCreate) {
                             courseApi.updateCourseCelebration(courseData.getCourseId())
-                                    .enqueue(new ErrorHandlingCallback<Void>(CourseUnitNavigationActivity.this) {
+                                    .enqueue(new ErrorHandlingCallback<>(CourseUnitNavigationActivity.this) {
                                         @Override
                                         protected void onResponse(@NonNull Void responseBody) {
                                             isFirstSection = false;
@@ -452,7 +453,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
         if (selectedUnit != null) {
@@ -520,14 +521,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             return;
         }
         switch (event.getFlowAction()) {
-            case SHOW_FULL_SCREEN_LOADER: {
-                showFullscreenLoader(event.getIapFlowData());
-                break;
-            }
-            case PURCHASE_FLOW_COMPLETE: {
-                EventBus.getDefault().post(new MyCoursesRefreshEvent());
-                break;
-            }
+            case SHOW_FULL_SCREEN_LOADER -> showFullscreenLoader(event.getIapFlowData());
+            case PURCHASE_FLOW_COMPLETE -> EventBus.getDefault().post(new MyCoursesRefreshEvent());
         }
     }
 
@@ -537,6 +532,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void onEvent(CourseUpgradedEvent event) {
         finish();
     }
