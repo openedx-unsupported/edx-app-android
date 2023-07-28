@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/course_unit_nav_spinner_item_height">
+
+        <FrameLayout
+            android:id="@+id/fl_unit_status"
+            android:layout_width="@dimen/ic_base"
+            android:layout_height="@dimen/ic_base"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/widget_margin">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_unit_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:srcCompat="@drawable/ic_green_check" />
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_unit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/widget_margin"
+            android:layout_toEndOf="@+id/fl_unit_status"
+            android:background="@drawable/view_selector"
+            android:ellipsize="end"
+            android:fontFamily="?attr/fontRegular"
+            android:maxLines="1"
+            android:textColor="@color/neutralXXDark"
+            android:textSize="@dimen/edx_small"
+            tools:text="Introducing Weekly Check Ins" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edx_divider_length"
+            android:layout_alignParentBottom="true"
+            android:background="@color/neutralXLight" />
+    </RelativeLayout>
+</layout>

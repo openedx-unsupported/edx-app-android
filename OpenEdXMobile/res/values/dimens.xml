@@ -120,6 +120,7 @@
     <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
     <dimen name="course_unit_message_icon_size">140dp</dimen>
+    <dimen name="course_unit_nav_spinner_item_height">36dp</dimen>
 
     <dimen name="tab_height">56dp</dimen>
     <dimen name="tab_indicator_height">2dp</dimen>
