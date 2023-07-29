@@ -31,7 +31,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.AuthenticatedWebviewBinding;
 import org.edx.mobile.event.CourseDashboardRefreshEvent;
-import org.edx.mobile.event.FileSelectionEvent;
+import org.edx.mobile.event.FileShareEvent;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
@@ -346,7 +346,7 @@ public class AuthenticatedWebView extends FrameLayout implements RefreshListener
 
     @Subscribe
     @SuppressWarnings("unused")
-    public void onEventMainThread(FileSelectionEvent event) {
+    public void onEventMainThread(FileShareEvent event) {
         if (webViewClient != null) {
             webViewClient.onFilesSelection(event.getFiles());
         }

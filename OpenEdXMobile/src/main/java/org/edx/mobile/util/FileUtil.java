@@ -11,9 +11,7 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RawRes;
-import androidx.fragment.app.FragmentActivity;
 
-import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -34,7 +32,6 @@ public class FileUtil {
     protected static final Logger logger = new Logger(FileUtil.class.getName());
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
-    public static final int FILE_CHOOSER_RESULT_CODE = 0x001;
 
     // Make this class non-instantiable
     private FileUtil() {
@@ -283,15 +280,17 @@ public class FileUtil {
     }
 
     /**
-     * Method to initiate the file selector with given supported file extensions.
+     * Creates an Intent to pick files with specified extensions.
+     *
+     * @param acceptTypes An array of MIME types to filter file selection.
+     * @return An Intent for the file picker activity.
      */
-    public static void chooseFiles(FragmentActivity activity, String[] acceptTypes) {
+    public static Intent getChooseFilesIntent(String[] acceptTypes) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, getSupportedFileMimeType(acceptTypes));
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.choose_file_title)),
-                FILE_CHOOSER_RESULT_CODE);
+        return intent;
     }
 
     /**

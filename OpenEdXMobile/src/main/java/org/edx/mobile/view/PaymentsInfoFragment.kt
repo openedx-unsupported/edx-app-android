@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.databinding.FragmentPaymentsInfoBinding
+import org.edx.mobile.extenstion.parcelableOrThrow
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.model.api.CourseUpgradeResponse
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.util.DateUtil
 import org.edx.mobile.util.ResourceUtil
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class PaymentsInfoFragment : BaseFragment() {
 
@@ -39,7 +41,7 @@ class PaymentsInfoFragment : BaseFragment() {
         val context = view.context
         binding.btnClose.setOnClickListener { activity?.finish() }
         val courseData =
-            arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+            arguments.serializableOrThrow<EnrolledCoursesResponse>(Router.EXTRA_COURSE_DATA)
 
         val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
         val stringBuilder: StringBuilder = java.lang.StringBuilder()
@@ -76,7 +78,8 @@ class PaymentsInfoFragment : BaseFragment() {
         binding.tvAuditAccessExpiresDetails.text = stringBuilder.toString()
 
         val courseUpgradeData =
-            arguments?.getParcelable<CourseUpgradeResponse>(Router.EXTRA_COURSE_UPGRADE_DATA) as CourseUpgradeResponse
+            arguments.parcelableOrThrow<CourseUpgradeResponse>(Router.EXTRA_COURSE_UPGRADE_DATA)
+
         PaymentsBannerFragment.loadPaymentsBannerFragment(
             R.id.fragment_container, courseData, null,
             courseUpgradeData, false, childFragmentManager, false

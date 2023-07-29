@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.BuildConfig;
@@ -218,31 +217,29 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
-    public void showCourseContainerOutline(Fragment fragment, int requestCode,
-                                           EnrolledCoursesResponse courseData,
-                                           CourseUpgradeResponse courseUpgradeData,
-                                           String courseComponentId,
-                                           String lastAccessedId, boolean isVideosMode) {
-        Intent courseDetail = CourseOutlineActivity.newIntent(fragment.getActivity(),
+    public Intent getCourseOutlineIntent(Activity activity,
+                                         EnrolledCoursesResponse courseData,
+                                         CourseUpgradeResponse courseUpgradeData,
+                                         String courseComponentId,
+                                         String lastAccessedId, boolean isVideosMode) {
+        return CourseOutlineActivity.newIntent(activity,
                 courseData, courseUpgradeData, courseComponentId, lastAccessedId, isVideosMode);
-        //TODO - what's the most suitable FLAG?
-        // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        fragment.startActivityForResult(courseDetail, requestCode);
     }
 
-    public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
-                                     CourseUpgradeResponse courseUpgradeData,
-                                     String courseComponentId, boolean isVideosMode) {
+    public Intent getCourseUnitDetailIntent(Activity activity,
+                                            EnrolledCoursesResponse model,
+                                            CourseUpgradeResponse courseUpgradeData,
+                                            String courseComponentId, boolean isVideosMode) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putParcelable(EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetail = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        fragment.startActivityForResult(courseDetail, requestCode);
+        Intent courseDetailIntent = new Intent(activity, CourseUnitNavigationActivity.class);
+        courseDetailIntent.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetailIntent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        courseDetailIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return courseDetailIntent;
     }
 
     public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {

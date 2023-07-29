@@ -15,7 +15,6 @@ import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ScreenArgumentsEvent;
 import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.UiUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -110,20 +109,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
     private void requestPostNotificationsPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-            permissionListener = new PermissionListener() {
-                @Override
-                public void onPermissionGranted(String[] permissions, int requestCode) {
-                }
-
-                @Override
-                public void onPermissionDenied(String[] permissions, int requestCode) {
-                }
-            };
-
-            askForPermission(
-                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                    PermissionsUtil.POST_NOTIFICATION_REQUEST
-            );
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 

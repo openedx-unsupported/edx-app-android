@@ -5,6 +5,9 @@ import android.content.Intent
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
+import org.edx.mobile.extenstion.serializable
+import org.edx.mobile.http.notifications.FullScreenErrorNotification
+import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.services.CourseManager
@@ -61,10 +64,15 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
      * Method to redirect the user to course outline screen for maintaining the
      * back stack in case when user directly move to the course unit detail screen.
      */
-    fun navigateToCourseUnit(data: Intent, courseData: EnrolledCoursesResponse, outlineComp: CourseComponent) {
-        val leafCompId = data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID) as String
-        val leafComp = courseManager.getComponentByIdFromAppLevelCache(
-                courseData.courseId, leafCompId)
+    fun navigateToCourseUnit(
+        data: Intent,
+        courseData: EnrolledCoursesResponse,
+        outlineComp: CourseComponent
+    ) {
+        val leafCompId = data.serializable<String>(Router.EXTRA_COURSE_COMPONENT_ID)
+        val leafComp = leafCompId?.let {
+            courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, it)
+        }
         val outlinePath = outlineComp.path
         val leafPath = leafComp?.path
         val outlinePathSize = outlinePath.path.size
@@ -79,10 +87,12 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
                 var i = outlinePathSize + 1
                 while (i < leafPathSize - 1) {
                     val nextComp = leafPath[i]
-                    environment.router?.showCourseContainerOutline(
-                            this@OfflineSupportBaseFragment,
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, null,
-                            nextComp.id, leafCompId, false)
+                    val intent = environment.router?.getCourseOutlineIntent(
+                        requireActivity(),
+                        courseData, null,
+                        nextComp.id, leafCompId, false
+                    )
+                    intent?.let { startActivity(it) }
                     i += 2
                 }
             }
@@ -96,9 +106,5 @@ abstract class OfflineSupportBaseFragment : BaseFragment() {
      */
     open fun canUpdateRowSelection(): Boolean {
         return false
-    }
-
-    companion object {
-        const val REQUEST_SHOW_COURSE_UNIT_DETAIL = 101
     }
 }

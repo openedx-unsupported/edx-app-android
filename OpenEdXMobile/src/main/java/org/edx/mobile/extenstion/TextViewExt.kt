@@ -1,12 +1,12 @@
 package org.edx.mobile.extenstion
 
-import android.text.Html
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 
 fun TextView.renderHtml(body: String) {
     parseHtml(body)?.let { spannedHtml ->
@@ -14,7 +14,7 @@ fun TextView.renderHtml(body: String) {
             0, spannedHtml.length,
             URLSpan::class.java
         )
-        this.autoLinkMask = Linkify.ALL
+        this.autoLinkMask = Linkify.EMAIL_ADDRESSES or Linkify.PHONE_NUMBERS or Linkify.WEB_URLS
         this.movementMethod = LinkMovementMethod.getInstance()
         this.text = spannedHtml
         val viewText = this.text as SpannableString
@@ -30,10 +30,10 @@ fun TextView.renderHtml(body: String) {
 private fun parseHtml(html: String): Spanned? {
     // If the HTML contains a paragraph at the end, there will be blank lines following the text
     // Therefore, we need to trim the resulting CharSequence to remove those extra lines
-    return trim(Html.fromHtml(html)) as Spanned?
+    return trim(HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)) as Spanned?
 }
 
-private fun trim(s: CharSequence): CharSequence? {
+private fun trim(s: CharSequence): CharSequence {
     var start = 0
     var end = s.length
     while (start < end && Character.isWhitespace(s[start])) {

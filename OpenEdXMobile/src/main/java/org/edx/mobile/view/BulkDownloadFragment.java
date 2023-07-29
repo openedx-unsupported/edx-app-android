@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -37,7 +40,6 @@ import org.edx.mobile.module.storage.BulkVideosDownloadStartedEvent;
 import org.edx.mobile.util.DownloadUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.PermissionsUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.VideoUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
@@ -54,9 +56,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class BulkDownloadFragment extends BaseFragment implements BaseFragment.PermissionListener {
+public class BulkDownloadFragment extends BaseFragment {
     private final String EXTRA_COURSE_VIDEOS_STATUS = "extra_course_videos_status";
-
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -114,11 +115,21 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     /**
      * List of videos that are remaining for download.
      */
-    private List<HasDownloadEntry> remainingVideos = new ArrayList<>();
+    private final List<HasDownloadEntry> remainingVideos = new ArrayList<>();
     /**
      * List of videos that are currently being downloaded or have been downloaded.
      */
-    private List<VideoModel> removableVideos = new ArrayList<>();
+    private final List<VideoModel> removableVideos = new ArrayList<>();
+
+    private final ActivityResultLauncher<String> storagePermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    onPermissionGranted();
+                } else {
+                    showPermissionDeniedMessage();
+                }
+            });
+
 
     public BulkDownloadFragment() {
     }
@@ -133,22 +144,21 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_COURSE_VIDEOS_STATUS, videosStatus);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = RowBulkDownloadBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        permissionListener = this;
 
         final HandlerThread handlerThread = new HandlerThread("BulkDownloadBgThread");
         handlerThread.start();
@@ -192,7 +202,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
 
         // Get all the videos of this course from DB that we have downloaded or are downloading
         environment.getDatabase().getVideosByVideoIds(totalDownloadableVideos, null,
-                new DataCallback<List<VideoModel>>() {
+                new DataCallback<>() {
                     @Override
                     public void onResult(final List<VideoModel> result) {
                         for (CourseComponent video : totalDownloadableVideos) {
@@ -202,24 +212,24 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                                     final DownloadEntry.DownloadedState downloadedState =
                                             DownloadEntry.DownloadedState.values()[dbVideo.getDownloadedStateOrdinal()];
                                     switch (downloadedState) {
-                                        case DOWNLOADED:
+                                        case DOWNLOADED -> {
                                             videosStatus.downloaded++;
                                             videosStatus.totalVideosSize += dbVideo.getSize();
                                             removableVideos.add(dbVideo);
-                                            break;
-                                        case DOWNLOADING:
+                                        }
+                                        case DOWNLOADING -> {
                                             videosStatus.downloading++;
                                             videosStatus.remaining++;
                                             videosStatus.remainingVideosSize += dbVideo.getSize();
                                             videosStatus.totalVideosSize += dbVideo.getSize();
                                             removableVideos.add(dbVideo);
-                                            break;
-                                        default:
+                                        }
+                                        default -> {
                                             videosStatus.remaining++;
                                             videosStatus.remainingVideosSize += dbVideo.getSize();
                                             videosStatus.totalVideosSize += dbVideo.getSize();
                                             remainingVideos.add((VideoBlockModel) video);
-                                            break;
+                                        }
                                     }
                                     foundInDb = true;
                                     break;
@@ -312,12 +322,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
 
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    downloadListener.viewDownloadsStatus();
-                }
-            });
+            binding.getRoot().setOnClickListener(v -> downloadListener.viewDownloadsStatus());
             ViewCompat.setImportantForAccessibility(binding.getRoot(), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
             setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else if (switchState == SwitchState.IN_PROCESS) {
@@ -326,12 +331,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                     "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
                     MemoryUtil.format(getContext(), videosStatus.remainingVideosSize));
 
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    downloadListener.viewDownloadsStatus();
-                }
-            });
+            binding.getRoot().setOnClickListener(v -> downloadListener.viewDownloadsStatus());
             ViewCompat.setImportantForAccessibility(binding.getRoot(), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
             setSwitchAccessibility(R.string.switch_on_all_downloading);
         } else {
@@ -376,11 +376,11 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
 
     private void setSwitchState() {
         switch (switchState) {
-            case USER_TURNED_ON:
+            case USER_TURNED_ON -> {
                 binding.swDownload.setChecked(true);
                 binding.swDownload.setEnabled(true);
-                break;
-            case IN_PROCESS:
+            }
+            case IN_PROCESS -> {
                 binding.swDownload.setChecked(true);
                 binding.swDownload.setEnabled(false);
                 if (videosStatus.allVideosDownloading(switchState)) {
@@ -389,8 +389,8 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                     userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     setSwitchState();
                 }
-                break;
-            case USER_TURNED_OFF:
+            }
+            case USER_TURNED_OFF -> {
                 binding.swDownload.setChecked(false);
                 binding.swDownload.setEnabled(true);
                 if ((videosStatus.allVideosDownloading(switchState) || videosStatus.allVideosDownloaded())
@@ -401,11 +401,11 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                     userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
                     setSwitchState();
                 }
-                break;
-            case DEFAULT:
+            }
+            case DEFAULT -> {
                 binding.swDownload.setChecked(videosStatus.allVideosDownloaded() || videosStatus.allVideosDownloading(switchState));
                 binding.swDownload.setEnabled(true);
-                break;
+            }
         }
     }
 
@@ -420,30 +420,29 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     }
 
     private void initDownloadSwitch() {
-        binding.swDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final CompoundButton buttonView = (CompoundButton) v;
-                if (buttonView.isChecked()) {
-                    askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PermissionsUtil.WRITE_STORAGE_PERMISSION_REQUEST);
+        binding.swDownload.setOnClickListener(v -> {
+            final CompoundButton buttonView = (CompoundButton) v;
+            if (buttonView.isChecked()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    onPermissionGranted();
                 } else {
-                    switchState = SwitchState.USER_TURNED_OFF;
-                    userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
-                    // Delete all videos after a delay
-                    startVideosDeletion();
-                    bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
-                    updateUI();
-
-                    environment.getAnalyticsRegistry().trackBulkDownloadSwitchOff(
-                            videosStatus.courseComponentId, videosStatus.total);
+                    storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
+            } else {
+                switchState = SwitchState.USER_TURNED_OFF;
+                userPrefs.setBulkDownloadSwitchState(switchState, videosStatus.courseComponentId);
+                // Delete all videos after a delay
+                startVideosDeletion();
+                bgThreadHandler.removeCallbacks(PROGRESS_RUNNABLE);
+                updateUI();
+
+                environment.getAnalyticsRegistry().trackBulkDownloadSwitchOff(
+                        videosStatus.courseComponentId, videosStatus.total);
             }
         });
     }
 
-    @Override
-    public void onPermissionGranted(String[] permissions, int requestCode) {
+    public void onPermissionGranted() {
         //FIXME: This check should be removed within scope of this story LEARNER-2177
         if (downloadListener == null) {
             return;
@@ -462,10 +461,6 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
 
         environment.getAnalyticsRegistry().trackBulkDownloadSwitchOn(
                 videosStatus.courseComponentId, videosStatus.total, videosStatus.remaining);
-    }
-
-    @Override
-    public void onPermissionDenied(String[] permissions, int requestCode) {
     }
 
     private void startVideosDeletion() {
@@ -495,22 +490,19 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     final Runnable PROGRESS_RUNNABLE = new Runnable() {
 
         public void run() {
-            final Context context = getContext();
+            final Context context = requireContext();
             if (!isValidState() || !NetworkUtil.isConnected(context)) {
                 return;
             }
 
             if (!videosStatus.allVideosDownloading(switchState)) {
-                binding.pbDownload.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        binding.pbDownload.setVisibility(View.GONE);
-                        updateUI();
-                    }
+                binding.pbDownload.post(() -> {
+                    binding.pbDownload.setVisibility(View.GONE);
+                    updateUI();
                 });
             } else {
                 environment.getStorage().getDownloadProgressOfVideos(totalDownloadableVideos,
-                        new DataCallback<NativeDownloadModel>() {
+                        new DataCallback<>() {
                             @Override
                             public void onResult(final NativeDownloadModel downloadModel) {
                                 if (downloadModel != null && isValidState()) {
@@ -527,16 +519,13 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
                                             videosStatus.totalVideosSize, videosStatus.totalVideosSize - remainingSizeToDownload);
 
                                     if (videosStatus.allVideosDownloading(switchState) && remainingSizeToDownload > 0) {
-                                        binding.pbDownload.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                binding.pbDownload.setVisibility(View.VISIBLE);
-                                                binding.pbDownload.setProgress(percentageDownloaded);
-                                                setSubtitle(binding.tvSubtitle.getResources().getString(R.string.download_remaining),
-                                                        "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
-                                                        MemoryUtil.format(context, remainingSizeToDownload));
-                                                setSwitchAccessibility(R.string.switch_on_all_downloading);
-                                            }
+                                        binding.pbDownload.post(() -> {
+                                            binding.pbDownload.setVisibility(View.VISIBLE);
+                                            binding.pbDownload.setProgress(percentageDownloaded);
+                                            setSubtitle(binding.tvSubtitle.getResources().getString(R.string.download_remaining),
+                                                    "remaining_videos_count", videosStatus.remaining + "", "remaining_videos_size",
+                                                    MemoryUtil.format(context, remainingSizeToDownload));
+                                            setSwitchAccessibility(R.string.switch_on_all_downloading);
                                         });
                                     }
                                 }
@@ -586,6 +575,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void onEvent(BulkVideosDownloadCancelledEvent event) {
         if (getView() == null) {
             // If fragment view is not created yet, mark the event and fire it once the view is created.
@@ -599,6 +589,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void onEvent(BulkVideosDownloadStartedEvent event) {
         if (getView() == null) {
             // If fragment view is not created yet, mark the event and fire it once the view is created.
@@ -627,7 +618,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         }
 
         boolean allVideosDownloading(SwitchState switchState) {
-            return (total == downloaded + downloading) || (switchState != null && switchState == SwitchState.USER_TURNED_ON);
+            return (total == downloaded + downloading) || (switchState == SwitchState.USER_TURNED_ON);
         }
 
         void reset() {
@@ -636,6 +627,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
             courseComponentId = null;
         }
 
+        @NonNull
         @SuppressLint("DefaultLocale")
         @Override
         public String toString() {
@@ -673,7 +665,7 @@ public class BulkDownloadFragment extends BaseFragment implements BaseFragment.P
         }
 
         @SuppressWarnings("unused")
-        public static final Parcelable.Creator<CourseVideosStatus> CREATOR = new Parcelable.Creator<CourseVideosStatus>() {
+        public static final Parcelable.Creator<CourseVideosStatus> CREATOR = new Parcelable.Creator<>() {
             @Override
             public CourseVideosStatus createFromParcel(Parcel in) {
                 return new CourseVideosStatus(in);

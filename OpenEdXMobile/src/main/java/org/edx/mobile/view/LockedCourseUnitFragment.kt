@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentLockedCourseUnitBinding
+import org.edx.mobile.extenstion.parcelableOrThrow
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.model.api.CourseUpgradeResponse
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
@@ -48,9 +50,9 @@ class LockedCourseUnitFragment : CourseUnitFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val courseUpgradeData =
-            arguments?.getParcelable<CourseUpgradeResponse>(Router.EXTRA_COURSE_UPGRADE_DATA) as CourseUpgradeResponse
+            arguments.parcelableOrThrow<CourseUpgradeResponse>(Router.EXTRA_COURSE_UPGRADE_DATA)
         val courseData =
-            arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+            arguments.serializableOrThrow<EnrolledCoursesResponse>(Router.EXTRA_COURSE_DATA)
         loadPaymentBannerFragment(courseData, courseUpgradeData)
         analyticsRegistry.trackScreenView(Analytics.Screens.COURSE_UNIT_LOCKED)
     }
