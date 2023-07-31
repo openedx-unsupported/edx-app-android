@@ -92,7 +92,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), HasComponent, PreLo
     private lateinit var binding: ActivityCourseUnitNavigationBinding
     private lateinit var pagerAdapter: CourseUnitPagerAdapter
 
-    override var component: CourseComponent? = null
+    private var component: CourseComponent? = null
     private var courseData: EnrolledCoursesResponse? = null
     private var courseUpgradeData: CourseUpgradeResponse? = null
     private var courseComponentId: String? = null

@@ -1,5 +1,6 @@
 package org.edx.mobile.view.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -52,13 +53,18 @@ class UnitsDropDownAdapter(
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setSelection(position: Int) {
         selectedItemPosition = position
-        notifyItemChanged(selectedItemPosition)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
         return units.size
+    }
+
+    fun getUnitIndex(unit: CourseComponent): Int {
+        return units.indexOf(unit)
     }
 
     class UnitDropDownViewHolder(val binding: LayoutUnitDropDownItemBinding) :
