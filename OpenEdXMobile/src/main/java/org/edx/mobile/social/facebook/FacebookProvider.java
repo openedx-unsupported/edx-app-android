@@ -36,7 +36,7 @@ public class FacebookProvider implements SocialProvider {
         throw new UnsupportedOperationException("Not implemented / Not supported");
     }
 
-    public void getUserInfo(Context context, SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,
+    public void getUserInfo(Context context, SocialFactory.SocialSourceType socialType, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
         getUser(new SocialProvider.Callback<SocialMember>() {
             @Override

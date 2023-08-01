@@ -141,13 +141,13 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
         ).apply {
             binding.socialAuth.facebookButton.setOnClickListener {
-                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK)
+                createSocialButtonClickHandler(SocialFactory.SocialSourceType.FACEBOOK)
             }
             binding.socialAuth.googleButton.setOnClickListener(
-                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE)
+                createSocialButtonClickHandler(SocialFactory.SocialSourceType.GOOGLE)
             )
             binding.socialAuth.microsoftButton.setOnClickListener(
-                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT)
+                createSocialButtonClickHandler(SocialFactory.SocialSourceType.MICROSOFT)
             )
         }
     }

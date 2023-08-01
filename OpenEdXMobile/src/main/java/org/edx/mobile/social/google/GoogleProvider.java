@@ -42,7 +42,7 @@ public class GoogleProvider implements SocialProvider {
 
     @Override
     public void getUserInfo(Context context,
-                            SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,
+                            SocialFactory.SocialSourceType socialType, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
         OkHttpClientProvider okHttpClientProvider = EntryPointAccessors
                 .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)

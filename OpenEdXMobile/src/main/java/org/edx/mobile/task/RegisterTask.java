@@ -13,11 +13,11 @@ import dagger.hilt.android.EntryPointAccessors;
 public abstract class RegisterTask extends Task<AuthResponse> {
 
     private Bundle parameters;
-    private SocialFactory.SOCIAL_SOURCE_TYPE backstoreType;
+    private SocialFactory.SocialSourceType backstoreType;
     private String accessToken;
     private LoginAPI loginAPI;
 
-    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE backstoreType) {
+    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SocialSourceType backstoreType) {
         super(context);
         this.parameters = parameters;
         this.accessToken = accessToken;

@@ -60,19 +60,19 @@ public class SocialLoginDelegate {
         this.loginPrefs = loginPrefs;
         this.feature = feature;
 
-        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE, config);
+        google = SocialFactory.getInstance(activity, SocialFactory.SocialSourceType.GOOGLE, config);
         google.setCallback(accessToken -> {
             logger.debug("Google logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_GOOGLE);
         });
 
-        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK, config);
+        facebook = SocialFactory.getInstance(activity, SocialFactory.SocialSourceType.FACEBOOK, config);
         facebook.setCallback(accessToken -> {
             logger.debug("Facebook logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_FACEBOOK);
         });
 
-        microsoft = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT, config);
+        microsoft = SocialFactory.getInstance(activity, SocialFactory.SocialSourceType.MICROSOFT, config);
         microsoft.setCallback(new ISocial.Callback() {
             @Override
             public void onCancel() {
@@ -127,7 +127,7 @@ public class SocialLoginDelegate {
         microsoft.onActivityStopped(activity);
     }
 
-    private void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+    private void socialLogin(SocialFactory.SocialSourceType socialType) {
         switch (socialType) {
             case FACEBOOK:
                 facebook.login();
@@ -141,7 +141,7 @@ public class SocialLoginDelegate {
         }
     }
 
-    private void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+    private void socialLogout(SocialFactory.SocialSourceType socialType) {
         switch (socialType) {
             case FACEBOOK:
                 facebook.logout();
@@ -178,13 +178,13 @@ public class SocialLoginDelegate {
     }
 
 
-    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken, final SocialUserInfoCallback userInfoCallback) {
+    public void getUserInfo(SocialFactory.SocialSourceType socialType, String accessToken, final SocialUserInfoCallback userInfoCallback) {
         SocialProvider socialProvider = null;
-        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK) {
+        if (socialType == SocialFactory.SocialSourceType.FACEBOOK) {
             socialProvider = new FacebookProvider();
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE) {
+        } else if (socialType == SocialFactory.SocialSourceType.GOOGLE) {
             socialProvider = new GoogleProvider((GoogleOauth2) google);
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT) {
+        } else if (socialType == SocialFactory.SocialSourceType.MICROSOFT) {
             socialProvider = new MicrosoftProvide();
         }
 
@@ -287,14 +287,14 @@ public class SocialLoginDelegate {
         }
     }
 
-    public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+    public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SocialSourceType socialType) {
         return new SocialButtonClickHandler(socialType);
     }
 
     public class SocialButtonClickHandler implements View.OnClickListener {
-        private SocialFactory.SOCIAL_SOURCE_TYPE socialType;
+        private SocialFactory.SocialSourceType socialType;
 
-        private SocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+        private SocialButtonClickHandler(SocialFactory.SocialSourceType socialType) {
             this.socialType = socialType;
         }
 

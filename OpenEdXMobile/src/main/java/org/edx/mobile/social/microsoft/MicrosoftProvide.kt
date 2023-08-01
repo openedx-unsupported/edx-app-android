@@ -19,7 +19,7 @@ class MicrosoftProvide : SocialProvider {
     }
 
     override fun getUserInfo(
-        context: Context?, socialType: SocialFactory.SOCIAL_SOURCE_TYPE?,
+        context: Context?, socialType: SocialFactory.SocialSourceType?,
         accessToken: String?,
         userInfoCallback: SocialLoginDelegate.SocialUserInfoCallback?
     ) {
