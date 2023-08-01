@@ -5,6 +5,7 @@ import androidx.annotation.NonNull
 import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.event.CourseOutlineRefreshEvent
+import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.services.CourseManager
 import org.greenrobot.eventbus.EventBus
@@ -25,8 +26,7 @@ abstract class CourseUnitFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        unit =
-            if (arguments == null) null else arguments?.getSerializable(Router.EXTRA_COURSE_UNIT) as CourseComponent
+        unit = arguments?.serializable(Router.EXTRA_COURSE_UNIT)
     }
 
     fun markComponentCompletion(isCompleted: Boolean) {

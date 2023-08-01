@@ -18,6 +18,7 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogFullscreenLoaderBinding
 import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
@@ -72,7 +73,7 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, args: Bundle?) {
         super.onViewCreated(view, args)
-        iapFlowData = arguments?.getSerializable(KEY_IAP_DATA) as IAPFlowData?
+        iapFlowData = arguments?.serializable(KEY_IAP_DATA)
         loaderStartTime = arguments?.getLong(LOADER_START_TIME, Calendar.getInstance().timeInMillis)
             ?: Calendar.getInstance().timeInMillis
         intiViews()

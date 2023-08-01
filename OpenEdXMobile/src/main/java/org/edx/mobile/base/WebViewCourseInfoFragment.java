@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -26,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class WebViewCourseInfoFragment extends BaseWebViewFragment
         implements WebViewStatusListener {
 
-    private static final int LOG_IN_REQUEST_CODE = 42;
     private static final String INSTANCE_COURSE_ID = "enrollCourseId";
     private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
 
@@ -36,6 +37,13 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
     private DefaultActionListener defaultActionListener;
 
     private FragmentWebviewBinding binding;
+
+    private final ActivityResultLauncher<Intent> loginRequestLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    defaultActionListener.onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
+                }
+            });
 
     @Nullable
     @Override
@@ -56,14 +64,14 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(INSTANCE_COURSE_ID, lastClickEnrollCourseId);
         outState.putBoolean(INSTANCE_EMAIL_OPT_IN, lastClickEnrollEmailOptIn);
     }
 
     public void setWebViewActionListener() {
-        defaultActionListener = new DefaultActionListener(getActivity(), progressWheel,
+        defaultActionListener = new DefaultActionListener(requireActivity(), progressWheel,
                 new DefaultActionListener.EnrollCallback() {
                     @Override
                     public void onResponse(@NonNull EnrolledCoursesResponse course) {
@@ -78,7 +86,7 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
                     public void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn) {
                         lastClickEnrollCourseId = courseId;
                         lastClickEnrollEmailOptIn = emailOptIn;
-                        startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
+                        loginRequestLauncher.launch(environment.getRouter().getRegisterIntent());
                     }
                 });
         client.setActionListener(defaultActionListener);
@@ -89,16 +97,8 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
         return new FullScreenErrorNotification(binding.webview);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            defaultActionListener.onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
-        }
-    }
-
     /**
-     * Loads the given URL into {@link #webView}.
+     * Loads the given URL into [webview].
      *
      * @param url The URL to load.
      */
@@ -114,7 +114,7 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
      * By default, all links will not be treated as external.
      * Depends on host, as long as the links have same host, they are treated as non-external links.
      *
-     * @return
+     * @return True to treat every link as an external link
      */
     protected boolean isAllLinksExternal() {
         return true;

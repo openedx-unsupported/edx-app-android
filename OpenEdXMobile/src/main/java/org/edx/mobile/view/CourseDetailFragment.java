@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -55,8 +57,6 @@ import retrofit2.Call;
 @AndroidEntryPoint
 public class CourseDetailFragment extends BaseFragment {
 
-    private static final int LOG_IN_REQUEST_CODE = 42;
-
     private TextView mCourseTextName;
     private TextView mCourseTextDetails;
     private AppCompatImageView mHeaderImageView;
@@ -87,6 +87,13 @@ public class CourseDetailFragment extends BaseFragment {
     @Inject
     IEdxEnvironment environment;
 
+    private final ActivityResultLauncher<Intent> loginRequestLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    enrollInCourse();
+                }
+            });
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,13 +113,10 @@ public class CourseDetailFragment extends BaseFragment {
         mHeaderPlayIcon = view.findViewById(R.id.header_play_icon);
         mCourseDetailLayout = view.findViewById(R.id.dashboard_detail);
 
-        mHeaderPlayIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse(courseDetail.media.course_video.uri);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
+        mHeaderPlayIcon.setOnClickListener(v -> {
+            Uri uri = Uri.parse(courseDetail.media.course_video.uri);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
 
         return view;
@@ -126,7 +130,7 @@ public class CourseDetailFragment extends BaseFragment {
      * Sets the view for About this Course which is retrieved in a later api call.
      */
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Short Description
@@ -199,7 +203,7 @@ public class CourseDetailFragment extends BaseFragment {
         if (courseDetail.media.course_video.uri == null || courseDetail.media.course_video.uri.isEmpty()) {
             mHeaderPlayIcon.setEnabled(false);
         } else {
-            mHeaderPlayIcon.setVisibility(mHeaderPlayIcon.VISIBLE);
+            mHeaderPlayIcon.setVisibility(View.VISIBLE);
         }
     }
 
@@ -212,7 +216,7 @@ public class CourseDetailFragment extends BaseFragment {
         final Activity activity = getActivity();
         final TaskProgressCallback pCallback = activity instanceof TaskProgressCallback ? (TaskProgressCallback) activity : null;
         final TaskMessageCallback mCallback = activity instanceof TaskMessageCallback ? (TaskMessageCallback) activity : null;
-        getCourseDetailCall.enqueue(new ErrorHandlingCallback<CourseDetail>(getActivity(),
+        getCourseDetailCall.enqueue(new ErrorHandlingCallback<>(requireActivity(),
                 pCallback, mCallback, CallTrigger.LOADING_CACHED) {
             @Override
             protected void onResponse(@NonNull final CourseDetail courseDetail) {
@@ -232,7 +236,7 @@ public class CourseDetailFragment extends BaseFragment {
      */
     private void populateAboutThisCourse(String overview) {
         courseAbout.setVisibility(View.VISIBLE);
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(),
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(requireActivity(),
                 courseAboutWebView, false, null);
         client.setAllLinksAsExternal(true);
 
@@ -263,7 +267,7 @@ public class CourseDetailFragment extends BaseFragment {
         return holder;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         View rowView;
         AppCompatImageView rowIcon;
         TextView rowFieldName;
@@ -302,24 +306,13 @@ public class CourseDetailFragment extends BaseFragment {
             mEnrollButton.setText(R.string.enroll_now_button_text);
         }
 
-        mEnrollButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!mEnrolled) {
-                    enrollInCourse();
-                } else {
-                    openCourseDashboard();
-                }
+        mEnrollButton.setOnClickListener(v -> {
+            if (!mEnrolled) {
+                enrollInCourse();
+            } else {
+                openCourseDashboard();
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            enrollInCourse();
-        }
     }
 
     /**
@@ -327,12 +320,12 @@ public class CourseDetailFragment extends BaseFragment {
      */
     public void enrollInCourse() {
         if (!environment.getLoginPrefs().isUserLoggedIn()) {
-            startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
+            loginRequestLauncher.launch(environment.getRouter().getRegisterIntent());
             return;
         }
         environment.getAnalyticsRegistry().trackEnrollClicked(courseDetail.course_id, emailOptIn);
         courseApi.enrollInACourse(courseDetail.course_id, emailOptIn)
-                .enqueue(new CourseAPI.EnrollCallback(getActivity(), null) {
+                .enqueue(new CourseAPI.EnrollCallback(requireActivity(), null) {
                     @Override
                     protected void onResponse(@NonNull final ResponseBody responseBody) {
                         super.onResponse(responseBody);
@@ -345,12 +338,12 @@ public class CourseDetailFragment extends BaseFragment {
                             @Override
                             public void run() {
                                 courseApi.getEnrolledCourses().enqueue(new CourseAPI.GetCourseByIdCallback(
-                                        getActivity(),
+                                        requireActivity(),
                                         courseDetail.course_id,
                                         null) {
                                     @Override
                                     protected void onResponse(@NonNull EnrolledCoursesResponse course) {
-                                        environment.getRouter().showCourseDashboardTabs(getActivity(), course, false);
+                                        environment.getRouter().showCourseDashboardTabs(requireActivity(), course, false);
                                     }
                                 });
                             }
@@ -373,13 +366,12 @@ public class CourseDetailFragment extends BaseFragment {
                     executeStrict(courseApi.getEnrolledCoursesFromCache()).getEnrollments();
             for (EnrolledCoursesResponse course : enrolledCoursesResponse) {
                 if (course.getCourse().getId().equals(courseDetail.course_id)) {
-                    environment.getRouter().showCourseDashboardTabs(getActivity(), course, false);
+                    environment.getRouter().showCourseDashboardTabs(requireActivity(), course, false);
                 }
             }
         } catch (Exception exception) {
             logger.debug(exception.toString());
             Toast.makeText(getContext(), R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
         }
-
     }
 }

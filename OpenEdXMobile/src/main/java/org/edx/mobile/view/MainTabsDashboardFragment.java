@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +38,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.viewPager2.setUserInputEnabled(false);
+        requestPostNotificationsPermission();
     }
 
     @Override
@@ -101,6 +104,13 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
 
         return items;
+    }
+
+    private void requestPostNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
     @Subscribe

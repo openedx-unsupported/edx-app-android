@@ -2,21 +2,21 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig.VERSION_NAME
 import org.edx.mobile.R
-import org.edx.mobile.base.BaseFragment
 import org.edx.mobile.databinding.FragmentCourseDatesPageBinding
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
@@ -25,13 +25,13 @@ import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.CourseDatesCalendarSync
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseBannerInfoModel
-import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.CalendarUtils
 import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.CourseDateUtil
+import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.PermissionsUtil
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.UiUtils
@@ -41,22 +41,56 @@ import org.edx.mobile.view.dialog.AlertDialogFragment
 import org.edx.mobile.viewModel.CourseDateViewModel
 
 @AndroidEntryPoint
-class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.PermissionListener {
+class CourseDatesPageFragment : OfflineSupportBaseFragment() {
 
     private lateinit var errorNotification: FullScreenErrorNotification
 
     private lateinit var binding: FragmentCourseDatesPageBinding
     private val viewModel: CourseDateViewModel by viewModels()
 
+    private val courseUnitDetailLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val resultData = result.data
+        if (result?.resultCode == Activity.RESULT_OK && resultData != null) {
+            val outlineComp = courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
+            outlineComp?.let {
+                navigateToCourseUnit(resultData, courseData, outlineComp)
+            }
+        }
+    }
+
+    private val calendarPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { isGranted ->
+        if (isGranted.containsValue(false).not()) {
+            askForCalendarSync()
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ACCESS_OK,
+                Analytics.Values.CALENDAR_ACCESS_OK
+            )
+        } else {
+            binding.switchSync.isChecked = false
+            trackCalendarEvent(
+                Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
+                Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
+            )
+        }
+    }
+
     private var onDateItemClick: OnDateBlockListener = object : OnDateBlockListener {
         override fun onClick(link: String, blockId: String) {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
-                environment.router.showCourseUnitDetail(
-                    this@CourseDatesPageFragment,
-                    REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, null, blockId, false
+                val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
+                    requireActivity(),
+                    courseData,
+                    null,
+                    blockId,
+                    false
                 )
+                courseUnitDetailLauncher.launch(courseUnitDetailIntent)
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,
@@ -75,6 +109,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         }
     }
+
     private lateinit var courseData: EnrolledCoursesResponse
     private var isSelfPaced: Boolean = true
     private var isDeepLinkEnabled: Boolean = false
@@ -83,7 +118,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     private lateinit var keyValMap: Map<String, CharSequence>
     private var isCalendarExist: Boolean = false
     private lateinit var loaderDialog: AlertDialogFragment
-
 
     companion object {
         @JvmStatic
@@ -106,25 +140,9 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
         return binding.root
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SHOW_COURSE_UNIT_DETAIL && resultCode == Activity.RESULT_OK
-            && data != null
-        ) {
-            val outlineComp: CourseComponent? =
-                courseManager.getCourseDataFromAppLevelCache(courseData.courseId)
-            outlineComp?.let {
-                navigateToCourseUnit(data, courseData, outlineComp)
-            }
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionListener = this
-
-        courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+        courseData = arguments.serializableOrThrow(Router.EXTRA_COURSE_DATA)
         isSelfPaced = courseData.course.isSelfPaced
         calendarTitle = CalendarUtils.getCourseCalendarTitle(environment, courseData.course.name)
         accountName = CalendarUtils.getUserAccountForSync(environment)
@@ -165,12 +183,12 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
     }
 
     private fun initObserver() {
-        viewModel.showLoader.observe(viewLifecycleOwner, Observer { showLoader ->
+        viewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver { showLoader ->
             binding.loadingIndicator.loadingIndicator.visibility =
                 if (showLoader) View.VISIBLE else View.GONE
         })
 
-        viewModel.bannerInfo.observe(viewLifecycleOwner, Observer {
+        viewModel.bannerInfo.observe(viewLifecycleOwner, NonNullObserver {
             initDatesBanner(it)
         })
 
@@ -209,11 +227,9 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             }
         })
 
-        viewModel.resetCourseDates.observe(viewLifecycleOwner, Observer { resetCourseDates ->
-            if (resetCourseDates != null) {
-                if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                    showShiftDateSnackBar(true)
-                }
+        viewModel.resetCourseDates.observe(viewLifecycleOwner, NonNullObserver {
+            if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
+                showShiftDateSnackBar(true)
             }
         })
 
@@ -229,6 +245,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                             )
                             return@Observer
                         }
+
                         else ->
                             errorNotification.showError(
                                 contextOrThrow,
@@ -246,16 +263,16 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
                                 -1,
                                 null
                             )
-                        ErrorMessage.BANNER_INFO_CODE ->
-                            initDatesBanner(null)
-                        ErrorMessage.COURSE_RESET_DATES_CODE ->
-                            showShiftDateSnackBar(false)
+
+                        ErrorMessage.BANNER_INFO_CODE -> initDatesBanner(null)
+
+                        ErrorMessage.COURSE_RESET_DATES_CODE -> showShiftDateSnackBar(false)
                     }
                 }
             }
         })
 
-        viewModel.swipeRefresh.observe(viewLifecycleOwner, Observer { enableSwipeListener ->
+        viewModel.swipeRefresh.observe(viewLifecycleOwner, NonNullObserver { enableSwipeListener ->
             binding.swipeContainer.isRefreshing = enableSwipeListener
         })
     }
@@ -328,7 +345,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             screenName = Analytics.Screens.PLS_COURSE_DATES,
             analyticsRegistry = environment.analyticsRegistry,
             courseBannerInfoModel = courseBannerInfo,
-            clickListener = View.OnClickListener { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
+            clickListener = { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
 
     }
 
@@ -388,15 +405,11 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
 
         val alertDialog =
             AlertDialogFragment.newInstance(title, message, getString(R.string.label_ok),
-                { _: DialogInterface, _: Int ->
-                    PermissionsUtil.requestPermissions(
-                        PermissionsUtil.CALENDAR_PERMISSION_REQUEST,
-                        CalendarUtils.permissions,
-                        this@CourseDatesPageFragment
-                    )
+                { _, _ ->
+                    calendarPermissionLauncher.launch(CalendarUtils.permissions)
                 },
                 getString(R.string.label_do_not_allow),
-                { _: DialogInterface?, _: Int ->
+                { _, _ ->
                     trackCalendarEvent(
                         Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
                         Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
@@ -590,19 +603,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment(), BaseFragment.Permi
             getString(R.string.label_cancel),
             null
         ).show(childFragmentManager, null)
-    }
-
-    override fun onPermissionGranted(permissions: Array<out String>?, requestCode: Int) {
-        askForCalendarSync()
-        trackCalendarEvent(Analytics.Events.CALENDAR_ACCESS_OK, Analytics.Values.CALENDAR_ACCESS_OK)
-    }
-
-    override fun onPermissionDenied(permissions: Array<out String>?, requestCode: Int) {
-        binding.switchSync.isChecked = false
-        trackCalendarEvent(
-            Analytics.Events.CALENDAR_ACCESS_DONT_ALLOW,
-            Analytics.Values.CALENDAR_ACCESS_DONT_ALLOW
-        )
     }
 
     private fun trackCalendarEvent(eventName: String, biValue: String) {

@@ -23,6 +23,7 @@ import org.edx.mobile.event.MoveToDiscoveryTabEvent
 import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
@@ -349,12 +350,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     }
 
     private fun detectDeeplink() {
-        if (arguments?.get(Router.EXTRA_DEEP_LINK) != null) {
-            (arguments?.get(Router.EXTRA_DEEP_LINK) as DeepLink).let { deeplink ->
-                DeepLinkManager.proceedDeeplink(requireActivity(), deeplink)
-                MainApplication.instance().showBanner(loginAPI, true)
-            }
-        } else {
+        arguments?.parcelable<DeepLink>(Router.EXTRA_DEEP_LINK)?.let {
+            DeepLinkManager.proceedDeeplink(requireActivity(), it)
+            MainApplication.instance().showBanner(loginAPI, true)
+        } ?: run {
             MainApplication.instance().showBanner(loginAPI, false)
         }
     }

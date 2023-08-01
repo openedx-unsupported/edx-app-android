@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +28,7 @@ import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.databinding.ViewCourseUnitPagerBinding;
 import org.edx.mobile.event.CourseUpgradedEvent;
 import org.edx.mobile.event.FileSelectionEvent;
+import org.edx.mobile.event.FileShareEvent;
 import org.edx.mobile.event.IAPFlowEvent;
 import org.edx.mobile.event.MyCoursesRefreshEvent;
 import org.edx.mobile.event.VideoPlaybackEvent;
@@ -41,7 +44,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NonNullObserver;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
@@ -74,7 +76,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private ViewPager2 pager2;
     private CourseComponent selectedUnit;
 
-    private List<CourseComponent> unitList = new ArrayList<>();
+    private final List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
     private InAppPurchasesViewModel iapViewModel;
 
@@ -93,10 +95,51 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     private boolean isVideoMode = false;
     private boolean refreshCourse = false;
 
+    ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Uri[] files = null;
+                Intent resultData = result.getData();
+                if (result.getResultCode() == Activity.RESULT_OK && resultData != null) {
+                    String dataString = resultData.getDataString();
+                    ClipData clipData = resultData.getClipData();
+                    if (clipData != null) {
+                        files = new Uri[clipData.getItemCount()];
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            ClipData.Item item = clipData.getItemAt(i);
+                            files[i] = item.getUri();
+                        }
+                    }
+                    // Executed when user select only one file.
+                    if (dataString != null) {
+                        files = new Uri[]{Uri.parse(dataString)};
+                    }
+                    if (files != null) {
+                        EventBus.getDefault().post(new FileShareEvent(files));
+                    }
+                }
+            }
+    );
+
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            // Add result data into the intent to trigger the signal that `courseData` is updated after
+            // the course was purchased from a locked component screen.
+            if (refreshCourse) {
+                Intent resultData = new Intent();
+                resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
+                setResult(RESULT_OK, resultData);
+                refreshCourse = false;
+            }
+            finish();
+        }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setToolbarAsActionBar();
-        RelativeLayout insertPoint = (RelativeLayout) findViewById(R.id.fragment_container);
+        RelativeLayout insertPoint = findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         @NonNull ViewCourseUnitPagerBinding binding = ViewCourseUnitPagerBinding.inflate(inflater, null, false);
@@ -118,6 +161,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
         if (!isVideoMode) {
             getCourseCelebrationStatus();
         }
+        getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
     }
 
     private void initAdapter() {
@@ -151,7 +195,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
 
     private void getCourseCelebrationStatus() {
         Call<CourseStatus> courseStatusCall = courseApi.getCourseStatus(courseData.getCourseId());
-        courseStatusCall.enqueue(new ErrorHandlingCallback<CourseStatus>(this, null, null) {
+        courseStatusCall.enqueue(new ErrorHandlingCallback<>(this, null, null) {
             @Override
             protected void onResponse(@NonNull CourseStatus responseBody) {
                 isFirstSection = responseBody.getCelebrationStatus().getFirstSection();
@@ -180,7 +224,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
                         EventBus.getDefault().postSticky(new VideoPlaybackEvent(true));
                         if (!reCreate) {
                             courseApi.updateCourseCelebration(courseData.getCourseId())
-                                    .enqueue(new ErrorHandlingCallback<Void>(CourseUnitNavigationActivity.this) {
+                                    .enqueue(new ErrorHandlingCallback<>(CourseUnitNavigationActivity.this) {
                                         @Override
                                         protected void onResponse(@NonNull Void responseBody) {
                                             isFirstSection = false;
@@ -409,20 +453,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     @Override
-    public void onBackPressed() {
-        // Add result data into the intent to trigger the signal that `courseData` is updated after
-        // the course was purchased from a locked component screen.
-        if (refreshCourse) {
-            Intent resultData = new Intent();
-            resultData.putExtra(AppConstants.COURSE_UPGRADED, true);
-            setResult(RESULT_OK, resultData);
-            refreshCourse = false;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
         if (selectedUnit != null) {
@@ -438,7 +469,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     private void updateUIForOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && VideoUtil.isCourseUnitVideo(environment, selectedUnit)) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && selectedUnit.isVideoBlock()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
@@ -490,43 +521,19 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
             return;
         }
         switch (event.getFlowAction()) {
-            case SHOW_FULL_SCREEN_LOADER: {
-                showFullscreenLoader(event.getIapFlowData());
-                break;
-            }
-            case PURCHASE_FLOW_COMPLETE: {
-                EventBus.getDefault().post(new MyCoursesRefreshEvent());
-                break;
-            }
+            case SHOW_FULL_SCREEN_LOADER -> showFullscreenLoader(event.getIapFlowData());
+            case PURCHASE_FLOW_COMPLETE -> EventBus.getDefault().post(new MyCoursesRefreshEvent());
         }
     }
 
     @Subscribe
-    public void onEvent(CourseUpgradedEvent event) {
-        finish();
+    public void onEvent(FileSelectionEvent event) {
+        fileChooserLauncher.launch(event.getIntent());
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Uri[] results = null;
-        if (requestCode == FileUtil.FILE_CHOOSER_RESULT_CODE) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                String dataString = data.getDataString();
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    results = new Uri[clipData.getItemCount()];
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        results[i] = item.getUri();
-                    }
-                }
-                // Executed when user select only one file.
-                if (dataString != null) {
-                    results = new Uri[]{Uri.parse(dataString)};
-                }
-            }
-            EventBus.getDefault().post(new FileSelectionEvent(results));
-        }
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onEvent(CourseUpgradedEvent event) {
+        finish();
     }
 }

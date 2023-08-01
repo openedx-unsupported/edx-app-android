@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import org.edx.mobile.core.EdxDefaultModule;
+import org.edx.mobile.event.FileSelectionEvent;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.AjaxCallData;
@@ -27,6 +28,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.links.WebViewLink;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -151,7 +153,9 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 URLInterceptorWebViewClient.this.filePathCallback = filePathCallback;
-                FileUtil.chooseFiles(activity, fileChooserParams.getAcceptTypes());
+                EventBus.getDefault().post(new FileSelectionEvent(
+                        FileUtil.getChooseFilesIntent(fileChooserParams.getAcceptTypes())
+                ));
                 return true;
             }
         });

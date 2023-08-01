@@ -1,5 +1,5 @@
 package org.edx.mobile.event
 
-import android.net.Uri
+import android.content.Intent
 
-data class FileSelectionEvent(val files: Array<Uri>?) : BaseEvent()
+class FileSelectionEvent(val intent: Intent) : BaseEvent()
