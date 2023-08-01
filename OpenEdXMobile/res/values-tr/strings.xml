@@ -85,7 +85,7 @@
   <!--Button text to show user current downloads screen-->
   <string name="label_current_downloads">Şu anki indirmeleri görüntüle</string>
   <!--Title of user's course list screen-->
-  <string name="label_my_courses">Derslerim</string>
+  <string name="label_my_courses">Dersler</string>
   <!--Title of user's program list screen-->
   <string name="label_my_programs">Programlar</string>
   <!--Title of native Find Courses Screen-->
@@ -93,7 +93,7 @@
   <!--Title of Find Courses tab on Main Dashboard screen-->
   <string name="label_discovery">Keşfet</string>
   <!--Button allowing users to send an email for feedback-->
-  <string name="label_submit_feedback">Geribildirim Gönder</string>
+  <string name="label_submit_feedback">Geribildirim gönder</string>
   <!--Toggle switch on state label-->
   <string name="toggle_turn_on">Açık</string>
   <!--Toggle switch off state label-->
@@ -239,7 +239,7 @@
   <!--Used while constructing the author attribution text for a discussion post e.g. "3 days ago by Brian (Staff)"-->
   <string name="discussion_post_author_attribution">{author} tarafından</string>
   <!--Used while constructing the author attribution text for an answer response e.g. "Marked as answer 2 days ago by Khalid (Community TA)"-->
-  <string name="discussion_post_marked_as_answer">Çözüm olarak işaretlendi.</string>
+  <string name="discussion_post_marked_as_answer">Çözüm olarak işaretlendi</string>
   <!--Used while constructing the author attribution text for an endorsed response e.g. "Endorsed 2 days ago by Khalid"-->
   <string name="discussion_post_endorsed">En İyi Cevap Olarak Seçildi</string>
   <!--Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff)-->
@@ -310,9 +310,9 @@
   <!--Label for selected topic when creating a post-->
   <string name="discussion_add_post_topic_selection">Konu:  {topic}</string>
   <!--Add post button title in adding a new discussion-->
-  <string name="discussion_add_post_button_label">Tartışma gönder</string>
+  <string name="discussion_add_post_button_label">Tartışmaya ileti gönder</string>
   <!--Add post button description for accessibility in adding a new discussion-->
-  <string name="discussion_add_post_button_description">Tartışma gönder düğmesi</string>
+  <string name="discussion_add_post_button_description">Tartışmaya ileti gönder düğmesi</string>
   <!--Add post button title in adding a new post-->
   <string name="discussion_add_question_button_label">Soru gönder</string>
   <!--Add post button content description for accessibility in adding a new post-->
@@ -391,7 +391,7 @@
     <item quantity="other">{total_videos_count} Video, toplam {total_videos_size}</item>
   </plurals>
   <!--Title for bulk videos download view when download is starting-->
-  <string name="download_starting">İndirilme Başlıyor...</string>
+  <string name="download_starting">İndirme Başlıyor...</string>
   <!--Title for bulk videos download view when in downloading state-->
   <string name="downloading_videos">Videolar İndiriliyor...</string>
   <!--Subtitle for bulk videos download view when in downloading state-->

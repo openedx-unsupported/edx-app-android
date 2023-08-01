@@ -43,7 +43,7 @@
     <!-- Title course calendar is out-of-date  -->
     <string name="title_calendar_out_of_date">Ders takviminiz güncel değil</string>
     <!-- Message course calendar is out-of-date  -->
-    <string name="message_calendar_out_of_date">Ders tarihleriniz değiştirildi ve ders takviminiz artık yeni programınızla güncel değil.</string>
+    <string name="message_calendar_out_of_date">Ders tarihleriniz değiştirildi ve ders takviminiz artık yeni programınızla uyumlu değil.</string>
     <!-- Error message while creating calendar for the course events -->
     <string name="adding_calendar_error_message">Takvim Eklenirken Hata, Lütfen daha sonra tekrar deneyin</string>
     <!-- Alert dialog remove course calendar button -->

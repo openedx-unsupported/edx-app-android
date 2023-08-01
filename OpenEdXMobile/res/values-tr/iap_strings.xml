@@ -34,9 +34,12 @@
     <string name="error_course_not_fullfilled">Ders deneyiminizi güncellemeye çalıştığımızda bir şey oldu. Bu hata devam ederse, yardım için Destek ile iletişime geçin.</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">İsteğiniz şu anda tamamlanamadı. Bu hata devam ederse, lütfen Destek ile iletişime geçin.</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">Yükseltmek istediğiniz dersin ödemesi zaten yapıldı. Ek yardım için Destek ile iletişime geçin.</string>
+
 
     <!-- Full Screen Loader -->
-    <string name="fullscreen_loader_unlocking">Kilidini açma</string>
+    <string name="fullscreen_loader_unlocking">Kilit açılıyor</string>
     <string name="fullscreen_loader_full_access">tam erişim</string>
     <string name="fullscreen_loader_to_your_course">dersinize</string>
 
