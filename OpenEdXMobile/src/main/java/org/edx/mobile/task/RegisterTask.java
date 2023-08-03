@@ -6,18 +6,18 @@ import android.os.Bundle;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.model.authentication.AuthResponse;
-import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.social.SocialSourceType;
 
 import dagger.hilt.android.EntryPointAccessors;
 
 public abstract class RegisterTask extends Task<AuthResponse> {
 
     private Bundle parameters;
-    private SocialFactory.SocialSourceType backstoreType;
+    private SocialSourceType backstoreType;
     private String accessToken;
     private LoginAPI loginAPI;
 
-    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SocialSourceType backstoreType) {
+    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialSourceType backstoreType) {
         super(context);
         this.parameters = parameters;
         this.accessToken = accessToken;

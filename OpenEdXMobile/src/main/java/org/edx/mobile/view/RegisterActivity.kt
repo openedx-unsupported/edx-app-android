@@ -36,14 +36,14 @@ import org.edx.mobile.module.registration.model.RegistrationFieldType
 import org.edx.mobile.module.registration.view.IRegistrationFieldView
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.Factory.getInstance
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
-import org.edx.mobile.social.SocialFactory
-import org.edx.mobile.social.SocialFactory.SocialSourceType
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
+import org.edx.mobile.social.SocialSourceType
 import org.edx.mobile.task.RegisterTask
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.AppStoreUtils
+import org.edx.mobile.util.ConfigUtil
 import org.edx.mobile.util.IntentFactory
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.ResourceUtil
@@ -145,7 +145,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     private fun isSocialFeatureEnable(type: SocialSourceType): Boolean {
-        return SocialFactory.isSocialFeatureEnabled(type, environment.config)
+        return ConfigUtil.isSocialFeatureEnabled(type, environment.config)
     }
 
     private fun validateRegistrationFields() {

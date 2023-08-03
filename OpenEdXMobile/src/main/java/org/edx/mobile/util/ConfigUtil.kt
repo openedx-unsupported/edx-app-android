@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.model.CourseDatesCalendarSync
+import org.edx.mobile.social.SocialSourceType
 import org.json.JSONObject
 import java.lang.reflect.InvocationTargetException
 
@@ -94,6 +95,19 @@ class ConfigUtil {
                 }
             }
             return config.getAgreementUrl(urlType)
+        }
+
+        @JvmStatic
+        fun isSocialFeatureEnabled(
+            type: SocialSourceType,
+            config: Config
+        ): Boolean {
+            return when (type) {
+                SocialSourceType.GOOGLE -> config.googleConfig.isEnabled
+                SocialSourceType.FACEBOOK -> config.facebookConfig.isEnabled
+                SocialSourceType.MICROSOFT -> config.microsoftConfig.isEnabled
+                else -> true
+            }
         }
     }
 

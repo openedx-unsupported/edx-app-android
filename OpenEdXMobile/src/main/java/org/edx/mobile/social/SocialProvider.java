@@ -39,5 +39,5 @@ public interface SocialProvider {
     /**
      * Gets the user object for the current logged in user
      */
-    void getUserInfo(Context context, SocialFactory.SocialSourceType socialType, String accessToken, SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
+    void getUserInfo(Context context, SocialSourceType socialType, String accessToken, SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
 }

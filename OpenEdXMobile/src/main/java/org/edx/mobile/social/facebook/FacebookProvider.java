@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 import com.facebook.AccessToken;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
+import org.edx.mobile.social.SocialSourceType;
 
 public class FacebookProvider implements SocialProvider {
     protected final Logger logger = new Logger(getClass().getName());
@@ -36,7 +36,7 @@ public class FacebookProvider implements SocialProvider {
         throw new UnsupportedOperationException("Not implemented / Not supported");
     }
 
-    public void getUserInfo(Context context, SocialFactory.SocialSourceType socialType, String accessToken,
+    public void getUserInfo(Context context, SocialSourceType socialType, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
         getUser(new SocialProvider.Callback<SocialMember>() {
             @Override

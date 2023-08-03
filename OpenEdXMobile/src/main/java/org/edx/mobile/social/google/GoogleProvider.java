@@ -8,10 +8,10 @@ import androidx.annotation.NonNull;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback;
 import org.edx.mobile.http.provider.OkHttpClientProvider;
-import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
+import org.edx.mobile.social.SocialSourceType;
 
 import dagger.hilt.android.EntryPointAccessors;
 import okhttp3.Request;
@@ -42,7 +42,7 @@ public class GoogleProvider implements SocialProvider {
 
     @Override
     public void getUserInfo(Context context,
-                            SocialFactory.SocialSourceType socialType, String accessToken,
+                            SocialSourceType socialType, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
         OkHttpClientProvider okHttpClientProvider = EntryPointAccessors
                 .fromApplication(context, EdxDefaultModule.ProviderEntryPoint.class)
