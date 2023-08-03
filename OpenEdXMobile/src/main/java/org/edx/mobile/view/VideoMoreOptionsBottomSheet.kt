@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.databinding.BottomSheetVideoMoreOptionsBinding
+import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.viewModel.VideoViewModel
 
 @AndroidEntryPoint
@@ -25,8 +26,8 @@ class VideoMoreOptionsBottomSheet : BottomSheetDialogFragment() {
         binding = BottomSheetVideoMoreOptionsBinding.inflate(inflater, container, false)
 
         binding.deleteOption.setOnClickListener {
-            @Suppress("UNCHECKED_CAST") val selectedItemPosition =
-                arguments?.getSerializable(LIST_ITEM_POSITION) as Pair<Int, Int>?
+            val selectedItemPosition =
+                arguments?.serializable(LIST_ITEM_POSITION) as Pair<Int, Int>?
             videoViewModel.deleteVideosAtPosition(selectedItemPosition ?: DEFAULT_LIST_POSITION)
             dismiss()
         }
