@@ -16,6 +16,7 @@ import org.edx.mobile.deeplink.DeepLinkManager
 import org.edx.mobile.exception.LoginErrorMessage
 import org.edx.mobile.exception.LoginException
 import org.edx.mobile.extenstion.isNotNullOrEmpty
+import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
@@ -288,7 +289,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     override fun onUserLoginSuccess() {
         setResult(RESULT_OK)
         finish()
-        val deepLink = intent.getParcelableExtra<DeepLink>(Router.EXTRA_DEEP_LINK)
+        val deepLink = intent.parcelable<DeepLink>(Router.EXTRA_DEEP_LINK)
         if (deepLink != null) {
             DeepLinkManager.onDeepLinkReceived(this, deepLink)
             return

@@ -31,6 +31,8 @@ import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MoveToDiscoveryTabEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.serializable
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
@@ -156,7 +158,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        if (arguments?.getSerializable(Router.EXTRA_COURSE_DATA) == null) {
+        if (arguments?.serializable<EnrolledCoursesResponse>(Router.EXTRA_COURSE_DATA) == null) {
             return if (arguments?.getBoolean(ARG_COURSE_NOT_FOUND) == true) {
                 // The case where we have invalid course data
                 binding.loadingError.apply {
@@ -183,7 +185,8 @@ class CourseTabsDashboardFragment : BaseFragment() {
         }
 
         binding = FragmentCourseTabsDashboardBinding.inflate(inflater, container, false)
-        courseData = arguments?.getSerializable(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+        courseData =
+            arguments?.serializableOrThrow(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
 
         setHasOptionsMenu(courseData.course.coursewareAccess.hasAccess())
 
