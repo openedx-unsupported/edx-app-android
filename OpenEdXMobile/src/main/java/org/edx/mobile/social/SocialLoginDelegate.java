@@ -51,7 +51,6 @@ public class SocialLoginDelegate {
     private ISocial google, facebook, microsoft;
     private final LoginPrefs loginPrefs;
 
-    private String userEmail;
     private Feature feature;
 
     public SocialLoginDelegate(@NonNull Activity activity, @Nullable Bundle savedInstanceState,
@@ -63,19 +62,19 @@ public class SocialLoginDelegate {
         this.loginPrefs = loginPrefs;
         this.feature = feature;
 
-        google = getInstance(SocialSourceType.GOOGLE, config);
+        google = getInstance(SocialAuthSource.GOOGLE, config);
         google.setCallback(accessToken -> {
             logger.debug("Google logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_GOOGLE);
         });
 
-        facebook = getInstance(SocialSourceType.FACEBOOK, config);
+        facebook = getInstance(SocialAuthSource.FACEBOOK, config);
         facebook.setCallback(accessToken -> {
             logger.debug("Facebook logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_FACEBOOK);
         });
 
-        microsoft = getInstance(SocialSourceType.MICROSOFT, config);
+        microsoft = getInstance(SocialAuthSource.MICROSOFT, config);
         microsoft.setCallback(new ISocial.Callback() {
             @Override
             public void onCancel() {
@@ -130,8 +129,8 @@ public class SocialLoginDelegate {
         microsoft.onActivityStopped(activity);
     }
 
-    private void socialLogin(SocialSourceType socialType) {
-        switch (socialType) {
+    private void socialLogin(SocialAuthSource socialAuthSource) {
+        switch (socialAuthSource) {
             case FACEBOOK:
                 facebook.login();
                 break;
@@ -144,8 +143,8 @@ public class SocialLoginDelegate {
         }
     }
 
-    private void socialLogout(SocialSourceType socialType) {
-        switch (socialType) {
+    private void socialLogout(SocialAuthSource socialAuthSource) {
+        switch (socialAuthSource) {
             case FACEBOOK:
                 facebook.logout();
                 break;
@@ -171,46 +170,30 @@ public class SocialLoginDelegate {
         task.execute();
     }
 
-    public void setUserEmail(String email) {
-        this.userEmail = email;
-    }
-
-    public String getUserEmail() {
-        return this.userEmail;
-    }
-
-    public void getUserInfo(SocialSourceType socialType, String accessToken, final SocialUserInfoCallback userInfoCallback) {
+    public void getUserInfo(SocialAuthSource socialAuthSource, String accessToken, final SocialUserInfoCallback userInfoCallback) {
         SocialProvider socialProvider = null;
-        if (socialType == SocialSourceType.FACEBOOK) {
+        if (socialAuthSource == SocialAuthSource.FACEBOOK) {
             socialProvider = new FacebookProvider();
-        } else if (socialType == SocialSourceType.GOOGLE) {
+        } else if (socialAuthSource == SocialAuthSource.GOOGLE) {
             socialProvider = new GoogleProvider((GoogleOauth2) google);
-        } else if (socialType == SocialSourceType.MICROSOFT) {
+        } else if (socialAuthSource == SocialAuthSource.MICROSOFT) {
             socialProvider = new MicrosoftProvide();
         }
 
         if (socialProvider != null) {
-            socialProvider.getUserInfo(activity, socialType, accessToken, userInfoCallback);
+            socialProvider.getUserInfo(activity, accessToken, userInfoCallback);
         }
 
     }
 
-    public ISocial getInstance(SocialSourceType type, Config config) {
-        if (ConfigUtil.isSocialFeatureEnabled(type, config)) {
-            switch (type) {
-                case GOOGLE -> {
-                    return new GoogleOauth2(activity);
-                }
-                case FACEBOOK -> {
-                    return new FacebookAuth(activity);
-                }
-                case MICROSOFT -> {
-                    return new MicrosoftAuth(activity);
-                }
-                case UNKNOWN -> {
-                    return new ISocialEmptyImpl();
-                }
-            }
+    public ISocial getInstance(SocialAuthSource source, Config config) {
+        if (ConfigUtil.isSocialFeatureEnabled(source, config)) {
+            return switch (source) {
+                case GOOGLE -> new GoogleOauth2(activity);
+                case FACEBOOK -> new FacebookAuth(activity);
+                case MICROSOFT -> new MicrosoftAuth(activity);
+                case UNKNOWN -> new ISocialEmptyImpl();
+            };
         }
         return new ISocialEmptyImpl();
     }
@@ -307,15 +290,15 @@ public class SocialLoginDelegate {
         }
     }
 
-    public SocialButtonClickHandler createSocialButtonClickHandler(SocialSourceType socialType) {
-        return new SocialButtonClickHandler(socialType);
+    public SocialButtonClickHandler createSocialButtonClickHandler(SocialAuthSource socialAuthSource) {
+        return new SocialButtonClickHandler(socialAuthSource);
     }
 
     public class SocialButtonClickHandler implements View.OnClickListener {
-        private final SocialSourceType socialType;
+        private final SocialAuthSource socialAuthSource;
 
-        private SocialButtonClickHandler(SocialSourceType socialType) {
-            this.socialType = socialType;
+        private SocialButtonClickHandler(SocialAuthSource socialAuthSource) {
+            this.socialAuthSource = socialAuthSource;
         }
 
         @Override
@@ -329,7 +312,7 @@ public class SocialLoginDelegate {
 
                     @Override
                     protected Void doInBackground(Void... voids) {
-                        socialLogout(socialType);
+                        socialLogout(socialAuthSource);
                         return null;
                     }
 
@@ -337,7 +320,7 @@ public class SocialLoginDelegate {
                     protected void onPostExecute(Void unused) {
                         super.onPostExecute(unused);
                         try {
-                            socialLogin(socialType);
+                            socialLogin(socialAuthSource);
                         } catch (Exception ex) {
                             handleException(ex);
                         }

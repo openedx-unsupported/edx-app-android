@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical"
-        android:splitMotionEvents="false">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/ll_content"
@@ -27,7 +26,6 @@
                 android:id="@+id/iv_edx_logo"
                 android:layout_width="@dimen/logo_width"
                 android:layout_height="@dimen/logo_height"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="@dimen/widget_margin_quadruple"
                 android:contentDescription="@string/phonetic_app_name"
                 app:srcCompat="@drawable/launch_screen_logo" />

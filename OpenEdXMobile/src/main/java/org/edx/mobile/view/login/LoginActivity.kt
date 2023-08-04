@@ -24,7 +24,7 @@ import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
-import org.edx.mobile.social.SocialSourceType
+import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.IntentFactory
@@ -141,13 +141,13 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
         ).apply {
             binding.socialAuth.facebookButton.setOnClickListener {
-                createSocialButtonClickHandler(SocialSourceType.FACEBOOK)
+                createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)
             }
             binding.socialAuth.googleButton.setOnClickListener(
-                createSocialButtonClickHandler(SocialSourceType.GOOGLE)
+                createSocialButtonClickHandler(SocialAuthSource.GOOGLE)
             )
             binding.socialAuth.microsoftButton.setOnClickListener(
-                createSocialButtonClickHandler(SocialSourceType.MICROSOFT)
+                createSocialButtonClickHandler(SocialAuthSource.MICROSOFT)
             )
         }
     }

@@ -10,7 +10,6 @@ import org.edx.mobile.http.provider.OkHttpClientProvider
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialMember
 import org.edx.mobile.social.SocialProvider
-import org.edx.mobile.social.SocialSourceType
 
 class MicrosoftProvide : SocialProvider {
 
@@ -19,8 +18,7 @@ class MicrosoftProvide : SocialProvider {
     }
 
     override fun getUserInfo(
-        context: Context?, socialType: SocialSourceType?,
-        accessToken: String?,
+        context: Context?, accessToken: String?,
         userInfoCallback: SocialLoginDelegate.SocialUserInfoCallback?
     ) {
         context?.run {

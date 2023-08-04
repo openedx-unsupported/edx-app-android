@@ -5,7 +5,6 @@ import static android.app.Activity.RESULT_OK;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -39,7 +38,6 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @Inject
     LoginService loginService;
 
-    @NonNull
     private ResetPasswordDialogBinding binding;
 
     @Nullable
@@ -56,7 +54,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        binding = ResetPasswordDialogBinding.inflate(LayoutInflater.from(getActivity()),
+        binding = ResetPasswordDialogBinding.inflate(getLayoutInflater(),
                 null, false);
         binding.emailEditText.setText(getArguments().getString(ARG_LOGIN_EMAIL));
 
@@ -91,14 +89,10 @@ public class ResetPasswordDialogFragment extends DialogFragment {
          * We want to prevent the dialog from automatically closing on positive button click,
          * and letting submit() control the logic so, we are overriding View.OnClickListener here.
          */
-        ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        submit(binding.emailEditText.getText().toString().trim());
-                        SoftKeyboardUtil.hide(binding.emailInputLayout);
-                    }
-                });
+        ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> {
+            submit(binding.emailEditText.getText().toString().trim());
+            SoftKeyboardUtil.hide(binding.emailInputLayout);
+        });
     }
 
     public void showError(@NonNull String error) {

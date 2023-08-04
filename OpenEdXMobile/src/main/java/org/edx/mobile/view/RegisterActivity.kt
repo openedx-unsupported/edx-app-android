@@ -21,6 +21,7 @@ import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.databinding.ActivityRegisterBinding
 import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.extenstion.isVisible
+import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
@@ -36,9 +37,9 @@ import org.edx.mobile.module.registration.model.RegistrationFieldType
 import org.edx.mobile.module.registration.view.IRegistrationFieldView
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.Factory.getInstance
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
+import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
-import org.edx.mobile.social.SocialSourceType
 import org.edx.mobile.task.RegisterTask
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppConstants
@@ -59,7 +60,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     private val mFieldViews: MutableList<IRegistrationFieldView> = mutableListOf()
     private lateinit var socialLoginDelegate: SocialLoginDelegate
     private lateinit var errorNotification: FullScreenErrorNotification
-    private var socialRegistrationType = SocialSourceType.UNKNOWN
+    private var socialRegistrationType = SocialAuthSource.UNKNOWN
     private var savedRegistrationFormState: Bundle? = null
 
     @Inject
@@ -111,13 +112,13 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 SocialLoginDelegate.Feature.REGISTRATION
             ).apply {
                 binding.socialAuth.facebookButton.setOnClickListener {
-                    createSocialButtonClickHandler(SocialSourceType.FACEBOOK)
+                    createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)
                 }
                 binding.socialAuth.googleButton.setOnClickListener(
-                    createSocialButtonClickHandler(SocialSourceType.GOOGLE)
+                    createSocialButtonClickHandler(SocialAuthSource.GOOGLE)
                 )
                 binding.socialAuth.microsoftButton.setOnClickListener(
-                    createSocialButtonClickHandler(SocialSourceType.MICROSOFT)
+                    createSocialButtonClickHandler(SocialAuthSource.MICROSOFT)
                 )
             }
         }
@@ -127,15 +128,15 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         binding.socialAuth.apply {
             facebookButton.text =
                 getString(R.string.continue_with_social, getString(R.string.facebook_text))
-            facebookButton.setVisibility(isSocialFeatureEnable(SocialSourceType.FACEBOOK))
+            facebookButton.setVisibility(isSocialFeatureEnable(SocialAuthSource.FACEBOOK))
 
             googleButton.text =
                 getString(R.string.continue_with_social, getString(R.string.google_text))
-            googleButton.setVisibility(isSocialFeatureEnable(SocialSourceType.GOOGLE))
+            googleButton.setVisibility(isSocialFeatureEnable(SocialAuthSource.GOOGLE))
 
             microsoftButton.text =
                 getString(R.string.continue_with_social, getString(R.string.microsoft_text))
-            microsoftButton.setVisibility(isSocialFeatureEnable(SocialSourceType.MICROSOFT))
+            microsoftButton.setVisibility(isSocialFeatureEnable(SocialAuthSource.MICROSOFT))
 
             val isSocialLoginEnable =
                 facebookButton.isVisible() || googleButton.isVisible() || microsoftButton.isVisible()
@@ -144,8 +145,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         }
     }
 
-    private fun isSocialFeatureEnable(type: SocialSourceType): Boolean {
-        return ConfigUtil.isSocialFeatureEnabled(type, environment.config)
+    private fun isSocialFeatureEnable(source: SocialAuthSource): Boolean {
+        return ConfigUtil.isSocialFeatureEnabled(source, environment.config)
     }
 
     private fun validateRegistrationFields() {
@@ -232,7 +233,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 updateUI(true)
                 setupRegistrationForm(registrationDescription)
                 setRegistrationFields(savedRegistrationFormState)
-                if (socialRegistrationType != SocialSourceType.UNKNOWN) {
+                if (socialRegistrationType != SocialAuthSource.UNKNOWN) {
                     updateUIOnSocialLoginToEdxFailure(socialRegistrationType)
                 }
             }
@@ -293,7 +294,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
         // Send analytics event for Create Account button click
         val appVersion = "${getString(R.string.android)} ${BuildConfig.VERSION_NAME}"
-        val backSourceType = SocialSourceType.fromString(provider)
+        val backSourceType = SocialAuthSource.fromString(provider)
         environment.analyticsRegistry.trackCreateAccountClicked(appVersion, provider)
 
         @SuppressLint("StaticFieldLeak")
@@ -430,19 +431,13 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     /**
      * we can create enum for strong type, but lose the extensibility.
      *
-     * @param socialType
+     * @param socialAuthSource
      */
-    private fun showRegularMessage(socialType: SocialSourceType) {
-        binding.messageLayout.title.text = when (socialType) {
-            SocialSourceType.FACEBOOK ->
-                getString(R.string.sign_up_with_facebook_ok)
-
-            SocialSourceType.MICROSOFT ->
-                getString(R.string.sign_up_with_microsoft_ok)
-
-            SocialSourceType.GOOGLE ->
-                getString(R.string.sign_up_with_google_ok)
-
+    private fun showRegularMessage(socialAuthSource: SocialAuthSource) {
+        binding.messageLayout.title.text = when (socialAuthSource) {
+            SocialAuthSource.FACEBOOK -> getString(R.string.sign_up_with_facebook_ok)
+            SocialAuthSource.MICROSOFT -> getString(R.string.sign_up_with_microsoft_ok)
+            SocialAuthSource.GOOGLE -> getString(R.string.sign_up_with_google_ok)
             else -> ""
         }
         binding.messageLayout.message.text = ResourceUtil.getFormattedString(
@@ -455,15 +450,15 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     private fun updateUIOnSocialLoginToEdxFailure(
-        socialType: SocialSourceType,
+        socialAuthSource: SocialAuthSource,
         accessToken: String? = null
     ) {
         //change UI.
         binding.socialAuth.root.setVisibility(false)
         //help method
-        showRegularMessage(socialType)
+        showRegularMessage(socialAuthSource)
         //populate the field with value from social site
-        accessToken?.let { populateEmailFromSocialSite(socialType, it) }
+        accessToken?.let { populateEmailFromSocialSite(socialAuthSource, it) }
         //hide confirm email and password field as we don't need them in case of social signup
         val extraFields: MutableList<IRegistrationFieldView> = ArrayList()
         for (field in mFieldViews) {
@@ -484,8 +479,11 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         }
     }
 
-    private fun populateEmailFromSocialSite(socialType: SocialSourceType, accessToken: String) {
-        socialLoginDelegate.getUserInfo(socialType, accessToken) { email, name ->
+    private fun populateEmailFromSocialSite(
+        socialAuthSource: SocialAuthSource,
+        accessToken: String
+    ) {
+        socialLoginDelegate.getUserInfo(socialAuthSource, accessToken) { email, name ->
             populateFormField("email", email)
             if (name.isNotNullOrEmpty()) {
                 populateFormField("name", name)
@@ -506,7 +504,12 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBundle(REGISTRATION_FORM_DATA, getRegistrationFields())
+        // Get the registration form fields from the current state. If the fields are not loaded
+        // yet, use the saved registration form state as a fallback.
+        val formFields = getRegistrationFields().takeIf {
+            it.isEmpty.not()
+        } ?: savedRegistrationFormState
+        outState.putBundle(REGISTRATION_FORM_DATA, formFields)
         outState.putSerializable(SOCIAL_REGISTRATION_TYPE, socialRegistrationType)
         socialLoginDelegate.onActivitySaveInstanceState(outState)
     }
@@ -514,8 +517,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedRegistrationFormState = savedInstanceState.getBundle(REGISTRATION_FORM_DATA)
-        socialRegistrationType =
-            savedInstanceState.getSerializable(SOCIAL_REGISTRATION_TYPE) as SocialSourceType
+        socialRegistrationType = savedInstanceState.serializableOrThrow(SOCIAL_REGISTRATION_TYPE)
     }
 
     private fun getRegistrationFields(): Bundle {
@@ -527,14 +529,20 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                     fieldView.getCurrentValue()?.asString
                 )
             }
+            if (fieldView.getView().hasFocus()) {
+                parameters.putString(REGISTRATION_FOCUS_FIELD, fieldView.getField().name)
+            }
         }
         return parameters
     }
 
     private fun setRegistrationFields(parameters: Bundle?) {
         parameters?.let {
+            val focusedFieldName = parameters.getString(REGISTRATION_FOCUS_FIELD, null)
             for (fieldView in mFieldViews) {
                 fieldView.setRawValue(parameters.getString(fieldView.getField().name))
+                if (fieldView.getField().name.equals(focusedFieldName))
+                    fieldView.getView().requestFocus()
             }
         }
     }
@@ -603,7 +611,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 }, getString(android.R.string.cancel), null
             )
         } else {
-            socialRegistrationType = SocialSourceType.fromString(backend)
+            socialRegistrationType = SocialAuthSource.fromString(backend)
             updateUIOnSocialLoginToEdxFailure(socialRegistrationType, accessToken)
         }
     }
@@ -702,6 +710,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     companion object {
         private const val REGISTRATION_FORM_DATA = "registration_form_data"
         private const val SOCIAL_REGISTRATION_TYPE = "social_registration_type"
+        private const val REGISTRATION_FOCUS_FIELD = "registration_focus_field"
         private const val ACCESSIBILITY_FOCUS_DELAY_MS = 500
 
         @JvmStatic

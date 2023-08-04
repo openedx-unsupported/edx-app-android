@@ -6,22 +6,22 @@ import android.os.Bundle;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.model.authentication.AuthResponse;
-import org.edx.mobile.social.SocialSourceType;
+import org.edx.mobile.social.SocialAuthSource;
 
 import dagger.hilt.android.EntryPointAccessors;
 
 public abstract class RegisterTask extends Task<AuthResponse> {
 
     private Bundle parameters;
-    private SocialSourceType backstoreType;
+    private SocialAuthSource socialAuthSource;
     private String accessToken;
     private LoginAPI loginAPI;
 
-    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialSourceType backstoreType) {
+    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialAuthSource socialAuthSource) {
         super(context);
         this.parameters = parameters;
         this.accessToken = accessToken;
-        this.backstoreType = backstoreType;
+        this.socialAuthSource = socialAuthSource;
         loginAPI = EntryPointAccessors.fromApplication(
                 context, EdxDefaultModule.ProviderEntryPoint.class).getLoginAPI();
     }
@@ -29,7 +29,7 @@ public abstract class RegisterTask extends Task<AuthResponse> {
     @Override
     protected AuthResponse doInBackground(Void... voids) {
         try {
-            switch (backstoreType) {
+            switch (socialAuthSource) {
                 case GOOGLE:
                     return loginAPI.registerUsingGoogle(parameters, accessToken);
                 case FACEBOOK:

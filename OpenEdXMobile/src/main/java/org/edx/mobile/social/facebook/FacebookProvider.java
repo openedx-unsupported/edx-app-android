@@ -10,7 +10,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
-import org.edx.mobile.social.SocialSourceType;
 
 public class FacebookProvider implements SocialProvider {
     protected final Logger logger = new Logger(getClass().getName());
@@ -36,7 +35,7 @@ public class FacebookProvider implements SocialProvider {
         throw new UnsupportedOperationException("Not implemented / Not supported");
     }
 
-    public void getUserInfo(Context context, SocialSourceType socialType, String accessToken,
+    public void getUserInfo(Context context, String accessToken,
                             final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
         getUser(new SocialProvider.Callback<SocialMember>() {
             @Override
