@@ -34,6 +34,9 @@
     <string name="error_course_not_fullfilled">משהו קרה כשניסינו לעדכן את חוויית הקורס שלך. אם השגיאה הזאת נמשכת, נא לפנות לתמיכה לעזרה.</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">לא ניתן להשלים את הבקשה שלך כרגע. אם השגיאה הזאת נמשכת, נא לפנות לתמיכה.</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">הקורס שברצונך לשדרג כבר שולם. לעזרה נוספת, נא לגשת לתמיכה.</string>
+
 
     <!-- Full Screen Loader -->
     <string name="fullscreen_loader_unlocking">הגישה המלאה</string>

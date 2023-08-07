@@ -31,3 +31,9 @@
 
 # Keep Rule to hide the original source file name on stack trace
 -renamesourcefileattribute SourceFile
+
+# Rules enforced by Android Gradle plugin.
+-dontwarn com.google.crypto.**
+-dontwarn com.google.protobuf.**
+-dontwarn com.huawei.hms.ads.**
+-dontwarn edu.umd.cs.findbugs.**
