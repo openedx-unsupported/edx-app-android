@@ -294,11 +294,11 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
 
         // Send analytics event for Create Account button click
         val appVersion = "${getString(R.string.android)} ${BuildConfig.VERSION_NAME}"
-        val backSourceType = SocialAuthSource.fromString(provider)
+        val socialAuthSource = SocialAuthSource.fromString(provider)
         environment.analyticsRegistry.trackCreateAccountClicked(appVersion, provider)
 
         @SuppressLint("StaticFieldLeak")
-        val task = object : RegisterTask(this, parameters, accessToken, backSourceType) {
+        val task = object : RegisterTask(this, parameters, accessToken, socialAuthSource) {
             @Deprecated("Deprecated in Java")
             override fun onPostExecute(auth: AuthResponse?) {
                 super.onPostExecute(auth)

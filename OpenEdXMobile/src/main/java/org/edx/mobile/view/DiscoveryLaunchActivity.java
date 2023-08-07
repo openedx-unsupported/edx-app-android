@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
 
     private static final String QUERY_PARAM = "query_param";
+    private static final String FOCUSED_VIEW = "focused_view";
 
     private ActivityDiscoveryLaunchBinding binding;
 
@@ -86,6 +87,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(QUERY_PARAM, binding.svSearchCourses.getQuery().toString());
+        outState.putBoolean(FOCUSED_VIEW, binding.svSearchCourses.hasFocus());
     }
 
     @Override
@@ -93,6 +95,9 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
         super.onRestoreInstanceState(savedInstanceState);
         String queryString = savedInstanceState.getString(QUERY_PARAM, "");
         binding.svSearchCourses.setQuery(queryString, false);
+        if (savedInstanceState.getBoolean(FOCUSED_VIEW, false)) {
+            binding.svSearchCourses.postDelayed(() -> binding.svSearchCourses.requestFocus(), 100);
+        }
     }
 
     @Override

@@ -109,6 +109,14 @@ class ConfigUtil {
             return config.getAgreementUrl(urlType)
         }
 
+        /**
+         * Determines whether a specific social feature is enabled based on the provided
+         * social authentication source and configuration.
+         *
+         * @param type The social authentication source for which to check the feature's enablement.
+         * @param config The global configuration containing individual social network configurations.
+         * @return `true` if the specified social feature is enabled; otherwise, `false`.
+         */
         @JvmStatic
         fun isSocialFeatureEnabled(
             type: SocialAuthSource,

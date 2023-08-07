@@ -29,16 +29,12 @@ public abstract class RegisterTask extends Task<AuthResponse> {
     @Override
     protected AuthResponse doInBackground(Void... voids) {
         try {
-            switch (socialAuthSource) {
-                case GOOGLE:
-                    return loginAPI.registerUsingGoogle(parameters, accessToken);
-                case FACEBOOK:
-                    return loginAPI.registerUsingFacebook(parameters, accessToken);
-                case MICROSOFT:
-                    return loginAPI.registerUsingMicrosoft(parameters, accessToken);
-            }
-            // normal email address login
-            return loginAPI.registerUsingEmail(parameters);
+            return switch (socialAuthSource) {
+                case GOOGLE -> loginAPI.registerUsingGoogle(parameters, accessToken);
+                case FACEBOOK -> loginAPI.registerUsingFacebook(parameters, accessToken);
+                case MICROSOFT -> loginAPI.registerUsingMicrosoft(parameters, accessToken);
+                default -> loginAPI.registerUsingEmail(parameters);
+            };
         } catch (Exception e) {
             handleException(e);
             return null;

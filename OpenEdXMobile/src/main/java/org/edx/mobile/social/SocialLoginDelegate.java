@@ -131,29 +131,17 @@ public class SocialLoginDelegate {
 
     private void socialLogin(SocialAuthSource socialAuthSource) {
         switch (socialAuthSource) {
-            case FACEBOOK:
-                facebook.login();
-                break;
-            case GOOGLE:
-                google.login();
-                break;
-            case MICROSOFT:
-                microsoft.login();
-                break;
+            case FACEBOOK -> facebook.login();
+            case GOOGLE -> google.login();
+            case MICROSOFT -> microsoft.login();
         }
     }
 
     private void socialLogout(SocialAuthSource socialAuthSource) {
         switch (socialAuthSource) {
-            case FACEBOOK:
-                facebook.logout();
-                break;
-            case GOOGLE:
-                google.logout();
-                break;
-            case MICROSOFT:
-                microsoft.logout();
-                break;
+            case FACEBOOK -> facebook.logout();
+            case GOOGLE -> google.logout();
+            case MICROSOFT -> microsoft.logout();
         }
     }
 
