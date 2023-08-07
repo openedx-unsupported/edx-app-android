@@ -96,7 +96,10 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
         String queryString = savedInstanceState.getString(QUERY_PARAM, "");
         binding.svSearchCourses.setQuery(queryString, false);
         if (savedInstanceState.getBoolean(FOCUSED_VIEW, false)) {
-            binding.svSearchCourses.postDelayed(() -> binding.svSearchCourses.requestFocus(), 100);
+            binding.svSearchCourses.postDelayed(() -> {
+                binding.svSearchCourses.requestFocus();
+                SoftKeyboardUtil.hide(this);
+            }, 1000);
         }
     }
 
