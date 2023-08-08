@@ -115,7 +115,7 @@ class ConfigUtil {
          *
          * @param type The social authentication source for which to check the feature's enablement.
          * @param config The global configuration containing individual social network configurations.
-         * @return `true` if the specified social feature is enabled; otherwise, `false`.
+         * @return The feature flag value if available; otherwise, `true`.
          */
         @JvmStatic
         fun isSocialFeatureEnabled(
