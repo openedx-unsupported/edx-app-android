@@ -54,8 +54,7 @@
         android:divider="@null"
         android:importantForAccessibility="noHideDescendants"
         android:paddingTop="@dimen/widget_margin_half"
-        android:paddingBottom="@dimen/widget_margin_half"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:paddingBottom="@dimen/widget_margin_half" />
 
     <FrameLayout
         android:id="@+id/fl_mini_controller"
