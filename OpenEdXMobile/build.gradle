@@ -197,6 +197,8 @@ dependencies {
 
     // ViewPager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+    // Segmented Progress bar
+    implementation "com.github.rayzone107:SegmentedProgressBar:1.01"
 
     // Material components like Chips and TabLayoutMediator
     implementation "com.google.android.material:material:1.9.0"

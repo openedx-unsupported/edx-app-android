@@ -155,6 +155,8 @@
     <dimen name="x_small_icon_margin">5dp</dimen>
     <dimen name="small_icon_size">15dp</dimen>
     <dimen name="medium_icon_size">35dp</dimen>
+    <dimen name="complete_progressbar_height">5dp</dimen>
+    <dimen name="complete_progressbar_divider_width">2dp</dimen>
 
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>

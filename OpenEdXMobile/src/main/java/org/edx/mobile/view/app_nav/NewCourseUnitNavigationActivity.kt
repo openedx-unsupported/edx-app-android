@@ -147,16 +147,14 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
 
     private fun setupToolbar() {
         subsection?.let { subSection ->
-            // Sub section title
-            binding.courseSubSectionTitle.text = subSection.displayName
-
             val hasMultipleChildren =
                 subSection.children.isNullOrEmpty().not() && subSection.children.size > 1
             subSection.firstIncompleteComponent?.let {
-                setUnitTitle(it, hasMultipleChildren)
+                setToolbarTitle(it, hasMultipleChildren)
                 if (hasMultipleChildren) {
                     setupUnitsDropDown(subSection.children, it)
                 }
+                updateCompletionProgressBar(0, it.children.size)
             }
 
             ViewAnimationUtil.startAlphaAnimation(
@@ -165,6 +163,12 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             )
             setupToolbarListeners()
         }
+    }
+
+    private fun updateCompletionProgressBar(currentPosition: Int, size: Int) {
+        binding.spbUnits.setDivisions(size)
+        binding.spbUnits.setDividerEnabled(true)
+        binding.spbUnits.setEnabledDivisions((0..currentPosition).toList())
     }
 
     private fun setupToolbarListeners() {
@@ -197,13 +201,16 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         binding.ivCollapsedBack.setOnClickListener { finish() }
     }
 
-    private fun setUnitTitle(firstIncompleteUnit: CourseComponent, hasMoreThenOneChild: Boolean) {
+    private fun setToolbarTitle(courseUnit: CourseComponent, hasMoreThenOneChild: Boolean) {
+        // Sub section title
+        binding.courseSubSectionTitle.text = courseUnit.parent.displayName
+
         val dropdownIcon = ImageUtils.rotateVectorDrawable(this, R.drawable.ic_play_arrow, 90f)
-        var unitTitle = firstIncompleteUnit.displayName
+        var unitTitle = courseUnit.displayName
         if (hasMoreThenOneChild) {
             unitTitle += "  " + AppConstants.ICON_PLACEHOLDER
         }
-        binding.collapsedToolbarTitle.text = firstIncompleteUnit.displayName
+        binding.collapsedToolbarTitle.text = courseUnit.displayName
         // first incomplete unit title
         binding.courseUnitTitle.setTextWithIcon(
             unitTitle,
@@ -231,7 +238,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             val adapter =
                 UnitsDropDownAdapter(courseData, units, object : UnitsDropDownAdapter.OnItemSelect {
                     override fun onUnitSelect(unit: IBlock) {
-                        setUnitTitle(unit as CourseComponent, true)
+                        setToolbarTitle(unit as CourseComponent, true)
                         var index = 0
                         unit.firstIncompleteComponent?.let { component ->
                             index = (binding.pager2.adapter as NewCourseUnitPagerAdapter)
@@ -296,11 +303,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 updateCurrentComponent(currentComponent)
             }
 
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_IDLE) {
-//                    tryToUpdateForEndOfSequential()
-                }
-            }
+            override fun onPageScrollStateChanged(state: Int) {}
         })
         val firstIncompleteComponentIndex =
             componentList.indexOf(subsection?.firstIncompleteComponent?.firstIncompleteComponent)
@@ -310,11 +313,14 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private fun updateCurrentComponent(currentComponent: CourseComponent) {
         // CourseComponent#getAncestor(1) returns the current Subsection of a component
         val currentSubSection = currentComponent.getAncestor(1)
-        setUnitTitle(currentComponent.parent, currentSubSection.children.size > 1)
+        val currentUnit = currentComponent.parent
+        setToolbarTitle(currentUnit, currentSubSection.children.size > 1)
         if (subsection?.id.equals(currentSubSection.id).not()) {
             subsection = currentSubSection
         }
-        subsection?.children?.let { setupUnitsDropDown(it, currentComponent.parent) }
+        subsection?.children?.let { setupUnitsDropDown(it, currentUnit) }
+        val currentComponentIndex = currentUnit.children.indexOf(currentComponent)
+        updateCompletionProgressBar(currentComponentIndex, currentUnit.children.size)
     }
 
     private fun getComponentList(): MutableList<CourseComponent> {

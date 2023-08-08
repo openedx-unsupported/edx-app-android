@@ -24,44 +24,63 @@
                     android:id="@+id/expanded_toolbar_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/primaryLightColor"
-                    android:orientation="vertical"
-                    android:padding="@dimen/edx_default_margin"
-                    app:layout_collapseMode="parallax">
+                    android:orientation="vertical">
 
-                    <android.widget.Space
-                        android:id="@+id/space"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/collapsed_toolbar_height" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/course_sub_section_title"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:fontFamily="?attr/fontRegular"
-                        android:textColor="@color/neutralWhiteT"
-                        android:textDirection="locale"
-                        android:textSize="@dimen/edx_small"
-                        tools:text="What is Happiness?" />
+                        android:background="@color/primaryLightColor"
+                        android:orientation="vertical"
+                        android:padding="@dimen/edx_default_margin"
+                        app:layout_collapseMode="parallax">
 
-                    <FrameLayout
-                        android:id="@+id/fl_units_drop_down"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/edx_x_quarter_margin">
+                        <android.widget.Space
+                            android:id="@+id/space"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/collapsed_toolbar_height" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/course_unit_title"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/course_sub_section_title"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
-                            android:fontFamily="?attr/fontBold"
+                            android:fontFamily="?attr/fontRegular"
                             android:textColor="@color/neutralWhiteT"
                             android:textDirection="locale"
-                            android:textSize="@dimen/edx_base"
-                            tools:text="Introducing Weekly Check In" />
-                    </FrameLayout>
+                            android:textSize="@dimen/edx_small"
+                            tools:text="What is Happiness?" />
+
+                        <FrameLayout
+                            android:id="@+id/fl_units_drop_down"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/edx_x_quarter_margin">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/course_unit_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="?attr/fontBold"
+                                android:textColor="@color/neutralWhiteT"
+                                android:textDirection="locale"
+                                android:textSize="@dimen/edx_base"
+                                tools:text="Introducing Weekly Check In" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <com.rachitgoyal.segmented.SegmentedProgressBar
+                        android:id="@+id/spb_units"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/complete_progressbar_height"
+                        app:cornerRadius="0dp"
+                        app:dividerColor="@color/neutralWhiteT"
+                        app:dividerWidth="@dimen/complete_progressbar_divider_width"
+                        app:divisions="5"
+                        app:isDividerEnabled="true"
+                        app:progressBarBackgroundColor="@color/neutralDark"
+                        app:progressBarColor="@color/accentBColor" />
+
                 </LinearLayout>
 
                 <androidx.appcompat.widget.Toolbar
