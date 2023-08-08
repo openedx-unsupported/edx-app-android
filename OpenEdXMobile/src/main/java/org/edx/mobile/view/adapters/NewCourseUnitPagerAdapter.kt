@@ -18,12 +18,12 @@ import org.edx.mobile.view.CourseUnitDiscussionFragment
 import org.edx.mobile.view.CourseUnitEmptyFragment
 import org.edx.mobile.view.CourseUnitFragment
 import org.edx.mobile.view.CourseUnitFragment.HasComponent
-import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment.Companion.newInstance
+import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment
 import org.edx.mobile.view.CourseUnitVideoPlayerFragment
 import org.edx.mobile.view.CourseUnitWebViewFragment
 import org.edx.mobile.view.CourseUnitYoutubePlayerFragment
-import org.edx.mobile.view.LockedCourseUnitFragment.Companion.newInstance
+import org.edx.mobile.view.LockedCourseUnitFragment
 
 class NewCourseUnitPagerAdapter(
     fragmentActivity: FragmentActivity,
@@ -85,9 +85,13 @@ class NewCourseUnitPagerAdapter(
         unitFragment =
             if (minifiedUnit.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
                 if (courseUpgradeData == null) {
-                    newInstance(minifiedUnit, courseData)
+                    CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
                 } else {
-                    newInstance(minifiedUnit, courseData, courseUpgradeData)
+                    LockedCourseUnitFragment.newInstance(
+                        minifiedUnit,
+                        courseData,
+                        courseUpgradeData
+                    )
                 }
             } else if (VideoUtil.isCourseUnitVideo(environment, minifiedUnit)) {
                 val videoBlockModel = minifiedUnit as VideoBlockModel
@@ -104,14 +108,14 @@ class NewCourseUnitPagerAdapter(
             } else if (config.isDiscussionsEnabled && minifiedUnit is DiscussionBlockModel) {
                 CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData)
             } else if (!minifiedUnit.isMultiDevice) {
-                newInstance(minifiedUnit, courseData)
+                CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
             } else if (minifiedUnit.type !== BlockType.VIDEO && minifiedUnit.type !== BlockType.HTML && minifiedUnit.type !== BlockType.OTHERS && minifiedUnit.type !== BlockType.DISCUSSION && minifiedUnit.type !== BlockType.PROBLEM && minifiedUnit.type !== BlockType.OPENASSESSMENT && minifiedUnit.type !== BlockType.DRAG_AND_DROP_V2 && minifiedUnit.type !== BlockType.WORD_CLOUD && minifiedUnit.type !== BlockType.LTI_CONSUMER) {
                 CourseUnitEmptyFragment.newInstance(minifiedUnit)
             } else if (minifiedUnit is HtmlBlockModel) {
                 minifiedUnit.setCourseId(courseData.course.id)
                 CourseUnitWebViewFragment.newInstance(minifiedUnit, courseData)
             } else {
-                newInstance(minifiedUnit, courseData)
+                CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
             }
         unitFragment.setHasComponentCallback(callback)
         fragments.add(unitFragment)

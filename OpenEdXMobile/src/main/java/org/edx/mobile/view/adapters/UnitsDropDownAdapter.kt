@@ -46,7 +46,10 @@ class UnitsDropDownAdapter(
         }
         holder.binding.divider.setVisibility(position < itemCount - 1)
         holder.binding.rlContent.background =
-            ContextCompat.getDrawable(holder.binding.rlContent.context, R.drawable.view_selector)
+            ContextCompat.getDrawable(
+                holder.binding.rlContent.context,
+                R.drawable.round_view_selector
+            )
         holder.binding.rlContent.isSelected = selectedItemPosition == position
         holder.binding.rlContent.setOnClickListener {
             listener?.onUnitSelect(unit)

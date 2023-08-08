@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content_area"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -10,7 +11,6 @@
             android:id="@+id/course_navigation_toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:paddingTop="@dimen/widget_margin"
             app:layout_constraintBottom_toTopOf="@+id/course_unit_nav_bar">
 
             <com.google.android.material.appbar.AppBarLayout

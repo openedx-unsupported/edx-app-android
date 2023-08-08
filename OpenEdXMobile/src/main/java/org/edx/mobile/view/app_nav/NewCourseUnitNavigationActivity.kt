@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
@@ -17,7 +19,9 @@ import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.ActivityCourseUnitNavigationNewBinding
 import org.edx.mobile.databinding.LayoutUnitsDropDownBinding
+import org.edx.mobile.event.LogoutEvent
 import org.edx.mobile.event.VideoPlaybackEvent
+import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.CollapsingToolbarStatListener
 import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.serializableOrThrow
@@ -25,6 +29,8 @@ import org.edx.mobile.extenstion.setTextWithIcon
 import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.callback.ErrorHandlingCallback
+import org.edx.mobile.http.notifications.FullScreenErrorNotification
+import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.model.api.CourseUpgradeResponse
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.BlockType
@@ -33,24 +39,32 @@ import org.edx.mobile.model.course.CourseStatus
 import org.edx.mobile.model.course.IBlock
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.NetworkUtil
+import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.VideoUtil
 import org.edx.mobile.util.ViewAnimationUtil
 import org.edx.mobile.util.images.ImageUtils
 import org.edx.mobile.util.images.ShareUtils
+import org.edx.mobile.util.observer.Event
+import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.CourseUnitFragment
 import org.edx.mobile.view.Router
 import org.edx.mobile.view.adapters.NewCourseUnitPagerAdapter
 import org.edx.mobile.view.adapters.UnitsDropDownAdapter
 import org.edx.mobile.view.custom.PreLoadingListener
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment
+import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
+import org.edx.mobile.viewModel.CourseViewModel
+import org.edx.mobile.viewModel.InAppPurchasesViewModel
+import org.edx.mobile.wrapper.InAppPurchasesDialog
 import org.greenrobot.eventbus.EventBus
 import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.HasComponent,
-    PreLoadingListener {
+    PreLoadingListener, RefreshListener {
 
     private lateinit var binding: ActivityCourseUnitNavigationNewBinding
 
@@ -59,6 +73,11 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
 
     @Inject
     lateinit var courseApi: CourseAPI
+
+    @Inject
+    lateinit var iapDialogs: InAppPurchasesDialog
+
+    private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
     private lateinit var courseData: EnrolledCoursesResponse
     private var courseComponentId: String? = null
@@ -69,6 +88,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private var isVideoMode = false
     private var viewPagerState = PreLoadingListener.State.DEFAULT
     private var isFirstSection = false
+    private var errorNotification: FullScreenErrorNotification? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +101,10 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             if (intent != null) bundle = intent.getBundleExtra(Router.EXTRA_BUNDLE)
         }
         restore(bundle)
+        initViews()
+    }
+
+    private fun initViews() {
         binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
         binding.gotoNext.setOnClickListener { navigateNextComponent() }
         // If the data is available then trigger the callback
@@ -99,6 +123,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         if (!isVideoMode) {
             courseCelebrationStatus
         }
+        errorNotification = FullScreenErrorNotification(binding.contentArea)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -303,6 +328,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                         !horizontalBlocks.contains(currentComponent.type)
                 }
                 updateCurrentComponent(currentComponent)
+                updateUIForOrientation()
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -373,6 +399,80 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     }
 
     override fun initializeIAPObserver() {
+        // The shared observer is used to monitor and handle any errors that may occur during the
+        // ‘refreshCourseData’ method, which is called as part of the refresh flow. This observer
+        // invokes the ‘updateCourseStructure’ method.
+        iapViewModel.errorMessage.observe(
+            this,
+            NonNullObserver { errorMessageEvent: Event<ErrorMessage> ->
+                if (errorMessageEvent.peekContent().requestType == ErrorMessage.COURSE_REFRESH_CODE) {
+                    val errorMessage = errorMessageEvent.getContentIfNotConsumed()
+                    val fullScreenLoader = FullscreenLoaderDialogFragment.getRetainedInstance(
+                        supportFragmentManager
+                    )
+                    if (fullScreenLoader == null || errorMessage == null) {
+                        return@NonNullObserver
+                    }
+                    iapDialogs.handleIAPException(fullScreenLoader, errorMessage, { _, _ ->
+                        updateCourseStructure(
+                            courseData.courseId, courseComponentId
+                        )
+                    }) { _, _ ->
+                        iapViewModel.iapFlowData.clear()
+                        fullScreenLoader.dismiss()
+                    }
+                }
+            })
+    }
+
+    /**
+     * Method to force update the course structure from server.
+     */
+    private fun updateCourseStructure(courseId: String?, componentId: String?) {
+        if (!environment.loginPrefs.isUserLoggedIn) {
+            EventBus.getDefault().post(LogoutEvent())
+            return
+        }
+        val courseViewModel = ViewModelProvider(this)[CourseViewModel::class.java]
+        courseViewModel.courseComponent.observe(
+            this,
+            EventObserver { courseComponent: CourseComponent ->
+                // Check if the Course structure is updated from a specific component
+                // so need to set the courseComponentId to that specific component
+                // as after update app needs to show the updated content for that component.
+                courseComponentId = componentId ?: courseComponent.id
+                invalidateOptionsMenu()
+                onLoadData()
+            })
+        courseViewModel.handleError.observe(this) { throwable: Throwable ->
+            errorNotification?.showError(
+                this@NewCourseUnitNavigationActivity,
+                throwable,
+                R.string.lbl_reload
+            ) {
+                if (NetworkUtil.isConnected(this@NewCourseUnitNavigationActivity)) {
+                    onRefresh()
+                }
+            }
+            onCourseRefreshError(throwable)
+        }
+        courseId?.let {
+            courseViewModel.getCourseData(
+                courseId = courseId,
+                courseComponentId = null,
+                showProgress = false,
+                swipeRefresh = false,
+                coursesRequestType = CourseViewModel.CoursesRequestType.LIVE
+            )
+        }
+    }
+
+    private fun onCourseRefreshError(error: Throwable) {
+        val fullScreenLoader =
+            FullscreenLoaderDialogFragment.getRetainedInstance(supportFragmentManager)
+        if (fullScreenLoader?.isResumed == true) {
+            iapViewModel.dispatchError(ErrorMessage.COURSE_REFRESH_CODE, null, error)
+        }
     }
 
     override fun setLoadingState(newState: PreLoadingListener.State) {
@@ -391,12 +491,25 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             WindowInsetsControllerCompat(window, window.decorView).apply {
                 hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
             }
-            binding.appbar.setVisibility(false)
+            val layoutParams = binding.appbar.layoutParams
+            layoutParams.height = 0
+            binding.courseNavigationToolbar.setPadding(0, 0, 0, 0)
+            binding.appbar.layoutParams = layoutParams
+            binding.courseUnitNavBar.setVisibility(false)
         } else {
             WindowCompat.setDecorFitsSystemWindows(window, true)
             WindowInsetsControllerCompat(window, window.decorView)
                 .show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
-            binding.appbar.setVisibility(true)
+            val layoutParams = binding.appbar.layoutParams
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            binding.appbar.layoutParams = layoutParams
+            binding.courseNavigationToolbar.setPadding(
+                0,
+                resources.getDimensionPixelSize(R.dimen.edx_half_margin),
+                0,
+                0
+            )
+            binding.courseUnitNavBar.setVisibility(true)
         }
     }
 
@@ -453,5 +566,14 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         })
         celebrationDialog.isCancelable = false
         celebrationDialog.show(supportFragmentManager, CelebratoryModalDialogFragment.TAG)
+    }
+
+    override fun onRefresh() {
+        errorNotification?.hideError()
+        if (!environment.loginPrefs.isUserLoggedIn) {
+            EventBus.getDefault().post(LogoutEvent())
+            return
+        }
+        initViews()
     }
 }

@@ -29,7 +29,6 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/widget_margin"
             android:layout_toEndOf="@+id/fl_unit_status"
-            android:background="@drawable/view_selector"
             android:ellipsize="end"
             android:fontFamily="?attr/fontRegular"
             android:maxLines="1"
