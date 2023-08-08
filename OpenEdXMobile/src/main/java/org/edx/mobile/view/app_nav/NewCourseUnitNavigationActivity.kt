@@ -81,6 +81,8 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             if (intent != null) bundle = intent.getBundleExtra(Router.EXTRA_BUNDLE)
         }
         restore(bundle)
+        binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
+        binding.gotoNext.setOnClickListener { navigateNextComponent() }
         // If the data is available then trigger the callback
         // after basic initialization
         if (courseComponentId != null && environment.loginPrefs.isUserLoggedIn) {
@@ -244,7 +246,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                             index = (binding.pager2.adapter as NewCourseUnitPagerAdapter)
                                 .getComponentIndex(component)
                         }
-                        binding.pager2.setCurrentItem(index, false)
+                        binding.pager2.currentItem = index
                         popupWindow.dismiss()
                     }
                 })
