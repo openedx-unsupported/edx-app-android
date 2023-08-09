@@ -7,7 +7,6 @@ import okhttp3.Request
 import org.edx.mobile.core.EdxDefaultModule
 import org.edx.mobile.http.callback.ErrorHandlingOkCallback
 import org.edx.mobile.http.provider.OkHttpClientProvider
-import org.edx.mobile.social.SocialFactory
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialMember
 import org.edx.mobile.social.SocialProvider
@@ -19,8 +18,7 @@ class MicrosoftProvide : SocialProvider {
     }
 
     override fun getUserInfo(
-        context: Context?, socialType: SocialFactory.SOCIAL_SOURCE_TYPE?,
-        accessToken: String?,
+        context: Context?, accessToken: String?,
         userInfoCallback: SocialLoginDelegate.SocialUserInfoCallback?
     ) {
         context?.run {

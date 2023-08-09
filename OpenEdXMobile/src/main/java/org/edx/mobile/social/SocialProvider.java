@@ -9,6 +9,7 @@ public interface SocialProvider {
      */
     interface Callback<T> {
         void onSuccess(T response);
+
         void onError(SocialError err);
     }
 
@@ -36,7 +37,7 @@ public interface SocialProvider {
     void getUser(Callback<SocialMember> callback);
 
     /**
-     *   Gets the user object for the current logged in user
+     * Gets the user object for the current logged in user
      */
-    void getUserInfo(Context context, SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,  SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
+    void getUserInfo(Context context, String accessToken, SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
 }

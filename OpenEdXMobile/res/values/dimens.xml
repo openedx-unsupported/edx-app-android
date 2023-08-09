@@ -9,6 +9,7 @@
 
     <!-- Per Material Design Guidelines -->
     <dimen name="action_bar_icon_size">24dp</dimen>
+    <dimen name="action_bar_text_size">20sp</dimen>
 
     <!-- Alert dialog default padding -->
     <!-- Note: Copied from the support library, since they are private to the library

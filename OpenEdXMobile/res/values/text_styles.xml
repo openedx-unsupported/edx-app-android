@@ -149,7 +149,7 @@
 
     <!-- Registration Instruction Message below fields-->
     <style name="registration_instruction_message" parent="registration_error_message">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/neutralXDark</item>
     </style>
 
     <!-- Course Card styles -->

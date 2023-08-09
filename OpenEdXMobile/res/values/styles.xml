@@ -113,6 +113,7 @@
     <style name="AppTheme.ToolBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/toolbar_controls_color</item>
         <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="android:textSize">@dimen/action_bar_text_size</item>
     </style>
 
     <style name="AppTheme.ToolBar.SubTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
@@ -495,10 +496,6 @@
         <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
         <item name="android:background">@drawable/edx_segmented_control_middle_background</item>
-    </style>
-
-    <style name="edX.Widget.TextInputLayout.HintTextAppearance" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
 
     <style name="Calendar.Sync.Switch" parent="Theme.AppCompat.Light">

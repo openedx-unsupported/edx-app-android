@@ -62,7 +62,6 @@
         <activity
             android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_shortcut_name"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoDisplayTheme"
             android:exported="true">
             <intent-filter>
@@ -80,21 +79,21 @@
 
         <activity
             android:name="org.edx.mobile.view.LaunchActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launch" />
 
         <activity
             android:name="org.edx.mobile.view.DiscoveryLaunchActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.edx.mobile.view.login.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <!--Intent filter to capture System Browser or Authenticator calling back to our app after sign-in-->
@@ -119,12 +118,10 @@
 
         <activity
             android:name="org.edx.mobile.view.PaymentsInfoActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.edx.mobile.view.CourseOutlineActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
@@ -136,7 +133,6 @@
         <activity
             android:name=".view.CourseDiscussionCommentsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
@@ -166,7 +162,6 @@
         <activity
             android:name="org.edx.mobile.view.CourseUnitNavigationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
-            android:label="@string/app_name"
             android:screenOrientation="user"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
@@ -261,7 +256,6 @@
         <!--Google cast expanded controls activity-->
         <activity
             android:name="org.edx.mobile.googlecast.ExpandedControlsActivity"
-            android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/Theme.CastVideosTheme"
             android:exported="true">
@@ -311,8 +305,7 @@
         <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="false"/>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">

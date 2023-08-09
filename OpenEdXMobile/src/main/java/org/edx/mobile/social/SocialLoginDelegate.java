@@ -18,12 +18,15 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.authentication.AuthResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.social.facebook.FacebookAuth;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
+import org.edx.mobile.social.microsoft.MicrosoftAuth;
 import org.edx.mobile.social.microsoft.MicrosoftProvide;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.ICommonUI;
@@ -48,7 +51,6 @@ public class SocialLoginDelegate {
     private ISocial google, facebook, microsoft;
     private final LoginPrefs loginPrefs;
 
-    private String userEmail;
     private Feature feature;
 
     public SocialLoginDelegate(@NonNull Activity activity, @Nullable Bundle savedInstanceState,
@@ -60,19 +62,19 @@ public class SocialLoginDelegate {
         this.loginPrefs = loginPrefs;
         this.feature = feature;
 
-        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE, config);
+        google = getInstance(SocialAuthSource.GOOGLE, config);
         google.setCallback(accessToken -> {
             logger.debug("Google logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_GOOGLE);
         });
 
-        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK, config);
+        facebook = getInstance(SocialAuthSource.FACEBOOK, config);
         facebook.setCallback(accessToken -> {
             logger.debug("Facebook logged in; token= " + accessToken);
             onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_FACEBOOK);
         });
 
-        microsoft = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT, config);
+        microsoft = getInstance(SocialAuthSource.MICROSOFT, config);
         microsoft.setCallback(new ISocial.Callback() {
             @Override
             public void onCancel() {
@@ -127,31 +129,19 @@ public class SocialLoginDelegate {
         microsoft.onActivityStopped(activity);
     }
 
-    private void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-        switch (socialType) {
-            case FACEBOOK:
-                facebook.login();
-                break;
-            case GOOGLE:
-                google.login();
-                break;
-            case MICROSOFT:
-                microsoft.login();
-                break;
+    private void socialLogin(SocialAuthSource socialAuthSource) {
+        switch (socialAuthSource) {
+            case FACEBOOK -> facebook.login();
+            case GOOGLE -> google.login();
+            case MICROSOFT -> microsoft.login();
         }
     }
 
-    private void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-        switch (socialType) {
-            case FACEBOOK:
-                facebook.logout();
-                break;
-            case GOOGLE:
-                google.logout();
-                break;
-            case MICROSOFT:
-                microsoft.logout();
-                break;
+    private void socialLogout(SocialAuthSource socialAuthSource) {
+        switch (socialAuthSource) {
+            case FACEBOOK -> facebook.logout();
+            case GOOGLE -> google.logout();
+            case MICROSOFT -> microsoft.logout();
         }
     }
 
@@ -168,32 +158,33 @@ public class SocialLoginDelegate {
         task.execute();
     }
 
-
-    public void setUserEmail(String email) {
-        this.userEmail = email;
-    }
-
-    public String getUserEmail() {
-        return this.userEmail;
-    }
-
-
-    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken, final SocialUserInfoCallback userInfoCallback) {
+    public void getUserInfo(SocialAuthSource socialAuthSource, String accessToken, final SocialUserInfoCallback userInfoCallback) {
         SocialProvider socialProvider = null;
-        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK) {
+        if (socialAuthSource == SocialAuthSource.FACEBOOK) {
             socialProvider = new FacebookProvider();
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE) {
+        } else if (socialAuthSource == SocialAuthSource.GOOGLE) {
             socialProvider = new GoogleProvider((GoogleOauth2) google);
-        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT) {
+        } else if (socialAuthSource == SocialAuthSource.MICROSOFT) {
             socialProvider = new MicrosoftProvide();
         }
 
         if (socialProvider != null) {
-            socialProvider.getUserInfo(activity, socialType, accessToken, userInfoCallback);
+            socialProvider.getUserInfo(activity, accessToken, userInfoCallback);
         }
 
     }
 
+    public ISocial getInstance(SocialAuthSource source, Config config) {
+        if (ConfigUtil.isSocialFeatureEnabled(source, config)) {
+            return switch (source) {
+                case GOOGLE -> new GoogleOauth2(activity);
+                case FACEBOOK -> new FacebookAuth(activity);
+                case MICROSOFT -> new MicrosoftAuth(activity);
+                case UNKNOWN -> new ISocialEmptyImpl();
+            };
+        }
+        return new ISocialEmptyImpl();
+    }
 
     class ProfileTask extends Task<AuthResponse> {
 
@@ -287,15 +278,15 @@ public class SocialLoginDelegate {
         }
     }
 
-    public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-        return new SocialButtonClickHandler(socialType);
+    public SocialButtonClickHandler createSocialButtonClickHandler(SocialAuthSource socialAuthSource) {
+        return new SocialButtonClickHandler(socialAuthSource);
     }
 
     public class SocialButtonClickHandler implements View.OnClickListener {
-        private SocialFactory.SOCIAL_SOURCE_TYPE socialType;
+        private final SocialAuthSource socialAuthSource;
 
-        private SocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
-            this.socialType = socialType;
+        private SocialButtonClickHandler(SocialAuthSource socialAuthSource) {
+            this.socialAuthSource = socialAuthSource;
         }
 
         @Override
@@ -309,7 +300,7 @@ public class SocialLoginDelegate {
 
                     @Override
                     protected Void doInBackground(Void... voids) {
-                        socialLogout(socialType);
+                        socialLogout(socialAuthSource);
                         return null;
                     }
 
@@ -317,7 +308,7 @@ public class SocialLoginDelegate {
                     protected void onPostExecute(Void unused) {
                         super.onPostExecute(unused);
                         try {
-                            socialLogin(socialType);
+                            socialLogin(socialAuthSource);
                         } catch (Exception ex) {
                             handleException(ex);
                         }

@@ -6,22 +6,22 @@ import android.os.Bundle;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.model.authentication.AuthResponse;
-import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.social.SocialAuthSource;
 
 import dagger.hilt.android.EntryPointAccessors;
 
 public abstract class RegisterTask extends Task<AuthResponse> {
 
     private Bundle parameters;
-    private SocialFactory.SOCIAL_SOURCE_TYPE backstoreType;
+    private SocialAuthSource socialAuthSource;
     private String accessToken;
     private LoginAPI loginAPI;
 
-    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE backstoreType) {
+    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialAuthSource socialAuthSource) {
         super(context);
         this.parameters = parameters;
         this.accessToken = accessToken;
-        this.backstoreType = backstoreType;
+        this.socialAuthSource = socialAuthSource;
         loginAPI = EntryPointAccessors.fromApplication(
                 context, EdxDefaultModule.ProviderEntryPoint.class).getLoginAPI();
     }
@@ -29,16 +29,12 @@ public abstract class RegisterTask extends Task<AuthResponse> {
     @Override
     protected AuthResponse doInBackground(Void... voids) {
         try {
-            switch (backstoreType) {
-                case GOOGLE:
-                    return loginAPI.registerUsingGoogle(parameters, accessToken);
-                case FACEBOOK:
-                    return loginAPI.registerUsingFacebook(parameters, accessToken);
-                case MICROSOFT:
-                    return loginAPI.registerUsingMicrosoft(parameters, accessToken);
-            }
-            // normal email address login
-            return loginAPI.registerUsingEmail(parameters);
+            return switch (socialAuthSource) {
+                case GOOGLE -> loginAPI.registerUsingGoogle(parameters, accessToken);
+                case FACEBOOK -> loginAPI.registerUsingFacebook(parameters, accessToken);
+                case MICROSOFT -> loginAPI.registerUsingMicrosoft(parameters, accessToken);
+                default -> loginAPI.registerUsingEmail(parameters);
+            };
         } catch (Exception e) {
             handleException(e);
             return null;
