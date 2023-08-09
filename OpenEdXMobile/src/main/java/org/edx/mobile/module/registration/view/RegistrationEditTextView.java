@@ -64,7 +64,6 @@ public class RegistrationEditTextView implements IRegistrationFieldView {
         // hide error text view
         mErrorTextView.setVisibility(View.GONE);
 
-        // This tag is necessary for End-to-End tests to work properly
         mTextInputLayout.setTag(mField.getName());
 
         // Do a11y adjustment
