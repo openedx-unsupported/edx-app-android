@@ -22,9 +22,9 @@ import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.analytics.Analytics
-import org.edx.mobile.social.SocialFactory
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
+import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.IntentFactory
@@ -141,13 +141,13 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
         ).apply {
             binding.socialAuth.facebookButton.setOnClickListener {
-                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.FACEBOOK)
+                createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)
             }
             binding.socialAuth.googleButton.setOnClickListener(
-                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.GOOGLE)
+                createSocialButtonClickHandler(SocialAuthSource.GOOGLE)
             )
             binding.socialAuth.microsoftButton.setOnClickListener(
-                createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.MICROSOFT)
+                createSocialButtonClickHandler(SocialAuthSource.MICROSOFT)
             )
         }
     }

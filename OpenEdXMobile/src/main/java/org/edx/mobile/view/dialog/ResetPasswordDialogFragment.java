@@ -5,7 +5,6 @@ import static android.app.Activity.RESULT_OK;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -39,7 +38,6 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @Inject
     LoginService loginService;
 
-    @NonNull
     private ResetPasswordDialogBinding binding;
 
     @Nullable
@@ -56,11 +54,11 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        binding = ResetPasswordDialogBinding.inflate(LayoutInflater.from(getActivity()),
+        binding = ResetPasswordDialogBinding.inflate(getLayoutInflater(),
                 null, false);
         binding.emailEditText.setText(getArguments().getString(ARG_LOGIN_EMAIL));
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+        final AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.confirm_dialog_title_help)
                 .setMessage(R.string.confirm_dialog_message_help)
                 .setPositiveButton(android.R.string.ok, null)
@@ -91,14 +89,10 @@ public class ResetPasswordDialogFragment extends DialogFragment {
          * We want to prevent the dialog from automatically closing on positive button click,
          * and letting submit() control the logic so, we are overriding View.OnClickListener here.
          */
-        ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        submit(binding.emailEditText.getText().toString().trim());
-                        SoftKeyboardUtil.hide(binding.emailInputLayout);
-                    }
-                });
+        ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> {
+            submit(binding.emailEditText.getText().toString().trim());
+            SoftKeyboardUtil.hide(binding.emailInputLayout);
+        });
     }
 
     public void showError(@NonNull String error) {
@@ -107,7 +101,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     }
 
     private void submit(@Nullable String email) {
-        if (!NetworkUtil.isConnected(getContext())) {
+        if (!NetworkUtil.isConnected(requireContext())) {
             showError(getString(R.string.network_not_connected_short));
         } else if (!InputValidationUtil.isValidEmail(email)) {
             showError(getString(R.string.error_invalid_email));
@@ -115,7 +109,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
             setUiForInteraction(false);
             binding.emailInputLayout.setError(null);
             resetCall = loginService.resetPassword(email);
-            resetCall.enqueue(new ErrorHandlingCallback<ResetPasswordResponse>(getContext()) {
+            resetCall.enqueue(new ErrorHandlingCallback<>(requireContext()) {
                 @Override
                 protected void onResponse(@NonNull final ResetPasswordResponse result) {
                     setUiForInteraction(true);
@@ -132,7 +126,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
                 @Override
                 protected void onFailure(@NonNull Throwable error) {
                     setUiForInteraction(true);
-                    final String errorMsg = ErrorUtils.getErrorMessage(error, getContext());
+                    final String errorMsg = ErrorUtils.getErrorMessage(error, requireContext());
                     showError(errorMsg);
                 }
             });
@@ -140,7 +134,7 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (resetCall != null) {
             resetCall.cancel();

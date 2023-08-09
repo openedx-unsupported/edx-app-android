@@ -54,7 +54,7 @@ class RegistrationSelectView(
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (!mBinding.etAutoComplete.hasValue(s.toString().trim())) {
+                    if (!mBinding.etAutoComplete.hasName(s.toString().trim())) {
                         mBinding.etAutoComplete.selectedItem = null
                     }
                     // Don't show the error until view has lost the focus at least once
@@ -88,7 +88,7 @@ class RegistrationSelectView(
 
     override fun setRawValue(value: String?): Boolean {
         if (mBinding.etAutoComplete.hasValue(value)) {
-            mBinding.etAutoComplete.select(value)
+            mBinding.etAutoComplete.selectFromValue(value)
             return true
         }
         return false
