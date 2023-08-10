@@ -24,13 +24,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.edx.mobile.extenstion.encodeToString
+import org.edx.mobile.extenstion.resumeIfActive
 import org.edx.mobile.logger.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * The BillingProcessor implements all billing functionality for application.
@@ -69,14 +69,14 @@ class BillingProcessor @Inject constructor(
     }
 
     private suspend fun connect(): Boolean {
-        return suspendCoroutine { continuation ->
+        return suspendCancellableCoroutine { continuation ->
             billingClientStateListener = object : BillingClientStateListener {
                 override fun onBillingSetupFinished(billingResult: BillingResult) {
                     logger.debug("BillingSetupFinished -> $billingResult")
                     if (billingResult.responseCode == BillingResponseCode.OK) {
-                        continuation.resume(true)
+                        continuation.resumeIfActive(true)
                     } else {
-                        continuation.resume(false)
+                        continuation.resumeIfActive(false)
                     }
                 }
 
@@ -89,7 +89,7 @@ class BillingProcessor @Inject constructor(
                         connectionTryCount++
                         retryBillingServiceConnectionWithExponentialBackoff()
                     }
-                    continuation.resume(false)
+                    continuation.resumeIfActive(false)
                 }
             }
             billingClient.startConnection(billingClientStateListener)
