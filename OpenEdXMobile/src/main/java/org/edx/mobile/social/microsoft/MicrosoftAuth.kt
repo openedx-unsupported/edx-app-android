@@ -7,6 +7,7 @@ import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAccount
 import com.microsoft.identity.client.IAuthenticationResult
 import com.microsoft.identity.client.IMultipleAccountPublicClientApplication
+import com.microsoft.identity.client.IMultipleAccountPublicClientApplication.RemoveAccountCallback
 import com.microsoft.identity.client.IPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.exception.MsalException
@@ -56,7 +57,17 @@ class MicrosoftAuth(activity: Activity?) : ISocialImpl(activity) {
     override fun logout() {
         microsoftClient?.getAccounts(object : IPublicClientApplication.LoadAccountsCallback {
             override fun onTaskCompleted(result: MutableList<IAccount>?) {
-                result?.forEach { microsoftClient?.removeAccount(it) }
+                result?.forEach { account ->
+                    microsoftClient?.removeAccount(account, object : RemoveAccountCallback {
+                        override fun onRemoved() {
+                            // No action needed
+                        }
+
+                        override fun onError(exception: MsalException) {
+                            logger.error(exception, true)
+                        }
+                    })
+                }
             }
 
             override fun onError(exception: MsalException?) {
