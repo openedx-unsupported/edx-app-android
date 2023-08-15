@@ -469,7 +469,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements
     }
 
     private void updateUIForOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && selectedUnit.isVideoBlock()) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE &&
+                selectedUnit != null && selectedUnit.isVideoBlock()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
