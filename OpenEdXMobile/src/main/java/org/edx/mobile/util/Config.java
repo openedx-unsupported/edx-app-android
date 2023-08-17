@@ -71,7 +71,6 @@ public class Config {
     private static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
     private static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
-    private static final String END_TO_END_TEST = "END_TO_END_TEST";
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
     private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
@@ -258,24 +257,6 @@ public class Config {
 
         public String getKey() {
             return key;
-        }
-    }
-
-    public static class EndToEndConfig {
-        private static final String DEFAULT_EMAIL_TEMPLATE = "test-{unique_id}@example.com";
-
-        @SerializedName("EMAIL_TEMPLATE")
-        private String mEmailTemplate;
-
-        @SerializedName("TEST_COURSE_ID")
-        private String mTestCourseId;
-
-        public String getEmailTemplate() {
-            return TextUtils.isEmpty(mEmailTemplate) ? DEFAULT_EMAIL_TEMPLATE : mEmailTemplate;
-        }
-
-        public String getTestCourseId() {
-            return mTestCourseId;
         }
     }
 
@@ -700,12 +681,6 @@ public class Config {
     @NonNull
     public BrazeConfig getBrazeConfig() {
         return getObjectOrNewInstance(BRAZE, BrazeConfig.class);
-    }
-
-    @NonNull
-    @SuppressWarnings("unused")
-    public EndToEndConfig getEndToEndConfig() {
-        return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
     }
 
     @NonNull
