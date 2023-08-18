@@ -95,5 +95,21 @@ interface IRegistrationFieldView {
                 }
             }
         }
+
+        @JvmStatic
+        fun getResourceId(field: RegistrationFormField): Int {
+            return when (field.name) {
+                "name" -> R.id.et_name
+                "username" -> R.id.et_username
+                "email" -> R.id.et_email
+                "password" -> R.id.et_password
+                "country" -> R.id.et_country
+                "level_of_education" -> R.id.et_level_of_education
+                "gender" -> R.id.et_gender
+                else -> {
+                    -1
+                }
+            }
+        }
     }
 }
