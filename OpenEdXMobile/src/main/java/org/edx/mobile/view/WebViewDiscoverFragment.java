@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,6 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.UrlUtil;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.links.DefaultActionListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -82,29 +82,22 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     }
 
     private void initTitle() {
-        Bundle args = getArguments();
-        if (args != null && !TextUtils.isEmpty(args.getString(Router.EXTRA_SCREEN_TITLE))) {
-            binding.toolbar.getRoot().setVisibility(View.VISIBLE);
-            binding.toolbar.tvTitle.setText(args.getString(Router.EXTRA_SCREEN_TITLE));
-            ToolbarExtKt.setTitleStateListener(binding.toolbar.appbar,
-                    binding.toolbar.collapsingToolbar,
-                    new CollapsingToolbarStatListener() {
-                        @Override
-                        public void onExpanded() {
-                            ViewAnimationUtil.animateTitleSize(
-                                    binding.toolbar.tvTitle,
-                                    getResources().getDimension(R.dimen.edx_x_large));
-                        }
+        binding.toolbar.tvTitle.setText(getString(R.string.label_explore_all_courses));
+        binding.toolbar.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.edx_large));
 
-                        @Override
-                        public void onCollapsed() {
-                            ViewAnimationUtil.animateTitleSize(binding.toolbar.tvTitle,
-                                    getResources().getDimension(R.dimen.edx_large));
-                        }
-                    });
-        } else {
-            binding.toolbar.getRoot().setVisibility(View.GONE);
-        }
+        ToolbarExtKt.setTitleStateListener(binding.toolbar.appbar,
+                binding.toolbar.collapsingToolbar,
+                new CollapsingToolbarStatListener() {
+                    @Override
+                    public void onExpanded() {
+                        binding.toolbar.getRoot().setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onCollapsed() {
+                        binding.toolbar.getRoot().setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     public void setWebViewActionListener() {

@@ -187,8 +187,7 @@
 
         <activity
             android:name=".view.DiscoveryActivity"
-            android:label="@string/label_discover"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.edx.mobile.view.CertificateActivity"

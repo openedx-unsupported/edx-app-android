@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
@@ -41,18 +42,23 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.label_discover);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+    }
+
+    @Override
+    protected void configureActionBar() {
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.hide();
+            bar.setDisplayShowHomeEnabled(false);
+            bar.setDisplayHomeAsUpEnabled(false);
+            bar.setIcon(android.R.color.transparent);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
-    }
-
-    @Override
-    public void setTitle(int titleId) {
-        setTitle(getResources().getString(titleId));
     }
 }
