@@ -79,6 +79,12 @@ class RegistrationSelectView(
 
         // hide error text view
         mBinding.autoCompleteLayout.error = null
+
+        // Need to assign identical resource ids for the automation
+        val resourceId = IRegistrationFieldView.Factory.getResourceId(mField)
+        if (resourceId != -1) {
+            mBinding.etAutoComplete.id = resourceId
+        }
     }
 
     override fun getCurrentValue(): JsonElement {
