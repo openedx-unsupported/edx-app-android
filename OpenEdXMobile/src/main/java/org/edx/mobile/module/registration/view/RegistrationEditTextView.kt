@@ -75,6 +75,11 @@ open class RegistrationEditTextView(
             tag = mField.name
             contentDescription = "${mField.label}. ${mField.instructions}."
         }
+        // Need to assign identical resource ids for the automation
+        val resourceId = IRegistrationFieldView.Factory.getResourceId(mField)
+        if (resourceId != -1) {
+            mBinding.editText.id = resourceId
+        }
     }
 
     override fun setRawValue(value: String?): Boolean {

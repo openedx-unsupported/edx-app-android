@@ -6,4 +6,13 @@
     <item name="discussion" type="id" />
     <item name="important_dates" type="id" />
     <item name="resources" type="id" />
+
+    <!-- Registration screen views id -->
+    <item name="et_name" type="id" />
+    <item name="et_username" type="id" />
+    <item name="et_email" type="id" />
+    <item name="et_password" type="id" />
+    <item name="et_country" type="id" />
+    <item name="et_level_of_education" type="id" />
+    <item name="et_gender" type="id" />
 </resources>
