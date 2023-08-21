@@ -28,21 +28,6 @@ public class WebViewLinkTest extends BaseTestCase {
         assertEquals(emailOptIn, Boolean.valueOf(link.params.get(WebViewLink.Param.EMAIL_OPT)));
     }
 
-    @Test
-    public void testWebViewLinkParsesCourseIdAndRemovesCoursePrefix() {
-        final String courseId = "cosmology-anux-anu-astro4x";
-        final Uri uri = new Uri.Builder()
-                .scheme(WebViewLink.SCHEME)
-                .authority(WebViewLink.Authority.COURSE_INFO.getKey())
-                .appendQueryParameter(WebViewLink.Param.PATH_ID,
-                        WebViewLink.PATH_ID_COURSE_PREFIX + courseId)
-                .build();
-        final WebViewLink link = WebViewLink.parse(uri.toString());
-        assertNotNull(link);
-        assertNotNull(link.params);
-        assertEquals(courseId, link.params.get(WebViewLink.Param.PATH_ID));
-    }
-
     /**
      * Tests our workaround for edx.org failing to encode plus signs in the course_id parameter
      * See https://openedx.atlassian.net/browse/MA-1901

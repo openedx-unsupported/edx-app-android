@@ -14,7 +14,6 @@ import java.util.Map;
  */
 public class WebViewLink {
     public static final String SCHEME = "edxapp";
-    public static final String PATH_ID_COURSE_PREFIX = "course/";
 
     public enum Authority {
         COURSE_INFO("course_info"),
