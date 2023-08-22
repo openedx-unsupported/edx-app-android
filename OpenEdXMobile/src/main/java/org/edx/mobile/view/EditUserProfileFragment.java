@@ -23,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -38,6 +39,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.extenstion.ViewExtKt;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.model.user.Account;
@@ -48,7 +50,6 @@ import org.edx.mobile.model.user.FormField;
 import org.edx.mobile.model.user.LanguageProficiency;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.user.DeleteAccountImageTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
@@ -60,7 +61,9 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.viewModel.ProfileViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -102,6 +105,8 @@ public class EditUserProfileFragment extends BaseFragment {
 
     @Inject
     AnalyticsRegistry analyticsRegistry;
+
+    ProfileViewModel profileViewModel;
 
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
@@ -194,7 +199,6 @@ public class EditUserProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
-
         parseExtras();
 
         final Activity activity = requireActivity();
@@ -246,11 +250,7 @@ public class EditUserProfileFragment extends BaseFragment {
                                     cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
                             case R.id.choose_photo ->
                                     storagePermissionLauncher.launch(PermissionsUtil.getReadStoragePermission());
-                            case R.id.remove_photo -> {
-                                final Task<Void> task = new DeleteAccountImageTask(requireActivity(), username);
-                                task.setProgressDialog(viewHolder.profileImageProgress);
-                                executePhotoTask(task);
-                            }
+                            case R.id.remove_photo -> profileViewModel.removeProfileImage();
                         }
                         return true;
                     }
@@ -259,6 +259,18 @@ public class EditUserProfileFragment extends BaseFragment {
             }
         });
         setData(account, formDescription);
+
+        initObservers();
+    }
+
+    private void initObservers() {
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
+        profileViewModel.getShowProgress().observe(getViewLifecycleOwner(), new EventObserver<>(showProgress -> {
+            if (viewHolder != null)
+                ViewExtKt.setVisibility(viewHolder.profileImageProgress, showProgress);
+            return null;
+        }));
     }
 
     private void parseExtras() {

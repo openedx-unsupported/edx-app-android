@@ -16,6 +16,7 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProgressCallback;
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -89,5 +90,9 @@ public class UserAPI {
                 username,
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
                 RequestBody.create(MediaType.parse(mimeType), file));
+    }
+
+    public Call<ResponseBody> removeProfileImage(@NotNull String username) {
+        return userService.deleteProfileImage(username);
     }
 }

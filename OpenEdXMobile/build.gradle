@@ -513,6 +513,7 @@ android {
         abortOnError true
         error "StopShip", "ContentDescription"
         showAll true
+        disable 'NonConstantResourceId'
         warning "TypographyQuotes", "InvalidPackage", "MissingTranslation", "ImpliedQuantity"
     }
 }
