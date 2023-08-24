@@ -1,5 +1,6 @@
 package org.edx.mobile.viewModel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import org.edx.mobile.util.observer.Event
 import org.edx.mobile.util.observer.postEvent
 import org.edx.mobile.view.ProfileRepository
 import org.greenrobot.eventbus.EventBus
+import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -25,8 +27,6 @@ class ProfileViewModel @Inject constructor(
     private val loginPrefs: LoginPrefs,
 ) : ViewModel() {
 
-    private lateinit var rawProfilesInputStream: InputStream
-
     private val _showProgress = MutableLiveData(Event(false))
     val showProgress: LiveData<Event<Boolean>> = _showProgress
 
@@ -34,8 +34,18 @@ class ProfileViewModel @Inject constructor(
     val formDescription: FormDescription?
         get() = _formDescription
 
-    fun setRawProfilesInputStream(inputStream: InputStream) {
-        rawProfilesInputStream = inputStream
+    fun uploadProfileImage(imageFile: File) {
+        _showProgress.postEvent(true)
+        viewModelScope.launch {
+            val isSuccessful = profileRepository.uploadProfileImage(imageFile)
+
+            if (isSuccessful) {
+                EventBus.getDefault().post(
+                    ProfilePhotoUpdatedEvent(loginPrefs.username, Uri.fromFile(imageFile))
+                )
+            }
+            _showProgress.postEvent(false)
+        }
     }
 
     fun removeProfileImage() {
