@@ -50,7 +50,6 @@ import org.edx.mobile.model.user.FormField;
 import org.edx.mobile.model.user.LanguageProficiency;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
 import org.edx.mobile.user.UserService;
@@ -84,15 +83,10 @@ public class EditUserProfileFragment extends BaseFragment {
 
     private Call<Account> getAccountCall;
 
-    private GetProfileFormDescriptionTask getProfileFormDescriptionTask;
-
     private Task setAccountImageTask;
 
     @Nullable
     private Account account;
-
-    @Nullable
-    private FormDescription formDescription;
 
     @Nullable
     private ViewHolder viewHolder;
@@ -208,20 +202,6 @@ public class EditUserProfileFragment extends BaseFragment {
                 activity, username,
                 null, // Disable default loading indicator, we have our own
                 mCallback, CallTrigger.LOADING_CACHED));
-
-        getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(activity) {
-
-            @Override
-            protected void onPostExecute(FormDescription formDescription) {
-                super.onPostExecute(formDescription);
-                EditUserProfileFragment.this.formDescription = formDescription;
-                if (null != viewHolder) {
-                    setData(account, formDescription);
-                }
-            }
-        };
-        getProfileFormDescriptionTask.setTaskProcessCallback(null);
-        getProfileFormDescriptionTask.execute();
     }
 
     @Nullable
@@ -233,6 +213,8 @@ public class EditUserProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initObservers();
+
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
@@ -258,13 +240,12 @@ public class EditUserProfileFragment extends BaseFragment {
                 popup.show();
             }
         });
-        setData(account, formDescription);
-
-        initObservers();
+        setData(account, profileViewModel.getFormDescription());
     }
 
     private void initObservers() {
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel.setProfileFormDescription(getResources().openRawResource(R.raw.profiles));
 
         profileViewModel.getShowProgress().observe(getViewLifecycleOwner(), new EventObserver<>(showProgress -> {
             if (viewHolder != null)
@@ -291,7 +272,6 @@ public class EditUserProfileFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         getAccountCall.cancel();
-        getProfileFormDescriptionTask.cancel(true);
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
         }
@@ -318,7 +298,7 @@ public class EditUserProfileFragment extends BaseFragment {
         if (event.getAccount().getUsername().equals(username)) {
             account = event.getAccount();
             if (null != viewHolder) {
-                setData(account, formDescription);
+                setData(account, profileViewModel.getFormDescription());
             }
         }
     }
@@ -507,7 +487,7 @@ public class EditUserProfileFragment extends BaseFragment {
                     protected void onResponse(@NonNull final Account account) {
                         super.onResponse(account);
                         EditUserProfileFragment.this.account = account;
-                        setData(account, formDescription);
+                        setData(account, profileViewModel.getFormDescription());
                     }
                 });
     }

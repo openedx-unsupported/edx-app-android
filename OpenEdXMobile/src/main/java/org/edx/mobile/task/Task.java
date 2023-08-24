@@ -95,7 +95,10 @@ public abstract class Task<T> extends AsyncTask<Void, Void, T> {
     }
 
     public void setMessageCallback(@Nullable TaskMessageCallback callback) {
-        messageCallback = callback == null ? null : new WeakReference<>(callback);
+        if (callback != null)
+            messageCallback = new WeakReference<>(callback);
+        else
+            messageCallback = null;
     }
 
     @Nullable
