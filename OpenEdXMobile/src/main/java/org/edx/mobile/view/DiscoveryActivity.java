@@ -46,19 +46,16 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
+    }
+
+    @Override
     protected void configureActionBar() {
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.hide();
-            bar.setDisplayShowHomeEnabled(false);
-            bar.setDisplayHomeAsUpEnabled(false);
-            bar.setIcon(android.R.color.transparent);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 }

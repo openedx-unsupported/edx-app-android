@@ -82,7 +82,7 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     }
 
     private void initTitle() {
-        binding.toolbar.tvTitle.setText(getString(R.string.label_explore_all_courses));
+        binding.toolbar.tvTitle.setText(getString(R.string.label_explore_the_catalog));
         binding.toolbar.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.edx_large));
 
         ToolbarExtKt.setTitleStateListener(binding.toolbar.appbar,
