@@ -82,4 +82,7 @@
     <string name="continue_with_social">Continue with %s</string>
     <!-- Message shown while user waits for response to a sign in request-->
     <string name="signing_in">Signing in</string>
+
+    <!-- Title of Discover screen -->
+    <string name="label_explore_the_catalog">Explore the catalog</string>
 </resources>
