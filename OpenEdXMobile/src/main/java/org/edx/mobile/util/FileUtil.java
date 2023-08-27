@@ -2,9 +2,11 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -313,5 +315,23 @@ public class FileUtil {
             }
         }
         return Arrays.copyOf(mimeTypes.toArray(), mimeTypes.size(), String[].class);
+    }
+
+    @Nullable
+    public static Uri getFileUriFromMediaStoreUri(@NonNull Context context, @NonNull Uri mediaUri) {
+        String[] projection = {MediaStore.Images.ImageColumns.DATA};
+
+        try (Cursor cursor = context.getContentResolver().query(mediaUri, projection, null, null, null)) {
+
+            if (cursor != null && cursor.moveToFirst() && cursor.getColumnCount() > 0) {
+                final String data = cursor.getString(0);
+                if (!TextUtils.isEmpty(data)) {
+                    return Uri.fromFile(new File(data));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
