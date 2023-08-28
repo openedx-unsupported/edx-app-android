@@ -5,7 +5,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.links.WebViewLink;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -64,11 +63,6 @@ public class UrlUtil {
         for (String name : paramNames) {
             String value = uri.getQueryParameter(name);
             if (value != null) {
-                if (name.equals(WebViewLink.Param.PATH_ID) &&
-                        value.startsWith(WebViewLink.PATH_ID_COURSE_PREFIX)) {
-                    // Our config already has this prefix in the URI, so we need to get rid of it here in the param's value
-                    value = value.substring(WebViewLink.PATH_ID_COURSE_PREFIX.length()).trim();
-                }
                 paramsMap.put(name, value);
             }
         }
