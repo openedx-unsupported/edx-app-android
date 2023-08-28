@@ -28,11 +28,18 @@
     </declare-styleable>
 
     <!--  Font attributes for the app  -->
+    <!-- font-weight: 400 -->
     <attr name="fontItalic" format="reference" />
+    <!-- font-weight: 400 -->
     <attr name="fontRegular" format="reference" />
+    <!-- font-weight: 500 -->
     <attr name="fontMedium" format="reference" />
+    <!-- font-weight: 600 -->
     <attr name="fontSemiBold" format="reference" />
+    <!-- font-weight: 600 -->
     <attr name="fontSemiBoldItalic" format="reference" />
+    <!-- font-weight: 700 -->
     <attr name="fontBold" format="reference" />
+    <!-- font-weight: 400 -->
     <attr name="secondaryFontRegular" format="reference" />
 </resources>

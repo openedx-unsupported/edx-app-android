@@ -282,20 +282,10 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), HasComponent, PreLo
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        /*
-         * If the youtube player is not in a proper state then it throws the IllegalStateException.
-         * To avoid the crash and continue the flow we are catching the exception.
-         *
-         * It may occur when the edX app was in background and user kills the on-device YouTube app.
-         */
-        try {
-            super.onSaveInstanceState(outState)
-            outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData)
-            outState.putParcelable(Router.EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData)
-            outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId)
-        } catch (e: IllegalStateException) {
-            logger.error(e)
-        }
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData)
+        outState.putParcelable(Router.EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData)
+        outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId)
     }
 
     private fun restore(bundle: Bundle?) {

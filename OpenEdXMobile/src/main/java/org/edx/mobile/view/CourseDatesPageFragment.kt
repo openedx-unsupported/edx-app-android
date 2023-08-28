@@ -83,24 +83,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
         override fun onClick(link: String, blockId: String) {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
-            if (blockId.isNotEmpty() && component != null) {
-
-                environment.analyticsRegistry.trackDatesCourseComponentTapped(
-                    courseData.courseId,
-                    component.id,
-                    component.type.toString().lowercase(),
-                    link
-                )
-            } else {
-                showOpenInBrowserDialog(link)
-                if (blockId.isNotEmpty()) {
-                    environment.analyticsRegistry.trackUnsupportedComponentTapped(
-                        courseData.courseId,
-                        blockId,
-                        link
-                    )
-                }
-            }
 
             if (blockId.isNotEmpty() && component != null) {
                 val courseUnitDetailIntent: Intent
@@ -119,7 +101,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                         requireActivity(),
                         courseData,
                         null,
-                        blockId,
+                        component.id,
                         false
                     )
                 }

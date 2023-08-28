@@ -135,14 +135,24 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pager2"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:importantForAccessibility="no"
-                android:orientation="horizontal"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <TextView
+                    android:id="@+id/flying_message"
+                    style="@style/flying_message"
+                    android:visibility="gone" />
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pager2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:importantForAccessibility="no"
+                    android:orientation="horizontal" />
+            </RelativeLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <RelativeLayout

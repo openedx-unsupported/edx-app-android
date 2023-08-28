@@ -73,7 +73,7 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     /**
-     * @param blockModel
+     * @param blockModel course component to be cloned
      * @param parent     is null if and only if this is the root
      */
     public CourseComponent(BlockModel blockModel, CourseComponent parent) {
@@ -271,10 +271,6 @@ public class CourseComponent implements IBlock, IPathNode {
         return multiDevice;
     }
 
-    public void setMultiDevice(boolean multiDevice) {
-        this.multiDevice = multiDevice;
-    }
-
     public boolean isContainer() {
         return type != null ? type.isContainer() : (children != null && children.size() > 0);
     }
@@ -287,7 +283,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * get direct children who have child.  it is not based on the block type, but on
      * the real tree structure.
      *
-     * @return
+     * @return list of children for the current component
      */
     public List<CourseComponent> getChildContainers() {
         List<CourseComponent> childContainers = new ArrayList<>();
@@ -304,7 +300,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * get direct children who is leaf.  it is not based on the block type, but on
      * the real tree structure.
      *
-     * @return
+     * @return list of all leaf children for the current component
      */
     public List<CourseComponent> getChildLeafs() {
         List<CourseComponent> childLeafs = new ArrayList<>();
@@ -325,7 +321,7 @@ public class CourseComponent implements IBlock, IPathNode {
             return this;
         if (!isContainer())
             return null;
-        CourseComponent found = null;
+        CourseComponent found;
         for (CourseComponent c : children) {
             found = c.find(matcher);
             if (found != null)
@@ -400,7 +396,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * we get all the leaves below this node.  if this node itself is leaf,
      * just add it to list
      *
-     * @param leaves
+     * @param leaves all direct children of current component
      */
     public void fetchAllLeafComponents(List<CourseComponent> leaves, EnumSet<BlockType> types) {
         if (!isContainer() && types.contains(type)) {
@@ -414,9 +410,9 @@ public class CourseComponent implements IBlock, IPathNode {
 
     /**
      * get the ancestor based on level, level = 0, means itself.
-     * if level is out of the boundary, just return the toppest one
+     * if level is out of the boundary, just return the uppermost one
      *
-     * @param level
+     * @param level of parent component
      * @return it will never return null.
      */
     public CourseComponent getAncestor(int level) {
@@ -449,10 +445,9 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof CourseComponent)) {
+        if (!(obj instanceof CourseComponent other)) {
             return false;
         }
-        CourseComponent other = (CourseComponent) obj;
         return this.id.equals(other.id);
     }
 
@@ -581,6 +576,11 @@ public class CourseComponent implements IBlock, IPathNode {
         return sections;
     }
 
+    /**
+     * Method to retrieve the first in-complete child OR return last child if all child are completed.
+     *
+     * @return the child of the current component
+     */
     @Nullable
     public CourseComponent getFirstIncompleteComponent() {
         for (CourseComponent block : children) {

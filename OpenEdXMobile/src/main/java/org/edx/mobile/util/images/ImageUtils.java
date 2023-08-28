@@ -5,18 +5,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.ImageView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.third_party.crop.CropUtil;
@@ -42,7 +37,7 @@ public class ImageUtils {
     @Nullable
     public static Uri rotateImageAccordingToExifTag(@NonNull Context context, @NonNull Uri imageUri) {
         System.gc();
-        final String imagePath = imageUri.getPath().toString();
+        final String imagePath = imageUri.getPath();
         final int requiredRotation = CropUtil.getOrientationFromUri(imagePath);
 
         if (requiredRotation == 0) {
@@ -51,11 +46,11 @@ public class ImageUtils {
 
         final File file;
         try {
+            //noinspection SpellCheckingInspection
             file = File.createTempFile(
-                    new StringBuilder(32)
-                            .append("JPEG_")
-                            .append(new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()))
-                            .append("_2").toString(), ".jpg",
+                    "JPEG_" +
+                            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()) +
+                            "_2", ".jpg",
                     context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             );
         } catch (IOException e) {
@@ -107,7 +102,7 @@ public class ImageUtils {
      * <p>
      * TODO: Revisit this validity in LEARNER-4118
      *
-     * @param context
+     * @param context current application context
      * @return <code>true</code> if context is valid for Glide to load the required image,
      * <code>false</code> otherwise.
      */
@@ -115,8 +110,7 @@ public class ImageUtils {
         if (context == null) {
             return false;
         }
-        if (context instanceof Activity) {
-            final Activity activity = (Activity) context;
+        if (context instanceof final Activity activity) {
             return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;
@@ -134,47 +128,5 @@ public class ImageUtils {
 
         animator.setDuration(200); // Adjust the animation duration as needed
         animator.start();
-    }
-
-    public static Drawable rotateVectorDrawable(Context context, @DrawableRes int drawableResId, float rotationDegrees) {
-        Drawable originalDrawable = VectorDrawableCompat.create(context.getResources(), drawableResId, context.getTheme());
-        if (originalDrawable == null) {
-            return null;
-        }
-
-        return new Drawable() {
-            @Override
-            public void draw(Canvas canvas) {
-                float centerX = getBounds().exactCenterX();
-                float centerY = getBounds().exactCenterY();
-
-                canvas.save();
-                canvas.rotate(rotationDegrees, centerX, centerY);
-                originalDrawable.setBounds(getBounds());
-                originalDrawable.draw(canvas);
-                canvas.restore();
-            }
-
-            @Override
-            public void setAlpha(int alpha) {
-                originalDrawable.setAlpha(alpha);
-            }
-
-            @Override
-            public void setColorFilter(android.graphics.ColorFilter colorFilter) {
-                originalDrawable.setColorFilter(colorFilter);
-            }
-
-            @Override
-            public int getOpacity() {
-                return originalDrawable.getOpacity();
-            }
-
-            @Override
-            protected void onBoundsChange(Rect bounds) {
-                super.onBoundsChange(bounds);
-                originalDrawable.setBounds(bounds);
-            }
-        };
     }
 }

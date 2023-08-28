@@ -52,7 +52,7 @@ fun TextView.setTextWithIcon(fullText: String, drawable: Drawable, targetText: S
     val spannableString = SpannableString(fullText)
 
     // Get the drawable resource for the icon
-    drawable.setBounds(0, 0, (textSize * 0.75).toInt(), textSize.toInt())
+    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
 
     // Search for the targetText in the fullText
     val startIndex = fullText.indexOf(targetText)
@@ -60,7 +60,7 @@ fun TextView.setTextWithIcon(fullText: String, drawable: Drawable, targetText: S
     // If the targetText is found, create and set the ImageSpan
     if (startIndex != -1) {
         val endIndex = startIndex + targetText.length
-        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM)
         spannableString.setSpan(imageSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
     this.text = spannableString

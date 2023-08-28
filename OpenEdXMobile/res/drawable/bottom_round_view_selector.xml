@@ -3,35 +3,35 @@
     <item android:state_pressed="true">
         <shape>
             <solid android:color="@color/neutralDark" />
-            <corners android:radius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="@dimen/edx_box_radius" />
         </shape>
     </item>
     <item android:state_selected="true">
         <shape>
             <solid android:color="@color/neutralXLight" />
-            <corners android:radius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="@dimen/edx_box_radius" />
         </shape>
     </item>
     <item android:drawable="@drawable/focus_disabled_drawable" android:state_enabled="false" android:state_focused="true">
         <shape>
-            <corners android:radius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="@dimen/edx_box_radius" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape>
             <solid android:color="@color/neutralXLight" />
-            <corners android:radius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="@dimen/edx_box_radius" />
         </shape>
     </item>
     <item android:drawable="@drawable/focus_drawable" android:state_focused="true">
         <shape>
-            <corners android:radius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="@dimen/edx_box_radius" />
         </shape>
     </item>
     <item>
         <shape>
             <solid android:color="@android:color/transparent" />
-            <corners android:radius="@dimen/edx_box_radius" />
+            <corners android:bottomLeftRadius="@dimen/edx_box_radius" android:bottomRightRadius="@dimen/edx_box_radius" />
         </shape>
     </item>
 </selector>

@@ -254,9 +254,6 @@ public class Config {
         @SerializedName("KEY")
         private String key;
 
-        @SerializedName("SECRET")
-        private String secret;
-
         public boolean isEnabled() {
             return mEnabled;
         }
@@ -658,11 +655,13 @@ public class Config {
     }
 
     public boolean isNewDashboardEnabled() {
-        return getBoolean(NEW_DASHBOARD_ENABLED, false);
+//        return getBoolean(NEW_DASHBOARD_ENABLED, false);
+        return true;
     }
 
     public boolean isNewCourseUnitNavigationEnabled() {
-        return getBoolean(NEW_COURSE_UNIT_NAVIGATION_ENABLED, false);
+//        return getBoolean(NEW_COURSE_UNIT_NAVIGATION_ENABLED, false);
+        return true;
     }
 
     @NonNull

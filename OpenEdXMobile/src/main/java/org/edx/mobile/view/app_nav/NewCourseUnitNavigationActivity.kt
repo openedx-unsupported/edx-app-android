@@ -1,11 +1,16 @@
 package org.edx.mobile.view.app_nav
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowCompat
@@ -19,6 +24,8 @@ import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.ActivityCourseUnitNavigationNewBinding
 import org.edx.mobile.databinding.LayoutUnitsDropDownBinding
+import org.edx.mobile.event.FileSelectionEvent
+import org.edx.mobile.event.FileShareEvent
 import org.edx.mobile.event.LogoutEvent
 import org.edx.mobile.event.VideoPlaybackEvent
 import org.edx.mobile.exception.ErrorMessage
@@ -30,6 +37,7 @@ import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.callback.ErrorHandlingCallback
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
+import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.model.api.CourseUpgradeResponse
 import org.edx.mobile.model.api.EnrolledCoursesResponse
@@ -44,7 +52,6 @@ import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.VideoUtil
 import org.edx.mobile.util.ViewAnimationUtil
-import org.edx.mobile.util.images.ImageUtils
 import org.edx.mobile.util.images.ShareUtils
 import org.edx.mobile.util.observer.Event
 import org.edx.mobile.util.observer.EventObserver
@@ -52,6 +59,7 @@ import org.edx.mobile.view.CourseUnitFragment
 import org.edx.mobile.view.Router
 import org.edx.mobile.view.adapters.NewCourseUnitPagerAdapter
 import org.edx.mobile.view.adapters.UnitsDropDownAdapter
+import org.edx.mobile.view.custom.DividerItemDecorator
 import org.edx.mobile.view.custom.PreLoadingListener
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
@@ -59,6 +67,7 @@ import org.edx.mobile.viewModel.CourseViewModel
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -88,20 +97,55 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private var isVideoMode = false
     private var viewPagerState = PreLoadingListener.State.DEFAULT
     private var isFirstSection = false
+    private var refreshCourse = false
     private var errorNotification: FullScreenErrorNotification? = null
+
+    private var fileChooserLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            var files: Array<Uri>? = null
+            val resultData = result.data
+            if (result.resultCode == RESULT_OK && resultData != null) {
+                val dataString = resultData.dataString
+                val clipData = resultData.clipData
+                if (clipData != null) {
+                    files = emptyArray()
+                    for (i in 0 until clipData.itemCount) {
+                        val item = clipData.getItemAt(i)
+                        files[i] = item.uri
+                    }
+                }
+                // Executed when user select only one file.
+                if (dataString != null) {
+                    files = arrayOf(Uri.parse(dataString))
+                }
+                if (files != null) {
+                    EventBus.getDefault().post(FileShareEvent(files))
+                }
+            }
+        }
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // Add result data into the intent to trigger the signal that `courseData` is updated after
+            // the course was purchased from a locked component screen.
+            if (refreshCourse) {
+                val resultData = Intent()
+                resultData.putExtra(AppConstants.COURSE_UPGRADED, true)
+                setResult(RESULT_OK, resultData)
+                refreshCourse = false
+            }
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityCourseUnitNavigationNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        var bundle = savedInstanceState
-        if (bundle == null) {
-            if (intent != null) bundle = intent.getBundleExtra(Router.EXTRA_BUNDLE)
-        }
-        restore(bundle)
+        restore(savedInstanceState ?: intent?.getBundleExtra(Router.EXTRA_BUNDLE))
         initViews()
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun initViews() {
@@ -124,6 +168,13 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             courseCelebrationStatus
         }
         errorNotification = FullScreenErrorNotification(binding.contentArea)
+    }
+
+    public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData)
+        outState.putParcelable(Router.EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData)
+        outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -175,7 +226,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private fun setupToolbar() {
         subsection?.let { subSection ->
             val hasMultipleChildren =
-                subSection.children.isNullOrEmpty().not() && subSection.children.size > 1
+                subSection.children.isNullOrEmpty().not() && subSection.children.size > 2
             subSection.firstIncompleteComponent?.let {
                 setToolbarTitle(it, hasMultipleChildren)
                 if (hasMultipleChildren) {
@@ -205,7 +256,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 override fun onExpanded() {
                     ViewAnimationUtil.startAlphaAnimation(
                         binding.collapsedToolbarTitle,
-                        View.GONE
+                        View.INVISIBLE
                     )
                     ViewAnimationUtil.startAlphaAnimation(
                         binding.expandedToolbarLayout,
@@ -220,7 +271,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                     )
                     ViewAnimationUtil.startAlphaAnimation(
                         binding.expandedToolbarLayout,
-                        View.GONE
+                        View.INVISIBLE
                     )
                 }
 
@@ -231,14 +282,14 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private fun setToolbarTitle(courseUnit: CourseComponent, hasMoreThenOneChild: Boolean) {
         // Sub section title
         binding.courseSubSectionTitle.text = courseUnit.parent.displayName
-
-        val dropdownIcon = ImageUtils.rotateVectorDrawable(this, R.drawable.ic_play_arrow, 90f)
         var unitTitle = courseUnit.displayName
         if (hasMoreThenOneChild) {
             unitTitle += "  " + AppConstants.ICON_PLACEHOLDER
         }
         binding.collapsedToolbarTitle.text = courseUnit.displayName
         // first incomplete unit title
+        val dropdownIcon =
+            UiUtils.getDrawable(this, R.drawable.ic_tip_down, 0, R.color.neutralWhiteT)
         binding.courseUnitTitle.setTextWithIcon(
             unitTitle,
             dropdownIcon,
@@ -263,11 +314,11 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             )
 
             val adapter =
-                UnitsDropDownAdapter(courseData, units, object : UnitsDropDownAdapter.OnItemSelect {
-                    override fun onUnitSelect(unit: IBlock) {
-                        setToolbarTitle(unit as CourseComponent, true)
+                UnitsDropDownAdapter(courseData, units, object : OnItemClickListener<IBlock> {
+                    override fun onItemClick(item: IBlock) {
+                        setToolbarTitle(item as CourseComponent, true)
                         var index = 0
-                        unit.firstIncompleteComponent?.let { component ->
+                        item.firstIncompleteComponent?.let { component ->
                             index = (binding.pager2.adapter as NewCourseUnitPagerAdapter)
                                 .getComponentIndex(component)
                         }
@@ -275,7 +326,17 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                         popupWindow.dismiss()
                     }
                 })
-            popupViewBinding.rvUnits.adapter = adapter
+            popupViewBinding.rvUnits.apply {
+                this.adapter = adapter
+                this.addItemDecoration(
+                    DividerItemDecorator(
+                        UiUtils.getDrawable(
+                            applicationContext,
+                            R.drawable.list_item_divider
+                        )
+                    )
+                )
+            }
             val index = adapter.getUnitIndex(selectedUnits)
             adapter.setSelection(index)
 
@@ -346,7 +407,11 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         if (subsection?.id.equals(currentSubSection.id).not()) {
             subsection = currentSubSection
         }
-        subsection?.children?.let { setupUnitsDropDown(it, currentUnit) }
+        subsection?.children?.let {
+            if (it.size > 1) {
+                setupUnitsDropDown(it, currentUnit)
+            }
+        }
         val currentComponentIndex = currentUnit.children.indexOf(currentComponent)
         updateCompletionProgressBar(currentComponentIndex, currentUnit.children.size)
     }
@@ -395,7 +460,8 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     }
 
     override fun refreshCourseData(courseId: String, componentId: String) {
-
+        refreshCourse = true
+        updateCourseStructure(courseId, componentId)
     }
 
     override fun initializeIAPObserver() {
@@ -575,5 +641,10 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             return
         }
         initViews()
+    }
+
+    @Subscribe
+    fun onEvent(event: FileSelectionEvent) {
+        fileChooserLauncher.launch(event.intent)
     }
 }

@@ -242,11 +242,11 @@ public class Router {
         courseBundle.putParcelable(EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetail = new Intent(activity, courseDetailActivityType);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        return courseDetail;
+        Intent courseDetailIntent = new Intent(activity, courseDetailActivityType);
+        courseDetailIntent.putExtra(EXTRA_BUNDLE, courseBundle);
+        courseDetailIntent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
+        courseDetailIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        return courseDetailIntent;
     }
 
     public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {
