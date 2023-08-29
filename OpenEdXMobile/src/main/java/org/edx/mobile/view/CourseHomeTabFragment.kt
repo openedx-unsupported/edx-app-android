@@ -2,6 +2,7 @@ package org.edx.mobile.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -288,7 +289,11 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
 
     override fun download(downloadableVideos: List<HasDownloadEntry>) {
         downloadEntries = downloadableVideos.toMutableList()
-        storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            onPermissionGranted()
+        } else {
+            storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
     }
 
     private fun initVideoObserver() {
