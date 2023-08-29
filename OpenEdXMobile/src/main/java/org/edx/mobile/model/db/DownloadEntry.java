@@ -96,7 +96,11 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public boolean isDownloaded() {
         return (downloaded == DownloadedState.DOWNLOADED);
     }
-    
+
+    public boolean isDownloading() {
+        return (downloaded == DownloadedState.DOWNLOADING);
+    }
+
     @Override
     public String toString() {
         return String.format("dmid=%d, title=%s, path=%s, url=%s, size=%d, duration=%d", dmId, title, filepath, url, size, duration);

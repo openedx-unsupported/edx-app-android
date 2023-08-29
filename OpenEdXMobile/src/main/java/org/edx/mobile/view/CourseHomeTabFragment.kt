@@ -39,27 +39,27 @@ import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.HasDownloadEntry
 import org.edx.mobile.model.course.SectionRow
 import org.edx.mobile.model.course.VideoBlockModel
+import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent
 import org.edx.mobile.module.storage.DownloadCompletedEvent
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent
-import org.edx.mobile.services.VideoDownloadHelper
-import org.edx.mobile.services.VideoDownloadHelper.DownloadManagerCallback
 import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.MediaConsentUtils
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.adapters.CourseHomeAdapter
+import org.edx.mobile.view.dialog.DownloadSizeExceedDialog
+import org.edx.mobile.view.dialog.IDialogCallback
 import org.edx.mobile.viewModel.CourseViewModel
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType
 import org.edx.mobile.viewModel.VideoViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallback,
-    CourseHomeAdapter.OnItemClickListener {
+class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.OnItemClickListener {
 
     private val logger = Logger(javaClass.name)
     private lateinit var binding: FragmentCourseHomeBinding
@@ -67,9 +67,6 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
 
     private val courseViewModel: CourseViewModel by viewModels()
     private val videoViewModel: VideoViewModel by viewModels()
-
-    @Inject
-    lateinit var downloadManager: VideoDownloadHelper
 
     private var courseUpgradeData: CourseUpgradeResponse? = null
     private lateinit var courseData: EnrolledCoursesResponse
@@ -297,6 +294,32 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
     }
 
     private fun initVideoObserver() {
+        videoViewModel.refreshUI.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                updateListUI()
+            }
+        })
+
+        videoViewModel.infoMessage.observe(viewLifecycleOwner, EventObserver { strResId ->
+            showInfoMessage(getString(strResId))
+        })
+
+        videoViewModel.downloadSizeExceeded.observe(viewLifecycleOwner, EventObserver {
+            if (it.isNotEmpty()) {
+                DownloadSizeExceedDialog.newInstance(object : IDialogCallback {
+                    override fun onPositiveClicked() {
+                        videoViewModel.startDownload(it)
+                    }
+
+                    override fun onNegativeClicked() {
+                        EventBus.getDefault().post(BulkVideosDownloadCancelledEvent())
+                    }
+                }).apply {
+                    show(requireActivity().supportFragmentManager, "dialog")
+                }
+            }
+        })
+
         videoViewModel.selectedVideosPosition.observe(
             viewLifecycleOwner,
             EventObserver { position: Pair<Int, Int> ->
@@ -391,7 +414,16 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
     }
 
     private fun onPermissionGranted() {
-        downloadManager.downloadVideos(downloadEntries, activity, this)
+        MediaConsentUtils.requestStreamMedia(requireActivity(), object : IDialogCallback {
+            override fun onPositiveClicked() {
+                videoViewModel.downloadMultipleVideos(downloadEntries)
+            }
+
+            override fun onNegativeClicked() {
+                showInfoMessage(getString(R.string.wifi_off_message))
+                EventBus.getDefault().post(BulkVideosDownloadCancelledEvent())
+            }
+        })
     }
 
     private fun onPermissionDenied() {
@@ -401,23 +433,11 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
         }
     }
 
-    override fun onDownloadStarted(result: Long) {
-        updateListUI()
-    }
-
-    override fun onDownloadFailedToStart() {
-        updateListUI()
-    }
-
-    override fun showProgressDialog(numDownloads: Int) {
-        // nothing to do.
-    }
-
-    override fun updateListUI() {
+    fun updateListUI() {
         adapter.updateList()
     }
 
-    override fun showInfoMessage(message: String?): Boolean {
+    fun showInfoMessage(message: String?): Boolean {
         return activity is BaseFragmentActivity &&
                 (activity as BaseFragmentActivity).showInfoMessage(message)
     }

@@ -16,8 +16,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Map;
-
 public class DownloadSizeExceedDialog extends DialogFragment {
 
     private final Logger logger = new Logger(getClass().getName());
@@ -38,16 +36,12 @@ public class DownloadSizeExceedDialog extends DialogFragment {
     }
 
     public static DownloadSizeExceedDialog newInstance(
-            Map<String, String> dialogMap, IDialogCallback callback) {
-        DownloadSizeExceedDialog frag = new DownloadSizeExceedDialog();
-
-        frag.callback = callback;
-        Bundle args = new Bundle();
-
-        args.putString("title", dialogMap.get("title"));
-        args.putString("dialog_msg_1", dialogMap.get("message_1"));
-        frag.setArguments(args);
-        return frag;
+            IDialogCallback callback) {
+        DownloadSizeExceedDialog dialog = new DownloadSizeExceedDialog();
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        dialog.setCancelable(false);
+        dialog.callback = callback;
+        return dialog;
     }
 
     @Override
@@ -60,8 +54,8 @@ public class DownloadSizeExceedDialog extends DialogFragment {
         TextView dialog_tv_1 = (TextView) v
                 .findViewById(R.id.tv_dialog_message1);
 
-        title_tv.setText(getArguments().getString("title"));
-        dialog_tv_1.setText(getArguments().getString("dialog_msg_1"));
+        title_tv.setText(getString(R.string.download_exceed_title));
+        dialog_tv_1.setText(getString(R.string.download_exceed_message));
         // Watch for button clicks.
         final Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
         positiveBtn.setText(getString(R.string.label_download));
