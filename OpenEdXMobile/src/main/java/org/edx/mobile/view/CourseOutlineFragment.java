@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -379,32 +378,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private void initListView() {
         initAdapter();
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listView.clearChoices();
-                final CourseComponent component = adapter.getItem(position).getComponent();
-                Intent intent;
-                if (environment.getConfig().isNewDashboardEnabled() &&
-                        environment.getConfig().isNewCourseUnitNavigationEnabled()) {
-                    intent = environment.getRouter().getNewCourseUnitDetailIntent(requireActivity(),
-                            courseData, courseUpgradeData, component.getId(), isVideoMode);
-                    environment.getAnalyticsRegistry().trackScreenView(
-                            Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
-                } else if (component.isContainer()) {
-                    intent = environment.getRouter().getCourseOutlineIntent(requireActivity(),
-                            courseData, courseUpgradeData, component.getId(), null, isVideoMode);
-                } else {
-                    if (adapter.getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM) {
-                        environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
-                    }
-                    intent = environment.getRouter().getLegacyCourseUnitDetailIntent(requireActivity(),
-                            courseData, courseUpgradeData, component.getId(), isVideoMode);
-                    environment.getAnalyticsRegistry().trackScreenView(
-                            Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
-                }
-                courseUnitDetailLauncher.launch(intent);
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            listView.clearChoices();
+            final CourseComponent component = adapter.getItem(position).getComponent();
+            showComponentDetailScreen(component, position);
         });
 
         listView.setOnItemLongClickListener((parent, itemView, position, id) -> {
@@ -417,6 +394,29 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             }
             return false;
         });
+    }
+
+    private void showComponentDetailScreen(CourseComponent component, int position) {
+        Intent intent;
+        if (environment.getConfig().isNewDashboardEnabled() &&
+                environment.getConfig().isNewCourseUnitNavigationEnabled()) {
+            intent = environment.getRouter().getNewCourseUnitDetailIntent(requireActivity(),
+                    courseData, courseUpgradeData, component.getId(), isVideoMode);
+            environment.getAnalyticsRegistry().trackScreenView(
+                    Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
+        } else if (component.isContainer()) {
+            intent = environment.getRouter().getCourseOutlineIntent(requireActivity(),
+                    courseData, courseUpgradeData, component.getId(), null, isVideoMode);
+        } else {
+            if (adapter.getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM) {
+                environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
+            }
+            intent = environment.getRouter().getLegacyCourseUnitDetailIntent(requireActivity(),
+                    courseData, courseUpgradeData, component.getId(), isVideoMode);
+            environment.getAnalyticsRegistry().trackScreenView(
+                    Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
+        }
+        courseUnitDetailLauncher.launch(intent);
     }
 
     private void initAdapter() {

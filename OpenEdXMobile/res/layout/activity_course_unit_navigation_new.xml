@@ -152,6 +152,11 @@
                     android:clipToPadding="false"
                     android:importantForAccessibility="no"
                     android:orientation="horizontal" />
+
+                <include
+                    android:id="@+id/stateLayout"
+                    layout="@layout/layout_error_state"
+                    android:visibility="gone" />
             </RelativeLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

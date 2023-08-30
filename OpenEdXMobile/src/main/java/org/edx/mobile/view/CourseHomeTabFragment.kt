@@ -244,42 +244,35 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
     override fun onSectionItemClick(
         itemView: LinearLayout, parentPosition: Int, childPosition: Int
     ) {
-        val component = adapter.getItem(parentPosition, childPosition)
-        component?.let {
-            if (environment.config.isNewDashboardEnabled &&
-                environment.config.isNewCourseUnitNavigationEnabled
-            ) {
-                environment.router.getNewCourseUnitDetailIntent(
-                    requireActivity(),
-                    courseData,
-                    courseUpgradeData,
-                    component.id,
-                    false
-                )?.let { startActivity(it) }
-            } else if (component.isContainer) {
-                environment.router.getCourseOutlineIntent(
-                    requireActivity(),
-                    courseData,
-                    courseUpgradeData,
-                    component.id,
-                    null,
-                    false
-                )?.let { startActivity(it) }
-            } else {
-                // nothing to do.
-            }
+        adapter.getItem(parentPosition, childPosition)?.let { component ->
+            showComponentDetailScreen(component)
         }
     }
 
     override fun resumeCourseClicked(lastAccessedComponent: CourseComponent) {
-        if (environment.config.isNewDashboardEnabled &&
-            environment.config.isNewCourseUnitNavigationEnabled
-        ) {
+        showComponentDetailScreen(lastAccessedComponent)
+        environment.analyticsRegistry.trackResumeCourseBannerTapped(
+            lastAccessedComponent.courseId,
+            lastAccessedComponent.id
+        )
+    }
+
+    private fun showComponentDetailScreen(component: CourseComponent) {
+        if (environment.config.isNewDashboardEnabled && environment.config.isNewCourseUnitNavigationEnabled) {
             environment.router.getNewCourseUnitDetailIntent(
                 requireActivity(),
                 courseData,
+                courseUpgradeData,
+                component.id,
+                false
+            )?.let { startActivity(it) }
+        } else if (component.isContainer) {
+            environment.router.getCourseOutlineIntent(
+                requireActivity(),
+                courseData,
+                courseUpgradeData,
+                component.id,
                 null,
-                lastAccessedComponent.id,
                 false
             )?.let { startActivity(it) }
         } else {
@@ -287,15 +280,10 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
                 requireActivity(),
                 courseData,
                 courseUpgradeData,
-                lastAccessedComponent.id,
+                component.id,
                 false
             )?.let { startActivity(it) }
         }
-
-        environment.analyticsRegistry.trackResumeCourseBannerTapped(
-            lastAccessedComponent.courseId,
-            lastAccessedComponent.id
-        )
     }
 
     override fun onSectionItemLongClick(

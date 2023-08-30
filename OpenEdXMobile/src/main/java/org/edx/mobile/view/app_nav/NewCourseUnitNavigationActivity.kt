@@ -24,6 +24,7 @@ import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.databinding.ActivityCourseUnitNavigationNewBinding
 import org.edx.mobile.databinding.LayoutUnitsDropDownBinding
+import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.event.FileSelectionEvent
 import org.edx.mobile.event.FileShareEvent
 import org.edx.mobile.event.LogoutEvent
@@ -36,7 +37,6 @@ import org.edx.mobile.extenstion.setTextWithIcon
 import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.callback.ErrorHandlingCallback
-import org.edx.mobile.http.notifications.FullScreenErrorNotification
 import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.model.api.CourseUpgradeResponse
@@ -61,6 +61,7 @@ import org.edx.mobile.view.adapters.NewCourseUnitPagerAdapter
 import org.edx.mobile.view.adapters.UnitsDropDownAdapter
 import org.edx.mobile.view.custom.DividerItemDecorator
 import org.edx.mobile.view.custom.PreLoadingListener
+import org.edx.mobile.view.custom.error.EdxErrorState
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
 import org.edx.mobile.viewModel.CourseViewModel
@@ -98,7 +99,6 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private var viewPagerState = PreLoadingListener.State.DEFAULT
     private var isFirstSection = false
     private var refreshCourse = false
-    private var errorNotification: FullScreenErrorNotification? = null
 
     private var fileChooserLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -167,7 +167,9 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         if (!isVideoMode) {
             courseCelebrationStatus
         }
-        errorNotification = FullScreenErrorNotification(binding.contentArea)
+        binding.pager2.setVisibility(true)
+        binding.stateLayout.root.setVisibility(false)
+        binding.stateLayout.dismiss.setVisibility(false)
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -511,11 +513,13 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 onLoadData()
             })
         courseViewModel.handleError.observe(this) { throwable: Throwable ->
-            errorNotification?.showError(
-                this@NewCourseUnitNavigationActivity,
-                throwable,
-                R.string.lbl_reload
-            ) {
+            binding.stateLayout.root.setVisibility(true)
+            binding.pager2.setVisibility(false)
+            binding.stateLayout.state.setState(
+                EdxErrorState.State.NETWORK,
+                Screen.COURSE_COMPONENT
+            )
+            binding.stateLayout.state.setActionListener {
                 if (NetworkUtil.isConnected(this@NewCourseUnitNavigationActivity)) {
                     onRefresh()
                 }
@@ -635,7 +639,6 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     }
 
     override fun onRefresh() {
-        errorNotification?.hideError()
         if (!environment.loginPrefs.isUserLoggedIn) {
             EventBus.getDefault().post(LogoutEvent())
             return

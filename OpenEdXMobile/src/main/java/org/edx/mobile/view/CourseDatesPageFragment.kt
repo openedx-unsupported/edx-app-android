@@ -26,6 +26,7 @@ import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.CourseDatesCalendarSync
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseBannerInfoModel
+import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.BrowserUtil
@@ -85,28 +86,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
 
             if (blockId.isNotEmpty() && component != null) {
-                val courseUnitDetailIntent: Intent
-                if (environment.config.isNewDashboardEnabled &&
-                    environment.config.isNewCourseUnitNavigationEnabled
-                ) {
-                    courseUnitDetailIntent = environment.router.getNewCourseUnitDetailIntent(
-                        requireActivity(),
-                        courseData,
-                        null,
-                        component.id,
-                        false
-                    )
-                } else {
-                    courseUnitDetailIntent = environment.router.getLegacyCourseUnitDetailIntent(
-                        requireActivity(),
-                        courseData,
-                        null,
-                        component.id,
-                        false
-                    )
-                }
-                courseUnitDetailLauncher.launch(courseUnitDetailIntent)
-
+                showUnitDetailScreen(component)
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,
@@ -124,6 +104,30 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 }
             }
         }
+    }
+
+    private fun showUnitDetailScreen(component: CourseComponent) {
+        val courseUnitDetailIntent: Intent
+        if (environment.config.isNewDashboardEnabled &&
+            environment.config.isNewCourseUnitNavigationEnabled
+        ) {
+            courseUnitDetailIntent = environment.router.getNewCourseUnitDetailIntent(
+                requireActivity(),
+                courseData,
+                null,
+                component.id,
+                false
+            )
+        } else {
+            courseUnitDetailIntent = environment.router.getLegacyCourseUnitDetailIntent(
+                requireActivity(),
+                courseData,
+                null,
+                component.id,
+                false
+            )
+        }
+        courseUnitDetailLauncher.launch(courseUnitDetailIntent)
     }
 
     private lateinit var courseData: EnrolledCoursesResponse
