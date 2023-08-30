@@ -73,13 +73,13 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initViews(savedInstanceState)
+        initViews()
         hideSoftKeypad()
         tryToSetUIInteraction(true)
         environment.analyticsRegistry.trackScreenView(Analytics.Screens.REGISTER)
     }
 
-    private fun initViews(savedInstanceState: Bundle?) {
+    private fun initViews() {
         setToolbarAsActionBar()
         setTitle(R.string.register_title)
         errorNotification = FullScreenErrorNotification(binding.root)
@@ -90,7 +90,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         binding.optionalFieldTv.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.optionalFieldsLayout.setVisibility(isChecked)
         }
-        setupSocialAuth(savedInstanceState)
+        setupSocialAuth()
         initEULA()
     }
 
@@ -101,11 +101,10 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         )
     }
 
-    private fun setupSocialAuth(savedInstanceState: Bundle?) {
+    private fun setupSocialAuth() {
         if (setupSocialLoginButton()) {
             socialLoginDelegate = SocialLoginDelegate(
                 this,
-                savedInstanceState,
                 this,
                 environment.config,
                 environment.loginPrefs,
@@ -497,10 +496,6 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     ///////section related to social login ///////////////
     // there are some duplicated code from login activity, as the logic
     //between login and registration is different subtly
-    override fun onDestroy() {
-        super.onDestroy()
-        socialLoginDelegate.onActivityDestroyed()
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -511,7 +506,6 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         } ?: savedRegistrationFormState
         outState.putBundle(REGISTRATION_FORM_DATA, formFields)
         outState.putSerializable(SOCIAL_REGISTRATION_TYPE, socialRegistrationType)
-        socialLoginDelegate.onActivitySaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -545,16 +539,6 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                     fieldView.getView().requestFocus()
             }
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        socialLoginDelegate.onActivityStopped()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        socialLoginDelegate.onActivityStarted()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

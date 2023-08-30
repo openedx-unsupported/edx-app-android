@@ -68,7 +68,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     override fun createView(savedInstanceState: Bundle?): LoginViewInterface {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initViews(savedInstanceState)
+        initViews()
         hideSoftKeypad()
         // enable login buttons at launch
         tryToSetUIInteraction(true)
@@ -97,7 +97,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         }
     }
 
-    private fun initViews(savedInstanceState: Bundle?) {
+    private fun initViews() {
         title = getString(R.string.login_title)
 
         binding.loginButtonLayout.setOnClickListener {
@@ -131,13 +131,13 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
                 binding.passwordWrapper.error = null
             }
         })
-        setupSocialLogin(savedInstanceState)
+        setupSocialLogin()
         initEULA()
     }
 
-    private fun setupSocialLogin(savedInstanceState: Bundle?) {
+    private fun setupSocialLogin() {
         socialLoginDelegate = SocialLoginDelegate(
-            this, savedInstanceState, this,
+            this, this,
             environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
         ).apply {
             binding.socialAuth.facebookButton.setOnClickListener {
@@ -172,15 +172,9 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        socialLoginDelegate.onActivityDestroyed()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("username", email)
-        socialLoginDelegate.onActivitySaveInstanceState(outState)
     }
 
     override fun onStart() {
@@ -188,7 +182,6 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         if (email.isEmpty()) {
             displayLastEmailId()
         }
-        socialLoginDelegate.onActivityStarted()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -259,11 +252,6 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             loginTask.setProgressDialog(binding.progress.progressIndicator)
             loginTask.execute()
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        socialLoginDelegate.onActivityStopped()
     }
 
     private fun showResetPasswordDialog() {

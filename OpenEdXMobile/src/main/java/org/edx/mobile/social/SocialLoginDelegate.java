@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -53,7 +52,7 @@ public class SocialLoginDelegate {
 
     private Feature feature;
 
-    public SocialLoginDelegate(@NonNull Activity activity, @Nullable Bundle savedInstanceState,
+    public SocialLoginDelegate(@NonNull Activity activity,
                                @NonNull MobileLoginCallback callback, @NonNull Config config,
                                @NonNull LoginPrefs loginPrefs, @NonNull Feature feature) {
 
@@ -94,39 +93,12 @@ public class SocialLoginDelegate {
                 onSocialLoginSuccess(accessToken, LoginPrefs.BACKEND_MICROSOFT);
             }
         });
-        google.onActivityCreated(activity, savedInstanceState);
-        facebook.onActivityCreated(activity, savedInstanceState);
-        microsoft.onActivityCreated(activity, savedInstanceState);
-    }
-
-    public void onActivityDestroyed() {
-        google.onActivityDestroyed(activity);
-        facebook.onActivityDestroyed(activity);
-        microsoft.onActivityDestroyed(activity);
-    }
-
-    public void onActivitySaveInstanceState(Bundle outState) {
-        google.onActivitySaveInstanceState(activity, outState);
-        facebook.onActivitySaveInstanceState(activity, outState);
-        microsoft.onActivitySaveInstanceState(activity, outState);
-    }
-
-    public void onActivityStarted() {
-        google.onActivityStarted(activity);
-        facebook.onActivityStarted(activity);
-        microsoft.onActivityStarted(activity);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         google.onActivityResult(requestCode, resultCode, data);
         facebook.onActivityResult(requestCode, resultCode, data);
         microsoft.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void onActivityStopped() {
-        google.onActivityStopped(activity);
-        facebook.onActivityStopped(activity);
-        microsoft.onActivityStopped(activity);
     }
 
     private void socialLogin(SocialAuthSource socialAuthSource) {
