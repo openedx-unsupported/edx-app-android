@@ -446,7 +446,8 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
          * 1. We haven't arrived at component navigation from the Videos tab.
          * 2. The current section is the first section being completed (not necessarily the actual first section of the course).
          * 3. Section of the current and next components are different.
-         */if (!isVideoMode && isFirstSection && currentBlockSection != nextBlockSection) {
+         */
+        if (!isVideoMode && isFirstSection && currentBlockSection != nextBlockSection) {
             showCelebrationModal(false)
         }
     }
@@ -591,7 +592,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         get() {
             val courseStatusCall = courseApi.getCourseStatus(courseData.courseId)
             courseStatusCall.enqueue(object :
-                ErrorHandlingCallback<CourseStatus?>(this, null, null) {
+                ErrorHandlingCallback<CourseStatus>(this, null, null) {
                 override fun onResponse(responseBody: CourseStatus) {
                     isFirstSection = responseBody.celebrationStatus.firstSection
                 }
@@ -626,7 +627,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 if (!reCreate) {
                     courseApi.updateCourseCelebration(courseData.courseId).enqueue(object :
                         ErrorHandlingCallback<Void?>(this@NewCourseUnitNavigationActivity) {
-                        override fun onResponse(responseBody: Void) {
+                        override fun onResponse(responseBody: Void?) {
                             isFirstSection = false
                         }
                     })
