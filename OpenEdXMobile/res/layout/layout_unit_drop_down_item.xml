@@ -5,7 +5,7 @@
     android:id="@+id/rl_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selectable_rounded_box_overlay"
+    android:background="@drawable/view_selector"
     android:gravity="center_vertical"
     android:minHeight="@dimen/course_unit_nav_spinner_item_height"
     android:orientation="vertical">

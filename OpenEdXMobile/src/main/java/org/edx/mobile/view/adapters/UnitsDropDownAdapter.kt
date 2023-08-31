@@ -3,9 +3,7 @@ package org.edx.mobile.view.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import org.edx.mobile.R
 import org.edx.mobile.databinding.LayoutUnitDropDownItemBinding
 import org.edx.mobile.extenstion.setInVisible
 import org.edx.mobile.extenstion.setVisibility
@@ -45,23 +43,6 @@ class UnitsDropDownAdapter(
         holder.binding.rlContent.setOnClickListener {
             listener?.onItemClick(unit)
         }
-        holder.binding.rlContent.background =
-            ContextCompat.getDrawable(
-                holder.binding.rlContent.context,
-                when (position) {
-                    0 -> {
-                        R.drawable.top_round_view_selector
-                    }
-
-                    itemCount - 1 -> {
-                        R.drawable.bottom_round_view_selector
-                    }
-
-                    else -> {
-                        R.drawable.view_selector
-                    }
-                }
-            )
     }
 
     @SuppressLint("NotifyDataSetChanged")
