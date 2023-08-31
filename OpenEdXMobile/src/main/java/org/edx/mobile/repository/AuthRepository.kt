@@ -17,6 +17,18 @@ class AuthRepository @Inject constructor(
     private val environment: EdxEnvironment,
     private val loginAPI: LoginAPI,
 ) {
+    suspend fun loginUsingEmail(
+        email: String,
+        password: String,
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    ): AuthResponse = withContext(dispatcher) {
+        try {
+            loginAPI.logInUsingEmail(email, password)
+        } catch (exception: Exception) {
+            throw exception
+        }
+    }
+
     suspend fun registerAccount(
         formFields: Bundle,
         dispatcher: CoroutineDispatcher = Dispatchers.IO,

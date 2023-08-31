@@ -1,15 +1,14 @@
 package org.edx.mobile.view.login
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
+import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
-import org.edx.mobile.authentication.LoginTask
 import org.edx.mobile.databinding.ActivityLoginBinding
 import org.edx.mobile.deeplink.DeepLink
 import org.edx.mobile.deeplink.DeepLinkManager
@@ -20,21 +19,22 @@ import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
-import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.analytics.Analytics
+import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
-import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.IntentFactory
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.TextUtils
 import org.edx.mobile.util.images.ErrorUtils
+import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.PresenterActivity
 import org.edx.mobile.view.Router
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment
 import org.edx.mobile.view.login.LoginPresenter.LoginViewInterface
+import org.edx.mobile.viewModel.AuthViewModel
 
 @AndroidEntryPoint
 class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
@@ -42,13 +42,15 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     private lateinit var socialLoginDelegate: SocialLoginDelegate
     private lateinit var binding: ActivityLoginBinding
 
+    private val authViewModel: AuthViewModel by viewModels()
+
     val email: String
         get() = binding.emailEt.text.toString().trim()
 
     val password: String
         get() = binding.passwordEt.text.toString().trim()
 
-    val loginException: LoginException
+    private val loginException: LoginException
         get() = LoginException(
             LoginErrorMessage(
                 getString(R.string.login_error),
@@ -69,6 +71,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
+        initObservers()
         hideSoftKeypad()
         // enable login buttons at launch
         tryToSetUIInteraction(true)
@@ -152,6 +155,27 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         }
     }
 
+    private fun initObservers() {
+        authViewModel.onLogin.observe(this, EventObserver {
+            if (it) {
+                onUserLoginSuccess()
+            }
+        })
+
+        authViewModel.showProgress.observe(this, EventObserver {
+            binding.progress.progressIndicator.setVisibility(it)
+        })
+
+        authViewModel.errorMessage.observe(this, EventObserver {
+            val ex = it.throwable
+            if (ex is HttpStatusException && ex.statusCode == HttpStatus.BAD_REQUEST) {
+                onUserLoginFailure(loginException, null, null)
+            } else {
+                onUserLoginFailure(ex as Exception, null, null)
+            }
+        })
+    }
+
     private fun initEULA() {
         binding.endUserAgreementTv.movementMethod = LinkMovementMethod.getInstance()
         binding.endUserAgreementTv.text = TextUtils.generateLicenseText(
@@ -209,8 +233,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         binding.emailEt.setText(environment.loginPrefs.lastAuthenticatedEmail)
     }
 
-    @SuppressLint("StaticFieldLeak")
-    fun callServerForLogin() {
+    private fun callServerForLogin() {
         if (!NetworkUtil.isConnected(this)) {
             showAlertDialog(
                 getString(R.string.no_connectivity),
@@ -232,25 +255,8 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             binding.forgotPasswordTv.isEnabled = false
             binding.endUserAgreementTv.isEnabled = false
 
-            val loginTask: LoginTask = object : LoginTask(this, email, password) {
-                override fun onPostExecute(result: AuthResponse?) {
-                    super.onPostExecute(result)
-                    if (result != null) {
-                        onUserLoginSuccess()
-                    }
-                }
-
-                override fun onException(ex: Exception) {
-                    if (ex is HttpStatusException && ex.statusCode == HttpStatus.BAD_REQUEST) {
-                        onUserLoginFailure(loginException, null, null)
-                    } else {
-                        onUserLoginFailure(ex, null, null)
-                    }
-                }
-            }
+            authViewModel.loginUsingEmail(email, password)
             tryToSetUIInteraction(false)
-            loginTask.setProgressDialog(binding.progress.progressIndicator)
-            loginTask.execute()
         }
     }
 
