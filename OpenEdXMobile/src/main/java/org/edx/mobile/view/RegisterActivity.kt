@@ -1,6 +1,5 @@
 package org.edx.mobile.view
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -8,6 +7,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ScrollView
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -29,7 +29,6 @@ import org.edx.mobile.http.callback.ErrorHandlingCallback
 import org.edx.mobile.http.constants.ApiConstants
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
 import org.edx.mobile.model.api.RegisterResponseFieldError
-import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.registration.model.RegistrationDescription
@@ -40,7 +39,6 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionLis
 import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
-import org.edx.mobile.task.RegisterTask
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.AppStoreUtils
@@ -50,6 +48,8 @@ import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.TextUtils
 import org.edx.mobile.util.images.ErrorUtils
+import org.edx.mobile.util.observer.EventObserver
+import org.edx.mobile.viewModel.AuthViewModel
 import javax.inject.Inject
 
 
@@ -63,6 +63,8 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     private var socialRegistrationType = SocialAuthSource.UNKNOWN
     private var savedRegistrationFormState: Bundle? = null
 
+    private val authViewModel: AuthViewModel by viewModels()
+
     @Inject
     lateinit var loginPrefs: LoginPrefs
 
@@ -74,6 +76,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
+        initObservers()
         hideSoftKeypad()
         tryToSetUIInteraction(true)
         environment.analyticsRegistry.trackScreenView(Analytics.Screens.REGISTER)
@@ -142,6 +145,58 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             root.setVisibility(isSocialLoginEnable)
             return isSocialLoginEnable
         }
+    }
+
+    private fun initObservers() {
+        authViewModel.onRegister.observe(this, EventObserver {
+            if (it) {
+                val appVersion = "${getString(R.string.android)} ${BuildConfig.VERSION_NAME}"
+                val provider = environment.loginPrefs.socialLoginProvider
+
+                environment.analyticsRegistry.trackRegistrationSuccess(appVersion, provider)
+                onUserLoginSuccess()
+            }
+        })
+
+        authViewModel.errorMessage.observe(this, EventObserver { error ->
+            setBtnProgressEnabled(false)
+            val ex = error.throwable
+            if (ex is RegistrationException) {
+                val messageBody = ex.formErrorBody
+                var errorShown = false
+                for ((key, value) in messageBody) {
+                    mFieldViews.find { fieldView ->
+                        fieldView.getField().name.equals(key, true)
+                    }?.let { fieldView ->
+                        showErrorOnField(value, fieldView)
+                        if (!errorShown) {
+                            // this is the first input field with error,
+                            // so focus on it after showing the popup
+                            showErrorPopup(fieldView.getOnErrorFocusView())
+                            errorShown = true
+                        }
+                    }
+                }
+                if (errorShown) {
+                    // We have already shown a specific error message.
+                    // Return here to avoid falling back to the generic error handler.
+                    return@EventObserver
+                }
+            }
+            // If app version is un-supported
+            if (ex is HttpStatusException && ex.statusCode == HttpStatus.UPGRADE_REQUIRED) {
+                showAlertDialog(
+                    null,
+                    getString(R.string.app_version_unsupported_register_msg),
+                    getString(R.string.label_update),
+                    { _, _ -> AppStoreUtils.openAppInAppStore(this@RegisterActivity) },
+                    getString(android.R.string.cancel),
+                    null
+                )
+            } else {
+                showAlertDialog(null, ErrorUtils.getErrorMessage(ex, this@RegisterActivity))
+            }
+        })
     }
 
     private fun isSocialFeatureEnable(source: SocialAuthSource): Boolean {
@@ -278,76 +333,11 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     }
 
     private fun createAccount(parameters: Bundle) {
-        // set honor_code and terms_of_service to true
-        parameters.putString("honor_code", "true")
-        parameters.putString("terms_of_service", "true")
+        authViewModel.registerAccount(parameters)
 
-        //set parameter required by social registration
-        val accessToken = environment.loginPrefs.socialLoginAccessToken
         val provider = environment.loginPrefs.socialLoginProvider
-        if (accessToken.isNotNullOrEmpty()) {
-            parameters.putString("access_token", accessToken)
-            parameters.putString("provider", provider)
-            parameters.putString("client_id", environment.config.oAuthClientId)
-        }
-
-        // Send analytics event for Create Account button click
         val appVersion = "${getString(R.string.android)} ${BuildConfig.VERSION_NAME}"
-        val socialAuthSource = SocialAuthSource.fromString(provider)
         environment.analyticsRegistry.trackCreateAccountClicked(appVersion, provider)
-
-        @SuppressLint("StaticFieldLeak")
-        val task = object : RegisterTask(this, parameters, accessToken, socialAuthSource) {
-            @Deprecated("Deprecated in Java")
-            override fun onPostExecute(auth: AuthResponse?) {
-                super.onPostExecute(auth)
-                if (auth != null) {
-                    environment.analyticsRegistry.trackRegistrationSuccess(appVersion, provider)
-                    onUserLoginSuccess()
-                }
-            }
-
-            override fun onException(ex: Exception) {
-                setBtnProgressEnabled(false)
-                if (ex is RegistrationException) {
-                    val messageBody = ex.formErrorBody
-                    var errorShown = false
-                    for ((key, value) in messageBody) {
-                        mFieldViews.find { it.getField().name.equals(key, true) }
-                            ?.let { fieldView ->
-                                showErrorOnField(value, fieldView)
-                                if (!errorShown) {
-                                    // this is the first input field with error,
-                                    // so focus on it after showing the popup
-                                    showErrorPopup(fieldView.getOnErrorFocusView())
-                                    errorShown = true
-                                }
-                            }
-                    }
-                    if (errorShown) {
-                        // We have already shown a specific error message.
-                        return  // Return here to avoid falling back to the generic error handler.
-                    }
-                }
-                // If app version is un-supported
-                if (ex is HttpStatusException && ex.statusCode == HttpStatus.UPGRADE_REQUIRED) {
-                    this@RegisterActivity.showAlertDialog(
-                        null,
-                        getString(R.string.app_version_unsupported_register_msg),
-                        getString(R.string.label_update),
-                        { _, _ -> AppStoreUtils.openAppInAppStore(this@RegisterActivity) },
-                        getString(android.R.string.cancel),
-                        null
-                    )
-                } else {
-                    this@RegisterActivity.showAlertDialog(
-                        null,
-                        ErrorUtils.getErrorMessage(ex, this@RegisterActivity)
-                    )
-                }
-            }
-        }
-        task.execute()
     }
 
     // this is the first input field with error,
