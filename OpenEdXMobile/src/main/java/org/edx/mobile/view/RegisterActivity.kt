@@ -38,6 +38,7 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView.Factory.ge
 import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionListener
 import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
+import org.edx.mobile.social.SocialLoginDelegate.Feature
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppConstants
@@ -111,7 +112,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 this,
                 environment.config,
                 environment.loginPrefs,
-                SocialLoginDelegate.Feature.REGISTRATION
+                Feature.REGISTRATION
             ).apply {
                 binding.socialAuth.facebookButton.setOnClickListener {
                     createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)

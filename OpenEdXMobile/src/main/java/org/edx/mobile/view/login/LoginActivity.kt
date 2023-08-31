@@ -22,6 +22,7 @@ import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
+import org.edx.mobile.social.SocialLoginDelegate.Feature
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
 import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppStoreUtils
@@ -141,7 +142,7 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
     private fun setupSocialLogin() {
         socialLoginDelegate = SocialLoginDelegate(
             this, this,
-            environment.config, environment.loginPrefs, SocialLoginDelegate.Feature.SIGN_IN
+            environment.config, environment.loginPrefs, Feature.SIGN_IN
         ).apply {
             binding.socialAuth.facebookButton.setOnClickListener {
                 createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)
