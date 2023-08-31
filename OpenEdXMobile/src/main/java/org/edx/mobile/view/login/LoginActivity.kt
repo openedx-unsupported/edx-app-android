@@ -2,18 +2,18 @@ package org.edx.mobile.view.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
+import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.databinding.ActivityLoginBinding
 import org.edx.mobile.deeplink.DeepLink
 import org.edx.mobile.deeplink.DeepLinkManager
 import org.edx.mobile.exception.LoginErrorMessage
 import org.edx.mobile.exception.LoginException
+import org.edx.mobile.extenstion.addAfterTextChanged
 import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.setVisibility
@@ -31,15 +31,13 @@ import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.TextUtils
 import org.edx.mobile.util.images.ErrorUtils
 import org.edx.mobile.util.observer.EventObserver
-import org.edx.mobile.view.PresenterActivity
 import org.edx.mobile.view.Router
 import org.edx.mobile.view.dialog.ResetPasswordDialogFragment
-import org.edx.mobile.view.login.LoginPresenter.LoginViewInterface
 import org.edx.mobile.viewModel.AuthViewModel
 
 @AndroidEntryPoint
-class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
-    MobileLoginCallback {
+class LoginActivity : BaseFragmentActivity(), MobileLoginCallback {
+
     private lateinit var socialLoginDelegate: SocialLoginDelegate
     private lateinit var binding: ActivityLoginBinding
 
@@ -59,16 +57,8 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
             )
         )
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        this.intent = intent
-    }
-
-    override fun createPresenter(savedInstanceState: Bundle?): LoginPresenter {
-        return LoginPresenter(environment.config)
-    }
-
-    override fun createView(savedInstanceState: Bundle?): LoginViewInterface {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
@@ -77,37 +67,15 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         // enable login buttons at launch
         tryToSetUIInteraction(true)
         environment.analyticsRegistry.trackScreenView(Analytics.Screens.LOGIN)
-
-        return object : LoginViewInterface {
-            override fun disableToolbarNavigation() {
-                supportActionBar?.apply {
-                    setHomeButtonEnabled(false)
-                    setDisplayHomeAsUpEnabled(false)
-                    setDisplayShowHomeEnabled(false)
-                }
-            }
-
-            override fun setSocialLoginButtons(
-                googleEnabled: Boolean, facebookEnabled: Boolean,
-                microsoftEnabled: Boolean
-            ) {
-                binding.socialAuth.apply {
-                    root.setVisibility((!facebookEnabled && !googleEnabled && !microsoftEnabled).not())
-                    googleButton.setVisibility(googleEnabled)
-                    facebookButton.setVisibility(facebookEnabled)
-                    microsoftButton.setVisibility(microsoftEnabled)
-                }
-            }
-        }
     }
 
     private fun initViews() {
+        setToolbarAsActionBar()
         title = getString(R.string.login_title)
-
         binding.loginButtonLayout.setOnClickListener {
             callServerForLogin()
         }
-        binding.forgotPasswordTv.setOnClickListener { // Calling help dialog
+        binding.forgotPasswordTv.setOnClickListener {
             if (NetworkUtil.isConnected(this@LoginActivity)) {
                 showResetPasswordDialog()
             } else {
@@ -117,29 +85,28 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
                 )
             }
         }
-        binding.emailEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
-
-            override fun onTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
-
-            override fun afterTextChanged(editable: Editable) {
-                binding.usernameWrapper.error = null
-            }
-        })
-        binding.passwordEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
-
-            override fun onTextChanged(c: CharSequence, s: Int, b: Int, a: Int) {}
-
-            override fun afterTextChanged(editable: Editable) {
-                binding.passwordWrapper.error = null
-            }
-        })
+        binding.emailEt.addAfterTextChanged {
+            binding.usernameWrapper.error = null
+        }
+        binding.passwordEt.addAfterTextChanged {
+            binding.passwordWrapper.error = null
+        }
         setupSocialLogin()
         initEULA()
     }
 
     private fun setupSocialLogin() {
+        val googleEnabled = environment.config.googleConfig.isEnabled
+        val facebookEnabled = environment.config.facebookConfig.isEnabled
+        val microsoftEnabled = environment.config.microsoftConfig.isEnabled
+
+        binding.socialAuth.apply {
+            root.setVisibility((!facebookEnabled && !googleEnabled && !microsoftEnabled).not())
+            googleButton.setVisibility(googleEnabled)
+            facebookButton.setVisibility(facebookEnabled)
+            microsoftButton.setVisibility(microsoftEnabled)
+        }
+
         socialLoginDelegate = SocialLoginDelegate(
             this, this,
             environment.config, environment.loginPrefs, Feature.SIGN_IN
@@ -197,9 +164,25 @@ class LoginActivity : PresenterActivity<LoginPresenter, LoginViewInterface>(),
         }
     }
 
+    override fun configureActionBar() {
+        super.configureActionBar()
+        if (environment.config.isRegistrationEnabled.not()) {
+            supportActionBar?.apply {
+                setHomeButtonEnabled(false)
+                setDisplayHomeAsUpEnabled(false)
+                setDisplayShowHomeEnabled(false)
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("username", email)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        this.intent = intent
     }
 
     override fun onStart() {

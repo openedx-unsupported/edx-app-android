@@ -1,15 +1,29 @@
 package org.edx.mobile.extenstion
 
 import android.graphics.drawable.Drawable
+import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
+
+fun TextView.addAfterTextChanged(listener: (Editable) -> Unit) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(editable: Editable) {
+            listener(editable)
+        }
+    })
+}
 
 fun TextView.renderHtml(body: String) {
     parseHtml(body)?.let { spannedHtml ->
