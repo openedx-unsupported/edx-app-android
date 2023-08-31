@@ -232,7 +232,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), HasComponent, PreLo
             courseData?.courseId?.let { courseId ->
                 val courseStatusCall = courseApi.getCourseStatus(courseId)
                 courseStatusCall.enqueue(object :
-                    ErrorHandlingCallback<CourseStatus?>(this, null, null) {
+                    ErrorHandlingCallback<CourseStatus>(this, null, null) {
                     override fun onResponse(responseBody: CourseStatus) {
                         isFirstSection = responseBody.celebrationStatus.firstSection
                     }
@@ -268,7 +268,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), HasComponent, PreLo
                     courseData?.courseId?.let { courseId ->
                         courseApi.updateCourseCelebration(courseId).enqueue(object :
                             ErrorHandlingCallback<Void?>(this@CourseUnitNavigationActivity) {
-                            override fun onResponse(responseBody: Void) {
+                            override fun onResponse(responseBody: Void?) {
                                 isFirstSection = false
                             }
                         })
