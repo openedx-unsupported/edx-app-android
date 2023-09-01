@@ -473,15 +473,20 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         socialAuthSource: SocialAuthSource,
         accessToken: String
     ) {
-        socialLoginDelegate.getUserInfo(socialAuthSource, accessToken) { email, name ->
-            populateFormField("email", email)
-            if (name.isNotNullOrEmpty()) {
-                populateFormField("name", name)
+        socialLoginDelegate.getUserInfo(
+            socialAuthSource,
+            accessToken,
+            object : SocialLoginDelegate.SocialUserInfoCallback {
+                override fun setSocialUserInfo(email: String?, name: String?) {
+                    populateFormField("email", email)
+                    if (name.isNotNullOrEmpty()) {
+                        populateFormField("name", name)
 
-                //Should we save the email here?
-                environment.loginPrefs.lastAuthenticatedEmail = email
-            }
-        }
+                        //Should we save the email here?
+                        environment.loginPrefs.lastAuthenticatedEmail = email
+                    }
+                }
+            })
     }
 
     ///////section related to social login ///////////////
@@ -548,7 +553,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
      * @param accessToken
      * @param backend
      */
-    override fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>?) {
+    override fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>) {
         //we should handle UI update here. but right now we do nothing in UI
     }
 
@@ -563,7 +568,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     /**
      * callback if login to edx failed using social access_token
      */
-    override fun onUserLoginFailure(ex: Exception, accessToken: String, backend: String) {
+    override fun onUserLoginFailure(ex: Exception, accessToken: String?, backend: String?) {
         // FIXME: We are assuming that if we get here, the accessToken is valid. That may not be the case!
 
         //we should redirect to current page.
