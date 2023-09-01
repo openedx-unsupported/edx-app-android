@@ -12,6 +12,8 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.discussion.DiscussionService
@@ -20,6 +22,7 @@ import org.edx.mobile.http.provider.RetrofitProvider
 import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter
 import org.edx.mobile.http.serialization.JsonPageDeserializer
 import org.edx.mobile.inapppurchases.InAppPurchasesAPI
+import org.edx.mobile.injection.DataSourceDispatcher
 import org.edx.mobile.model.Page
 import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.model.authentication.AuthResponse
@@ -129,6 +132,10 @@ abstract class EdxDefaultModule {
         fun provideInAppPurchasesRepository(iapAPI: InAppPurchasesAPI): InAppPurchasesRepository {
             return InAppPurchasesRepository(iapAPI)
         }
+
+        @DataSourceDispatcher
+        @Provides
+        fun provideDataSourceDispatcher(): CoroutineDispatcher = Dispatchers.IO
     }
 
     // Inject dependencies in classes not supported by Hilt

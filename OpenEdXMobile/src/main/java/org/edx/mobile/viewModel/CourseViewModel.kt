@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.http.HttpStatus
@@ -197,25 +196,26 @@ class CourseViewModel @Inject constructor(
             runCatching {
                 courseRepository.getCourseComponentsFromAppLevelCache(
                     courseId,
-                    courseComponentId,
-                    Dispatchers.IO
+                    courseComponentId
                 )
             }
         }
+
         PERSISTABLE_CACHE -> {
             runCatching {
-                courseRepository.getCourseDataFromPersistableCache(courseId, Dispatchers.IO)
+                courseRepository.getCourseDataFromPersistableCache(courseId)
             }
         }
+
         STALE, LIVE -> {
             runCatching {
                 courseRepository.getCourseStructure(
                     courseId,
-                    coursesRequestType,
-                    Dispatchers.IO
+                    coursesRequestType
                 )
             }
         }
+
         else -> {
             throw Exception("Unknown Request Type: $coursesRequestType")
         }
@@ -224,7 +224,7 @@ class CourseViewModel @Inject constructor(
     fun getCourseStatusInfo(courseId: String) {
         viewModelScope.launch {
             val courseStatusResult = runCatching {
-                courseRepository.getCourseStatusInfo(courseId, Dispatchers.IO)
+                courseRepository.getCourseStatusInfo(courseId)
             }
             courseStatusResult.onSuccess {
                 it?.let {

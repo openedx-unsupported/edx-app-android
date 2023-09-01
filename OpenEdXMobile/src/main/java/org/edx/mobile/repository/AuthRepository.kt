@@ -2,11 +2,11 @@ package org.edx.mobile.repository
 
 import android.os.Bundle
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.core.EdxEnvironment
 import org.edx.mobile.extenstion.isNotNullOrEmpty
+import org.edx.mobile.injection.DataSourceDispatcher
 import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.social.SocialAuthSource
@@ -17,11 +17,11 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
     private val environment: EdxEnvironment,
     private val loginAPI: LoginAPI,
+    @DataSourceDispatcher val dispatcher: CoroutineDispatcher,
 ) {
     suspend fun loginUsingEmail(
         email: String,
         password: String,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ): AuthResponse = withContext(dispatcher) {
         try {
             loginAPI.logInUsingEmail(email, password)
@@ -32,7 +32,6 @@ class AuthRepository @Inject constructor(
 
     suspend fun registerAccount(
         formFields: Bundle,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ): AuthResponse? {
         val accessToken = environment.loginPrefs.socialLoginAccessToken
         val provider = environment.loginPrefs.socialLoginProvider
@@ -76,7 +75,7 @@ class AuthRepository @Inject constructor(
     suspend fun loginUsingSocialAccount(
         accessToken: String,
         backend: String
-    ): AuthResponse = withContext(Dispatchers.IO) {
+    ): AuthResponse = withContext(dispatcher) {
 
         val loginFunction = when (backend.lowercase()) {
             LoginPrefs.BACKEND_FACEBOOK -> loginAPI::logInUsingFacebook

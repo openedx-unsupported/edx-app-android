@@ -28,7 +28,8 @@ import org.edx.mobile.view.ICommonUI
 class SocialLoginDelegate(
     private val activity: Activity,
     private val callback: MobileLoginCallback, config: Config,
-    private val loginPrefs: LoginPrefs, private val feature: Feature
+    private val loginPrefs: LoginPrefs,
+    private val feature: Feature,
 ) {
     private val logger = Logger(javaClass.name)
 
