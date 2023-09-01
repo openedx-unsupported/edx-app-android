@@ -107,26 +107,13 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
     }
 
     private fun showUnitDetailScreen(component: CourseComponent) {
-        val courseUnitDetailIntent: Intent
-        if (environment.config.isNewDashboardEnabled &&
-            environment.config.isNewCourseUnitNavigationEnabled
-        ) {
-            courseUnitDetailIntent = environment.router.getNewCourseUnitDetailIntent(
-                requireActivity(),
-                courseData,
-                null,
-                component.id,
-                false
-            )
-        } else {
-            courseUnitDetailIntent = environment.router.getLegacyCourseUnitDetailIntent(
-                requireActivity(),
-                courseData,
-                null,
-                component.id,
-                false
-            )
-        }
+        val courseUnitDetailIntent: Intent = environment.router.getCourseUnitDetailIntent(
+            requireActivity(),
+            courseData,
+            null,
+            component.id,
+            false
+        )
         courseUnitDetailLauncher.launch(courseUnitDetailIntent)
     }
 

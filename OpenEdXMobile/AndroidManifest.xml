@@ -159,13 +159,7 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
-            android:name="org.edx.mobile.view.CourseUnitNavigationActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
-            android:screenOrientation="user"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
-
-        <activity
-            android:name="org.edx.mobile.view.app_nav.NewCourseUnitNavigationActivity"
+            android:name="org.edx.mobile.view.app_nav.CourseUnitNavigationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="user"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />

@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.course.CourseAPI
-import org.edx.mobile.databinding.ActivityCourseUnitNavigationNewBinding
+import org.edx.mobile.databinding.ActivityCourseUnitNavigationBinding
 import org.edx.mobile.databinding.LayoutUnitsDropDownBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.event.FileSelectionEvent
@@ -45,6 +45,7 @@ import org.edx.mobile.model.course.BlockType
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.CourseStatus
 import org.edx.mobile.model.course.IBlock
+import org.edx.mobile.model.course.VideoBlockModel
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.NetworkUtil
@@ -57,7 +58,7 @@ import org.edx.mobile.util.observer.Event
 import org.edx.mobile.util.observer.EventObserver
 import org.edx.mobile.view.CourseUnitFragment
 import org.edx.mobile.view.Router
-import org.edx.mobile.view.adapters.NewCourseUnitPagerAdapter
+import org.edx.mobile.view.adapters.CourseUnitPagerAdapter
 import org.edx.mobile.view.adapters.UnitsDropDownAdapter
 import org.edx.mobile.view.custom.DividerItemDecorator
 import org.edx.mobile.view.custom.PreLoadingListener
@@ -73,10 +74,10 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.HasComponent,
+class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.HasComponent,
     PreLoadingListener, RefreshListener {
 
-    private lateinit var binding: ActivityCourseUnitNavigationNewBinding
+    private lateinit var binding: ActivityCourseUnitNavigationBinding
 
     @Inject
     lateinit var courseManager: CourseManager
@@ -94,7 +95,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     private var subsection: CourseComponent? = null
     private var courseUpgradeData: CourseUpgradeResponse? = null
 
-    private lateinit var pagerAdapter: NewCourseUnitPagerAdapter
+    private lateinit var pagerAdapter: CourseUnitPagerAdapter
     private var isVideoMode = false
     private var viewPagerState = PreLoadingListener.State.DEFAULT
     private var isFirstSection = false
@@ -141,7 +142,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityCourseUnitNavigationNewBinding.inflate(layoutInflater)
+        binding = ActivityCourseUnitNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         restore(savedInstanceState ?: intent?.getBundleExtra(Router.EXTRA_BUNDLE))
         initViews()
@@ -278,7 +279,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 }
 
             })
-        binding.ivCollapsedBack.setOnClickListener { finish() }
+        binding.ivCollapsedBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
     private fun setToolbarTitle(courseUnit: CourseComponent, hasMoreThenOneChild: Boolean) {
@@ -321,7 +322,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                         setToolbarTitle(item as CourseComponent, true)
                         var index = 0
                         item.firstIncompleteComponent?.let { component ->
-                            index = (binding.pager2.adapter as NewCourseUnitPagerAdapter)
+                            index = (binding.pager2.adapter as CourseUnitPagerAdapter)
                                 .getComponentIndex(component)
                         }
                         binding.pager2.currentItem = index
@@ -359,7 +360,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
         }
         val componentList = getComponentList()
         pagerAdapter =
-            NewCourseUnitPagerAdapter(
+            CourseUnitPagerAdapter(
                 this,
                 environment,
                 componentList,
@@ -521,7 +522,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 Screen.COURSE_COMPONENT
             )
             binding.stateLayout.state.setActionListener {
-                if (NetworkUtil.isConnected(this@NewCourseUnitNavigationActivity)) {
+                if (NetworkUtil.isConnected(this@CourseUnitNavigationActivity)) {
                     onRefresh()
                 }
             }
@@ -585,7 +586,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
     }
 
     private fun getCurrentComponent(): CourseComponent {
-        return (binding.pager2.adapter as NewCourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
+        return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
     }
 
     private val courseCelebrationStatus: Unit
@@ -609,7 +610,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             override fun onCelebrationShare(anchor: View) {
                 courseData.courseId.let { courseId ->
                     ShareUtils.showCelebrationShareMenu(
-                        this@NewCourseUnitNavigationActivity,
+                        this@CourseUnitNavigationActivity,
                         anchor,
                         courseData
                     ) { shareType: ShareUtils.ShareType ->
@@ -626,7 +627,7 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
                 EventBus.getDefault().postSticky(VideoPlaybackEvent(true))
                 if (!reCreate) {
                     courseApi.updateCourseCelebration(courseData.courseId).enqueue(object :
-                        ErrorHandlingCallback<Void?>(this@NewCourseUnitNavigationActivity) {
+                        ErrorHandlingCallback<Void?>(this@CourseUnitNavigationActivity) {
                         override fun onResponse(responseBody: Void?) {
                             isFirstSection = false
                         }
@@ -645,6 +646,15 @@ class NewCourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragme
             return
         }
         initViews()
+    }
+
+    override fun showGoogleCastButton(): Boolean {
+        val component = getCurrentComponent()
+        return if (component is VideoBlockModel) {
+            // Showing casting button only for native video block
+            // Currently casting for youtube video isn't available
+            VideoUtil.isCourseUnitVideo(environment, component)
+        } else super.showGoogleCastButton()
     }
 
     @Subscribe

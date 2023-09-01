@@ -116,7 +116,6 @@
 
     <!-- Course unit -->
     <dimen name="course_unit_nav_bar_height">55dp</dimen>
-    <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
     <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
     <dimen name="course_unit_message_icon_size">140dp</dimen>

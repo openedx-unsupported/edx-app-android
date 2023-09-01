@@ -258,32 +258,13 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
     }
 
     private fun showComponentDetailScreen(component: CourseComponent) {
-        if (environment.config.isNewDashboardEnabled && environment.config.isNewCourseUnitNavigationEnabled) {
-            environment.router.getNewCourseUnitDetailIntent(
-                requireActivity(),
-                courseData,
-                courseUpgradeData,
-                component.id,
-                false
-            )?.let { startActivity(it) }
-        } else if (component.isContainer) {
-            environment.router.getCourseOutlineIntent(
-                requireActivity(),
-                courseData,
-                courseUpgradeData,
-                component.id,
-                null,
-                false
-            )?.let { startActivity(it) }
-        } else {
-            environment.router.getLegacyCourseUnitDetailIntent(
-                requireActivity(),
-                courseData,
-                courseUpgradeData,
-                component.id,
-                false
-            )?.let { startActivity(it) }
-        }
+        environment.router.getCourseUnitDetailIntent(
+            requireActivity(),
+            courseData,
+            courseUpgradeData,
+            component.id,
+            false
+        )?.let { startActivity(it) }
     }
 
     override fun onSectionItemLongClick(

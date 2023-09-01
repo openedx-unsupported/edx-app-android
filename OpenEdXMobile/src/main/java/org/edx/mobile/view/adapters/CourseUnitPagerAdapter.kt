@@ -25,7 +25,7 @@ import org.edx.mobile.view.CourseUnitWebViewFragment
 import org.edx.mobile.view.CourseUnitYoutubePlayerFragment
 import org.edx.mobile.view.LockedCourseUnitFragment
 
-class NewCourseUnitPagerAdapter(
+class CourseUnitPagerAdapter(
     fragmentActivity: FragmentActivity,
     private val environment: IEdxEnvironment,
     componentList: MutableList<CourseComponent>,

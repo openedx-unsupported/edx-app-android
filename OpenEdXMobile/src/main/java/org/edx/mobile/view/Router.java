@@ -34,7 +34,7 @@ import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
-import org.edx.mobile.view.app_nav.NewCourseUnitNavigationActivity;
+import org.edx.mobile.view.app_nav.CourseUnitNavigationActivity;
 import org.edx.mobile.view.dialog.WebViewActivity;
 import org.edx.mobile.view.login.LoginActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
@@ -217,32 +217,15 @@ public class Router {
                 courseData, courseUpgradeData, courseComponentId, lastAccessedId, isVideosMode);
     }
 
-
-    public Intent getLegacyCourseUnitDetailIntent(Activity activity,
-                                                  EnrolledCoursesResponse model,
-                                                  CourseUpgradeResponse courseUpgradeData,
-                                                  String courseComponentId, boolean isVideosMode) {
-        return getCourseUnitDetailIntent(activity, model, courseUpgradeData, courseComponentId,
-                isVideosMode, CourseUnitNavigationActivity.class);
-    }
-
-    public Intent getNewCourseUnitDetailIntent(Activity activity, EnrolledCoursesResponse model,
-                                               CourseUpgradeResponse courseUpgradeData,
-                                               String courseComponentId, boolean isVideosMode) {
-        return getCourseUnitDetailIntent(activity, model, courseUpgradeData, courseComponentId,
-                isVideosMode, NewCourseUnitNavigationActivity.class);
-    }
-
     public Intent getCourseUnitDetailIntent(Activity activity, EnrolledCoursesResponse model,
                                             CourseUpgradeResponse courseUpgradeData,
-                                            String courseComponentId, boolean isVideosMode,
-                                            Class<?> courseDetailActivityType) {
+                                            String courseComponentId, boolean isVideosMode) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putParcelable(EXTRA_COURSE_UPGRADE_DATA, courseUpgradeData);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
-        Intent courseDetailIntent = new Intent(activity, courseDetailActivityType);
+        Intent courseDetailIntent = new Intent(activity, CourseUnitNavigationActivity.class);
         courseDetailIntent.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetailIntent.putExtra(EXTRA_IS_VIDEOS_MODE, isVideosMode);
         courseDetailIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
