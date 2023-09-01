@@ -8,6 +8,7 @@ import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.core.EdxEnvironment
 import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.model.authentication.AuthResponse
+import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.social.SocialAuthSource
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -69,6 +70,27 @@ class AuthRepository @Inject constructor(
             } catch (exception: Exception) {
                 throw exception
             }
+        }
+    }
+
+    suspend fun loginUsingSocialAccount(
+        accessToken: String,
+        backend: String
+    ): AuthResponse = withContext(Dispatchers.IO) {
+
+        val loginFunction = when (backend.lowercase()) {
+            LoginPrefs.BACKEND_FACEBOOK -> loginAPI::logInUsingFacebook
+            LoginPrefs.BACKEND_GOOGLE -> loginAPI::logInUsingGoogle
+            LoginPrefs.BACKEND_MICROSOFT -> loginAPI::logInUsingMicrosoft
+            else -> throw IllegalArgumentException("Unknown backend: $backend")
+        }
+
+        try {
+            loginFunction(accessToken)
+        } catch (exception: LoginAPI.AccountNotLinkedException) {
+            throw exception
+        } catch (exception: Exception) {
+            throw exception
         }
     }
 }

@@ -40,7 +40,6 @@ import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.Feature
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
-import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.ConfigUtil
@@ -194,9 +193,31 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                     getString(android.R.string.cancel),
                     null
                 )
+            } else if (ex is HttpStatusException && ex.statusCode == HttpStatus.FORBIDDEN) {
+                showAlertDialog(
+                    getString(R.string.login_error),
+                    getString(R.string.auth_provider_disabled_user_error),
+                    getString(R.string.label_customer_support),
+                    { _, _ ->
+                        environment.router.showFeedbackScreen(
+                            this, getString(R.string.email_subject_account_disabled)
+                        )
+                    },
+                    getString(android.R.string.cancel), null
+                )
             } else {
                 showAlertDialog(null, ErrorUtils.getErrorMessage(ex, this@RegisterActivity))
             }
+        })
+
+        authViewModel.socialLoginErrorMessage.observe(this, EventObserver {
+            tryToSetUIInteraction(true)
+            logger.error(it.throwable)
+            socialRegistrationType = SocialAuthSource.fromString(loginPrefs.socialLoginProvider)
+            updateUIOnSocialLoginToEdxFailure(
+                socialRegistrationType,
+                loginPrefs.socialLoginAccessToken
+            )
         })
     }
 
@@ -543,57 +564,16 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
         tryToSetUIInteraction(true)
     }
 
-    /**
-     * after login by Facebook or Google, the workflow is different from login page.
-     * we need to adjust the register view
-     * 1. first we try to login,
-     * 2. if login return 200, redirect to course screen.
-     * 3. otherwise, go through the normal registration flow.
-     *
-     * @param accessToken
-     * @param backend
-     */
-    override fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>) {
-        //we should handle UI update here. but right now we do nothing in UI
-    }
-
     /*
      *  callback if login to edx success using social access_token
      */
-    override fun onUserLoginSuccess() {
+    private fun onUserLoginSuccess() {
         setResult(RESULT_OK)
         finish()
     }
 
-    /**
-     * callback if login to edx failed using social access_token
-     */
-    override fun onUserLoginFailure(ex: Exception, accessToken: String?, backend: String?) {
-        // FIXME: We are assuming that if we get here, the accessToken is valid. That may not be the case!
-
-        //we should redirect to current page.
-        //do nothing
-        //we need to add 1)access_token   2) provider 3) client_id
-        // handle if this is a LoginException
-        tryToSetUIInteraction(true)
-        logger.error(ex)
-        if (ex is HttpStatusException && ex.statusCode == HttpStatus.FORBIDDEN) {
-            this@RegisterActivity.showAlertDialog(
-                getString(R.string.login_error),
-                getString(R.string.auth_provider_disabled_user_error),
-                getString(R.string.label_customer_support),
-                { _, _ ->
-                    environment.router
-                        .showFeedbackScreen(
-                            this@RegisterActivity,
-                            getString(R.string.email_subject_account_disabled)
-                        )
-                }, getString(android.R.string.cancel), null
-            )
-        } else {
-            socialRegistrationType = SocialAuthSource.fromString(backend)
-            updateUIOnSocialLoginToEdxFailure(socialRegistrationType, accessToken)
-        }
+    override fun performUserLogin(accessToken: String, backend: String, feature: Feature) {
+        authViewModel.loginUsingSocialAccount(accessToken, backend, feature)
     }
 
     /**

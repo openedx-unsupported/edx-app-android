@@ -1,22 +1,14 @@
 package org.edx.mobile.social
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.view.View
-import dagger.hilt.android.EntryPointAccessors.fromApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.edx.mobile.R
-import org.edx.mobile.authentication.LoginAPI
-import org.edx.mobile.authentication.LoginAPI.AccountNotLinkedException
-import org.edx.mobile.core.EdxDefaultModule.ProviderEntryPoint
-import org.edx.mobile.exception.LoginErrorMessage
-import org.edx.mobile.exception.LoginException
 import org.edx.mobile.logger.Logger
-import org.edx.mobile.model.authentication.AuthResponse
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.social.facebook.FacebookAuth
 import org.edx.mobile.social.facebook.FacebookProvider
@@ -24,13 +16,10 @@ import org.edx.mobile.social.google.GoogleOauth2
 import org.edx.mobile.social.google.GoogleProvider
 import org.edx.mobile.social.microsoft.MicrosoftAuth
 import org.edx.mobile.social.microsoft.MicrosoftProvide
-import org.edx.mobile.task.Task
 import org.edx.mobile.util.Config
 import org.edx.mobile.util.ConfigUtil.Companion.isSocialFeatureEnabled
 import org.edx.mobile.util.NetworkUtil
-import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.view.ICommonUI
-import java.net.HttpURLConnection
 
 /**
  * Code refactored from Login Activity, for the logic of login to social site are the same
@@ -111,9 +100,7 @@ class SocialLoginDelegate(
      */
     fun onSocialLoginSuccess(accessToken: String, backend: String) {
         loginPrefs.saveSocialLoginToken(accessToken, backend)
-        val task: Task<*> = ProfileTask(activity, accessToken, backend)
-        callback.onSocialLoginSuccess(accessToken, backend, task)
-        task.execute()
+        callback.performUserLogin(accessToken, backend, feature)
     }
 
     fun getUserInfo(
@@ -141,93 +128,6 @@ class SocialLoginDelegate(
                 SocialAuthSource.UNKNOWN -> ISocialEmptyImpl()
             }
         } else ISocialEmptyImpl()
-    }
-
-    internal inner class ProfileTask(
-        context: Context?,
-        private val accessToken: String?,
-        private val backend: String
-    ) : Task<AuthResponse?>(context) {
-        var loginAPI: LoginAPI
-
-        init {
-            loginAPI = fromApplication(context!!, ProviderEntryPoint::class.java)
-                .getLoginAPI()
-        }
-
-        override fun onException(ex: Exception) {
-            callback.onUserLoginFailure(ex, accessToken, backend)
-        }
-
-        override fun onPostExecute(result: AuthResponse?) {
-            super.onPostExecute(result)
-            if (result != null) {
-                if (feature == Feature.REGISTRATION) {
-                    environment.loginPrefs.alreadyRegisteredLoggedIn = true
-                }
-                callback.onUserLoginSuccess()
-            }
-        }
-
-        override fun doInBackground(vararg voids: Void): AuthResponse? {
-            val auth: AuthResponse
-            return try {
-                auth = if (backend.equals(LoginPrefs.BACKEND_FACEBOOK, ignoreCase = true)) {
-                    try {
-                        loginAPI.logInUsingFacebook(accessToken)
-                    } catch (e: AccountNotLinkedException) {
-                        throw LoginException(makeLoginErrorMessage(e))
-                    }
-                } else if (backend.equals(LoginPrefs.BACKEND_GOOGLE, ignoreCase = true)) {
-                    try {
-                        loginAPI.logInUsingGoogle(accessToken)
-                    } catch (e: AccountNotLinkedException) {
-                        throw LoginException(makeLoginErrorMessage(e))
-                    }
-                } else if (backend.equals(LoginPrefs.BACKEND_MICROSOFT, ignoreCase = true)) {
-                    try {
-                        loginAPI.logInUsingMicrosoft(accessToken)
-                    } catch (e: AccountNotLinkedException) {
-                        throw LoginException(makeLoginErrorMessage(e))
-                    }
-                } else {
-                    throw IllegalArgumentException("Unknown backend: $backend")
-                }
-                auth
-            } catch (ex: Exception) {
-                handleException(ex)
-                null
-            }
-        }
-
-        @Throws(LoginException::class)
-        fun makeLoginErrorMessage(e: AccountNotLinkedException): LoginErrorMessage {
-            val isFacebook = backend.equals(LoginPrefs.BACKEND_FACEBOOK, ignoreCase = true)
-            val isMicrosoft = backend.equals(LoginPrefs.BACKEND_MICROSOFT, ignoreCase = true)
-            if (feature == Feature.SIGN_IN && e.responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
-                val title = activity.resources.getString(R.string.login_error)
-                val desc = ResourceUtil.getFormattedString(
-                    context.get()!!.resources,
-                    if (isFacebook) R.string.error_account_not_linked_desc_fb_2 else if (isMicrosoft) R.string.error_account_not_linked_desc_microsoft_2 else R.string.error_account_not_linked_desc_google_2,
-                    "platform_name", environment.config.platformName
-                )
-                throw LoginException(LoginErrorMessage(title, desc.toString()))
-            }
-            val title = ResourceUtil.getFormattedString(
-                context.get()!!.resources,
-                if (isFacebook) R.string.error_account_not_linked_title_fb else if (isMicrosoft) R.string.error_account_not_linked_title_microsoft else R.string.error_account_not_linked_title_google,
-                "platform_name", environment.config.platformName
-            )
-            val descParamsDesc = HashMap<String, CharSequence>()
-            descParamsDesc["platform_name"] = environment.config.platformName
-            descParamsDesc["platform_destination"] = environment.config.platformDestinationName
-            val desc = ResourceUtil.getFormattedString(
-                context.get()!!.resources,
-                if (isFacebook) R.string.error_account_not_linked_desc_fb else if (isMicrosoft) R.string.error_account_not_linked_desc_microsoft else R.string.error_account_not_linked_desc_google,
-                descParamsDesc
-            )
-            return LoginErrorMessage(title.toString(), desc.toString())
-        }
     }
 
     fun createSocialButtonClickHandler(socialAuthSource: SocialAuthSource): SocialButtonClickHandler {
@@ -266,10 +166,8 @@ class SocialLoginDelegate(
     }
 
     interface MobileLoginCallback {
-        fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>)
-        fun onUserLoginFailure(ex: Exception, accessToken: String?, backend: String?)
-        fun onUserLoginSuccess()
         fun showAlertDialog(header: String?, message: String)
+        fun performUserLogin(accessToken: String, backend: String, feature: Feature)
     }
 
     interface SocialUserInfoCallback {

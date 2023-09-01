@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig
 import org.edx.mobile.R
+import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.databinding.ActivityLoginBinding
 import org.edx.mobile.deeplink.DeepLink
@@ -24,8 +25,8 @@ import org.edx.mobile.social.SocialAuthSource
 import org.edx.mobile.social.SocialLoginDelegate
 import org.edx.mobile.social.SocialLoginDelegate.Feature
 import org.edx.mobile.social.SocialLoginDelegate.MobileLoginCallback
-import org.edx.mobile.task.Task
 import org.edx.mobile.util.AppStoreUtils
+import org.edx.mobile.util.AuthUtils
 import org.edx.mobile.util.IntentFactory
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.TextUtils
@@ -137,11 +138,34 @@ class LoginActivity : BaseFragmentActivity(), MobileLoginCallback {
         authViewModel.errorMessage.observe(this, EventObserver {
             val ex = it.throwable
             if (ex is HttpStatusException && ex.statusCode == HttpStatus.BAD_REQUEST) {
-                onUserLoginFailure(loginException, null, null)
+                onUserLoginFailure(loginException)
             } else {
-                onUserLoginFailure(ex as Exception, null, null)
+                onUserLoginFailure(ex as Exception)
             }
         })
+
+        authViewModel.socialLoginErrorMessage.observe(this, EventObserver {
+            if (it.throwable is LoginAPI.AccountNotLinkedException) {
+                onUserLoginFailure(
+                    LoginException(
+                        AuthUtils.getLoginErrorMessage(
+                            activity = this,
+                            config = environment.config,
+                            backend = environment.loginPrefs.socialLoginProvider,
+                            feature = Feature.SIGN_IN,
+                            e = it.throwable
+                        )
+                    )
+                )
+            } else {
+                onUserLoginFailure(it.throwable as Exception)
+            }
+        })
+    }
+
+    override fun performUserLogin(accessToken: String, backend: String, feature: Feature) {
+        tryToSetUIInteraction(false)
+        authViewModel.loginUsingSocialAccount(accessToken, backend, feature)
     }
 
     private fun initEULA() {
@@ -253,18 +277,7 @@ class LoginActivity : BaseFragmentActivity(), MobileLoginCallback {
         super.showAlertDialog(header, message)
     }
 
-    /**
-     * Starts fetching profile of the user after login by Facebook or Google.
-     *
-     * @param accessToken
-     * @param backend
-     */
-    override fun onSocialLoginSuccess(accessToken: String, backend: String, task: Task<*>) {
-        tryToSetUIInteraction(false)
-        task.setProgressDialog(binding.progress.progressIndicator)
-    }
-
-    override fun onUserLoginSuccess() {
+    private fun onUserLoginSuccess() {
         setResult(RESULT_OK)
         finish()
         val deepLink = intent.parcelable<DeepLink>(Router.EXTRA_DEEP_LINK)
@@ -277,7 +290,7 @@ class LoginActivity : BaseFragmentActivity(), MobileLoginCallback {
         }
     }
 
-    override fun onUserLoginFailure(ex: Exception, accessToken: String?, backend: String?) {
+    private fun onUserLoginFailure(ex: Exception) {
         tryToSetUIInteraction(true)
         when (ex) {
             is LoginException -> {
