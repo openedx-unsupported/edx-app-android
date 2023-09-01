@@ -58,7 +58,7 @@ class CourseSubSectionAdapter(
      * @param component The CourseComponent to extract data from.
      */
     private fun setupSubSectionData(component: CourseComponent) {
-        for (block in component.children) {
+        for (block in component.getChildren(false)) {
             val courseComponent = block as CourseComponent
             val row = SectionRow(SectionRow.SUB_SECTION, courseComponent)
             adapterData.add(row)
@@ -183,12 +183,14 @@ class CourseSubSectionAdapter(
                         loadingIndicator.contentDescription = state.toString()
                         bulkDownload.setVisibility(false)
                     }
+
                     DownloadedState.DOWNLOADED -> {
                         loadingIndicator.setVisibility(false)
                         bulkDownload.setVisibility(true)
                         bulkDownload.setImageResource(R.drawable.download_done_selector)
                         bulkDownload.tag = R.drawable.ic_download_done
                     }
+
                     DownloadedState.ONLINE -> {
                         loadingIndicator.setVisibility(false)
                         bulkDownload.setVisibility(true)

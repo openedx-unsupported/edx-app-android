@@ -145,6 +145,9 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         binding = ActivityCourseUnitNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         restore(savedInstanceState ?: intent?.getBundleExtra(Router.EXTRA_BUNDLE))
+        if (intent != null) {
+            isVideoMode = intent.extras?.getBoolean(Router.EXTRA_IS_VIDEOS_MODE, false) as Boolean
+        }
         initViews()
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
@@ -157,10 +160,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         if (courseComponentId != null && environment.loginPrefs.isUserLoggedIn) {
             onLoadData()
             setupToolbar()
-        }
-
-        if (intent != null) {
-            isVideoMode = intent.extras?.getBoolean(Router.EXTRA_IS_VIDEOS_MODE, false) as Boolean
         }
         initAdapter()
         // Enforce to intercept single scrolling direction
@@ -227,15 +226,15 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     }
 
     private fun setupToolbar() {
-        subsection?.let { subSection ->
-            val hasMultipleChildren =
-                subSection.children.isNullOrEmpty().not() && subSection.children.size > 2
-            subSection.firstIncompleteComponent?.let {
+        subsection?.let { subsection ->
+            val unitList = subsection.getChildren(isVideoMode)
+            val hasMultipleChildren = unitList.isNullOrEmpty().not() && unitList.size > 1
+            subsection.firstIncompleteComponent?.let {
                 setToolbarTitle(it, hasMultipleChildren)
                 if (hasMultipleChildren) {
-                    setupUnitsDropDown(subSection.children, it)
+                    setupUnitsDropDown(unitList, it)
                 }
-                updateCompletionProgressBar(0, it.children.size)
+                updateCompletionProgressBar(0, it.getChildren(isVideoMode).size)
             }
 
             ViewAnimationUtil.startAlphaAnimation(
@@ -406,17 +405,18 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         // CourseComponent#getAncestor(1) returns the current Subsection of a component
         val currentSubSection = currentComponent.getAncestor(1)
         val currentUnit = currentComponent.parent
-        setToolbarTitle(currentUnit, currentSubSection.children.size > 1)
+        setToolbarTitle(currentUnit, currentSubSection.getChildren(isVideoMode).size > 1)
         if (subsection?.id.equals(currentSubSection.id).not()) {
             subsection = currentSubSection
         }
-        subsection?.children?.let {
+        subsection?.getChildren(isVideoMode)?.let {
             if (it.size > 1) {
                 setupUnitsDropDown(it, currentUnit)
             }
         }
-        val currentComponentIndex = currentUnit.children.indexOf(currentComponent)
-        updateCompletionProgressBar(currentComponentIndex, currentUnit.children.size)
+        val unitComponents = currentUnit.getChildren(isVideoMode)
+        val currentComponentIndex = unitComponents.indexOf(currentComponent)
+        updateCompletionProgressBar(currentComponentIndex, unitComponents.size)
     }
 
     private fun getComponentList(): MutableList<CourseComponent> {

@@ -227,7 +227,7 @@ public class ApiTests extends HttpBaseTestCase {
         assertNotNull(courseComponent.getRoot());
         assertEquals(courseId, courseComponent.getCourseId());
 
-        List<IBlock> children = courseComponent.getChildren();
+        List<IBlock> children = courseComponent.getChildren(false);
         assertNotNull(children);
         List<CourseComponent> childContainers = new ArrayList<>();
         List<CourseComponent> childLeafs = new ArrayList<>();
@@ -240,7 +240,7 @@ public class ApiTests extends HttpBaseTestCase {
                     return child.getId().equals(component.getId());
                 }
             }));
-            List<IBlock> grandchildren = child.getChildren();
+            List<IBlock> grandchildren = child.getChildren(false);
             for (IBlock gc : grandchildren) {
                 assertTrue(gc instanceof CourseComponent);
                 final CourseComponent grandchild = (CourseComponent) c;
