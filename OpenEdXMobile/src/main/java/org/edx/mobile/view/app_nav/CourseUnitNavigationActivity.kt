@@ -93,6 +93,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     private lateinit var courseData: EnrolledCoursesResponse
     private var courseComponentId: String? = null
     private var subsection: CourseComponent? = null
+    private var resumedComponent: CourseComponent? = null
     private var courseUpgradeData: CourseUpgradeResponse? = null
 
     private lateinit var pagerAdapter: CourseUnitPagerAdapter
@@ -211,7 +212,14 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     @Suppress("DEPRECATION")
     private fun onLoadData() {
         subsection = courseComponentId?.let { componentId ->
-            courseManager.getComponentById(courseData.courseId, componentId)
+            val component = courseManager.getComponentById(courseData.courseId, componentId)
+            if (component?.isLastChild == true) {
+                resumedComponent = component
+                // CourseComponent#getAncestor(1) returns the current Subsection of a component
+                component.getAncestor(1)
+            } else {
+                component
+            }
         }
     }
 
@@ -399,8 +407,12 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
-        val firstIncompleteComponentIndex =
-            componentList.indexOf(subsection?.firstIncompleteComponent?.firstIncompleteComponent)
+        val selectedComponent: CourseComponent? = if (resumedComponent != null) {
+            resumedComponent
+        } else {
+            subsection?.firstIncompleteComponent?.firstIncompleteComponent
+        }
+        val firstIncompleteComponentIndex = componentList.indexOf(selectedComponent)
         binding.pager2.setCurrentItem(firstIncompleteComponentIndex, false)
     }
 
