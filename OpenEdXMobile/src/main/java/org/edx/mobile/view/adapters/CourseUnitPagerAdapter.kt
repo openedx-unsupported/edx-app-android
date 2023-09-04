@@ -64,18 +64,9 @@ class CourseUnitPagerAdapter(
         // Create a deep copy of original CourseComponent object with `root` and `parent` objects
         // removed to save memory.
         val minifiedUnit: CourseComponent = when (val unit = getComponent(pos)) {
-            is VideoBlockModel -> {
-                VideoBlockModel(unit)
-            }
-
-            is DiscussionBlockModel -> {
-                DiscussionBlockModel(unit)
-            }
-
-            is HtmlBlockModel -> {
-                HtmlBlockModel(unit)
-            }
-
+            is VideoBlockModel -> VideoBlockModel(unit)
+            is DiscussionBlockModel -> DiscussionBlockModel(unit)
+            is HtmlBlockModel -> HtmlBlockModel(unit)
             else -> CourseComponent(unit)
         }
         minifiedUnit.courseSku = courseData.courseSku
@@ -122,11 +113,7 @@ class CourseUnitPagerAdapter(
         return unitFragment
     }
 
-    override fun getItemCount(): Int {
-        return componentList.size
-    }
+    override fun getItemCount(): Int = componentList.size
 
-    fun getComponentIndex(component: CourseComponent): Int {
-        return componentList.indexOf(component)
-    }
+    fun getComponentIndex(component: CourseComponent): Int = componentList.indexOf(component)
 }

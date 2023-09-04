@@ -84,6 +84,8 @@
     <string name="signing_in">Signing in</string>
     <!-- Title of Discover screen -->
     <string name="label_explore_the_catalog">Explore the catalog</string>
+
+    <!-- Course unit navigation screen -->
     <!-- Message shown while some course content is locked -->
     <string name="locked_content_message_in_drop_down">Some content in this part of the course is locked for upgraded users only.</string>
 </resources>

@@ -316,18 +316,21 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             )
 
             val adapter =
-                UnitsDropDownAdapter(courseData, units, object : OnItemClickListener<IBlock> {
-                    override fun onItemClick(item: IBlock) {
-                        setToolbarTitle(item as CourseComponent, true)
-                        var index = 0
-                        item.firstIncompleteComponent?.let { component ->
-                            index = (binding.pager2.adapter as CourseUnitPagerAdapter)
-                                .getComponentIndex(component)
+                UnitsDropDownAdapter(
+                    courseData.isUpgradeable,
+                    units,
+                    object : OnItemClickListener<IBlock> {
+                        override fun onItemClick(item: IBlock) {
+                            setToolbarTitle(item as CourseComponent, true)
+                            var index = 0
+                            item.firstIncompleteComponent?.let { component ->
+                                index = (binding.pager2.adapter as CourseUnitPagerAdapter)
+                                    .getComponentIndex(component)
+                            }
+                            binding.pager2.currentItem = index
+                            popupWindow.dismiss()
                         }
-                        binding.pager2.currentItem = index
-                        popupWindow.dismiss()
-                    }
-                })
+                    })
             popupViewBinding.rvUnits.apply {
                 this.adapter = adapter
                 this.addItemDecoration(

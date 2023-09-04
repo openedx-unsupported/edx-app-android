@@ -26,7 +26,6 @@ import org.edx.mobile.interfaces.OnDateBlockListener
 import org.edx.mobile.model.CourseDatesCalendarSync
 import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseBannerInfoModel
-import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.BrowserUtil
@@ -84,9 +83,15 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
         override fun onClick(link: String, blockId: String) {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
-
             if (blockId.isNotEmpty() && component != null) {
-                showUnitDetailScreen(component)
+                val courseUnitDetailIntent: Intent = environment.router.getCourseUnitDetailIntent(
+                    requireActivity(),
+                    courseData,
+                    null,
+                    component.id,
+                    false
+                )
+                courseUnitDetailLauncher.launch(courseUnitDetailIntent)
                 environment.analyticsRegistry.trackDatesCourseComponentTapped(
                     courseData.courseId,
                     component.id,
@@ -104,17 +109,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 }
             }
         }
-    }
-
-    private fun showUnitDetailScreen(component: CourseComponent) {
-        val courseUnitDetailIntent: Intent = environment.router.getCourseUnitDetailIntent(
-            requireActivity(),
-            courseData,
-            null,
-            component.id,
-            false
-        )
-        courseUnitDetailLauncher.launch(courseUnitDetailIntent)
     }
 
     private lateinit var courseData: EnrolledCoursesResponse

@@ -37,7 +37,7 @@ public class ImageUtils {
     @Nullable
     public static Uri rotateImageAccordingToExifTag(@NonNull Context context, @NonNull Uri imageUri) {
         System.gc();
-        final String imagePath = imageUri.getPath();
+        final String imagePath = imageUri.getPath().toString();
         final int requiredRotation = CropUtil.getOrientationFromUri(imagePath);
 
         if (requiredRotation == 0) {
@@ -46,11 +46,11 @@ public class ImageUtils {
 
         final File file;
         try {
-            //noinspection SpellCheckingInspection
             file = File.createTempFile(
-                    "JPEG_" +
-                            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()) +
-                            "_2", ".jpg",
+                    new StringBuilder(32)
+                            .append("JPEG_")
+                            .append(new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()))
+                            .append("_2").toString(), ".jpg",
                     context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             );
         } catch (IOException e) {
@@ -102,7 +102,7 @@ public class ImageUtils {
      * <p>
      * TODO: Revisit this validity in LEARNER-4118
      *
-     * @param context current application context
+     * @param context
      * @return <code>true</code> if context is valid for Glide to load the required image,
      * <code>false</code> otherwise.
      */
@@ -110,7 +110,8 @@ public class ImageUtils {
         if (context == null) {
             return false;
         }
-        if (context instanceof final Activity activity) {
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
             return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;

@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/view_selector"
     android:gravity="center_vertical"
-    android:minHeight="@dimen/course_unit_nav_spinner_item_height"
+    android:minHeight="@dimen/course_unit_nav_popup_item_height"
     android:orientation="vertical">
 
     <LinearLayout
@@ -52,7 +52,7 @@
             android:layout_width="@dimen/ic_small"
             android:layout_height="@dimen/ic_small"
             android:layout_marginEnd="@dimen/widget_margin"
-            tools:srcCompat="@drawable/ic_white_lock_secondary_base" />
+            app:srcCompat="@drawable/ic_white_lock_secondary_base" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/CourseUnitDropDownItemLocked"

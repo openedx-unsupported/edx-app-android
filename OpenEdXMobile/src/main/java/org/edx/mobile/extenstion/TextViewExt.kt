@@ -48,6 +48,13 @@ private fun trim(s: CharSequence): CharSequence {
     return s.subSequence(start, end)
 }
 
+/**
+ * This extension allows to add an icon or image to a TextView using SpannableString.
+ *
+ * @param fullText  the string to which the icon will be appended.
+ * @param drawable the icon resource representing the image to append.
+ * @param targetText the string that needs to be replaced with drawable.
+ * */
 fun TextView.setTextWithIcon(fullText: String, drawable: Drawable, targetText: String) {
     val spannableString = SpannableString(fullText)
 

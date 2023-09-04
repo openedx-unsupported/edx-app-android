@@ -589,7 +589,9 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     /**
-     * Method to retrieve the first in-complete child OR return last child if all child are completed.
+     * Method to retrieve the first in-complete child
+     * Or return last child if all child are completed
+     * Or null if it has 0 child
      *
      * @return the child of the current component
      */

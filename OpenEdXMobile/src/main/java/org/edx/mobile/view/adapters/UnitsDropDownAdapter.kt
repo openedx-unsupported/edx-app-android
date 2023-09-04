@@ -9,12 +9,11 @@ import org.edx.mobile.extenstion.setInVisible
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.model.api.AuthorizationDenialReason
-import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.IBlock
 
 class UnitsDropDownAdapter(
-    private val courseData: EnrolledCoursesResponse?,
+    private val isCourseUpgradeable: Boolean,
     private val units: MutableList<IBlock>,
     private val listener: OnItemClickListener<IBlock>?
 ) : RecyclerView.Adapter<UnitsDropDownAdapter.UnitDropDownViewHolder>() {
@@ -32,16 +31,17 @@ class UnitsDropDownAdapter(
 
     override fun onBindViewHolder(holder: UnitDropDownViewHolder, position: Int) {
         val unit = units[position]
-        holder.binding.tvUnitTitle.text = unit.displayName
-        holder.binding.ivUnitStatus.setInVisible(unit.isCompleted.not())
-        holder.binding.containerLockedUnit.setVisibility(
-            courseData?.isUpgradeable == true &&
-                    unit is CourseComponent &&
-                    unit.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS
-        )
-        holder.binding.rlContent.isSelected = selectedItemPosition == position
-        holder.binding.rlContent.setOnClickListener {
-            listener?.onItemClick(unit)
+        holder.binding.apply {
+            tvUnitTitle.text = unit.displayName
+            ivUnitStatus.setInVisible(unit.isCompleted.not())
+            containerLockedUnit.setVisibility(
+                isCourseUpgradeable && unit is CourseComponent &&
+                        unit.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS
+            )
+            rlContent.isSelected = selectedItemPosition == position
+            rlContent.setOnClickListener {
+                listener?.onItemClick(unit)
+            }
         }
     }
 
@@ -51,13 +51,9 @@ class UnitsDropDownAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int {
-        return units.size
-    }
+    override fun getItemCount(): Int = units.size
 
-    fun getUnitIndex(unit: CourseComponent): Int {
-        return units.indexOf(unit)
-    }
+    fun getUnitIndex(unit: CourseComponent): Int = units.indexOf(unit)
 
     class UnitDropDownViewHolder(val binding: LayoutUnitDropDownItemBinding) :
         RecyclerView.ViewHolder(binding.root)

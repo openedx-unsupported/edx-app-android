@@ -44,7 +44,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Router {
-    public static final String EXTRA_ANNOUNCEMENTS = "announcements";
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
     public static final String EXTRA_COURSE_NAME = "course_name";

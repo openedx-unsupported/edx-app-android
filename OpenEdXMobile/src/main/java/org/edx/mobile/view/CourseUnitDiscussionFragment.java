@@ -51,8 +51,8 @@ public class CourseUnitDiscussionFragment extends CourseUnitFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState == null) {
-            if (unit != null && !unit.isCompleted()) {
+        if (savedInstanceState == null && unit != null) {
+            if (!unit.isCompleted()) {
                 markComponentCompletion(true);
                 courseApi.markBlocksCompletion(unit.getCourseId(), List.of(unit.getId())).enqueue(new Callback<>() {
                     @Override
