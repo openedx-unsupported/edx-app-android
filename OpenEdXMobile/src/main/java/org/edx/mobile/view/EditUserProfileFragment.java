@@ -49,7 +49,6 @@ import org.edx.mobile.model.user.FormDescription;
 import org.edx.mobile.model.user.FormField;
 import org.edx.mobile.model.user.LanguageProficiency;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.third_party.crop.CropUtil;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
@@ -65,8 +64,6 @@ import org.edx.mobile.viewModel.ProfileViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -111,14 +108,7 @@ public class EditUserProfileFragment extends BaseFragment {
                     final Uri imageUri = CropImageActivity.getImageUriFromResult(resultData);
                     final Rect cropRect = CropImageActivity.getCropRectFromResult(resultData);
                     if (imageUri != null && cropRect != null) {
-                        try {
-                            final String croppedFileName = "cropped-image" + System.currentTimeMillis() + ".jpg";
-                            final File cropped = new File(requireActivity().getExternalCacheDir(), croppedFileName);
-                            CropUtil.crop(requireActivity(), imageUri, cropRect, 500, 500, cropped);
-                            profileViewModel.uploadProfileImage(cropped);
-                        } catch (IOException exception) {
-                            exception.printStackTrace();
-                        }
+                        profileViewModel.uploadProfileImage(requireActivity(), imageUri, cropRect);
                         analyticsRegistry.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(resultData));
                     }
                 }
@@ -252,8 +242,9 @@ public class EditUserProfileFragment extends BaseFragment {
         profileViewModel.setProfileFormDescription(getResources().openRawResource(R.raw.profiles));
 
         profileViewModel.getShowProgress().observe(getViewLifecycleOwner(), new EventObserver<>(showProgress -> {
-            if (viewHolder != null)
+            if (viewHolder != null) {
                 ViewExtKt.setVisibility(viewHolder.profileImageProgress, showProgress);
+            }
             return null;
         }));
     }

@@ -1,6 +1,8 @@
 package org.edx.mobile.viewModel
 
+import android.app.Activity
 import android.content.ContentResolver
+import android.graphics.Rect
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent
 import org.edx.mobile.model.user.FormDescription
 import org.edx.mobile.module.prefs.LoginPrefs
+import org.edx.mobile.third_party.crop.CropUtil
 import org.edx.mobile.util.IOUtils
 import org.edx.mobile.util.observer.Event
 import org.edx.mobile.util.observer.postEvent
@@ -40,11 +43,21 @@ class ProfileViewModel @Inject constructor(
     val formDescription: FormDescription?
         get() = _formDescription
 
-    fun uploadProfileImage(imageFile: File) {
+    fun uploadProfileImage(activity: Activity, imageUri: Uri, cropRect: Rect) {
         _showProgress.postEvent(true)
         viewModelScope.launch {
-            val isSuccessful = profileRepository.uploadProfileImage(imageFile)
+            val imageFile: File = try {
+                val croppedFileName = "cropped-image" + System.currentTimeMillis() + ".jpg"
+                val imageFile = File(activity.externalCacheDir, croppedFileName)
+                CropUtil.crop(activity, imageUri, cropRect, 500, 500, imageFile)
+                imageFile
+            } catch (exception: IOException) {
+                exception.printStackTrace()
+                _showProgress.postEvent(false)
+                return@launch
+            }
 
+            val isSuccessful = profileRepository.uploadProfileImage(imageFile)
             if (isSuccessful) {
                 EventBus.getDefault().post(
                     ProfilePhotoUpdatedEvent(loginPrefs.username, Uri.fromFile(imageFile))

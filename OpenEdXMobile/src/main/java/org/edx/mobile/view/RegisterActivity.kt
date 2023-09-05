@@ -194,6 +194,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                     null
                 )
             } else if (ex is HttpStatusException && ex.statusCode == HttpStatus.FORBIDDEN) {
+                tryToSetUIInteraction(true)
                 showAlertDialog(
                     getString(R.string.login_error),
                     getString(R.string.auth_provider_disabled_user_error),
