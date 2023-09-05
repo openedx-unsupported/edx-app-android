@@ -7,16 +7,13 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.model.api.AuthorizationDenialReason
 import org.edx.mobile.model.api.CourseUpgradeResponse
 import org.edx.mobile.model.api.EnrolledCoursesResponse
-import org.edx.mobile.model.course.BlockType
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.DiscussionBlockModel
 import org.edx.mobile.model.course.HtmlBlockModel
 import org.edx.mobile.model.course.VideoBlockModel
-import org.edx.mobile.util.Config
 import org.edx.mobile.util.VideoUtil
 import org.edx.mobile.view.CourseUnitDiscussionFragment
 import org.edx.mobile.view.CourseUnitEmptyFragment
-import org.edx.mobile.view.CourseUnitFragment
 import org.edx.mobile.view.CourseUnitFragment.HasComponent
 import org.edx.mobile.view.CourseUnitMobileNotSupportedFragment
 import org.edx.mobile.view.CourseUnitOnlyOnYoutubeFragment
@@ -28,25 +25,13 @@ import org.edx.mobile.view.LockedCourseUnitFragment
 class CourseUnitPagerAdapter(
     fragmentActivity: FragmentActivity,
     private val environment: IEdxEnvironment,
-    componentList: MutableList<CourseComponent>,
-    courseData: EnrolledCoursesResponse,
-    courseUpgradeData: CourseUpgradeResponse?,
-    callback: HasComponent
+    private val componentList: MutableList<CourseComponent>,
+    private val courseData: EnrolledCoursesResponse,
+    private val courseUpgradeData: CourseUpgradeResponse?,
+    private val callback: HasComponent
 ) : FragmentStateAdapter(fragmentActivity) {
 
-    private val config: Config = environment.config
-    private val componentList: MutableList<CourseComponent>
-    private val courseData: EnrolledCoursesResponse
-    private val courseUpgradeData: CourseUpgradeResponse?
-    private val callback: HasComponent
     private val fragments: MutableList<Fragment> = ArrayList()
-
-    init {
-        this.componentList = componentList
-        this.courseData = courseData
-        this.courseUpgradeData = courseUpgradeData
-        this.callback = callback
-    }
 
     fun getComponent(pos: Int): CourseComponent {
         var unitPosition = pos
@@ -70,44 +55,65 @@ class CourseUnitPagerAdapter(
             else -> CourseComponent(unit)
         }
         minifiedUnit.courseSku = courseData.courseSku
-        val unitFragment: CourseUnitFragment
-        val isYoutubeVideo =
-            minifiedUnit is VideoBlockModel && minifiedUnit.data.encodedVideos.youtubeVideoInfo != null
-        unitFragment =
-            if (minifiedUnit.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS) {
+
+        val unitFragment = when {
+            minifiedUnit.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS -> {
                 if (courseUpgradeData == null) {
                     CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
                 } else {
+                    minifiedUnit.courseSku = courseData.courseSku
                     LockedCourseUnitFragment.newInstance(
                         minifiedUnit,
                         courseData,
                         courseUpgradeData
                     )
                 }
-            } else if (VideoUtil.isCourseUnitVideo(environment, minifiedUnit)) {
-                val videoBlockModel = minifiedUnit as VideoBlockModel
-                videoBlockModel.setVideoThumbnail(courseData.course.course_image)
-                CourseUnitVideoPlayerFragment.newInstance(
-                    videoBlockModel,
-                    pos < componentList.size,
-                    (pos > 0)
-                )
-            } else if (isYoutubeVideo && config.youtubePlayerConfig.isYoutubePlayerEnabled) {
-                CourseUnitYoutubePlayerFragment.newInstance(minifiedUnit as VideoBlockModel)
-            } else if (isYoutubeVideo) {
-                CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit)
-            } else if (config.isDiscussionsEnabled && minifiedUnit is DiscussionBlockModel) {
+            }
+
+            minifiedUnit is VideoBlockModel -> {
+                val isYoutubeVideo = minifiedUnit.data.encodedVideos.isYoutubeVideo
+                when {
+                    VideoUtil.isCourseUnitVideo(environment, minifiedUnit) -> {
+                        minifiedUnit.setVideoThumbnail(courseData.course.course_image)
+                        CourseUnitVideoPlayerFragment.newInstance(
+                            minifiedUnit,
+                            pos < componentList.size,
+                            (pos > 0)
+                        )
+                    }
+
+                    isYoutubeVideo && environment.config.youtubePlayerConfig.isYoutubePlayerEnabled -> {
+                        CourseUnitYoutubePlayerFragment.newInstance(minifiedUnit)
+                    }
+
+                    isYoutubeVideo -> {
+                        CourseUnitOnlyOnYoutubeFragment.newInstance(minifiedUnit)
+                    }
+
+                    else -> {
+                        CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
+                    }
+                }
+            }
+
+            minifiedUnit is DiscussionBlockModel && environment.config.isDiscussionsEnabled -> {
                 CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData)
-            } else if (!minifiedUnit.isMultiDevice) {
-                CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
-            } else if (minifiedUnit.type !== BlockType.VIDEO && minifiedUnit.type !== BlockType.HTML && minifiedUnit.type !== BlockType.OTHERS && minifiedUnit.type !== BlockType.DISCUSSION && minifiedUnit.type !== BlockType.PROBLEM && minifiedUnit.type !== BlockType.OPENASSESSMENT && minifiedUnit.type !== BlockType.DRAG_AND_DROP_V2 && minifiedUnit.type !== BlockType.WORD_CLOUD && minifiedUnit.type !== BlockType.LTI_CONSUMER) {
-                CourseUnitEmptyFragment.newInstance(minifiedUnit)
-            } else if (minifiedUnit is HtmlBlockModel) {
+            }
+
+            minifiedUnit is HtmlBlockModel -> {
                 minifiedUnit.setCourseId(courseData.course.id)
                 CourseUnitWebViewFragment.newInstance(minifiedUnit, courseData)
-            } else {
+            }
+
+            minifiedUnit.isEmptyComponent -> {
+                CourseUnitEmptyFragment.newInstance(minifiedUnit)
+            }
+
+            else -> {
+                // in case of !minifiedUnit.isMultiDevice else executed
                 CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
             }
+        }
         unitFragment.setHasComponentCallback(callback)
         fragments.add(unitFragment)
         return unitFragment

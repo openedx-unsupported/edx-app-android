@@ -176,7 +176,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         this.rootComponent = component;
         clearCourseOutlineData();
         if (rootComponent != null) {
-            List<IBlock> children = rootComponent.getChildren(false);
+            List<IBlock> children = rootComponent.getChildren();
             for (IBlock block : children) {
                 CourseComponent comp = (CourseComponent) block;
                 if (isVideoMode && comp.getVideos().size() == 0)
@@ -184,7 +184,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 if (comp.isContainer()) {
                     SectionRow header = new SectionRow(SectionRow.SECTION, comp);
                     adapterData.add(header);
-                    for (IBlock childBlock : comp.getChildren(false)) {
+                    for (IBlock childBlock : comp.getChildren()) {
                         CourseComponent child = (CourseComponent) childBlock;
                         if (isVideoMode && child.getVideos().size() == 0)
                             continue;

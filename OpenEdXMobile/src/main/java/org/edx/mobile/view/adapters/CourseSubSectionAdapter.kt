@@ -58,7 +58,7 @@ class CourseSubSectionAdapter(
      * @param component The CourseComponent to extract data from.
      */
     private fun setupSubSectionData(component: CourseComponent) {
-        for (block in component.getChildren(false)) {
+        for (block in component.children) {
             val courseComponent = block as CourseComponent
             val row = SectionRow(SectionRow.SUB_SECTION, courseComponent)
             adapterData.add(row)

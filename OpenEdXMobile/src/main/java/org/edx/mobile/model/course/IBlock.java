@@ -44,7 +44,7 @@ public interface IBlock extends Serializable {
 
     IBlock getParent();
 
-    List<IBlock> getChildren(boolean videosOnly);
+    List<IBlock> getChildren();
 
     IBlock getRoot();
 

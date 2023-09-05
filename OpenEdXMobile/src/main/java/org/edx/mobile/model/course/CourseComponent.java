@@ -96,7 +96,7 @@ public class CourseComponent implements IBlock, IPathNode {
         if (parent == null) {
             this.root = this;
         } else {
-            parent.getChildren(false).add(this);
+            parent.getChildren().add(this);
             //we cache the root to improve the performance
             this.root = (CourseComponent) parent.getRoot();
         }
@@ -207,15 +207,15 @@ public class CourseComponent implements IBlock, IPathNode {
      */
     private void updateDiscussionComponentsCompletion() {
         boolean isAllSiblingsCompleted = true;
-        if (getParent().getChildren(false).size() > 0) {
-            for (IBlock iBlock : getParent().getChildren(false)) {
+        if (getParent().getChildren().size() > 0) {
+            for (IBlock iBlock : getParent().getChildren()) {
                 if (iBlock.getType() != BlockType.DISCUSSION && !iBlock.isCompleted()) {
                     isAllSiblingsCompleted = false;
                 }
             }
         }
         if (isAllSiblingsCompleted) {
-            for (IBlock iBlock : getParent().getChildren(false)) {
+            for (IBlock iBlock : getParent().getChildren()) {
                 if (iBlock.getType() == BlockType.DISCUSSION) {
                     iBlock.setCompleted(1);
                 }
@@ -238,17 +238,17 @@ public class CourseComponent implements IBlock, IPathNode {
      * @return true if all the children are completed
      */
     private boolean isAllChildCompleted() {
-        for (IBlock iBlock : getChildren(false)) {
+        for (IBlock iBlock : getChildren()) {
             if (iBlock.getType() != BlockType.DISCUSSION && !iBlock.isCompleted()) {
                 return false;
             }
         }
-        for (IBlock iBlock : getChildren(false)) {
+        for (IBlock iBlock : getChildren()) {
             if (iBlock.getType() == BlockType.DISCUSSION) {
                 iBlock.setCompleted(1);
             }
         }
-        return getChildren(false).size() > 0;
+        return getChildren().size() > 0;
     }
 
     @Override
@@ -257,6 +257,10 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     @Override
+    public List<IBlock> getChildren() {
+        return (List) children;
+    }
+
     public List<IBlock> getChildren(boolean videosOnly) {
         if (videosOnly) {
             List<IBlock> videoChildren = new ArrayList<>();
@@ -269,7 +273,7 @@ public class CourseComponent implements IBlock, IPathNode {
             }
             return videoChildren;
         } else {
-            return (List) children;
+            return getChildren();
         }
     }
 
@@ -397,7 +401,7 @@ public class CourseComponent implements IBlock, IPathNode {
     public boolean isLastChild() {
         if (parent == null)
             return true;
-        List<IBlock> sibling = parent.getChildren(false);
+        List<IBlock> sibling = parent.getChildren();
         if (sibling == null) {
             return false;  //it wont happen. TODO - should we log here?
         }
@@ -607,5 +611,17 @@ public class CourseComponent implements IBlock, IPathNode {
         } else {
             return null;
         }
+    }
+
+    public boolean isEmptyComponent() {
+        return type != BlockType.VIDEO &&
+                type != BlockType.HTML &&
+                type != BlockType.OTHERS &&
+                type != BlockType.DISCUSSION &&
+                type != BlockType.PROBLEM &&
+                type != BlockType.OPENASSESSMENT &&
+                type != BlockType.DRAG_AND_DROP_V2 &&
+                type != BlockType.WORD_CLOUD &&
+                type != BlockType.LTI_CONSUMER;
     }
 }

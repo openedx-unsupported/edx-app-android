@@ -63,7 +63,7 @@ class CourseHomeAdapter(
         return if (parentPosition >= itemCount) {
             null
         } else {
-            getItem(parentPosition).component.getChildren(false)[childPosition] as CourseComponent
+            getItem(parentPosition).component.children[childPosition] as CourseComponent
         }
     }
 
@@ -92,7 +92,7 @@ class CourseHomeAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(sectionComponent: CourseComponent) {
             binding.tvSectionTitle.text = sectionComponent.displayName
-            if (sectionComponent.getChildren(false).size > 0) {
+            if (sectionComponent.children.size > 0) {
                 binding.ivExpandSection.setVisibility(true)
                 setupSubSectionList(sectionComponent)
             } else {

@@ -140,28 +140,38 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         }
     }
 
+    private val courseCelebrationStatus: Unit
+        get() {
+            val courseStatusCall = courseApi.getCourseStatus(courseData.courseId)
+            courseStatusCall.enqueue(object :
+                ErrorHandlingCallback<CourseStatus>(this, null, null) {
+                override fun onResponse(responseBody: CourseStatus) {
+                    isFirstSection = responseBody.celebrationStatus.firstSection
+                }
+            })
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityCourseUnitNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         restore(savedInstanceState ?: intent?.getBundleExtra(Router.EXTRA_BUNDLE))
-        if (intent != null) {
-            isVideoMode = intent.extras?.getBoolean(Router.EXTRA_IS_VIDEOS_MODE, false) as Boolean
-        }
-        initViews()
+        isVideoMode = intent?.extras?.getBoolean(Router.EXTRA_IS_VIDEOS_MODE, false) as Boolean
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        initViews()
     }
 
     private fun initViews() {
+        if (courseComponentId == null && environment.loginPrefs.isUserLoggedIn.not()) {
+            EventBus.getDefault().post(LogoutEvent())
+            return
+        }
         binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
         binding.gotoNext.setOnClickListener { navigateNextComponent() }
-        // If the data is available then trigger the callback
-        // after basic initialization
-        if (courseComponentId != null && environment.loginPrefs.isUserLoggedIn) {
-            onLoadData()
-            setupToolbar()
-        }
+        onLoadData()
+        setupToolbar()
         initAdapter()
         // Enforce to intercept single scrolling direction
         UiUtils.enforceSingleScrollDirection(binding.pager2)
@@ -170,7 +180,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         }
         binding.pager2.setVisibility(true)
         binding.stateLayout.root.setVisibility(false)
-        binding.stateLayout.dismiss.setVisibility(false)
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -183,6 +192,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         restore(savedInstanceState)
+        onLoadData()
     }
 
     override fun onResume() {
@@ -604,17 +614,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
     }
 
-    private val courseCelebrationStatus: Unit
-        get() {
-            val courseStatusCall = courseApi.getCourseStatus(courseData.courseId)
-            courseStatusCall.enqueue(object :
-                ErrorHandlingCallback<CourseStatus>(this, null, null) {
-                override fun onResponse(responseBody: CourseStatus) {
-                    isFirstSection = responseBody.celebrationStatus.firstSection
-                }
-            })
-        }
-
     private fun showCelebrationModal(reCreate: Boolean) {
         val celebrationDialog = CelebratoryModalDialogFragment.newInstance(object :
             CelebratoryModalDialogFragment.CelebratoryModelCallback {
@@ -656,10 +655,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     }
 
     override fun onRefresh() {
-        if (!environment.loginPrefs.isUserLoggedIn) {
-            EventBus.getDefault().post(LogoutEvent())
-            return
-        }
         initViews()
     }
 
