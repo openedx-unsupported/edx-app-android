@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/view_selector"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/course_unit_nav_popup_item_height"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/edx_half_margin">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_unit_status"
+            android:layout_width="@dimen/ic_small"
+            android:layout_height="@dimen/ic_small"
+            android:layout_marginEnd="@dimen/widget_margin"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_green_check"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_unit_title"
+            style="@style/CourseUnitDropDownItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="Introducing Weekly Check Ins" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_locked_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/edx_half_margin"
+        android:paddingTop="@dimen/edx_x_quarter_margin"
+        android:paddingEnd="@dimen/edx_half_margin"
+        android:paddingBottom="@dimen/edx_half_margin"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/ic_small"
+            android:layout_height="@dimen/ic_small"
+            android:layout_marginEnd="@dimen/widget_margin"
+            app:srcCompat="@drawable/ic_white_lock_secondary_base" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/CourseUnitDropDownItemLocked"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/locked_content_message_in_drop_down" />
+    </LinearLayout>
+</LinearLayout>

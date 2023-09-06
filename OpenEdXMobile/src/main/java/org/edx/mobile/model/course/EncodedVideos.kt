@@ -30,6 +30,8 @@ data class EncodedVideos(
     val youtubeVideoInfo: VideoInfo?
         get() = if (youtube != null && URLUtil.isNetworkUrl(youtube.url)) youtube else null
 
+    val isYoutubeVideo = youtubeVideoInfo != null
+
     /**
      * Extract the Preferred Native [VideoInfo] based on their stream priority for media playback
      * to store in database model.

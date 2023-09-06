@@ -37,6 +37,8 @@ import okhttp3.Request;
 public class CourseAnnouncementsFragment extends BaseFragment implements RefreshListener {
     private final Logger logger = new Logger(getClass().getName());
 
+    public static final String EXTRA_ANNOUNCEMENTS = "announcements";
+
     private EdxWebView webView;
 
     private EnrolledCoursesResponse courseData;
@@ -78,7 +80,7 @@ public class CourseAnnouncementsFragment extends BaseFragment implements Refresh
 
         if (savedInstanceState != null) {
             try {
-                savedAnnouncements = savedInstanceState.getParcelableArrayList(Router.EXTRA_ANNOUNCEMENTS);
+                savedAnnouncements = savedInstanceState.getParcelableArrayList(EXTRA_ANNOUNCEMENTS);
             } catch (Exception ex) {
                 logger.error(ex);
             }
@@ -107,7 +109,7 @@ public class CourseAnnouncementsFragment extends BaseFragment implements Refresh
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (savedAnnouncements != null) {
-            outState.putParcelableArrayList(Router.EXTRA_ANNOUNCEMENTS, new ArrayList<Parcelable>(savedAnnouncements));
+            outState.putParcelableArrayList(EXTRA_ANNOUNCEMENTS, new ArrayList<Parcelable>(savedAnnouncements));
         }
     }
 

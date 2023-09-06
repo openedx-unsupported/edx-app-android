@@ -16,3 +16,7 @@ fun View.setVisibility(isVisible: Boolean) {
 fun AppCompatImageView.setImageDrawable(@DrawableRes drawableId: Int) {
     this.setImageDrawable(ContextCompat.getDrawable(context, drawableId))
 }
+
+fun View.setInVisible(isInVisible: Boolean) {
+    this.visibility = if (isInVisible) View.INVISIBLE else View.VISIBLE
+}

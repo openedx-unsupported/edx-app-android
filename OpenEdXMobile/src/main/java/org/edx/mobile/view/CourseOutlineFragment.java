@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -379,27 +378,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     private void initListView() {
         initAdapter();
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listView.clearChoices();
-                final CourseComponent component = adapter.getItem(position).getComponent();
-                if (component.isContainer()) {
-                    Intent courseOutlineIntent = environment.getRouter().getCourseOutlineIntent(requireActivity(),
-                            courseData, courseUpgradeData, component.getId(), null, isVideoMode);
-                    courseUnitDetailLauncher.launch(courseOutlineIntent);
-                } else {
-                    if (adapter.getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM) {
-                        environment.getAnalyticsRegistry().trackResumeCourseBannerTapped(component.getCourseId(), component.getId());
-                    }
-                    Intent courseUnitDetailIntent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
-                            courseData, courseUpgradeData, component.getId(), isVideoMode);
-                    courseUnitDetailLauncher.launch(courseUnitDetailIntent);
-
-                    environment.getAnalyticsRegistry().trackScreenView(
-                            Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
-                }
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            listView.clearChoices();
+            final CourseComponent component = adapter.getItem(position).getComponent();
+            showComponentDetailScreen(component);
         });
 
         listView.setOnItemLongClickListener((parent, itemView, position, id) -> {
@@ -412,6 +394,14 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
             }
             return false;
         });
+    }
+
+    private void showComponentDetailScreen(CourseComponent component) {
+        Intent intent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
+                courseData, courseUpgradeData, component.getId(), isVideoMode);
+        environment.getAnalyticsRegistry().trackScreenView(
+                Analytics.Screens.UNIT_DETAIL, courseData.getCourse().getId(), component.getParent().getInternalName());
+        courseUnitDetailLauncher.launch(intent);
     }
 
     private void initAdapter() {
@@ -445,16 +435,17 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
                     environment.getRouter().showDownloads(getActivity());
                 }
             };
-            adapter = new CourseOutlineAdapter(getActivity(), courseData, environment, downloadListener,
+            adapter = new CourseOutlineAdapter(requireActivity(), courseData, environment, downloadListener,
                     isVideoMode, isOnCourseOutline);
         }
     }
 
     private void detectDeepLinking() {
-        if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName)
-                && !TextUtils.isEmpty(courseComponentId)) {
-            Intent courseUnitDetailIntent = environment.getRouter().getCourseUnitDetailIntent(requireActivity(),
-                    courseData, courseUpgradeData, courseComponentId, false);
+        if (Screen.COURSE_COMPONENT.equalsIgnoreCase(screenName) &&
+                !TextUtils.isEmpty(courseComponentId)) {
+            Intent courseUnitDetailIntent = environment.getRouter()
+                    .getCourseUnitDetailIntent(requireActivity(), courseData, courseUpgradeData,
+                            courseComponentId, isVideoMode);
             courseUnitDetailLauncher.launch(courseUnitDetailIntent);
             screenName = null;
         }

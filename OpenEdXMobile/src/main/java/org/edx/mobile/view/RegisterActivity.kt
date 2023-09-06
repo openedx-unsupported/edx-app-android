@@ -159,7 +159,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
             parameterMap[key] = parameters.getString(key)
         }
         val validateRegistrationFields = loginService.validateRegistrationFields(parameterMap)
-        validateRegistrationFields.enqueue(object : ErrorHandlingCallback<JsonObject?>(this) {
+        validateRegistrationFields.enqueue(object : ErrorHandlingCallback<JsonObject>(this) {
             override fun onResponse(responseBody: JsonObject) {
                 // Callback method for a successful HTTP response.
                 val stringMapType = object : TypeToken<HashMap<String, String?>?>() {}.type

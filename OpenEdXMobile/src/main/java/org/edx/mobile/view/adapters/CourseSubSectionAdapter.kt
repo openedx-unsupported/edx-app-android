@@ -183,12 +183,14 @@ class CourseSubSectionAdapter(
                         loadingIndicator.contentDescription = state.toString()
                         bulkDownload.setVisibility(false)
                     }
+
                     DownloadedState.DOWNLOADED -> {
                         loadingIndicator.setVisibility(false)
                         bulkDownload.setVisibility(true)
                         bulkDownload.setImageResource(R.drawable.download_done_selector)
                         bulkDownload.tag = R.drawable.ic_download_done
                     }
+
                     DownloadedState.ONLINE -> {
                         loadingIndicator.setVisibility(false)
                         bulkDownload.setVisibility(true)

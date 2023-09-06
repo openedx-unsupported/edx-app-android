@@ -116,10 +116,10 @@
 
     <!-- Course unit -->
     <dimen name="course_unit_nav_bar_height">55dp</dimen>
-    <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
     <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
     <dimen name="course_unit_message_icon_size">140dp</dimen>
+    <dimen name="course_unit_nav_popup_item_height">36dp</dimen>
 
     <dimen name="tab_height">56dp</dimen>
     <dimen name="tab_indicator_height">2dp</dimen>
@@ -154,6 +154,8 @@
     <dimen name="x_small_icon_margin">5dp</dimen>
     <dimen name="small_icon_size">15dp</dimen>
     <dimen name="medium_icon_size">35dp</dimen>
+    <dimen name="segmented_progressbar_height">5dp</dimen>
+    <dimen name="segmented_progressbar_divider_width">2dp</dimen>
 
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>

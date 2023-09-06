@@ -290,7 +290,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      * @param responseBody The response body, converted to an instance of it's associated Java
      *                     class.
      */
-    protected abstract void onResponse(@NonNull final T responseBody);
+    protected abstract void onResponse(final T responseBody);
 
     /**
      * Callback method for when the HTTP response was not received successfully, whether due to a

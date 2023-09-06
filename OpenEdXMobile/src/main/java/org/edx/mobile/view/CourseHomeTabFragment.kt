@@ -244,31 +244,27 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), DownloadManagerCallb
     override fun onSectionItemClick(
         itemView: LinearLayout, parentPosition: Int, childPosition: Int
     ) {
-        val component = adapter.getItem(parentPosition, childPosition)
-        if (component?.isContainer == true) {
-            environment.router.getCourseOutlineIntent(
-                requireActivity(),
-                courseData,
-                courseUpgradeData,
-                component.id,
-                null,
-                false
-            )?.let { startActivity(it) }
+        adapter.getItem(parentPosition, childPosition)?.let { component ->
+            showComponentDetailScreen(component)
         }
     }
 
     override fun resumeCourseClicked(lastAccessedComponent: CourseComponent) {
-        environment.router.getCourseUnitDetailIntent(
-            requireActivity(),
-            courseData,
-            courseUpgradeData,
-            lastAccessedComponent.id,
-            false
-        )?.let { startActivity(it) }
+        showComponentDetailScreen(lastAccessedComponent)
         environment.analyticsRegistry.trackResumeCourseBannerTapped(
             lastAccessedComponent.courseId,
             lastAccessedComponent.id
         )
+    }
+
+    private fun showComponentDetailScreen(component: CourseComponent) {
+        environment.router.getCourseUnitDetailIntent(
+            requireActivity(),
+            courseData,
+            courseUpgradeData,
+            component.id,
+            false
+        )?.let { startActivity(it) }
     }
 
     override fun onSectionItemLongClick(

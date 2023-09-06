@@ -2,6 +2,7 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -83,11 +84,11 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
-                val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
+                val courseUnitDetailIntent: Intent = environment.router.getCourseUnitDetailIntent(
                     requireActivity(),
                     courseData,
                     null,
-                    blockId,
+                    component.id,
                     false
                 )
                 courseUnitDetailLauncher.launch(courseUnitDetailIntent)

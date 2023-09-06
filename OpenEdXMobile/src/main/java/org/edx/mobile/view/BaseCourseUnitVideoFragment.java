@@ -364,13 +364,15 @@ public abstract class BaseCourseUnitVideoFragment extends CourseUnitFragment
                     .updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                             watchedStateCallback);
         }
-        markComponentCompletion(true);
-        courseApi.markBlocksCompletion(unit.getCourseId(), List.of(unit.getId())).enqueue(new Callback<JSONObject>() {
-            @Override
-            protected void onResponse(@NonNull JSONObject responseBody) {
-                // Nothing to do here
-            }
-        });
+        if (!unit.isCompleted()) {
+            markComponentCompletion(true);
+            courseApi.markBlocksCompletion(unit.getCourseId(), List.of(unit.getId())).enqueue(new Callback<JSONObject>() {
+                @Override
+                protected void onResponse(@NonNull JSONObject responseBody) {
+                    // Nothing to do here
+                }
+            });
+        }
         // mark offset as zero, so that playback will resume from start next time
         saveCurrentPlaybackPosition(0);
     }
