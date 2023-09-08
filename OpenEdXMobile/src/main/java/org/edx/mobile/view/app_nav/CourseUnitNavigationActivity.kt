@@ -590,7 +590,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             }
             val layoutParams = binding.appbar.layoutParams
             layoutParams.height = 0
-            binding.courseNavigationToolbar.setPadding(0, 0, 0, 0)
             binding.appbar.layoutParams = layoutParams
             binding.courseUnitNavBar.setVisibility(false)
         } else {
@@ -600,12 +599,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             val layoutParams = binding.appbar.layoutParams
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.appbar.layoutParams = layoutParams
-            binding.courseNavigationToolbar.setPadding(
-                0,
-                resources.getDimensionPixelSize(R.dimen.edx_half_margin),
-                0,
-                0
-            )
             binding.courseUnitNavBar.setVisibility(true)
         }
     }

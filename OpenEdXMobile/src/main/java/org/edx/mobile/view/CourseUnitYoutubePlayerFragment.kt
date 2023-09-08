@@ -195,7 +195,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
         if (videoModel == null) {
             val downloadEntry = DownloadEntry()
             downloadEntry.videoId = unit.id
-            addVideoDatatoDb(downloadEntry)
+            addVideoDataToDb(downloadEntry)
             videoModel = downloadEntry
         }
     }

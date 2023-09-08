@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/course_unit_video"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,15 +47,17 @@
             android:textSize="@dimen/edx_base" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/transcript_listview"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_transcripts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="@null"
         android:importantForAccessibility="noHideDescendants"
         android:paddingTop="@dimen/widget_margin_half"
-        android:paddingBottom="@dimen/widget_margin_half" />
+        android:paddingBottom="@dimen/widget_margin_half"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="5"
+        tools:listitem="@layout/row_transcript_item" />
 
     <FrameLayout
         android:id="@+id/fl_mini_controller"

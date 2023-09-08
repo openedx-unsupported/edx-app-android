@@ -12,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.android.billingclient.api.ProductDetails
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -31,8 +29,10 @@ import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MoveToDiscoveryTabEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.CollapsingToolbarStatListener
 import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.extenstion.serializableOrThrow
+import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
@@ -84,7 +84,6 @@ import org.edx.mobile.wrapper.InAppPurchasesDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
-import kotlin.math.abs
 
 @AndroidEntryPoint
 class CourseTabsDashboardFragment : BaseFragment() {
@@ -110,9 +109,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     private val iapViewModel: InAppPurchasesViewModel by viewModels()
     private val courseDateViewModel: CourseDateViewModel by viewModels()
-
-    private var isCollapsedTitleVisible = false
-    private var isExpandedTitleVisible = true
 
     private val loaderDialog: AlertDialogFragment by lazy {
         AlertDialogFragment.newInstance(
@@ -544,7 +540,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 courseTitle.text = spannableString
             }
             collapsedToolbarDismiss.setOnClickListener { requireActivity().finish() }
-            expandedToolbarDismiss.setOnClickListener { requireActivity().finish() }
 
             if (hasAccess && courseData.isUpgradeable && environment.featuresPrefs.isValuePropEnabled) {
                 layoutUpgradeBtn.root.setVisibility(true)
@@ -563,19 +558,36 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 layoutUpgradeBtn.root.setVisibility(false)
             }
 
-            OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
-                val maxScroll = appBarLayout.totalScrollRange
-                val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
-                handleToolbarVisibility(
-                    binding.toolbar.collapsedToolbarLayout,
-                    binding.toolbar.expandedToolbarLayout,
-                    percentage
-                )
-            }.apply {
-                appbar.addOnOffsetChangedListener(this)
-            }
+            appbar.setTitleStateListener(
+                binding.toolbar.collapsingToolbarLayout,
+                object : CollapsingToolbarStatListener {
+                    override fun onExpanded() {
+                        ViewAnimationUtil.startAlphaAnimation(
+                            binding.toolbar.expandedToolbarLayout,
+                            View.VISIBLE
+                        )
+                        ViewAnimationUtil.startAlphaAnimation(
+                            binding.toolbar.collapsedToolbarTitle,
+                            View.INVISIBLE
+                        )
+                        layoutUpgradeBtn.root.isEnabled = true
+                    }
+
+                    override fun onCollapsed() {
+                        ViewAnimationUtil.startAlphaAnimation(
+                            binding.toolbar.expandedToolbarLayout,
+                            View.INVISIBLE
+                        )
+                        ViewAnimationUtil.startAlphaAnimation(
+                            binding.toolbar.collapsedToolbarTitle,
+                            View.VISIBLE
+                        )
+                        layoutUpgradeBtn.root.isEnabled = false
+                    }
+
+                })
             ViewAnimationUtil.startAlphaAnimation(
-                binding.toolbar.collapsedToolbarLayout,
+                binding.toolbar.collapsedToolbarTitle,
                 View.INVISIBLE
             )
             showCertificate()
@@ -806,58 +818,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
             analyticsRegistry.trackScreenView(
                 Analytics.Screens.COURSE_ANNOUNCEMENTS, courseData.courseId, null
             )
-        }
-    }
-
-    /**
-     * It will handle the toolbar's collapse or expand state based on the scroll position. It will
-     * also disable the clickable views of the toolbar because the alpha attribute has been used to
-     * handle the toolbar's transition from one state to another.
-     *
-     * Inspiration: http://www.devexchanges.info/2016/03/android-tip-custom-coordinatorlayout.html
-     *
-     * @param collapsedToolbar Parent view for Toolbar design in collapsed state
-     * @param expandedToolbar  Parent view for Toolbar design in expanded state
-     * @param percentage       Percentage of Toolbar's current scroll over max scroll
-     */
-    private fun handleToolbarVisibility(
-        collapsedToolbar: View, expandedToolbar: View,
-        percentage: Float
-    ) {
-        val minVisibleCollapsedToolbarPercentage = 0.9f
-        val maxHiddenExpandedToolbarPercentage = 0.8f
-
-        if (percentage >= minVisibleCollapsedToolbarPercentage) {
-            if (!isCollapsedTitleVisible) {
-                ViewAnimationUtil.startAlphaAnimation(collapsedToolbar, View.VISIBLE)
-                isCollapsedTitleVisible = true
-            }
-        } else {
-            if (isCollapsedTitleVisible) {
-                ViewAnimationUtil.startAlphaAnimation(collapsedToolbar, View.INVISIBLE)
-                isCollapsedTitleVisible = false
-            }
-        }
-        if (percentage >= maxHiddenExpandedToolbarPercentage) {
-            if (isExpandedTitleVisible) {
-                ViewAnimationUtil.startAlphaAnimation(expandedToolbar, View.INVISIBLE)
-                isExpandedTitleVisible = false
-            }
-            binding.toolbar.apply {
-                courseTitle.isEnabled = false
-                expandedToolbarDismiss.isEnabled = false
-                layoutUpgradeBtn.root.isEnabled = false
-            }
-        } else {
-            if (!isExpandedTitleVisible) {
-                ViewAnimationUtil.startAlphaAnimation(expandedToolbar, View.VISIBLE)
-                isExpandedTitleVisible = true
-            }
-            binding.toolbar.apply {
-                courseTitle.isEnabled = true
-                expandedToolbarDismiss.isEnabled = true
-                layoutUpgradeBtn.root.isEnabled = true
-            }
         }
     }
 
