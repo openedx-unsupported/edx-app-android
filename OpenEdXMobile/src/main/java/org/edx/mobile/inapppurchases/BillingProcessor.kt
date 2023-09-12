@@ -21,13 +21,14 @@ import com.android.billingclient.api.acknowledgePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchasesAsync
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.extenstion.resumeIfActive
+import org.edx.mobile.injection.DataSourceDispatcher
 import org.edx.mobile.logger.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +45,7 @@ import javax.inject.Singleton
 @Singleton
 class BillingProcessor @Inject constructor(
     @ApplicationContext val context: Context,
+    @DataSourceDispatcher val dispatcher: CoroutineDispatcher,
 ) : PurchasesUpdatedListener {
 
     private val logger = Logger(TAG)
@@ -108,7 +110,7 @@ class BillingProcessor @Inject constructor(
     ) {
         if (billingResult.responseCode == BillingResponseCode.OK && purchases != null) {
             if (!purchases.first().isAcknowledged) {
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(dispatcher).launch {
                     acknowledgePurchase(purchases.first())
                 }
             } else {
@@ -208,7 +210,7 @@ class BillingProcessor @Inject constructor(
             .setProductType(BillingClient.ProductType.INAPP)
             .build()
 
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             billingClient.queryProductDetails(
                 QueryProductDetailsParams
                     .newBuilder()

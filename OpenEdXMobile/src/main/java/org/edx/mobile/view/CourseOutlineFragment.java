@@ -61,19 +61,22 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.iap.IAPFlowData;
 import org.edx.mobile.model.video.VideoQuality;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.EdxCookieManager;
-import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.ConfigUtil;
+import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
+import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment;
+import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.VideoDownloadQualityDialogFragment;
 import org.edx.mobile.viewModel.CourseViewModel;
 import org.edx.mobile.viewModel.CourseViewModel.CoursesRequestType;
@@ -95,8 +98,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @AndroidEntryPoint
-public class CourseOutlineFragment extends OfflineSupportBaseFragment implements RefreshListener,
-        VideoDownloadHelper.DownloadManagerCallback {
+public class CourseOutlineFragment extends OfflineSupportBaseFragment implements RefreshListener {
     private final Logger logger = new Logger(getClass().getName());
     private static final int AUTOSCROLL_DELAY_MS = 500;
 
@@ -117,10 +119,10 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     @Inject
     CourseAPI courseApi;
 
-    @Inject
-    VideoDownloadHelper downloadManager;
-
     private CourseViewModel courseViewModel;
+
+    private VideoViewModel videoViewModel;
+
     private View loadingIndicator;
     private FrameLayout flBulkDownload;
     private View videoQualityLayout;
@@ -231,7 +233,40 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
     }
 
     private void initVideoObserver() {
-        VideoViewModel videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
+
+        videoViewModel.getRefreshUI().observe(getViewLifecycleOwner(), new EventObserver<>(refresh -> {
+            if (refresh) {
+                updateListUI();
+            }
+            return null;
+        }));
+
+        videoViewModel.getInfoMessage().observe(getViewLifecycleOwner(), new EventObserver<>(strResId -> {
+            showInfoMessage(getString(strResId));
+            return null;
+        }));
+
+        videoViewModel.getDownloadSizeExceeded().observe(getViewLifecycleOwner(), new EventObserver<>(downloads -> {
+            if (!downloads.isEmpty()) {
+                IDialogCallback callback = new IDialogCallback() {
+                    @Override
+                    public void onPositiveClicked() {
+                        videoViewModel.startDownload(downloads, true);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+                        EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
+                    }
+                };
+
+                DownloadSizeExceedDialog.newInstance(callback).show(
+                        requireActivity().getSupportFragmentManager(), "dialog"
+                );
+            }
+            return null;
+        }));
 
         videoViewModel.getSelectedVideosPosition().observe(getViewLifecycleOwner(), new EventObserver<>(position -> {
             if (position.getSecond() != ListView.INVALID_POSITION && position.getSecond() == listView.getCheckedItemPosition()) {
@@ -453,9 +488,20 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
 
     public void onPermissionGranted() {
         if (isSingleVideoDownload) {
-            downloadManager.downloadVideo(downloadEntry, getActivity(), CourseOutlineFragment.this);
+            videoViewModel.downloadSingleVideo(downloadEntry);
         } else {
-            downloadManager.downloadVideos(downloadEntries, getActivity(), CourseOutlineFragment.this);
+            MediaConsentUtils.requestStreamMedia(requireActivity(), new IDialogCallback() {
+                @Override
+                public void onPositiveClicked() {
+                    videoViewModel.downloadMultipleVideos((List<HasDownloadEntry>) downloadEntries);
+                }
+
+                @Override
+                public void onNegativeClicked() {
+                    showInfoMessage(getString(R.string.wifi_off_message));
+                    EventBus.getDefault().post(new BulkVideosDownloadCancelledEvent());
+                }
+            });
         }
     }
 
@@ -846,23 +892,6 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }
     }
 
-    @Override
-    public void onDownloadStarted(Long result) {
-        reloadList();
-        updateBulkDownloadFragment();
-    }
-
-    @Override
-    public void onDownloadFailedToStart() {
-        reloadList();
-        updateBulkDownloadFragment();
-    }
-
-    @Override
-    public void showProgressDialog(int numDownloads) {
-    }
-
-    @Override
     public void updateListUI() {
         reloadList();
         updateBulkDownloadFragment();
@@ -878,10 +907,9 @@ public class CourseOutlineFragment extends OfflineSupportBaseFragment implements
         }
     }
 
-    @Override
     public boolean showInfoMessage(String message) {
         final Activity activity = getActivity();
-        return activity != null && activity instanceof BaseFragmentActivity && ((BaseFragmentActivity) getActivity()).showInfoMessage(message);
+        return activity instanceof BaseFragmentActivity && ((BaseFragmentActivity) getActivity()).showInfoMessage(message);
     }
 
     @Override

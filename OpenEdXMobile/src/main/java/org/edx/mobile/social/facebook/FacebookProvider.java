@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.facebook.AccessToken;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.social.SocialLoginDelegate;
+import org.edx.mobile.social.SocialLoginDelegate.SocialUserInfoCallback;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 
@@ -36,7 +36,7 @@ public class FacebookProvider implements SocialProvider {
     }
 
     public void getUserInfo(Context context, String accessToken,
-                            final SocialLoginDelegate.SocialUserInfoCallback userInfoCallback) {
+                            final SocialUserInfoCallback userInfoCallback) {
         getUser(new SocialProvider.Callback<SocialMember>() {
             @Override
             public void onSuccess(SocialMember response) {
