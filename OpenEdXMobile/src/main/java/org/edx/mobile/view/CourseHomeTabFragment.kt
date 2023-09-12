@@ -314,9 +314,7 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
                     override fun onNegativeClicked() {
                         EventBus.getDefault().post(BulkVideosDownloadCancelledEvent())
                     }
-                }).apply {
-                    show(requireActivity().supportFragmentManager, "dialog")
-                }
+                }).show(childFragmentManager, "dialog")
             }
         })
 

@@ -1,7 +1,6 @@
 package org.edx.mobile.viewModel
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.graphics.Rect
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -15,6 +14,7 @@ import org.edx.mobile.event.ProfilePhotoUpdatedEvent
 import org.edx.mobile.model.user.FormDescription
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.third_party.crop.CropUtil
+import org.edx.mobile.util.FileUtil
 import org.edx.mobile.util.IOUtils
 import org.edx.mobile.util.observer.Event
 import org.edx.mobile.util.observer.postEvent
@@ -93,22 +93,26 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun copyUriContentToFile(
+        activity: Activity,
         uri: Uri,
-        outputFile: File,
-        contentResolver: ContentResolver
     ) {
         viewModelScope.launch {
-            try {
-                contentResolver.openInputStream(uri)?.use { inputStream ->
-                    FileOutputStream(outputFile).use { outputStream ->
-                        IOUtils.copy(inputStream, outputStream)
+            if ("file" != uri.scheme) {
+                try {
+                    val fileUri = FileUtil.getFileUriFromMediaStoreUri(activity, uri) ?: uri
+                    val filename = "cropped-image" + System.currentTimeMillis() + ".jpg"
+                    val outputFile = File(activity.externalCacheDir, filename)
+
+                    activity.contentResolver.openInputStream(fileUri)?.use { inputStream ->
+                        FileOutputStream(outputFile).use { outputStream ->
+                            IOUtils.copy(inputStream, outputStream)
+                        }
                     }
+                    _croppedImageUri.postValue(Uri.fromFile(outputFile))
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                throw e
             }
-            _croppedImageUri.postValue(Uri.fromFile(outputFile))
         }
     }
 }

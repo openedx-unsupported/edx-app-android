@@ -17,12 +17,9 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.third_party.subscaleview.ImageSource;
-import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.NonNullObserver;
 import org.edx.mobile.view.custom.CropImageView;
 import org.edx.mobile.viewModel.ProfileViewModel;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -67,21 +64,7 @@ public class CropImageActivity extends BaseFragmentActivity {
         initObservers();
 
         Uri uri = getIntent().getParcelableExtra(EXTRA_IMAGE_URI);
-
-        if (!"file".equals(uri.getScheme())) {
-            try {
-                Uri fileUri = FileUtil.getFileUriFromMediaStoreUri(this, uri);
-                if (fileUri != null) {
-                    uri = fileUri;
-                }
-                String filename = "cropped-image" + System.currentTimeMillis() + ".jpg";
-                File outputFile = new File(this.getExternalCacheDir(), filename);
-
-                profileViewModel.copyUriContentToFile(uri, outputFile, getContentResolver());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        profileViewModel.copyUriContentToFile(this, uri);
 
         findViewById(R.id.cancel).setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.PROFILE_CROP_PHOTO);
