@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDiscussionThreadPostsBinding;
@@ -189,8 +189,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     }
 
     @Override
-    protected ListView getDiscussionPostsListView() {
-        return binding.discussionPostsListview;
+    protected RecyclerView getDiscussionPostsRecyclerView() {
+        return binding.discussionPostsRv;
     }
 
     private void parseExtras() {
@@ -237,7 +237,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             actionItem = discussionTopic.getName();
         }
         values.put(Analytics.Keys.TOPIC_ID, topicId);
-        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FORUM_VIEW_TOPIC_THREADS,
+        analyticsRegistry.trackScreenView(Analytics.Screens.FORUM_VIEW_TOPIC_THREADS,
                 courseData.getCourse().getId(), actionItem, values);
     }
 
@@ -251,9 +251,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
-        for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
+        for (int i = 0; i < discussionPostsAdapter.getItemCount(); ++i) {
             if (discussionPostsAdapter.getItem(i).hasSameId(event.getDiscussionThread())) {
-                discussionPostsAdapter.replace(event.getDiscussionThread(), i);
+                discussionPostsAdapter.updateItem(event.getDiscussionThread(), i);
                 break;
             }
         }
@@ -263,7 +263,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         // If a new response/comment was posted in a listed thread, we need to update the list
-        for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
+        for (int i = 0; i < discussionPostsAdapter.getItemCount(); ++i) {
             final DiscussionThread discussionThread = discussionPostsAdapter.getItem(i);
             if (discussionThread.containsComment(event.getComment())) {
                 // No need to update the discussionThread object because its already updated on
@@ -292,14 +292,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
 
             int i = 0;
-            for (; i < discussionPostsAdapter.getCount(); ++i) {
+            for (; i < discussionPostsAdapter.getItemCount(); ++i) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
                     break;
                 }
             }
             discussionPostsAdapter.insert(newThread, i);
             // move the ListView's scroll to that newly added post's position
-            binding.discussionPostsListview.setSelection(i);
+            discussionPostsAdapter.selectedItem(i);
             // In case this is the first addition, we need to hide the no-item-view
             setScreenStateUponResult();
         }
@@ -321,7 +321,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private void clearListAndLoadFirstPage() {
         nextPage = 1;
-        binding.discussionPostsListview.setVisibility(View.INVISIBLE);
+        binding.discussionPostsRv.setVisibility(View.INVISIBLE);
         binding.centerMessageBox.setVisibility(View.GONE);
         controller.reset();
     }
@@ -357,7 +357,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 ++nextPage;
                 callback.onPageLoaded(threadsPage);
 
-                if (discussionPostsAdapter.getCount() == 0) {
+                if (discussionPostsAdapter.getItemCount() == 0) {
                     if (discussionTopic.isAllType()) {
                         setScreenStateUponError(EmptyQueryResultsFor.COURSE);
                     } else if (discussionTopic.isFollowingType()) {
@@ -412,14 +412,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         binding.centerMessageBox.setText(resultsText);
         binding.centerMessageBox.setVisibility(View.VISIBLE);
-        binding.discussionPostsListview.setVisibility(View.INVISIBLE);
+        binding.discussionPostsRv.setVisibility(View.INVISIBLE);
     }
 
     private void setScreenStateUponResult() {
         errorNotification.hideError();
         binding.centerMessageBox.setVisibility(View.GONE);
         binding.spinnersContainer.setVisibility(View.VISIBLE);
-        binding.discussionPostsListview.setVisibility(View.VISIBLE);
+        binding.discussionPostsRv.setVisibility(View.VISIBLE);
     }
 
     @NonNull

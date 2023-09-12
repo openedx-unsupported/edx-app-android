@@ -1,6 +1,7 @@
 package org.edx.mobile.extenstion
 
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,6 +12,7 @@ import android.text.style.ImageSpan
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.widget.TextView
+import androidx.annotation.StyleRes
 import androidx.core.text.HtmlCompat
 
 fun TextView.addAfterTextChanged(listener: (Editable) -> Unit) {
@@ -85,4 +87,14 @@ fun TextView.setTextWithIcon(fullText: String, drawable: Drawable, targetText: S
         spannableString.setSpan(imageSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
     this.text = spannableString
+}
+
+fun TextView.setCustomTextAppearance(@StyleRes resId: Int) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        // Use the new method available in Android 12 and later
+        this.setTextAppearance(resId);
+    } else {
+        // Fallback for earlier Android versions
+        this.setTextAppearance(this.context, resId);
+    }
 }

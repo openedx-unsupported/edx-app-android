@@ -12,4 +12,5 @@
     android:singleLine="true"
     android:textDirection="locale"
     android:textSize="@dimen/edx_base"
+    android:background="@drawable/view_selector"
     tools:text="Topic Name" />
