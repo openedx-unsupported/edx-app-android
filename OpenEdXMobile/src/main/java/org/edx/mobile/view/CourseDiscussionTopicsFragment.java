@@ -18,7 +18,6 @@ import org.edx.mobile.event.CourseDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
-import org.edx.mobile.interfaces.OnItemClickListener;
 import org.edx.mobile.interfaces.RefreshListener;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -57,8 +56,8 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
 
     private FullScreenErrorNotification errorNotification;
     private FragmentDiscussionTopicsBinding binding;
-    private List<DiscussionTopicDepth> topicsList = new ArrayList<>();
-    private OnItemClickListener<DiscussionTopicDepth> listener;
+    private final List<DiscussionTopicDepth> topicsList = new ArrayList<>();
+    private DiscussionTopicsAdapter adapter;
 
     @Nullable
     @Override
@@ -72,18 +71,16 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         errorNotification = new FullScreenErrorNotification((View) binding.discussionTopicsRv.getParent());
-        listener = item -> {
-            router.showCourseDiscussionPostsForDiscussionTopic(
-                    requireActivity(),
-                    item.getDiscussionTopic(),
-                    courseData);
-        };
         DividerItemDecoration itemDecorator = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         itemDecorator.setDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.list_item_divider));
         binding.discussionTopicsRv.addItemDecoration(itemDecorator);
-        addDiscussionHeaders();
-        binding.discussionTopicsRv.setAdapter(new DiscussionTopicsAdapter(topicsList, listener));
-
+        adapter = new DiscussionTopicsAdapter(
+                item -> router.showCourseDiscussionPostsForDiscussionTopic(
+                        requireActivity(),
+                        item.getDiscussionTopic(),
+                        courseData)
+        );
+        binding.discussionTopicsRv.setAdapter(adapter);
 
         binding.discussionTopicsSearchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -103,14 +100,17 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
         showCourseDiscussionTopic();
     }
 
-    private void addDiscussionHeaders() {
-        topicsList.clear();
+    /**
+     * Method to return custom headers to the topics list
+     */
+    private List<DiscussionTopicDepth> getTopicsHeaders() {
+        final List<DiscussionTopicDepth> headerList = new ArrayList<>();
         // Add "All posts" item
         {
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.ALL_TOPICS_ID);
             discussionTopic.setName(getString(R.string.discussion_posts_filter_all_posts));
-            topicsList.add(new DiscussionTopicDepth(discussionTopic, 0, true));
+            headerList.add(new DiscussionTopicDepth(discussionTopic, 0, true));
         }
 
         // Add "Posts I'm following" item
@@ -118,8 +118,9 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);
             discussionTopic.setName(getString(R.string.forum_post_i_am_following));
-            topicsList.add(new DiscussionTopicDepth(discussionTopic, 0, true));
+            headerList.add(new DiscussionTopicDepth(discussionTopic, 0, true));
         }
+        return headerList;
     }
 
     private void getTopicList() {
@@ -137,10 +138,12 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
                 ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
                 allTopics.addAll(courseTopics.getCoursewareTopics());
-                addDiscussionHeaders();
                 List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                topicsList.clear();
+                topicsList.addAll(getTopicsHeaders());
                 topicsList.addAll(allTopicsWithDepth);
-                binding.discussionTopicsRv.getAdapter().notifyDataSetChanged();
+                adapter.submitList(topicsList);
+                adapter.notifyItemRangeInserted(0, topicsList.size());
             }
 
             @Override

@@ -92,10 +92,6 @@ object UiUtils {
         )
     }
 
-    fun setImageViewColor(context: Context, imageView: AppCompatImageView, colorRes: Int) {
-        imageView.setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
-    }
-
     private fun setDrawableSize(context: Context, drawable: Drawable, resSize: Int): Drawable {
         val bitmap = Bitmap.createBitmap(
                 drawable.intrinsicWidth,

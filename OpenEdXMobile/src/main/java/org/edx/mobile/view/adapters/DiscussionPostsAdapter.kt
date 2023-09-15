@@ -17,10 +17,9 @@ import org.edx.mobile.extenstion.setSrcColor
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.model.discussion.DiscussionThread
-import org.edx.mobile.model.discussion.FormatedCount
+import org.edx.mobile.model.discussion.formattedCount
 import org.edx.mobile.util.ResourceUtil
 import org.edx.mobile.util.UiUtils.getDrawable
-import org.edx.mobile.util.UiUtils.setImageViewColor
 
 class DiscussionPostsAdapter(
     private val listener: OnItemClickListener<DiscussionThread>
@@ -118,7 +117,7 @@ class DiscussionPostsAdapter(
                 discussionPostRepliesCount.setVisibility(commentCount > 0)
                 val totalReplies = ResourceUtil.getFormattedString(
                     context.resources, R.string.discussion_post_total_replies,
-                    "total_replies", discussionThread.commentCount.FormatedCount()
+                    "total_replies", discussionThread.commentCount.formattedCount()
                 )
                 discussionPostRepliesCount.text = totalReplies
             }
@@ -138,7 +137,7 @@ class DiscussionPostsAdapter(
                 val unreadCommentCount = discussionThread.unreadCommentCount
                 discussionUnreadRepliesText.setInVisible(unreadCommentCount == 0)
                 discussionUnreadRepliesText.text =
-                    discussionThread.unreadCommentCount.FormatedCount()
+                    discussionThread.unreadCommentCount.formattedCount()
             }
             root.setOnClickListener { listener.onItemClick(discussionThread) }
             root.isSelected = position == selectedItemPosition
@@ -183,7 +182,7 @@ class DiscussionPostsAdapter(
 
     fun insert(item: DiscussionThread, position: Int) {
         items.add(position, item)
-        notifyItemInserted(position)
+        notifyItemRangeChanged(0, position)
     }
 
     fun selectedItem(position: Int) {
@@ -196,8 +195,7 @@ class DiscussionPostsAdapter(
     }
 
     fun updateItem(item: DiscussionThread, position: Int) {
-        items[position] = item
-        notifyItemChanged(position)
+        notifyItemChanged(position, item)
     }
 
     override fun getItemViewType(position: Int): Int {

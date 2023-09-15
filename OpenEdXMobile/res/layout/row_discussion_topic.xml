@@ -5,6 +5,7 @@
     style="@style/regular_edx_black_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/view_selector"
     android:drawablePadding="@dimen/edx_margin"
     android:ellipsize="end"
     android:gravity="center_vertical"
@@ -12,5 +13,4 @@
     android:singleLine="true"
     android:textDirection="locale"
     android:textSize="@dimen/edx_base"
-    android:background="@drawable/view_selector"
     tools:text="Topic Name" />

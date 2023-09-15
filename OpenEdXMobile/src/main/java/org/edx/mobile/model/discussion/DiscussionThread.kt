@@ -211,4 +211,4 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
  * @return 99+ if the count is equal to or greater than 99, otherwise the actual count
  * as a String.
  */
-fun Int.FormatedCount(): String = if (this >= 99) "99+" else this.toString()
+fun Int.formattedCount(): String = if (this >= 99) "99+" else this.toString()

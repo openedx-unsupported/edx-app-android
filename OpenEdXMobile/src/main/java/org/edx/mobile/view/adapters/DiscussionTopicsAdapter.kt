@@ -3,18 +3,24 @@ package org.edx.mobile.view.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.edx.mobile.R
 import org.edx.mobile.databinding.RowDiscussionTopicBinding
+import org.edx.mobile.interfaces.ItemsComparator
 import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.model.discussion.DiscussionTopicDepth
 import org.edx.mobile.util.UiUtils.setTextViewDrawableStart
 
 class DiscussionTopicsAdapter(
-    private val items: List<DiscussionTopicDepth>,
     private val listener: OnItemClickListener<DiscussionTopicDepth>
-) :
-    RecyclerView.Adapter<DiscussionTopicsAdapter.DiscussionTopicViewHolder>() {
+) : ListAdapter<DiscussionTopicDepth, DiscussionTopicsAdapter.DiscussionTopicViewHolder>(object :
+    ItemsComparator<DiscussionTopicDepth>() {
+    override fun areContentsTheSame(
+        oldItem: DiscussionTopicDepth,
+        newItem: DiscussionTopicDepth
+    ): Boolean = oldItem.discussionTopic.hasSameId(newItem.discussionTopic)
+}) {
     private var childPadding: Int = 0
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,7 +36,7 @@ class DiscussionTopicsAdapter(
         holder: DiscussionTopicViewHolder,
         position: Int
     ) {
-        val item = items[position]
+        val item = getItem(position)
         holder.binding.apply {
             if (getItemViewType(position) == VIEW_TYPE_HEADER) {
                 setTextViewDrawableStart(
@@ -49,8 +55,6 @@ class DiscussionTopicsAdapter(
             )
         }
     }
-
-    override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 1) VIEW_TYPE_HEADER else 1

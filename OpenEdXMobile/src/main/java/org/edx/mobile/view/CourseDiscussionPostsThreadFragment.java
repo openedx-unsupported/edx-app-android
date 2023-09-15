@@ -201,7 +201,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
         final Activity activity = requireActivity();
         discussionService.getSpecificCourseTopics(courseData.getCourse().getId(),
-                Collections.singletonList(topicId))
+                        Collections.singletonList(topicId))
                 .enqueue(new ErrorHandlingCallback<CourseTopics>(activity,
                         new ProgressViewController(binding.loadingIndicator.loadingIndicator), errorNotification) {
                     @Override
@@ -251,8 +251,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
-        for (int i = 0; i < discussionPostsAdapter.getItemCount(); ++i) {
-            if (discussionPostsAdapter.getItem(i).hasSameId(event.getDiscussionThread())) {
+        for (int i = 0; i < discussionPostsAdapter.getItemCount(); i++) {
+            DiscussionThread item = discussionPostsAdapter.getItem(i);
+            if (item.hasSameId(event.getDiscussionThread())) {
                 discussionPostsAdapter.updateItem(event.getDiscussionThread(), i);
                 break;
             }
@@ -263,7 +264,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         // If a new response/comment was posted in a listed thread, we need to update the list
-        for (int i = 0; i < discussionPostsAdapter.getItemCount(); ++i) {
+        for (int i = 0; i < discussionPostsAdapter.getItemCount(); i++) {
             final DiscussionThread discussionThread = discussionPostsAdapter.getItem(i);
             if (discussionThread.containsComment(event.getComment())) {
                 // No need to update the discussionThread object because its already updated on
@@ -274,7 +275,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 // sharing of the objects in an unpredictable manner by always cloning or copying
                 // from them, or on the other extreme, having a central memory cache with
                 // registered observers so that the objects are always shared.
-                discussionPostsAdapter.notifyDataSetChanged();
+                discussionPostsAdapter.notifyItemRangeChanged(0, i);
                 break;
             }
         }
@@ -292,7 +293,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
 
             int i = 0;
-            for (; i < discussionPostsAdapter.getItemCount(); ++i) {
+            for (; i < discussionPostsAdapter.getItemCount(); i++) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
                     break;
                 }
@@ -300,6 +301,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             discussionPostsAdapter.insert(newThread, i);
             // move the ListView's scroll to that newly added post's position
             discussionPostsAdapter.selectedItem(i);
+            getDiscussionPostsRecyclerView().scrollToPosition(i);
             // In case this is the first addition, we need to hide the no-item-view
             setScreenStateUponResult();
         }

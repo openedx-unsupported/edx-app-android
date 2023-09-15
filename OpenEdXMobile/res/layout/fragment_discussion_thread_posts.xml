@@ -57,6 +57,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:visibility="invisible"
+            tools:itemCount="4"
             tools:listitem="@layout/row_discussion_thread"
             tools:visibility="visible" />
 

@@ -21,6 +21,9 @@ abstract class VideoQualityAdapter(
         R.layout.video_quality_row_item,
         environment
     ) {
+    override fun replace(item: VideoQuality?, position: Int) {
+        super.replace(item, position)
+    }
 
     override fun render(tag: BaseViewHolder?, model: VideoQuality) {
         val holder = tag as ViewHolder
