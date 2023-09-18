@@ -26,7 +26,7 @@ class DiscussionPostsAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     InfiniteScrollUtils.ListContentController<DiscussionThread> {
 
-    private val items: MutableList<DiscussionThread> = mutableListOf()
+    private val items: ArrayList<DiscussionThread> = arrayListOf()
 
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private val initialTimeStampMs = System.currentTimeMillis()
@@ -63,85 +63,132 @@ class DiscussionPostsAdapter(
         if (getItemViewType(position) == RowType.PROGRESS) return
         val itemHolder = holder as DiscussionPostViewHolder
         val discussionThread = items[position]
-        val context = itemHolder.binding.root.context
         itemHolder.binding.apply {
-            run {
-                @DrawableRes val iconResId: Int
-                @ColorRes val iconColorRes: Int
-                if (discussionThread.type === DiscussionThread.ThreadType.QUESTION) {
-                    if (discussionThread.isHasEndorsed) {
-                        iconResId = R.drawable.ic_verified
-                        iconColorRes = R.color.successBase
-                    } else {
-                        iconResId = R.drawable.ic_help_center
-                        iconColorRes = R.color.secondaryDarkColor
-                    }
+            initView(this, discussionThread)
+            root.isSelected = position == selectedItemPosition
+            root.setOnClickListener { listener.onItemClick(discussionThread) }
+        }
+    }
+
+    private fun initView(binding: RowDiscussionThreadBinding, discussionThread: DiscussionThread) {
+        binding.apply {
+            setThreadType(this, discussionThread)
+            setViewsAppearance(this, discussionThread)
+            setIconVisibility(this, discussionThread)
+            setTotalReplies(this, discussionThread)
+            setLastUpdate(this, discussionThread)
+            setUnreadReplies(this, discussionThread)
+        }
+    }
+
+    private fun setThreadType(
+        binding: RowDiscussionThreadBinding,
+        discussionThread: DiscussionThread
+    ) {
+        binding.apply {
+            @DrawableRes val iconResId: Int
+            @ColorRes val iconColorRes: Int
+            if (discussionThread.type === DiscussionThread.ThreadType.QUESTION) {
+                if (discussionThread.isHasEndorsed) {
+                    iconResId = R.drawable.ic_verified
+                    iconColorRes = R.color.successBase
                 } else {
-                    iconResId = R.drawable.ic_chat
-                    iconColorRes =
-                        if (discussionThread.isRead) R.color.neutralXDark else R.color.primaryBaseColor
+                    iconResId = R.drawable.ic_help_center
+                    iconColorRes = R.color.secondaryDarkColor
                 }
-                discussionPostTypeIcon.setImageDrawable(
-                    getDrawable(
-                        context,
-                        iconResId,
-                        0,
-                        iconColorRes
-                    )
+            } else {
+                iconResId = R.drawable.ic_chat
+                iconColorRes =
+                    if (discussionThread.isRead) R.color.neutralXDark else R.color.primaryBaseColor
+            }
+            discussionPostTypeIcon.setImageDrawable(
+                getDrawable(
+                    root.context,
+                    iconResId,
+                    0,
+                    iconColorRes
                 )
+            )
+        }
+    }
+
+    private fun setViewsAppearance(
+        binding: RowDiscussionThreadBinding,
+        discussionThread: DiscussionThread
+    ) {
+        binding.apply {
+            val threadTitle: CharSequence? = discussionThread.title
+            discussionPostTitle.text = threadTitle
+            if (!discussionThread.isRead) {
+                discussionPostTitle.setCustomTextAppearance(R.style.discussion_title_text)
+                discussionPostTitle.typeface =
+                    ResourcesCompat.getFont(root.context, R.font.inter_semi_bold)
+            } else {
+                discussionPostTitle.setCustomTextAppearance(R.style.discussion_responses_read)
+                discussionPostRepliesCount.setCustomTextAppearance(R.style.discussion_responses_read)
+                discussionPostDate.setCustomTextAppearance(R.style.discussion_responses_read)
+                discussionUnreadRepliesText.setCustomTextAppearance(R.style.discussion_responses_read)
+                discussionPostTypeIcon.setSrcColor(R.color.neutralXDark)
+                discussionPostClosedIcon.setSrcColor(R.color.neutralXDark)
+                discussionPostPinIcon.setSrcColor(R.color.neutralXDark)
+                discussionPostFollowingIcon.setSrcColor(R.color.neutralXDark)
             }
-            run {
-                val threadTitle: CharSequence? = discussionThread.title
-                discussionPostTitle.text = threadTitle
-                if (!discussionThread.isRead) {
-                    discussionPostTitle.setCustomTextAppearance(R.style.discussion_title_text)
-                    discussionPostTitle.typeface =
-                        ResourcesCompat.getFont(root.context, R.font.inter_semi_bold)
-                } else {
-                    discussionPostTitle.setCustomTextAppearance(R.style.discussion_responses_read)
-                    discussionPostRepliesCount.setCustomTextAppearance(R.style.discussion_responses_read)
-                    discussionPostDate.setCustomTextAppearance(R.style.discussion_responses_read)
-                    discussionUnreadRepliesText.setCustomTextAppearance(R.style.discussion_responses_read)
-                    discussionPostTypeIcon.setSrcColor(R.color.neutralXDark)
-                    discussionPostClosedIcon.setSrcColor(R.color.neutralXDark)
-                    discussionPostPinIcon.setSrcColor(R.color.neutralXDark)
-                    discussionPostFollowingIcon.setSrcColor(R.color.neutralXDark)
-                }
-            }
+        }
+    }
+
+    private fun setIconVisibility(
+        binding: RowDiscussionThreadBinding,
+        discussionThread: DiscussionThread
+    ) {
+        binding.apply {
             discussionPostClosedIcon.setVisibility(discussionThread.isClosed)
             discussionPostPinIcon.setVisibility(discussionThread.isPinned)
             discussionPostFollowingIcon.setVisibility(discussionThread.isFollowing)
-            run {
-                val commentCount = discussionThread.commentCount
-                discussionSubtitleFirstPipe.setVisibility(commentCount > 0 && discussionThread.isAnyIconVisible())
-                discussionPostRepliesCount.setVisibility(commentCount > 0)
-                val totalReplies = ResourceUtil.getFormattedString(
-                    context.resources, R.string.discussion_post_total_replies,
-                    "total_replies", discussionThread.commentCount.formattedCount()
-                )
-                discussionPostRepliesCount.text = totalReplies
-            }
-            run {
-                val lastPostDate = DiscussionTextUtils.getRelativeTimeSpanString(
-                    context,
-                    initialTimeStampMs, discussionThread.updatedAt!!.time,
-                    DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_YEAR
-                )
-                discussionSubtitleSecondPipe.setVisibility(discussionThread.isAnyIconVisible() || discussionThread.commentCount != 0)
-                discussionPostDate.text = ResourceUtil.getFormattedString(
-                    context.resources, R.string.discussion_post_last_interaction_date,
-                    "date", lastPostDate
-                )
-            }
-            run {
-                val unreadCommentCount = discussionThread.unreadCommentCount
-                discussionUnreadRepliesText.setInVisible(unreadCommentCount == 0)
-                discussionUnreadRepliesText.text =
-                    discussionThread.unreadCommentCount.formattedCount()
-            }
-            root.setOnClickListener { listener.onItemClick(discussionThread) }
-            root.isSelected = position == selectedItemPosition
         }
+    }
+
+    private fun setTotalReplies(
+        binding: RowDiscussionThreadBinding,
+        discussionThread: DiscussionThread
+    ) {
+        binding.apply {
+            val commentCount = discussionThread.commentCount
+            discussionSubtitleFirstPipe.setVisibility(commentCount > 0 && discussionThread.isAnyIconVisible())
+            discussionPostRepliesCount.setVisibility(commentCount > 0)
+            val totalReplies = ResourceUtil.getFormattedString(
+                root.resources, R.string.discussion_post_total_replies,
+                "total_replies", discussionThread.commentCount.formattedCount()
+            )
+            discussionPostRepliesCount.text = totalReplies
+        }
+    }
+
+    private fun setLastUpdate(
+        binding: RowDiscussionThreadBinding,
+        discussionThread: DiscussionThread
+    ) {
+        binding.apply {
+            val lastPostDate = DiscussionTextUtils.getRelativeTimeSpanString(
+                root.context,
+                initialTimeStampMs, discussionThread.updatedAt?.time ?: 0,
+                DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_YEAR
+            )
+            discussionSubtitleSecondPipe.setVisibility(discussionThread.isAnyIconVisible() || discussionThread.commentCount != 0)
+            discussionPostDate.text = ResourceUtil.getFormattedString(
+                root.resources, R.string.discussion_post_last_interaction_date,
+                "date", lastPostDate
+            )
+        }
+    }
+
+    private fun setUnreadReplies(
+        binding: RowDiscussionThreadBinding,
+        discussionThread: DiscussionThread
+    ) {
+        val unreadCommentCount = discussionThread.unreadCommentCount
+        binding.discussionUnreadRepliesText.setInVisible(unreadCommentCount == 0)
+        binding.discussionUnreadRepliesText.text =
+            discussionThread.unreadCommentCount.formattedCount()
     }
 
     override fun getItemCount(): Int {
@@ -195,7 +242,8 @@ class DiscussionPostsAdapter(
     }
 
     fun updateItem(item: DiscussionThread, position: Int) {
-        notifyItemChanged(position, item)
+        items.add(0, item)
+        notifyItemMoved(position, 0)
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -7,29 +7,26 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.edx.mobile.R
 import org.edx.mobile.databinding.RowDiscussionTopicBinding
-import org.edx.mobile.interfaces.ItemsComparator
 import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.model.discussion.DiscussionTopicDepth
-import org.edx.mobile.util.UiUtils.setTextViewDrawableStart
+import org.edx.mobile.util.UiUtils
 
 class DiscussionTopicsAdapter(
     private val listener: OnItemClickListener<DiscussionTopicDepth>
-) : ListAdapter<DiscussionTopicDepth, DiscussionTopicsAdapter.DiscussionTopicViewHolder>(object :
-    ItemsComparator<DiscussionTopicDepth>() {
-    override fun areContentsTheSame(
-        oldItem: DiscussionTopicDepth,
-        newItem: DiscussionTopicDepth
-    ): Boolean = oldItem.discussionTopic.hasSameId(newItem.discussionTopic)
-}) {
-    private var childPadding: Int = 0
+) : ListAdapter<DiscussionTopicDepth, DiscussionTopicsAdapter.DiscussionTopicViewHolder>(
+    DiscussionTopicDepth.DiscussionTopicsComparator()
+) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): DiscussionTopicViewHolder {
-        val binding =
-            RowDiscussionTopicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        childPadding = parent.context.resources.getDimensionPixelOffset(R.dimen.edx_margin);
-        return DiscussionTopicViewHolder(binding)
+        return DiscussionTopicViewHolder(
+            RowDiscussionTopicBinding.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ), parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(
@@ -37,27 +34,30 @@ class DiscussionTopicsAdapter(
         position: Int
     ) {
         val item = getItem(position)
-        holder.binding.apply {
+        holder.binding.discussionTopicNameTextView.apply {
+            text = item.discussionTopic.getTopicTitle(resources)
+
             if (getItemViewType(position) == VIEW_TYPE_HEADER) {
-                setTextViewDrawableStart(
-                    root.context, discussionTopicNameTextView, R.drawable.ic_star_rate,
+                UiUtils.setTextViewDrawableStart(
+                    context, this, R.drawable.ic_star_rate,
                     R.dimen.edx_base, R.color.primaryBaseColor
                 )
             }
-            discussionTopicNameTextView.text = item.discussionTopic.getTopicTitle(root.resources)
-            this.root.setOnClickListener { listener.onItemClick(item) }
+            val childPadding = context.resources.getDimensionPixelOffset(R.dimen.edx_margin);
+
             ViewCompat.setPaddingRelative(
-                discussionTopicNameTextView,
+                this,
                 childPadding * (1 + item.depth),
                 childPadding,
                 childPadding,
                 childPadding
             )
+            setOnClickListener { listener.onItemClick(item) }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 1) VIEW_TYPE_HEADER else 1
+        return if (position == 1) VIEW_TYPE_HEADER else VIEW_TYPE_ITEM
     }
 
     class DiscussionTopicViewHolder(val binding: RowDiscussionTopicBinding) :
@@ -65,5 +65,6 @@ class DiscussionTopicsAdapter(
 
     companion object {
         private const val VIEW_TYPE_HEADER = 0
+        private const val VIEW_TYPE_ITEM = 1
     }
 }

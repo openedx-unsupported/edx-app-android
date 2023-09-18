@@ -195,6 +195,7 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
      * Checks whether an icon is visible in the action layout.
      * Based on the result of this function we decide if we need to append
      * a pipe sign before the following text to the icons.
+     * i.e, <icon> | 2 totals | Last post: 1 minute ago
      *
      * @return `true` if a thread is closed, pinned or being followed by a user,
      * `false` otherwise.

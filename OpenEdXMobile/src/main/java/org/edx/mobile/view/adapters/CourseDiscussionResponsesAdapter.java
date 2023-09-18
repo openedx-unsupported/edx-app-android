@@ -20,7 +20,6 @@ import org.edx.mobile.discussion.DiscussionService.FlagBody;
 import org.edx.mobile.discussion.DiscussionService.FollowBody;
 import org.edx.mobile.discussion.DiscussionService.VoteBody;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -34,7 +33,6 @@ import org.edx.mobile.view.custom.EdxDiscussionBody;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +201,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                                 @Override
                                 protected void onResponse(@NonNull final DiscussionThread topicThread) {
                                     discussionThread = discussionThread.patchObject(topicThread);
-                                    EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                                 }
 
                                 @Override
@@ -232,7 +229,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                             }
 
                             @Override
@@ -254,7 +250,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                             @Override
                             protected void onResponse(@NonNull final DiscussionThread updatedDiscussionThread) {
                                 discussionThread = discussionThread.patchObject(updatedDiscussionThread);
-                                EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
                             }
 
                             @Override

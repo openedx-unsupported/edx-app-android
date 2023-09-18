@@ -20,7 +20,6 @@ import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
-import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.Page;
@@ -249,19 +248,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @Subscribe
     @SuppressWarnings("unused")
-    public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
-        // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
-        for (int i = 0; i < discussionPostsAdapter.getItemCount(); i++) {
-            DiscussionThread item = discussionPostsAdapter.getItem(i);
-            if (item.hasSameId(event.getDiscussionThread())) {
-                discussionPostsAdapter.updateItem(event.getDiscussionThread(), i);
-                break;
-            }
-        }
-    }
-
-    @Subscribe
-    @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         // If a new response/comment was posted in a listed thread, we need to update the list
         for (int i = 0; i < discussionPostsAdapter.getItemCount(); i++) {
@@ -269,13 +255,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             if (discussionThread.containsComment(event.getComment())) {
                 // No need to update the discussionThread object because its already updated on
                 // the responses screen and is shared on both screens, because it's queried via
-                // a PATCH call in the responses screen to mark it as read, and the response is
-                // broadcasted on the event bus as a DiscussionThreadUpdatedEvent, which is then
-                // used to replace the existing model. A better approach may be to not allow
+                // a PATCH call in the responses screen to mark it as read. A better approach may be to not allow
                 // sharing of the objects in an unpredictable manner by always cloning or copying
                 // from them, or on the other extreme, having a central memory cache with
                 // registered observers so that the objects are always shared.
-                discussionPostsAdapter.notifyItemRangeChanged(0, i);
+                discussionPostsAdapter.updateItem(discussionThread, discussionPostsAdapter.getItemPosition(discussionThread));
                 break;
             }
         }

@@ -56,7 +56,6 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
 
     private FullScreenErrorNotification errorNotification;
     private FragmentDiscussionTopicsBinding binding;
-    private final List<DiscussionTopicDepth> topicsList = new ArrayList<>();
     private DiscussionTopicsAdapter adapter;
 
     @Nullable
@@ -138,12 +137,9 @@ public class CourseDiscussionTopicsFragment extends OfflineSupportBaseFragment
                 ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
                 allTopics.addAll(courseTopics.getCoursewareTopics());
-                List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
-                topicsList.clear();
-                topicsList.addAll(getTopicsHeaders());
-                topicsList.addAll(allTopicsWithDepth);
-                adapter.submitList(topicsList);
-                adapter.notifyItemRangeInserted(0, topicsList.size());
+                List<DiscussionTopicDepth> allTopicsWithDepth = getTopicsHeaders();
+                allTopicsWithDepth.addAll(DiscussionTopicDepth.createFromDiscussionTopics(allTopics));
+                adapter.submitList(allTopicsWithDepth);
             }
 
             @Override

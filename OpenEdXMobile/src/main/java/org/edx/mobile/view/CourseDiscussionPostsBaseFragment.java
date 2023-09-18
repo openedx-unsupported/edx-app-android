@@ -52,7 +52,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
                 // Refresh the row to mark it as read immediately.
                 // There will be a silent refresh upon return to this Activity.
                 item.setRead(true);
-                discussionPostsAdapter.updateItem(item, discussionPostsAdapter.getItemPosition(item));
+                discussionPostsAdapter.notifyItemChanged(discussionPostsAdapter.getItemPosition(item));
             }
         });
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(getDiscussionPostsRecyclerView(), discussionPostsAdapter, this);

@@ -1,9 +1,6 @@
 package org.edx.mobile.extenstion
 
 import android.view.View
-import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
 
 fun View.isVisible(): Boolean = this.visibility == View.VISIBLE
 
