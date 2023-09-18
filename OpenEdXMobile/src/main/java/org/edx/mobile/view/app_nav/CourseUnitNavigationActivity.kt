@@ -223,7 +223,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     private fun onLoadData() {
         subsection = courseComponentId?.let { componentId ->
             val component = courseManager.getComponentById(courseData.courseId, componentId)
-            if (component?.isLastChild == true) {
+            if (component?.isContainer == false) { // if the component is the leaf
                 resumedComponent = component
                 // CourseComponent#getAncestor(1) returns the current Subsection of a component
                 component.getAncestor(1)
