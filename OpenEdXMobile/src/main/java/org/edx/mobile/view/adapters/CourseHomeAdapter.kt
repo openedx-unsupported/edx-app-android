@@ -183,9 +183,9 @@ class CourseHomeAdapter(
         private fun updateExpandViewIconState(isChildListVisible: Boolean) {
             binding.ivExpandSection.setImageResource(
                 if (isChildListVisible) {
-                    R.drawable.ic_drop_down
-                } else {
                     R.drawable.ic_drop_up
+                } else {
+                    R.drawable.ic_drop_down
                 }
             )
         }
