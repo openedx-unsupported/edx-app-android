@@ -46,7 +46,6 @@ class DiscussionPostsAdapter(
                 )
                 object : RecyclerView.ViewHolder(binding.root) {}
             }
-
             else -> {
                 val binding =
                     RowDiscussionThreadBinding.inflate(
@@ -64,13 +63,20 @@ class DiscussionPostsAdapter(
         val itemHolder = holder as DiscussionPostViewHolder
         val discussionThread = items[position]
         itemHolder.binding.apply {
-            initView(this, discussionThread)
+            bindView(this, discussionThread)
             root.isSelected = position == selectedItemPosition
-            root.setOnClickListener { listener.onItemClick(discussionThread) }
+            root.setOnClickListener {
+                listener.onItemClick(discussionThread)
+                if (!discussionThread.isRead) {
+                    // Refresh the row to mark it as read immediately.
+                    discussionThread.isRead = true
+                    notifyItemChanged(position)
+                }
+            }
         }
     }
 
-    private fun initView(binding: RowDiscussionThreadBinding, discussionThread: DiscussionThread) {
+    private fun bindView(binding: RowDiscussionThreadBinding, discussionThread: DiscussionThread) {
         binding.apply {
             setThreadType(this, discussionThread)
             setViewsAppearance(this, discussionThread)
@@ -102,12 +108,7 @@ class DiscussionPostsAdapter(
                     if (discussionThread.isRead) R.color.neutralXDark else R.color.primaryBaseColor
             }
             discussionPostTypeIcon.setImageDrawable(
-                getDrawable(
-                    root.context,
-                    iconResId,
-                    0,
-                    iconColorRes
-                )
+                getDrawable(root.context, iconResId, 0, iconColorRes)
             )
         }
     }
@@ -192,21 +193,15 @@ class DiscussionPostsAdapter(
     }
 
     override fun getItemCount(): Int {
-        var total: Int = items.size
-        if (progressVisible) {
-            total++
-        }
-        return total
+        return if (progressVisible) items.size + 1 else items.size
     }
 
     fun getItem(position: Int): DiscussionThread = items[position]
 
-    fun getItemPosition(item: DiscussionThread): Int = items.indexOf(item)
-
     override fun clear() {
         val itemCount: Int = itemCount
         items.clear()
-        notifyItemRangeRemoved(1, itemCount)
+        notifyItemRangeRemoved(0, itemCount)
     }
 
     override fun setProgressVisible(visible: Boolean) {
@@ -227,7 +222,7 @@ class DiscussionPostsAdapter(
         notifyItemRangeInserted(lastItemsCount, itemCount)
     }
 
-    fun insert(item: DiscussionThread, position: Int) {
+    fun insert(position: Int, item: DiscussionThread) {
         items.add(position, item)
         notifyItemRangeChanged(0, position)
     }
@@ -241,14 +236,9 @@ class DiscussionPostsAdapter(
         }
     }
 
-    fun updateItem(item: DiscussionThread, position: Int) {
-        items.add(0, item)
-        notifyItemMoved(position, 0)
-    }
-
     override fun getItemViewType(position: Int): Int {
         return if (progressVisible && position == itemCount - 1) RowType.PROGRESS
-        else 1
+        else RowType.ITEM
     }
 
     class DiscussionPostViewHolder(val binding: RowDiscussionThreadBinding) :
@@ -256,7 +246,8 @@ class DiscussionPostsAdapter(
 
     companion object {
         internal object RowType {
-            const val PROGRESS = 0
+            const val ITEM = 0
+            const val PROGRESS = 1
         }
     }
 }

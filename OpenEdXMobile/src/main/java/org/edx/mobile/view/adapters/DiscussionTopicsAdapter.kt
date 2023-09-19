@@ -43,14 +43,10 @@ class DiscussionTopicsAdapter(
                     R.dimen.edx_base, R.color.primaryBaseColor
                 )
             }
-            val childPadding = context.resources.getDimensionPixelOffset(R.dimen.edx_margin);
 
+            val childPadding = context.resources.getDimensionPixelOffset(R.dimen.edx_margin)
             ViewCompat.setPaddingRelative(
-                this,
-                childPadding * (1 + item.depth),
-                childPadding,
-                childPadding,
-                childPadding
+                this, childPadding * (1 + item.depth), childPadding, childPadding, childPadding
             )
             setOnClickListener { listener.onItemClick(item) }
         }

@@ -47,13 +47,6 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
         super.onViewCreated(view, savedInstanceState);
         discussionPostsAdapter = new DiscussionPostsAdapter(item -> {
             router.showCourseDiscussionResponses(requireContext(), item, courseData);
-
-            if (!item.isRead()) {
-                // Refresh the row to mark it as read immediately.
-                // There will be a silent refresh upon return to this Activity.
-                item.setRead(true);
-                discussionPostsAdapter.notifyItemChanged(discussionPostsAdapter.getItemPosition(item));
-            }
         });
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(getDiscussionPostsRecyclerView(), discussionPostsAdapter, this);
         DividerItemDecoration itemDecorator = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);

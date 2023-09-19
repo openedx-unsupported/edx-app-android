@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentDiscussionThreadPostsBinding;
-import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionService;
@@ -248,25 +247,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @Subscribe
     @SuppressWarnings("unused")
-    public void onEventMainThread(DiscussionCommentPostedEvent event) {
-        // If a new response/comment was posted in a listed thread, we need to update the list
-        for (int i = 0; i < discussionPostsAdapter.getItemCount(); i++) {
-            final DiscussionThread discussionThread = discussionPostsAdapter.getItem(i);
-            if (discussionThread.containsComment(event.getComment())) {
-                // No need to update the discussionThread object because its already updated on
-                // the responses screen and is shared on both screens, because it's queried via
-                // a PATCH call in the responses screen to mark it as read. A better approach may be to not allow
-                // sharing of the objects in an unpredictable manner by always cloning or copying
-                // from them, or on the other extreme, having a central memory cache with
-                // registered observers so that the objects are always shared.
-                discussionPostsAdapter.updateItem(discussionThread, discussionPostsAdapter.getItemPosition(discussionThread));
-                break;
-            }
-        }
-    }
-
-    @Subscribe
-    @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         DiscussionThread newThread = event.getDiscussionThread();
         // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
@@ -282,7 +262,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     break;
                 }
             }
-            discussionPostsAdapter.insert(newThread, i);
+            discussionPostsAdapter.insert(i, newThread);
             // move the ListView's scroll to that newly added post's position
             discussionPostsAdapter.selectedItem(i);
             getDiscussionPostsRecyclerView().scrollToPosition(i);
