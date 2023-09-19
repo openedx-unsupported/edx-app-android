@@ -46,6 +46,7 @@ class DiscussionPostsAdapter(
                 )
                 object : RecyclerView.ViewHolder(binding.root) {}
             }
+
             else -> {
                 val binding =
                     RowDiscussionThreadBinding.inflate(

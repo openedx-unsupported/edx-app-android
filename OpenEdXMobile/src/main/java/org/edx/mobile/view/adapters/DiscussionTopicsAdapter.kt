@@ -44,9 +44,10 @@ class DiscussionTopicsAdapter(
                 )
             }
 
-            val childPadding = context.resources.getDimensionPixelOffset(R.dimen.edx_margin)
+            // Add padding based on thread's depth
+            val padding = context.resources.getDimensionPixelOffset(R.dimen.edx_margin)
             ViewCompat.setPaddingRelative(
-                this, childPadding * (1 + item.depth), childPadding, childPadding, childPadding
+                this, padding * (1 + item.depth), padding, padding, padding
             )
             setOnClickListener { listener.onItemClick(item) }
         }
