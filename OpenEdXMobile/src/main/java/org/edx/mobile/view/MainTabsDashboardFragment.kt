@@ -1,6 +1,8 @@
 package org.edx.mobile.view
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +67,8 @@ class MainTabsDashboardFragment : BaseFragment() {
         handleTabSelection(arguments)
 
         binding.viewPager.isUserInputEnabled = false
+
+        requestPostNotificationsPermission()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -77,6 +81,14 @@ class MainTabsDashboardFragment : BaseFragment() {
         handleTabSelection(intent.extras)
         intent.extras?.let {
             EventBus.getDefault().post(ScreenArgumentsEvent(it))
+        }
+    }
+
+    private fun requestPostNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+        ) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
