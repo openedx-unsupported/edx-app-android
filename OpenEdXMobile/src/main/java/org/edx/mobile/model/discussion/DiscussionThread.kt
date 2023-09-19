@@ -190,4 +190,26 @@ class DiscussionThread : Serializable, IAuthorData, ProfileImageProvider {
         newObj.users = users
         return newObj
     }
+
+    /**
+     * Checks whether an icon is visible in the action layout.
+     * Based on the result of this function we decide if we need to append
+     * a pipe sign before the following text to the icons.
+     * i.e, <icon> | 2 totals | Last post: 1 minute ago
+     *
+     * @return `true` if a thread is closed, pinned or being followed by a user,
+     * `false` otherwise.
+     */
+    fun isAnyIconVisible(): Boolean {
+        return isClosed || isFollowing || isPinned
+    }
 }
+
+/**
+ * Format a number according to the count format.
+ * Based on the count value this function decides what string has to be
+ * shown to the user.
+ * @return 99+ if the count is equal to or greater than 99, otherwise the actual count
+ * as a String.
+ */
+fun Int.formattedCount(): String = if (this >= 99) "99+" else this.toString()

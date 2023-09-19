@@ -272,6 +272,7 @@
     <style name="discussion_topics_search_bar" parent="search_bar">
         <item name="android:queryHint">@string/topics_search</item>
         <item name="android:background">@color/white</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
         <item name="android:iconifiedByDefault">false</item>
     </style>
 

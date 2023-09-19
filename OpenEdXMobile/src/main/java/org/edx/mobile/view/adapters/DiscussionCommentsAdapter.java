@@ -235,7 +235,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
     }
 
     public void updateComment(DiscussionComment comment) {
-        for (int i = 0; i < discussionComments.size(); ++i) {
+        for (int i = 0; i < discussionComments.size(); i++) {
             if (discussionComments.get(i).getIdentifier().equals(comment.getIdentifier())) {
                 discussionComments.set(i, comment);
                 notifyItemChanged(1 + i);

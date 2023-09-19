@@ -17,7 +17,6 @@ import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.databinding.FragmentDiscussionResponsesOrCommentsBinding;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
-import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.callback.ErrorHandlingCallback;
@@ -149,7 +148,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             protected void onResponse(@NonNull final DiscussionThread discussionThread) {
                 courseDiscussionResponsesAdapter.updateDiscussionThread(discussionThread);
                 responsesLoader.unfreeze();
-                EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
             }
         });
 

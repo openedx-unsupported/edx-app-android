@@ -76,7 +76,7 @@ public class TopicSpinnerAdapter extends ArrayAdapter<DiscussionTopicDepth> {
      * @return The position of the specified topic, or -1 if not found
      */
     public int getPosition(@NonNull DiscussionTopic discussionTopic) {
-        for (int i = 0; i < getCount(); ++i) {
+        for (int i = 0; i < getCount(); i++) {
             final DiscussionTopicDepth item = getItem(i);
             if (item.isPostable() && discussionTopic.hasSameId(item.getDiscussionTopic())) {
                 return i;

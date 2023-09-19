@@ -11,7 +11,9 @@ import android.text.style.ImageSpan
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.widget.TextView
+import androidx.annotation.StyleRes
 import androidx.core.text.HtmlCompat
+import androidx.core.widget.TextViewCompat
 
 fun TextView.addAfterTextChanged(listener: (Editable) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -85,4 +87,8 @@ fun TextView.setTextWithIcon(fullText: String, drawable: Drawable, targetText: S
         spannableString.setSpan(imageSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
     this.text = spannableString
+}
+
+fun TextView.setCustomTextAppearance(@StyleRes resId: Int) {
+    TextViewCompat.setTextAppearance(this, resId)
 }

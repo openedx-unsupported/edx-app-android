@@ -1,85 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_error_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content_error_root"
+    <LinearLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/content"
+            android:id="@+id/spinners_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="@dimen/discussion_post_refine_layout_height"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <LinearLayout
-                android:id="@+id/spinners_container"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/discussion_post_refine_layout_height"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                tools:visibility="visible">
+            <TextView
+                android:id="@+id/discussion_posts_refine_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/edx_margin"
+                android:text="@string/discussion_posts_refine"
+                android:textColor="@color/primaryXLightColor" />
 
-                <TextView
-                    android:id="@+id/discussion_posts_refine_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/edx_margin"
-                    android:text="@string/discussion_posts_refine"
-                    android:textColor="@color/primaryXLightColor" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/discussion_posts_filter_spinner"
-                    style="?attr/popupSpinnerStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/edx_margin"
-                    android:layout_weight="1"
-                    tools:listitem="@layout/row_discussion_thread_dropdown" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/discussion_posts_sort_spinner"
-                    style="?attr/popupSpinnerStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    tools:listitem="@layout/row_discussion_thread_dropdown" />
-
-            </LinearLayout>
-
-            <Space style="@style/gray_separator" />
-
-            <ListView
-                android:id="@+id/discussion_posts_listview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/discussion_posts_filter_spinner"
+                style="?attr/popupSpinnerStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/edx_margin"
                 android:layout_weight="1"
-                android:background="@color/white"
-                android:visibility="invisible"
-                tools:listitem="@layout/row_discussion_thread"
-                tools:visibility="visible" />
+                tools:listitem="@layout/row_discussion_thread_dropdown" />
 
-            <include
-                android:id="@+id/create_new_item"
-                layout="@layout/create_new_item_layout" />
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/discussion_posts_sort_spinner"
+                style="?attr/popupSpinnerStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:listitem="@layout/row_discussion_thread_dropdown" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/center_message_box"
-            style="@style/content_unavailable_error_text"
-            tools:text="Error text comes here."
+        <Space style="@style/gray_separator" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/discussion_posts_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:visibility="invisible"
+            tools:itemCount="4"
+            tools:listitem="@layout/row_discussion_thread"
             tools:visibility="visible" />
 
         <include
-            android:id="@+id/loading_indicator"
-            layout="@layout/loading_indicator"
-            tools:visibility="visible" />
+            android:id="@+id/create_new_item"
+            layout="@layout/create_new_item_layout" />
 
-        <include layout="@layout/content_error" />
+    </LinearLayout>
 
-    </FrameLayout>
-</layout>
+    <TextView
+        android:id="@+id/center_message_box"
+        style="@style/content_unavailable_error_text"
+        tools:text="Error text comes here."
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/loading_indicator"
+        layout="@layout/loading_indicator"
+        tools:visibility="visible" />
+
+    <include
+        layout="@layout/content_error"
+        tools:visibility="gone" />
+
+</FrameLayout>

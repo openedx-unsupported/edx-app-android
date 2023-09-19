@@ -5,6 +5,7 @@
     style="@style/regular_edx_black_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/view_selector"
     android:drawablePadding="@dimen/edx_margin"
     android:ellipsize="end"
     android:gravity="center_vertical"
