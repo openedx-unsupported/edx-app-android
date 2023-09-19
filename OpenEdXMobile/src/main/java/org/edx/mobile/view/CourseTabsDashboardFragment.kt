@@ -22,7 +22,6 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.course.CourseAPI.GetCourseByIdCallback
 import org.edx.mobile.databinding.FragmentCourseTabsDashboardBinding
-import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.IAPFlowEvent
@@ -209,10 +208,16 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 }
             } else {
                 //Todo Remove when Next Session Enrollment feature is added
-                val errorLayoutBinding =
-                    FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false)
-                errorLayoutBinding.errorMsg.setText(R.string.course_not_started)
-                return errorLayoutBinding.root
+                binding.apply {
+                    toolbar.root.setVisibility(false)
+                    pager.setVisibility(false)
+                    accessError.setVisibility(false)
+                    loadingError.root.setVisibility(true)
+                    loadingError.dismiss.setVisibility(true)
+                    loadingError.dismiss.setOnClickListener(onCloseClick())
+                    loadingError.state.setActionListener(onCloseClick())
+                }
+                return binding.root
             }
         } else {
             setViewPager()
