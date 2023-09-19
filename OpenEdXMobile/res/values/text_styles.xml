@@ -238,7 +238,7 @@
     </style>
 
     <style name="profile_field_heading" parent="profile_field_description">
-        <item name="android:fontFamily">?attr/secondaryFontRegular</item>
+        <item name="android:fontFamily">?attr/fontSecondaryRegular</item>
     </style>
 
     <style name="video_download_label_text_style" parent="regular_primary_base_text">
@@ -247,6 +247,16 @@
 
     <style name="video_download_description_text_style" parent="regular_primary_x_light_text">
         <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="course_navigation_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">?attr/fontSecondaryMedium</item>
+        <item name="android:textColor">@color/neutralXDark</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="lineHeight">@dimen/widget_margin_double</item>
+        <item name="textAllCaps">true</item>
     </style>
 
     <style name="error_state_text" parent="Widget.MaterialComponents.TextView">

@@ -41,5 +41,7 @@
     <!-- font-weight: 700 -->
     <attr name="fontBold" format="reference" />
     <!-- font-weight: 400 -->
-    <attr name="secondaryFontRegular" format="reference" />
+    <attr name="fontSecondaryRegular" format="reference" />
+    <!-- font-weight: 500 -->
+    <attr name="fontSecondaryMedium" format="reference" />
 </resources>
