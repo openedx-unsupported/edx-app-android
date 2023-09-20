@@ -1,6 +1,5 @@
 package org.edx.mobile.view.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -23,9 +22,11 @@ class CourseHomeAdapter(
     private val itemClickListener: OnItemClickListener
 ) : ListAdapter<SectionRow, RecyclerView.ViewHolder>(SectionRow.SectionRowComparator) {
 
-    private var otherSectionVisible = false
+    private var isAnySectionVisible = false
 
     private var checkedItem = Pair(-1, -1)
+
+    private val sectionVisibility = mutableMapOf<String, Boolean>()
 
     override fun getItemViewType(position: Int): Int {
         return getItem(position).type
@@ -67,14 +68,11 @@ class CourseHomeAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateList(position: Int = -1) {
-        // On data refresh, reset the value to expand the first incomplete section.
-        otherSectionVisible = false
         if (position != -1) {
             notifyItemChanged(position)
         } else {
-            notifyDataSetChanged()
+            notifyItemRangeChanged(0, itemCount)
         }
     }
 
@@ -113,14 +111,20 @@ class CourseHomeAdapter(
                         R.drawable.edx_neutral_white_t_fill_neutral_dark_border,
                         binding.root.context.theme
                     )
-                    binding.rvSubSection.setVisibility(!otherSectionVisible)
-                    otherSectionVisible = true
+                    if (!isAnySectionVisible) {
+                        isAnySectionVisible = true
+                        sectionVisibility[sectionComponent.id] = true
+                    }
                 }
-                updateExpandViewIconState(binding.rvSubSection.isVisible())
             }
+
+            val isSectionVisible = sectionVisibility[sectionComponent.id] == true
+            binding.rvSubSection.setVisibility(isSectionVisible)
+            updateExpandViewIconState(isSectionVisible)
 
             binding.root.setOnClickListener {
                 binding.rvSubSection.isVisible().apply {
+                    sectionVisibility[sectionComponent.id] = !this
                     binding.rvSubSection.setVisibility(!this)
                     updateExpandViewIconState(!this)
                 }

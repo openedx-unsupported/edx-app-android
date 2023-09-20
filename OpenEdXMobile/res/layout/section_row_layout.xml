@@ -13,7 +13,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/edx_default_margin">
+        android:layout_margin="@dimen/edx_divider_length"
+        android:background="@drawable/view_selector"
+        android:padding="@dimen/edx_margin">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_completed_section"
@@ -59,6 +61,7 @@
         android:id="@+id/rv_sub_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/edx_divider_length"
         android:visibility="gone"
         tools:itemCount="3"
         tools:listitem="@layout/sub_section_row_layout"
