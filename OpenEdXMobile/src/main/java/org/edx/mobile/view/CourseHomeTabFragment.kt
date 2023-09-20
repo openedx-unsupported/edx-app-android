@@ -322,14 +322,16 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
             viewLifecycleOwner,
             EventObserver { position: Pair<Int, Int> ->
                 if (position.first != RecyclerView.NO_POSITION) {
+                    adapter.clearChoicesAndUpdateUI(refresh = false)
                     deleteDownloadedVideosAtPosition(position)
                 }
             })
+
         videoViewModel.clearChoices.observe(
             viewLifecycleOwner,
             EventObserver { shouldClear: Boolean ->
                 if (shouldClear) {
-                    adapter.clearChoices()
+                    adapter.clearChoicesAndUpdateUI()
                 }
             })
     }
