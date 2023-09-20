@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -45,6 +46,18 @@ class MainTabsDashboardFragment : BaseFragment() {
 
     private var selectedTabPosition = -1
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val learnTabPosition =
+                if (environment.config.discoveryConfig.isDiscoveryEnabled) 1 else 0
+            if (selectedTabPosition != learnTabPosition) {
+                binding.viewPager.currentItem = learnTabPosition
+                return
+            }
+            requireActivity().finish()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,6 +82,11 @@ class MainTabsDashboardFragment : BaseFragment() {
         binding.viewPager.isUserInputEnabled = false
 
         requestPostNotificationsPermission()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -256,15 +274,6 @@ class MainTabsDashboardFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-    }
-
-    fun onBackPressed(): Boolean {
-        val learnTabPosition = if (environment.config.discoveryConfig.isDiscoveryEnabled) 1 else 0
-        if (selectedTabPosition != learnTabPosition) {
-            binding.viewPager.currentItem = learnTabPosition
-            return true
-        }
-        return false
     }
 
     companion object {

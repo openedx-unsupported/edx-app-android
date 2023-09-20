@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.android.billingclient.api.ProductDetails
@@ -147,6 +148,17 @@ class CourseTabsDashboardFragment : BaseFragment() {
             items.add(createAnnouncementsItem())
 
             return items
+        }
+
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.pager.currentItem != 0) {
+                    binding.pager.currentItem = 0
+                    return
+                }
+                requireActivity().finish()
+            }
         }
 
     override fun onCreateView(
@@ -483,6 +495,10 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
         binding.pager.setVisibility(true)
         enforceSingleScrollDirection(binding.pager)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         binding.toolbar.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
