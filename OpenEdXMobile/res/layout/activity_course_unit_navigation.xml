@@ -181,8 +181,7 @@
             android:id="@+id/goto_next"
             style="@style/course_navigation_button"
             android:layout_alignParentEnd="true"
-            android:text="@string/assessment_next"
-            tools:ignore="RelativeOverlap" />
+            android:text="@string/assessment_next" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

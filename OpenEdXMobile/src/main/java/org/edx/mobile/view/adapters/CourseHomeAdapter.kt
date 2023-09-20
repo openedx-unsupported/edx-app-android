@@ -1,6 +1,5 @@
 package org.edx.mobile.view.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.edx.mobile.R
 import org.edx.mobile.databinding.RowResumeCourseBinding
 import org.edx.mobile.databinding.SectionRowLayoutBinding
-import org.edx.mobile.extenstion.isVisible
+import org.edx.mobile.extenstion.isNotVisible
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.HasDownloadEntry
@@ -23,9 +22,11 @@ class CourseHomeAdapter(
     private val itemClickListener: OnItemClickListener
 ) : ListAdapter<SectionRow, RecyclerView.ViewHolder>(SectionRow.SectionRowComparator) {
 
-    private var otherSectionVisible = false
+    private var isAnySectionExpended = false
 
     private var checkedItem = Pair(-1, -1)
+
+    private val sectionsExpandedState = mutableMapOf<String, Boolean>()
 
     override fun getItemViewType(position: Int): Int {
         return getItem(position).type
@@ -67,14 +68,11 @@ class CourseHomeAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateList(position: Int = -1) {
-        // On data refresh, reset the value to expand the first incomplete section.
-        otherSectionVisible = false
         if (position != -1) {
             notifyItemChanged(position)
         } else {
-            notifyDataSetChanged()
+            notifyItemRangeChanged(0, itemCount)
         }
     }
 
@@ -113,18 +111,25 @@ class CourseHomeAdapter(
                         R.drawable.edx_neutral_white_t_fill_neutral_dark_border,
                         binding.root.context.theme
                     )
-                    binding.rvSubSection.setVisibility(!otherSectionVisible)
-                    otherSectionVisible = true
+                    if (!isAnySectionExpended) {
+                        isAnySectionExpended = true
+                        sectionsExpandedState[sectionComponent.id] = true
+                    }
                 }
-                updateExpandViewIconState(binding.rvSubSection.isVisible())
             }
 
+            updateSubSectionVisibility(sectionsExpandedState[sectionComponent.id] == true)
+
             binding.root.setOnClickListener {
-                binding.rvSubSection.isVisible().apply {
-                    binding.rvSubSection.setVisibility(!this)
-                    updateExpandViewIconState(!this)
-                }
+                val isExpended = binding.rvSubSection.isNotVisible()
+                sectionsExpandedState[sectionComponent.id] = isExpended
+                updateSubSectionVisibility(isExpended)
             }
+        }
+
+        private fun updateSubSectionVisibility(isVisible: Boolean) {
+            binding.rvSubSection.setVisibility(isVisible)
+            updateExpandViewIconState(isVisible)
         }
 
         private fun setupSubSectionList(sectionComponent: CourseComponent) {

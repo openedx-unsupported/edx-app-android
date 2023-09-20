@@ -168,13 +168,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         if (arguments?.serializable<EnrolledCoursesResponse>(Router.EXTRA_COURSE_DATA) == null) {
             return if (arguments?.getBoolean(ARG_COURSE_NOT_FOUND) == true) {
                 // The case where we have invalid course data
-                binding.loadingError.apply {
-                    root.setVisibility(true)
-                    dismiss.setVisibility(true)
-                    dismiss.setOnClickListener(onCloseClick())
-                    state.setState(EdxErrorState.State.LOAD_ERROR, Screen.COURSE_DASHBOARD)
-                    state.setActionListener(onCloseClick())
-                }
+                initLoadingErrorLayout()
                 binding.root
             } else {
                 // The case where we need to fetch course's data based on its courseId
@@ -224,11 +218,8 @@ class CourseTabsDashboardFragment : BaseFragment() {
                     toolbar.root.setVisibility(false)
                     pager.setVisibility(false)
                     accessError.setVisibility(false)
-                    loadingError.root.setVisibility(true)
-                    loadingError.dismiss.setVisibility(true)
-                    loadingError.dismiss.setOnClickListener(onCloseClick())
-                    loadingError.state.setActionListener(onCloseClick())
                 }
+                initLoadingErrorLayout()
                 return binding.root
             }
         } else {
@@ -245,6 +236,16 @@ class CourseTabsDashboardFragment : BaseFragment() {
         environment.analyticsRegistry.trackScreenView(
             Analytics.Screens.COURSE_DASHBOARD, courseData.course.id, null
         )
+    }
+
+    private fun initLoadingErrorLayout() {
+        binding.loadingError.apply {
+            root.setVisibility(true)
+            dismiss.setVisibility(true)
+            dismiss.setOnClickListener(onCloseClick())
+            state.setState(EdxErrorState.State.LOAD_ERROR, Screen.COURSE_DASHBOARD)
+            state.setActionListener(onCloseClick())
+        }
     }
 
     private fun setupIAPLayout() {
