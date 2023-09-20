@@ -81,9 +81,9 @@ class CourseHomeAdapter(
         updateList()
     }
 
-    fun clearChoices() {
+    fun clearChoicesAndUpdateUI(refresh: Boolean = true) {
         checkedItem = Pair(-1, -1)
-        updateList()
+        if (refresh) updateList()
     }
 
     inner class SectionViewHolder(val binding: SectionRowLayoutBinding) :
