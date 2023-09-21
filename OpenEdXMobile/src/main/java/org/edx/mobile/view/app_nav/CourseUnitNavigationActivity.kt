@@ -266,7 +266,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     private fun updateCompletionProgressBar(currentPosition: Int, size: Int) {
         binding.spbUnits.setDivisions(size)
         binding.spbUnits.setDividerEnabled(true)
-        binding.spbUnits.setEnabledDivisions((0..currentPosition).toList())
+        binding.spbUnits.setEnabledDivisions(listOf(currentPosition))
     }
 
     private fun setupToolbarListeners() {
