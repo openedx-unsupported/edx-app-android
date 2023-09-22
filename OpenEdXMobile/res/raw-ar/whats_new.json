@@ -1,5 +1,50 @@
 [
   {
+    "version": "5.0",
+    "messages": [
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_1",
+        "title": "Simplified navigation",
+        "message": "Navigate with ease—the bottom navigation gets you where you want to go next!"
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_2",
+        "title": "1. Discover",
+        "message": "Search for what you want to learn and enroll directly into a course."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_3",
+        "title": "2. Learn",
+        "message": "Switch between your courses and programs using the dropdown."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_4",
+        "title": "3. Learn",
+        "message": "Once in the course, navigate course content quickly and easily using tabs and dropdowns."
+      },
+      {
+        "platforms": [
+          "android"
+        ],
+        "image": "screen_5",
+        "title": "4. Profile",
+        "message": "Access your account information and user settings."
+      }
+    ]
+  },
+  {
     "version": "3.1",
     "messages": [
       {
