@@ -354,7 +354,6 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         data: List<EnrolledCoursesResponse>
     ) {
         adapter.submitList(data)
-        adapter.notifyDataSetChanged()
 
         if (adapter.itemCount == 0 && environment.config.discoveryConfig.isDiscoveryEnabled) {
             binding.stateLayout.state.setState(EdxErrorState.State.EMPTY, Screen.MY_COURSES)
