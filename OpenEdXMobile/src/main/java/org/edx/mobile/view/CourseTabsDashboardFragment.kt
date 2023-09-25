@@ -28,6 +28,8 @@ import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MoveToDiscoveryTabEvent
+import org.edx.mobile.event.MyCoursesRefreshEvent
+import org.edx.mobile.event.RefreshCourseDashboardEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.CollapsingToolbarStatListener
 import org.edx.mobile.extenstion.serializable
@@ -233,6 +235,9 @@ class CourseTabsDashboardFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         handleTabSelection(requireArguments())
 
+        if (EventBus.getDefault().isRegistered(this).not())
+            EventBus.getDefault().register(this)
+
         environment.analyticsRegistry.trackScreenView(
             Analytics.Screens.COURSE_DASHBOARD, courseData.course.id, null
         )
@@ -436,13 +441,11 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        EventBus.getDefault().register(this)
         courseDateViewModel.fetchCourseDates(courseData.courseId, true)
     }
 
     override fun onPause() {
         super.onPause()
-        EventBus.getDefault().unregister(this)
         // TODO: block of code can be removed once `fetchCourseById` retrofit call replaced with MVVM approach.
         fullscreenLoader?.closeTimer()
     }
@@ -848,13 +851,29 @@ class CourseTabsDashboardFragment : BaseFragment() {
         if (!this.isResumed) {
             return
         }
-        if (event.flowAction == IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE) {
-            courseData.mode = EnrollmentMode.VERIFIED.toString()
-            arguments?.putString(Router.EXTRA_COURSE_ID, courseData.courseId)
-            courseDateViewModel.fetchCourseDates(courseData.courseId, true)
-            fetchCourseById()
-            EventBus.getDefault().post(MainDashboardRefreshEvent())
+        when (event.flowAction) {
+            IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE -> {
+                courseData.mode = EnrollmentMode.VERIFIED.toString()
+                arguments?.putString(Router.EXTRA_COURSE_ID, courseData.courseId)
+                courseDateViewModel.fetchCourseDates(courseData.courseId, true)
+                fetchCourseById()
+                EventBus.getDefault().post(MainDashboardRefreshEvent())
+            }
+
+            IAPFlowData.IAPAction.SHOW_FULL_SCREEN_LOADER -> {
+                event.iapFlowData?.let {
+                    showFullscreenLoader(it)
+                }
+            }
         }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe
+    fun onEvent(event: RefreshCourseDashboardEvent) {
+        courseData.mode = EnrollmentMode.VERIFIED.toString()
+        binding.toolbar.layoutUpgradeBtn.root.setVisibility(false)
+        EventBus.getDefault().post(MyCoursesRefreshEvent())
     }
 
     companion object {
