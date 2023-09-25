@@ -13,48 +13,56 @@ class RegistrationOptionAutoCompleteTextView : AppCompatAutoCompleteTextView {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     fun hasValue(value: String?): Boolean {
         value?.let {
-            return getAdapterPosition(value) >= 0
+            return getAdapterPositionFromValueOrName(value) >= 0
         }
         return false
     }
 
-    fun select(value: String?) {
+    fun hasName(name: String?): Boolean {
+        name?.let {
+            return getAdapterPositionFromValueOrName(name) >= 0
+        }
+        return false
+    }
+
+    fun selectFromValue(value: String?) {
         value?.let {
-            val pos = getAdapterPosition(value)
+            val pos = getAdapterPositionFromValueOrName(value)
             if (pos >= 0) {
-                setSelection(pos)
+                val option = getAdapter().getItem(pos) as RegistrationOption
+                setText(option.name, false)
             }
         }
     }
 
     val selectedItemValue: String?
-        get() {
-            var value: String? = null
-            selectedItem?.let {
-                value = it.value
-            }
-            return value
-        }
+        get() = selectedItem?.value
 
     val selectedItemName: String?
-        get() {
-            var name: String? = null
-            selectedItem?.let {
-                name = it.name
-            }
-            return name
-        }
+        get() = selectedItem?.name
 
-    private fun getAdapterPosition(input: String): Int {
+    /**
+     * Retrieves the adapter position for a given value or name in a selectable adapter.
+     *
+     * @param input The value or name to search for.
+     * @return The adapter position of the matched item, or -1 if no match is found.
+     */
+    private fun getAdapterPositionFromValueOrName(input: String): Int {
         var position = -1
         adapter?.let {
             for (i in 0 until it.count) {
                 val item = it.getItem(i)
-                if (item != null && input.equals(item.toString(), ignoreCase = true)) {
+                if (input.equals(item?.value, ignoreCase = true)
+                    || input.equals(item?.name, ignoreCase = true)
+                ) {
                     position = i
                     selectedItem = item
                     break

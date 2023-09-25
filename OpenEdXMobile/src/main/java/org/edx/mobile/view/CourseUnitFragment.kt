@@ -70,7 +70,6 @@ abstract class CourseUnitFragment : BaseFragment() {
     }
 
     interface HasComponent {
-        val component: CourseComponent?
         fun navigateNextComponent()
         fun navigatePreviousComponent()
 

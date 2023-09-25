@@ -3,6 +3,7 @@ package org.edx.mobile.model.course;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -72,7 +73,7 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     /**
-     * @param blockModel
+     * @param blockModel course component to be cloned
      * @param parent     is null if and only if this is the root
      */
     public CourseComponent(BlockModel blockModel, CourseComponent parent) {
@@ -181,7 +182,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public void setBlockCount(BlockCount count) {
-        this.blockCount = blockCount;
+        this.blockCount = count;
     }
 
     @Override
@@ -260,6 +261,22 @@ public class CourseComponent implements IBlock, IPathNode {
         return (List) children;
     }
 
+    public List<IBlock> getChildren(boolean videosOnly) {
+        if (videosOnly) {
+            List<IBlock> videoChildren = new ArrayList<>();
+            for (CourseComponent component : children) {
+                List<CourseComponent> videos = new ArrayList<>();
+                component.fetchAllLeafComponents(videos, EnumSet.of(BlockType.VIDEO));
+                if (videos.size() > 0) {
+                    videoChildren.add(component);
+                }
+            }
+            return videoChildren;
+        } else {
+            return getChildren();
+        }
+    }
+
     @Override
     public CourseComponent getRoot() {
         return root;
@@ -268,10 +285,6 @@ public class CourseComponent implements IBlock, IPathNode {
 
     public boolean isMultiDevice() {
         return multiDevice;
-    }
-
-    public void setMultiDevice(boolean multiDevice) {
-        this.multiDevice = multiDevice;
     }
 
     public boolean isContainer() {
@@ -286,7 +299,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * get direct children who have child.  it is not based on the block type, but on
      * the real tree structure.
      *
-     * @return
+     * @return list of children for the current component
      */
     public List<CourseComponent> getChildContainers() {
         List<CourseComponent> childContainers = new ArrayList<>();
@@ -303,7 +316,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * get direct children who is leaf.  it is not based on the block type, but on
      * the real tree structure.
      *
-     * @return
+     * @return list of all leaf children for the current component
      */
     public List<CourseComponent> getChildLeafs() {
         List<CourseComponent> childLeafs = new ArrayList<>();
@@ -324,7 +337,7 @@ public class CourseComponent implements IBlock, IPathNode {
             return this;
         if (!isContainer())
             return null;
-        CourseComponent found = null;
+        CourseComponent found;
         for (CourseComponent c : children) {
             found = c.find(matcher);
             if (found != null)
@@ -399,7 +412,7 @@ public class CourseComponent implements IBlock, IPathNode {
      * we get all the leaves below this node.  if this node itself is leaf,
      * just add it to list
      *
-     * @param leaves
+     * @param leaves all direct children of current component
      */
     public void fetchAllLeafComponents(List<CourseComponent> leaves, EnumSet<BlockType> types) {
         if (!isContainer() && types.contains(type)) {
@@ -413,9 +426,9 @@ public class CourseComponent implements IBlock, IPathNode {
 
     /**
      * get the ancestor based on level, level = 0, means itself.
-     * if level is out of the boundary, just return the toppest one
+     * if level is out of the boundary, just return the uppermost one
      *
-     * @param level
+     * @param level of parent component
      * @return it will never return null.
      */
     public CourseComponent getAncestor(int level) {
@@ -448,10 +461,9 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof CourseComponent)) {
+        if (!(obj instanceof CourseComponent other)) {
             return false;
         }
-        CourseComponent other = (CourseComponent) obj;
         return this.id.equals(other.id);
     }
 
@@ -566,5 +578,50 @@ public class CourseComponent implements IBlock, IPathNode {
 
     public void setCourseSku(String courseSku) {
         this.courseSku = courseSku;
+    }
+
+    public ArrayList<SectionRow> getSectionData() {
+        ArrayList<SectionRow> sections = new ArrayList<>();
+        if (isContainer()) {
+            for (CourseComponent block : children) {
+                if (block.isContainer()) {
+                    sections.add(new SectionRow(SectionRow.SECTION, block));
+                }
+            }
+        }
+        return sections;
+    }
+
+    /**
+     * Method to retrieve the first in-complete child
+     * Or return last child if all child are completed
+     * Or null if it has 0 child
+     *
+     * @return the child of the current component
+     */
+    @Nullable
+    public CourseComponent getFirstIncompleteComponent() {
+        for (CourseComponent block : children) {
+            if (!block.isCompleted()) {
+                return block;
+            }
+        }
+        if (children.size() > 0) {
+            return children.get(children.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isEmptyComponent() {
+        return type != BlockType.VIDEO &&
+                type != BlockType.HTML &&
+                type != BlockType.OTHERS &&
+                type != BlockType.DISCUSSION &&
+                type != BlockType.PROBLEM &&
+                type != BlockType.OPENASSESSMENT &&
+                type != BlockType.DRAG_AND_DROP_V2 &&
+                type != BlockType.WORD_CLOUD &&
+                type != BlockType.LTI_CONSUMER;
     }
 }

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/collapsible_toolbar_layout"
+        android:visibility="invisible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
@@ -25,12 +34,20 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
-                <org.edx.mobile.view.custom.EdxWebView
-                    android:id="@+id/webview"
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="@color/neutralLight" />
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                    <org.edx.mobile.view.custom.EdxWebView
+                        android:id="@+id/webview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/neutralLight" />
+
+                </androidx.core.widget.NestedScrollView>
+
             </LinearLayout>
 
             <include
@@ -42,4 +59,4 @@
                 layout="@layout/content_error" />
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</layout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

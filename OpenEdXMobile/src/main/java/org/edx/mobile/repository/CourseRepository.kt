@@ -1,12 +1,12 @@
 package org.edx.mobile.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.model.NetworkResponseCallback
 import org.edx.mobile.http.model.Result
+import org.edx.mobile.injection.DataSourceDispatcher
 import org.edx.mobile.model.api.EnrollmentResponse
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.CourseStructureV1Model
@@ -20,7 +20,9 @@ import javax.inject.Singleton
 
 @Singleton
 class CourseRepository @Inject constructor(
-    private val courseAPI: CourseAPI, private var courseManager: CourseManager
+    private val courseAPI: CourseAPI,
+    private var courseManager: CourseManager,
+    @DataSourceDispatcher val dispatcher: CoroutineDispatcher,
 ) {
     fun fetchEnrolledCourses(
         type: CoursesRequestType,
@@ -47,6 +49,7 @@ class CourseRepository @Inject constructor(
                             message = response.message()
                         )
                     )
+
                     false -> callback.onError(
                         Result.Error(
                             HttpStatusException(response.code(), response.message())
@@ -64,7 +67,6 @@ class CourseRepository @Inject constructor(
     suspend fun getCourseComponentsFromAppLevelCache(
         courseId: String,
         courseComponentId: String? = null,
-        dispatcher: CoroutineDispatcher = Dispatchers.Default
     ): CourseComponent? = withContext(dispatcher) {
         if (courseComponentId?.isNotEmpty() == true) {
             // Course data exist in app session cache
@@ -77,7 +79,6 @@ class CourseRepository @Inject constructor(
 
     suspend fun getCourseDataFromPersistableCache(
         courseId: String,
-        dispatcher: CoroutineDispatcher = Dispatchers.Default
     ): CourseComponent? = withContext(dispatcher) {
         courseManager.getCourseDataFromPersistableCache(courseId)
     }
@@ -85,8 +86,7 @@ class CourseRepository @Inject constructor(
     suspend fun getCourseStructure(
         courseId: String,
         coursesRequestType: CoursesRequestType = CoursesRequestType.LIVE,
-        defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-    ): CourseComponent? = withContext(defaultDispatcher) {
+    ): CourseComponent? = withContext(dispatcher) {
         val courseDataResponse = getCourseStructureCall(courseId, coursesRequestType).execute()
         var courseComponent: CourseComponent? = null
         if (courseDataResponse.isSuccessful) {
@@ -112,12 +112,29 @@ class CourseRepository @Inject constructor(
             CoursesRequestType.STALE -> {
                 courseAPI.getCourseStructureWithStale(courseId)
             }
+
             CoursesRequestType.LIVE -> {
                 courseAPI.getCourseStructureWithoutStale(courseId)
             }
+
             else -> {
                 throw java.lang.Exception("Unknown Request Type: $coursesRequestType")
             }
+        }
+    }
+
+    suspend fun getCourseStatusInfo(
+        courseId: String,
+    ): CourseComponent? = withContext(dispatcher) {
+        val response = courseAPI.getCourseStatusInfo(courseId).execute()
+        if (response.isSuccessful) {
+            val lastAccessBlockId = response.body()?.lastVisitedBlockId ?: return@withContext null
+            courseManager.getComponentByIdFromAppLevelCache(
+                courseId,
+                lastAccessBlockId
+            )
+        } else {
+            throw HttpStatusException(response.raw())
         }
     }
 }

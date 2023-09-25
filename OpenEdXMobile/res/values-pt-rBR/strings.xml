@@ -5,8 +5,6 @@
   <string name="course_details_congratulations">Parabéns!</string>
   <!--Message for user who has successfully completed a certificate course-->
   <string name="course_details_earned_cert">Você passou o curso.</string>
-  <!--Button that opens a full view of an earned certificate-->
-  <string name="course_details_view_cert_button">Visualizar o certificado</string>
   <!--Course Discovery-->
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Matricule-se agora</string>
@@ -28,8 +26,6 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">Não foi capaz de abrir a página.</string>
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">Compartilhe seu curso</string>
   <!--Share course-->
   <string name="share_course_message">Estou fazendo um curso no {platform_name}! Confira:</string>
   <!--Certificate Page-->
@@ -43,22 +39,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">Esse recurso exige uma conexão ativa com a Internet. </string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">Nome de usuário ou endereço de e-mail</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">Endereço de e-mail</string>
   <!--Hint text for password field-->
   <string name="password">Senha</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">Esqueceu sua senha?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Entrar</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Botão Entrar</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">Aguarde</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">Entrando...</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">Mensagem de erro</string>
   <!--Generic error during log in-->
@@ -76,22 +64,15 @@
   <string name="tos_and_honor_code">{platform_name} Termos de Serviço e Código de Honra</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">Política de Privacidade</string>
-  <string name="login_title">Entrar</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">Fechar</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">Lista suspensa.</string>
   <!--Navigation Drawer Labels-->
-  <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads">Visualizar transferências atuais</string>
-  <!--Title of user's course list screen-->
-  <string name="label_my_courses">Cursos</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs">Programas</string>
+  <string name="label_programs">Programas</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontre cursos</string>
-  <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Descubra</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar comentário</string>
   <!--Toggle switch on state label-->
@@ -152,20 +133,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="course_name">Nome do curso</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Novo conteúdo do curso</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">Iniciando {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">Finalizado {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">Finalizado {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">Acesso ao curso expira {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">Acesso ao curso expira em {date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">Acesso ao curso expirado {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">Acesso ao curso expirado em {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Conteúdo do curso</string>
@@ -195,8 +162,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="upgrade_to_verified_today_title">Faça o upgrade para o módulo Verificado hoje mesmo</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Realizar pedido</string>
-  <!--label for resume course section. Will be followed by course name-->
-  <string name="label_resume">Continuar</string>
   <!--Mobile Payments-->
   <string name="payments_info_header">Possui um certificado verificado!</string>
   <string name="payments_info_details">Destaque seu currículo com um certificado válido.\n\nTenha em mãos mais um credencial válida para melhorar suas perspectivas de emprego e avançar na sua carreira, ou ao inscrever-se em outras escolas.</string>
@@ -452,10 +417,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="video_player_forward_time_sec">+15</string>
   <!--Button label to bring up course finder-->
   <string name="find_course_text">Buscando novos desafios?</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">Encontre um curso</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">ou entre com</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -471,9 +432,6 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <string name="already_have_an_account">Já possui uma conta? Entrar</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Registre-se e comece a aprender</string>
-  <!--In Register screen-->
-  <string name="register_with">Registre-se com</string>
-  <string name="or_register_with_email">ou registre-se com um e-mail</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">Inscreva-se</string>
@@ -490,14 +448,8 @@ Se você não recebê-la nos próximos minutos, verifique sua caixa de spam. </s
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>Explore todos os cursos</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Exibir campos opcionais</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Ocultar campos opcionais</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Criar minha conta</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Botão criar minha conta</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Criando conta...</string>
   <!--Registration screen title-->

@@ -1,77 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryBaseColor"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ll_root"
+    <FrameLayout
+        android:id="@+id/fl_top_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/primaryBaseColor"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <FrameLayout
-            android:id="@+id/fl_top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/screen_title"
-                style="@style/semibold_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:padding="@dimen/widget_margin"
-                android:text="@string/whats_new_title"
-                android:textColor="@color/neutralWhite"
-                android:textSize="@dimen/edx_base" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/close_btn"
-                style="@style/semibold_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|end"
-                android:background="@drawable/selectable_box_overlay"
-                android:contentDescription="@string/label_close"
-                android:padding="@dimen/widget_margin"
-                android:textSize="@dimen/edx_x_large"
-                app:srcCompat="@drawable/ic_close"
-                app:tint="@color/white" />
-        </FrameLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal" />
-
-        <FrameLayout
-            android:id="@+id/fl_bottom_bar"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/screen_title"
+            style="@style/semibold_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/whats_new_bottom_bar_min_height">
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="@dimen/widget_margin"
+            android:text="@string/whats_new_title"
+            android:textColor="@color/neutralWhite"
+            android:textSize="@dimen/edx_base" />
 
-            <FrameLayout
-                android:id="@+id/indicator_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:padding="@dimen/widget_margin" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/close_btn"
+            style="@style/semibold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:background="@drawable/selectable_box_overlay"
+            android:contentDescription="@string/label_close"
+            android:padding="@dimen/widget_margin"
+            app:srcCompat="@drawable/ic_close"
+            app:tint="@color/white" />
+    </FrameLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/done_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:background="@drawable/selectable_box_overlay"
-                android:padding="@dimen/widget_margin"
-                android:text="@string/label_done"
-                android:textColor="@color/accentAColor"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </FrameLayout>
-    </LinearLayout>
-</layout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" />
+
+    <FrameLayout
+        android:id="@+id/fl_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/whats_new_bottom_bar_min_height">
+
+        <FrameLayout
+            android:id="@+id/indicator_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:padding="@dimen/widget_margin" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/done_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/selectable_box_overlay"
+            android:padding="@dimen/widget_margin"
+            android:text="@string/label_done"
+            android:textColor="@color/accentAColor"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+</LinearLayout>

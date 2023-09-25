@@ -13,17 +13,17 @@ public class MemoryUtil {
 
     /**
      * Returns available number of bytes in external memory.
-     * @param context
+     *
      * @return
      */
-    public static long getAvailableExternalMemory(Context context) {
+    public static long getAvailableExternalMemory() {
         File path = Environment.getExternalStorageDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
         return (availableBlocks * blockSize);
     }
-    
+
     /**
      * Returns available number of bytes in internal memory.
      * @param context

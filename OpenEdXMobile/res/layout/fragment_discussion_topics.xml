@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_error_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content_error_root"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <SearchView
+            android:id="@+id/discussion_topics_searchview"
+            style="@style/discussion_topics_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View style="@style/gray_separator" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/discussion_topics_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:nestedScrollingEnabled="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_discussion_topic" />
 
-            <SearchView
-                android:id="@+id/discussion_topics_searchview"
-                style="@style/discussion_topics_search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+    </LinearLayout>
 
-            <View style="@style/gray_separator" />
+    <include
+        android:id="@+id/loading_indicator"
+        layout="@layout/loading_indicator" />
 
-            <ListView
-                android:id="@+id/discussion_topics_listview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                tools:listitem="@layout/row_discussion_topic" />
-
-        </LinearLayout>
-
-        <include
-            android:id="@+id/loading_indicator"
-            layout="@layout/loading_indicator" />
-
-        <include layout="@layout/content_error" />
-
-    </FrameLayout>
-</layout>
+    <include
+        layout="@layout/content_error"
+        tools:visibility="gone" />
+</FrameLayout>

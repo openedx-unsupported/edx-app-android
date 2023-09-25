@@ -3,15 +3,20 @@ package org.edx.mobile.util;
 import static org.edx.mobile.view.dialog.WebViewActivity.PARAM_INTENT_FILE_LINK;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
 import android.text.style.UnderlineSpan;
+import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -241,6 +246,42 @@ public class TextUtils {
     public static SpannableString underline(Context context, @StringRes int resId) {
         SpannableString content = new SpannableString(context.getString(resId));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        return content;
+    }
+
+    /**
+     * To append a clickable icon at the end of a string with a padding of three spaces.
+     *
+     * @param context           Context object to use for obtaining the drawable
+     * @param text              The string to use for appending
+     * @param iconResId         Resource Id of the icon to be used
+     * @param iconClickListener The click listener for the icon
+     * @return String with a clickable icon appended at the end
+     */
+    public static SpannableString setIconifiedText(Context context, String text, @DrawableRes int iconResId, View.OnClickListener iconClickListener) {
+        Drawable icon = UiUtils.INSTANCE.getDrawable(context, iconResId, R.dimen.ic_xxx_small, R.color.neutralWhiteT);
+        icon.setBounds(10, 0, icon.getIntrinsicWidth() + 10, icon.getIntrinsicHeight());
+
+        // Adding space between text & icon
+        text = text + "   ";
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                iconClickListener.onClick(widget);
+            }
+        };
+
+        SpannableString content = new SpannableString(text);
+        content.setSpan(new ImageSpan(icon, ImageSpan.ALIGN_BASELINE),
+                text.length() - 1,
+                text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        content.setSpan(clickableSpan,
+                text.length() - 1,
+                text.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         return content;
     }
 }

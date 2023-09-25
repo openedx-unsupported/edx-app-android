@@ -21,6 +21,9 @@ public enum AppConstants {
     // Threshold percentage of a web page's loading after which we are hiding the progress indicator
     public static final int PAGE_LOAD_THRESHOLD = 50;
 
+    // Max time for the snack bar to be displayed
+    public static final int SNACKBAR_SHOWTIME_MS = 5000;
+
     public static final String VIDEO_FORMAT_M3U8 = ".m3u8";
     public static final String VIDEO_FORMAT_MP4 = ".mp4";
     public static final String APP_URI_SCHEME = "org.edx.mobile.innerlinks://";
@@ -28,9 +31,10 @@ public enum AppConstants {
     public static final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
     public static final String BROWSER_PLAYSTORE_YOUTUBE_URI = "https://play.google.com/store/apps/details?id=" + YOUTUBE_PACKAGE_NAME;
 
-    public static final String ICON_PLACEHOLDER = "icon";
+    public static final String ICON_PLACEHOLDER = "{icon}";
 
     public static final String PLATFORM_NAME = "platform_name";
+    public static final String PLATFORM_DESTINATION = "platform_destination";
     public static final String SOCIAL_PROVIDER = "social_provider";
     public static final String COURSE_NAME = "course_name";
     public static final String ASSIGNMENT_DUE = "Assignment Due";
@@ -42,6 +46,7 @@ public enum AppConstants {
 
     public static final String HEADER_KEY_AUTHORIZATION = "Authorization";
     public static final String QUERY_PARAM_EXTERNAL_LINK = "external_link";
+
     /**
      * This class defines all the Firebase constants related to the app.
      */

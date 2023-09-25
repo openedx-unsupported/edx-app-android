@@ -3,8 +3,11 @@ package org.edx.mobile.util;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -17,6 +20,7 @@ public class ViewAnimationUtil {
 
     private static final long DEFAULT_ANIMATION_DURATION_MS = 500L;
     private static final float ANIMATION_DISPLACEMENT = 60f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
 
     // Prohibit instantiation
     private ViewAnimationUtil() {
@@ -106,5 +110,25 @@ public class ViewAnimationUtil {
             }
         });
         return translateAnimation;
+    }
+
+    public static void startAlphaAnimation(View v, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(ALPHA_ANIMATIONS_DURATION);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
+    }
+
+    public static void animateTitleSize(TextView textView, float targetSize) {
+        ValueAnimator animator = ValueAnimator.ofFloat(textView.getTextSize(), targetSize);
+        animator.addUpdateListener(valueAnimator -> {
+            float animatedValue = (float) valueAnimator.getAnimatedValue();
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, animatedValue);
+        });
+        animator.setDuration(200); // Adjust the animation duration as needed
+        animator.start();
     }
 }

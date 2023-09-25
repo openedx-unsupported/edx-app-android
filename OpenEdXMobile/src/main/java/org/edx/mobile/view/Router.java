@@ -34,7 +34,9 @@ import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SecurityUtil;
 import org.edx.mobile.util.links.WebViewLink;
+import org.edx.mobile.view.app_nav.CourseUnitNavigationActivity;
 import org.edx.mobile.view.dialog.WebViewActivity;
+import org.edx.mobile.view.login.LoginActivity;
 import org.edx.mobile.whatsnew.WhatsNewActivity;
 
 import javax.inject.Inject;
@@ -42,7 +44,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Router {
-    public static final String EXTRA_ANNOUNCEMENTS = "announcements";
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
     public static final String EXTRA_COURSE_NAME = "course_name";
@@ -66,6 +67,7 @@ public class Router {
     public static final String EXTRA_ENROLLMENT_MODE = "enrollment_mode";
     public static final String EXTRA_IS_SELF_PACED = "is_self_paced";
     public static final String EXTRA_IS_UPGRADEABLE = "is_upgradeable";
+    public static final String EXTRA_SCREEN_TITLE = "screen_title";
 
     @Inject
     Config config;
@@ -167,16 +169,21 @@ public class Router {
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
+                                        @Nullable EnrolledCoursesResponse model) {
+        showCourseDashboardTabs(activity, model, null, null, null, null, null);
+    }
+
+    public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable EnrolledCoursesResponse model,
-                                        boolean announcements) {
-        showCourseDashboardTabs(activity, model, null, null, null, null, announcements, null);
+                                        @Nullable @ScreenDef String screenName) {
+        showCourseDashboardTabs(activity, model, null, null, null, null, screenName);
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
                                         @Nullable String courseId,
                                         @Nullable @ScreenDef String screenName) {
         activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, null, courseId,
-                null, null, null, false, screenName));
+                null, null, null, screenName));
     }
 
     public void showCourseDashboardTabs(@NonNull Activity activity,
@@ -185,10 +192,9 @@ public class Router {
                                         @Nullable String componentId,
                                         @Nullable String topicId,
                                         @Nullable String threadId,
-                                        boolean announcements,
                                         @Nullable @ScreenDef String screenName) {
         activity.startActivity(CourseTabsDashboardActivity.newIntent(activity, model, courseId,
-                componentId, topicId, threadId, announcements, screenName));
+                componentId, topicId, threadId, screenName));
     }
 
     public void showCourseUpgradeWebViewActivity(@NonNull Context context,
@@ -201,22 +207,6 @@ public class Router {
         );
     }
 
-    /**
-     * FIXME - it will bring to different view in the future
-     *
-     * @param activity
-     * @param model
-     */
-    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model) {
-        final Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
-        final Intent courseDetail = new Intent(activity, CourseAnnouncementsActivity.class);
-        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
-    }
-
     public Intent getCourseOutlineIntent(Activity activity,
                                          EnrolledCoursesResponse courseData,
                                          CourseUpgradeResponse courseUpgradeData,
@@ -226,8 +216,7 @@ public class Router {
                 courseData, courseUpgradeData, courseComponentId, lastAccessedId, isVideosMode);
     }
 
-    public Intent getCourseUnitDetailIntent(Activity activity,
-                                            EnrolledCoursesResponse model,
+    public Intent getCourseUnitDetailIntent(Activity activity, EnrolledCoursesResponse model,
                                             CourseUpgradeResponse courseUpgradeData,
                                             String courseComponentId, boolean isVideosMode) {
         Bundle courseBundle = new Bundle();
@@ -386,13 +375,6 @@ public class Router {
         SecurityUtil.clearUserData(context);
     }
 
-    public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
-        Intent handoutIntent = new Intent(activity, CourseHandoutActivity.class);
-        handoutIntent.putExtra(EXTRA_COURSE_DATA, courseData);
-        handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(handoutIntent);
-    }
-
     public void showUserProfile(@NonNull Context context, @NonNull String username) {
         context.startActivity(UserProfileActivity.newIntent(context, username));
     }
@@ -435,14 +417,6 @@ public class Router {
 
     public void showWhatsNewActivity(@NonNull Activity activity) {
         activity.startActivity(WhatsNewActivity.newIntent(activity));
-    }
-
-    public void showAccountActivity(@NonNull Activity activity) {
-        activity.startActivity(AccountActivity.newIntent(activity, null));
-    }
-
-    public void showAccountActivity(@NonNull Activity activity, @Nullable @ScreenDef String screenName) {
-        activity.startActivity(AccountActivity.newIntent(activity, screenName));
     }
 
     public void showPaymentsInfoActivity(@NonNull Context context, @NonNull EnrolledCoursesResponse courseDate,

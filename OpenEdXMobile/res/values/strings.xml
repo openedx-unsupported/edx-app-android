@@ -10,8 +10,6 @@
     <string name="course_details_congratulations">Congratulations!</string>
     <!-- Message for user who has successfully completed a certificate course -->
     <string name="course_details_earned_cert">You’ve passed the course.</string>
-    <!-- Button that opens a full view of an earned certificate -->
-    <string name="course_details_view_cert_button">View Certificate</string>
 
     <!-- Course Discovery -->
 
@@ -36,9 +34,6 @@
     <string name="cannot_open_url">Unable to open web page.</string>
 
     <!-- Course Sharing -->
-
-    <!-- Description of button that will open the share course menu -->
-    <string name="share_course_button">Share your course</string>
     <!-- Share course -->
     <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
 
@@ -55,22 +50,14 @@
     <string name="need_data">This feature requires an active Internet connection.</string>
 
     <!-- Login Activity Place Holders -->
-    <!-- Hint text for login field -->
-    <string name="email_username">User name or e-mail address</string>
     <!-- Hint text for email address field in reset password dialog -->
     <string name="email">E-mail address</string>
     <!-- Hint text for password field -->
     <string name="password">Password</string>
-    <!-- Button text allowing user to reset their password -->
-    <string name="forgot_password">Forgot your password?</string>
-    <!-- Button initiating login process after user enters credentials like username and password -->
-    <string name="login">Sign In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
     <string name="login_btn">Sign in button</string>
     <!-- Message shown while waiting for action -->
     <string name="progress_text">Please wait</string>
-    <!-- Message shown while user waits for response to a sign in request-->
-    <string name="signing_in">Signing In</string>
     <!-- Message for shown after tapping Sign In -->
     <string name="error_message">Error Message</string>
     <!-- Generic error during log in -->
@@ -90,23 +77,16 @@
     <!-- Label for Privacy Policy -->
     <string name="privacy_policy">Privacy Policy</string>
 
-    <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
     <string name="close">Close</string>
     <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->
     <string name="dropdown_list_prefix">Dropdown list.</string>
 
     <!-- Navigation Drawer Labels -->
-    <!-- Button text to show user current downloads screen -->
-    <string name="label_current_downloads">View current downloads</string>
-    <!-- Title of user's course list screen -->
-    <string name="label_my_courses">Courses</string>
     <!-- Title of user's program list screen -->
-    <string name="label_my_programs">Programs</string>
+    <string name="label_programs">Programs</string>
     <!-- Title of native Find Courses Screen -->
     <string name="label_find_courses">Find Courses</string>
-    <!-- Title of Find Courses tab on Main Dashboard screen -->
-    <string name="label_discovery">Discovery</string>
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback">Submit feedback</string>
     <!-- Toggle switch on state label -->
@@ -170,20 +150,6 @@
     <string name="course_name">Course Name</string>
     <!-- Label indicating new course content has been downloaded -->
     <string name="new_course_content">New Course Content</string>
-    <!-- Label for date when course starts -->
-    <string name="label_starting">Starting {date}</string>
-    <!-- Label for course that has ended -->
-    <string name="label_ended">Ended {date}</string>
-    <!-- Label for date when course is ending -->
-    <string name="label_ending">Ending {date}</string>
-    <!-- Label for date when course is expiring in a specific time frame like in 2 days -->
-    <string name="label_expires">Course access expires {date}</string>
-    <!-- Label for date when course is expiring on a specific date like on December 5 -->
-    <string name="label_expires_on">Course access expires on {date}</string>
-    <!-- Label for date when course expired a specific time ago like 2 days ago -->
-    <string name="label_expired">Course access expired {date}</string>
-    <!-- Label for date when course expired on a specific date like on November 5 -->
-    <string name="label_expired_on">Course access expired on {date}</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
@@ -203,7 +169,7 @@
     <!-- Label shown when no important dates are available for a course -->
     <string name="no_course_dates_to_display">Course dates are not currently available.</string>
     <!-- Title of the screen where user can delete videos -->
-    <string name="delete_videos_title">Delete Videos</string>
+    <string name="delete_videos_title">Delete videos</string>
     <!-- Label for a course item's due date for same day -->
     <string name="due_date_today">due today at {due_date}</string>
     <!-- Label for a course item's due date -->
@@ -214,8 +180,6 @@
     <string name="upgrade_to_verified_today_title">Upgrade to Verified Today</string>
     <!--Title of place order for course upgrade screen-->
     <string name="place_order_title">Place Order</string>
-    <!-- label for resume course section. Will be followed by course name -->
-    <string name="label_resume">Resume</string>
 
     <!-- Mobile Payments -->
     <string name="payments_info_header">Pursue a Verified Certificate!</string>
@@ -489,11 +453,9 @@
     <string name="video_player_forward_time_sec">+15</string>
 
     <!-- Button label to bring up course finder -->
-    <string name="find_course_text">Looking for a new challenge?</string>
+    <string name="find_course_text">Looking for a new \nchallenge?</string>
     <!-- Button label to bring up course finder -->
-    <string name="find_course_btn_text">Find a Course</string>
-    <!-- Message between sign in button and social login buttons -->
-    <string name="or_sign_in_with">Or sign in with</string>
+    <string name="find_course_btn_text">Explore courses</string>
     <!-- Facebook login method -->
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
@@ -510,9 +472,6 @@
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <!-- Prompt leading user to create account screen -->
     <string name="sign_up_and_learn">Sign up and start learning</string>
-    <!-- In Register screen -->
-    <string name="register_with">Register with</string>
-    <string name="or_register_with_email">or register with email</string>
 
     <!-- New Logistration Launch screen text -->
     <!-- Button leading user to create account screen -->
@@ -531,14 +490,8 @@
     <string name="label_explore_all_courses"><u>Explore all courses</u></string>
 
     <!-- Registration Screen -->
-    <!-- Button text allowing user to show hidden optional registration fields -->
-    <string name="show_optional_text">Show optional fields</string>
     <!-- Button text allowing user to hide visible optional registration fields -->
     <string name="hide_optional_text">Hide optional fields</string>
-    <!-- Button text allowing user create an account -->
-    <string name="create_account_text">Create my account</string>
-    <!-- Accessible content description of create account button on Registration screen -->
-    <string name="create_account_btn">Create my account button</string>
     <!-- Text shown while waiting for registration request -->
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->

@@ -9,7 +9,7 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView.IActionLis
 
 class RegistrationCheckBoxView(
     field: RegistrationFormField,
-    view: View
+    view: View,
 ) : IRegistrationFieldView {
 
     private val binding: ViewRegisterCheckboxBinding = ViewRegisterCheckboxBinding.bind(view)
@@ -36,7 +36,13 @@ class RegistrationCheckBoxView(
 
     override fun isValidInput(): Boolean = true
 
-    override fun setRawValue(value: String?): Boolean = false
+    override fun setRawValue(value: String?): Boolean {
+        value?.toBoolean()?.let {
+            binding.registerCheckbox.isChecked = it
+            return true
+        }
+        return false
+    }
 
     override fun setInstructions(instructions: String?) {
     }
@@ -48,7 +54,7 @@ class RegistrationCheckBoxView(
         binding.registerCheckbox.isEnabled = enabled
     }
 
-    override fun setActionListener(actionListener: IActionListener?) {
+    override fun setActionListener(actionListener: IActionListener) {
         this.actionListener = actionListener
     }
 }

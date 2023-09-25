@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
@@ -90,10 +89,6 @@ object UiUtils {
             ContextCompat.getColor(context, colorRes),
             PorterDuff.Mode.SRC_IN
         )
-    }
-
-    fun setImageViewColor(context: Context, imageView: AppCompatImageView, colorRes: Int) {
-        imageView.setColorFilter(ContextCompat.getColor(context, colorRes), PorterDuff.Mode.SRC_IN)
     }
 
     private fun setDrawableSize(context: Context, drawable: Drawable, resSize: Int): Drawable {

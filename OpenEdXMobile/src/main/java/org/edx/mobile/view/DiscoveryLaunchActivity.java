@@ -6,7 +6,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import androidx.databinding.DataBindingUtil;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
@@ -19,6 +18,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
 
+    private static final String QUERY_PARAM = "query_param";
+    private static final String FOCUSED_VIEW = "focused_view";
+
     private ActivityDiscoveryLaunchBinding binding;
 
     @NonNull
@@ -30,7 +32,8 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     @NonNull
     @Override
     protected DiscoveryLaunchPresenter.ViewInterface createView(@Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
+        binding = ActivityDiscoveryLaunchBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
@@ -73,11 +76,31 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
             }
 
             @Override
-            public void navigateToMyCourses() {
+            public void navigateToMainDashboard() {
                 finish();
                 environment.getRouter().showMainDashboard(DiscoveryLaunchActivity.this);
             }
         };
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(QUERY_PARAM, binding.svSearchCourses.getQuery().toString());
+        outState.putBoolean(FOCUSED_VIEW, binding.svSearchCourses.hasFocus());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String queryString = savedInstanceState.getString(QUERY_PARAM, "");
+        binding.svSearchCourses.setQuery(queryString, false);
+        if (savedInstanceState.getBoolean(FOCUSED_VIEW, false)) {
+            binding.svSearchCourses.postDelayed(() -> {
+                binding.svSearchCourses.requestFocus();
+                SoftKeyboardUtil.hide(this);
+            }, 1000);
+        }
     }
 
     @Override

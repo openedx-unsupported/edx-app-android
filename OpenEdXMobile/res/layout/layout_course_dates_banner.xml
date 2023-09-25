@@ -7,59 +7,28 @@
         android:id="@+id/container_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/infoXXLight"
+        android:background="@color/warningXXLight"
         android:orientation="vertical"
-        android:padding="@dimen/container_padding"
+        android:padding="@dimen/edx_default_margin"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/banner_title"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/banner_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edx_half_margin"
-            android:fontFamily="?attr/fontSemiBold"
-            android:text="@string/course_schedule_title"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="@dimen/edx_large"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_calender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin_x_half"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_calendar"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/banner_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="?attr/fontRegular"
-                android:lineSpacingMultiplier="@dimen/course_date_desc_line_spacing"
-                android:textColor="@color/neutralXDark"
-                android:textSize="@dimen/edx_x_small"
-                tools:text="@string/course_dates_info_banner" />
-        </LinearLayout>
-
-        <!--  Use legacy text field instated of material-components-->
-        <!--  Ref: https://medium.com/androiddevelopers/migrating-to-material-components-for-android-ec6757795351  -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_shift_dates"
-            style="@style/edX.Widget.PrimaryActionButton"
-            android:padding="@dimen/edx_half_margin"
+            android:fontFamily="?attr/fontRegular"
+            android:textColor="@color/neutralXXDark"
             android:textSize="@dimen/edx_x_small"
+            app:lineHeight="@dimen/edx_default_margin"
+            tools:text="@string/course_dashboard_banner_reset_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_shift_dates"
+            style="@style/edX.Widget.TertiaryActionButton"
+            android:layout_marginTop="@dimen/edx_default_margin"
+            android:text="@string/course_dates_banner_reset_date_button"
             android:visibility="gone"
-            tools:text="@string/course_dates_banner_reset_date_button"
             tools:visibility="visible" />
     </LinearLayout>
 </layout>

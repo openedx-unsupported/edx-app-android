@@ -1,13 +1,14 @@
 package org.edx.mobile.view.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.Page;
@@ -184,6 +185,7 @@ public class InfiniteScrollUtils {
                         adapter.clear();
                     }
                     adapter.addAll(newItems);
+
                     hasMoreItems = hasMore;
                     if (!hasMoreItems) {
                         adapter.setProgressVisible(false);

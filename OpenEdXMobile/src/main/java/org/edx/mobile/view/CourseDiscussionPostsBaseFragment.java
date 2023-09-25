@@ -1,14 +1,17 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
 
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.discussion.DiscussionThread;
+import org.edx.mobile.module.analytics.AnalyticsRegistry;
+import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -17,14 +20,13 @@ import javax.inject.Inject;
 
 public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment implements InfiniteScrollUtils.PageLoader<DiscussionThread> {
 
-    @Inject
     protected DiscussionPostsAdapter discussionPostsAdapter;
 
     @Inject
     protected Router router;
 
     @Inject
-    protected IEdxEnvironment environment;
+    AnalyticsRegistry analyticsRegistry;
 
     protected EnrolledCoursesResponse courseData;
 
@@ -43,22 +45,17 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        controller = InfiniteScrollUtils.configureListViewWithInfiniteList(getDiscussionPostsListView(), discussionPostsAdapter, this);
-        getDiscussionPostsListView().setOnItemClickListener((parent, view1, position, id) -> {
-            Context context = getContext();
-            DiscussionThread thread = discussionPostsAdapter.getItem(position);
-            router.showCourseDiscussionResponses(requireContext(), thread, courseData);
-
-            if (!thread.isRead()) {
-                // Refresh the row to mark it as read immediately.
-                // There will be a silent refresh upon return to this Activity.
-                thread.setRead(true);
-                discussionPostsAdapter.getView(position, view1, parent);
-            }
+        discussionPostsAdapter = new DiscussionPostsAdapter(item -> {
+            router.showCourseDiscussionResponses(requireContext(), item, courseData);
         });
+        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(getDiscussionPostsRecyclerView(), discussionPostsAdapter, this);
+        DividerItemDecoration itemDecorator = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        itemDecorator.setDrawable(UiUtils.INSTANCE.getDrawable(requireContext(), R.drawable.list_item_divider));
+        getDiscussionPostsRecyclerView().addItemDecoration(itemDecorator);
+        getDiscussionPostsRecyclerView().setAdapter(discussionPostsAdapter);
     }
 
-    protected abstract ListView getDiscussionPostsListView();
+    protected abstract RecyclerView getDiscussionPostsRecyclerView();
 
     @Override
     public void onStart() {

@@ -9,6 +9,7 @@
 
     <!-- Per Material Design Guidelines -->
     <dimen name="action_bar_icon_size">24dp</dimen>
+    <dimen name="action_bar_text_size">20sp</dimen>
 
     <!-- Alert dialog default padding -->
     <!-- Note: Copied from the support library, since they are private to the library
@@ -17,7 +18,6 @@
     <dimen name="dialog_padding_top_material">18dp</dimen>
 
     <!-- Navigation Drawer -->
-    <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="drawer_profile_image_border_width">@dimen/image_border_width</dimen>
     <dimen name="drawer_app_version_text">12sp</dimen>
 
@@ -29,13 +29,8 @@
     <dimen name="width_chapter_text">185dp</dimen>
 
     <!-- Resume Course Bar-->
-    <dimen name="resume_course_bar_left_margin">26dp</dimen>
-    <dimen name="resume_course_bar_height">72dp</dimen>
-    <dimen name="resume_course_header_text_size">@dimen/edx_small</dimen>
-    <dimen name="resume_course_header_unit_vertical_margin">2dp</dimen>
-    <dimen name="resume_course_button_text_size">@dimen/edx_base</dimen>
-    <dimen name="resume_course_button_padding">12dp</dimen>
-    <dimen name="resume_course_button_right_margin">14dp</dimen>
+    <dimen name="resume_course_bar_height">36dp</dimen>
+    <dimen name="resume_course_arrow_margin">12dp</dimen>
 
     <!-- Course Card -->
     <dimen name="course_card_height">190dp</dimen>
@@ -47,48 +42,11 @@
     <dimen name="course_card_detail_padding_top">8dp</dimen>
     <dimen name="course_card_detail_padding_bottom">8dp</dimen>
 
-    <!-- Course Dashboard-->
-    <dimen name="dashboard_nav_element_height">85dp</dimen>
-    <dimen name="dashboard_nav_element_left_margin">30dp</dimen>
-    <dimen name="dashboard_nav_element_right_margin">30dp</dimen>
-    <!--NOTE: This margin needs to be 75dp as per design doc
-        But, since we are using a LinearLayout in the base layout {@link layout/row_course_dashboard_list}
-        so we deduct the element's left margin i.e. {@link dashboard_nav_element_left_margin} and icon
-        width i.e. {@link #fa_xx_large} from 75dp.
-        in short: 75 - 30 - 24 = 21dp
-    -->
-    <dimen name="dashboard_nav_element_text_left_margin">21dp</dimen>
-
     <!-- Course Outline -->
     <dimen name="course_item_vertical_padding">8dp</dimen>
     <dimen name="course_item_horizontal_padding">9dp</dimen>
-    <dimen name="course_item_half_separator_left_margin">@dimen/resume_course_bar_left_margin
-    </dimen>
     <dimen name="course_section_header_margin">22dp</dimen>
     <dimen name="course_section_header_height">40dp</dimen>
-
-    <!-- Sign in dimensions-->
-    <dimen name="login_edx_logo_height">125dp</dimen>
-    <dimen name="login_logo_margin_top">20dp</dimen>
-    <dimen name="login_logo_margin_bottom">15dp</dimen>
-    <dimen name="login_margin_horizontal">44dp</dimen>
-    <dimen name="login_social_divider_margin_top">20dp</dimen>
-    <dimen name="login_social_divider_margin_bottom">15dp</dimen>
-    <dimen name="login_field_horizontal_padding">-4dp</dimen>
-    <dimen name="login_layout_bottom_margin">3dp</dimen>
-    <dimen name="launch_button_top_margin">25dp</dimen>
-    <dimen name="launch_button_bottom_margin">35dp</dimen>
-
-    <!-- Sign up -->
-    <dimen name="signup_social_title_margin">5dp</dimen>
-    <dimen name="signup_social_title_margin_large">13dp</dimen>
-    <dimen name="signup_social_title_margin_bottom">6dp</dimen>
-    <dimen name="registration_field_vertical_padding">2dp</dimen>
-    <dimen name="registration_field_horizontal_padding">2dp</dimen>
-    <dimen name="registration_message_panel_margin">2dp</dimen>
-    <dimen name="registration_spinner_horizontal_padding_start">-10dp</dimen>
-    <dimen name="registration_spinner_horizontal_padding_end">24dp</dimen>
-    <dimen name="social_auth_bottom_margin">5dp</dimen>
 
     <!-- Switch -->
     <dimen name="switch_corner_radius">3dp</dimen>
@@ -158,11 +116,13 @@
 
     <!-- Course unit -->
     <dimen name="course_unit_nav_bar_height">55dp</dimen>
-    <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
-    <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
+    <dimen name="course_unit_nav_bar_padding_left">16dp</dimen>
     <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
     <dimen name="course_unit_message_icon_size">140dp</dimen>
+    <dimen name="course_unit_nav_popup_item_height">36dp</dimen>
 
+    <dimen name="tab_height">56dp</dimen>
+    <dimen name="tab_indicator_height">2dp</dimen>
     <dimen name="tab_indicator_unselected_height">1.5dp</dimen>
     <dimen name="tab_indicator_selected_height">6dp</dimen>
 
@@ -170,7 +130,7 @@
     <dimen name="edx_xxxx_large">32sp</dimen>
     <dimen name="edx_xxx_large">28sp</dimen>
     <dimen name="edx_xx_large">24sp</dimen>
-    <dimen name="edx_x_large">21sp</dimen>
+    <dimen name="edx_x_large">22sp</dimen>
     <dimen name="edx_large">18sp</dimen>
     <dimen name="edx_base">16sp</dimen>
     <dimen name="edx_medium">15sp</dimen>
@@ -194,6 +154,8 @@
     <dimen name="x_small_icon_margin">5dp</dimen>
     <dimen name="small_icon_size">15dp</dimen>
     <dimen name="medium_icon_size">35dp</dimen>
+    <dimen name="segmented_progressbar_height">5dp</dimen>
+    <dimen name="segmented_progressbar_divider_width">2dp</dimen>
 
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>
@@ -209,17 +171,12 @@
     <dimen name="notification_settings_margin">12dp</dimen>
     <dimen name="fullscreen_message_max_width">240dp</dimen>
 
-    <!-- Horizontal Progress -->
-    <dimen name="progress_bar_height">3dp</dimen>
-    <dimen name="progress_bar_width">5dp</dimen>
-    <dimen name="progress_bar_length">70dp</dimen>
-    <dimen name="progress_bar_rim_width">4dp</dimen>
-
     <!-- Bulk Download View -->
     <dimen name="download_view_min_height">56dp</dimen>
-    <dimen name="bulk_download_progress_height">@dimen/progress_bar_height</dimen>
+    <dimen name="bulk_download_progress_height">3dp</dimen>
     <dimen name="bulk_download_description_top_margin">4dp</dimen>
     <dimen name="download_background_size">30dp</dimen>
+    <dimen name="home_download_background_size">24dp</dimen>
 
     <!-- Logistration Launch screen -->
     <dimen name="logo_top_margin">90dp</dimen>
@@ -249,29 +206,22 @@
     <dimen name="widget_margin">10dp</dimen>
     <dimen name="widget_margin_double">20dp</dimen>
     <dimen name="widget_margin_x_double">24dp</dimen>
+    <dimen name="widget_margin_xx_double">28dp</dimen>
     <dimen name="widget_margin_quadruple">40dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
     <dimen name="button_icon_horizontal_padding">20dp</dimen>
-    <dimen name="divider_with_text_margin">12dp</dimen>
     <dimen name="transcript_row_height">50dp</dimen>
     <dimen name="shadow_view_height">4dp</dimen>
     <dimen name="container_padding">12dp</dimen>
     <dimen name="radio_tab_height">32dp</dimen>
     <dimen name="edx_default_margin">16dp</dimen>
+    <dimen name="edx_default_margin_double">32dp</dimen>
     <dimen name="profile_view_button_height">36dp</dimen>
-
-    <!-- Social platforms -->
-    <dimen name="social_btn_radius">3dp</dimen>
-    <dimen name="social_btn_min_height">40dp</dimen>
-    <dimen name="social_btn_divider_width">@dimen/edx_divider_length</dimen>
-    <dimen name="social_btn_icon_size">24dp</dimen>
-    <dimen name="social_btn_margin">8dp</dimen>
-    <dimen name="social_btn_divider_height">40dp</dimen>
-    <dimen name="social_btn_text_size">14sp</dimen>
-    <dimen name="social_btn_height">40dp</dimen>
+    <dimen name="profile_switcher_radius">7dp</dimen>
+    <dimen name="profile_switcher_card_height">36dp</dimen>
 
     <!-- Segmented Control Dimensions -->
     <dimen name="edx_segmented_control_start_corner">5dp</dimen>
@@ -322,5 +272,18 @@
     <dimen name="fullscreen_margin">18dp</dimen>
     <dimen name="fullscreen_margin_top">36dp</dimen>
     <dimen name="fullscreen_message_line_height">36dp</dimen>
+
+    <!-- Learn Screen -->
+    <dimen name="learn_selection_height">60dp</dimen>
+    <dimen name="learn_drop_down_icon_margin">14dp</dimen>
+
+    <!-- Course Dashboard Toolbar -->
+    <dimen name="collapsed_toolbar_height">40dp</dimen>
+    <dimen name="expanded_toolbar_margin_top">-6dp</dimen>
+    <dimen name="expanded_toolbar_margin_end">-8dp</dimen>
+
+    <!-- Course Certificate Block -->
+    <dimen name="course_certificate_logo_height">100dp</dimen>
+    <dimen name="course_certificate_logo_width">138dp</dimen>
 
 </resources>

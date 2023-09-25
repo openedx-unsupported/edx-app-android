@@ -190,7 +190,7 @@ public class CourseUnitVideoPlayerFragment extends BaseCourseUnitVideoFragment {
             showPlayer();
         }
 
-        addVideoDatatoDb(model);
+        addVideoDataToDb(model);
 
         playVideoModel(model);
     }

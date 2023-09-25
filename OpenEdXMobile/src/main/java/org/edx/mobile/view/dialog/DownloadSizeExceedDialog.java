@@ -3,20 +3,17 @@ package org.edx.mobile.view.dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import org.edx.mobile.R;
+import org.edx.mobile.databinding.FragmentVideosizeExceedsDialogBinding;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.storage.BulkVideosDownloadCancelledEvent;
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.Map;
 
 public class DownloadSizeExceedDialog extends DialogFragment {
 
@@ -37,58 +34,40 @@ public class DownloadSizeExceedDialog extends DialogFragment {
         }
     }
 
-    public static DownloadSizeExceedDialog newInstance(
-            Map<String, String> dialogMap, IDialogCallback callback) {
-        DownloadSizeExceedDialog frag = new DownloadSizeExceedDialog();
-
-        frag.callback = callback;
-        Bundle args = new Bundle();
-
-        args.putString("title", dialogMap.get("title"));
-        args.putString("dialog_msg_1", dialogMap.get("message_1"));
-        frag.setArguments(args);
-        return frag;
+    public static DownloadSizeExceedDialog newInstance(IDialogCallback callback) {
+        DownloadSizeExceedDialog dialog = new DownloadSizeExceedDialog();
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        dialog.setCancelable(false);
+        dialog.callback = callback;
+        return dialog;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FragmentVideosizeExceedsDialogBinding binding = FragmentVideosizeExceedsDialogBinding.inflate(inflater, container, false);
 
-        View v = inflater.inflate(R.layout.fragment_videosize_exceeds_dialog, container,
-                false);
-        TextView title_tv = (TextView) v.findViewById(R.id.tv_dialog_title);
-        TextView dialog_tv_1 = (TextView) v
-                .findViewById(R.id.tv_dialog_message1);
+        binding.tvDialogTitle.setText(getString(R.string.download_exceed_title));
+        binding.tvDialogMessage1.setText(getString(R.string.download_exceed_message));
 
-        title_tv.setText(getArguments().getString("title"));
-        dialog_tv_1.setText(getArguments().getString("dialog_msg_1"));
-        // Watch for button clicks.
-        final Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
-        positiveBtn.setText(getString(R.string.label_download));
-        positiveBtn.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    dismiss();
-                    if (callback != null) {
-                        callback.onPositiveClicked();
-                    }
-                } catch (Exception e) {
-                    logger.error(e);
-                }
-            }
-        });
-
-        Button negativeBtn = (Button) v.findViewById(R.id.negativeButton);
-        negativeBtn.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
+        binding.positiveButton.setText(getString(R.string.label_download));
+        binding.positiveButton.setOnClickListener(v -> {
+            try {
                 if (callback != null) {
-                    callback.onNegativeClicked();
+                    callback.onPositiveClicked();
                 }
+                dismiss();
+            } catch (Exception e) {
+                logger.error(e);
             }
         });
 
-        return v;
+        binding.negativeButton.setOnClickListener(v -> {
+            if (callback != null) {
+                callback.onNegativeClicked();
+            }
+            dismiss();
+        });
+
+        return binding.getRoot();
     }
-
-
 }

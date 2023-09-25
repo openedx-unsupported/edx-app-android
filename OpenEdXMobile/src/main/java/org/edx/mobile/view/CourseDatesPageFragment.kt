@@ -2,6 +2,7 @@ package org.edx.mobile.view
 
 import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.BuildConfig.VERSION_NAME
@@ -17,6 +17,7 @@ import org.edx.mobile.R
 import org.edx.mobile.databinding.FragmentCourseDatesPageBinding
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.serializableOrThrow
+import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.FullScreenErrorNotification
@@ -83,11 +84,11 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             val component =
                 courseManager.getComponentByIdFromAppLevelCache(courseData.courseId, blockId)
             if (blockId.isNotEmpty() && component != null) {
-                val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
+                val courseUnitDetailIntent: Intent = environment.router.getCourseUnitDetailIntent(
                     requireActivity(),
                     courseData,
                     null,
-                    blockId,
+                    component.id,
                     false
                 )
                 courseUnitDetailLauncher.launch(courseUnitDetailIntent)
@@ -184,8 +185,7 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
 
     private fun initObserver() {
         viewModel.showLoader.observe(viewLifecycleOwner, NonNullObserver { showLoader ->
-            binding.loadingIndicator.loadingIndicator.visibility =
-                if (showLoader) View.VISIBLE else View.GONE
+            binding.loadingIndicator.loadingIndicator.setVisibility(showLoader)
         })
 
         viewModel.bannerInfo.observe(viewLifecycleOwner, NonNullObserver {
@@ -226,52 +226,41 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 }
             }
         })
-
-        viewModel.resetCourseDates.observe(viewLifecycleOwner, NonNullObserver {
-            if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
-                showShiftDateSnackBar(true)
-            }
-        })
-
-        viewModel.errorMessage.observe(viewLifecycleOwner, Observer { errorMsg ->
-            if (errorMsg != null) {
-                if (errorMsg.throwable is HttpStatusException) {
-                    when (errorMsg.throwable.statusCode) {
-                        HttpStatus.UNAUTHORIZED -> {
-                            environment.router?.forceLogout(
-                                contextOrThrow,
-                                environment.analyticsRegistry,
-                                environment.notificationDelegate
-                            )
-                            return@Observer
-                        }
-
-                        else ->
-                            errorNotification.showError(
-                                contextOrThrow,
-                                errorMsg.throwable,
-                                -1,
-                                null
-                            )
+        viewModel.errorMessage.observe(viewLifecycleOwner, NonNullObserver { errorMsg ->
+            if (errorMsg.throwable is HttpStatusException) {
+                when (errorMsg.throwable.statusCode) {
+                    HttpStatus.UNAUTHORIZED -> {
+                        environment.router?.forceLogout(
+                            contextOrThrow,
+                            environment.analyticsRegistry,
+                            environment.notificationDelegate
+                        )
                     }
-                } else {
-                    when (errorMsg.requestType) {
-                        ErrorMessage.COURSE_DATES_CODE ->
-                            errorNotification.showError(
-                                contextOrThrow,
-                                errorMsg.throwable,
-                                -1,
-                                null
-                            )
 
-                        ErrorMessage.BANNER_INFO_CODE -> initDatesBanner(null)
-
-                        ErrorMessage.COURSE_RESET_DATES_CODE -> showShiftDateSnackBar(false)
+                    else -> {
+                        errorNotification.showError(
+                            contextOrThrow,
+                            errorMsg.throwable,
+                            -1,
+                            null
+                        )
                     }
+                }
+            } else {
+                when (errorMsg.requestType) {
+                    ErrorMessage.COURSE_DATES_CODE ->
+                        errorNotification.showError(
+                            contextOrThrow,
+                            errorMsg.throwable,
+                            -1,
+                            null
+                        )
+
+                    ErrorMessage.BANNER_INFO_CODE ->
+                        initDatesBanner(null)
                 }
             }
         })
-
         viewModel.swipeRefresh.observe(viewLifecycleOwner, NonNullObserver { enableSwipeListener ->
             binding.swipeContainer.isRefreshing = enableSwipeListener
         })
@@ -337,7 +326,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 }
             })
 
-        CourseDateUtil.setupCourseDatesBanner(view = binding.banner.root,
+        CourseDateUtil.setupCourseDatesBanner(
+            view = binding.banner.root,
             isCourseDatePage = true,
             courseId = courseData.courseId,
             enrollmentMode = courseData.mode,
@@ -345,8 +335,8 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
             screenName = Analytics.Screens.PLS_COURSE_DATES,
             analyticsRegistry = environment.analyticsRegistry,
             courseBannerInfoModel = courseBannerInfo,
-            clickListener = { viewModel.resetCourseDatesBanner(courseId = courseData.courseId) })
-
+            clickListener = null
+        )
     }
 
     private fun initializedSyncContainer() {
@@ -452,20 +442,6 @@ class CourseDatesPageFragment : OfflineSupportBaseFragment() {
                 })
         alertDialog.isCancelable = false
         alertDialog.show(childFragmentManager, null)
-    }
-
-    private fun showShiftDateSnackBar(isSuccess: Boolean) {
-        val snackbarErrorNotification = SnackbarErrorNotification(binding.root)
-        snackbarErrorNotification.showError(
-            if (isSuccess) R.string.assessment_shift_dates_success_msg else R.string.course_dates_reset_unsuccessful,
-            0, 0, SnackbarErrorNotification.COURSE_DATE_MESSAGE_DURATION, null
-        )
-        environment.analyticsRegistry.trackPLSCourseDatesShift(
-            courseData.courseId,
-            courseData.mode,
-            Analytics.Screens.PLS_COURSE_DATES,
-            isSuccess
-        )
     }
 
     private fun insertCalendarEvent() {

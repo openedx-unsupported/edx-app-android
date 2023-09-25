@@ -60,7 +60,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/info"
-            style="@style/edX.Widget.ActionBorderedButton"
+            style="@style/edX.Widget.SecondaryActionButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/edx_half_margin"

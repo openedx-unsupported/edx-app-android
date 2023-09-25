@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,12 @@ import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentWebviewDiscoveryBinding;
 import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.extenstion.CollapsingToolbarStatListener;
+import org.edx.mobile.extenstion.ToolbarExtKt;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.UiUtils;
@@ -45,6 +49,7 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initTitle();
         setWebViewActionListener();
         setWebViewBackPressListener();
 
@@ -74,6 +79,25 @@ public class WebViewDiscoverFragment extends BaseWebViewFragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+    }
+
+    private void initTitle() {
+        binding.toolbar.tvTitle.setText(getString(R.string.label_explore_the_catalog));
+        binding.toolbar.tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.edx_large));
+
+        ToolbarExtKt.setTitleStateListener(binding.toolbar.appbar,
+                binding.toolbar.collapsingToolbar,
+                new CollapsingToolbarStatListener() {
+                    @Override
+                    public void onExpanded() {
+                        binding.toolbar.getRoot().setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onCollapsed() {
+                        binding.toolbar.getRoot().setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     public void setWebViewActionListener() {

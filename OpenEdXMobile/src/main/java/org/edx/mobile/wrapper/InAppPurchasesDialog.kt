@@ -87,10 +87,12 @@ class InAppPurchasesDialog @Inject constructor(
                 eventName = Analytics.Events.IAP_PAYMENT_ERROR,
                 errorMsg = feedbackErrorMessage
             )
+
             ErrorMessage.PRICE_CODE -> iapAnalytics.trackIAPEvent(
                 eventName = Analytics.Events.IAP_PRICE_LOAD_ERROR,
                 errorMsg = feedbackErrorMessage
             )
+
             else -> iapAnalytics.trackIAPEvent(
                 eventName = Analytics.Events.IAP_COURSE_UPGRADE_ERROR,
                 errorMsg = feedbackErrorMessage
@@ -110,6 +112,7 @@ class InAppPurchasesDialog @Inject constructor(
                     positiveBtnResId = R.string.label_refresh_now
                     actionTaken = Analytics.Values.ACTION_REFRESH
                 }
+
                 else -> {
                     positiveBtnResId = R.string.try_again
                     actionTaken = Analytics.Values.ACTION_RELOAD_PRICE
@@ -136,7 +139,9 @@ class InAppPurchasesDialog @Inject constructor(
             { _, _ ->
                 if (retryListener != null) {
                     trackAlertCloseEvent(feedbackErrorMessage)
-                    if (context is DialogFragment) context.dismiss()
+                    if (context is DialogFragment) {
+                        context.dismiss()
+                    }
                 } else {
                     showFeedbackScreen(context, feedbackErrorMessage)
                 }

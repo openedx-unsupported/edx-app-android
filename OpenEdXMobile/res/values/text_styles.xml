@@ -77,10 +77,6 @@
         <item name="android:textColor">@color/neutralDark</item>
     </style>
 
-    <style name="regular_white_text" parent="@style/regular_text">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="bold_edx_brand_primary_base_text" parent="@style/bold_text">
         <item name="android:textColor">@color/primaryBaseColor</item>
     </style>
@@ -116,19 +112,6 @@
         <item name="android:gravity">center</item>
         <item name="lineHeight">@dimen/fullscreen_message_line_height</item>
     </style>
-    
-    <style name="account_option" parent="@style/regular_white_text">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/height_drawer_menu</item>
-        <item name="android:textColor">@color/primaryBaseColor</item>
-        <item name="android:background">@drawable/selectable_box_overlay</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingBottom">@dimen/widget_margin</item>
-        <item name="android:paddingStart">@dimen/edx_margin</item>
-        <item name="android:paddingEnd">@dimen/edx_margin</item>
-        <item name="android:paddingTop">@dimen/widget_margin</item>
-        <item name="android:textSize">@dimen/edx_base</item>
-    </style>
 
     <style name="bold_text">
         <item name="android:fontFamily">?attr/fontSemiBold</item>
@@ -140,6 +123,10 @@
 
     <style name="regular_text">
         <item name="android:fontFamily">?attr/fontRegular</item>
+    </style>
+
+    <style name="medium_text">
+        <item name="android:fontFamily">?attr/fontMedium</item>
     </style>
 
     <style name="text_network_error" parent="@style/semibold_white_text">
@@ -162,7 +149,7 @@
 
     <!-- Registration Instruction Message below fields-->
     <style name="registration_instruction_message" parent="registration_error_message">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/neutralXDark</item>
     </style>
 
     <!-- Course Card styles -->
@@ -251,7 +238,7 @@
     </style>
 
     <style name="profile_field_heading" parent="profile_field_description">
-        <item name="android:fontFamily">?attr/secondaryFontRegular</item>
+        <item name="android:fontFamily">?attr/fontSecondaryRegular</item>
     </style>
 
     <style name="video_download_label_text_style" parent="regular_primary_base_text">
@@ -260,5 +247,69 @@
 
     <style name="video_download_description_text_style" parent="regular_primary_x_light_text">
         <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="course_navigation_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">?attr/fontSecondaryMedium</item>
+        <item name="android:textColor">@color/neutralXDark</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="lineHeight">@dimen/widget_margin_double</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="error_state_text" parent="Widget.MaterialComponents.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/widget_margin_x_double</item>
+        <item name="android:layout_marginTop">@dimen/widget_margin_x_double</item>
+        <item name="android:layout_marginEnd">@dimen/widget_margin_x_double</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/primaryDarkColor</item>
+        <item name="android:textSize">@dimen/edx_xxx_large</item>
+        <item name="lineHeight">@dimen/edx_default_margin_double</item>
+    </style>
+
+    <style name="CourseDashboardHeadline">
+        <item name="android:textColor">@color/neutralBlackT</item>
+        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="android:gravity">start</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
+    </style>
+
+    <style name="CourseDashboardDescription">
+        <item name="android:textColor">@color/neutralXXDark</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:gravity">start</item>
+        <item name="android:fontFamily">?attr/fontRegular</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
+    </style>
+
+    <style name="TabItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/tab_selector</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="lineHeight">@dimen/edx_default_margin</item>
+    </style>
+
+    <style name="CourseUnitDropDownItem">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/neutralXXDark</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="lineHeight">@dimen/widget_margin_double</item>
+        <item name="fontFamily">?attr/fontRegular</item>
+    </style>
+
+    <style name="CourseUnitDropDownItemLocked">
+        <item name="android:textColor">@color/neutralXDark</item>
+        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="lineHeight">@dimen/edx_margin</item>
+        <item name="fontFamily">?attr/fontRegular</item>
     </style>
 </resources>

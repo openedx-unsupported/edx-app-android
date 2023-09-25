@@ -1,37 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/content_error_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/neutralLight">
+        android:background="@color/neutralWhite">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
-                android:id="@+id/my_course_list"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="@dimen/widget_margin_half"
-                android:paddingTop="@dimen/widget_margin_half"
-                android:paddingBottom="@dimen/widget_margin_half"
-                android:drawSelectorOnTop="false"
-                android:listSelector="@android:color/transparent"
-                tools:listitem="@layout/row_course_list" />
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/my_course_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/widget_margin_half"
+                    android:paddingBottom="@dimen/widget_margin_half"
+                    android:clipToPadding="false"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/row_course_list"
+                    tools:visibility="visible" />
+
+                <include
+                    android:id="@+id/stateLayout"
+                    layout="@layout/layout_error_state"
+                    android:visibility="visible"
+                    tools:visibility="gone" />
+
+            </FrameLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <include
             android:id="@+id/loading_indicator"
             layout="@layout/loading_indicator" />
 
-        <include layout="@layout/content_error" />
+        <include
+            layout="@layout/content_error"
+            tools:visibility="gone" />
 
     </FrameLayout>
 </layout>

@@ -1,0 +1,80 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edx_divider_length"
+        android:background="@color/neutralDark" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sub_section_row_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/edx_default_margin"
+        android:paddingTop="@dimen/container_padding"
+        android:paddingEnd="@dimen/edx_half_margin"
+        android:paddingBottom="@dimen/widget_margin">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_completed_section"
+            android:layout_width="@dimen/ic_large"
+            android:layout_height="@dimen/ic_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_green_check"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/edx_margin"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/bulk_download_layout"
+            app:layout_constraintStart_toEndOf="@+id/iv_completed_section"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_sub_section_title"
+                style="@style/regular_primary_base_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textSize="@dimen/edx_small"
+                tools:text="Title Title Title Title Title Title Title Title Title Title " />
+
+            <TextView
+                android:id="@+id/tv_sub_title"
+                style="@style/regular_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/neutralXDark"
+                android:textSize="@dimen/edx_small"
+                android:visibility="gone"
+                tools:text="Subtitle"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/bulk_download_layout"
+            layout="@layout/home_bulk_download_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

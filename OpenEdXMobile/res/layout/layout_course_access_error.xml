@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/edx_default_margin">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/heading"
+            style="@style/CourseDashboardHeadline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/course_access_expired" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/description"
+            style="@style/CourseDashboardDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_default_margin"
+            tools:text="@string/message_no_new_session" />
+
+        <include
+            android:id="@+id/layout_upgrade_features"
+            layout="@layout/layout_upgrade_features"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/edx_default_margin"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/primary_button"
+            layout="@layout/layout_upgrade_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/widget_margin_x_double" />
+
+        <include
+            android:id="@+id/secondary_button"
+            layout="@layout/layout_secondary_button" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

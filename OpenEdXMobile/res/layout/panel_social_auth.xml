@@ -1,53 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/panel_social_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/edx_default_margin"
+    android:layout_marginBottom="@dimen/edx_default_margin"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/panel_social_layout"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/google_button"
+        style="@style/edX.Widget.SocialLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/social_auth_bottom_margin"
-        android:baselineAligned="false"
-        android:gravity="center">
+        android:background="@drawable/edx_neutral_x_dark_bordered_button"
+        android:text="@string/sign_in_with_google"
+        android:textColor="@color/neutralXDark"
+        app:icon="@drawable/ic_google_logo" />
 
-        <include
-            android:id="@+id/google_button"
-            layout="@layout/panel_google_button"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/social_btn_height"
-            app:layout_constraintEnd_toStartOf="@+id/view_padding"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/facebook_button"
+        style="@style/edX.Widget.SocialLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/edx_default_margin"
+        android:background="@color/facebook_button_background"
+        android:text="@string/sign_in_with_facebook"
+        android:textColor="@color/neutralWhiteT"
+        app:icon="@drawable/ic_facebook_logo" />
 
-        <View
-            android:id="@+id/view_padding"
-            android:layout_width="6dp"
-            android:layout_height="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/facebook_button"
-            layout="@layout/panel_facebook_button"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/social_btn_height"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view_padding"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/microsoft_button"
-            layout="@layout/panel_microsoft_button"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/social_btn_height"
-            android:layout_marginTop="@dimen/social_button_top_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_padding"
-            app:layout_constraintWidth_percent=".50" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/microsoft_button"
+        style="@style/edX.Widget.SocialLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/edx_default_margin"
+        android:background="@color/microsoft_button_background"
+        android:text="@string/sign_in_with_microsoft"
+        android:textColor="@color/neutralWhiteT"
+        app:icon="@drawable/ic_microsoft_logo" />
+</LinearLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import org.edx.mobile.R;
@@ -41,7 +42,6 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.label_discovery);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
     }
 
@@ -52,7 +52,10 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity {
     }
 
     @Override
-    public void setTitle(int titleId) {
-        setTitle(getResources().getString(titleId));
+    protected void configureActionBar() {
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.hide();
+        }
     }
 }

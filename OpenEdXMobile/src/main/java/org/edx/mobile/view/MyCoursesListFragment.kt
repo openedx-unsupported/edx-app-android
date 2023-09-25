@@ -6,13 +6,15 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnScrollChangedListener
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.authentication.LoginAPI
 import org.edx.mobile.base.MainApplication
 import org.edx.mobile.databinding.FragmentMyCoursesListBinding
-import org.edx.mobile.databinding.PanelFindCourseBinding
 import org.edx.mobile.deeplink.DeepLink
 import org.edx.mobile.deeplink.DeepLinkManager
 import org.edx.mobile.deeplink.Screen
@@ -34,12 +36,15 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
+import org.edx.mobile.util.AppStoreUtils
 import org.edx.mobile.util.InAppPurchasesException
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
 import org.edx.mobile.util.observer.EventObserver
-import org.edx.mobile.view.adapters.MyCoursesAdapter
+import org.edx.mobile.view.adapters.BaseListAdapter
+import org.edx.mobile.view.adapters.MyCoursesListAdapter
+import org.edx.mobile.view.custom.error.EdxErrorState
 import org.edx.mobile.view.dialog.CourseModalDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
 import org.edx.mobile.viewModel.CourseViewModel
@@ -53,7 +58,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
-    private lateinit var adapter: MyCoursesAdapter
+    private lateinit var adapter: MyCoursesListAdapter
     private lateinit var binding: FragmentMyCoursesListBinding
 
     private val courseViewModel: CourseViewModel by viewModels()
@@ -69,29 +74,35 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     lateinit var iapDialog: InAppPurchasesDialog
 
     private lateinit var errorNotification: FullScreenErrorNotification
+    private lateinit var onScrollChangedListener: OnScrollChangedListener
+
     private var refreshOnResume = false
     private var isObserversInitialized = true
     private var lastClickTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = object : MyCoursesAdapter(activity, environment) {
+        adapter = object : MyCoursesListAdapter(environment) {
             override fun onItemClicked(model: EnrolledCoursesResponse) {
                 activity?.let { activity ->
-                    environment.router.showCourseDashboardTabs(activity, model, false)
+                    environment.router.showCourseDashboardTabs(activity, model)
                 }
             }
 
             override fun onAnnouncementClicked(model: EnrolledCoursesResponse) {
                 activity?.let { activity ->
-                    environment.router.showCourseDashboardTabs(activity, model, true)
+                    environment.router.showCourseDashboardTabs(
+                        activity,
+                        model,
+                        Screen.COURSE_ANNOUNCEMENT
+                    )
                 }
             }
 
             override fun onValuePropClicked(model: EnrolledCoursesResponse) {
                 //This time is checked to avoid taps in quick succession
                 val currentTime = SystemClock.elapsedRealtime()
-                if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
+                if (currentTime - lastClickTime > BaseListAdapter.MIN_CLICK_INTERVAL) {
                     lastClickTime = currentTime
                     CourseModalDialogFragment.newInstance(
                         Analytics.Screens.COURSE_ENROLLMENT,
@@ -115,6 +126,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
         binding.swipeContainer.setOnRefreshListener {
             errorNotification.hideError()
+            binding.stateLayout.root.setVisibility(false)
             courseViewModel.fetchEnrolledCourses(
                 type = CoursesRequestType.STALE,
                 showProgress = false
@@ -122,11 +134,17 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         }
         UiUtils.setSwipeRefreshLayoutColors(binding.swipeContainer)
 
-        // Add empty view to cause divider to render at the top of the list.
-        binding.myCourseList.addHeaderView(View(context), null, false)
         binding.myCourseList.adapter = adapter
-        binding.myCourseList.onItemClickListener = adapter
-
+        binding.myCourseList.addItemDecoration(
+            DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+                setDrawable(
+                    UiUtils.getDrawable(
+                        requireContext(),
+                        R.drawable.my_course_list_recycler_view_divider
+                    )
+                )
+            }
+        )
         initCourseObservers()
         courseViewModel.fetchEnrolledCourses(type = CoursesRequestType.PERSISTABLE_CACHE)
 
@@ -138,6 +156,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
             binding.loadingIndicator.root.setVisibility(it)
             if (it) {
                 errorNotification.hideError()
+                binding.stateLayout.root.setVisibility(false)
             }
         })
 
@@ -179,12 +198,10 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         }
 
                         HttpStatus.UPGRADE_REQUIRED -> {
-                            context?.let { context ->
-                                errorNotification.showError(
-                                    context,
-                                    it
-                                )
-                            }
+                            showError(EdxErrorState.State.UPDATE_APP)
+                        }
+                        else -> {
+                            showError(EdxErrorState.State.NETWORK)
                         }
                     }
                 }
@@ -198,7 +215,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 }
 
                 else -> {
-                    showError(it)
+                    showError(EdxErrorState.State.NETWORK)
                 }
             }
             invalidateView()
@@ -268,6 +285,18 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         )
     }
 
+    override fun onStart() {
+        super.onStart()
+        // To force the SwipeRefreshLayout to use the scroll only when the underlying view has
+        // scrolled up to its top.
+        binding.swipeContainer.viewTreeObserver.addOnScrollChangedListener(
+            OnScrollChangedListener {
+                binding.swipeContainer.isEnabled = binding.stateLayout.root.scrollY == 0
+            }.also {
+                onScrollChangedListener = it
+            })
+    }
+
     override fun onResume() {
         super.onResume()
         if (!EventBus.getDefault().isRegistered(this@MyCoursesListFragment)) {
@@ -284,6 +313,9 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        binding.swipeContainer.viewTreeObserver.removeOnScrollChangedListener(
+            onScrollChangedListener
+        )
         EventBus.getDefault().unregister(this)
     }
 
@@ -321,19 +353,25 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
     private fun populateCourseData(
         data: List<EnrolledCoursesResponse>
     ) {
-        if (data.isNotEmpty()) {
-            adapter.setItems(data)
-        }
+        adapter.submitList(data)
 
-        addFindCoursesFooter()
-        adapter.notifyDataSetChanged()
-
-        if (adapter.isEmpty && !environment.config.discoveryConfig.isDiscoveryEnabled) {
+        if (adapter.itemCount == 0 && environment.config.discoveryConfig.isDiscoveryEnabled) {
+            binding.stateLayout.state.setState(EdxErrorState.State.EMPTY, Screen.MY_COURSES)
+            binding.stateLayout.state.setActionListener {
+                environment.analyticsRegistry?.trackUserFindsCourses(adapter.itemCount)
+                EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
+            }
+            binding.stateLayout.root.setVisibility(true)
+            binding.myCourseList.setVisibility(false)
+        } else if (adapter.itemCount == 0 && !environment.config.discoveryConfig.isDiscoveryEnabled) {
             errorNotification.showError(
                 R.string.no_courses_to_display,
                 R.drawable.ic_error, 0, null
             )
-            binding.myCourseList.visibility = View.GONE
+            binding.myCourseList.setVisibility(false)
+        } else {
+            binding.stateLayout.root.setVisibility(false)
+            binding.myCourseList.setVisibility(true)
         }
         invalidateView()
     }
@@ -363,34 +401,21 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         binding.loadingIndicator.root.visibility = View.GONE
     }
 
-    private fun showError(error: Throwable) {
-        context?.let { context ->
-            errorNotification.showError(context, error, R.string.lbl_reload) {
-                if (NetworkUtil.isConnected(context)) {
+    private fun showError(state: EdxErrorState.State) {
+        binding.myCourseList.setVisibility(false)
+        binding.stateLayout.root.setVisibility(true)
+        binding.stateLayout.state.setState(state, Screen.MY_COURSES)
+        binding.stateLayout.state.setActionListener {
+            when (state) {
+                EdxErrorState.State.UPDATE_APP -> {
+                    AppStoreUtils.openAppInAppStore(requireContext())
+                }
+                EdxErrorState.State.NETWORK -> {
                     onRefresh()
                 }
+                else -> {}
             }
         }
-    }
-
-    private fun addFindCoursesFooter() {
-        // Validate footer is not already added.
-        if (binding.myCourseList.footerViewsCount > 0) {
-            return
-        }
-        if (environment.config.discoveryConfig.isDiscoveryEnabled) {
-            // Add 'Find a Course' list item as a footer.
-            val footer: PanelFindCourseBinding = PanelFindCourseBinding.inflate(
-                LayoutInflater.from(activity), binding.myCourseList, false
-            )
-            binding.myCourseList.addFooterView(footer.root, null, false)
-            footer.courseBtn.setOnClickListener {
-                environment.analyticsRegistry?.trackUserFindsCourses(adapter.count)
-                EventBus.getDefault().post(MoveToDiscoveryTabEvent(Screen.DISCOVERY))
-            }
-        }
-        // Add empty view to cause divider to render at the bottom of the list.
-        binding.myCourseList.addFooterView(View(context), null, false)
     }
 
     override fun onRefresh() {

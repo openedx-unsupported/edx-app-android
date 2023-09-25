@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date"><b>Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida.</b>
-Para se ficar em dia, você pode atualizar esta programação e adiar as tarefas já atrasadas. Não se preocupe – você não perderá o progresso já feito.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">Alterar datas de entrega</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">Programação do Curso</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">Fizemos uma programação como sugestão para te ajudar a manter o ritmo. Mas não se preocupe, ela é flexível, assim você pode aprender no seu próprio ritmo. 
 Se você não conseguir acompanhar tudo nas datas sugeridas, você poderá ajustá-las de forma que seja melhor para você.</string>
@@ -16,9 +11,6 @@ Se você não conseguir acompanhar tudo nas datas sugeridas, você poderá ajust
     <!-- Message Course Dates Banner Upgrade to Reset -->
     <string name="course_dates_banner_upgrade_to_reset">Você está participando deste curso,
 o que significa que você não pode participar em avaliações. Para completar avaliações como uma parte deste curso, faça o upgrade hoje. Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida. Para completar avaliações como parte deste curso e adiar tarefas já atrasadas, faça o upgrade hoje.</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">Parece que você perdeu alguns prazos importantes baseados em nossa programação sugerida.
-Para se ficar em dia, você pode atualizar esta programação e adiar as tarefas já atrasadas. Não se preocupe – você não perderá o progresso já feito.</string>
     <!-- Label Course Card Graded Message -->
     <string name="value_prop_course_card_message">Faça o upgrade para ter acesso a mais recursos</string>
 

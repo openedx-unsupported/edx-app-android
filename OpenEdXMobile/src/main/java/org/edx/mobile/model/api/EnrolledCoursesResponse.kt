@@ -1,8 +1,11 @@
 package org.edx.mobile.model.api
 
+import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName
 import org.edx.mobile.interfaces.SectionItemInterface
 import org.edx.mobile.model.course.EnrollmentMode
+import org.edx.mobile.util.DateUtil
+import java.util.Date
 
 data class EnrolledCoursesResponse(
 
@@ -10,7 +13,7 @@ data class EnrolledCoursesResponse(
     var mode: String,
 
     @SerializedName("audit_access_expires")
-    val auditAccessExpires: String,
+    val auditAccessExpires: String?,
 
     @SerializedName("is_active")
     val isActive: Boolean = false,
@@ -44,6 +47,10 @@ data class EnrolledCoursesResponse(
     val isAuditMode: Boolean
         get() = EnrollmentMode.AUDIT.toString().equals(mode, ignoreCase = true)
 
+    val isAuditAccessExpired: Boolean
+        get() = auditAccessExpires.isNullOrEmpty().not() &&
+                Date().after(DateUtil.convertToDate(auditAccessExpires))
+
     val isUpgradeable: Boolean
         get() = isAuditMode &&
                 course.isStarted &&
@@ -74,5 +81,31 @@ data class EnrolledCoursesResponse(
 
     override fun isDownload(): Boolean {
         return false
+    }
+}
+
+/**
+ * The callback for calculating the difference between two non-null items in a list.
+ */
+object EnrolledCoursesComparator : DiffUtil.ItemCallback<EnrolledCoursesResponse>() {
+    /**
+     * To check whether two objects represent the same item
+     */
+    override fun areItemsTheSame(
+        oldItem: EnrolledCoursesResponse,
+        newItem: EnrolledCoursesResponse,
+    ): Boolean {
+        return oldItem == newItem
+    }
+
+    /**
+     * To check whether two items have the same data. With a RecyclerView.Adapter, we should return
+     * whether the items' visual representations are the same.
+     */
+    override fun areContentsTheSame(
+        oldItem: EnrolledCoursesResponse,
+        newItem: EnrolledCoursesResponse,
+    ): Boolean {
+        return oldItem.courseId == newItem.courseId
     }
 }

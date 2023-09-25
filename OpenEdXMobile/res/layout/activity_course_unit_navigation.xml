@@ -1,0 +1,187 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_area"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/course_navigation_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/course_unit_nav_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@color/toolbar_background_color">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed">
+
+                <LinearLayout
+                    android:id="@+id/expanded_toolbar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_collapseMode="parallax">
+
+                    <android.widget.Space
+                        android:id="@+id/space"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/collapsed_toolbar_height" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/primaryLightColor"
+                        android:orientation="vertical"
+                        android:padding="@dimen/edx_default_margin">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/course_sub_section_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="?attr/fontRegular"
+                            android:textColor="@color/neutralWhiteT"
+                            android:textDirection="locale"
+                            android:textSize="@dimen/edx_small"
+                            tools:text="What is Happiness?" />
+
+                        <FrameLayout
+                            android:id="@+id/fl_units_drop_down"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/edx_x_quarter_margin">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/course_unit_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="?attr/fontBold"
+                                android:textColor="@color/neutralWhiteT"
+                                android:textDirection="locale"
+                                android:textSize="@dimen/edx_base"
+                                tools:text="Introducing Weekly Check In" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <com.rachitgoyal.segmented.SegmentedProgressBar
+                        android:id="@+id/spb_units"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/segmented_progressbar_height"
+                        app:cornerRadius="0dp"
+                        app:dividerColor="@color/neutralWhiteT"
+                        app:dividerWidth="@dimen/segmented_progressbar_divider_width"
+                        app:divisions="5"
+                        app:isDividerEnabled="true"
+                        app:progressBarBackgroundColor="@color/neutralDark"
+                        app:progressBarColor="@color/accentBColor" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/collapsed_toolbar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/collapsed_toolbar_height"
+                    android:background="@color/primaryLightColor"
+                    android:contentInsetStart="0dp"
+                    app:contentInsetStart="0dp"
+                    app:layout_collapseMode="pin">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_collapsed_back"
+                            android:layout_width="@dimen/ic_base"
+                            android:layout_height="@dimen/ic_base"
+                            android:layout_marginStart="@dimen/widget_margin"
+                            android:rotation="180"
+                            android:tint="@color/neutralWhiteT"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            tools:ignore="ContentDescription" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/collapsed_toolbar_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/widget_margin"
+                            android:ellipsize="end"
+                            android:fontFamily="?attr/fontBold"
+                            android:maxLines="1"
+                            android:textAppearance="@style/CourseDashboardCollapsedToolbarTitle"
+                            android:textSize="@dimen/edx_small"
+                            android:textStyle="bold"
+                            tools:text="Introducing Weekly Check Ins" />
+
+                    </LinearLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <TextView
+                android:id="@+id/flying_message"
+                style="@style/flying_message"
+                android:visibility="gone" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pager2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:importantForAccessibility="no"
+                android:orientation="horizontal" />
+
+            <include
+                android:id="@+id/stateLayout"
+                layout="@layout/layout_error_state"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <RelativeLayout
+        android:id="@+id/course_unit_nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/course_unit_nav_bar_height"
+        android:background="@drawable/rectangle_with_top_border"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
+        android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/goto_prev"
+            style="@style/course_navigation_button"
+            android:layout_alignParentStart="true"
+            android:text="@string/assessment_previous" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/goto_next"
+            style="@style/course_navigation_button"
+            android:layout_alignParentEnd="true"
+            android:text="@string/assessment_next" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

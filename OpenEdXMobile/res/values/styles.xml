@@ -30,9 +30,12 @@
         <item name="castMiniControllerStyle">@style/CastMiniControllerTheme</item>
         <item name="fontItalic">@font/inter_italic</item>
         <item name="fontRegular">@font/inter_regular</item>
+        <item name="fontMedium">@font/inter_medium</item>
         <item name="fontSemiBoldItalic">@font/inter_semi_bold_italic</item>
         <item name="fontSemiBold">@font/inter_semi_bold</item>
-        <item name="secondaryFontRegular">@font/roboto_mono_regular</item>
+        <item name="fontBold">@font/inter_bold</item>
+        <item name="fontSecondaryRegular">@font/roboto_mono_regular</item>
+        <item name="fontSecondaryMedium">@font/roboto_mono_medium</item>
         <item name="android:fontFamily">?attr/fontRegular</item>
     </style>
 
@@ -111,6 +114,7 @@
     <style name="AppTheme.ToolBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/toolbar_controls_color</item>
         <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="android:textSize">@dimen/action_bar_text_size</item>
     </style>
 
     <style name="AppTheme.ToolBar.SubTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
@@ -142,10 +146,6 @@
     <style name="separator_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-    </style>
-
-    <style name="blue_separator" parent="separator_base">
-        <item name="android:background">@color/primaryBaseColor</item>
     </style>
 
     <style name="gray_separator" parent="separator_base">
@@ -236,8 +236,8 @@
 
     <style name="custom_horizontal_progress" parent="Widget.MaterialComponents.LinearProgressIndicator">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:minHeight">@dimen/progress_bar_height</item>
-        <item name="android:maxHeight">@dimen/progress_bar_height</item>
+        <item name="android:minHeight">@dimen/bulk_download_progress_height</item>
+        <item name="android:maxHeight">@dimen/bulk_download_progress_height</item>
         <item name="trackColor">@color/neutralDark</item>
         <item name="indicatorColor">@color/successBase</item>
         <item name="trackCornerRadius">@dimen/edx_box_radius</item>
@@ -264,16 +264,6 @@
         <item name="colorAccent">@color/primaryXLightColor</item>
     </style>
 
-    <style name="section_lbl">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxWidth">150dp</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/primaryXLightColor</item>
-        <item name="android:layout_marginTop">-5dp</item>
-    </style>
-
     <style name="search_bar">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
@@ -283,6 +273,7 @@
     <style name="discussion_topics_search_bar" parent="search_bar">
         <item name="android:queryHint">@string/topics_search</item>
         <item name="android:background">@color/white</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
         <item name="android:iconifiedByDefault">false</item>
     </style>
 
@@ -348,8 +339,11 @@
         <item name="android:textColor">@color/neutralXDark</item>
         <item name="android:textColorLink">@color/primaryDarkColor</item>
         <item name="android:gravity">start</item>
-        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="android:textSize">@dimen/edx_xx_small</item>
+        <item name="android:layout_marginTop">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/edx_default_margin</item>
         <item name="lineHeight">@dimen/edx_x_small</item>
+        <item name="lineSpacing">@dimen/edx_x_quarter_margin</item>
     </style>
 
     <!-- Styles from the edX style guide will be nested under "edX" -->
@@ -372,35 +366,11 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="edX.Widget.ActionBrandPillButton" parent="@style/edX.Widget.Button">
-        <item name="android:paddingStart">@dimen/widget_margin</item>
-        <item name="android:paddingEnd">@dimen/widget_margin</item>
-        <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:background">@drawable/edx_brand_button</item>
-        <item name="android:textColor">@color/edx_brand_button_text</item>
-        <item name="android:textSize">@dimen/edx_base</item>
-        <item name="android:fontFamily">?attr/fontSemiBold</item>
-    </style>
-
-    <style name="edX.Widget.PrimaryActionButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:layout_marginTop">@dimen/widget_margin</item>
-        <item name="android:fontFamily">?attr/fontSemiBold</item>
-        <item name="android:background">@drawable/edx_primary_button</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/edx_small</item>
-    </style>
-
-    <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
-        <item name="android:textColor">?attr/disableableButtonTextColor</item>
-    </style>
-
     <style name="edX.Widget.SignInButtonLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/edx_button_height</item>
-        <item name="android:layout_marginTop">@dimen/edx_margin</item>
+        <item name="android:layout_height">@dimen/upgrade_now_button_height</item>
+        <item name="android:layout_marginTop">@dimen/edx_default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/edx_default_margin</item>
         <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
@@ -445,16 +415,6 @@
         <item name="android:text">@string/enroll_now_button_text</item>
     </style>
 
-    <style name="edX.Widget.ActionBorderedButton" parent="edX.Widget.Button">
-        <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/secondaryBaseColor</item>
-        <item name="android:background">@drawable/edx_neutral_dark_bordered_button</item>
-        <item name="android:textSize">@dimen/edx_small</item>
-        <item name="android:paddingStart">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingEnd">@dimen/button_horizontal_padding</item>
-        <item name="android:fontFamily">?attr/fontSemiBold</item>
-    </style>
-
     <style name="edX.Widget.ProfileActionBorderedButton" parent="edX.Widget.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/profile_view_button_height</item>
@@ -469,10 +429,6 @@
         <item name="android:fontFamily">?attr/fontSemiBold</item>
         <item name="android:ellipsize">end</item>
         <item name="android:focusable">true</item>
-    </style>
-
-    <style name="edX.Widget.BaseSizeButton" parent="edX.Widget.ActionBorderedButton">
-        <item name="android:textSize">@dimen/edx_base</item>
     </style>
 
     <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
@@ -530,10 +486,6 @@
         <item name="android:background">@drawable/edx_segmented_control_middle_background</item>
     </style>
 
-    <style name="edX.Widget.TextInputLayout.HintTextAppearance" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/primaryBaseColor</item>
-    </style>
-
     <style name="Calendar.Sync.Switch" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/primaryDarkColor</item>
         <item name="colorSwitchThumbNormal">@color/neutralDark</item>
@@ -559,4 +511,95 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <style name="CourseTabItem">
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+    </style>
+
+    <style name="ProfileTabItem">
+        <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="CourseDashboardExpandedToolbarTitle">
+        <item name="android:textColor">@color/neutralWhiteT</item>
+        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="background">@color/primaryLightColor</item>
+        <item name="android:gravity">start</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
+    </style>
+
+    <style name="CourseDashboardCollapsedToolbarTitle">
+        <item name="android:textColor">@color/neutralWhiteT</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textDirection">locale</item>
+        <item name="background">@color/primaryLightColor</item>
+        <item name="android:gravity">start</item>
+        <item name="lineHeight">@dimen/widget_margin_double</item>
+    </style>
+
+    <style name="MainDashboardToolbarTitle">
+        <item name="android:textColor">@color/primaryDarkColor</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
+        <item name="android:fontFamily">?attr/fontBold</item>
+        <item name="android:textDirection">locale</item>
+        <item name="android:gravity">start</item>
+        <item name="lineHeight">@dimen/widget_margin_xx_double</item>
+    </style>
+
+    <style name="edX.Widget.PrimaryActionButton" parent="@style/edX.Widget.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:background">@drawable/edx_brand_button</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:paddingEnd">@dimen/widget_margin</item>
+        <item name="android:paddingStart">@dimen/widget_margin</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:fontFamily">?attr/fontSemiBold</item>
+        <item name="lineHeight">@dimen/widget_margin_x_double</item>
+        <item name="android:textColor">@color/edx_brand_button_text</item>
+    </style>
+
+    <style name="edX.Widget.SecondaryActionButton" parent="edX.Widget.PrimaryActionButton">
+        <item name="android:textColor">@color/secondaryBaseColor</item>
+        <item name="android:background">@drawable/edx_neutral_x_light_bordered_button</item>
+    </style>
+
+    <style name="edX.Widget.TertiaryActionButton" parent="edX.Widget.PrimaryActionButton">
+        <item name="android:background">@color/primaryBaseColor</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+    </style>
+
+    <style name="edX.Widget.SocialLogin" parent="android:Widget.Material.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/upgrade_now_button_height</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:foreground">@drawable/selectable_rounded_box_overlay</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">start</item>
+        <item name="android:paddingStart">@dimen/edx_margin</item>
+        <item name="android:paddingEnd">@dimen/edx_margin</item>
+        <item name="backgroundTint">@null</item>
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">start</item>
+        <item name="iconPadding">@dimen/edx_margin</item>
+    </style>
+
+    <style name="edX.Widget.InputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="minHeight">@dimen/auth_panel_btn_height</item>
+        <item name="hintTextColor">@color/neutralXXDark</item>
+        <item name="boxStrokeColor">@color/neutralXDark</item>
+        <item name="boxStrokeErrorColor">@color/errorLight</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="endIconMode">none</item>
+        <item name="boxCornerRadiusTopStart">0dp</item>
+        <item name="boxCornerRadiusTopEnd">0dp</item>
+        <item name="boxCornerRadiusBottomStart">0dp</item>
+        <item name="boxCornerRadiusBottomEnd">0dp</item>
+    </style>
 </resources>

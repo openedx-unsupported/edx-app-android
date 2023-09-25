@@ -2,6 +2,7 @@ package org.edx.mobile.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.Dispatchers
 import org.edx.mobile.base.http.HttpBaseTestCase
 import org.edx.mobile.repository.CourseDatesRepository
 import org.junit.Assert.assertNotNull
@@ -23,7 +24,7 @@ class CourseDateViewModelTest : HttpBaseTestCase() {
     @Throws(Exception::class)
     override fun setUp() {
         super.setUp()
-        courseDateViewModel = CourseDateViewModel(CourseDatesRepository(courseAPI))
+        courseDateViewModel = CourseDateViewModel(CourseDatesRepository(courseAPI), Dispatchers.IO)
     }
 
     @Test

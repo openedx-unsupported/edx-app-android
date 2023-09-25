@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.http.HttpStatus
@@ -39,6 +38,9 @@ class CourseViewModel @Inject constructor(
 
     private val _courseComponent = MutableLiveData<Event<CourseComponent>>()
     val courseComponent: LiveData<Event<CourseComponent>> = _courseComponent
+
+    private val _lastAccessedComponent = MutableLiveData<Event<CourseComponent>>()
+    val lastAccessedComponent: LiveData<Event<CourseComponent>> = _lastAccessedComponent
 
     private val _showProgress = MutableLiveData(true)
     val showProgress: LiveData<Boolean> = _showProgress
@@ -120,7 +122,7 @@ class CourseViewModel @Inject constructor(
 
     fun getCourseData(
         courseId: String,
-        courseComponentId: String?,
+        courseComponentId: String? = null,
         showProgress: Boolean = false,
         swipeRefresh: Boolean = false,
         coursesRequestType: CoursesRequestType = LIVE
@@ -194,27 +196,43 @@ class CourseViewModel @Inject constructor(
             runCatching {
                 courseRepository.getCourseComponentsFromAppLevelCache(
                     courseId,
-                    courseComponentId,
-                    Dispatchers.IO
+                    courseComponentId
                 )
             }
         }
+
         PERSISTABLE_CACHE -> {
             runCatching {
-                courseRepository.getCourseDataFromPersistableCache(courseId, Dispatchers.IO)
+                courseRepository.getCourseDataFromPersistableCache(courseId)
             }
         }
+
         STALE, LIVE -> {
             runCatching {
                 courseRepository.getCourseStructure(
                     courseId,
-                    coursesRequestType,
-                    Dispatchers.IO
+                    coursesRequestType
                 )
             }
         }
+
         else -> {
             throw Exception("Unknown Request Type: $coursesRequestType")
+        }
+    }
+
+    fun getCourseStatusInfo(courseId: String) {
+        viewModelScope.launch {
+            val courseStatusResult = runCatching {
+                courseRepository.getCourseStatusInfo(courseId)
+            }
+            courseStatusResult.onSuccess {
+                it?.let {
+                    _lastAccessedComponent.postEvent(it)
+                }
+            }.onFailure {
+                // nothing to do
+            }
         }
     }
 

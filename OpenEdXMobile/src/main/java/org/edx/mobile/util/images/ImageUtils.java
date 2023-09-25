@@ -1,12 +1,16 @@
 package org.edx.mobile.util.images;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.TypedValue;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,5 +117,65 @@ public class ImageUtils {
             return !activity.isDestroyed() && !activity.isFinishing();
         }
         return true;
+    }
+
+    public static void animateIconSize(ImageView imageView, float targetScale) {
+        float initialScaleX = imageView.getScaleX();
+
+        ValueAnimator animator = ValueAnimator.ofFloat(initialScaleX, targetScale);
+        animator.addUpdateListener(valueAnimator -> {
+            float animatedScale = (float) valueAnimator.getAnimatedValue();
+            imageView.setScaleX(animatedScale);
+            imageView.setScaleY(animatedScale);
+        });
+
+        animator.setDuration(200); // Adjust the animation duration as needed
+        animator.start();
+    }
+
+    /**
+     * Get the MIME type of a drawable resource based on its resource ID.
+     *
+     * @param context            The context to access resources.
+     * @param drawableResourceId The resource ID of the drawable.
+     * @return The MIME type of the drawable resource, or "unknown" if it couldn't be determined.
+     */
+    public static MimeType getDrawableMimeType(Context context, int drawableResourceId) {
+        Resources resources = context.getResources();
+        TypedValue typedValue = new TypedValue();
+        // Get the TypedValue associated with the drawable resource
+        resources.getValue(drawableResourceId, typedValue, true);
+        // Extract the resource type and subtype
+        String resourceType = typedValue.string.toString();
+        // Determine the MIME type based on the resource type
+        MimeType mimeType;
+        if (resourceType.endsWith(".png")) {
+            mimeType = MimeType.PNG;
+        } else if (resourceType.endsWith(".jpeg") || resourceType.endsWith(".jpg")) {
+            mimeType = MimeType.JPEG;
+        } else if (resourceType.endsWith(".gif")) {
+            mimeType = MimeType.GIF;
+        } else {
+            mimeType = MimeType.UNKNOWN; // Default to "unknown" for unsupported types
+        }
+
+        return mimeType;
+    }
+
+    public enum MimeType {
+        JPEG("image/jpeg"), PNG("image/png"), GIF("image/gif"),
+
+        // A default unknown MIME type
+        UNKNOWN("application/octet-stream");
+
+        private final String value;
+
+        MimeType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }

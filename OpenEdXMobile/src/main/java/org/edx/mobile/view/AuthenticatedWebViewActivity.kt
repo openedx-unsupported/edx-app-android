@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.base.BaseSingleFragmentActivity
 import org.edx.mobile.model.course.CourseComponent
+import org.edx.mobile.view.Router.EXTRA_SCREEN_TITLE
 
 @AndroidEntryPoint
 class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
@@ -40,7 +41,6 @@ class AuthenticatedWebViewActivity : BaseSingleFragmentActivity() {
     }
 
     companion object {
-        private const val EXTRA_SCREEN_TITLE = "screen_title"
         private const val EXTRA_COMPONENT_URL = "component_block_url"
         private const val EXTRA_IS_MODAL_VIEW = "is_modal_view"
 

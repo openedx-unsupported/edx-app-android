@@ -36,6 +36,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
+import org.edx.mobile.view.app_nav.CourseUnitNavigationActivity;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,17 +55,6 @@ import java.util.List;
 @Ignore("Include this test once we have migrated to the androidX")
 // TODO: To be fixed in LEARNER-7466
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
-    /**
-     * Method for defining the subclass of {@link CourseUnitNavigationActivity}
-     * that is being tested. Should be overridden by subclasses.
-     *
-     * @return The {@link CourseUnitNavigationActivity} subclass that is being
-     * tested
-     */
-    @Override
-    protected Class<? extends CourseUnitNavigationActivity> getActivityClass() {
-        return CourseUnitNavigationActivity.class;
-    }
 
     /**
      * {@inheritDoc}
@@ -132,14 +122,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         assertNotNull(next);
         assertThat(next).isInstanceOf(TextView.class);
         TextView nextButton = (TextView) next;
-        View prevUnitTitle = activity.findViewById(R.id.prev_unit_title);
-        assertNotNull(prevUnitTitle);
-        assertThat(prevUnitTitle).isInstanceOf(TextView.class);
-        TextView prevUnitLabel = (TextView) prevUnitTitle;
-        View nextUnitTitle = activity.findViewById(R.id.next_unit_title);
-        assertNotNull(nextUnitTitle);
-        assertThat(nextUnitTitle).isInstanceOf(TextView.class);
-        TextView nextUnitLabel = (TextView) nextUnitTitle;
         View pager = activity.findViewById(R.id.pager2);
         assertNotNull(pager);
         assertThat(pager).isInstanceOf(ViewPager2.class);
@@ -453,7 +435,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 unitList, courseData, null, hasComponent);
 
         for (int size = unitList.size(), i = 0; i < size; i++) {
-            assertThat(adapter.getItem(i)).isInstanceOf(classesList.get(i));
+            assertThat(adapter.getComponent(i)).isInstanceOf(classesList.get(i));
         }
     }
 
@@ -550,7 +532,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                     Robolectric.buildActivity(CourseUnitNavigationActivity.class).get(), environment,
                     Collections.singletonList(paramCourseComponent), courseData, null, hasComponent);
 
-            assertThat(adapter.getItem(0)).isInstanceOf(expectedFragmentClass);
+            assertThat(adapter.getComponent(0)).isInstanceOf(expectedFragmentClass);
         }
 
         @Override

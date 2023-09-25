@@ -12,16 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
-import com.bumptech.glide.Glide;
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -34,9 +29,9 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.model.course.SectionRow;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
@@ -45,21 +40,13 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.MemoryUtil;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.TimeZoneUtils;
 import org.edx.mobile.util.UiUtils;
 import org.edx.mobile.util.VideoUtil;
-import org.edx.mobile.util.images.CourseCardUtils;
-import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
-import org.edx.mobile.view.dialog.CourseModalDialogFragment;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class CourseOutlineAdapter extends BaseAdapter {
 
@@ -100,25 +87,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
         this.isVideoMode = isVideoMode;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapterData = new ArrayList();
-        if (isOnCourseOutline && !isVideoMode) {
-            // Add course card item
-            adapterData.add(new SectionRow(SectionRow.COURSE_CARD, null));
-            // Add certificate item
-            if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
-                adapterData.add(new SectionRow(SectionRow.COURSE_CERTIFICATE, null,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                environment.getRouter().showCertificate(context, courseData);
-                            }
-                        }));
-            }
-        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return getItem(position).type;
+        return getItem(position).getType();
     }
 
     @Override
@@ -145,7 +118,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     @Override
     public boolean isEnabled(int position) {
-        return getItemViewType(position) == SectionRow.ITEM || getItemViewType(position) == SectionRow.RESUME_COURSE_ITEM;
+        return getItemViewType(position) == SectionRow.SUB_SECTION;
     }
 
     @Override
@@ -161,7 +134,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
         // INITIALIZATION
         if (convertView == null) {
             switch (type) {
-                case SectionRow.ITEM: {
+                case SectionRow.SUB_SECTION: {
                     convertView = inflater.inflate(R.layout.row_course_outline_list, parent, false);
                     // apply a tag to this list row
                     ViewHolder tag = getTag(convertView);
@@ -172,17 +145,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.row_section_header, parent, false);
                     break;
                 }
-                case SectionRow.COURSE_CARD: {
-                    convertView = inflater.inflate(R.layout.row_course_card, parent, false);
-                    break;
-                }
-                case SectionRow.COURSE_CERTIFICATE:
-                    convertView = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
-                    break;
-                case SectionRow.RESUME_COURSE_ITEM: {
-                    convertView = inflater.inflate(R.layout.row_resume_course, parent, false);
-                    break;
-                }
                 default: {
                     throw new IllegalArgumentException(String.valueOf(type));
                 }
@@ -191,19 +153,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
         // POPULATION
         switch (type) {
-            case SectionRow.ITEM: {
+            case SectionRow.SUB_SECTION: {
                 return getRowView(position, convertView);
             }
             case SectionRow.SECTION: {
                 return getHeaderView(position, convertView);
-            }
-            case SectionRow.COURSE_CARD: {
-                return getCardView(convertView);
-            }
-            case SectionRow.COURSE_CERTIFICATE:
-                return getCertificateView(position, convertView);
-            case SectionRow.RESUME_COURSE_ITEM: {
-                return getResumeCourseView(position, convertView);
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(type));
@@ -234,11 +188,11 @@ public class CourseOutlineAdapter extends BaseAdapter {
                         CourseComponent child = (CourseComponent) childBlock;
                         if (isVideoMode && child.getVideos().size() == 0)
                             continue;
-                        SectionRow row = new SectionRow(SectionRow.ITEM, false, child);
+                        SectionRow row = new SectionRow(SectionRow.SUB_SECTION, child);
                         adapterData.add(row);
                     }
                 } else {
-                    SectionRow row = new SectionRow(SectionRow.ITEM, true, comp);
+                    SectionRow row = new SectionRow(SectionRow.SUB_SECTION, comp);
                     adapterData.add(row);
                 }
             }
@@ -294,14 +248,14 @@ public class CourseOutlineAdapter extends BaseAdapter {
     public View getRowView(int position, View convertView) {
         final SectionRow row = this.getItem(position);
         final SectionRow nextRow = this.getItem(position + 1);
-        final CourseComponent component = row.component;
+        final CourseComponent component = row.getComponent();
         final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
         if (nextRow == null) {
             viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
         } else {
             viewHolder.wholeSeparator.setVisibility(View.GONE);
-            boolean isLastChildInBlock = !row.component.getParent().getId().equals(nextRow.component.getParent().getId());
+            boolean isLastChildInBlock = !row.getComponent().getParent().getId().equals(nextRow.getComponent().getParent().getId());
             if (!isLastChildInBlock) {
                 viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
             }
@@ -322,7 +276,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
     }
 
     private void getRowViewForLeaf(ViewHolder viewHolder, final SectionRow row) {
-        final CourseComponent unit = row.component;
+        final CourseComponent unit = row.getComponent();
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitleVideoSize.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
@@ -335,10 +289,10 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.wholeSeparator.setBackgroundColor(ContextCompat.getColor(context, R.color.neutralDark));
 
         boolean isDenialFeatureBasedEnrolments =
-                row.component.getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS;
+                row.getComponent().getAuthorizationDenialReason() == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS;
 
-        if (row.component instanceof VideoBlockModel) {
-            final VideoBlockModel videoBlockModel = (VideoBlockModel) row.component;
+        if (row.getComponent() instanceof VideoBlockModel) {
+            final VideoBlockModel videoBlockModel = (VideoBlockModel) row.getComponent();
             final DownloadEntry videoData = videoBlockModel.getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData, videoBlockModel);
@@ -347,7 +301,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
                         isYoutubePlayerEnabled ? R.drawable.ic_youtube_play : R.drawable.ic_laptop, R.dimen.small_icon_size);
             }
-        } else if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
+        } else if (config.isDiscussionsEnabled() && row.getComponent() instanceof DiscussionBlockModel) {
             UiUtils.INSTANCE.setTextViewDrawableEnd(context, viewHolder.rowTitle,
                     R.drawable.ic_forum, R.dimen.small_icon_size);
         } else if (!unit.isMultiDevice()) {
@@ -468,7 +422,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
 
     private void getRowViewForContainer(ViewHolder holder,
                                         final SectionRow row) {
-        final CourseComponent component = row.component;
+        final CourseComponent component = row.getComponent();
         String courseId = component.getCourseId();
         BlockPath path = component.getPath();
         //FIXME - we should add a new column in database - pathinfo.
@@ -495,7 +449,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             if (!TextUtils.isEmpty(component.getDueDate())) {
                 try {
                     holder.rowSubtitle.setText(String.format("%s %s", holder.rowSubtitle.getText().toString(),
-                            getFormattedDueDate(component.getDueDate())));
+                            DateUtil.getFormattedDueDate(holder.rowSubtitle.getContext(), component.getDueDate())));
                 } catch (IllegalArgumentException e) {
                     logger.error(e);
                 }
@@ -555,22 +509,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         }
     }
 
-    private String getFormattedDueDate(final String date) throws IllegalArgumentException {
-        final SimpleDateFormat dateFormat;
-        final Date dueDate = DateUtil.convertToDate(date);
-        if (android.text.format.DateUtils.isToday(dueDate.getTime())) {
-            dateFormat = new SimpleDateFormat("HH:mm");
-            String formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string.due_date_today,
-                    "due_date", dateFormat.format(dueDate)).toString();
-            formattedDate += " " + TimeZoneUtils.getTimeZoneAbbreviation(TimeZone.getDefault());
-            return formattedDate;
-        } else {
-            dateFormat = new SimpleDateFormat("MMM dd, yyyy");
-            return ResourceUtil.getFormattedString(context.getResources(), R.string.due_date_past_future,
-                    "due_date", dateFormat.format(dueDate)).toString();
-        }
-    }
-
     /**
      * Makes various changes to the row based on a video element's download status
      *
@@ -585,23 +523,19 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 row.bulkDownloadLoading.setVisibility(View.VISIBLE);
                 row.bulkDownloadLoading.setTag(DownloadEntry.DownloadedState.DOWNLOADING);
                 row.bulkDownload.setVisibility(View.GONE);
-                row.downloadBackground.setVisibility(View.GONE);
                 row.bulkDownloadLoading.setContentDescription(state.toString());
                 break;
             case DOWNLOADED:
                 row.bulkDownloadLoading.setVisibility(View.GONE);
-                row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setVisibility(View.VISIBLE);
-                row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
-                        R.drawable.ic_download_done, R.dimen.edx_large));
+                row.bulkDownload.setImageResource(R.drawable.download_done_selector);
                 row.bulkDownload.setTag(R.drawable.ic_download_done);
                 break;
             case ONLINE:
                 row.bulkDownloadLoading.setVisibility(View.GONE);
                 row.bulkDownload.setVisibility(View.VISIBLE);
-                row.downloadBackground.setVisibility(View.VISIBLE);
                 row.bulkDownload.setImageDrawable(UiUtils.INSTANCE.getDrawable(context,
-                        R.drawable.ic_download, R.dimen.edx_large));
+                        R.drawable.ic_download));
                 row.bulkDownload.setTag(R.drawable.ic_download);
                 break;
         }
@@ -615,98 +549,13 @@ public class CourseOutlineAdapter extends BaseAdapter {
     public View getHeaderView(int position, View convertView) {
         final SectionRow row = this.getItem(position);
         TextView titleView = (TextView) convertView.findViewById(R.id.row_header);
-        titleView.setText(row.component.getDisplayName());
-        if (row.component.isCompleted() || (isVideoMode && row.component.isCompletedForVideos())) {
+        titleView.setText(row.getComponent().getDisplayName());
+        if (row.getComponent().isCompleted() || (isVideoMode && row.getComponent().isCompletedForVideos())) {
             titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.successXXLight));
         } else {
             titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
         return convertView;
-    }
-
-    public View getCardView(View view) {
-        final MaterialTextView courseTextName = view.findViewById(R.id.course_detail_name);
-        final MaterialTextView courseTextDetails = view.findViewById(R.id.course_detail_extras);
-        final AppCompatImageView headerImageView = view.findViewById(R.id.header_image_view);
-        final View upgradeBtn = view.findViewById(R.id.layout_upgrade_btn);
-        final MaterialButton upgradeBtnText = upgradeBtn.findViewById(R.id.btn_upgrade);
-
-        if (courseData.isUpgradeable() && environment.getFeaturesPrefs().isValuePropEnabled()) {
-            upgradeBtn.setVisibility(View.VISIBLE);
-            ((ShimmerFrameLayout) upgradeBtn).hideShimmer();
-            upgradeBtnText.setOnClickListener(v -> {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - lastValuePropClickTime >= BaseListAdapter.MIN_CLICK_INTERVAL) {
-                    lastValuePropClickTime = currentTime;
-                    CourseModalDialogFragment.newInstance(
-                            Analytics.Screens.PLS_COURSE_DASHBOARD,
-                            courseData.getCourseId(),
-                            courseData.getCourseSku(),
-                            courseData.getCourse().getName(),
-                            courseData.getCourse().isSelfPaced()
-                    ).show(((AppCompatActivity) context).getSupportFragmentManager(),
-                            CourseModalDialogFragment.TAG);
-                }
-            });
-            upgradeBtnText.setText(R.string.value_prop_course_card_message);
-        } else {
-            upgradeBtn.setVisibility(View.GONE);
-        }
-
-        // Full course name should appear on the course's dashboard screen.
-        courseTextName.setEllipsize(null);
-        courseTextName.setSingleLine(false);
-
-        final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig().getApiHostURL());
-        Glide.with(context)
-                .load(headerImageUrl)
-                .placeholder(R.drawable.placeholder_course_card_image)
-                .transform(new TopAnchorFillWidthTransformation())
-                .into(headerImageView);
-
-        courseTextName.setText(courseData.getCourse().getName());
-        courseTextDetails.setText(CourseCardUtils.getFormattedDate(context, courseData));
-
-        return view;
-    }
-
-    private View getCertificateView(int position, View convertView) {
-        final SectionRow sectionRow = getItem(position);
-        convertView.setOnClickListener(sectionRow.clickListener);
-        return convertView;
-    }
-
-    private View getResumeCourseView(int position, View convertView) {
-        final SectionRow sectionRow = getItem(position);
-        final TextView tvResumeCourseComponentTitle = (TextView) convertView.findViewById(R.id.resume_course_text);
-        tvResumeCourseComponentTitle.setText(sectionRow.component.getDisplayName());
-        return convertView;
-    }
-
-    /**
-     * Adds resume course item view in the ListView.
-     *
-     * @param lastAccessedComponent The last accessed component.
-     */
-    public void addResumeCourseView(CourseComponent lastAccessedComponent) {
-        final int resumeCourseItemPlace = getNonCourseWareItemPlace(SectionRow.RESUME_COURSE_ITEM);
-        // Update the last accessed item, if its already there in the list
-        if (resumeCourseItemPlace >= 0) {
-            adapterData.set(resumeCourseItemPlace, new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
-        } else {
-            // Add it otherwise
-            adapterData.add(getResumeCourseItemPlace(), new SectionRow(SectionRow.RESUME_COURSE_ITEM, lastAccessedComponent));
-        }
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Tells the appropriate place for a {@link SectionRow#RESUME_COURSE_ITEM} to put in the adapter's list.
-     *
-     * @return List index (non-negative number) for a {@link SectionRow#RESUME_COURSE_ITEM}.
-     */
-    public int getResumeCourseItemPlace() {
-        return isNonCourseWareItemExist(SectionRow.COURSE_CERTIFICATE) ? 2 : 1;
     }
 
     /**
@@ -738,7 +587,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             if (sectionRow.isCoursewareRow()) {
                 break;
             }
-            if (sectionRow.type == sectionType) {
+            if (sectionRow.getType() == sectionType) {
                 return i;
             }
         }
@@ -769,9 +618,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.bulk_download);
         holder.bulkDownloadLoading = (CircularProgressIndicator) convertView
                 .findViewById(R.id.loading_indicator);
-        holder.downloadBackground = (View) convertView
-                .findViewById(R.id.download_background);
-        holder.bulkDownload.setColorFilter(R.color.primaryXLightColor);
         holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel = convertView.findViewById(R.id.row_subtitle_panel);
@@ -792,7 +638,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
         AppCompatImageView rowSubtitleIcon;
         AppCompatImageView bulkDownload;
         CircularProgressIndicator bulkDownloadLoading;
-        View downloadBackground;
         AppCompatImageView lockedContent;
         TextView noOfVideos;
         LinearLayout numOfVideoAndDownloadArea;
@@ -800,53 +645,13 @@ public class CourseOutlineAdapter extends BaseAdapter {
         View wholeSeparator;
     }
 
-    public static class SectionRow {
-        public static final int COURSE_CARD = 0;
-        public static final int COURSE_CERTIFICATE = 1;
-        public static final int RESUME_COURSE_ITEM = 2;
-        public static final int SECTION = 3;
-        public static final int ITEM = 4;
-
-        // Update this count according to the section types mentioned above
-        public static final int NUM_OF_SECTION_ROWS = 6;
-
-        public final int type;
-        public final boolean topComponent;
-        public final CourseComponent component;
-        public final View.OnClickListener clickListener;
-
-        public SectionRow(int type, CourseComponent component) {
-            this(type, false, component, null);
-        }
-
-        public SectionRow(int type, boolean topComponent, CourseComponent component) {
-            this(type, topComponent, component, null);
-        }
-
-        public SectionRow(int type, CourseComponent component, View.OnClickListener listener) {
-            this(type, false, component, listener);
-        }
-
-        public SectionRow(int type, boolean topComponent, CourseComponent component, View.OnClickListener listener) {
-            this.type = type;
-            this.topComponent = topComponent;
-            this.component = component;
-            this.clickListener = listener;
-        }
-
-        public boolean isCoursewareRow() {
-            return this.type == ITEM ||
-                    this.type == SECTION;
-        }
-    }
-
     public int getPositionByItemId(String itemId) {
         int size = getCount();
         for (int i = 0; i < size; i++) {
             // Some items might not have a component assigned to them e.g. Bulk Download item
-            if (getItem(i).component == null) continue;
-            if (getItem(i).component.getId().equals(itemId))
+            if (getItem(i).getComponent().getId().equals(itemId)) {
                 return i;
+            }
         }
         return -1;
     }

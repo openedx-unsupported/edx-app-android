@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/section_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/course_card_detail_padding_start"
+    android:layout_marginTop="@dimen/edx_default_margin"
+    android:layout_marginEnd="@dimen/course_card_detail_padding_end"
+    android:background="@drawable/edx_neutral_white_t_fill_neutral_dark_border"
+    android:orientation="vertical"
+    android:padding="@dimen/edx_divider_length">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/view_selector"
+        android:padding="@dimen/edx_default_margin">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_completed_section"
+            android:layout_width="@dimen/ic_large"
+            android:layout_height="@dimen/ic_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_green_check"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_section_title"
+            style="@style/regular_primary_base_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/edx_margin"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="@dimen/edx_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_expand_section"
+            app:layout_constraintStart_toEndOf="@+id/iv_completed_section"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title Title Title Title Title Title Title Title Title Title " />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_expand_section"
+            android:layout_width="@dimen/ic_small"
+            android:layout_height="@dimen/ic_small"
+            android:layout_marginStart="@dimen/edx_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_drop_up"
+            app:tint="@color/neutralDark"
+            tools:ignore="ContentDescription, ImageContrastCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_sub_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:itemCount="3"
+        tools:listitem="@layout/sub_section_row_layout"
+        tools:visibility="visible" />
+</LinearLayout>

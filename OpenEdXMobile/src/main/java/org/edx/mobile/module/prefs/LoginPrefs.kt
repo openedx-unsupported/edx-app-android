@@ -111,7 +111,7 @@ class LoginPrefs @Inject constructor(
         authBackendType = null
     }
 
-    private fun clearSocialLoginToken() {
+    fun clearSocialLoginToken() {
         socialLoginAccessToken = null
         socialLoginProvider = null
     }

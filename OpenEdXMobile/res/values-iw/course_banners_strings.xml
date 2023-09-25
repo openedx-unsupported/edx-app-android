@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date"><b>נראה שהחמצת כמה מועדים חשובים בהתבסס על לוח הזמנים המוצע שלנו.</b>
-        כדי לשמור על עצמכם על המסלול, תוכלו לעדכן את לוח הזמנים הזה ולהעביר את ההקצאות שהוגשו לעתיד. אל דאגה - לא תאבד שום התקדמות שהשגת כאשר תשנה את תאריכי היעד שלך.</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">תאריכי יעד של משמרת</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">לוח זמנים של הקורס</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">בנינו לוח זמנים מוצע כדי לעזור לך להישאר על המסלול. אבל אל דאגה - זה גמיש כך שתוכל ללמוד בקצב שלך.
 אם במקרה תיקלע לפיגור, תוכל להתאים את התאריכים כדי לשמור על עצמך על המסלול.</string>
@@ -16,9 +11,6 @@
     <!-- Message Course Dates Banner Upgrade to Reset -->
     <string name="course_dates_banner_upgrade_to_reset">אתה מבקר את הקורס הזה,
 מה שאומר שאינך יכול להשתתף במטלות מדורגות. אולי פספסת כמה מועדים חשובים בהתבסס על לוח הזמנים המוצע שלנו. כדי להשלים מטלות מדורגות כחלק מהקורס הזה ולהעביר את המטלות שנקבעו בעבר אל העתיד, אתה יכול לשדרג היום.</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">נראה שהחמצת כמה מועדים חשובים בהתבסס על לוח הזמנים המוצע שלנו.
-כדי לשמור על עצמכם על המסלול, תוכלו לעדכן את לוח הזמנים הזה ולהעביר את ההקצאות שהוגשו לעתיד. אל דאגה - לא תאבד שום התקדמות שהשגת עד כה כאשר תשנה את תאריכי היעד שלך.</string>
     <!-- Label Course Card Graded Message -->
     <string name="value_prop_course_card_message">שדרג כדי לגשת לתכונות נוספות</string>
 

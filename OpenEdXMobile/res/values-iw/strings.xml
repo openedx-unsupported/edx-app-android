@@ -5,8 +5,6 @@
   <string name="course_details_congratulations">מזל טוב!</string>
   <!--Message for user who has successfully completed a certificate course-->
   <string name="course_details_earned_cert">עברת את הקורס.</string>
-  <!--Button that opens a full view of an earned certificate-->
-  <string name="course_details_view_cert_button">הצג תעודת סיום</string>
   <!--Course Discovery-->
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">הירשמו עכשיו</string>
@@ -28,8 +26,6 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">לא ניתן לפתוח את דף האינטרנט</string>
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">שתפו את הקורסים שלכם</string>
   <!--Share course-->
   <string name="share_course_message">אני לוקח\ת קורס ב{platform_name}! תעיפו מבט:</string>
   <!--Certificate Page-->
@@ -43,22 +39,14 @@
   <!--Alert dialog error message shown when using a feature with a required Internet connection-->
   <string name="need_data">מאפיין זה מצריך חיבור אינטרנט פעיל.</string>
   <!--Login Activity Place Holders-->
-  <!--Hint text for login field-->
-  <string name="email_username">שם משתמש או כתובת דואר אלקטרוני</string>
   <!--Hint text for email address field in reset password dialog-->
   <string name="email">כתובת דוא\"ל</string>
   <!--Hint text for password field-->
   <string name="password">סיסמה</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">שכחת את סיסמתך?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">התחבר</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">כפתור כניסה</string>
   <!--Message shown while waiting for action-->
   <string name="progress_text">אנא המתינ</string>
-  <!--Message shown while user waits for response to a sign in request-->
-  <string name="signing_in">נכנס</string>
   <!--Message for shown after tapping Sign In-->
   <string name="error_message">הודעת שגיאה</string>
   <!--Generic error during log in-->
@@ -76,22 +64,15 @@
   <string name="tos_and_honor_code">תנאי השירות וקוד הכבוד ב-{platform_name}</string>
   <!--Label for Privacy Policy-->
   <string name="privacy_policy">מדיניות פרטיות</string>
-  <string name="login_title">היכנס</string>
   <!--Accessible content description of close button on Sign in and Sign up screen-->
   <string name="close">סגור</string>
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">רשימה נפתחת.</string>
   <!--Navigation Drawer Labels-->
-  <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads">צפו בהורדות המתבצעות כעת</string>
-  <!--Title of user's course list screen-->
-  <string name="label_my_courses">קורסים</string>
   <!--Title of user's program list screen-->
-  <string name="label_my_programs">תכניות</string>
+  <string name="label_programs">תכניות</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">מצא קורסים</string>
-  <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">גילוי</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">הגש משוב</string>
   <!--Toggle switch on state label-->
@@ -152,20 +133,6 @@
   <string name="course_name">שם קורס</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">תוכן קורס חדש</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">התחלה {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">סיום {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">סיום {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">תוקף הגישה לקורס יפוג {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">תוקף הגישה לקורס יפוג ב{date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">תוקף הכניסה לקורס פג {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">תוקף הכניסה לקורס פג ב{date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">תוכן הקורס</string>
@@ -195,8 +162,6 @@
   <string name="upgrade_to_verified_today_title">שדרגו למסלול \'מאומת\' היום</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">ביצוע הזמנה</string>
-  <!--label for resume course section. Will be followed by course name-->
-  <string name="label_resume">להמשיך את</string>
   <!--Mobile Payments-->
   <string name="upgrade_deadline_details">כדאי לשדרג עד {date} כדי לקבל גישה בלי מוגבלת לקורס כל עוד הוא קיים באתר.</string>
   <string name="locked_content_header">זמין ללומדים מאומתים!</string>
@@ -450,10 +415,6 @@
   <!--Label for video playback forward 15 sec in video player-->
   <!--Button label to bring up course finder-->
   <string name="find_course_text">מחפש אתגרים חדשים?</string>
-  <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">מצא קורס</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">או היכנס באמצעות</string>
   <!--Facebook login method-->
   <string name="facebook_text">פייסבוק</string>
   <!--Google login method-->
@@ -469,9 +430,6 @@
   <string name="already_have_an_account">כבר יש לך חשבון? התחבר</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">הירשם והתחל ללמוד</string>
-  <!--In Register screen-->
-  <string name="register_with">הירשם באמצעות</string>
-  <string name="or_register_with_email">או הירשמו באמצעות אימייל</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">הרשמה</string>
@@ -488,14 +446,8 @@
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>דפדוף בין כל הקורסים</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">הצג שדות רשות</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">הסתר שדות אופציונלים</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">צור את חשבוני</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">כפתור צור את החשבון שלי</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">צור חשבון...</string>
   <!--Registration screen title-->

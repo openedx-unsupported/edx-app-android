@@ -1,55 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/resume_course_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/resume_course_bar_height"
-    android:background="@drawable/edx_primary_button"
-    android:orientation="vertical">
+    android:layout_marginStart="@dimen/edx_default_margin"
+    android:layout_marginTop="@dimen/edx_default_margin"
+    android:layout_marginEnd="@dimen/edx_default_margin"
+    android:background="@drawable/edx_neutral_x_light_bordered_button"
+    android:gravity="center"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/resume_course_bar_left_margin"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="?attr/fontSemiBold"
+        android:text="@string/label_resume_course"
+        android:textColor="@color/primaryBaseColor"
+        android:textSize="@dimen/edx_small" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/resume_course_arrow_margin"
+        app:srcCompat="@drawable/ic_arrow_right" />
 
-            <TextView
-                style="@style/bold_white_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/resume_course_header_unit_vertical_margin"
-                android:text="@string/label_resume"
-                android:textSize="@dimen/edx_small" />
-
-            <TextView
-                android:id="@+id/resume_course_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/edx_base"
-                tools:text="Course Name" />
-        </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/resume_course_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/resume_course_button_right_margin"
-            android:padding="@dimen/resume_course_button_padding"
-            app:srcCompat="@drawable/ic_arrow_right" />
-
-    </LinearLayout>
-
-    <View style="@style/blue_separator" />
 </LinearLayout>

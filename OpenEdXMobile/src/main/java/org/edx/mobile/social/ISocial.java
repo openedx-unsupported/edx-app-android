@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import org.edx.mobile.logger.Logger;
 
-public interface ISocial extends ActivityLifecycleCallbacks {
+public interface ISocial {
 
     Logger logger = new Logger(ISocial.class.getName());
 

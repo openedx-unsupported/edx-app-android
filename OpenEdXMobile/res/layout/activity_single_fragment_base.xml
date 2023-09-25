@@ -2,28 +2,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:fitsSystemWindows="true">
 
-        <View
-            android:id="@+id/toolbar_placeholder"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:minHeight="?android:attr/actionBarSize" />
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <View
+                android:id="@+id/toolbar_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:minHeight="?android:attr/actionBarSize"
+                tools:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:fillViewport="true"
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <LinearLayout
                     android:id="@+id/error_layout"
@@ -37,41 +42,48 @@
                 <RelativeLayout
                     android:id="@+id/my_groups_list_container"
                     android:layout_width="match_parent"
-                    android:layout_height="0px"
+                    android:layout_height="0dp"
                     android:layout_weight="1">
 
                 </RelativeLayout>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/toolbar_background_color"
-                    android:visibility="gone"
-                    app:tabGravity="fill"
-                    app:tabMaxWidth="0dp"
-                    tools:visibility="visible" />
-
                 <include
                     android:id="@+id/auth_panel"
                     layout="@layout/auth_panel" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/flying_message"
-                style="@style/flying_message"
-                android:visibility="gone" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <include
-                android:id="@+id/loading_indicator"
-                layout="@layout/loading_indicator" />
+        <TextView
+            android:id="@+id/flying_message"
+            style="@style/flying_message"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/center_message_box"
-                style="@style/content_unavailable_error_text"
-                tools:text="Error text comes here."
-                tools:visibility="visible" />
+        <include
+            android:id="@+id/loading_indicator"
+            layout="@layout/loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        </FrameLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <TextView
+            android:id="@+id/center_message_box"
+            style="@style/content_unavailable_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Error text comes here."
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

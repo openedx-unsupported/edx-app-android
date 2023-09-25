@@ -2,6 +2,8 @@ package org.edx.mobile.social;
 
 import android.content.Context;
 
+import org.edx.mobile.social.SocialLoginDelegate.SocialUserInfoCallback;
+
 public interface SocialProvider {
 
     /**
@@ -9,6 +11,7 @@ public interface SocialProvider {
      */
     interface Callback<T> {
         void onSuccess(T response);
+
         void onError(SocialError err);
     }
 
@@ -36,7 +39,7 @@ public interface SocialProvider {
     void getUser(Callback<SocialMember> callback);
 
     /**
-     *   Gets the user object for the current logged in user
+     * Gets the user object for the current logged in user
      */
-    void getUserInfo(Context context, SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,  SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
+    void getUserInfo(Context context, String accessToken, SocialUserInfoCallback userInfoCallback);
 }

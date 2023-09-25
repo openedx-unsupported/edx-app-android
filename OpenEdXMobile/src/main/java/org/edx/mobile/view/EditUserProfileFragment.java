@@ -16,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,9 +23,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.Tab;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -38,6 +39,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.extenstion.ViewExtKt;
 import org.edx.mobile.http.callback.CallTrigger;
 import org.edx.mobile.http.notifications.DialogErrorNotification;
 import org.edx.mobile.model.user.Account;
@@ -47,10 +49,6 @@ import org.edx.mobile.model.user.FormDescription;
 import org.edx.mobile.model.user.FormField;
 import org.edx.mobile.model.user.LanguageProficiency;
 import org.edx.mobile.module.analytics.AnalyticsRegistry;
-import org.edx.mobile.task.Task;
-import org.edx.mobile.user.DeleteAccountImageTask;
-import org.edx.mobile.user.GetProfileFormDescriptionTask;
-import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
@@ -60,7 +58,9 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UserProfileUtils;
 import org.edx.mobile.util.images.ImageCaptureHelper;
 import org.edx.mobile.util.images.ImageUtils;
+import org.edx.mobile.util.observer.EventObserver;
 import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.viewModel.ProfileViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -81,15 +81,8 @@ public class EditUserProfileFragment extends BaseFragment {
 
     private Call<Account> getAccountCall;
 
-    private GetProfileFormDescriptionTask getProfileFormDescriptionTask;
-
-    private Task setAccountImageTask;
-
     @Nullable
     private Account account;
-
-    @Nullable
-    private FormDescription formDescription;
 
     @Nullable
     private ViewHolder viewHolder;
@@ -103,6 +96,8 @@ public class EditUserProfileFragment extends BaseFragment {
     @Inject
     AnalyticsRegistry analyticsRegistry;
 
+    ProfileViewModel profileViewModel;
+
     @NonNull
     private final ImageCaptureHelper helper = new ImageCaptureHelper();
 
@@ -113,9 +108,7 @@ public class EditUserProfileFragment extends BaseFragment {
                     final Uri imageUri = CropImageActivity.getImageUriFromResult(resultData);
                     final Rect cropRect = CropImageActivity.getCropRectFromResult(resultData);
                     if (imageUri != null && cropRect != null) {
-                        final Task<Void> task = new SetAccountImageTask(requireActivity(), username, imageUri, cropRect);
-                        task.setProgressDialog(viewHolder.profileImageProgress);
-                        executePhotoTask(task);
+                        profileViewModel.uploadProfileImage(requireActivity(), imageUri, cropRect);
                         analyticsRegistry.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(resultData));
                     }
                 }
@@ -194,7 +187,6 @@ public class EditUserProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
-
         parseExtras();
 
         final Activity activity = requireActivity();
@@ -204,20 +196,6 @@ public class EditUserProfileFragment extends BaseFragment {
                 activity, username,
                 null, // Disable default loading indicator, we have our own
                 mCallback, CallTrigger.LOADING_CACHED));
-
-        getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(activity) {
-
-            @Override
-            protected void onPostExecute(FormDescription formDescription) {
-                super.onPostExecute(formDescription);
-                EditUserProfileFragment.this.formDescription = formDescription;
-                if (null != viewHolder) {
-                    setData(account, formDescription);
-                }
-            }
-        };
-        getProfileFormDescriptionTask.setTaskProcessCallback(null);
-        getProfileFormDescriptionTask.execute();
     }
 
     @Nullable
@@ -229,6 +207,8 @@ public class EditUserProfileFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initObservers();
+
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
@@ -246,11 +226,7 @@ public class EditUserProfileFragment extends BaseFragment {
                                     cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
                             case R.id.choose_photo ->
                                     storagePermissionLauncher.launch(PermissionsUtil.getReadStoragePermission());
-                            case R.id.remove_photo -> {
-                                final Task<Void> task = new DeleteAccountImageTask(requireActivity(), username);
-                                task.setProgressDialog(viewHolder.profileImageProgress);
-                                executePhotoTask(task);
-                            }
+                            case R.id.remove_photo -> profileViewModel.removeProfileImage();
                         }
                         return true;
                     }
@@ -258,31 +234,29 @@ public class EditUserProfileFragment extends BaseFragment {
                 popup.show();
             }
         });
-        setData(account, formDescription);
+        setData(account, profileViewModel.getFormDescription());
+    }
+
+    private void initObservers() {
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel.setProfileFormDescription(getResources().openRawResource(R.raw.profiles));
+
+        profileViewModel.getShowProgress().observe(getViewLifecycleOwner(), new EventObserver<>(showProgress -> {
+            if (viewHolder != null) {
+                ViewExtKt.setVisibility(viewHolder.profileImageProgress, showProgress);
+            }
+            return null;
+        }));
     }
 
     private void parseExtras() {
         username = getArguments().getString(EditUserProfileActivity.EXTRA_USERNAME);
     }
 
-    private void executePhotoTask(Task<Void> task) {
-        viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        // TODO: Test this with "Don't keep activities"
-        if (null != setAccountImageTask) {
-            setAccountImageTask.cancel(true);
-        }
-        setAccountImageTask = task;
-        task.execute();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         getAccountCall.cancel();
-        getProfileFormDescriptionTask.cancel(true);
-        if (null != setAccountImageTask) {
-            setAccountImageTask.cancel(true);
-        }
         helper.deleteTemporaryFile();
 
         EventBus.getDefault().unregister(this);
@@ -306,7 +280,7 @@ public class EditUserProfileFragment extends BaseFragment {
         if (event.getAccount().getUsername().equals(username)) {
             account = event.getAccount();
             if (null != viewHolder) {
-                setData(account, formDescription);
+                setData(account, profileViewModel.getFormDescription());
             }
         }
     }
@@ -495,7 +469,7 @@ public class EditUserProfileFragment extends BaseFragment {
                     protected void onResponse(@NonNull final Account account) {
                         super.onResponse(account);
                         EditUserProfileFragment.this.account = account;
-                        setData(account, formDescription);
+                        setData(account, profileViewModel.getFormDescription());
                     }
                 });
     }
@@ -508,30 +482,40 @@ public class EditUserProfileFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(instructions);
-        final RadioGroup group = view.findViewById(R.id.options);
-        {
-            final RadioButton optionOne = view.findViewById(R.id.option_one);
-            final RadioButton optionTwo = view.findViewById(R.id.option_two);
-            optionOne.setText(field.getOptions().getValues().get(0).getName());
-            optionOne.setTag(field.getOptions().getValues().get(0).getValue());
-            optionTwo.setText(field.getOptions().getValues().get(1).getName());
-            optionTwo.setTag(field.getOptions().getValues().get(1).getValue());
-        }
-        for (int i = 0; i < group.getChildCount(); i++) {
-            final View child = group.getChildAt(i);
-            child.setEnabled(!readOnly);
-            if (child.getTag().equals(value)) {
-                group.check(child.getId());
+        final TabLayout group = view.findViewById(R.id.options);
+
+        final Tab optionOne = group.getTabAt(0);
+        final Tab optionTwo = group.getTabAt(1);
+
+        optionOne.setText(field.getOptions().getValues().get(0).getName());
+        optionOne.setTag(field.getOptions().getValues().get(0).getValue());
+        optionTwo.setText(field.getOptions().getValues().get(1).getName());
+        optionTwo.setTag(field.getOptions().getValues().get(1).getValue());
+
+        for (int i = 0; i < group.getTabCount(); i++) {
+            final Tab child = group.getTabAt(i);
+            if (child != null && value.equals(child.getTag())) {
+                child.select();
                 break;
             }
         }
         if (readOnly) {
             group.setEnabled(false);
         } else {
-            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            group.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
+                public void onTabSelected(Tab tab) {
+                    if (tab.getTag() != null) {
+                        switchListener.onSwitch((String) tab.getTag());
+                    }
+                }
+
+                @Override
+                public void onTabUnselected(Tab tab) {
+                }
+
+                @Override
+                public void onTabReselected(Tab tab) {
                 }
             });
         }
