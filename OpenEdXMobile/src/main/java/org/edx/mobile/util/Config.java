@@ -82,7 +82,7 @@ public class Config {
     private static final String COURSE_VIDEOS_ENABLED = "COURSE_VIDEOS_ENABLED";
     private static final String DOWNLOAD_TO_SD_CARD_ENABLED = "DOWNLOAD_TO_SD_CARD_ENABLED";
     private static final String ANNOUNCEMENTS_ENABLED = "ANNOUNCEMENTS_ENABLED";
-    private static final String CHROME_CAST_ENABLED = "CHROME_CAST_ENABLED";
+    private static final String CHROMECAST_ENABLED = "CHROMECAST_ENABLED";
 
     public static class DiscoveryConfig {
         @SerializedName("TYPE")
@@ -632,7 +632,7 @@ public class Config {
 
     // locally defined flag to disable the chromecast
     public boolean isChromeCastEnabled() {
-        return getBoolean(CHROME_CAST_ENABLED, false);
+        return getBoolean(CHROMECAST_ENABLED, false);
     }
 
     public boolean isDownloadToSDCardEnabled() {

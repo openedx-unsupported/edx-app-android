@@ -89,8 +89,8 @@ abstract class BaseAppActivity : AppCompatActivity(), CastStateListener {
          * as part of the Jira story: https://openedx.atlassian.net/browse/LEARNER-7722
          */
         try {
-            if (isInForeground) {
-                if (config.isChromeCastEnabled && mediaRouteMenuItem != null) {
+            if (config.isChromeCastEnabled && isInForeground) {
+                if (mediaRouteMenuItem != null) {
                     googleCastDelegate?.showIntroductoryOverlay(this, mediaRouteMenuItem)
                 }
                 invalidateOptionsMenu()
