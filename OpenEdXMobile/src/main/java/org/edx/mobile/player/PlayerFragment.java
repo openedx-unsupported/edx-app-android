@@ -182,7 +182,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        googleCastDelegate = GoogleCastDelegate.getInstance(environment.getAnalyticsRegistry());
+        if (environment.getConfig().isChromeCastEnabled()) {
+            googleCastDelegate = GoogleCastDelegate.getInstance(environment.getAnalyticsRegistry());
+        }
     }
 
     @Override
@@ -547,7 +549,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
             final long seekTo = videoEntry.getLastPlayedOffset();
             logger.debug("playing [seek=" + seekTo + "]: " + path);
-            if (googleCastDelegate.isConnected()) {
+            if (googleCastDelegate != null && googleCastDelegate.isConnected()) {
                 playVideoOnRemoteDevice(lastSavedPosition, true);
                 player.setUri(path, seekTo);
             } else if (prepareOnly)

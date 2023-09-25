@@ -653,7 +653,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     override fun showGoogleCastButton(): Boolean {
         val component = getCurrentComponent()
-        return if (component is VideoBlockModel) {
+        return if (config.isChromeCastEnabled && component is VideoBlockModel) {
             // Showing casting button only for native video block
             // Currently casting for youtube video isn't available
             VideoUtil.isCourseUnitVideo(environment, component)
