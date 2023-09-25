@@ -204,16 +204,6 @@ public class MainDashboardActivity extends OfflineSupportBaseActivity<ActivityMa
     }
 
     @Override
-    public void onBackPressed() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
-        if (fragment instanceof MainTabsDashboardFragment &&
-                ((MainTabsDashboardFragment) fragment).onBackPressed()) {
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public void setTitle(int titleId) {
         setTitle(getResources().getString(titleId));
     }

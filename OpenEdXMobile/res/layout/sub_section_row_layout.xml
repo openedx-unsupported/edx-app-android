@@ -15,8 +15,7 @@
         android:id="@+id/sub_section_row_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/edx_divider_length"
-        android:paddingStart="@dimen/edx_margin"
+        android:paddingStart="@dimen/edx_default_margin"
         android:paddingTop="@dimen/container_padding"
         android:paddingEnd="@dimen/edx_half_margin"
         android:paddingBottom="@dimen/widget_margin">

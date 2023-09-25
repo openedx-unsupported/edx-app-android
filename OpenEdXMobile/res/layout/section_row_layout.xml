@@ -8,11 +8,13 @@
     android:layout_marginTop="@dimen/edx_default_margin"
     android:layout_marginEnd="@dimen/course_card_detail_padding_end"
     android:background="@drawable/edx_neutral_white_t_fill_neutral_dark_border"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/edx_divider_length">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/view_selector"
         android:padding="@dimen/edx_default_margin">
 
         <androidx.appcompat.widget.AppCompatImageView

@@ -312,6 +312,9 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 setRegistrationFields(savedRegistrationFormState)
                 if (socialRegistrationType != SocialAuthSource.UNKNOWN) {
                     updateUIOnSocialLoginToEdxFailure(socialRegistrationType)
+                } else {
+                    // In case the user attempted social registration in a previous instance
+                    loginPrefs.clearSocialLoginToken()
                 }
             }
 

@@ -47,6 +47,8 @@ class VideoViewModel @Inject constructor(
     private val _selectedVideosPosition = MutableLiveData<Event<Pair<Int, Int>>>()
     val selectedVideosPosition: LiveData<Event<Pair<Int, Int>>> = _selectedVideosPosition
 
+    private var shouldClearChoices = true
+
     fun downloadMultipleVideos(downloads: MutableList<HasDownloadEntry>?) {
         if (downloads.isNullOrEmpty()) return
 
@@ -109,10 +111,16 @@ class VideoViewModel @Inject constructor(
 
     fun deleteVideosAtPosition(position: Pair<Int, Int>) {
         _selectedVideosPosition.postEvent(position)
+        shouldClearChoices = false
     }
 
     fun clearChoices() {
-        _clearChoices.postEvent(true)
+        // Avoid clearing choices when the flag is false, as video deletion will handle choice
+        // clearance automatically.
+        if (shouldClearChoices) {
+            _clearChoices.postEvent(true)
+        }
+        shouldClearChoices = true
     }
 
     private fun trackDownloadEvent(videosToDownload: List<DownloadEntry>, bulkDownload: Boolean) {

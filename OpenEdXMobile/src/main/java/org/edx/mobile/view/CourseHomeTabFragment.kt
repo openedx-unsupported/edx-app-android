@@ -2,6 +2,7 @@ package org.edx.mobile.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import org.edx.mobile.event.CourseOutlineRefreshEvent
 import org.edx.mobile.event.LogoutEvent
 import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
+import org.edx.mobile.event.RefreshCourseDashboardEvent
 import org.edx.mobile.exception.CourseContentNotValidException
 import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.serializableOrThrow
@@ -86,6 +88,24 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
                 onPermissionDenied()
             }
         }
+
+    private val courseUnitDetailLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val resultData = result.data
+        if (result.resultCode == Activity.RESULT_OK && resultData != null) {
+            // Check if the course has been upgraded
+            val isCourseUpgraded = resultData.getBooleanExtra(AppConstants.COURSE_UPGRADED, false)
+
+            if (isCourseUpgraded) {
+                fetchCourseComponents(CoursesRequestType.LIVE)
+                // Post a refresh event for the course dashboard toolbar
+                if (EventBus.getDefault().isRegistered(this).not())
+                    EventBus.getDefault().register(this)
+                EventBus.getDefault().post(RefreshCourseDashboardEvent())
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -256,13 +276,15 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
     }
 
     private fun showComponentDetailScreen(component: CourseComponent) {
-        environment.router.getCourseUnitDetailIntent(
-            requireActivity(),
-            courseData,
-            courseUpgradeData,
-            component.id,
-            false
-        )?.let { startActivity(it) }
+        courseUnitDetailLauncher.launch(
+            environment.router.getCourseUnitDetailIntent(
+                requireActivity(),
+                courseData,
+                courseUpgradeData,
+                component.id,
+                false
+            )
+        )
     }
 
     override fun onSectionItemLongClick(
@@ -322,14 +344,16 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
             viewLifecycleOwner,
             EventObserver { position: Pair<Int, Int> ->
                 if (position.first != RecyclerView.NO_POSITION) {
+                    adapter.clearChoicesAndUpdateUI(refresh = false)
                     deleteDownloadedVideosAtPosition(position)
                 }
             })
+
         videoViewModel.clearChoices.observe(
             viewLifecycleOwner,
             EventObserver { shouldClear: Boolean ->
                 if (shouldClear) {
-                    adapter.clearChoices()
+                    adapter.clearChoicesAndUpdateUI()
                 }
             })
     }

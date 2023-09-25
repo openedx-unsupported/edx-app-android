@@ -1,10 +1,13 @@
 package org.edx.mobile.view
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -43,6 +46,18 @@ class MainTabsDashboardFragment : BaseFragment() {
 
     private var selectedTabPosition = -1
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val learnTabPosition =
+                if (environment.config.discoveryConfig.isDiscoveryEnabled) 1 else 0
+            if (selectedTabPosition != learnTabPosition) {
+                binding.viewPager.currentItem = learnTabPosition
+                return
+            }
+            requireActivity().finish()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,6 +80,13 @@ class MainTabsDashboardFragment : BaseFragment() {
         handleTabSelection(arguments)
 
         binding.viewPager.isUserInputEnabled = false
+
+        requestPostNotificationsPermission()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -77,6 +99,14 @@ class MainTabsDashboardFragment : BaseFragment() {
         handleTabSelection(intent.extras)
         intent.extras?.let {
             EventBus.getDefault().post(ScreenArgumentsEvent(it))
+        }
+    }
+
+    private fun requestPostNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+        ) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -244,15 +274,6 @@ class MainTabsDashboardFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-    }
-
-    fun onBackPressed(): Boolean {
-        val learnTabPosition = if (environment.config.discoveryConfig.isDiscoveryEnabled) 1 else 0
-        if (selectedTabPosition != learnTabPosition) {
-            binding.viewPager.currentItem = learnTabPosition
-            return true
-        }
-        return false
     }
 
     companion object {

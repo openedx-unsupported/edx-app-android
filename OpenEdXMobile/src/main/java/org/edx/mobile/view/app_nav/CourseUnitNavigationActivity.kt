@@ -27,7 +27,9 @@ import org.edx.mobile.databinding.LayoutUnitsDropDownBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.event.FileSelectionEvent
 import org.edx.mobile.event.FileShareEvent
+import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.event.LogoutEvent
+import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.VideoPlaybackEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.CollapsingToolbarStatListener
@@ -37,6 +39,7 @@ import org.edx.mobile.extenstion.setTextWithIcon
 import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.callback.ErrorHandlingCallback
+import org.edx.mobile.http.notifications.SnackbarErrorNotification
 import org.edx.mobile.interfaces.OnItemClickListener
 import org.edx.mobile.interfaces.RefreshListener
 import org.edx.mobile.model.api.CourseUpgradeResponse
@@ -44,8 +47,11 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse
 import org.edx.mobile.model.course.BlockType
 import org.edx.mobile.model.course.CourseComponent
 import org.edx.mobile.model.course.CourseStatus
+import org.edx.mobile.model.course.EnrollmentMode
 import org.edx.mobile.model.course.IBlock
 import org.edx.mobile.model.course.VideoBlockModel
+import org.edx.mobile.model.iap.IAPFlowData
+import org.edx.mobile.model.iap.IAPFlowData.IAPAction
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.util.AppConstants
 import org.edx.mobile.util.NetworkUtil
@@ -65,6 +71,7 @@ import org.edx.mobile.view.custom.PreLoadingListener
 import org.edx.mobile.view.custom.error.EdxErrorState
 import org.edx.mobile.view.dialog.CelebratoryModalDialogFragment
 import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment
+import org.edx.mobile.view.dialog.FullscreenLoaderDialogFragment.Companion.newInstance
 import org.edx.mobile.viewModel.CourseViewModel
 import org.edx.mobile.viewModel.InAppPurchasesViewModel
 import org.edx.mobile.wrapper.InAppPurchasesDialog
@@ -266,7 +273,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     private fun updateCompletionProgressBar(currentPosition: Int, size: Int) {
         binding.spbUnits.setDivisions(size)
         binding.spbUnits.setDividerEnabled(true)
-        binding.spbUnits.setEnabledDivisions((0..currentPosition).toList())
+        binding.spbUnits.setEnabledDivisions(listOf(currentPosition))
     }
 
     private fun setupToolbarListeners() {
@@ -490,6 +497,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     override fun refreshCourseData(courseId: String, componentId: String) {
         refreshCourse = true
+        courseData.mode = EnrollmentMode.VERIFIED.toString()
         updateCourseStructure(courseId, componentId)
     }
 
@@ -529,6 +537,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             return
         }
         val courseViewModel = ViewModelProvider(this)[CourseViewModel::class.java]
+
         courseViewModel.courseComponent.observe(
             this,
             EventObserver { courseComponent: CourseComponent ->
@@ -538,7 +547,18 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
                 courseComponentId = componentId ?: courseComponent.id
                 invalidateOptionsMenu()
                 onLoadData()
+                initAdapter()
+
+                val fullScreenLoader =
+                    FullscreenLoaderDialogFragment.getRetainedInstance(supportFragmentManager)
+                if (fullScreenLoader != null && fullScreenLoader.isResumed) {
+                    SnackbarErrorNotification(binding.pager2).showUpgradeSuccessSnackbar(
+                        R.string.purchase_success_message
+                    )
+                    fullScreenLoader.closeLoader(null)
+                }
             })
+
         courseViewModel.handleError.observe(this) { throwable: Throwable ->
             binding.stateLayout.root.setVisibility(true)
             binding.pager2.setVisibility(false)
@@ -553,6 +573,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             }
             onCourseRefreshError(throwable)
         }
+
         courseId?.let {
             courseViewModel.getCourseData(
                 courseId = courseId,
@@ -658,6 +679,27 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             // Currently casting for youtube video isn't available
             VideoUtil.isCourseUnitVideo(environment, component)
         } else super.showGoogleCastButton()
+    }
+
+    private fun showFullscreenLoader(iapFlowData: IAPFlowData) {
+        // To proceed with the same instance of dialog fragment in case of orientation change
+        var fullScreenLoader =
+            FullscreenLoaderDialogFragment.getRetainedInstance(supportFragmentManager)
+        if (fullScreenLoader == null) {
+            fullScreenLoader = newInstance(iapFlowData)
+        }
+        fullScreenLoader.show(supportFragmentManager, FullscreenLoaderDialogFragment.TAG)
+    }
+
+    @Subscribe
+    fun onEventMainThread(event: IAPFlowEvent) {
+        if (!isInForeground) {
+            return
+        }
+        when (event.flowAction) {
+            IAPAction.SHOW_FULL_SCREEN_LOADER -> event.iapFlowData?.let { showFullscreenLoader(it) }
+            IAPAction.PURCHASE_FLOW_COMPLETE -> EventBus.getDefault().post(MyCoursesRefreshEvent())
+        }
     }
 
     @Subscribe

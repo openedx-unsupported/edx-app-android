@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.android.billingclient.api.ProductDetails
@@ -22,12 +23,13 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.course.CourseAPI
 import org.edx.mobile.course.CourseAPI.GetCourseByIdCallback
 import org.edx.mobile.databinding.FragmentCourseTabsDashboardBinding
-import org.edx.mobile.databinding.FragmentDashboardErrorLayoutBinding
 import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.event.MainDashboardRefreshEvent
 import org.edx.mobile.event.MoveToDiscoveryTabEvent
+import org.edx.mobile.event.MyCoursesRefreshEvent
+import org.edx.mobile.event.RefreshCourseDashboardEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.CollapsingToolbarStatListener
 import org.edx.mobile.extenstion.serializable
@@ -150,6 +152,17 @@ class CourseTabsDashboardFragment : BaseFragment() {
             return items
         }
 
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.pager.currentItem != 0) {
+                    binding.pager.currentItem = 0
+                    return
+                }
+                requireActivity().finish()
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -157,13 +170,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         if (arguments?.serializable<EnrolledCoursesResponse>(Router.EXTRA_COURSE_DATA) == null) {
             return if (arguments?.getBoolean(ARG_COURSE_NOT_FOUND) == true) {
                 // The case where we have invalid course data
-                binding.loadingError.apply {
-                    root.setVisibility(true)
-                    dismiss.setVisibility(true)
-                    dismiss.setOnClickListener(onCloseClick())
-                    state.setState(EdxErrorState.State.LOAD_ERROR, Screen.COURSE_DASHBOARD)
-                    state.setActionListener(onCloseClick())
-                }
+                initLoadingErrorLayout()
                 binding.root
             } else {
                 // The case where we need to fetch course's data based on its courseId
@@ -209,10 +216,13 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 }
             } else {
                 //Todo Remove when Next Session Enrollment feature is added
-                val errorLayoutBinding =
-                    FragmentDashboardErrorLayoutBinding.inflate(inflater, container, false)
-                errorLayoutBinding.errorMsg.setText(R.string.course_not_started)
-                return errorLayoutBinding.root
+                binding.apply {
+                    toolbar.root.setVisibility(false)
+                    pager.setVisibility(false)
+                    accessError.setVisibility(false)
+                }
+                initLoadingErrorLayout()
+                return binding.root
             }
         } else {
             setViewPager()
@@ -225,9 +235,22 @@ class CourseTabsDashboardFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         handleTabSelection(requireArguments())
 
+        if (EventBus.getDefault().isRegistered(this).not())
+            EventBus.getDefault().register(this)
+
         environment.analyticsRegistry.trackScreenView(
             Analytics.Screens.COURSE_DASHBOARD, courseData.course.id, null
         )
+    }
+
+    private fun initLoadingErrorLayout() {
+        binding.loadingError.apply {
+            root.setVisibility(true)
+            dismiss.setVisibility(true)
+            dismiss.setOnClickListener(onCloseClick())
+            state.setState(EdxErrorState.State.LOAD_ERROR, Screen.COURSE_DASHBOARD)
+            state.setActionListener(onCloseClick())
+        }
     }
 
     private fun setupIAPLayout() {
@@ -418,13 +441,11 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        EventBus.getDefault().register(this)
         courseDateViewModel.fetchCourseDates(courseData.courseId, true)
     }
 
     override fun onPause() {
         super.onPause()
-        EventBus.getDefault().unregister(this)
         // TODO: block of code can be removed once `fetchCourseById` retrofit call replaced with MVVM approach.
         fullscreenLoader?.closeTimer()
     }
@@ -478,6 +499,10 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
         binding.pager.setVisibility(true)
         enforceSingleScrollDirection(binding.pager)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         binding.toolbar.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -826,13 +851,29 @@ class CourseTabsDashboardFragment : BaseFragment() {
         if (!this.isResumed) {
             return
         }
-        if (event.flowAction == IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE) {
-            courseData.mode = EnrollmentMode.VERIFIED.toString()
-            arguments?.putString(Router.EXTRA_COURSE_ID, courseData.courseId)
-            courseDateViewModel.fetchCourseDates(courseData.courseId, true)
-            fetchCourseById()
-            EventBus.getDefault().post(MainDashboardRefreshEvent())
+        when (event.flowAction) {
+            IAPFlowData.IAPAction.PURCHASE_FLOW_COMPLETE -> {
+                courseData.mode = EnrollmentMode.VERIFIED.toString()
+                arguments?.putString(Router.EXTRA_COURSE_ID, courseData.courseId)
+                courseDateViewModel.fetchCourseDates(courseData.courseId, true)
+                fetchCourseById()
+                EventBus.getDefault().post(MainDashboardRefreshEvent())
+            }
+
+            IAPFlowData.IAPAction.SHOW_FULL_SCREEN_LOADER -> {
+                event.iapFlowData?.let {
+                    showFullscreenLoader(it)
+                }
+            }
         }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe
+    fun onEvent(event: RefreshCourseDashboardEvent) {
+        courseData.mode = EnrollmentMode.VERIFIED.toString()
+        binding.toolbar.layoutUpgradeBtn.root.setVisibility(false)
+        EventBus.getDefault().post(MyCoursesRefreshEvent())
     }
 
     companion object {
