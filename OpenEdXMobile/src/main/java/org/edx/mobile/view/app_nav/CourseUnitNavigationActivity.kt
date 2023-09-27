@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -54,6 +55,7 @@ import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.model.iap.IAPFlowData.IAPAction
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
@@ -179,14 +181,18 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         binding.gotoNext.setOnClickListener { navigateNextComponent() }
         onLoadData()
         setupToolbar()
-        initAdapter()
-        // Enforce to intercept single scrolling direction
-        UiUtils.enforceSingleScrollDirection(binding.pager2)
-        if (!isVideoMode) {
-            courseCelebrationStatus
+        subsection?.children?.size?.let { size ->
+            if (size > 0) {
+                initAdapter()
+                // Enforce to intercept single scrolling direction
+                UiUtils.enforceSingleScrollDirection(binding.pager2)
+                if (!isVideoMode) {
+                    courseCelebrationStatus
+                }
+                binding.pager2.setVisibility(true)
+                binding.stateLayout.root.setVisibility(false)
+            }
         }
-        binding.pager2.setVisibility(true)
-        binding.stateLayout.root.setVisibility(false)
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -253,20 +259,45 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     private fun setupToolbar() {
         subsection?.let { subsection ->
             val unitList = subsection.getChildren(isVideoMode)
-            val hasMultipleChildren = unitList.isNullOrEmpty().not() && unitList.size > 1
-            subsection.firstIncompleteComponent?.let {
-                setToolbarTitle(it, hasMultipleChildren)
-                if (hasMultipleChildren) {
-                    setupUnitsDropDown(unitList, it)
+            if (unitList.size > 0) {
+                val hasMultipleChildren = unitList.isNullOrEmpty().not() && unitList.size > 1
+                subsection.firstIncompleteComponent?.let {
+                    setToolbarTitle(it, hasMultipleChildren)
+                    if (hasMultipleChildren) {
+                        setupUnitsDropDown(unitList, it)
+                    }
+                    updateCompletionProgressBar(0, it.getChildren(isVideoMode).size)
                 }
-                updateCompletionProgressBar(0, it.getChildren(isVideoMode).size)
-            }
 
-            ViewAnimationUtil.startAlphaAnimation(
-                binding.collapsedToolbarTitle,
-                View.INVISIBLE
-            )
+                ViewAnimationUtil.startAlphaAnimation(
+                    binding.collapsedToolbarTitle,
+                    View.INVISIBLE
+                )
+            } else {
+                showComponentNotSupportError()
+            }
             setupToolbarListeners()
+        }
+    }
+
+    private fun showComponentNotSupportError() {
+        subsection?.let { subsection ->
+            binding.courseUnitNavBar.setVisibility(false)
+            binding.expandedToolbarLayout.setVisibility(false)
+            val primaryColor = ContextCompat.getColor(this, R.color.primaryBaseColor)
+            binding.ivCollapsedBack.setColorFilter(primaryColor)
+            binding.collapsedToolbarTitle.text = subsection.displayName
+            binding.collapsedToolbarTitle.setTextColor(primaryColor)
+            binding.collapsedToolbarLayout.setBackgroundResource(R.color.white)
+            binding.containerLayoutNotAvailable.setVisibility(true)
+            binding.viewOnWebButton.setOnClickListener {
+                environment.analyticsRegistry.trackSubsectionViewOnWebTapped(
+                    subsection.courseId,
+                    subsection.blockId,
+                    subsection.specialExamInfo != null
+                )
+                BrowserUtil.open(this, subsection.webUrl, false)
+            }
         }
     }
 
@@ -382,7 +413,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     private fun initAdapter() {
         if (subsection?.root == null) {
-            logger.warn("selectedUnit is null?")
+            logger.warn("selected section is null?")
             return  //should not happen
         }
         val componentList = getComponentList()
@@ -624,7 +655,11 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             val layoutParams = binding.appbar.layoutParams
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.appbar.layoutParams = layoutParams
-            binding.courseUnitNavBar.setVisibility(true)
+            subsection?.children?.size?.let { size ->
+                if (size > 0) {
+                    binding.courseUnitNavBar.setVisibility(true)
+                }
+            }
         }
     }
 
