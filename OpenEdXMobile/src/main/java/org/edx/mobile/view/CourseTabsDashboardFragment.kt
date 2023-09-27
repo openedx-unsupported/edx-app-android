@@ -396,7 +396,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
             }
         })
 
-        courseDateViewModel.resetCourseDates.observe(viewLifecycleOwner, NonNullObserver {
+        courseDateViewModel.resetCourseDates.observe(viewLifecycleOwner, EventObserver {
             if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
                 showShiftDateSnackBar(true)
                 binding.toolbar.datesBanner.root.setVisibility(false)
