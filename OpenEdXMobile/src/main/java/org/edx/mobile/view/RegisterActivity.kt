@@ -113,9 +113,9 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 environment.loginPrefs,
                 Feature.REGISTRATION
             ).apply {
-                binding.socialAuth.facebookButton.setOnClickListener {
+                binding.socialAuth.facebookButton.setOnClickListener(
                     createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)
-                }
+                )
                 binding.socialAuth.googleButton.setOnClickListener(
                     createSocialButtonClickHandler(SocialAuthSource.GOOGLE)
                 )
