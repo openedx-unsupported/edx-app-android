@@ -427,7 +427,11 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         val selectedComponent: CourseComponent? = if (resumedComponent != null) {
             resumedComponent
         } else {
-            subsection?.firstIncompleteComponent?.firstIncompleteComponent
+            if (isVideoMode) {
+                subsection?.firstIncompleteComponent?.firstIncompleteVideoComponent
+            } else {
+                subsection?.firstIncompleteComponent?.firstIncompleteComponent
+            }
         }
         val firstIncompleteComponentIndex = componentList.indexOf(selectedComponent)
         binding.pager2.setCurrentItem(firstIncompleteComponentIndex, false)
