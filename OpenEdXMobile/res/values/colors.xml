@@ -129,6 +129,7 @@
 
     <color name="crop_circle_overlay_color">#c8000000</color>
 
+    <color name="transparent">@android:color/transparent</color>
     <color name="transparent_black">#90000000</color>
     <color name="transparent_black_80">#CC000000</color>
     <color name="transparent_black_50">#80000000</color>
