@@ -61,11 +61,7 @@ class CourseUnitYoutubePlayerFragment : BaseCourseUnitVideoFragment(), YouTubePl
 
     private fun initializeYoutubePlayer() {
         try {
-            if (activity != null && NetworkUtil.verifyDownloadPossible(
-                    activity as BaseFragmentActivity,
-                    userPrefs.isDownloadOverWifiOnly
-                )
-            ) {
+            activity?.let {
                 downloadTranscript()
                 releaseYoutubePlayer()
                 youTubePlayerView = YouTubePlayerView(requireContext())

@@ -140,11 +140,6 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <TextView
-                android:id="@+id/flying_message"
-                style="@style/flying_message"
-                android:visibility="gone" />
-
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/pager2"
                 android:layout_width="match_parent"
@@ -156,6 +151,11 @@
             <include
                 android:id="@+id/stateLayout"
                 layout="@layout/layout_error_state"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/flying_message"
+                style="@style/flying_message"
                 android:visibility="gone" />
         </RelativeLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
