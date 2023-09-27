@@ -8,7 +8,6 @@ import androidx.core.view.NestedScrollingChild
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
 
-
 /**
  * A custom WebView implementation that implements the NestedScrollingChild interface
  * to enable nested scrolling behavior. This class allows the WebView to interact with
@@ -19,8 +18,10 @@ import androidx.core.view.ViewCompat
  *
  * Inspiration: https://github.com/takahirom/webview-in-coordinatorlayout
  */
-class NestedScrollWebView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
-    EdxWebView(context, attrs), NestedScrollingChild {
+class NestedScrollWebView @JvmOverloads constructor(
+    context: Context?,
+    attrs: AttributeSet? = null
+) : EdxWebView(context, attrs), NestedScrollingChild {
     private var lastY = 0
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
