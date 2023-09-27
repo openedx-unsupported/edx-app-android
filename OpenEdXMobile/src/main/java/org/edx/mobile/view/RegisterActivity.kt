@@ -85,7 +85,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     private fun initViews() {
         setToolbarAsActionBar()
         setTitle(R.string.register_title)
-        errorNotification = FullScreenErrorNotification(binding.root)
+        errorNotification = FullScreenErrorNotification(binding.scrollview)
         getRegistrationForm()
         binding.createAccountBtn.setOnClickListener {
             validateRegistrationFields()
