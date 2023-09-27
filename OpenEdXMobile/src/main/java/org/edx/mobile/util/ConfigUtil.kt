@@ -61,7 +61,7 @@ class ConfigUtil {
             // Check firebase enabled in config
             if (config.firebaseConfig.isEnabled) {
                 val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-                firebaseRemoteConfig.fetch(0).addOnCompleteListener {
+                firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
                     try {
                         val response = JSONObject(
                             firebaseRemoteConfig
