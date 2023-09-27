@@ -350,7 +350,7 @@ public class Storage implements IStorage {
             return video;
         }
 
-        return DatabaseModelFactory.getModel(block.getData(), block);
+        return DatabaseModelFactory.getModel(block.getData(), block, userPrefs.getVideoQuality());
     }
 
     @Override

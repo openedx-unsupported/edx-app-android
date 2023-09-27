@@ -13,6 +13,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.video.VideoQuality;
 
 /**
  * Model Factory class for the database models.
@@ -87,9 +88,10 @@ public class DatabaseModelFactory {
      * Returns an object of IVideoModel which has all the fields copied from given VideoData.
      *
      * @param vrm
+     * @param videoQuality
      * @return
      */
-    public static VideoModel getModel(VideoData vrm, VideoBlockModel block) {
+    public static VideoModel getModel(VideoData vrm, VideoBlockModel block, VideoQuality videoQuality) {
         DownloadEntry e = new DownloadEntry();
         //FIXME - current database schema is not suitable for arbitary level of course structure tree
         //solution - store the navigation path info in into one column field in the database,
@@ -100,7 +102,7 @@ public class DatabaseModelFactory {
         IBlock root = block.getRoot();
         e.eid = root.getCourseId();
         e.duration = vrm.duration;
-        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredNativeVideoInfo();
+        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfoForDownloading(videoQuality);
         e.size = preferredVideoInfo.fileSize;
         e.title = block.getDisplayName();
         e.url = preferredVideoInfo.url;
