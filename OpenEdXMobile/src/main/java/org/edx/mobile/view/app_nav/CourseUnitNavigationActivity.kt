@@ -644,7 +644,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     private fun updateUIForOrientation() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE &&
-            VideoUtil.isCourseUnitVideo(environment, getCurrentComponent())
+            getCurrentComponent()?.isVideoBlock == true
         ) {
             WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowInsetsControllerCompat(window, window.decorView).apply {
