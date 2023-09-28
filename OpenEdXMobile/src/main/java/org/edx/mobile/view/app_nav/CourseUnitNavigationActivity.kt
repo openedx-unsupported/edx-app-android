@@ -280,22 +280,29 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     private fun showComponentNotSupportError() {
         subsection?.let { subsection ->
-            binding.courseUnitNavBar.setVisibility(false)
-            binding.expandedToolbarLayout.setVisibility(false)
-            val primaryColor = ContextCompat.getColor(this, R.color.primaryBaseColor)
-            binding.ivCollapsedBack.setColorFilter(primaryColor)
-            binding.ivCollapsedBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-            binding.collapsedToolbarTitle.text = subsection.displayName
-            binding.collapsedToolbarTitle.setTextColor(primaryColor)
-            binding.collapsedToolbarLayout.setBackgroundResource(R.color.white)
-            binding.containerLayoutNotAvailable.setVisibility(true)
-            binding.viewOnWebButton.setOnClickListener {
-                environment.analyticsRegistry.trackSubsectionViewOnWebTapped(
-                    subsection.courseId,
-                    subsection.blockId,
-                    subsection.specialExamInfo != null
+            binding.apply {
+                courseUnitNavBar.setVisibility(false)
+                expandedToolbarLayout.setVisibility(false)
+                val primaryColor = ContextCompat.getColor(
+                    this@CourseUnitNavigationActivity,
+                    R.color.primaryBaseColor
                 )
-                BrowserUtil.open(this, subsection.webUrl, false)
+                ivCollapsedBack.setColorFilter(primaryColor)
+                ivCollapsedBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+                collapsedToolbarTitle.text = subsection.displayName
+                collapsedToolbarTitle.setTextColor(primaryColor)
+                collapsedToolbarLayout.setBackgroundResource(R.color.white)
+                containerLayoutNotAvailable.root.setVisibility(true)
+                containerLayoutNotAvailable.notAvailableMessage.setText(R.string.assessment_not_available)
+                containerLayoutNotAvailable.notAvailableMessage2.setVisibility(false)
+                containerLayoutNotAvailable.viewOnWebButton.setOnClickListener {
+                    environment.analyticsRegistry.trackSubsectionViewOnWebTapped(
+                        subsection.courseId,
+                        subsection.blockId,
+                        subsection.specialExamInfo != null
+                    )
+                    BrowserUtil.open(this@CourseUnitNavigationActivity, subsection.webUrl, false)
+                }
             }
         }
     }
