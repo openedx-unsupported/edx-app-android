@@ -234,6 +234,9 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (this::binding.isInitialized.not()) {
+            return
+        }
         handleTabSelection(requireArguments())
 
         if (EventBus.getDefault().isRegistered(this).not())
@@ -442,7 +445,9 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        courseDateViewModel.fetchCourseDates(courseData.courseId, true)
+        if (this::binding.isInitialized) {
+            courseDateViewModel.fetchCourseDates(courseData.courseId, true)
+        }
     }
 
     override fun onPause() {
