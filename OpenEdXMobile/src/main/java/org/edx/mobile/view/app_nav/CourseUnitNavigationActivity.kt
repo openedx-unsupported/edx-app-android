@@ -180,19 +180,21 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
         binding.gotoNext.setOnClickListener { navigateNextComponent() }
         onLoadData()
-        setupToolbar()
-        subsection?.children?.size?.let { size ->
-            if (size > 0) {
-                initAdapter()
-                // Enforce to intercept single scrolling direction
-                UiUtils.enforceSingleScrollDirection(binding.pager2)
-                if (!isVideoMode) {
-                    courseCelebrationStatus
-                }
-                binding.pager2.setVisibility(true)
-                binding.stateLayout.root.setVisibility(false)
-            }
+
+        if (subsection?.children.isNullOrEmpty()) {
+            showComponentNotSupportError()
+            return
         }
+
+        setupToolbar()
+        initAdapter()
+        // Enforce to intercept single scrolling direction
+        UiUtils.enforceSingleScrollDirection(binding.pager2)
+        if (!isVideoMode) {
+            courseCelebrationStatus
+        }
+        binding.pager2.setVisibility(true)
+        binding.stateLayout.root.setVisibility(false)
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -259,23 +261,19 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
     private fun setupToolbar() {
         subsection?.let { subsection ->
             val unitList = subsection.getChildren(isVideoMode)
-            if (unitList.size > 0) {
-                val hasMultipleChildren = unitList.isNullOrEmpty().not() && unitList.size > 1
-                subsection.firstIncompleteComponent?.let {
-                    setToolbarTitle(it, hasMultipleChildren)
-                    if (hasMultipleChildren) {
-                        setupUnitsDropDown(unitList, it)
-                    }
-                    updateCompletionProgressBar(0, it.getChildren(isVideoMode).size)
+            val hasMultipleChildren = unitList.isNullOrEmpty().not() && unitList.size > 1
+            subsection.firstIncompleteComponent?.let {
+                setToolbarTitle(it, hasMultipleChildren)
+                if (hasMultipleChildren) {
+                    setupUnitsDropDown(unitList, it)
                 }
-
-                ViewAnimationUtil.startAlphaAnimation(
-                    binding.collapsedToolbarTitle,
-                    View.INVISIBLE
-                )
-            } else {
-                showComponentNotSupportError()
+                updateCompletionProgressBar(0, it.getChildren(isVideoMode).size)
             }
+
+            ViewAnimationUtil.startAlphaAnimation(
+                binding.collapsedToolbarTitle,
+                View.INVISIBLE
+            )
             setupToolbarListeners()
         }
     }
@@ -286,6 +284,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             binding.expandedToolbarLayout.setVisibility(false)
             val primaryColor = ContextCompat.getColor(this, R.color.primaryBaseColor)
             binding.ivCollapsedBack.setColorFilter(primaryColor)
+            binding.ivCollapsedBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
             binding.collapsedToolbarTitle.text = subsection.displayName
             binding.collapsedToolbarTitle.setTextColor(primaryColor)
             binding.collapsedToolbarLayout.setBackgroundResource(R.color.white)
@@ -459,7 +458,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             resumedComponent
         } else {
             if (isVideoMode) {
-                subsection?.firstIncompleteComponent?.firstIncompleteVideoComponent
+                subsection?.firstIncompleteVideoComponent?.firstIncompleteVideoComponent
             } else {
                 subsection?.firstIncompleteComponent?.firstIncompleteComponent
             }
@@ -655,16 +654,15 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             val layoutParams = binding.appbar.layoutParams
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.appbar.layoutParams = layoutParams
-            subsection?.children?.size?.let { size ->
-                if (size > 0) {
-                    binding.courseUnitNavBar.setVisibility(true)
-                }
-            }
+            binding.courseUnitNavBar.setVisibility(subsection?.children.isNullOrEmpty().not())
         }
     }
 
-    private fun getCurrentComponent(): CourseComponent {
-        return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
+    private fun getCurrentComponent(): CourseComponent? {
+        if (binding.pager2.adapter is CourseUnitPagerAdapter) {
+            return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
+        }
+        return null
     }
 
     private fun showCelebrationModal(reCreate: Boolean) {
