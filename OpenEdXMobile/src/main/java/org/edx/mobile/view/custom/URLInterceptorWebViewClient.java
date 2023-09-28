@@ -1,7 +1,6 @@
 package org.edx.mobile.view.custom;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -26,12 +25,10 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.FileUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.links.WebViewLink;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -292,13 +289,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         if (completionCallback != null &&
                 AjaxCallData.isCompletionRequest(new AjaxCallData(HttpStatus.OK, request.getUrl().toString(), ""))) {
             completionCallback.blockCompletionHandler(true);
-        }
-        Context context = view.getContext().getApplicationContext();
-
-        // suppress external links on ZeroRated network
-        String url = request.getUrl().toString();
-        if (isExternalLink(url) && NetworkUtil.isConnectedMobile(context)) {
-            return new WebResourceResponse("text/html", StandardCharsets.UTF_8.name(), null);
         }
         return super.shouldInterceptRequest(view, request);
     }
