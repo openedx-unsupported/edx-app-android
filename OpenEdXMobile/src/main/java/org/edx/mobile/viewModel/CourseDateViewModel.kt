@@ -50,8 +50,8 @@ class CourseDateViewModel @Inject constructor(
     val bannerInfo: LiveData<CourseBannerInfoModel?>
         get() = _bannerInfo
 
-    private val _resetCourseDates = MutableLiveData<ResetCourseDates?>()
-    val resetCourseDates: LiveData<ResetCourseDates?>
+    private val _resetCourseDates = MutableLiveData<Event<ResetCourseDates?>>()
+    val resetCourseDates: LiveData<Event<ResetCourseDates?>>
         get() = _resetCourseDates
 
     private val _errorMessage = MutableLiveData<ErrorMessage?>()
@@ -182,7 +182,7 @@ class CourseDateViewModel @Inject constructor(
             callback = object : NetworkResponseCallback<ResetCourseDates> {
                 override fun onSuccess(result: Result.Success<ResetCourseDates>) {
                     if (result.isSuccessful && result.data != null) {
-                        _resetCourseDates.postValue(result.data)
+                        _resetCourseDates.postEvent(result.data)
                         fetchCourseDates(
                             courseId,
                             forceRefresh = true,

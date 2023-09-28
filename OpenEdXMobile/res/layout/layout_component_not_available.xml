@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_layout_not_available"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/content_error_icon"
+        android:layout_width="@dimen/unit_unavailable_error_icon_size"
+        android:layout_height="@dimen/unit_unavailable_error_icon_size"
+        android:layout_margin="@dimen/widget_margin_double"
+        app:srcCompat="@drawable/ic_laptop"
+        app:tint="@color/neutralXXDark" />
+
+    <TextView
+        android:id="@+id/not_available_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edx_quadruple_margin"
+        android:layout_marginEnd="@dimen/edx_quadruple_margin"
+        android:layout_marginBottom="@dimen/widget_margin_double"
+        android:gravity="center"
+        android:singleLine="false"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/edx_base"
+        tools:text="@string/assessment_not_available" />
+
+    <TextView
+        android:id="@+id/not_available_message_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edx_quadruple_margin"
+        android:layout_marginEnd="@dimen/edx_quadruple_margin"
+        android:layout_marginBottom="@dimen/widget_margin_double"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="@string/assessment_explore_on_web"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/edx_base" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/view_on_web_button"
+        style="@style/edX.Widget.SecondaryActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/widget_margin_double"
+        android:text="@string/assessment_view_on_web" />
+
+</LinearLayout>

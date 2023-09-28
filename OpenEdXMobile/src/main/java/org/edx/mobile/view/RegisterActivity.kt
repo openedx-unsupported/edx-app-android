@@ -85,7 +85,7 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
     private fun initViews() {
         setToolbarAsActionBar()
         setTitle(R.string.register_title)
-        errorNotification = FullScreenErrorNotification(binding.root)
+        errorNotification = FullScreenErrorNotification(binding.scrollview)
         getRegistrationForm()
         binding.createAccountBtn.setOnClickListener {
             validateRegistrationFields()
@@ -113,9 +113,9 @@ class RegisterActivity : BaseFragmentActivity(), MobileLoginCallback {
                 environment.loginPrefs,
                 Feature.REGISTRATION
             ).apply {
-                binding.socialAuth.facebookButton.setOnClickListener {
+                binding.socialAuth.facebookButton.setOnClickListener(
                     createSocialButtonClickHandler(SocialAuthSource.FACEBOOK)
-                }
+                )
                 binding.socialAuth.googleButton.setOnClickListener(
                     createSocialButtonClickHandler(SocialAuthSource.GOOGLE)
                 )

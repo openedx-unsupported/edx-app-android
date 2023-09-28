@@ -613,6 +613,21 @@ public class CourseComponent implements IBlock, IPathNode {
         }
     }
 
+    @Nullable
+    public CourseComponent getFirstIncompleteVideoComponent() {
+        List<VideoBlockModel> videos = getVideos();
+        for (CourseComponent block : videos) {
+            if (!block.isCompleted()) {
+                return block;
+            }
+        }
+        if (videos.size() > 0) {
+            return videos.get(videos.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
     public boolean isEmptyComponent() {
         return type != BlockType.VIDEO &&
                 type != BlockType.HTML &&

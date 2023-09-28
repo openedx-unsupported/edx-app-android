@@ -293,14 +293,15 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                         PreLoadingListener.State.MAIN_UNIT_LOADING :
                         PreLoadingListener.State.MAIN_UNIT_LOADED));
 
-        courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), resetCourseDates -> {
+        courseDateViewModel.getResetCourseDates().observe(getViewLifecycleOwner(), new EventObserver<>(resetCourseDates -> {
             if (resetCourseDates != null) {
                 binding.authWebview.loadUrl(true, unit.getBlockUrl());
                 if (!CalendarUtils.INSTANCE.isCalendarExists(getContextOrThrow(), accountName, calendarTitle)) {
                     showShiftDateSnackBar(true);
                 }
             }
-        });
+            return null;
+        }));
 
         courseDateViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {

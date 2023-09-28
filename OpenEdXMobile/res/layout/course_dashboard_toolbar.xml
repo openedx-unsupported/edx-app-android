@@ -99,7 +99,7 @@
                 android:id="@+id/collapsed_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/collapsed_toolbar_height"
-                android:background="@color/primaryLightColor"
+                android:background="@color/transparent"
                 app:layout_collapseMode="pin">
 
                 <LinearLayout

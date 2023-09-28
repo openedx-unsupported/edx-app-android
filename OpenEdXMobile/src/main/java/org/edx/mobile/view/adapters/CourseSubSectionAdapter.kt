@@ -92,7 +92,7 @@ class CourseSubSectionAdapter(
             }
             component.isCompleted.apply {
                 binding.ivCompletedSection.setVisibility(this)
-                binding.subSectionRowContainer.setBackgroundColor(
+                binding.root.setBackgroundColor(
                     if (this) {
                         ContextCompat.getColor(binding.root.context, R.color.successXXLight)
                     } else {
@@ -102,10 +102,6 @@ class CourseSubSectionAdapter(
             }
 
             binding.subSectionRowContainer.isActivated = isChecked
-            binding.subSectionRowContainer.background = ContextCompat.getDrawable(
-                binding.subSectionRowContainer.context,
-                R.drawable.view_selector
-            )
 
             setBulkDownloadView(component)
             binding.root.setOnClickListener {

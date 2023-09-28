@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -54,6 +55,7 @@ import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.model.iap.IAPFlowData.IAPAction
 import org.edx.mobile.services.CourseManager
 import org.edx.mobile.util.AppConstants
+import org.edx.mobile.util.BrowserUtil
 import org.edx.mobile.util.NetworkUtil
 import org.edx.mobile.util.NonNullObserver
 import org.edx.mobile.util.UiUtils
@@ -178,6 +180,12 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
         binding.gotoNext.setOnClickListener { navigateNextComponent() }
         onLoadData()
+
+        if (subsection?.children.isNullOrEmpty()) {
+            showComponentNotSupportError()
+            return
+        }
+
         setupToolbar()
         initAdapter()
         // Enforce to intercept single scrolling direction
@@ -267,6 +275,35 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
                 View.INVISIBLE
             )
             setupToolbarListeners()
+        }
+    }
+
+    private fun showComponentNotSupportError() {
+        subsection?.let { subsection ->
+            binding.apply {
+                courseUnitNavBar.setVisibility(false)
+                expandedToolbarLayout.setVisibility(false)
+                val primaryColor = ContextCompat.getColor(
+                    this@CourseUnitNavigationActivity,
+                    R.color.primaryBaseColor
+                )
+                ivCollapsedBack.setColorFilter(primaryColor)
+                ivCollapsedBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+                collapsedToolbarTitle.text = subsection.displayName
+                collapsedToolbarTitle.setTextColor(primaryColor)
+                collapsedToolbarLayout.setBackgroundResource(R.color.white)
+                containerLayoutNotAvailable.root.setVisibility(true)
+                containerLayoutNotAvailable.notAvailableMessage.setText(R.string.assessment_not_available)
+                containerLayoutNotAvailable.notAvailableMessage2.setVisibility(false)
+                containerLayoutNotAvailable.viewOnWebButton.setOnClickListener {
+                    environment.analyticsRegistry.trackSubsectionViewOnWebTapped(
+                        subsection.courseId,
+                        subsection.blockId,
+                        subsection.specialExamInfo != null
+                    )
+                    BrowserUtil.open(this@CourseUnitNavigationActivity, subsection.webUrl, false)
+                }
+            }
         }
     }
 
@@ -382,7 +419,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     private fun initAdapter() {
         if (subsection?.root == null) {
-            logger.warn("selectedUnit is null?")
+            logger.warn("selected section is null?")
             return  //should not happen
         }
         val componentList = getComponentList()
@@ -427,7 +464,11 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         val selectedComponent: CourseComponent? = if (resumedComponent != null) {
             resumedComponent
         } else {
-            subsection?.firstIncompleteComponent?.firstIncompleteComponent
+            if (isVideoMode) {
+                subsection?.firstIncompleteVideoComponent?.firstIncompleteVideoComponent
+            } else {
+                subsection?.firstIncompleteComponent?.firstIncompleteComponent
+            }
         }
         val firstIncompleteComponentIndex = componentList.indexOf(selectedComponent)
         binding.pager2.setCurrentItem(firstIncompleteComponentIndex, false)
@@ -603,7 +644,7 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
 
     private fun updateUIForOrientation() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE &&
-            VideoUtil.isCourseUnitVideo(environment, getCurrentComponent())
+            getCurrentComponent()?.isVideoBlock == true
         ) {
             WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowInsetsControllerCompat(window, window.decorView).apply {
@@ -620,12 +661,15 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             val layoutParams = binding.appbar.layoutParams
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.appbar.layoutParams = layoutParams
-            binding.courseUnitNavBar.setVisibility(true)
+            binding.courseUnitNavBar.setVisibility(subsection?.children.isNullOrEmpty().not())
         }
     }
 
-    private fun getCurrentComponent(): CourseComponent {
-        return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
+    private fun getCurrentComponent(): CourseComponent? {
+        if (binding.pager2.adapter is CourseUnitPagerAdapter) {
+            return (binding.pager2.adapter as CourseUnitPagerAdapter).getComponent(binding.pager2.currentItem)
+        }
+        return null
     }
 
     private fun showCelebrationModal(reCreate: Boolean) {

@@ -34,19 +34,13 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
-                <androidx.core.widget.NestedScrollView
+                <org.edx.mobile.view.custom.NestedScrollWebView
+                    android:id="@+id/webview"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                    <org.edx.mobile.view.custom.EdxWebView
-                        android:id="@+id/webview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/neutralLight" />
-
-                </androidx.core.widget.NestedScrollView>
+                    android:background="@color/neutralLight"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             </LinearLayout>
 

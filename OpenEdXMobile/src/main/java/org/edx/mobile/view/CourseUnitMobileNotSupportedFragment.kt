@@ -81,7 +81,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             val isPurchaseEnabled = unit.courseSku.isNullOrEmpty().not() &&
                     environment.featuresPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
 
-            binding.containerLayoutNotAvailable.setVisibility(false)
+            binding.containerLayoutNotAvailable.root.setVisibility(false)
             binding.llGradedContentLayout.setVisibility(true)
             var experimentGroup: String? = null
             if (environment.featuresPrefs.isIAPExperimentEnabled) {
@@ -137,27 +137,29 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     }
 
     private fun showNotAvailableOnMobile(isLockedContent: Boolean) {
-        binding.containerLayoutNotAvailable.setVisibility(true)
         binding.llGradedContentLayout.setVisibility(false)
-        binding.notAvailableMessage2.setVisibility(!isLockedContent)
+        binding.containerLayoutNotAvailable.apply {
+            root.setVisibility(true)
+            notAvailableMessage2.setVisibility(!isLockedContent)
 
-        if (isLockedContent) {
-            binding.contentErrorIcon.setImageDrawable(R.drawable.ic_lock)
-            binding.notAvailableMessage.setText(R.string.not_available_on_mobile)
-        } else {
-            binding.contentErrorIcon.setImageDrawable(R.drawable.ic_laptop)
-            binding.notAvailableMessage.setText(
-                if (unit?.isVideoBlock == true) R.string.video_only_on_web_short
-                else R.string.assessment_not_available
-            )
-        }
-
-        binding.viewOnWebButton.setOnClickListener {
-            unit?.let {
-                BrowserUtil.open(activity, it.webUrl, true)
-                environment.analyticsRegistry.trackOpenInBrowser(
-                    it.id, it.courseId, it.isMultiDevice, it.blockId
+            if (isLockedContent) {
+                contentErrorIcon.setImageDrawable(R.drawable.ic_lock)
+                notAvailableMessage.setText(R.string.not_available_on_mobile)
+            } else {
+                contentErrorIcon.setImageDrawable(R.drawable.ic_laptop)
+                notAvailableMessage.setText(
+                    if (unit?.isVideoBlock == true) R.string.video_only_on_web_short
+                    else R.string.assessment_not_available
                 )
+            }
+
+            viewOnWebButton.setOnClickListener {
+                unit?.let {
+                    BrowserUtil.open(activity, it.webUrl, true)
+                    environment.analyticsRegistry.trackOpenInBrowser(
+                        it.id, it.courseId, it.isMultiDevice, it.blockId
+                    )
+                }
             }
         }
     }

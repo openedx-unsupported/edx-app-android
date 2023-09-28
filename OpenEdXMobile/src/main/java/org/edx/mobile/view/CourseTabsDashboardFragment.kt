@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.android.billingclient.api.ProductDetails
@@ -395,7 +396,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
             }
         })
 
-        courseDateViewModel.resetCourseDates.observe(viewLifecycleOwner, NonNullObserver {
+        courseDateViewModel.resetCourseDates.observe(viewLifecycleOwner, EventObserver {
             if (!CalendarUtils.isCalendarExists(contextOrThrow, accountName, calendarTitle)) {
                 showShiftDateSnackBar(true)
                 binding.toolbar.datesBanner.root.setVisibility(false)
@@ -587,6 +588,12 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 binding.toolbar.collapsingToolbarLayout,
                 object : CollapsingToolbarStatListener {
                     override fun onExpanded() {
+                        binding.toolbar.collapsedToolbarLayout.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.transparent
+                            )
+                        )
                         ViewAnimationUtil.startAlphaAnimation(
                             binding.toolbar.expandedToolbarLayout,
                             View.VISIBLE
@@ -599,6 +606,12 @@ class CourseTabsDashboardFragment : BaseFragment() {
                     }
 
                     override fun onCollapsed() {
+                        binding.toolbar.collapsedToolbarLayout.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.primaryLightColor
+                            )
+                        )
                         ViewAnimationUtil.startAlphaAnimation(
                             binding.toolbar.expandedToolbarLayout,
                             View.INVISIBLE
