@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.edx.mobile.R
 import org.edx.mobile.base.BaseFragmentActivity
 import org.edx.mobile.databinding.FragmentCourseHomeBinding
-import org.edx.mobile.deeplink.DeepLink
+import org.edx.mobile.deeplink.Screen
 import org.edx.mobile.deeplink.ScreenDef
 import org.edx.mobile.event.CourseDashboardRefreshEvent
 import org.edx.mobile.event.CourseOutlineRefreshEvent
@@ -28,6 +28,7 @@ import org.edx.mobile.event.MediaStatusChangeEvent
 import org.edx.mobile.event.NetworkConnectivityChangeEvent
 import org.edx.mobile.event.RefreshCourseDashboardEvent
 import org.edx.mobile.exception.CourseContentNotValidException
+import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.extenstion.parcelable
 import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.extenstion.setVisibility
@@ -114,7 +115,7 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
                 this.serializableOrThrow(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
             courseUpgradeData = this.parcelable(Router.EXTRA_COURSE_UPGRADE_DATA)
             courseComponentId = this.getString(Router.EXTRA_COURSE_COMPONENT_ID)
-            screenName = this.getString(DeepLink.Keys.SCREEN_NAME)
+            screenName = this.getString(Router.EXTRA_SCREEN_NAME)
         } ?: run {
             throw IllegalStateException("No arguments available")
         }
@@ -257,6 +258,23 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
         }
         adapter.submitList(sectionList)
         updateListUI()
+        detectDeepLinking()
+    }
+
+    private fun detectDeepLinking() {
+        if (Screen.COURSE_COMPONENT.equals(screenName, true)
+            && courseComponentId.isNotNullOrEmpty()
+        ) {
+            val courseUnitDetailIntent = environment.router.getCourseUnitDetailIntent(
+                requireActivity(),
+                courseData,
+                courseUpgradeData,
+                courseComponentId,
+                false
+            )
+            courseUnitDetailLauncher.launch(courseUnitDetailIntent)
+            screenName = null
+        }
     }
 
     override fun onSectionItemClick(
