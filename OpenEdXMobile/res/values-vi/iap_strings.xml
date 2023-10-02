@@ -34,6 +34,9 @@
     <string name="error_course_not_fullfilled">Đã xảy ra sự cố khi chúng tôi cố gắng cập nhật trải nghiệm khóa học của bạn. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ để được trợ giúp.</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">Yêu cầu của bạn không thể được hoàn thành tại thời điểm này. Nếu lỗi này vẫn tiếp diễn, vui lòng liên hệ Hỗ trợ.</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">The course you are looking to upgrade has already been paid for. For additional help, reach out to Support.</string>
+
 
     <!-- Full Screen Loader -->
     <string name="fullscreen_loader_unlocking">Đang mở khóa</string>

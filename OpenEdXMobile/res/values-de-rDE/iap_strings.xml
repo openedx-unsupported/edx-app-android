@@ -34,6 +34,9 @@
     <string name="error_course_not_fullfilled">Beim Versuch, Ihre Kurserfahrung zu aktualisieren, ist etwas schiefgelaufen. Wenn dieser Fehler weiterhin auftritt, wenden Sie sich an den Support, um Hilfe zu erhalten.</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">Ihre Anfrage konnte derzeit nicht abgeschlossen werden. Wenn dieser Fehler weiterhin auftritt, wenden Sie sich bitte an den Support.</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">The course you are looking to upgrade has already been paid for. For additional help, reach out to Support.</string>
+
 
     <!-- Full Screen Loader -->
     <string name="fullscreen_loader_unlocking">Entsperren</string>
