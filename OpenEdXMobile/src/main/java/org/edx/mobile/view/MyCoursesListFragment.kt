@@ -200,6 +200,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                         HttpStatus.UPGRADE_REQUIRED -> {
                             showError(EdxErrorState.State.UPDATE_APP)
                         }
+
                         else -> {
                             showError(EdxErrorState.State.NETWORK)
                         }
@@ -391,6 +392,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
         arguments?.parcelable<DeepLink>(Router.EXTRA_DEEP_LINK)?.let {
             DeepLinkManager.proceedDeeplink(requireActivity(), it)
             MainApplication.instance().showBanner(loginAPI, true)
+            arguments?.putParcelable(Router.EXTRA_DEEP_LINK, null)
         } ?: run {
             MainApplication.instance().showBanner(loginAPI, false)
         }
@@ -410,9 +412,11 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 EdxErrorState.State.UPDATE_APP -> {
                     AppStoreUtils.openAppInAppStore(requireContext())
                 }
+
                 EdxErrorState.State.NETWORK -> {
                     onRefresh()
                 }
+
                 else -> {}
             }
         }
