@@ -232,9 +232,10 @@
 
         <activity
             android:name=".view.dialog.WebViewActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar">
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"
+            tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
@@ -255,11 +256,11 @@
         <!--Google cast expanded controls activity-->
         <activity
             android:name="org.edx.mobile.googlecast.ExpandedControlsActivity"
+            android:exported="false"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.CastVideosTheme"
-            android:exported="true">
+            android:theme="@style/Theme.CastVideosTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
