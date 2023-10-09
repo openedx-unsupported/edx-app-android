@@ -177,8 +177,6 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
             EventBus.getDefault().post(LogoutEvent())
             return
         }
-        binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
-        binding.gotoNext.setOnClickListener { navigateNextComponent() }
         onLoadData()
 
         if (subsection?.children.isNullOrEmpty()) {
@@ -195,6 +193,9 @@ class CourseUnitNavigationActivity : BaseFragmentActivity(), CourseUnitFragment.
         }
         binding.pager2.setVisibility(true)
         binding.stateLayout.root.setVisibility(false)
+
+        binding.gotoPrev.setOnClickListener { navigatePreviousComponent() }
+        binding.gotoNext.setOnClickListener { navigateNextComponent() }
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
