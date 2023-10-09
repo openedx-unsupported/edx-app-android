@@ -103,9 +103,15 @@ public class DatabaseModelFactory {
         e.eid = root.getCourseId();
         e.duration = vrm.duration;
         final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfoForDownloading(videoQuality);
-        e.size = preferredVideoInfo.fileSize;
+        final VideoInfo videoInfo = vrm.encodedVideos.getPreferredNativeVideoInfo();
+        if (preferredVideoInfo != null) {
+            e.size = preferredVideoInfo.fileSize;
+            e.url = preferredVideoInfo.url;
+        } else if (videoInfo != null) {
+            e.size = videoInfo.fileSize;
+            e.url = videoInfo.url;
+        }
         e.title = block.getDisplayName();
-        e.url = preferredVideoInfo.url;
         e.url_hls = getVideoNetworkUrlOrNull(vrm.encodedVideos.getHls());
         e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.getMobileHigh());
         e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.getMobileLow());

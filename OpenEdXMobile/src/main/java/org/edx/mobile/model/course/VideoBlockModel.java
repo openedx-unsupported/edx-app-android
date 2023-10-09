@@ -77,9 +77,11 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
      * @return The size of the video if available, <code>-1</code> otherwise.
      */
     public long getPreferredVideoEncodingSize(VideoQuality preferredVideoQuality) {
-        if (data != null && data.encodedVideos != null
-                && data.encodedVideos.getPreferredVideoInfoForDownloading(preferredVideoQuality) != null) {
-            return data.encodedVideos.getPreferredVideoInfoForDownloading(preferredVideoQuality).fileSize;
+        if (data != null && data.encodedVideos != null) {
+            VideoInfo videoInfo = data.encodedVideos.getPreferredVideoInfoForDownloading(preferredVideoQuality);
+            if (videoInfo != null && videoInfo.fileSize > 0) {
+                return videoInfo.fileSize;
+            }
         }
         return -1;
     }
