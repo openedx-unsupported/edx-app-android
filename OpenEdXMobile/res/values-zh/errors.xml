@@ -51,7 +51,7 @@
   <string name="error_account_not_linked_desc_microsoft_2">此微软账号尚未与任何{platform_name}账号相关联，请先注册。</string>
   <!--New version available-->
   <!--Snackbar notification shown when the current version of the app is unsupported-->
-  <string name="app_version_unsupported">不支持您的新版本</string>
+  <string name="app_version_unsupported">不支持您的新版本。</string>
   <!--Snackbar notification shown when the current version of the app is deprecated-->
   <!--Snackbar notification shown when the current version of the app is outdated-->
   <string name="app_version_outdated">应用程序有新版本可用。</string>

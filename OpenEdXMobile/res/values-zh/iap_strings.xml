@@ -34,6 +34,9 @@
     <string name="error_course_not_fullfilled">尝试升级您的课程体验时，发生错误。如果仍然发生错误，请联系支持人员。</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">当前无法完成您的申请。如果仍然发生错误，请联系支持人员。</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">The course you are looking to upgrade has already been paid for. For additional help, reach out to Support.</string>
+
 
     <!-- Full Screen Loader -->
     <string name="fullscreen_loader_unlocking">正在解锁</string>

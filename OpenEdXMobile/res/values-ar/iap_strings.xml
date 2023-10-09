@@ -34,6 +34,9 @@
     <string name="error_course_not_fullfilled">حدث خطأ ما عند محاولتنا تحديث تجربة الدورة التدريبية الخاصة بك. إذا استمر هذا الخطأ في الظهور، فاتصل بالدعم للحصول على المساعدة.</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">تعذر إكمال طلبك في الوقت الحالي. إذا استمر هذا الخطأ في الظهور، فيرجى التواصل مع الدعم.</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">The course you are looking to upgrade has already been paid for. For additional help, reach out to Support.</string>
+
 
     <!-- Full Screen Loader -->
     <string name="fullscreen_loader_unlocking">إتاحة</string>

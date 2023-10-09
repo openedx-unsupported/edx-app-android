@@ -34,6 +34,9 @@
     <string name="error_course_not_fullfilled">お客様のコース体験を更新しようとしたときに、何かが起こりました。このエラーが続く場合は、サポートまでご連絡ください。</string>
     <!--  The price wasn't fetched from the payment sdk  -->
     <string name="error_price_not_fetched">お客様のリクエストは、現時点では完了できませんでした。このエラーが続く場合は、サポートまでご連絡ください。</string>
+    <!--  The course is upgraded and verified  -->
+    <string name="error_course_paid_and_verified">The course you are looking to upgrade has already been paid for. For additional help, reach out to Support.</string>
+
 
     <!-- Full Screen Loader -->
     <string name="fullscreen_loader_unlocking">コースへの</string>
