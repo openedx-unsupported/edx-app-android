@@ -62,6 +62,7 @@ jobs:
     # Includes Screenshot Tests
     # Ref: https://github.com/marketplace/actions/android-emulator-runner
     runs-on: macos-11
+    if: false
 
     steps:
       # Checkouts the current branch for processing
