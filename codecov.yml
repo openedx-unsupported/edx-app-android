@@ -1,0 +1,7 @@
+# Configuration for GitHub-Codecov Checks
+# Inspiration: https://docs.codecov.com/docs/github-checks#yaml-configuration-for-github-checks-and-codecov
+
+coverage:
+  status:
+    patch: false
+    project: false
