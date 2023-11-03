@@ -100,17 +100,20 @@ class CourseUnitPagerAdapter(
                 CourseUnitDiscussionFragment.newInstance(minifiedUnit, courseData)
             }
 
-            minifiedUnit is HtmlBlockModel -> {
-                minifiedUnit.setCourseId(courseData.course.id)
-                CourseUnitWebViewFragment.newInstance(minifiedUnit, courseData)
+            minifiedUnit.isMultiDevice.not() -> {
+                CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
             }
 
             minifiedUnit.isEmptyComponent -> {
                 CourseUnitEmptyFragment.newInstance(minifiedUnit)
             }
 
+            minifiedUnit is HtmlBlockModel -> {
+                minifiedUnit.setCourseId(courseData.course.id)
+                CourseUnitWebViewFragment.newInstance(minifiedUnit, courseData)
+            }
+
             else -> {
-                // in case of !minifiedUnit.isMultiDevice else executed
                 CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
             }
         }
