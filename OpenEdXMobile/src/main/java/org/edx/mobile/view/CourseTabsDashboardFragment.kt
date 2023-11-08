@@ -130,28 +130,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
     private val fullscreenLoader: FullscreenLoaderDialogFragment?
         get() = getRetainedInstance(childFragmentManager)
 
-    private val courseTabItems: List<FragmentItemModel>
-        get() {
-            val screenName = arguments?.getString(Router.EXTRA_SCREEN_NAME)
-            val items = mutableListOf<FragmentItemModel>()
-
-            items.add(createCourseOutlineItem(screenName))
-            if (environment.config.isCourseVideosEnabled) {
-                items.add(createVideosItem())
-            }
-            if (environment.config.isDiscussionsEnabled &&
-                courseData.course.discussionUrl?.isNotEmpty() == true
-            ) {
-                items.add(createDiscussionsItem())
-            }
-            if (environment.config.isCourseDatesEnabled) {
-                items.add(createDatesItem())
-            }
-            items.add(createHandoutsItem())
-            items.add(createAnnouncementsItem())
-
-            return items
-        }
+    private lateinit var courseTabItems: List<FragmentItemModel>
 
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
@@ -191,6 +170,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         binding = FragmentCourseTabsDashboardBinding.inflate(inflater, container, false)
         courseData =
             arguments?.serializableOrThrow(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
+        courseTabItems = getCourseTabItems()
 
         setHasOptionsMenu(courseData.course.coursewareAccess.hasAccess())
 
@@ -786,6 +766,28 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 }
             }
         })
+    }
+
+    private fun getCourseTabItems(): List<FragmentItemModel> {
+        val screenName = arguments?.getString(Router.EXTRA_SCREEN_NAME)
+        val items = mutableListOf<FragmentItemModel>()
+
+        items.add(createCourseOutlineItem(screenName))
+        if (environment.config.isCourseVideosEnabled) {
+            items.add(createVideosItem())
+        }
+        if (environment.config.isDiscussionsEnabled &&
+            courseData.course.discussionUrl?.isNotEmpty() == true
+        ) {
+            items.add(createDiscussionsItem())
+        }
+        if (environment.config.isCourseDatesEnabled) {
+            items.add(createDatesItem())
+        }
+        items.add(createHandoutsItem())
+        items.add(createAnnouncementsItem())
+
+        return items
     }
 
     private fun createCourseOutlineItem(screenName: String?): FragmentItemModel {

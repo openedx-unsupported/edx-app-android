@@ -54,6 +54,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
 
+  # TODO: Re-enable this job when the Instrument Test functionality is restored - Remove 'if: false'
   android_screenshot:
     name: Android Instrumented Tests
     # The macOS VM provided by GitHub Actions has HAXM installed so we are able to create a new AVD
@@ -62,6 +63,7 @@ jobs:
     # Includes Screenshot Tests
     # Ref: https://github.com/marketplace/actions/android-emulator-runner
     runs-on: macos-11
+    if: false
 
     steps:
       # Checkouts the current branch for processing

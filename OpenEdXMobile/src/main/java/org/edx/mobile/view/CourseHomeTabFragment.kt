@@ -273,6 +273,7 @@ class CourseHomeTabFragment : OfflineSupportBaseFragment(), CourseHomeAdapter.On
                 false
             )
             courseUnitDetailLauncher.launch(courseUnitDetailIntent)
+            arguments?.putString(Router.EXTRA_SCREEN_NAME, null)
             screenName = null
         }
     }
