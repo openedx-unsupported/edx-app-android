@@ -14,6 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.android.billingclient.api.ProductDetails
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.gms.cast.framework.CastButtonFactory
+import com.google.android.gms.cast.framework.CastState
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -37,6 +39,7 @@ import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.extenstion.setTitleStateListener
 import org.edx.mobile.extenstion.setVisibility
+import org.edx.mobile.googlecast.GoogleCastDelegate
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.http.HttpStatusException
 import org.edx.mobile.http.notifications.SnackbarErrorNotification
@@ -109,6 +112,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
     private lateinit var binding: FragmentCourseTabsDashboardBinding
     private lateinit var courseData: EnrolledCoursesResponse
+    private lateinit var googleCastDelegate: GoogleCastDelegate
 
     private val iapViewModel: InAppPurchasesViewModel by viewModels()
     private val courseDateViewModel: CourseDateViewModel by viewModels()
@@ -171,6 +175,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         courseData =
             arguments?.serializableOrThrow(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
         courseTabItems = getCourseTabItems()
+        googleCastDelegate = GoogleCastDelegate.getInstance(analyticsRegistry)
 
         setHasOptionsMenu(courseData.course.coursewareAccess.hasAccess())
 
@@ -528,6 +533,15 @@ class CourseTabsDashboardFragment : BaseFragment() {
             courseOrganization.text = courseData.course.org
             courseTitle.text = courseData.course.name
             tabs.setVisibility(hasAccess)
+
+            if (environment.config.isChromeCastEnabled) {
+                mediaRouteButton.setVisibility(googleCastDelegate.isConnected)
+                CastButtonFactory.setUpMediaRouteButton(requireContext(), mediaRouteButton)
+
+                googleCastDelegate.addCastStateListener { state ->
+                    mediaRouteButton.setVisibility(state == CastState.CONNECTED)
+                }
+            }
 
             val expiryDate = CourseCardUtils.getFormattedDate(requireContext(), courseData)
             if (!expiryDate.isNullOrEmpty()) {
