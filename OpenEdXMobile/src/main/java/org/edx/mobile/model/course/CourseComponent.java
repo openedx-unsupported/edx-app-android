@@ -607,7 +607,7 @@ public class CourseComponent implements IBlock, IPathNode {
             }
         }
         if (children.size() > 0) {
-            return children.get(children.size() - 1);
+            return children.get(0);
         } else {
             return null;
         }
@@ -622,7 +622,7 @@ public class CourseComponent implements IBlock, IPathNode {
             }
         }
         if (videos.size() > 0) {
-            return videos.get(videos.size() - 1);
+            return videos.get(0);
         } else {
             return null;
         }
