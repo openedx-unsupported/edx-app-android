@@ -175,7 +175,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
         courseData =
             arguments?.serializableOrThrow(Router.EXTRA_COURSE_DATA) as EnrolledCoursesResponse
         courseTabItems = getCourseTabItems()
-        googleCastDelegate = GoogleCastDelegate.getInstance(analyticsRegistry)
 
         setHasOptionsMenu(courseData.course.coursewareAccess.hasAccess())
 
@@ -535,9 +534,10 @@ class CourseTabsDashboardFragment : BaseFragment() {
             tabs.setVisibility(hasAccess)
 
             if (environment.config.isChromeCastEnabled) {
+                googleCastDelegate = GoogleCastDelegate.getInstance(analyticsRegistry)
                 mediaRouteButton.setVisibility(googleCastDelegate.isConnected)
-                CastButtonFactory.setUpMediaRouteButton(requireContext(), mediaRouteButton)
 
+                CastButtonFactory.setUpMediaRouteButton(requireContext(), mediaRouteButton)
                 googleCastDelegate.addCastStateListener { state ->
                     mediaRouteButton.setVisibility(state == CastState.CONNECTED)
                 }
