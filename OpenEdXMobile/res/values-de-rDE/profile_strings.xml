@@ -75,8 +75,6 @@
     <string name="profile_incomplete_edit_button">Beginnen</string>
     <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
     <string name="profile_incomplete_about_me">Keine Informationen in \"Über mich\" vorhanden</string>
-    <!-- Window title for edit profile screen -->
-    <string name="edit_user_profile_title">Profil bearbeiten</string>
     <!-- How most profile fields are formatted when viewing the edit screen -->
     <string name="edit_user_profile_field">{label}: {value}</string>
     <!-- Default placeholder if a profile field is blank -->

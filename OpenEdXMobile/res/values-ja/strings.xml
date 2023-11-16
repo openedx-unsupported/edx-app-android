@@ -5,8 +5,6 @@
   <string name="course_details_congratulations">おめでとうございます！</string>
   <!--Message for user who has successfully completed a certificate course-->
   <string name="course_details_earned_cert">あなたは合格しました。</string>
-  <!--Button that opens a full view of an earned certificate-->
-  <string name="course_details_view_cert_button">修了証を見る</string>
   <!--Course Discovery-->
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">登録しよう</string>
@@ -25,8 +23,6 @@
   <string name="cannot_show_dashboard">ダッシュボードが表示できません。</string>
   <!--Error message shown when browser cannot handle request for given web url-->
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">講座をシェア</string>
   <!--Share course-->
   <string name="share_course_message">私は {platform_name} の講座を受講中です！こちらを見てください：</string>
   <!--Certificate Page-->
@@ -46,10 +42,6 @@
   <string name="email">メールアドレス</string>
   <!--Hint text for password field-->
   <string name="password">パスワード</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">パスワードをお忘れですか？</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">サインイン</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">サインインボタン</string>
   <!--Message shown while waiting for action-->
@@ -74,12 +66,9 @@
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">ドロップダウンリスト</string>
   <!--Navigation Drawer Labels-->
-  <!--Button text to show user current downloads screen-->
-  <!--Title of user's course list screen-->
   <!--Title of user's program list screen-->
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">講座を探す</string>
-  <!--Title of Find Courses tab on Main Dashboard screen-->
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">フィードバックを送る</string>
   <!--Toggle switch on state label-->
@@ -135,13 +124,6 @@
   <string name="course_name">講座名</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">新規講座コンテンツ</string>
-  <!--Label for date when course starts-->
-  <!--Label for course that has ended-->
-  <!--Label for date when course is ending-->
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <!--Label for date when course expired on a specific date like on November 5-->
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">講座コンテンツ</string>
@@ -164,7 +146,6 @@
   <!--Upgrade banner's description which appears on course outline screen.-->
   <!--Title upgrade to verified today course outline footer-->
   <!--Title of place order for course upgrade screen-->
-  <!--label for resume course section. Will be followed by course name-->
   <!--Mobile Payments-->
   <!--Discussion Topics-->
   <!--Label for the discussion topics page-->
@@ -383,9 +364,6 @@
   <!--Button label to bring up course finder-->
   <string name="find_course_text">新しいチャレンジを探していますか？</string>
   <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">講座を探す</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">またはサインイン</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -400,9 +378,6 @@
   <string name="already_have_an_account">アカウントをお持ちですか？サインインしてください。</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">登録申込をして学習を始める</string>
-  <!--In Register screen-->
-  <string name="register_with">登録</string>
-  <string name="or_register_with_email">メールで登録する</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <!--Button leading user to log in screen-->
@@ -412,14 +387,8 @@
   <!--Search view leading user to Find Courses screen from the launch screen upon searching some text-->
   <!--Label Explore all courses on the launch screen-->
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">任意のフィールドを表示する</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">任意のフィールドを隠す</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">アカウントを作成する</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">アカウントを作成するボタン</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">アカウント作成中…</string>
   <!--Registration screen title-->

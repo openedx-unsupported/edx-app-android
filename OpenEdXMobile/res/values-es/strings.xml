@@ -5,8 +5,6 @@
   <string name="course_details_congratulations">¡Felicidades!</string>
   <!--Message for user who has successfully completed a certificate course-->
   <string name="course_details_earned_cert">Ha aprobado el curso.</string>
-  <!--Button that opens a full view of an earned certificate-->
-  <string name="course_details_view_cert_button">Ver certificado</string>
   <!--Course Discovery-->
   <!--Enroll Now button text-->
   <string name="enroll_now_button_text">Inscribirse ahora</string>
@@ -28,8 +26,6 @@
   <!--Error message shown when browser cannot handle request for given web url-->
   <string name="cannot_open_url">No se puede abrir la página web.</string>
   <!--Course Sharing-->
-  <!--Description of button that will open the share course menu-->
-  <string name="share_course_button">Compartir este curso</string>
   <!--Share course-->
   <string name="share_course_message">Estoy tomando un curso en {platform_name}! Dale un vistazo:</string>
   <!--Certificate Page-->
@@ -49,10 +45,6 @@
   <string name="email">Correo electrónico</string>
   <!--Hint text for password field-->
   <string name="password">Contraseña</string>
-  <!--Button text allowing user to reset their password-->
-  <string name="forgot_password">¿Olvidó su contraseña?</string>
-  <!--Button initiating login process after user enters credentials like username and password-->
-  <string name="login">Iniciar sesión</string>
   <!--Accessible content description of sign in button on Log in screen-->
   <string name="login_btn">Botón de inicio de sesión</string>
   <!--Message shown while waiting for action-->
@@ -82,16 +74,10 @@
   <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
   <string name="dropdown_list_prefix">Lista desplegable.</string>
   <!--Navigation Drawer Labels-->
-  <!--Button text to show user current downloads screen-->
-  <string name="label_current_downloads">Ver descargas</string>
-  <!--Title of user's course list screen-->
-  <string name="label_my_courses">Cursos</string>
   <!--Title of user's program list screen-->
   <string name="label_programs">Programas</string>
   <!--Title of native Find Courses Screen-->
   <string name="label_find_courses">Encontrar cursos</string>
-  <!--Title of Find Courses tab on Main Dashboard screen-->
-  <string name="label_discovery">Descubrir</string>
   <!--Button allowing users to send an email for feedback-->
   <string name="label_submit_feedback">Enviar retroalimentación</string>
   <!--Toggle switch on state label-->
@@ -152,20 +138,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="course_name">Nombre del curso</string>
   <!--Label indicating new course content has been downloaded-->
   <string name="new_course_content">Nuevo contenido del curso</string>
-  <!--Label for date when course starts-->
-  <string name="label_starting">Comenzando el {date}</string>
-  <!--Label for course that has ended-->
-  <string name="label_ended">Terminado el {date}</string>
-  <!--Label for date when course is ending-->
-  <string name="label_ending">Terminando el {date}</string>
-  <!--Label for date when course is expiring in a specific time frame like in 2 days-->
-  <string name="label_expires">El acceso a los cursos caduca en {date}</string>
-  <!--Label for date when course is expiring on a specific date like on December 5-->
-  <string name="label_expires_on">El acceso a los cursos caduca el {date}</string>
-  <!--Label for date when course expired a specific time ago like 2 days ago-->
-  <string name="label_expired">El acceso a los cursos caducó hace {date}</string>
-  <!--Label for date when course expired on a specific date like on November 5-->
-  <string name="label_expired_on">El acceso a los cursos caducó el {date}</string>
   <!--Course Details-->
   <!--Accessible content description of label for course content-->
   <string name="course_content">Contenido del curso</string>
@@ -195,8 +167,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="upgrade_to_verified_today_title">Pásate a la modalidad de Certificado verificado</string>
   <!--Title of place order for course upgrade screen-->
   <string name="place_order_title">Hacer pedido</string>
-  <!--label for resume course section. Will be followed by course name-->
-  <string name="label_resume">Curriculum vitae</string>
   <!--Mobile Payments-->
   <string name="payments_info_header">¡Obtenga un certificado verificado!</string>
   <string name="payments_info_details">Resalte el nuevo conocimiento y nuevas habilidades con un certificado verificado.\n\nUse esta valiosa credencial para mejorar sus perspectivas laborales y avanzar en su carrera, o resaltar su certificado en las solicitudes escolares.</string>
@@ -453,9 +423,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Button label to bring up course finder-->
   <string name="find_course_text">¿Buscando un nuevo reto?</string>
   <!--Button label to bring up course finder-->
-  <string name="find_course_btn_text">Encontrar un curso</string>
-  <!--Message between sign in button and social login buttons-->
-  <string name="or_sign_in_with">O iniciar sesión con</string>
   <!--Facebook login method-->
   <string name="facebook_text">Facebook</string>
   <!--Google login method-->
@@ -471,9 +438,6 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <string name="already_have_an_account">¿Ya tiene una cuenta? Inicie sesión</string>
   <!--Prompt leading user to create account screen-->
   <string name="sign_up_and_learn">Inicie sesión y comience a aprender</string>
-  <!--In Register screen-->
-  <string name="register_with">Registrarse con</string>
-  <string name="or_register_with_email">o registrarse con el correo electrónico</string>
   <!--New Logistration Launch screen text-->
   <!--Button leading user to create account screen-->
   <string name="launch_register">Registrarse</string>
@@ -490,14 +454,8 @@ Si no lo recibe en algunos minutos, asegúrese de revisar su carpeta de spam.</s
   <!--Label Explore all courses on the launch screen-->
   <string name="label_explore_all_courses"><u>Explora todos los cursos</u></string>
   <!--Registration Screen-->
-  <!--Button text allowing user to show hidden optional registration fields-->
-  <string name="show_optional_text">Mostrar campos opcionales</string>
   <!--Button text allowing user to hide visible optional registration fields-->
   <string name="hide_optional_text">Ocultar campos opcionales</string>
-  <!--Button text allowing user create an account-->
-  <string name="create_account_text">Crear mi cuenta</string>
-  <!--Accessible content description of create account button on Registration screen-->
-  <string name="create_account_btn">Botón de Crear mi cuenta</string>
   <!--Text shown while waiting for registration request-->
   <string name="creating_account_text">Creando cuenta...</string>
   <!--Registration screen title-->
