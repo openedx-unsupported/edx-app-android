@@ -64,6 +64,12 @@
             android:textStyle="bold"
             tools:text="02:05" />
 
+        <androidx.mediarouter.app.MediaRouteButton
+            android:id="@+id/media_route_button"
+            style="@style/video_player_bottom_control"
+            android:mediaRouteTypes="user"
+            app:mediaRouteButtonTint="@color/white" />
+
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/settings"
             style="@style/video_player_bottom_control"

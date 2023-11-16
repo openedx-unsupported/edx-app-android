@@ -40,6 +40,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
+import androidx.mediarouter.app.MediaRouteButton;
+
+import com.google.android.gms.cast.framework.CastButtonFactory;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -108,6 +111,7 @@ public class PlayerController extends FrameLayout {
     private AppCompatImageButton mForwardButton;
     private AppCompatImageButton mFullscreenButton;
     private AppCompatImageButton mSettingsButton;
+    private MediaRouteButton mMediaRouteButton;
     private Handler mHandler = new MessageHandler(this);
     private String mTitle;
     private TextView mTitleTextView;
@@ -242,6 +246,10 @@ public class PlayerController extends FrameLayout {
             mSettingsButton.requestFocus();
             mSettingsButton.setOnClickListener(mSettingsListener);
         }
+
+        mMediaRouteButton = v.findViewById(R.id.media_route_button);
+        mMediaRouteButton.setVisibility(VISIBLE);
+        CastButtonFactory.setUpMediaRouteButton(getContext().getApplicationContext(), mMediaRouteButton);
 
         mEndTime = (TextView) v.findViewById(R.id.time);
         mCurrentTime = (TextView) v.findViewById(R.id.time_current);

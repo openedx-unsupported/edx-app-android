@@ -632,7 +632,7 @@ public class Config {
 
     // locally defined flag to disable the chromecast
     public boolean isChromeCastEnabled() {
-        return getBoolean(CHROMECAST_ENABLED, false);
+        return getBoolean(CHROMECAST_ENABLED, true);
     }
 
     public boolean isDownloadToSDCardEnabled() {

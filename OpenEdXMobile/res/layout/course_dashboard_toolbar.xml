@@ -121,6 +121,14 @@
                         android:textAppearance="@style/CourseDashboardCollapsedToolbarTitle"
                         tools:text="The Science of Happiness " />
 
+                    <androidx.mediarouter.app.MediaRouteButton
+                        android:id="@+id/media_route_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:mediaRouteTypes="user"
+                        android:visibility="gone"
+                        app:mediaRouteButtonTint="@color/neutralWhiteT" />
+
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/collapsed_toolbar_dismiss"
                         android:layout_width="@dimen/widget_margin_double"
