@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Message Course Dashboard Banner Reset Date -->
-    <string name="course_dashboard_banner_reset_date"><b>推奨スケジュールにある重要な期限が守られなかったようです。</b>
-        このスケジュールを更新し、過去の課題を未来日付に移動させることで、学習を計画通りに進めることができます。期限をずらしてもこれまでの進捗が失われることはありませんので、ご安心ください。</string>
     <!-- Label Course Dates Banner Reset Date Button -->
     <string name="course_dates_banner_reset_date_button">期限を移動</string>
 
-    <!-- Title Course Schedule  -->
-    <string name="course_schedule_title">コーススケジュール</string>
     <!-- Message Course Dates Info Banner -->
     <string name="course_dates_info_banner">スムーズに学習を進められるよう、推奨スケジュールをご用意しています。忙しい方も心配無用。自分のペースに合わせて柔軟に学習できるので、
         万が一予定より遅れてもその都度、調整が可能です。</string>
@@ -16,9 +11,6 @@
     <!-- Message Course Dates Banner Upgrade to Reset -->
     <string name="course_dates_banner_upgrade_to_reset">あなたはこのクラスを聴講しています。
         採点対象の課題には参加できません。推奨スケジュールにある重要な期限が守られなかったようです。このコースで採点対象の課題を完了し、過去の期限付き課題を未来日付に移動させるには、アップグレードしてください。</string>
-    <!-- Message Course Dates Banner Reset Date -->
-    <string name="course_dates_banner_reset_date">推奨スケジュールにある重要な期限が守られなかったようです。
-        このスケジュールを更新し、過去の課題を未来日付に移動させることで、学習を計画通りに進めることができます。期限をずらしてもこれまでの進捗が失われることはありませんので、ご安心ください。</string>
     <!-- Label Course Card Graded Message -->
     <string name="value_prop_course_card_message">アップグレードしてより多くの機能にアクセス</string>
 
