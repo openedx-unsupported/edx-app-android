@@ -30,7 +30,6 @@ class LearnFragment : OfflineSupportBaseFragment() {
     private var items: ArrayList<LearnScreenItem> = arrayListOf()
     private var selectedItemPosition = -1
     private var lastPopupWindowDismissTime = 0L
-    private var isTitleCollapsed = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,29 +69,30 @@ class LearnFragment : OfflineSupportBaseFragment() {
                     binding.ivSelectorIcon.setImageDrawable(R.drawable.ic_drop_up)
                 }
             }
-
-            binding.appbar.setTitleStateListener(
-                binding.collapsingToolbar,
-                object : CollapsingToolbarStatListener {
-                    override fun onExpanded() {
-                        ViewAnimationUtil.animateTitleSize(
-                            binding.tvSelectedItem,
-                            resources.getDimension(R.dimen.edx_x_large)
-                        )
-                        ImageUtils.animateIconSize(binding.ivSelectorIcon, 1f)
-                    }
-
-                    override fun onCollapsed() {
-                        ViewAnimationUtil.animateTitleSize(
-                            binding.tvSelectedItem,
-                            resources.getDimension(R.dimen.edx_large)
-                        )
-                        ImageUtils.animateIconSize(binding.ivSelectorIcon, 0.75f)
-                    }
-                })
         } else {
-            binding.llLearnSelection.setVisibility(false)
+            binding.ivSelectorIcon.setVisibility(false)
         }
+
+        binding.appbar.setTitleStateListener(
+            binding.collapsingToolbar,
+            object : CollapsingToolbarStatListener {
+                override fun onExpanded() {
+                    ViewAnimationUtil.animateTitleSize(
+                        binding.tvSelectedItem,
+                        resources.getDimension(R.dimen.edx_x_large)
+                    )
+                    ImageUtils.animateIconSize(binding.ivSelectorIcon, 1f)
+                }
+
+                override fun onCollapsed() {
+                    ViewAnimationUtil.animateTitleSize(
+                        binding.tvSelectedItem,
+                        resources.getDimension(R.dimen.edx_large)
+                    )
+                    ImageUtils.animateIconSize(binding.ivSelectorIcon, 0.75f)
+                }
+            })
+
         selectedItemPosition = arguments?.getInt(SELECTED_POSITION) ?: items.first().ordinal
         // no need to track event cuz handle event through event bus on tab selection.
         updateScreen(items[selectedItemPosition], false)

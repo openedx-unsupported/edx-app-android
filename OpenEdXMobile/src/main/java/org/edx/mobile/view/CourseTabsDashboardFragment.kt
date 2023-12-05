@@ -653,7 +653,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
             var actionListener: View.OnClickListener? = null
             var actionResId = 0
 
-            if (binding.pager.currentItem != 3) {
+            if (environment.config.isCourseDatesEnabled && binding.pager.currentItem != 3) {
                 actionListener = View.OnClickListener { binding.pager.currentItem = 3 }
                 actionResId = R.string.assessment_view_all_dates
             }
@@ -799,7 +799,9 @@ class CourseTabsDashboardFragment : BaseFragment() {
             items.add(createDatesItem())
         }
         items.add(createHandoutsItem())
-        items.add(createAnnouncementsItem())
+        if (environment.config.isAnnouncementEnabled) {
+            items.add(createAnnouncementsItem())
+        }
 
         return items
     }
