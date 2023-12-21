@@ -2,7 +2,6 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -159,8 +158,7 @@ public class Config {
         private String detailUrlTemplate;
 
         public boolean isEnabled() {
-            // TODO Disable program feature for kitkat users, See Jira story LEARNER-6625 for more details.
-            return enabled && Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT;
+            return enabled;
         }
 
         public String getUrl() {
@@ -277,22 +275,6 @@ public class Config {
         }
     }
 
-    public static class DomainWhiteListConfig {
-        @SerializedName("ENABLED")
-        private boolean mEnabled;
-
-        @SerializedName("DOMAINS")
-        private List<String> mDomains;
-
-        public boolean isEnabled() {
-            return mEnabled;
-        }
-
-        public List<String> getDomains() {
-            return mDomains != null ? mDomains : new ArrayList<String>();
-        }
-    }
-
     public static class FirebaseConfig {
         @SerializedName("ENABLED")
         private boolean mEnabled;
@@ -362,6 +344,9 @@ public class Config {
 
         @SerializedName("ENROLLMENTS")
         private String enrollmentsApiVersion;
+
+        public ApiUrlVersionConfig() {
+        }
 
         public ApiUrlVersionConfig(String blocksApiVersion, String registrationApiVersion, String enrollmentsApiVersion) {
             this.blocksApiVersion = blocksApiVersion;
@@ -713,9 +698,7 @@ public class Config {
         } else {
             try {
                 return cls.newInstance();
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
