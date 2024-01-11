@@ -35,6 +35,7 @@ import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.RefreshCourseDashboardEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.CollapsingToolbarStatListener
+import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.extenstion.setTitleStateListener
@@ -244,7 +245,8 @@ class CourseTabsDashboardFragment : BaseFragment() {
     private fun setupIAPLayout() {
         val isPurchaseEnabled = environment.featuresPrefs.isIAPEnabledForUser(
             environment.loginPrefs.isOddUserId
-        )
+        ) && courseData.courseSku.isNotNullOrEmpty()
+
         binding.accessError.apply {
             setVisibility(true)
             setState(State.IS_UPGRADEABLE, null)
