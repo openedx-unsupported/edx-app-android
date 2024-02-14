@@ -18,7 +18,7 @@
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">מחפש להגיש בקשה או לתת לנו משוב על האפליקציה שלנו?</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">שלח אימייל לצוות התמיכה</string>
+    <string name="label_email_support_team_btn">שלח אימייל לצוות התמיכה</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">קבל תמיכה</string>
     <!--  Description of Get Support Field  -->

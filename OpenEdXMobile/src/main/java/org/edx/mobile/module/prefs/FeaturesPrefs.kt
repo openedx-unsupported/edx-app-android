@@ -24,6 +24,9 @@ class FeaturesPrefs @Inject constructor(
     val isValuePropEnabled
         get() = appConfig.isValuePropEnabled
 
+    val feedbackFormUrl
+        get() = appConfig.feedbackFormUrl
+
     val isIAPEnabled
         get() = iapConfig.isEnabled &&
                 iapConfig.disableVersions.contains(BuildConfig.VERSION_NAME).not()

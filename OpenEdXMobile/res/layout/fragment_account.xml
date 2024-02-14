@@ -351,11 +351,26 @@
                     style="@style/profile_field_description"
                     android:text="@string/description_submit_feedback" />
 
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_submit_feedback"
+                    style="@style/edX.Widget.ProfileActionBorderedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_view_button_height"
+                    android:layout_marginTop="@dimen/edx_half_margin"
+                    android:includeFontPadding="false"
+                    android:text="@string/label_submit_feedback_btn"
+                    app:backgroundTint="@null"
+                    app:icon="@drawable/ic_open_in_new"
+                    app:iconGravity="textEnd"
+                    app:iconSize="@dimen/ic_small"
+                    app:iconTint="@color/primaryBaseColor" />
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_email_support"
                     style="@style/edX.Widget.ProfileActionBorderedButton"
                     android:layout_marginTop="@dimen/edx_half_margin"
-                    android:text="@string/label_submit_feedback_btn" />
+                    android:text="@string/label_email_support_team_btn" />
             </LinearLayout>
 
             <LinearLayout

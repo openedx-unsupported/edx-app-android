@@ -18,7 +18,7 @@
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">Bir özellik isteğinde bulunmak veya uygulamamıza dair geri bildirim vermek mi istiyorsunuz?</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">Destek ekibine e-posta gönder</string>
+    <string name="label_email_support_team_btn">Destek ekibine e-posta gönder</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">Destek alın</string>
     <!--  Description of Get Support Field  -->

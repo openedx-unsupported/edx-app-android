@@ -900,6 +900,8 @@ public interface Analytics {
         String PRIVACY_POLICY_CLICKED = "edx.bi.app.profile.privacy_policy.clicked";
         String COOKIE_POLICY_CLICKED = "edx.bi.app.profile.cookie_policy.clicked";
         String DO_NOT_SELL_DATA_CLICKED = "edx.bi.app.profile.do_not_sell_data.clicked";
+        String SUBMIT_FEEDBACK_CLICKED = "edx.bi.app.profile.submit_feedback.clicked";
+
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
@@ -1120,6 +1122,8 @@ public interface Analytics {
         String PRIVACY_POLICY_CLICKED = "Privacy Policy Clicked";
         String COOKIE_POLICY_CLICKED = "Cookie Policy Clicked";
         String DO_NOT_SELL_DATA_CLICKED = "Do Not Sell Data Clicked";
+        String SUBMIT_FEEDBACK_CLICKED = "Submit feedback clicked";
+
         // Video Download Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";

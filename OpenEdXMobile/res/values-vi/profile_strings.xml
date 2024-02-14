@@ -18,7 +18,7 @@
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">Bạn muốn yêu cầu một tính năng hoặc đưa ra một số phản hồi về ứng dụng của chúng tôi?</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">Gửi email cho nhóm hỗ trợ</string>
+    <string name="label_email_support_team_btn">Gửi email cho nhóm hỗ trợ</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">Nhận hỗ trợ</string>
     <!--  Description of Get Support Field  -->

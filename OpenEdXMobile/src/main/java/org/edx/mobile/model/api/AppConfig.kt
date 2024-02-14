@@ -13,7 +13,10 @@ data class AppConfig(
     val isValuePropEnabled: Boolean = false,
 
     @SerializedName("iap_config")
-    val iapConfig: IAPConfig = IAPConfig()
+    val iapConfig: IAPConfig = IAPConfig(),
+
+    @SerializedName("feedback_form_url")
+    val feedbackFormUrl: String? = null
 
 ) : Serializable
 

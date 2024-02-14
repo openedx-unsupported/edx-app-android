@@ -18,7 +18,7 @@
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">希望对我们的应用程序提出功能请求或提供一些反馈？</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">发email给支持服务团队</string>
+    <string name="label_email_support_team_btn">发email给支持服务团队</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">获取支持</string>
     <!--  Description of Get Support Field  -->
