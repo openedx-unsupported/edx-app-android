@@ -64,9 +64,7 @@ public class TextUtils {
      * @return App specific URI string.
      */
     public static String createAppUri(@NonNull String title, @NonNull String uri) {
-        final StringBuilder uriString = new StringBuilder(AppConstants.APP_URI_SCHEME);
-        uriString.append(title).append("?").append(PARAM_INTENT_FILE_LINK).append("=").append(uri);
-        return uriString.toString();
+        return AppConstants.APP_URI_SCHEME + title + "?" + PARAM_INTENT_FILE_LINK + "=" + uri;
     }
 
     /**
@@ -96,19 +94,19 @@ public class TextUtils {
 
         if (!android.text.TextUtils.isEmpty(eulaUri)) {
             eulaSpan.setSpan(new UrlSpanNoUnderline(TextUtils.createAppUri(
-                    context.getResources().getString(R.string.end_user_title), eulaUri)),
+                            context.getResources().getString(R.string.end_user_title), eulaUri)),
                     0, eula.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if (!android.text.TextUtils.isEmpty(tosUri)) {
             tosSpan.setSpan(new UrlSpanNoUnderline(TextUtils.createAppUri(
-                    context.getResources().getString(R.string.terms_of_service_title), tosUri)),
+                            context.getResources().getString(R.string.terms_of_service_title), tosUri)),
                     0, tos.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if (!android.text.TextUtils.isEmpty(privacyPolicyUri)) {
             privacyPolicySpan.setSpan(new UrlSpanNoUnderline(TextUtils.createAppUri(
-                    context.getResources().getString(R.string.privacy_policy_title), privacyPolicyUri)),
+                            context.getResources().getString(R.string.privacy_policy_title), privacyPolicyUri)),
                     0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -214,6 +212,7 @@ public class TextUtils {
             case ErrorMessage.PAYMENT_SDK_CODE -> "payment";
             case ErrorMessage.PRICE_CODE -> "price";
             case ErrorMessage.NO_SKU_CODE -> "sku";
+            case ErrorMessage.CONSUME_CODE -> "consume";
             default -> "unhandledError";
         };
         body.append(String.format("%s", endpoint));

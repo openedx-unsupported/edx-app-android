@@ -1,12 +1,13 @@
 package org.edx.mobile.model.iap
 
+import org.edx.mobile.model.api.EnrolledCoursesResponse.ProductInfo
 import java.io.Serializable
 
 data class IAPFlowData(
     var flowType: IAPFlowType = IAPFlowType.USER_INITIATED,
     var courseId: String = "",
     var isCourseSelfPaced: Boolean = false,
-    var productId: String = "",
+    var productInfo: ProductInfo = ProductInfo("", ""),
     var basketId: Long = 0,
     var purchaseToken: String = "",
     var price: Double = 0.0,
@@ -17,7 +18,7 @@ data class IAPFlowData(
     fun clear() {
         courseId = ""
         isCourseSelfPaced = false
-        productId = ""
+        productInfo = ProductInfo("", "")
         basketId = 0
         price = 0.0
         currencyCode = ""

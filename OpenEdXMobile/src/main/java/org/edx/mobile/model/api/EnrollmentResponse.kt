@@ -7,6 +7,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.logger.Logger
 import org.edx.mobile.model.iap.IAPFlowData
 import java.io.Serializable
@@ -59,6 +60,12 @@ data class EnrollmentResponse(
                         AppConfig::class.java
                     )
 
+                    if (appConfig.iapConfig.productPrefix.isNotNullOrEmpty()) {
+                        enrolledCourses.forEach { courseData ->
+                            courseData.setStoreSku(appConfig.iapConfig.productPrefix)
+                        }
+                    }
+
                     EnrollmentResponse(appConfig, enrolledCourses)
                 }
             } catch (ex: Exception) {
@@ -76,12 +83,12 @@ data class EnrollmentResponse(
  */
 fun List<EnrolledCoursesResponse>.getAuditCourses(): List<IAPFlowData> {
     return this.filter {
-        it.isAuditMode && it.courseSku.isNullOrBlank().not()
+        it.isAuditMode && it.productInfo != null
     }.mapNotNull { course ->
-        course.courseSku?.let { sku ->
+        course.productInfo?.let { productInfo ->
             IAPFlowData(
                 courseId = course.courseId,
-                productId = sku,
+                productInfo = productInfo,
                 isCourseSelfPaced = course.course.isSelfPaced
             )
         }

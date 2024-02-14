@@ -242,6 +242,8 @@ class AccountFragment : BaseFragment() {
                 retryListener = DialogInterface.OnClickListener { _, _ ->
                     if (errorMessage.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
                         iapViewModel.executeOrder()
+                    } else if (errorMessage.requestType == ErrorMessage.CONSUME_CODE) {
+                        iapViewModel.consumeOrderForFurtherPurchases(iapViewModel.iapFlowData)
                     } else if (HttpStatus.NOT_ACCEPTABLE == (errorMessage.throwable as InAppPurchasesException).httpErrorCode) {
                         showFullScreenLoader()
                     }

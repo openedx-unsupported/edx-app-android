@@ -15,9 +15,11 @@ import org.edx.mobile.core.IEdxEnvironment
 import org.edx.mobile.databinding.DialogUpgradeFeaturesBinding
 import org.edx.mobile.event.IAPFlowEvent
 import org.edx.mobile.exception.ErrorMessage
+import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.extenstion.setVisibility
 import org.edx.mobile.http.HttpStatus
 import org.edx.mobile.inapppurchases.getPriceAmount
+import org.edx.mobile.model.api.EnrolledCoursesResponse.ProductInfo
 import org.edx.mobile.model.iap.IAPFlowData
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.Analytics.Events
@@ -49,7 +51,7 @@ class CourseModalDialogFragment : DialogFragment() {
 
     private var screenName: String = ""
     private var courseId: String = ""
-    private var courseSku: String? = null
+    private var productInfo: ProductInfo? = null
     private var isSelfPaced: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +80,7 @@ class CourseModalDialogFragment : DialogFragment() {
         arguments?.let { bundle ->
             screenName = bundle.getString(KEY_SCREEN_NAME, "")
             courseId = bundle.getString(KEY_COURSE_ID, "")
-            courseSku = bundle.getString(KEY_COURSE_SKU)
+            productInfo = bundle.serializable<ProductInfo>(KEY_PRODUCT_INFO)
             isSelfPaced = bundle.getBoolean(KEY_IS_SELF_PACED)
             trackEvents()
         }
@@ -89,7 +91,7 @@ class CourseModalDialogFragment : DialogFragment() {
             KEY_COURSE_NAME,
             arguments?.getString(KEY_COURSE_NAME)
         )
-        val isPurchaseEnabled = courseSku.isNullOrEmpty().not() &&
+        val isPurchaseEnabled = productInfo != null &&
                 environment.featuresPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
 
         binding.layoutUpgradeBtn.root.setVisibility(isPurchaseEnabled)
@@ -102,7 +104,7 @@ class CourseModalDialogFragment : DialogFragment() {
             // by adding the some delay fixed that issue for lower-end devices, and for the
             // proper animation.
             binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                iapViewModel.initializeProductPrice(courseSku)
+                iapViewModel.initializeProductPrice(productInfo)
             }, 1500)
             binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
         }
@@ -130,7 +132,7 @@ class CourseModalDialogFragment : DialogFragment() {
         environment.analyticsRegistry.trackValuePropMessageViewed(
             courseId,
             screenName,
-            (courseSku.isNullOrEmpty().not() && environment.featuresPrefs.isIAPEnabled),
+            (productInfo != null && environment.featuresPrefs.isIAPEnabled),
             experimentGroup,
             null
         )
@@ -142,7 +144,11 @@ class CourseModalDialogFragment : DialogFragment() {
         })
 
         iapViewModel.launchPurchaseFlow.observe(viewLifecycleOwner, EventObserver {
-            iapViewModel.purchaseItem(requireActivity(), environment.loginPrefs.userId, courseSku)
+            iapViewModel.purchaseItem(
+                requireActivity(),
+                environment.loginPrefs.userId,
+                productInfo
+            )
         })
 
         iapViewModel.showLoader.observe(viewLifecycleOwner, EventObserver {
@@ -178,9 +184,9 @@ class CourseModalDialogFragment : DialogFragment() {
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(eventName = Events.IAP_UPGRADE_NOW_CLICKED)
-            courseSku?.let {
+            productInfo?.let { productInfo ->
                 iapViewModel.startPurchaseFlow(
-                    it,
+                    productInfo,
                     productDetails.getPriceAmount(),
                     productDetails.priceCurrencyCode,
                 )
@@ -211,7 +217,7 @@ class CourseModalDialogFragment : DialogFragment() {
             retryListener = DialogInterface.OnClickListener { _, _ ->
                 when (errorMessage.requestType) {
                     ErrorMessage.PRICE_CODE -> {
-                        iapViewModel.initializeProductPrice(courseSku)
+                        iapViewModel.initializeProductPrice(productInfo)
                     }
                 }
             }
@@ -236,7 +242,7 @@ class CourseModalDialogFragment : DialogFragment() {
         const val TAG: String = "CourseModalDialogFragment"
         const val KEY_SCREEN_NAME = "screen_name"
         const val KEY_COURSE_ID = "course_id"
-        const val KEY_COURSE_SKU = "course_sku"
+        const val KEY_PRODUCT_INFO = "product_info"
         const val KEY_COURSE_NAME = "course_name"
         const val KEY_IS_SELF_PACED = "is_Self_Paced"
 
@@ -244,7 +250,7 @@ class CourseModalDialogFragment : DialogFragment() {
         fun newInstance(
             screenName: String,
             courseId: String,
-            courseSku: String?,
+            productInfo: ProductInfo?,
             courseName: String,
             isSelfPaced: Boolean
         ): CourseModalDialogFragment {
@@ -252,9 +258,9 @@ class CourseModalDialogFragment : DialogFragment() {
             val args = Bundle().apply {
                 putString(KEY_SCREEN_NAME, screenName)
                 putString(KEY_COURSE_ID, courseId)
-                putString(KEY_COURSE_SKU, courseSku)
                 putString(KEY_COURSE_NAME, courseName)
                 putBoolean(KEY_IS_SELF_PACED, isSelfPaced)
+                putSerializable(KEY_PRODUCT_INFO, productInfo)
             }
             frag.arguments = args
             return frag

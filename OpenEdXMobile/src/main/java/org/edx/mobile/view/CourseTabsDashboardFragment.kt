@@ -35,7 +35,6 @@ import org.edx.mobile.event.MyCoursesRefreshEvent
 import org.edx.mobile.event.RefreshCourseDashboardEvent
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.extenstion.CollapsingToolbarStatListener
-import org.edx.mobile.extenstion.isNotNullOrEmpty
 import org.edx.mobile.extenstion.serializable
 import org.edx.mobile.extenstion.serializableOrThrow
 import org.edx.mobile.extenstion.setTitleStateListener
@@ -245,7 +244,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
     private fun setupIAPLayout() {
         val isPurchaseEnabled = environment.featuresPrefs.isIAPEnabledForUser(
             environment.loginPrefs.isOddUserId
-        ) && courseData.courseSku.isNotNullOrEmpty()
+        ) && courseData.productInfo != null
 
         binding.accessError.apply {
             setVisibility(true)
@@ -256,7 +255,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
                 // by adding the some delay fixed that issue for lower-end devices, and for the
                 // proper animation.
                 postDelayed(
-                    { iapViewModel.initializeProductPrice(courseData.courseSku) }, 1500
+                    { iapViewModel.initializeProductPrice(courseData.productInfo) }, 1500
                 )
                 setSecondaryButtonListener(onFindCourseClick())
             } else {
@@ -273,8 +272,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
 
         iapViewModel.launchPurchaseFlow.observe(viewLifecycleOwner, EventObserver {
             iapViewModel.purchaseItem(
-                requireActivity(), environment.loginPrefs.userId,
-                courseData.courseSku
+                requireActivity(), environment.loginPrefs.userId, courseData.productInfo
             )
         })
 
@@ -305,9 +303,9 @@ class CourseTabsDashboardFragment : BaseFragment() {
             )
             setPrimaryButtonListener {
                 iapAnalytics.trackIAPEvent(Analytics.Events.IAP_UPGRADE_NOW_CLICKED, "", "")
-                courseData.courseSku?.let { productId ->
+                courseData.productInfo?.let { productInfo ->
                     iapViewModel.startPurchaseFlow(
-                        productId,
+                        productInfo,
                         productDetails.getPriceAmount(),
                         productDetails.priceCurrencyCode,
                     )
@@ -329,7 +327,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
         } else if (errorMessage.canRetry()) {
             retryListener = DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
                 if (errorMessage.requestType == ErrorMessage.PRICE_CODE) {
-                    iapViewModel.initializeProductPrice(courseData.courseSku)
+                    iapViewModel.initializeProductPrice(courseData.productInfo)
                 }
             }
         }
@@ -575,7 +573,7 @@ class CourseTabsDashboardFragment : BaseFragment() {
                     newInstance(
                         Analytics.Screens.PLS_COURSE_DASHBOARD,
                         courseData.courseId,
-                        courseData.courseSku,
+                        courseData.productInfo,
                         courseData.course.name,
                         courseData.course.isSelfPaced
                     ).show(childFragmentManager, CourseModalDialogFragment.TAG)

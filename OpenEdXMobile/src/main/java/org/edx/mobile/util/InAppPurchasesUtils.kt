@@ -4,6 +4,7 @@ import com.android.billingclient.api.Purchase
 import org.edx.mobile.R
 import org.edx.mobile.exception.ErrorMessage
 import org.edx.mobile.http.HttpStatus
+import org.edx.mobile.inapppurchases.getCourseSku
 import org.edx.mobile.model.iap.IAPFlowData
 
 object InAppPurchasesUtils {
@@ -20,7 +21,7 @@ object InAppPurchasesUtils {
     ): MutableList<IAPFlowData> {
         purchases.forEach { purchase ->
             auditCourses.find { course ->
-                purchase.products.first().equals(course.productId)
+                purchase.getCourseSku() == course.productInfo.courseSku
             }?.apply {
                 this.purchaseToken = purchase.purchaseToken
                 this.flowType = flowType

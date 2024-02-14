@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import org.edx.mobile.interfaces.SectionItemInterface
 import org.edx.mobile.model.course.EnrollmentMode
 import org.edx.mobile.util.DateUtil
+import java.io.Serializable
 import java.util.Date
 
 data class EnrolledCoursesResponse(
@@ -39,11 +40,6 @@ data class EnrolledCoursesResponse(
     val isCertificateEarned: Boolean
         get() = certificateURL.isNullOrEmpty().not()
 
-    val courseSku: String?
-        get() = courseModes?.firstOrNull { item ->
-            EnrollmentMode.VERIFIED.name.equals(item.slug, ignoreCase = true)
-        }?.androidSku.takeUnless { it.isNullOrEmpty() }
-
     val isAuditMode: Boolean
         get() = EnrollmentMode.AUDIT.toString().equals(mode, ignoreCase = true)
 
@@ -58,6 +54,29 @@ data class EnrolledCoursesResponse(
                 courseModes?.find {
                     EnrollmentMode.VERIFIED.toString().equals(it.slug, ignoreCase = true)
                 } != null
+
+    val productInfo: ProductInfo?
+        get() = courseSku?.let { courseSku ->
+            storeSku?.let { storeSku ->
+                ProductInfo(courseSku, storeSku)
+            }
+        }
+
+    private val courseSku: String?
+        get() = courseModes?.firstOrNull { item ->
+            EnrollmentMode.VERIFIED.name.equals(item.slug, ignoreCase = true)
+        }?.androidSku.takeUnless { it.isNullOrEmpty() }
+
+    private val storeSku: String?
+        get() = courseModes?.firstOrNull { item ->
+            EnrollmentMode.VERIFIED.name.equals(item.slug, ignoreCase = true)
+        }?.storeSku
+
+    fun setStoreSku(storeProductPrefix: String) {
+        courseModes?.forEach {
+            it.setStoreProductSku(storeProductPrefix)
+        }
+    }
 
     override fun isChapter(): Boolean {
         return false
@@ -82,6 +101,11 @@ data class EnrolledCoursesResponse(
     override fun isDownload(): Boolean {
         return false
     }
+
+    data class ProductInfo(
+        val courseSku: String,
+        val storeSku: String,
+    ) : Serializable
 }
 
 /**

@@ -107,10 +107,18 @@ class FullscreenLoaderDialogFragment : DialogFragment() {
                     fragment = this@FullscreenLoaderDialogFragment,
                     errorMessage = errorMessage,
                     retryListener = { _, _ ->
-                        if (errorMessage.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
-                            iapViewModel.executeOrder(iapFlowData)
-                        } else {
-                            purchaseFlowComplete()
+                        when (errorMessage.requestType) {
+                            ErrorMessage.EXECUTE_ORDER_CODE -> {
+                                iapViewModel.executeOrder(iapFlowData)
+                            }
+
+                            ErrorMessage.CONSUME_CODE -> {
+                                iapViewModel.consumeOrderForFurtherPurchases(iapViewModel.iapFlowData)
+                            }
+
+                            else -> {
+                                purchaseFlowComplete()
+                            }
                         }
                     },
                     cancelListener = { _, _ ->

@@ -78,7 +78,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
     private fun showGradedContent() {
         unit?.let { unit ->
             val isSelfPaced = getBooleanArgument(Router.EXTRA_IS_SELF_PACED, false)
-            val isPurchaseEnabled = unit.courseSku.isNullOrEmpty().not() &&
+            val isPurchaseEnabled = unit.productInfo != null &&
                     environment.featuresPrefs.isIAPEnabledForUser(environment.loginPrefs.isOddUserId)
 
             binding.containerLayoutNotAvailable.root.setVisibility(false)
@@ -95,7 +95,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             environment.analyticsRegistry.trackValuePropMessageViewed(
                 unit.courseId,
                 Screens.COURSE_UNIT,
-                (unit.courseSku.isNullOrEmpty().not() && environment.featuresPrefs.isIAPEnabled),
+                (unit.productInfo != null && environment.featuresPrefs.isIAPEnabled),
                 experimentGroup,
                 unit.id
             )
@@ -112,7 +112,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
                 // by adding the some delay fixed that issue for lower-end devices, and for the
                 // proper animation.
                 binding.layoutUpgradeBtn.shimmerViewContainer.postDelayed({
-                    iapViewModel.initializeProductPrice(unit.courseSku)
+                    iapViewModel.initializeProductPrice(unit.productInfo)
                 }, 1500)
                 binding.layoutUpgradeBtn.btnUpgrade.isEnabled = false
             } else {
@@ -175,7 +175,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             iapViewModel.purchaseItem(
                 requireActivity(),
                 environment.loginPrefs.userId,
-                unit?.courseSku
+                unit?.productInfo,
             )
         })
 
@@ -207,7 +207,7 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
             retryListener = DialogInterface.OnClickListener { _, _ ->
                 when (errorMessage.requestType) {
                     ErrorMessage.PRICE_CODE -> {
-                        iapViewModel.initializeProductPrice(unit?.courseSku)
+                        iapViewModel.initializeProductPrice(unit?.productInfo)
                     }
                 }
             }
@@ -239,9 +239,9 @@ class CourseUnitMobileNotSupportedFragment : CourseUnitFragment() {
 
         binding.layoutUpgradeBtn.btnUpgrade.setOnClickListener {
             iapAnalytics.trackIAPEvent(Events.IAP_UPGRADE_NOW_CLICKED)
-            unit?.courseSku?.let { productId ->
+            unit?.productInfo?.let { productInfo ->
                 iapViewModel.startPurchaseFlow(
-                    productId,
+                    productInfo,
                     productDetails.getPriceAmount(),
                     productDetails.priceCurrencyCode,
                 )
