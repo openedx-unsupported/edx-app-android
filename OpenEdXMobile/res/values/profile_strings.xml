@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Profile Page -->
     <!-- Label for wifi only switch -->
     <string name="settings_wifi_top">Wifi only download</string>
@@ -17,8 +17,10 @@
     <string name="label_help">Help</string>
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">Looking to make a feature request or give us some feedback on our app?</string>
+    <!--  Label of Email to Support Team Button  -->
+    <string name="label_email_support_team_btn">Email the support team</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">Email the support team</string>
+    <string name="label_submit_feedback_btn" tools:ignore="MissingTranslation">Submit feedback</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">Get support</string>
     <!--  Description of Get Support Field  -->

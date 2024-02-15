@@ -18,7 +18,7 @@
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">Möchten Sie eine Funktionsanfrage stellen oder uns Feedback zu unserer App geben?</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">E-Mail an das Support-Team senden</string>
+    <string name="label_email_support_team_btn">E-Mail an das Support-Team senden</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">Unterstützung holen</string>
     <!--  Description of Get Support Field  -->

@@ -18,7 +18,7 @@
     <!--  Description of Submit feedback Field  -->
     <string name="description_submit_feedback">機能リクエストまたはアプリのフィードバックを送信しませんか？</string>
     <!--  Label of Submit feedback Button  -->
-    <string name="label_submit_feedback_btn">サポートチームにメールを送信</string>
+    <string name="label_email_support_team_btn">サポートチームにメールを送信</string>
     <!--  Heading of Get Support Field  -->
     <string name="title_get_support">サポートを利用</string>
     <!--  Description of Get Support Field  -->

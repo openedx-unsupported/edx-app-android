@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -34,6 +35,7 @@ import org.edx.mobile.model.user.Account
 import org.edx.mobile.model.video.VideoQuality
 import org.edx.mobile.module.analytics.Analytics
 import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
+import org.edx.mobile.module.prefs.FeaturesPrefs
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.UserPrefs
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
@@ -73,6 +75,9 @@ class AccountFragment : BaseFragment() {
 
     @Inject
     lateinit var environment: IEdxEnvironment
+
+    @Inject
+    lateinit var featuresPrefs: FeaturesPrefs
 
     @Inject
     lateinit var loginPrefs: LoginPrefs
@@ -297,6 +302,18 @@ class AccountFragment : BaseFragment() {
     }
 
     private fun initHelpFields() {
+        if (URLUtil.isValidUrl(featuresPrefs.feedbackFormUrl)) {
+            binding.btnSubmitFeedback.setVisibility(true)
+            binding.btnSubmitFeedback.setOnClickListener {
+                BrowserUtil.open(requireActivity(), featuresPrefs.feedbackFormUrl, false)
+                trackEvent(
+                    Analytics.Events.SUBMIT_FEEDBACK_CLICKED,
+                    Analytics.Values.SUBMIT_FEEDBACK_CLICKED
+                )
+            }
+        } else {
+            binding.btnSubmitFeedback.setVisibility(false)
+        }
         if (!config.feedbackEmailAddress.isNullOrBlank() || !config.faqUrl.isNullOrBlank()) {
             binding.tvHelp.visibility = View.VISIBLE
             if (!config.feedbackEmailAddress.isNullOrBlank()) {
