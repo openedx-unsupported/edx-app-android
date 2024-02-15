@@ -111,6 +111,14 @@ class InAppPurchasesViewModel @Inject constructor(
                         errorMessage = response.billingResult.debugMessage,
                     )
                 )
+            } else {
+                dispatchError(
+                    requestType = ErrorMessage.NO_SKU_CODE,
+                    throwable = InAppPurchasesException(
+                        httpErrorCode = response.billingResult.responseCode,
+                        errorMessage = response.billingResult.debugMessage,
+                    )
+                )
             }
         }
     }

@@ -221,6 +221,7 @@ class CourseModalDialogFragment : DialogFragment() {
             errorMessage = errorMessage,
             retryListener = retryListener
         )
+        binding.layoutUpgradeBtn.root.setVisibility(false)
     }
 
     private fun enableUpgradeButton(enable: Boolean) {
