@@ -88,7 +88,8 @@ class InAppPurchasesDialog @Inject constructor(
                 errorMsg = feedbackErrorMessage
             )
 
-            ErrorMessage.PRICE_CODE -> iapAnalytics.trackIAPEvent(
+            ErrorMessage.PRICE_CODE,
+            ErrorMessage.NO_SKU_CODE -> iapAnalytics.trackIAPEvent(
                 eventName = Analytics.Events.IAP_PRICE_LOAD_ERROR,
                 errorMsg = feedbackErrorMessage
             )

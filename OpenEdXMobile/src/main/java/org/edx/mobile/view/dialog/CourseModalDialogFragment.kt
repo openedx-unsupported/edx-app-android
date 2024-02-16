@@ -221,7 +221,10 @@ class CourseModalDialogFragment : DialogFragment() {
             errorMessage = errorMessage,
             retryListener = retryListener
         )
-        binding.layoutUpgradeBtn.root.setVisibility(false)
+        // Hide the upgrade button if the course SKU is not available on Play Console.
+        if (errorMessage.requestType == ErrorMessage.NO_SKU_CODE) {
+            binding.layoutUpgradeBtn.root.setVisibility(false)
+        }
     }
 
     private fun enableUpgradeButton(enable: Boolean) {
