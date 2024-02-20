@@ -59,16 +59,15 @@ class OauthRefreshTokenAuthenticator @Inject constructor(
 
     @Synchronized
     override fun authenticate(route: Route?, response: Response): Request? {
-        logger.warn(response.toString())
+        val responseBody = response.peekBody(Long.MAX_VALUE).string()
+        logger.warn(responseBody)
 
         val currentAuth = loginPrefs.get().currentAuth
         if (currentAuth?.refresh_token == null) {
             return null
         }
 
-        val errorCode = response.body?.let {
-            getErrorCode(it.string(), currentAuth.token_type)
-        } ?: return null
+        val errorCode = getErrorCode(responseBody, currentAuth.token_type) ?: return null
 
         when (errorCode) {
             TOKEN_EXPIRED_ERROR_MESSAGE,
