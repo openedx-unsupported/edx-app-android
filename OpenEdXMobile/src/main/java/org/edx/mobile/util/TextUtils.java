@@ -207,26 +207,15 @@ public class TextUtils {
         if (requestType == 0) {
             return body;
         }
-        String endpoint;
-        switch (requestType) {
-            case ErrorMessage.ADD_TO_BASKET_CODE:
-                endpoint = "basket";
-                break;
-            case ErrorMessage.CHECKOUT_CODE:
-                endpoint = "checkout";
-                break;
-            case ErrorMessage.EXECUTE_ORDER_CODE:
-                endpoint = "execute";
-                break;
-            case ErrorMessage.PAYMENT_SDK_CODE:
-                endpoint = "payment";
-                break;
-            case ErrorMessage.PRICE_CODE:
-                endpoint = "price";
-                break;
-            default:
-                endpoint = "unhandledError";
-        }
+        String endpoint = switch (requestType) {
+            case ErrorMessage.ADD_TO_BASKET_CODE -> "basket";
+            case ErrorMessage.CHECKOUT_CODE -> "checkout";
+            case ErrorMessage.EXECUTE_ORDER_CODE -> "execute";
+            case ErrorMessage.PAYMENT_SDK_CODE -> "payment";
+            case ErrorMessage.PRICE_CODE -> "price";
+            case ErrorMessage.NO_SKU_CODE -> "sku";
+            default -> "unhandledError";
+        };
         body.append(String.format("%s", endpoint));
         // change the default value to -1 cuz in case of BillingClient return errorCode 0 for price load.
         if (errorCode == -1) {
