@@ -79,6 +79,7 @@ class OauthRefreshTokenAuthenticator @Inject constructor(
                     requestBuilder.build()
                 }
             }
+
             TOKEN_NONEXISTENT_ERROR_MESSAGE,
             TOKEN_INVALID_GRANT_ERROR_MESSAGE,
             JWT_INVALID_TOKEN -> {
@@ -102,8 +103,10 @@ class OauthRefreshTokenAuthenticator @Inject constructor(
                  */
                 EventBus.getDefault().post(LogoutEvent())
             }
+
             DISABLED_USER_ERROR_MESSAGE,
-            JWT_DISABLED_USER_ERROR_MESSAGE -> {
+            JWT_DISABLED_USER_ERROR_MESSAGE,
+            JWT_USER_EMAIL_MISMATCH -> {
                 EventBus.getDefault().post(LogoutEvent())
             }
         }
@@ -239,6 +242,8 @@ class OauthRefreshTokenAuthenticator @Inject constructor(
         private const val JWT_DISABLED_USER_ERROR_MESSAGE = "User account is disabled."
         private const val JWT_TOKEN_EXPIRED = "Token has expired."
         private const val JWT_INVALID_TOKEN = "Invalid token."
+        private const val JWT_USER_EMAIL_MISMATCH =
+            "Failing JWT authentication due to jwt user email mismatch with lms user email."
 
         /**
          * [REFRESH_TOKEN_EXPIRY_THRESHOLD] behave as a buffer time to be used in the expiry
