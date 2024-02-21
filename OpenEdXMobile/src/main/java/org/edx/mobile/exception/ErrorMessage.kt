@@ -23,11 +23,17 @@ data class ErrorMessage(
         const val PAYMENT_SDK_CODE = 0x204
         const val COURSE_REFRESH_CODE = 0x205
         const val PRICE_CODE = 0x206
+        const val NO_SKU_CODE = 0x207
     }
 
-    private fun isPreUpgradeErrorType(): Boolean = requestType == PRICE_CODE ||
-            requestType == ADD_TO_BASKET_CODE || requestType == CHECKOUT_CODE ||
-            requestType == PAYMENT_SDK_CODE
+    private fun isPreUpgradeErrorType(): Boolean =
+        requestType in setOf(
+            PRICE_CODE,
+            NO_SKU_CODE,
+            ADD_TO_BASKET_CODE,
+            CHECKOUT_CODE,
+            PAYMENT_SDK_CODE
+        )
 
     fun isPostUpgradeErrorType(): Boolean = !isPreUpgradeErrorType()
 

@@ -88,7 +88,8 @@ class InAppPurchasesDialog @Inject constructor(
                 errorMsg = feedbackErrorMessage
             )
 
-            ErrorMessage.PRICE_CODE -> iapAnalytics.trackIAPEvent(
+            ErrorMessage.PRICE_CODE,
+            ErrorMessage.NO_SKU_CODE -> iapAnalytics.trackIAPEvent(
                 eventName = Analytics.Events.IAP_PRICE_LOAD_ERROR,
                 errorMsg = feedbackErrorMessage
             )
@@ -104,8 +105,18 @@ class InAppPurchasesDialog @Inject constructor(
                 errorMessage.getHttpErrorCode()
             )
 
+        var (@StringRes positiveBtnResId, @StringRes negativeBtnResId) = when (errorMessage.requestType) {
+            ErrorMessage.NO_SKU_CODE -> {
+                R.string.label_ok to 0
+            }
+
+            else -> {
+                R.string.label_close to
+                        if (retryListener != null) R.string.label_cancel else R.string.label_get_help
+            }
+        }
+
         var actionTaken: String = Analytics.Values.ACTION_CLOSE
-        @StringRes var positiveBtnResId = R.string.label_close
         if (retryListener != null) {
             when (errorMessage.getHttpErrorCode()) {
                 HttpStatus.NOT_ACCEPTABLE -> {
@@ -135,7 +146,7 @@ class InAppPurchasesDialog @Inject constructor(
                     }
                 } ?: run { trackAlertCloseEvent(feedbackErrorMessage) }
             },
-            context.getString(if (retryListener != null) R.string.label_cancel else R.string.label_get_help),
+            if (negativeBtnResId != 0) context.getString(negativeBtnResId) else "",
             { _, _ ->
                 if (retryListener != null) {
                     trackAlertCloseEvent(feedbackErrorMessage)
@@ -143,7 +154,9 @@ class InAppPurchasesDialog @Inject constructor(
                         context.dismiss()
                     }
                 } else {
-                    showFeedbackScreen(context, feedbackErrorMessage)
+                    if (errorMessage.requestType != ErrorMessage.NO_SKU_CODE) {
+                        showFeedbackScreen(context, feedbackErrorMessage)
+                    }
                 }
             }, false
         ).show(context.childFragmentManager, null)

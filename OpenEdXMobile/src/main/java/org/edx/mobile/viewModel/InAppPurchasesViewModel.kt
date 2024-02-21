@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.ProductDetails.OneTimePurchaseOfferDetails
 import com.android.billingclient.api.Purchase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,19 +99,34 @@ class InAppPurchasesViewModel @Inject constructor(
         viewModelScope.launch {
             val response = billingProcessor.querySyncDetails(courseSku)
             val productDetail = response.productDetailsList?.firstOrNull()
+            val billingResult = response.billingResult
 
-            if (productDetail?.productId == courseSku) {
-                productDetail.oneTimePurchaseOfferDetails?.let {
-                    _productPrice.postEvent(it)
-                    iapAnalytics.setPrice(it.formattedPrice)
-                    iapAnalytics.trackIAPEvent(Analytics.Events.IAP_LOAD_PRICE_TIME)
-                } ?: dispatchError(
-                    requestType = ErrorMessage.PRICE_CODE,
-                    throwable = InAppPurchasesException(
-                        httpErrorCode = response.billingResult.responseCode,
-                        errorMessage = response.billingResult.debugMessage,
+            when {
+                billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetail == null -> {
+                    dispatchError(
+                        requestType = ErrorMessage.NO_SKU_CODE,
+                        throwable = InAppPurchasesException(
+                            httpErrorCode = billingResult.responseCode,
+                            errorMessage = billingResult.debugMessage
+                        )
                     )
-                )
+                }
+
+                productDetail?.productId == courseSku && productDetail.oneTimePurchaseOfferDetails != null -> {
+                    _productPrice.postEvent(productDetail.oneTimePurchaseOfferDetails!!)
+                    iapAnalytics.setPrice(productDetail.oneTimePurchaseOfferDetails?.formattedPrice!!)
+                    iapAnalytics.trackIAPEvent(Analytics.Events.IAP_LOAD_PRICE_TIME)
+                }
+
+                else -> {
+                    dispatchError(
+                        requestType = ErrorMessage.PRICE_CODE,
+                        throwable = InAppPurchasesException(
+                            httpErrorCode = response.billingResult.responseCode,
+                            errorMessage = response.billingResult.debugMessage,
+                        )
+                    )
+                }
             }
         }
     }

@@ -60,7 +60,9 @@ object InAppPurchasesUtils {
 
             else -> when (requestType) {
                 ErrorMessage.PAYMENT_SDK_CODE -> R.string.error_payment_not_processed
-                ErrorMessage.PRICE_CODE -> R.string.error_price_not_fetched
+                ErrorMessage.PRICE_CODE,
+                ErrorMessage.NO_SKU_CODE -> R.string.error_price_not_fetched
+
                 ErrorMessage.COURSE_REFRESH_CODE -> R.string.error_course_not_fullfilled
                 else -> R.string.general_error_message
             }
