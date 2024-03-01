@@ -115,6 +115,29 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/lbl_delete_downloaded_videos"
+                style="@style/profile_field_title"
+                android:layout_width="match_parent"
+                android:layout_marginStart="@dimen/edx_default_margin"
+                android:layout_marginTop="@dimen/edx_default_margin"
+                android:layout_marginEnd="@dimen/edx_default_margin"
+                android:text="@string/delete_downloaded_videos_title" />
+
+            <TextView
+                android:id="@+id/tv_delete_downloaded_videos"
+                style="@style/profile_field_description"
+                android:text="@string/delete_downloaded_videos_description" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_delete_videos"
+                style="@style/edX.Widget.ProfileActionBorderedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/profile_view_button_height"
+                android:layout_marginTop="@dimen/edx_half_margin"
+                android:text="@string/label_delete_all_videos" />
+
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edx_line"

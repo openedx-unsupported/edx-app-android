@@ -334,4 +334,16 @@ public class FileUtil {
         }
         return null;
     }
+
+    /**
+     * Deletes all the files and directories in the app's external storage directory.
+     *
+     * @param context The current context.
+     */
+    public static void resetAppDirectory(@NonNull Context context) {
+        final File externalAppDir = getExternalAppDir(context);
+        if (externalAppDir != null) {
+            deleteRecursive(externalAppDir);
+        }
+    }
 }
