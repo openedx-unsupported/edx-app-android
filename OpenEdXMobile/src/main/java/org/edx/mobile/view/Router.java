@@ -369,7 +369,7 @@ public class Router {
      */
     public void performManualLogout(Context context, AnalyticsRegistry analyticsRegistry, NotificationDelegate delegate) {
         // Remove all ongoing downloads first which requires username
-        storage.removeAllDownloads();
+        storage.removeAllOnGoingDownloads();
         loginAPI.logOut();
         forceLogout(context, analyticsRegistry, delegate);
         SecurityUtil.clearUserData(context);

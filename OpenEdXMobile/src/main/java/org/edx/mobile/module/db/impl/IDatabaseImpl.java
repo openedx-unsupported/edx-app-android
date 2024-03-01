@@ -581,6 +581,14 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
+    public List<VideoModel> getAllVideos(DataCallback<List<VideoModel>> callback) {
+        DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
+                null, null, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
     public List<VideoModel> getAllVideosByCourse(@NonNull String courseId,
                                                  @Nullable DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,

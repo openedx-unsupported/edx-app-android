@@ -902,10 +902,12 @@ public interface Analytics {
         String DO_NOT_SELL_DATA_CLICKED = "edx.bi.app.profile.do_not_sell_data.clicked";
         String SUBMIT_FEEDBACK_CLICKED = "edx.bi.app.profile.submit_feedback.clicked";
 
-        // Video Download Quality
+        // Video Downloads & Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.profile.video_download_quality.clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "edx.bi.app.course_videos.video_download_quality.clicked";
         String VIDEO_DOWNLOAD_QUALITY_CHANGED = "edx.bi.app.video_download_quality.changed";
+        String DELETE_DOWNLOADED_VIDEOS_CLICKED = "edx.bi.app.delete_downloaded_videos.clicked";
+        String DELETE_DOWNLOADED_VIDEOS = "edx.bi.app.delete_downloaded_videos";
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "edx.bi.app.user.register.opt_in.on";
         String REGISTRATION_OPT_IN_TURNED_OFF = "edx.bi.app.user.register.opt_in.off";
@@ -1124,10 +1126,12 @@ public interface Analytics {
         String DO_NOT_SELL_DATA_CLICKED = "Do Not Sell Data Clicked";
         String SUBMIT_FEEDBACK_CLICKED = "Submit feedback clicked";
 
-        // Video Download Quality
+        // Video Downloads & Quality
         String PROFILE_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Profile: Video Download Quality Clicked";
         String COURSE_VIDEOS_VIDEO_DOWNLOAD_QUALITY_CLICKED = "Course Videos: Video Download Quality Clicked";
         String VIDEO_DOWNLOAD_QUALITY_CHANGED = "Video Download Quality Changed";
+        String DELETE_DOWNLOADED_VIDEOS_CLICKED = "Delete Downloaded Videos Clicked";
+        String DELETE_DOWNLOADED_VIDEOS = "Delete Downloaded Videos";
         // Account Registration
         String REGISTRATION_OPT_IN_TURNED_ON = "Registration: Opt-in Turned On";
         String REGISTRATION_OPT_IN_TURNED_OFF = "Registration: Opt-in Turned Off";

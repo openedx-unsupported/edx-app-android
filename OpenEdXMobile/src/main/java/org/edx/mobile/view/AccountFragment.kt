@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -38,6 +40,8 @@ import org.edx.mobile.module.analytics.InAppPurchasesAnalytics
 import org.edx.mobile.module.prefs.FeaturesPrefs
 import org.edx.mobile.module.prefs.LoginPrefs
 import org.edx.mobile.module.prefs.UserPrefs
+import org.edx.mobile.module.storage.DeleteAllDownloadedVideosEvent
+import org.edx.mobile.module.storage.IStorage
 import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback
 import org.edx.mobile.user.UserService
 import org.edx.mobile.util.AgreementUrlType
@@ -94,6 +98,9 @@ class AccountFragment : BaseFragment() {
     @Inject
     lateinit var iapAnalytics: InAppPurchasesAnalytics
 
+    @Inject
+    lateinit var storage: IStorage
+
     private val courseViewModel: CourseViewModel by viewModels()
     private val iapViewModel: InAppPurchasesViewModel by viewModels()
 
@@ -130,6 +137,7 @@ class AccountFragment : BaseFragment() {
         initPurchases()
         handleIntentBundle(arguments)
         initVideoQuality()
+        initDeleteDownloadedVideos()
         updateWifiSwitch()
         updateSDCardSwitch()
         initHelpFields()
@@ -171,7 +179,7 @@ class AccountFragment : BaseFragment() {
             binding.btnRestorePurchases.setOnClickListener {
                 iapAnalytics.reset()
                 iapAnalytics.trackIAPEvent(Analytics.Events.IAP_RESTORE_PURCHASE_CLICKED)
-                showLoader()
+                showLoader(R.string.title_checking_purchases)
                 lifecycleScope.launch {
                     courseViewModel.fetchEnrolledCourses(
                         type = CourseViewModel.CoursesRequestType.STALE,
@@ -266,9 +274,9 @@ class AccountFragment : BaseFragment() {
         fullScreenLoader.show(childFragmentManager, FullscreenLoaderDialogFragment.TAG)
     }
 
-    private fun showLoader() {
+    private fun showLoader(@StringRes titleResId: Int) {
         loaderDialog = AlertDialogFragment.newInstance(
-            R.string.title_checking_purchases,
+            titleResId,
             R.layout.alert_dialog_progress
         )
         loaderDialog?.isCancelable = false
@@ -299,6 +307,30 @@ class AccountFragment : BaseFragment() {
 
     private fun setVideoQualityDescription(videoQuality: VideoQuality) {
         binding.tvVideoDownloadQuality.setText(videoQuality.titleResId)
+    }
+
+    private fun initDeleteDownloadedVideos() {
+        binding.btnDeleteVideos.setOnClickListener {
+            trackEvent(
+                Analytics.Events.DELETE_DOWNLOADED_VIDEOS_CLICKED,
+                Analytics.Values.DELETE_DOWNLOADED_VIDEOS_CLICKED
+            )
+            AlertDialogFragment.newInstance(
+                getString(R.string.delete_downloaded_videos_title),
+                getString(R.string.delete_downloaded_videos_dialog_description),
+                getString(R.string.label_delete),
+                { _, _ ->
+                    showLoader(R.string.deleting_downloaded_videos_title)
+                    storage.removeAllDownloads()
+                    trackEvent(
+                        Analytics.Events.DELETE_DOWNLOADED_VIDEOS,
+                        Analytics.Values.DELETE_DOWNLOADED_VIDEOS
+                    )
+                },
+                getString(R.string.label_cancel),
+                null
+            ).show(childFragmentManager, null)
+        }
     }
 
     private fun initHelpFields() {
@@ -603,6 +635,22 @@ class AccountFragment : BaseFragment() {
 
     private fun trackEvent(eventName: String, biValue: String) {
         environment.analyticsRegistry.trackEvent(eventName, biValue)
+    }
+
+    @Subscribe(sticky = true)
+    @Suppress("UNUSED_PARAMETER")
+    fun onEventMainThread(event: DeleteAllDownloadedVideosEvent) {
+        binding.root.postDelayed(
+            {
+                loaderDialog?.dismiss()
+                Toast.makeText(
+                    requireContext(),
+                    R.string.deleted_downloaded_videos_success,
+                    Toast.LENGTH_LONG
+                ).show()
+            }, 2000
+        )
+
     }
 
     companion object {

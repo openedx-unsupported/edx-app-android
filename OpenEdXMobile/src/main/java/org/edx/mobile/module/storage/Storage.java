@@ -163,6 +163,23 @@ public class Storage implements IStorage {
 
     @Override
     public void removeAllDownloads() {
+        db.getAllVideos(new DataCallback<List<VideoModel>>() {
+            @Override
+            public void onResult(List<VideoModel> result) {
+                removeDownloadsFromApp(result, null);
+                FileUtil.resetAppDirectory(context);
+                EventBus.getDefault().post(new DeleteAllDownloadedVideosEvent());
+            }
+
+            @Override
+            public void onFail(Exception ex) {
+                logger.error(ex);
+            }
+        });
+    }
+
+    @Override
+    public void removeAllOnGoingDownloads() {
         final String username = loginPrefs.getUsername();
         final String sha1Username;
         if (TextUtils.isEmpty(username)) {

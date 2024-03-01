@@ -42,10 +42,17 @@ public interface IStorage {
 
     /**
      * Removes all videos from the database as well as NativeDownloadManager.
-     * This method fetches all ongoing downloads from the DB; iterates through the list
+     * This method fetches all downloads from the DB; iterates through the list
      * and then calls the {@link #removeDownload(VideoModel)} method for each video
      */
     void removeAllDownloads();
+
+    /**
+     * Removes all videos from the database as well as NativeDownloadManager.
+     * This method fetches all ongoing downloads from the DB; iterates through the list
+     * and then calls the {@link #removeDownload(VideoModel)} method for each video
+     */
+    void removeAllOnGoingDownloads();
 
     /**
      * This method fetches all unenrolledVideos from the DB.

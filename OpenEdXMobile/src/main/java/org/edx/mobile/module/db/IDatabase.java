@@ -366,11 +366,16 @@ public interface IDatabase {
                                              DataCallback<Integer> callback);
 
     /**
-     * Returns list of all videos from the database.
+     * Returns list of all videos from the database for a specific username.
      *
      * @return
      */
     List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
+
+    /**
+     * Returns list of all videos from the database.
+     */
+    List<VideoModel> getAllVideos(DataCallback<List<VideoModel>> DataCallback);
 
     /**
      * Returns list of all videos from the database for a specific course.

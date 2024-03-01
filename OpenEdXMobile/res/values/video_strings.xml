@@ -66,4 +66,18 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d mins</item>
     </plurals>
+
+    <!-- Title of Delete all downloaded videos -->
+    <string name="delete_downloaded_videos_title">Delete all downloaded videos</string>
+    <!-- Description of Delete all downloaded videos -->
+    <string name="delete_downloaded_videos_description">Remove all downloaded videos from your device.</string>
+    <!-- Title of Delete downloaded video dialog -->
+    <string name="delete_downloaded_videos_dialog_description">Are you sure you want to delete all downloaded videos from your device? This action cannot be undone.</string>
+    <!-- Title of Delete all videos button -->
+    <string name="label_delete_all_videos">Delete all videos</string>
+    <!-- Title of Deleting downloaded video progress dialog -->
+    <string name="deleting_downloaded_videos_title">Deleting downloaded videos…</string>
+    <!-- Message of Deleted downloaded video success snackbar -->
+    <string name="deleted_downloaded_videos_success">Downloaded videos deleted successfully.</string>
+
 </resources>
