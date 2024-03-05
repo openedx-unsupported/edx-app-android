@@ -15,6 +15,7 @@ import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResult
 import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
@@ -242,7 +243,7 @@ class BillingProcessor @Inject constructor(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.INAPP)
                 .build()
-        ).purchasesList
+        ).purchasesList.filter { it.purchaseState == PurchaseState.PURCHASED }
     }
 
     suspend fun consumePurchase(purchaseToken: String): BillingResult {
