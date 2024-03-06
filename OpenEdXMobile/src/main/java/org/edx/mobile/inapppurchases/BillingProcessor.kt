@@ -11,13 +11,16 @@ import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResult
 import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import com.android.billingclient.api.acknowledgePurchase
+import com.android.billingclient.api.consumePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchasesAsync
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,10 +29,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import org.edx.mobile.extenstion.decodeToString
 import org.edx.mobile.extenstion.encodeToString
 import org.edx.mobile.extenstion.resumeIfActive
 import org.edx.mobile.injection.DataSourceDispatcher
 import org.edx.mobile.logger.Logger
+import org.edx.mobile.model.api.EnrolledCoursesResponse.ProductInfo
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -125,16 +130,20 @@ class BillingProcessor @Inject constructor(
      * Called to purchase the new product. Query the product details and launch the purchase flow.
      *
      * @param activity active activity to launch our billing flow from
-     * @param productId Product Id to be purchased
      * @param userId    User Id of the purchaser
+     * @param productInfo Course and Product info to purchase
      */
-    suspend fun purchaseItem(activity: Activity, productId: String, userId: Long) {
+    suspend fun purchaseItem(
+        activity: Activity,
+        userId: Long,
+        productInfo: ProductInfo,
+    ) {
         if (isReadyOrConnect()) {
-            val response = querySyncDetails(productId)
+            val response = querySyncDetails(productInfo.storeSku)
             logger.debug("Getting Purchases -> ${response.billingResult}")
 
             response.productDetailsList?.first()?.let {
-                launchBillingFlow(activity, it, userId)
+                launchBillingFlow(activity, it, userId, productInfo.courseSku)
             }
         } else {
             listener.onPurchaseCancel(BillingResponseCode.BILLING_UNAVAILABLE, "")
@@ -152,7 +161,8 @@ class BillingProcessor @Inject constructor(
     private fun launchBillingFlow(
         activity: Activity,
         productDetails: ProductDetails,
-        userId: Long
+        userId: Long,
+        courseSku: String,
     ) {
         val productDetailsParamsList = listOf(
             ProductDetailsParams.newBuilder()
@@ -163,6 +173,7 @@ class BillingProcessor @Inject constructor(
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(productDetailsParamsList)
             .setObfuscatedAccountId(userId.encodeToString())
+            .setObfuscatedProfileId(courseSku.encodeToString())
             .build()
 
         billingClient.launchBillingFlow(activity, billingFlowParams)
@@ -232,7 +243,18 @@ class BillingProcessor @Inject constructor(
             QueryPurchasesParams.newBuilder()
                 .setProductType(BillingClient.ProductType.INAPP)
                 .build()
-        ).purchasesList
+        ).purchasesList.filter { it.purchaseState == PurchaseState.PURCHASED }
+    }
+
+    suspend fun consumePurchase(purchaseToken: String): BillingResult {
+        isReadyOrConnect()
+        val result = billingClient.consumePurchase(
+            ConsumeParams
+                .newBuilder()
+                .setPurchaseToken(purchaseToken)
+                .build()
+        )
+        return result.billingResult
     }
 
     companion object {
@@ -251,3 +273,7 @@ class BillingProcessor @Inject constructor(
 
 fun ProductDetails.OneTimePurchaseOfferDetails.getPriceAmount(): Double =
     this.priceAmountMicros.toDouble().div(BillingProcessor.MICROS_TO_UNIT)
+
+fun Purchase.getCourseSku(): String? {
+    return this.accountIdentifiers?.obfuscatedProfileId?.decodeToString()
+}

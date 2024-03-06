@@ -107,7 +107,7 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                     CourseModalDialogFragment.newInstance(
                         Analytics.Screens.COURSE_ENROLLMENT,
                         model.courseId,
-                        model.courseSku,
+                        model.productInfo,
                         model.course.name,
                         model.course.isSelfPaced
                     ).show(childFragmentManager, CourseModalDialogFragment.TAG)
@@ -246,6 +246,8 @@ class MyCoursesListFragment : OfflineSupportBaseFragment(), RefreshListener {
                 retryListener = DialogInterface.OnClickListener { _, _ ->
                     if (errorMessage.requestType == ErrorMessage.EXECUTE_ORDER_CODE) {
                         iapViewModel.executeOrder()
+                    } else if (errorMessage.requestType == ErrorMessage.CONSUME_CODE) {
+                        iapViewModel.consumeOrderForFurtherPurchases(iapViewModel.iapFlowData)
                     } else if (errorMessage.requestType == ErrorMessage.COURSE_REFRESH_CODE) {
                         courseViewModel.fetchEnrolledCourses(
                             type = CoursesRequestType.LIVE,

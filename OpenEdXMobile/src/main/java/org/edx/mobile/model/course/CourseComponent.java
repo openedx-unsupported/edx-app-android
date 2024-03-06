@@ -1,5 +1,7 @@
 package org.edx.mobile.model.course;
 
+import static org.edx.mobile.model.api.EnrolledCoursesResponse.ProductInfo;
+
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -43,7 +45,7 @@ public class CourseComponent implements IBlock, IPathNode {
     private String authorizationDenialMessage;
     private AuthorizationDenialReason authorizationDenialReason;
     private SpecialExamInfo specialExamInfo;
-    private String courseSku;
+    private ProductInfo productInfo;
 
     public CourseComponent() {
     }
@@ -69,7 +71,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.authorizationDenialMessage = other.authorizationDenialMessage;
         this.authorizationDenialReason = other.authorizationDenialReason;
         this.specialExamInfo = other.specialExamInfo;
-        this.courseSku = other.courseSku;
+        this.productInfo = other.productInfo;
     }
 
     /**
@@ -572,12 +574,12 @@ public class CourseComponent implements IBlock, IPathNode {
         return specialExamInfo;
     }
 
-    public String getCourseSku() {
-        return courseSku;
+    public ProductInfo getProductInfo() {
+        return productInfo;
     }
 
-    public void setCourseSku(String courseSku) {
-        this.courseSku = courseSku;
+    public void setProductInfo(ProductInfo productInfo) {
+        this.productInfo = productInfo;
     }
 
     public ArrayList<SectionRow> getSectionData() {

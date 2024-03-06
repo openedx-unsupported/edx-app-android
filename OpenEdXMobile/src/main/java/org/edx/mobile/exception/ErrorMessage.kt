@@ -24,6 +24,7 @@ data class ErrorMessage(
         const val COURSE_REFRESH_CODE = 0x205
         const val PRICE_CODE = 0x206
         const val NO_SKU_CODE = 0x207
+        const val CONSUME_CODE = 0x208
     }
 
     private fun isPreUpgradeErrorType(): Boolean =
@@ -56,6 +57,7 @@ data class ErrorMessage(
     fun canRetry(): Boolean {
         return requestType == PRICE_CODE ||
                 requestType == EXECUTE_ORDER_CODE ||
+                requestType == CONSUME_CODE ||
                 requestType == COURSE_REFRESH_CODE
     }
 }

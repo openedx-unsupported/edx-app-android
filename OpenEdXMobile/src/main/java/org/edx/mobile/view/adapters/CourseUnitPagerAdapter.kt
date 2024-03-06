@@ -54,14 +54,14 @@ class CourseUnitPagerAdapter(
             is HtmlBlockModel -> HtmlBlockModel(unit)
             else -> CourseComponent(unit)
         }
-        minifiedUnit.courseSku = courseData.courseSku
+        minifiedUnit.productInfo = courseData.productInfo
 
         val unitFragment = when {
             minifiedUnit.authorizationDenialReason == AuthorizationDenialReason.FEATURE_BASED_ENROLLMENTS -> {
                 if (courseUpgradeData == null) {
                     CourseUnitMobileNotSupportedFragment.newInstance(minifiedUnit, courseData)
                 } else {
-                    minifiedUnit.courseSku = courseData.courseSku
+                    minifiedUnit.productInfo = courseData.productInfo
                     LockedCourseUnitFragment.newInstance(
                         minifiedUnit,
                         courseData,
