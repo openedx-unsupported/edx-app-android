@@ -519,10 +519,6 @@ class CourseTabsDashboardFragment : BaseFragment() {
         ) { tab: TabLayout.Tab, position: Int ->
             tab.text = courseTabItems[position].title
         }.attach()
-
-        if (courseTabItems.size - 1 > 1) {
-            binding.pager.offscreenPageLimit = courseTabItems.size - 1
-        }
     }
 
     private fun setupToolbar(hasAccess: Boolean) {
