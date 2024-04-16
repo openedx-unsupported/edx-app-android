@@ -203,7 +203,6 @@ class InAppPurchasesViewModel @Inject constructor(
             this.iapFlowData = iapData
             repository.executeOrder(
                 basketId = iapData.basketId,
-                productId = iapData.productInfo.courseSku,
                 purchaseToken = iapData.purchaseToken,
                 price = iapData.price,
                 currencyCode = iapData.currencyCode,
