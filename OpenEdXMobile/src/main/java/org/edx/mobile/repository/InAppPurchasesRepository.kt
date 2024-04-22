@@ -45,7 +45,6 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
 
     fun executeOrder(
         basketId: Long,
-        productId: String,
         purchaseToken: String,
         price: Double,
         currencyCode: String,
@@ -53,7 +52,6 @@ class InAppPurchasesRepository(private var iapAPI: InAppPurchasesAPI) {
     ) {
         iapAPI.executeOrder(
             basketId = basketId,
-            productId = productId,
             purchaseToken = purchaseToken,
             price = price,
             currencyCode = currencyCode,
